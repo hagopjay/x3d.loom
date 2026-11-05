@@ -18,7 +18,7 @@ find "$ROOT" -name __pycache__ -type d -prune -exec rm -rf {} +
 "$LOOM" candidate "$ROOT"
 "$LOOM" grammar "$ROOT" --evidence "$EV" --files 'scenes/*.x3d'
 "$LOOM" traps   "$ROOT" --evidence "$EV" --files 'scenes/*.x3d'
-"$LOOM" pagetraps "$ROOT" --evidence "$EV" --files 'src/*.js'
+"$LOOM" pagetraps "$ROOT" --evidence "$EV" --files 'src/*.js,index.html'
 "$LOOM" sci     "$ROOT" --evidence "$EV" --profile "$PROFILE"
 case "$STUDY" in
   kerr2)

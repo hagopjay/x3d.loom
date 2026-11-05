@@ -21,6 +21,9 @@ Terms as Loom v1 uses them. Source IDs are in [SOURCES.md](SOURCES.md).
 | **Status** | What happened: pass, fail, error (the instrument could not complete), not_run, not_applicable, deferred | LS1 §12 |
 | **Grade** | How far a claim can be leaned on: C (a named tool ran), L (read or reasoned), S (suspected or model-written) | DEF, LEC 5 |
 | **Synthetic** | A label for fixtures, seeded mutants and teaching data; not a grade | This consolidation |
+| **Authored** | A label for values chosen by design (a deck's heads, a camera plan, a mix); not a grade. Shown beside its measured counterpart where one exists | MASH2 |
+| **Resilience probe** | Browser evidence that makes a page's own field callback throw once and requires playback to keep advancing (failure modes 88, 94) | x3d.STEM, MASH2 |
+| **Seen** | A witness's inventory of what it read (files, inline scripts, field callbacks, world loads); a pass with nothing seen judged nothing (law 36) | This repository |
 | **Receipt (Loom Receipt v1)** | One JSON per accepted artifact (`loom.receipt/1`) binding candidate, witness records, tools, outputs, unrun witnesses, budget and the previous receipt. Unsigned | DEF, receipt.py |
 | **x3dprov** | Hash-chained provenance steps inside the X3D head; lives in x3d.ML; 0.1 unsigned | DEF |
 | **FACTS** | x3d.onto's graded rulebook of findings (sections A to Q) | DEF |

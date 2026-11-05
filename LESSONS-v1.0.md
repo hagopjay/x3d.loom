@@ -1,6 +1,6 @@
 # Loom v1.0: the lessons, swept up
 
-5 November 2026. The plain-language companion to [LOOM-v1.md](LOOM-v1.md) v1.0: what three days of consolidation, the other models' project deliveries (loom, loom2, the Scientific Loom, loom4), six x3d.STEM flagships built under the Loom, and the loom4 delivery taught. Each lesson points at the law (§3) and failure modes (§8) that hold its evidence.
+5 November 2026. The plain-language companion to [LOOM-v1.md](LOOM-v1.md) v1.0: what three days of consolidation, the other models' project deliveries (loom, loom2, the Scientific Loom, loom4, Mashtots2), six x3d.STEM flagships built under the Loom, and the loom4 delivery taught. Each lesson points at the law (§3) and failure modes (§8) that hold its evidence.
 
 **For the next science or maths study:** start from [SCIENCE-PLAYBOOK.md](SCIENCE-PLAYBOOK.md) and `kit/templates/SCIENCE-STUDY-CARD.md`.
 
@@ -79,15 +79,35 @@
 22. **A signature proves a key, not an author.** Loom receipts stay unsigned until signing binds the validator build, canonicalization, report hash and scene hash under an independently pinned key. *(Law 35; from Tether.)*
 23. **Fold back small, add layers, never send without "send".** Lessons returned as additions-only patches with their counterexample (PRs #10–#17, none merged by the agent). Every receipt and red run is kept. Nothing was pushed or sent without your word. *(Laws 14, 16, 20.)*
 
-## 6. What v1.0 contains
+## 6. From the Mashtots2 delivery (the last fold-in)
+
+The two Mashtots standalones arrived well tested: 148 and 74 feature checks, clean consoles, and a careful report. The Loom's witnesses still found something, and they had to be fixed themselves before they could.
+
+24. **A pass must say what it saw.** Page traps passed the slide show while reading none of the code that drives X_ITE. That code was inline in the HTML and passed its callback by name. Taught to read both, the witness found one unguarded callback, and the freeze was then reproduced. It now reports what it saw, so a pass over nothing shows as one. *(Law 36; failure modes 93, 94.)*
+25. **The same runtime trap, in work not built under the Loom.** One exception in the slide show's conductor stops the whole piece until a reload. The feature checks and the clean console never touch that path; only a probe that breaks something on purpose does. The fix is two lines, kept as a patch and not applied. *(Failure mode 94.)*
+26. **Fixing a witness is a change like any other.**
+    - Widening its reading made a false positive at once: a module's names were flagged as window globals.
+    - An output nobody tested had been wrong since the rule shipped: the syntax error's line number.
+
+    Both were caught because every reading form is two-sided and the change was re-run on real pages. *(Law 8; failure modes 95, 96.)*
+27. **Keep the bug as a switch.** The constellation keeps its MSAA black screen behind a diagnostic button, which makes it a ready negative control for any check that claims the stage is lit (61 → 3.9 in mean brightness here). *(Failure mode 97.)*
+28. **What travels is what counts.** Two things in the delivery did not match what it claimed:
+    - a result file older than the code it ships with (148 checks recorded, 150 run here);
+    - provenance resting on a `.git` that the zip left behind. The repos turned out to be on this Mac and to match, so it was checkable here, but not by anyone else.
+
+    So receive a delivery by re-running it and by checking its claims against what arrived. *(Failure modes 98, 99.)*
+29. **Authored beside measured.** The slide show labels design choices "Authored" and shows the measured counterpart next to them, with their agreement measured (here, none: Spearman +0.02). The Loom adopts **Authored** as a label like Synthetic, never a grade.
+30. **Money and keys stay on the server and survive restarts.** The cap is rebuilt from a ledger, the key stays server-side, and recorded mode is the default. The demo launcher strips keys, so the demo page cannot spend. *(Law 11; failure mode 100.)*
+
+## 7. What v1.0 contains
 
 - **[LOOM-v1.md](LOOM-v1.md):**
-  - 35 laws;
+  - 36 laws;
   - the ten-step loop;
-  - 91 failure modes, each with its fix and source;
+  - 101 failure modes, each with its fix and source;
   - acceptance profiles for the Scientific Loom and each x3d.STEM study;
   - the roadmap, including the X_ITE fixture catalogue.
-- **`kit/loomkit`:** candidate binding, Grammar and Meaning on the x3d_mcp fork, 11 trap rules, science gates (builder and dependency hashes, payloads opened before they are hashed), receipts, a leak sweep. Page traps add six more two-sided rules (syntax, guarded callbacks, clock, navigation, globals, load budget). 44 negative controls pass, normal and under `python -O`.
+- **`kit/loomkit`:** candidate binding, Grammar and Meaning on the x3d_mcp fork, 11 trap rules, science gates (builder and dependency hashes, payloads opened before they are hashed), receipts, a leak sweep. Page traps add six more two-sided rules (syntax, guarded callbacks, clock, navigation, globals, load budget) and six two-sided reading forms (inline HTML scripts, callbacks passed by name, module scope), and report what they saw. 44 negative controls pass, normal and under `python -O`.
 - **Receipts in `runs/`** for Data City, the fold-backs, the Scientific Loom, and all six x3d.STEM flagships:
   - Kerr 2;
   - Turing Garden (re-accepted after its loading-race fix);
@@ -95,11 +115,13 @@
   - Chirp;
   - Living Heart;
   - Vortex Reconnection & Sound.
-- **The demo page** (http://127.0.0.1:8800/, started by `projects/run_all.sh`): 85 items in 13 groups, every one reachable.
+- **The demo page** (http://127.0.0.1:8800/, started by `projects/run_all.sh`): 95 items in 14 groups, every one reachable, including the ten Mashtots2 cards.
 
-## 7. Open before 1.0 is frozen
+## 8. Open before 1.0 is frozen
 
 - **Question 14** in LOOM-v1.md: exclude the Loom's own evidence directory by path, not by name (a versioned change to candidate hashing).
 - ~~Wrap callbacks in the five accepted study pages.~~ **Done 5 Nov:** all six pages hardened (guarded callbacks, budgeted world loads, navigation after the scene). A new `page-traps` witness (6 rules, including a syntax check) is required by every x3d.STEM profile. Each page's browser evidence now includes a resilience probe, and all six are re-accepted.
 - **X_ITE versions differ across deliveries:** 16.5.0 (Tether), 16.5.1 (x3d.STEM), 16.6.1 (the teardown) and 16.7.0 (the MuJoCo bridge). Pin one for v1.0 fixtures and re-run EVT03 (failure mode 88) on it.
 - **Signing receipts** (law 35) is a design decision for you, not a default.
+- **The Mashtots slide show's callback guard** (`runs/mashtots2-20261105/foldback/stage-onframe-guard.patch`, two pages): apply it to `projects/mashtots-slideshow`, or send it to the project, on your word.
+- **Armenian text** in both Mashtots pieces waits for a native reader (flagged by the delivery).

@@ -1,0 +1,74 @@
+{
+  "coverage": {
+    "rules": 6
+  },
+  "development": false,
+  "environment": {
+    "optimized": false,
+    "python": "3.13.2"
+  },
+  "evidence": [],
+  "finished_at": "2026-11-05T21:36:30+00:00",
+  "grade": "C",
+  "instrument": {
+    "rules": [
+      "js-syntax",
+      "loadurl-unbudgeted",
+      "nav-before-scene",
+      "window-global-shadow",
+      "xite-browser-currenttime",
+      "xite-callback-unguarded"
+    ],
+    "rules_sha256": "06d1813c07e5f84800b689b8ea5096df8769c3a913648a732727eb8818da5c70",
+    "tool": "loomkit.pagetraps"
+  },
+  "limitations": [
+    "Static pattern reading of page JavaScript; a clean result means none of these known traps is present, not that the page behaves correctly.",
+    "Reads .js files and the inline <script> blocks of .html files listed in --files; 'seen' counts the field callbacks and world loads it read (zero means the X_ITE rules had nothing to judge).",
+    "Rules are labelled with the runtime they were observed on (X_ITE 16.5.1 unless stated)."
+  ],
+  "measurements": {
+    "errors": 0,
+    "files": 27,
+    "hits": {
+      "public/config.js": [],
+      "public/index.html": [],
+      "public/js/api.js": [],
+      "public/js/constellation.js": [],
+      "public/js/converse.js": [],
+      "public/js/deck.js": [],
+      "public/js/info.js": [],
+      "public/js/living/director.js": [],
+      "public/js/living/shaders.js": [],
+      "public/js/living/sound.js": [],
+      "public/js/living/textures.js": [],
+      "public/js/main.js": [],
+      "public/js/ornament/arevakhach.js": [],
+      "public/js/ornament/capital.js": [],
+      "public/js/ornament/carpet.js": [],
+      "public/js/ornament/filters.js": [],
+      "public/js/ornament/index.js": [],
+      "public/js/ornament/interlace.js": [],
+      "public/js/ornament/khachkar.js": [],
+      "public/js/ornament/motifs.js": [],
+      "public/js/ornament/palettes.js": [],
+      "public/js/ornament/pomegranate.js": [],
+      "public/js/ornament/rng.js": [],
+      "public/js/ornament/svg.js": [],
+      "public/js/util.js": [],
+      "public/js/voice.js": [],
+      "server.mjs": []
+    },
+    "seen": {
+      "field_callbacks": 0,
+      "inline_scripts": 0,
+      "world_loads": 0
+    },
+    "warnings": 0
+  },
+  "reason": "",
+  "schema": "loom.witness/1",
+  "status": "pass",
+  "subject_sha256": "c0b6d67e20c8586f39760ffc87b102b589dbc7939cc64a2b9e50f3bb9bf810c8",
+  "witness": "page-traps"
+}

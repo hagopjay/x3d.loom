@@ -29,9 +29,13 @@ from .core import GateError, InstrumentError, candidate, need, portable, sha256_
 
 
 def _files(root: Path, pattern: str) -> list[Path]:
-    found = sorted(p for p in root.glob(pattern) if p.is_file())
-    need(found, "NO_FILES_MATCHED", pattern)
-    return found
+    """One glob, or several separated by commas ('app/*.js,app/*.html'). Every pattern must match something."""
+    found: set[Path] = set()
+    for pat in (x.strip() for x in pattern.split(",")):
+        hit = {p for p in root.glob(pat) if p.is_file()}
+        need(hit, "NO_FILES_MATCHED", pat)
+        found |= hit
+    return sorted(found)
 
 
 def cmd_traps(a) -> dict:
@@ -47,7 +51,7 @@ def cmd_traps(a) -> dict:
     return write_witness(a.evidence, root, subject, "traps", status, "C",
                          {"tool": "loomkit.traps", "rules": sorted(traps.RULES),
                           "rules_sha256": sha256_file(Path(traps.__file__))},
-                         measurements={"files": len(rows), "errors": errors, "warnings": warnings, "hits": rows},
+                         measurements={"files": len(rows), "errors": errors, "warnings": warnings, "seen": seen, "hits": rows},
                          coverage={"rules": len(traps.RULES)},
                          limitations=["Portable subset of x3d.onto loom_gate.py rules; the family gate itself is not on this machine.",
                                       "Runtime-labelled rules describe the runtime they were observed on."])
@@ -57,17 +61,25 @@ def cmd_pagetraps(a) -> dict:
     """Page traps over a study's JavaScript: the X_ITE runtime contracts the Loom has paid for (law 32)."""
     root = Path(a.root)
     subject = candidate(root)["sha256"]
-    rows, errors, warnings = {}, 0, 0
+    rows, errors, warnings, seen = {}, 0, 0, {"field_callbacks": 0, "world_loads": 0, "inline_scripts": 0}
     for f in _files(root, a.files):
-        hits = pagetraps.check(f.read_text(encoding="utf-8"), f.relative_to(root).as_posix())
-        rows[f.relative_to(root).as_posix()] = [h.__dict__ for h in hits]
+        text, rel = f.read_text(encoding="utf-8"), f.relative_to(root).as_posix()
+        if f.suffix.lower() in (".html", ".htm"):
+            hits, code = pagetraps.check_html(text, rel), pagetraps.scripts_view(text)
+            seen["inline_scripts"] += len(pagetraps.inline_scripts(text))
+        else:
+            hits, code = pagetraps.check(text, rel), text
+        for k, v in pagetraps.inventory(code).items():
+            seen[k] += v
+        rows[rel] = [h.__dict__ for h in hits]
         errors += sum(h.severity == "error" for h in hits)
         warnings += sum(h.severity == "warning" for h in hits)
     return write_witness(a.evidence, root, subject, "page-traps", "fail" if errors else "pass", "C",
                          {"tool": "loomkit.pagetraps", "rules": sorted(pagetraps.RULES), "rules_sha256": sha256_file(Path(pagetraps.__file__))},
-                         measurements={"files": len(rows), "errors": errors, "warnings": warnings, "hits": rows},
+                         measurements={"files": len(rows), "errors": errors, "warnings": warnings, "seen": seen, "hits": rows},
                          coverage={"rules": len(pagetraps.RULES)},
                          limitations=["Static pattern reading of page JavaScript; a clean result means none of these known traps is present, not that the page behaves correctly.",
+                                      "Reads .js files and the inline <script> blocks of .html files listed in --files; 'seen' counts the field callbacks and world loads it read (zero means the X_ITE rules had nothing to judge).",
                                       "Rules are labelled with the runtime they were observed on (X_ITE 16.5.1 unless stated)."])
 
 

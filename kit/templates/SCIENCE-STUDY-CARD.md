@@ -40,7 +40,8 @@ Fill this in **before** the first build. Copy it to `docs/CARD.md` in the study.
 - [ ] Payloads verified before use (compressed and decoded hashes)
 - [ ] `loadWorld()` with a time budget; navigation wired after the scene loads
 - [ ] Playback through `TimeSensor → IntegerSequencer → Switch`; `getCurrentTime()`
-- [ ] Every field callback guarded with try/catch; resilience probe in the browser evidence
+- [ ] Every field callback guarded with try/catch (inside a callback passed by name too); resilience probe in the browser evidence
+- [ ] Page traps given every file that runs page code (`src/*.js,index.html`), with non-zero `seen` counts
 - [ ] Every component declared; viewpoints TELEPORT before captures
 - [ ] A read-only view report and deep links
 

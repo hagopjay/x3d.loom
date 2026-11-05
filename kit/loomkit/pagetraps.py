@@ -8,6 +8,12 @@ remains the witness for behaviour.
 
 Rules are labelled with the runtime they were observed on: a browser fact must not become a universal
 prohibition (the same discipline as traps.py).
+
+What it reads: .js files, and the inline <script> blocks of .html files (the Mashtots slide show keeps its
+whole X_ITE driver inline in stage.html; a witness that read only app/*.js passed it while it measured
+nothing, failure mode 93). A callback passed by name is resolved to its definition in the same source and
+checked like an inline one. It reports an inventory (field callbacks and world loads seen) so a pass over
+code that never touches X_ITE is visible as such.
 """
 from __future__ import annotations
 
@@ -83,15 +89,17 @@ def strip_comments(src: str) -> str:
     return "".join(out)
 
 
-def syntax(src: str, path: str = "<page>") -> list[Hit]:
-    """Parse the page with node --check. Fails closed: without Node the check raises, it never passes."""
+def syntax(src: str, path: str = "<page>", module: bool = False) -> list[Hit]:
+    """Parse the page with node --check. Fails closed: without Node the check raises, it never passes.
+    module=True parses as an ES module (<script type="module">)."""
     import shutil, subprocess, tempfile, os
     node = shutil.which("node")
     if not node:
         raise RuntimeError("PAGE_SYNTAX_UNCHECKED: node is not on PATH")
-    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
+    with tempfile.NamedTemporaryFile("w", suffix=".mjs" if module else ".js", delete=False, encoding="utf-8") as f:
         f.write(src)
         tmp = f.name
+    real = os.path.realpath(tmp)
     try:
         r = subprocess.run([node, "--check", tmp], capture_output=True, text=True, timeout=60)
     finally:
@@ -99,24 +107,62 @@ def syntax(src: str, path: str = "<page>") -> list[Hit]:
     if r.returncode == 0:
         return []
     msg = next((l for l in r.stderr.splitlines() if "Error" in l), r.stderr.strip()[:200])
-    line = next((l.split(":")[-1] for l in r.stderr.splitlines() if l.startswith(tmp)), "?")
+    # node prints the real path (/private/var/... on macOS for a /var/... temp file): match either
+    names = (tmp, real)
+    line = next((l.rsplit(":", 1)[-1] for l in r.stderr.splitlines() if l.startswith(names)), "?")
     return [Hit("js-syntax", "error", f"{path}:{line}", msg[:200])]
 
 
-def check(src: str, path: str = "<page>") -> list[Hit]:
-    hits: list[Hit] = syntax(src, path)
-    src = strip_comments(src)
-    # 1. every addFieldCallback whose callback is an inline function must open with try
+_IDENT = r"[A-Za-z_$][\w$]*"
+_ARG = r"""(?:"[^"]*"|'[^']*'|[\w$.]+)"""
+_BY_NAME = re.compile(r"\s*" + _ARG + r"\s*,\s*" + _ARG + r"\s*,\s*(" + _IDENT + r")\s*\)")
+
+
+def _named_body(src: str, name: str) -> str | None:
+    """The text just after the opening brace of `name`'s definition in this source, or None."""
+    n = re.escape(name)
+    for pat in (r"(?:async\s+)?function\s+" + n + r"\s*\([^)]*\)\s*\{",
+                r"(?:const|let|var)\s+" + n + r"\s*=\s*(?:async\s*)?(?:function\s*\([^)]*\)|\([^)]*\)\s*=>|" + _IDENT + r"\s*=>)\s*\{"):
+        m = re.search(pat, src)
+        if m:
+            return src[m.end():]
+    return None
+
+
+_ESM = re.compile(r"^\s*(?:import\s*[\w${*\"']|export\s)", re.M)
+
+
+def is_module(src: str) -> bool:
+    """A .js file with top-level import or export can only load as a module, where top-level names stay out of window."""
+    return bool(_ESM.search(src))
+
+
+def patterns(src: str, path: str = "<page>", globals_shared: bool = True) -> list[Hit]:
+    """The pattern rules, on comment-stripped source (line numbers preserved). globals_shared=False for module
+    code: its top-level names do not reach window (the first HTML run flagged a module's `frames`, a false positive)."""
+    hits: list[Hit] = []
+    # 1. every field callback must open with try: inline functions, and functions passed by name that are
+    #    defined in this same source (the Mashtots slide show passes its whole clock as `onFrame`)
     for m in re.finditer(r"addFieldCallback\s*\(", src):
+        where = f"{path}:{_line(src, m.start())}"
+        ref = _BY_NAME.match(src, m.end())
+        if ref:
+            body = _named_body(src, ref.group(1))
+            if body is None:
+                hits.append(Hit("xite-callback-unguarded", "warning", where,
+                                f"callback {ref.group(1)} is defined elsewhere: put try/catch inside it (not checked here)"))
+            elif not body.lstrip().startswith("try"):
+                hits.append(Hit("xite-callback-unguarded", "error", where, f"callback {ref.group(1)} (passed by name) does not start with try"))
+            continue
         tail = src[m.end():m.end() + 600]
         fn = re.search(r"(=>\s*\{|function\s*\([^)]*\)\s*\{)", tail)
         if not fn:
-            hits.append(Hit("xite-callback-unguarded", "warning", f"{path}:{_line(src, m.start())}",
+            hits.append(Hit("xite-callback-unguarded", "warning", where,
                             "callback passed by reference: put try/catch inside that function (not checked here)"))
             continue
         body = tail[fn.end():].lstrip()
         if not body.startswith("try"):
-            hits.append(Hit("xite-callback-unguarded", "error", f"{path}:{_line(src, m.start())}", "callback body does not start with try"))
+            hits.append(Hit("xite-callback-unguarded", "error", where, "callback body does not start with try"))
     # 2. Browser.currentTime
     for m in re.finditer(r"\b(?:B|browser|Browser|X3D\.getBrowser\([^)]*\))\.currentTime\b", src):
         hits.append(Hit("xite-browser-currenttime", "error", f"{path}:{_line(src, m.start())}", m.group(0)))
@@ -127,7 +173,7 @@ def check(src: str, path: str = "<page>") -> list[Hit]:
             hits.append(Hit("nav-before-scene", "error", f"{path}:{_line(src, m.start())}",
                             "hashchange listener appears before loadURL" if load else "hashchange listener but no loadURL in this file"))
     # 4. top-level declarations that shadow window properties (classic scripts share the global scope)
-    for m in re.finditer(r"^(?:const|let|var|function)\s+([A-Za-z_$][\w$]*)", src, flags=re.M):
+    for m in re.finditer(r"^(?:const|let|var|function)\s+([A-Za-z_$][\w$]*)", src, flags=re.M) if globals_shared else ():
         if m.group(1) in WINDOW_PROPS:
             hits.append(Hit("window-global-shadow", "error", f"{path}:{_line(src, m.start())}", f"top-level {m.group(1)}"))
     # 5. world loads without a time budget
@@ -136,3 +182,54 @@ def check(src: str, path: str = "<page>") -> list[Hit]:
         if "Promise.race" not in window and "timeout" not in window.lower():
             hits.append(Hit("loadurl-unbudgeted", "warning", f"{path}:{_line(src, m.start())}", "await loadURL without a time budget"))
     return hits
+
+
+def inventory(src: str) -> dict:
+    """What the witness saw: a pass over code with no field callbacks and no world loads measured nothing about them."""
+    src = strip_comments(src)
+    return {"field_callbacks": len(re.findall(r"addFieldCallback\s*\(", src)),
+            "world_loads": len(re.findall(r"\.(?:loadURL|replaceWorld|createX3DFromURL)\s*\(", src))}
+
+
+def check(src: str, path: str = "<page>") -> list[Hit]:
+    code = strip_comments(src)
+    return syntax(src, path) + patterns(code, path, globals_shared=not is_module(code))
+
+
+_JS_TYPES = {"", "module", "text/javascript", "application/javascript"}
+
+
+def inline_scripts(html: str) -> list[tuple[int, int, bool]]:
+    """(start, end, is_module) spans of inline JavaScript bodies in an HTML file. Scripts with src= and non-JS
+    types (shaders, JSON) are skipped. Limitation: a literal '</script>' inside a script string ends the block."""
+    out = []
+    for m in re.finditer(r"<script\b([^>]*)>(.*?)</script\s*>", html, flags=re.S | re.I):
+        attrs = m.group(1)
+        if re.search(r"\bsrc\s*=", attrs, flags=re.I):
+            continue
+        t = re.search(r"""\btype\s*=\s*["']?([^"'\s>]*)""", attrs, flags=re.I)
+        typ = (t.group(1).lower() if t else "")
+        if typ not in _JS_TYPES:
+            continue
+        out.append((m.start(2), m.end(2), typ == "module"))
+    return out
+
+
+def scripts_view(html: str, which: str = "all") -> str:
+    """The HTML with everything outside inline script bodies blanked (newlines kept), so pattern rules see
+    all the page's inline code at once and report HTML line numbers. which: "all", "classic" or "module"."""
+    keep = [False] * len(html)
+    for a, b, module in inline_scripts(html):
+        if which == "all" or (which == "module") == module:
+            keep[a:b] = [True] * (b - a)
+    return "".join(c if k or c == "\n" else " " for c, k in zip(html, keep))
+
+
+def check_html(html: str, path: str = "<page>") -> list[Hit]:
+    hits: list[Hit] = []
+    for a, b, module in inline_scripts(html):
+        pad = "\n" * html.count("\n", 0, a)                  # syntax errors report the HTML line
+        hits += syntax(pad + html[a:b], path, module=module)
+    hits += patterns(strip_comments(scripts_view(html)), path, globals_shared=False)
+    shared = [h for h in patterns(strip_comments(scripts_view(html, "classic")), path) if h.rule == "window-global-shadow"]
+    return hits + shared

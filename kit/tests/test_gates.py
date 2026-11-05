@@ -157,7 +157,54 @@ PAGE_CASES = {
 }
 
 
+# Forms of the page the witness must read, each two-sided: a callback passed by name (the Mashtots slide
+# show's `onFrame`, failure mode 93) and inline <script> blocks in HTML, with the HTML line reported.
+_NAMED_OK = "function onFrame(e) { try { step(e); } catch (x) { console.error(x); } }\nclock." + _CB.split(".")[-1] + "(\"stage\", \"elapsedTime\", onFrame);\n"
+_NAMED_BAD = "function onFrame(e) {\n  step(e);\n}\nclock." + _CB.split(".")[-1] + "(\"stage\", \"elapsedTime\", onFrame);\n"
+
+
+def _html(js: str, attrs: str = ' type="module"') -> str:
+    return ('<!doctype html>\n<title>t</title>\n<script src="vendor/x_ite.min.js"></script>\n'
+            '<script type="x-shader/x-fragment">void main() { gl_FragColor = vec4(1); }</script>\n'
+            f"<script{attrs}>\n{js}</script>\n")
+
+
+PAGE_FORMS = [  # (label, rule, reader, passing source, failing source, expected line of the hit or None)
+    ("callback passed by name", "xite-callback-unguarded", "js", _NAMED_OK, _NAMED_BAD, 4),
+    ("inline module script", "xite-callback-unguarded", "html", _html(CLEAN_PAGE), _html(PAGE_CASES["xite-callback-unguarded"]), 11),
+    ("inline classic script", "window-global-shadow", "html", _html(CLEAN_PAGE, ""), _html(PAGE_CASES["window-global-shadow"], ""), 6),
+    ("inline script syntax", "js-syntax", "html", _html(CLEAN_PAGE), _html(PAGE_CASES["js-syntax"]), 11),
+    # a module's top-level names never reach window (the first HTML run flagged a module's `frames`)
+    ("module scope is not window", "window-global-shadow", "html", _html(PAGE_CASES["window-global-shadow"]),
+     _html(PAGE_CASES["window-global-shadow"], ""), 6),
+    ("ES module .js file", "window-global-shadow", "js", "export const x = 1;\n" + PAGE_CASES["window-global-shadow"],
+     PAGE_CASES["window-global-shadow"], 1),
+]
+
+
 def page_controls() -> list[dict]:
+    rows = page_rule_controls()
+    for label, rule, reader, good, bad, line in PAGE_FORMS:
+        run = pagetraps.check_html if reader == "html" else pagetraps.check
+        g = [h for h in run(good) if h.rule == rule]
+        b = [h for h in run(bad) if h.rule == rule and h.severity == "error"]
+        if g:
+            raise RuntimeError(f"FALSE_POSITIVE ({label}): {[h.__dict__ for h in g]}")
+        if not b:
+            raise RuntimeError(f"SURVIVING_CONTROL ({label}): {rule}")
+        if line is not None and b[0].where != f"<page>:{line}":
+            raise RuntimeError(f"WRONG_LINE ({label}): {b[0].where}, expected <page>:{line}")
+        rows.append({"form": label, "rule": rule, "passing_fixture": "clean", "failing_fixture": "caught"})
+    seen = pagetraps.inventory(pagetraps.scripts_view(_html(CLEAN_PAGE)))
+    if seen != {"field_callbacks": 1, "world_loads": 1}:
+        raise RuntimeError(f"INVENTORY: {seen}")
+    if pagetraps.inventory(pagetraps.scripts_view(_html("const a = 1;\n"))) != {"field_callbacks": 0, "world_loads": 0}:
+        raise RuntimeError("INVENTORY counts code outside inline scripts")
+    rows.append({"case": "inventory counts what was read, and only that", "result": "exact"})
+    return rows
+
+
+def page_rule_controls() -> list[dict]:
     if set(PAGE_CASES) != set(pagetraps.RULES):
         raise RuntimeError("PAGE_RULE_WITHOUT_TWO_SIDED_TEST: " + str(set(pagetraps.RULES) ^ set(PAGE_CASES)))
     clean = [h.rule for h in pagetraps.check(CLEAN_PAGE)]
@@ -325,9 +372,12 @@ if __name__ == "__main__":
         res = json.loads(p.stdout)
         negatives = sum(1 for k in ("acceptance", "picture", "receipt", "sweep", "sci") for row in res[k] if "caught" in row)
         report["modes"].append({"optimized": res["optimized"], "negative_controls_caught": negatives,
-                                "trap_rules_two_sided": len(res["traps"]), "page_trap_rules_two_sided": len(res["pagetraps"]), "detail": res})
+                                "trap_rules_two_sided": len(res["traps"]),
+                                "page_trap_rules_two_sided": sum(1 for r in res["pagetraps"] if "rule" in r and "form" not in r),
+                                "page_trap_forms_two_sided": sum(1 for r in res["pagetraps"] if "form" in r), "detail": res})
     out = KIT / "tests/last-run.json"
     out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     for m in report["modes"]:
         print(f"optimized={m['optimized']}: {m['negative_controls_caught']} negative controls caught with the intended code; "
-              f"{m['trap_rules_two_sided']} trap rules and {m['page_trap_rules_two_sided']} page-trap rules pass their clean fixture and catch their failing one")
+              f"{m['trap_rules_two_sided']} trap rules, {m['page_trap_rules_two_sided']} page-trap rules and {m['page_trap_forms_two_sided']} page forms "
+              "(named callback, inline HTML scripts, module scope) pass their clean fixture and catch their failing one")

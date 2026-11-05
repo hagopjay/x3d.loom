@@ -1,0 +1,42 @@
+diff -ru a/app/explore/director/index.html b/app/explore/director/index.html
+--- a/app/explore/director/index.html	2026-11-05 13:39:59
++++ b/app/explore/director/index.html	2026-11-05 13:39:59
+@@ -92,7 +92,7 @@
+ const wrap = t => ((t % cyc) + cyc) % cyc;
+ 
+ // ---- every frame: own the scene's time ----
+-function onFrame(e) {
++function onFrame(e) { try {   // guard: one exception escaping an X_ITE field callback freezes every route in the scene (X_ITE 16.5.1; Loom failure mode 88)
+   frames++;
+   const dt = ePrev === null ? 0 : Math.min(0.25, Math.max(0, e - ePrev)); ePrev = e;
+   if (!paused) V += dt * speed * (calm ? 0.5 : 1);
+@@ -101,7 +101,7 @@
+   V = wrap(V);
+   const S = PREVIEW ? toApproved(V) : V;
+   toff = wrap(S - e); seekNode.cycleInterval = toff + 0.001;            // ROUTEd to every shader's toff
+-}
++} catch (err) { console.error(err); } }
+ 
+ // ---- UI ----
+ function secIndex(t) { let k = 0; SEC.sections.forEach((s, i) => { if (t >= s.t - 0.05) k = i; }); return k; }
+diff -ru a/app/stage.html b/app/stage.html
+--- a/app/stage.html	2026-11-05 13:39:59
++++ b/app/stage.html	2026-11-05 13:39:59
+@@ -195,7 +195,7 @@
+ 
+ // ---- every frame: own the scene's time, scaled by the conductor ----
+ let toff = 0, fxOn = q.get("fx") !== "0";
+-function onFrame(e) {
++function onFrame(e) { try {   // guard: one exception escaping an X_ITE field callback freezes every route in the scene (X_ITE 16.5.1; Loom failure mode 88)
+   frames++;
+   const dt = ePrev === null ? 0 : Math.min(0.25, Math.max(0, e - ePrev)); ePrev = e;
+   if (chipT > 0) { chipT -= dt; if (chipT <= 0) $("chip").classList.remove("on"); }
+@@ -213,7 +213,7 @@
+   if (step) { V += step; step = 0; }
+   V = wrap(V);
+   toff = wrap(V - e); seekNode.cycleInterval = toff + 0.001;                    // ROUTEd to every shader's toff
+-}
++} catch (err) { console.error(err); } }
+ 
+ // ---- UI state ----
+ function secIndex(t) { let k = 0; SEC.sections.forEach((s, i) => { if (t >= s.t - 0.05) k = i; }); return k; }

@@ -3,7 +3,7 @@
 How to build a science- or maths-intensive X3D study under the Loom, distilled from six x3d.STEM flagships (4–5 Nov 2026). Each pattern names where it already runs, so a new study copies working code instead of re-deriving it.
 
 - **Paths:** `x3d.STEM/…` paths are relative to `~/Projects/x3d/x3d.STEM`; `kit/…` and `runs/…` are relative to this repository.
-- **The rules behind these patterns:** [LOOM-v1.md](LOOM-v1.md), laws 17–35 and failure modes 58–92.
+- **The rules behind these patterns:** [LOOM-v1.md](LOOM-v1.md), laws 17–36 and failure modes 58–101.
 - **Start every study with:** the card in [kit/templates/SCIENCE-STUDY-CARD.md](kit/templates/SCIENCE-STUDY-CARD.md).
 
 ## 1. The order of work
@@ -61,6 +61,7 @@ Every word in a caption that names a regime or event is a measured claim with a 
 - **Negative controls:** a flipped capture (orientation), a 2 % resampled audio track (pitch), reversed faces (mesh volume), mutated manifests (science gates).
 - **Signal floors:** a dark or flat frame correlates with anything (Kerr 2).
 - **Symmetric views** defeat orientation controls: choose evidence views that make the control bite.
+- **A bug kept on purpose:** a switch that reproduces a known failure (the Mashtots constellation's MSAA black screen, 61 → 3.9 in mean brightness) is the negative control for any brightness or eyes witness (failure mode 97).
 
 ### F. The display chain is part of the science (law 23)
 
@@ -115,7 +116,7 @@ Every x3d.STEM study's `src/app.js` follows the same shape:
 2. **Load the world with `loadWorld()`,** which has a time budget.
 3. **Wire navigation only after the scene loads,** and route again if the hash changed meanwhile.
 4. **Drive playback through X3D:** `TimeSensor → IntegerSequencer → Switch`, never blending frames. Start it with `getCurrentTime()`.
-5. **Guard every field callback with try/catch.**
+5. **Guard every field callback with try/catch,** including one passed by name (`addFieldCallback(…, onFrame)`): the guard goes inside `onFrame`.
 6. **Report what the page drew** through a read-only view function (`kerr2View()`, `gardenView()`, …), and support deep links that set a whole view.
 7. **Keep the ledger honest:** red rows stay red, and the browser's own checks appear as rows.
 8. **Make viewpoint switches instant** (TELEPORT) before capturing.
@@ -134,9 +135,12 @@ Every x3d.STEM study's `src/app.js` follows the same shape:
 
 `run_x3d_stem.sh` runs Grammar and Meaning (fork), Traps (scenes), **Page traps** (page code: callbacks, clock, navigation, globals, load budget, syntax), Science (manifests), Behaviour or Eyes (browser evidence), then a receipt and a stale-witness control.
 
+Give page traps every file that runs page code: `--files 'src/*.js,index.html'` (several globs, comma-separated; HTML is read for its inline scripts). Then read its `seen` counts. A pass with 0 field callbacks on a page that drives X_ITE judged nothing (law 36, failure mode 93).
+
 ## 5. Where the paid-for traps are indexed
 
 [LOOM-v1.md §8](LOOM-v1.md):
 - **Science and maths:** 59, 62, 63, 65–71, 76, 79, 82, 85–87.
-- **Browser and X_ITE:** 60, 61, 64, 72, 73, 77, 78, 80, 84, 88, 89, 92.
-- **Evidence handling:** 74, 75, 81, 83, 90, 91.
+- **Browser and X_ITE:** 60, 61, 64, 72, 73, 77, 78, 80, 84, 88, 89, 92, 94, 97, 101.
+- **Evidence handling:** 74, 75, 81, 83, 90, 91, 93, 95, 96, 98, 99.
+- **Paid calls and keys:** 100.

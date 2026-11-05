@@ -30,10 +30,14 @@ you repair the generator until they agree, and every claim carries a grade and a
 - Models: builder <id>; judges <ids> (flags only); image / video / audio <ids>. Cache by prompt hash.
 
 3. TRAPS TO READ BEFORE CODING
-- LOOM-v1 section 8 (92 known failure modes) and FACTS <sections>.
+- LOOM-v1 section 8 (101 known failure modes) and FACTS <sections>.
 - Host: the policy blocks other hosts and eval. No Script nodes: drive the scene from page JS through SAI.
   Fonts as TTF. Strip the DOCTYPE from page copies; serve .x3d as application/xml.
-- X_ITE: never let an exception escape a field callback (one escaping exception freezes all routing, 16.5.1); wire navigation only after the scene loads; put a time budget on loadURL.
+- X_ITE: never let an exception escape a field callback (one escaping exception freezes all routing, 16.5.1),
+  including a callback passed by name and code inline in HTML; wire navigation only after the scene loads;
+  put a time budget on loadURL and on any poll that waits for the scene. X_ITE does not start in a hidden tab.
+- X_ITE vendored: ship assets/fonts or register 'X_ITE PT Sans' locally (else a 404 on every load); use
+  addFieldCallback, not the deprecated getField(); quote MFString values in the scene.
 - X_ITE: browser.currentTime is undefined, so the page owns the clock. A 4.0 file rejects GaussianSplats,
   FontLibrary, HAnimPose, InlineGeometry and RenderedTexture. Inline shader source needs a data: prefix.
   A ROUTE written before its node is dropped. A still PNG in MovieTexture hangs the world. Give metadata
