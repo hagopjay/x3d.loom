@@ -84,7 +84,7 @@
 The two Mashtots standalones arrived well tested: 148 and 74 feature checks, clean consoles, and a careful report. The Loom's witnesses still found something, and they had to be fixed themselves before they could.
 
 24. **A pass must say what it saw.** Page traps passed the slide show while reading none of the code that drives X_ITE. That code was inline in the HTML and passed its callback by name. Taught to read both, the witness found one unguarded callback, and the freeze was then reproduced. It now reports what it saw, so a pass over nothing shows as one. *(Law 36; failure modes 93, 94.)*
-25. **The same runtime trap, in work not built under the Loom.** One exception in the slide show's conductor stops the whole piece until a reload. The feature checks and the clean console never touch that path; only a probe that breaks something on purpose does. The fix is two lines, kept as a patch and not applied. *(Failure mode 94.)*
+25. **The same runtime trap, in work not built under the Loom.** One exception in the slide show's conductor stops the whole piece until a reload. The feature checks and the clean console never touch that path; only a probe that breaks something on purpose does. The fix is two lines, kept as a patch and applied to the demo copy at your word (5 Nov). *(Failure mode 94.)*
 26. **Fixing a witness is a change like any other.**
     - Widening its reading made a false positive at once: a module's names were flagged as window globals.
     - An output nobody tested had been wrong since the rule shipped: the syntax error's line number.
@@ -123,5 +123,5 @@ The two Mashtots standalones arrived well tested: 148 and 74 feature checks, cle
 - ~~Wrap callbacks in the five accepted study pages.~~ **Done 5 Nov:** all six pages hardened (guarded callbacks, budgeted world loads, navigation after the scene). A new `page-traps` witness (6 rules, including a syntax check) is required by every x3d.STEM profile. Each page's browser evidence now includes a resilience probe, and all six are re-accepted.
 - **X_ITE versions differ across deliveries:** 16.5.0 (Tether), 16.5.1 (x3d.STEM), 16.6.1 (the teardown) and 16.7.0 (the MuJoCo bridge). Pin one for v1.0 fixtures and re-run EVT03 (failure mode 88) on it.
 - **Signing receipts** (law 35) is a design decision for you, not a default.
-- **The Mashtots slide show's callback guard** (`runs/mashtots2-20261105/foldback/stage-onframe-guard.patch`, two pages): apply it to `projects/mashtots-slideshow`, or send it to the project, on your word.
+- ~~The Mashtots slide show's callback guard.~~ **Applied 5 Nov** to `projects/mashtots-slideshow` (two pages). Re-checked live: the clock keeps running past a deliberate throw, 150 of 150 feature checks, page traps pass. The source repo `~/Projects/x3d/work/mashtots-standalones/slideshow` does not have it yet.
 - **Armenian text** in both Mashtots pieces waits for a native reader (flagged by the delivery).

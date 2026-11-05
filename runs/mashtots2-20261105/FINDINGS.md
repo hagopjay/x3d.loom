@@ -1,6 +1,6 @@
 # Mashtots2 under the Loom (5 Nov 2026)
 
-The Mashtots2 delivery was checked here: the slide show (X3D, X_ITE 16.5.1) and the living-alphabet constellation (three.js). Nothing in either project was changed. The one fix is a patch in `foldback/`, not applied.
+The Mashtots2 delivery was checked here: the slide show (X3D, X_ITE 16.5.1) and the living-alphabet constellation (three.js). The one fix is a patch in `foldback/`. It was kept unapplied until the user's word, then applied to the demo copy on 5 Nov (see the end of this file); nothing else in either project was changed.
 
 ## What arrived
 
@@ -48,7 +48,7 @@ The resilience probe used on the six x3d.STEM studies was applied to the slide s
 
 The patch is `foldback/stage-onframe-guard.patch` (sha256 `e2321435…4950`). It wraps the body of `onFrame` in try/catch in `app/stage.html` and `app/explore/director/index.html`, and applies cleanly with `patch -p1 --dry-run` in `projects/mashtots-slideshow`. The patched director page loads with a clean console, and its clock advances.
 
-**To apply** (your decision):
+**Applied** on 5 Nov at the user's word, with this command:
 
 ```
 cd ~/Projects/x3d/loom/projects/mashtots-slideshow && patch -p1 < ~/Projects/x3d/loom/v1/runs/mashtots2-20261105/foldback/stage-onframe-guard.patch
@@ -78,3 +78,16 @@ These became law 36, the Authored label, and failure modes 93 to 101 in [LOOM-v1
 - The Armenian text, which the delivery flags for a native reader.
 - Whether the first commits are verbatim copies of `mashtots-demo-site-eval` at `eaa7d37`. The repos and their history were checked against the delivery, not against that source (failure mode 99).
 - The hidden-tab behaviour is the delivery's own report; it was not reproduced here (failure mode 101).
+
+## Applied (5 Nov, at the user's word)
+
+The patch (sha256 `e2321435…4950`) was applied to `projects/mashtots-slideshow` cleanly, with no `.orig` or `.rej` files. It was then re-checked on the live demo server at :8834:
+
+| Check | Result |
+|---|---|
+| Page traps, 15 files (`slideshow-evidence-patched/`, subject `a61f4bca…`) | Pass: 2 field callbacks seen, 0 errors, 0 warnings |
+| Delivered feature test | 150 of 150, console clean |
+| Resilience probe | Clock 1.5 s in 1.5 s before the throw and 2.0 s in 2.0 s after; the TimeSensor advanced 2.0 s; only the probe's own error in the console |
+| Director page | Loads, and its clock advances 1.52 s in 1.5 s |
+
+The source repo `~/Projects/x3d/work/mashtots-standalones/slideshow` does not have the fix. The demo copy now differs from it in these two files.
