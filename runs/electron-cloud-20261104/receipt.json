@@ -1,0 +1,103 @@
+{
+  "budget": {
+    "cloud_resources": 0,
+    "paid_calls": 0
+  },
+  "candidate_files": 77,
+  "candidate_sha256": "ec8585c16e821e031b3914c6d200facbbb34a221b8dc448fb51ac75851f0bd1d",
+  "grade": "C",
+  "inputs": {
+    "candidate_sha256": "ec8585c16e821e031b3914c6d200facbbb34a221b8dc448fb51ac75851f0bd1d"
+  },
+  "kind": "artifact",
+  "limitations": [
+    "Behaviour is one headless Chromium on one machine (Apple M3, ANGLE Metal): mesh counts and volumes and playback order, not pixels or frame rate.",
+    "No offline-render comparison of browser frames (eyes) for this study yet.",
+    "The Lyman-alpha wavelength witness is a units check (its error equals the transition energy's); the model omits the reduced-mass correction, stated in every case.",
+    "The shared library lib/stemkit lies outside the candidate; its hashes are recorded in each case (external_dependencies) but not gated.",
+    "Grammar and Meaning ran on the local x3d_mcp fork checkout, not the family pin.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ],
+  "model_calls": [],
+  "not_run": [
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "eyes"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "host"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "gpu-location"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "paired-visual-review"
+    }
+  ],
+  "outputs": {},
+  "prev": null,
+  "profile": "x3d-stem-electron-cloud/v1",
+  "schema": "loom.receipt/1",
+  "sha256": "b3e3e146e6315544be8f029dd1343e2d32c8f2d8c46fbd6a5bb0a8b8ab86bb26",
+  "signed": false,
+  "subject": "x3d.STEM electron-cloud, pass 1",
+  "tools": {
+    "behaviour": {
+      "tool": "project gate (adapter)"
+    },
+    "grammar": {
+      "commit": "fa0b3899666fbd61962fffea0c21a29b445c1c8d",
+      "tool": "x3d_mcp fork (validate_xml + semantic_diagnostics)"
+    },
+    "meaning": {
+      "commit": "fa0b3899666fbd61962fffea0c21a29b445c1c8d",
+      "tool": "x3d_mcp fork (validate_xml + semantic_diagnostics)"
+    },
+    "science": {
+      "tool": "loomkit.sci (reconstructed SCI gates)"
+    },
+    "traps": {
+      "tool": "loomkit.traps"
+    }
+  },
+  "witnesses": [
+    {
+      "grade": "C",
+      "record_sha256": "94a5b75b7d7ac90913c1d956913c3b3bb674ce9b94ab5bdb129ff4d6aea63485",
+      "status": "pass",
+      "witness": "grammar"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "60dbfc9571cf39bd2726a3d83381bebee103d33a156818a82599905e2c0d91af",
+      "status": "pass",
+      "witness": "meaning"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "2146655c900f5c715527f05039fea7ec244d2d79671dc7f64dda5e74192dad52",
+      "status": "pass",
+      "witness": "traps"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "ef730b79b160b7ea2dd0a40b94b76471a752dde5252f828bc89c8f97c0b1a8ed",
+      "status": "pass",
+      "witness": "science"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "da05e7fb4fb5200029cb16c8250261ed583797a5c35fae5ebd52c22bab0d71ea",
+      "status": "pass",
+      "witness": "behaviour"
+    }
+  ],
+  "written_at": "2026-11-04T22:06:07+00:00"
+}

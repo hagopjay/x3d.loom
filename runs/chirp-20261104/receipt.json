@@ -1,0 +1,107 @@
+{
+  "budget": {
+    "cloud_resources": 0,
+    "paid_calls": 0
+  },
+  "candidate_files": 43,
+  "candidate_sha256": "33f6b3ddce41be1f7a5cd0a0ed9b4541cf53bcf59bd7d3019c7dc72e61356db4",
+  "grade": "C",
+  "inputs": {
+    "candidate_sha256": "33f6b3ddce41be1f7a5cd0a0ed9b4541cf53bcf59bd7d3019c7dc72e61356db4"
+  },
+  "kind": "artifact",
+  "limitations": [
+    "Behaviour is one muted headless Chromium on one machine: wave heights, playback state and clocks, not what a listener hears (listening-test not run).",
+    "No merger or ringdown; the sound ends where the model ends (stated in every case).",
+    "The shared library lib/stemkit lies outside the candidate; its hashes are recorded in each case (external_dependencies) but not gated.",
+    "Grammar and Meaning ran on the local x3d_mcp fork checkout, not the family pin.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ],
+  "model_calls": [],
+  "not_run": [
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "eyes"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "host"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "gpu-location"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "paired-visual-review"
+    },
+    {
+      "reason": "No person has listened to the published tracks on calibrated speakers; the browser run was muted and checked clocks only.",
+      "status": "not_run",
+      "witness": "listening-test"
+    }
+  ],
+  "outputs": {},
+  "prev": null,
+  "profile": "x3d-stem-chirp/v1",
+  "schema": "loom.receipt/1",
+  "sha256": "82c0321d74379135623e042c4121a84ff02193b503057767db5e541930cfe314",
+  "signed": false,
+  "subject": "x3d.STEM chirp, pass 1",
+  "tools": {
+    "behaviour": {
+      "tool": "project gate (adapter)"
+    },
+    "grammar": {
+      "commit": "fa0b3899666fbd61962fffea0c21a29b445c1c8d",
+      "tool": "x3d_mcp fork (validate_xml + semantic_diagnostics)"
+    },
+    "meaning": {
+      "commit": "fa0b3899666fbd61962fffea0c21a29b445c1c8d",
+      "tool": "x3d_mcp fork (validate_xml + semantic_diagnostics)"
+    },
+    "science": {
+      "tool": "loomkit.sci (reconstructed SCI gates)"
+    },
+    "traps": {
+      "tool": "loomkit.traps"
+    }
+  },
+  "witnesses": [
+    {
+      "grade": "C",
+      "record_sha256": "bb66292c102f38a0b58b56391c86e03902ffa2eac7f8c661b4c7852e87ca030b",
+      "status": "pass",
+      "witness": "grammar"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "4134a064e4a062494211d6d867314972995b6a1ad08243815da0aed786fce029",
+      "status": "pass",
+      "witness": "meaning"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "9570fb3d388b6669dda09d5ba503d03c5ecb1f0eb8a39beb53f445d2904bfcb3",
+      "status": "pass",
+      "witness": "traps"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "9d18bc4cce6d4519288f6dabeeecb374d3907bfddf7ef2a5c3c643816a7f455c",
+      "status": "pass",
+      "witness": "science"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "e81023490c8d61f858920af2b0aaf663185bbd39f3281ee8df769a176b3e3caa",
+      "status": "pass",
+      "witness": "behaviour"
+    }
+  ],
+  "written_at": "2026-11-04T22:20:56+00:00"
+}

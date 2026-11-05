@@ -1,0 +1,101 @@
+{
+  "budget": {
+    "cloud_resources": 0,
+    "paid_calls": 0
+  },
+  "candidate_files": 76,
+  "candidate_sha256": "ced12a1cd680e4cb5194bb10e802cbde2cbdb4fa33b2c31dfa6107d0f5e5fa8a",
+  "grade": "C",
+  "inputs": {
+    "candidate_sha256": "ced12a1cd680e4cb5194bb10e802cbde2cbdb4fa33b2c31dfa6107d0f5e5fa8a"
+  },
+  "kind": "artifact",
+  "limitations": [
+    "Eyes is one headless Chromium on one machine (Apple M3, ANGLE Metal), one view per case; behaviour, GPU and visual-review witnesses did not run.",
+    "Builder binding covers tools/kerr2.py only, not modules it imports (common.py, color.py).",
+    "Grammar and Meaning ran on the local x3d_mcp fork checkout, not the family pin.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ],
+  "model_calls": [],
+  "not_run": [
+    {
+      "reason": "Not run in pass 1: no scripted interaction test, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "behaviour"
+    },
+    {
+      "reason": "Not run in pass 1: no scripted interaction test, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "host"
+    },
+    {
+      "reason": "Not run in pass 1: no scripted interaction test, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "gpu-location"
+    },
+    {
+      "reason": "Not run in pass 1: no scripted interaction test, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "paired-visual-review"
+    }
+  ],
+  "outputs": {},
+  "prev": null,
+  "profile": "x3d-stem-kerr2/v1",
+  "schema": "loom.receipt/1",
+  "sha256": "7f2367849d057e92d4192d89d1fb4acb84d676026ba04b56ca8d0fb96f15cb40",
+  "signed": false,
+  "subject": "x3d.STEM kerr2, pass 1",
+  "tools": {
+    "eyes": {
+      "tool": "project gate (adapter)"
+    },
+    "grammar": {
+      "commit": "fa0b3899666fbd61962fffea0c21a29b445c1c8d",
+      "tool": "x3d_mcp fork (validate_xml + semantic_diagnostics)"
+    },
+    "meaning": {
+      "commit": "fa0b3899666fbd61962fffea0c21a29b445c1c8d",
+      "tool": "x3d_mcp fork (validate_xml + semantic_diagnostics)"
+    },
+    "science": {
+      "tool": "loomkit.sci (reconstructed SCI gates)"
+    },
+    "traps": {
+      "tool": "loomkit.traps"
+    }
+  },
+  "witnesses": [
+    {
+      "grade": "C",
+      "record_sha256": "5a0e0a582b7cffdfa43dfcf50af2d0e658244c98a93d2c8bc04c2335ba724606",
+      "status": "pass",
+      "witness": "grammar"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "dff25a13184694a745e1a25f27920d70beda4807a380916e22f3a240a2384d09",
+      "status": "pass",
+      "witness": "meaning"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "864036a1e88b4fe0a7cb45da1cf14b65d25ed834de1f5c14ec54aa150074d102",
+      "status": "pass",
+      "witness": "traps"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "bb665d3f0da01d80dc5edaadd0f4a9e72f80b1895e230c60cf70d4d466ba836b",
+      "status": "pass",
+      "witness": "science"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "f195cc0fe48683a653f009263028fecad735e87627ccbcc6e0b0cff47be3d5f0",
+      "status": "pass",
+      "witness": "eyes"
+    }
+  ],
+  "written_at": "2026-11-04T21:42:06+00:00"
+}

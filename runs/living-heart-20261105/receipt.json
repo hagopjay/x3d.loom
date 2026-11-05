@@ -1,0 +1,112 @@
+{
+  "budget": {
+    "cloud_resources": 0,
+    "paid_calls": 0
+  },
+  "candidate_files": 144,
+  "candidate_sha256": "b2868f2e2c061e6f9d25a2b7d3d5211f6b9eb053b1734f4c6e7aac9f8ff2a0f7",
+  "grade": "C",
+  "inputs": {
+    "candidate_sha256": "b2868f2e2c061e6f9d25a2b7d3d5211f6b9eb053b1734f4c6e7aac9f8ff2a0f7"
+  },
+  "kind": "artifact",
+  "limitations": [
+    "Page traps are static pattern and syntax checks of src/*.js against the X_ITE contracts the Loom has paid for (law 32); the page's browser evidence remains the behaviour witness.",
+    "Behaviour is one headless Chromium on one machine: counts, mesh and playback order, not pixels or frame rate.",
+    "The 3D scroll wave was seeded from a computed 2D spiral (stated in its manifest).",
+    "The shared library lib/stemkit lies outside the candidate; its hashes are recorded but not gated.",
+    "Grammar and Meaning ran on the local x3d_mcp fork checkout, not the family pin.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ],
+  "model_calls": [],
+  "not_run": [
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "eyes"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "host"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "gpu-location"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "paired-visual-review"
+    }
+  ],
+  "outputs": {},
+  "prev": null,
+  "profile": "x3d-stem-living-heart/v1",
+  "schema": "loom.receipt/1",
+  "sha256": "094ed43910f10320f254e3299a5ad0482fd6fa2b650ab15ae997c5b0891b1237",
+  "signed": false,
+  "subject": "x3d.STEM living-heart, pass 1",
+  "tools": {
+    "behaviour": {
+      "tool": "project gate (adapter)"
+    },
+    "grammar": {
+      "commit": "fa0b3899666fbd61962fffea0c21a29b445c1c8d",
+      "tool": "x3d_mcp fork (validate_xml + semantic_diagnostics)"
+    },
+    "meaning": {
+      "commit": "fa0b3899666fbd61962fffea0c21a29b445c1c8d",
+      "tool": "x3d_mcp fork (validate_xml + semantic_diagnostics)"
+    },
+    "page-traps": {
+      "tool": "loomkit.pagetraps"
+    },
+    "science": {
+      "tool": "loomkit.sci (reconstructed SCI gates)"
+    },
+    "traps": {
+      "tool": "loomkit.traps"
+    }
+  },
+  "witnesses": [
+    {
+      "grade": "C",
+      "record_sha256": "de39f1f1f6970c563507e10fc78360266ff45e6e42d19f2243ebf22e5df8712b",
+      "status": "pass",
+      "witness": "grammar"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "34dd91a3a69d320a7afc652cb67cd4faf9974bd037482ee41af7251a57fde578",
+      "status": "pass",
+      "witness": "meaning"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "b4221a8d321d87202460f2b32ff07fa8bb0b0ba0fbbfc6b2ac2badac4aa10306",
+      "status": "pass",
+      "witness": "traps"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "8633575bb7a15cc8aef4f79618a152aa4088fe395322b0ab615a288bfecf23f8",
+      "status": "pass",
+      "witness": "page-traps"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "1b39353debbc0e0250d3985bf50c87ae81dcd250fc3dc49f2541757b30b9ec55",
+      "status": "pass",
+      "witness": "science"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "b0c9c0993f9526ca22b44b52b615d1101ed16b0e18895aacf02d4a168251c3ff",
+      "status": "pass",
+      "witness": "behaviour"
+    }
+  ],
+  "written_at": "2026-11-05T21:09:20+00:00"
+}

@@ -1,0 +1,95 @@
+{
+  "schema": "loom.profile/1",
+  "name": "x3d-stem-electron-cloud/v1",
+  "purpose": "Electron Cloud Observatory (x3d.STEM flagship 3). Accepting under it means: the scene is grammatical and meaningful on the fork with no known trap; every state declares its model and limits; the numerical hydrogen solver matches the exact energies, degeneracy, Laguerre radial functions, <r>, virial theorem and node counts within declared limits, with the observed order of convergence; the Lyman-alpha superposition reproduces the exact transition energy and dipole on the radial grid and on its 3D frames; every reference mesh is closed, its volume agrees with the field, and the published precision moves the surface less than the declared limit; payloads inflate to their recorded bytes; the builder and the radial solver are the shipped ones; and a browser rebuilt every mesh from the verified fields and matched the builder's reference, with playback following the scene's own route.",
+  "required": [
+    {
+      "witness": "grammar"
+    },
+    {
+      "witness": "meaning"
+    },
+    {
+      "witness": "traps",
+      "coverage": {
+        "rules": 11
+      }
+    },
+    {
+      "witness": "page-traps",
+      "coverage": {
+        "rules": 6
+      }
+    },
+    {
+      "witness": "science",
+      "coverage": {
+        "kinds": 2
+      }
+    },
+    {
+      "witness": "behaviour"
+    }
+  ],
+  "visible_not_run": [
+    "eyes",
+    "host",
+    "gpu-location",
+    "paired-visual-review"
+  ],
+  "science": {
+    "min_cases": 11,
+    "min_witnesses": 14,
+    "quantization_max": 0.00196078431372549,
+    "case_glob": "cases/*/case.json",
+    "builders": {
+      "orbital": "tools/cloud.py",
+      "superposition": "tools/cloud.py"
+    },
+    "kinds": {
+      "orbital": {
+        "evolving": false,
+        "required_witnesses": [
+          "energy E(",
+          "observed order",
+          "Richardson",
+          "l-degeneracy",
+          "Laguerre",
+          "<r>",
+          "virial",
+          "radial nodes",
+          "3D normalization",
+          "closed meshes",
+          "mesh volume",
+          "display quantization",
+          "vertices on the displayed surface",
+          "clipping"
+        ]
+      },
+      "superposition": {
+        "evolving": true,
+        "required_witnesses": [
+          "transition energy",
+          "dipole <1s|z|2p_z>",
+          "Lyman-alpha wavelength",
+          "charge-centre swing",
+          "3D normalization",
+          "closed meshes",
+          "mesh volume",
+          "display quantization",
+          "vertices on the displayed surface",
+          "clipping"
+        ]
+      }
+    }
+  },
+  "limitations": [
+    "Page traps are static pattern and syntax checks of src/*.js against the X_ITE contracts the Loom has paid for (law 32); the page's browser evidence remains the behaviour witness.",
+    "Behaviour is one headless Chromium on one machine (Apple M3, ANGLE Metal): mesh counts and volumes and playback order, not pixels or frame rate.",
+    "No offline-render comparison of browser frames (eyes) for this study yet.",
+    "The Lyman-alpha wavelength witness is a units check (its error equals the transition energy's); the model omits the reduced-mass correction, stated in every case.",
+    "The shared library lib/stemkit lies outside the candidate; its hashes are recorded in each case (external_dependencies) but not gated.",
+    "Grammar and Meaning ran on the local x3d_mcp fork checkout, not the family pin.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "schema": "loom.profile/1",
+  "name": "x3d-stem-living-heart/v1",
+  "purpose": "Living Heart (x3d.STEM flagship 5). Accepting under it means: the scene is grammatical and meaningful on the fork with no known trap; every case declares its model and limits; the solver converges to the exact Nagumo front speed at second order and a resting mode decays at the exact discrete rate; conduction, spiral and scroll-wave periods are consistent and stable under refinement; the no-flux walls conserve exactly; payloads inflate to their recorded bytes; the builder and solver are the shipped ones; and a browser matched the builder's excited-cell counts on every frame, meshed the wall to the builder's reference, and played through the scene's own route.",
+  "required": [
+    {
+      "witness": "grammar"
+    },
+    {
+      "witness": "meaning"
+    },
+    {
+      "witness": "traps",
+      "coverage": {
+        "rules": 11
+      }
+    },
+    {
+      "witness": "page-traps",
+      "coverage": {
+        "rules": 6
+      }
+    },
+    {
+      "witness": "science",
+      "coverage": {
+        "kinds": 1
+      }
+    },
+    {
+      "witness": "behaviour"
+    }
+  ],
+  "visible_not_run": [
+    "eyes",
+    "host",
+    "gpu-location",
+    "paired-visual-review"
+  ],
+  "science": {
+    "min_cases": 3,
+    "min_witnesses": 7,
+    "quantization_max": 0.00196078431372549,
+    "case_glob": "cases/*/case.json",
+    "builders": {
+      "tissue": "tools/heart.py"
+    },
+    "kinds": {
+      "tissue": {
+        "evolving": true,
+        "required_witnesses": [
+          "Nagumo front",
+          "Richardson",
+          "resting state",
+          "clipping"
+        ]
+      }
+    }
+  },
+  "limitations": [
+    "Page traps are static pattern and syntax checks of src/*.js against the X_ITE contracts the Loom has paid for (law 32); the page's browser evidence remains the behaviour witness.",
+    "Behaviour is one headless Chromium on one machine: counts, mesh and playback order, not pixels or frame rate.",
+    "The 3D scroll wave was seeded from a computed 2D spiral (stated in its manifest).",
+    "The shared library lib/stemkit lies outside the candidate; its hashes are recorded but not gated.",
+    "Grammar and Meaning ran on the local x3d_mcp fork checkout, not the family pin.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ]
+}

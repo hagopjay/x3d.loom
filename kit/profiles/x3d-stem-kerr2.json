@@ -1,0 +1,69 @@
+{
+  "schema": "loom.profile/1",
+  "name": "x3d-stem-kerr2/v1",
+  "purpose": "Kerr 2 \u00b7 The Photon Ring (x3d.STEM flagship 1). Accepting under it means: the scene is grammatical and meaningful on the fork with no known trap; every case declares its model and limits; the analytic critical curve, sub-ring refinement, constraint, unresolved-ray, colour and clipping witnesses are present, consistent and green; payloads decode; and each bank was produced by the shipped builder. Eyes: a browser frame of every case matches the offline render of the same payloads (correlation at least 0.98, mean difference at most 4/255) with a signal floor and a flipped negative control that must fail. Behaviour, GPU location and paired visual review stay visible as not run.",
+  "required": [
+    {
+      "witness": "grammar"
+    },
+    {
+      "witness": "meaning"
+    },
+    {
+      "witness": "traps",
+      "coverage": {
+        "rules": 11
+      }
+    },
+    {
+      "witness": "page-traps",
+      "coverage": {
+        "rules": 6
+      }
+    },
+    {
+      "witness": "science",
+      "coverage": {
+        "kinds": 1
+      }
+    },
+    {
+      "witness": "eyes"
+    }
+  ],
+  "visible_not_run": [
+    "behaviour",
+    "host",
+    "gpu-location",
+    "paired-visual-review"
+  ],
+  "science": {
+    "min_cases": 3,
+    "min_witnesses": 6,
+    "quantization_max": 0.00196078431372549,
+    "builders": {
+      "kerr2": "tools/kerr2.py"
+    },
+    "kinds": {
+      "kerr2": {
+        "evolving": false,
+        "required_witnesses": [
+          "unresolved rays",
+          "constraint",
+          "analytic critical curve",
+          "sub-ring width change",
+          "Planckian chromaticity",
+          "clipping"
+        ]
+      }
+    },
+    "case_glob": "cases/*/case.json"
+  },
+  "limitations": [
+    "Page traps are static pattern and syntax checks of src/*.js against the X_ITE contracts the Loom has paid for (law 32); the page's browser evidence remains the behaviour witness.",
+    "Eyes is one headless Chromium on one machine (Apple M3, ANGLE Metal), one view per case; behaviour, GPU and visual-review witnesses did not run.",
+    "Builder binding covers tools/kerr2.py only, not modules it imports (common.py, color.py).",
+    "Grammar and Meaning ran on the local x3d_mcp fork checkout, not the family pin.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ]
+}

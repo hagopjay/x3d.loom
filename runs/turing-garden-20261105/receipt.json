@@ -1,0 +1,112 @@
+{
+  "budget": {
+    "cloud_resources": 0,
+    "paid_calls": 0
+  },
+  "candidate_files": 242,
+  "candidate_sha256": "df1480910e16e095e973281ee61d45a8b29886f896c39f6a53945951b534792e",
+  "grade": "C",
+  "inputs": {
+    "candidate_sha256": "df1480910e16e095e973281ee61d45a8b29886f896c39f6a53945951b534792e"
+  },
+  "kind": "artifact",
+  "limitations": [
+    "Page traps are static pattern and syntax checks of src/*.js against the X_ITE contracts the Loom has paid for (law 32); the page's browser evidence remains the behaviour witness.",
+    "Behaviour is one headless Chromium on one machine (Apple M3, ANGLE Metal): mesh counts and volumes and playback order, not pixels or frame rate.",
+    "No offline-render comparison of browser frames (eyes) for this study yet.",
+    "The shared library lib/stemkit lies outside the candidate; its hashes are recorded in each case (external_dependencies) but not gated.",
+    "Grammar and Meaning ran on the local x3d_mcp fork checkout, not the family pin.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ],
+  "model_calls": [],
+  "not_run": [
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "eyes"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "host"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "gpu-location"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "paired-visual-review"
+    }
+  ],
+  "outputs": {},
+  "prev": null,
+  "profile": "x3d-stem-turing-garden/v1",
+  "schema": "loom.receipt/1",
+  "sha256": "476125195d2c1c722b13d1c7a1be42f160e4f2775390d1b68648b2433aa3a938",
+  "signed": false,
+  "subject": "x3d.STEM turing-garden, pass 1",
+  "tools": {
+    "behaviour": {
+      "tool": "project gate (adapter)"
+    },
+    "grammar": {
+      "commit": "fa0b3899666fbd61962fffea0c21a29b445c1c8d",
+      "tool": "x3d_mcp fork (validate_xml + semantic_diagnostics)"
+    },
+    "meaning": {
+      "commit": "fa0b3899666fbd61962fffea0c21a29b445c1c8d",
+      "tool": "x3d_mcp fork (validate_xml + semantic_diagnostics)"
+    },
+    "page-traps": {
+      "tool": "loomkit.pagetraps"
+    },
+    "science": {
+      "tool": "loomkit.sci (reconstructed SCI gates)"
+    },
+    "traps": {
+      "tool": "loomkit.traps"
+    }
+  },
+  "witnesses": [
+    {
+      "grade": "C",
+      "record_sha256": "cfb28a85307f16eb2e83b8075ddf68023c833db0464f1410185a680696fbbc74",
+      "status": "pass",
+      "witness": "grammar"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "9f28f051f18072f35dd632951bc46731588cee52e95abf5ffc84b73ec0efc5c4",
+      "status": "pass",
+      "witness": "meaning"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "170e4b2c86220dc288a37324e2e43bd8afeac179c6e6be22f4d2ce523c7ae8ea",
+      "status": "pass",
+      "witness": "traps"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "12570cf3ed96aeef34c1c941db811a6f9aa18e007aaeabad22fe91fff2ced96c",
+      "status": "pass",
+      "witness": "page-traps"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "e2f21a24a08aa7bca44f77930f3c5c14587e3de7044a7a482b4228300a125a2a",
+      "status": "pass",
+      "witness": "science"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "36ea2c3b01227ced459888b72638107d56390b6e57c23bfe62abc5fc1dbc90da",
+      "status": "pass",
+      "witness": "behaviour"
+    }
+  ],
+  "written_at": "2026-11-05T21:09:09+00:00"
+}

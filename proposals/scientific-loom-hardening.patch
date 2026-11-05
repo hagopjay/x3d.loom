@@ -1,0 +1,85 @@
+diff --git a/tools/scene.py b/tools/scene.py
+index d1b5297..9c02745 100644
+--- a/tools/scene.py
++++ b/tools/scene.py
+@@ -3,7 +3,7 @@ def make(kind):
+  fields={'fieldTexture':('SFNode',None),'aspect':('SFFloat','1.5'),'exposure':('SFFloat','1.25'),'viewMode':('SFInt32','0')}
+  if kind=='field':fields.update({'gridSize':('SFFloat','80'),'tiles':('SFFloat','9'),'isoValue':('SFFloat','.38'),'clipX':('SFFloat','1'),'roughness':('SFFloat','.31'),'study':('SFInt32','0'),'samples':('SFInt32','384'),'diagnostic':('SFInt32','0'),'diagnosticPoint':('SFVec3f','0 0 0'),'eye':('SFVec3f','2.5 1.5 2.8'),'rightAxis':('SFVec3f','1 0 0'),'upAxis':('SFVec3f','0 1 0'),'forwardAxis':('SFVec3f','0 0 -1')})
+  else:fields.update({'transferTexture':('SFNode',None),'imageAspect':('SFFloat','1.5'),'zoom':('SFFloat','1')})
+- text='''<?xml version="1.0" encoding="UTF-8"?><X3D profile="Immersive" version="4.0"><Scene><WorldInfo title="Scientific Loom — quantitative field renderer"/><NavigationInfo type='"NONE"' headlight="false"/><Viewpoint position="0 0 3"/><Shape><Appearance alphaMode="OPAQUE"><ComposedShader DEF="FieldShader" language="GLSL">'''
++ text='''<?xml version="1.0" encoding="UTF-8"?><X3D profile="Immersive" version="4.0"><head><component name="Shaders" level="1"/><component name="Texturing" level="2"/></head><Scene><WorldInfo title="Scientific Loom — quantitative field renderer"/><NavigationInfo type='"NONE"' headlight="false"/><Viewpoint position="0 0 3"/><Shape><Appearance alphaMode="OPAQUE"><ComposedShader DEF="FieldShader" language="GLSL">'''
+  for name,(typ,value) in fields.items():
+   if value is None:text+=f'''<field name="{name}" type="SFNode" accessType="inputOutput"><ImageTexture  repeatS="false" repeatT="false"><TextureProperties boundaryModeS="CLAMP_TO_EDGE" boundaryModeT="CLAMP_TO_EDGE" magnificationFilter="AVG_PIXEL" minificationFilter="AVG_PIXEL" generateMipMaps="false"/></ImageTexture></field>'''
+   else:text+=f'<field name="{name}" type="{typ}" accessType="inputOutput" value="{value}"/>'
+diff --git a/tools/audit.py b/tools/audit.py
+index f53f14a..ea1dca2 100644
+--- a/tools/audit.py
++++ b/tools/audit.py
+@@ -10,6 +10,7 @@ def audit(root=ROOT):
+   for f in frames:
+    q=root/f['file']
+    if not q.is_file() or sha(q.read_bytes())!=f['sha256']:fail.append('payload hash')
++   elif q.suffix=='.png' and q.read_bytes()[-8:-4]!=b'IEND':fail.append('payload undecodable')
+    if f.get('clipped_values',0):fail.append('display clipping')
+    if f.get('quantization_max',0)>1/510+1e-12:fail.append('display quantization')
+    if f.get('transfer') and sha((root/f['transfer']['file']).read_bytes())!=f['transfer']['sha256']:fail.append('transfer hash')
+@@ -20,4 +21,5 @@ def audit(root=ROOT):
+  for p in (root/'scenes').glob('*.x3d'):ET.parse(str(p))
+  return rows
+ if __name__=='__main__':
+- rows=audit();write_json(ROOT/'evidence/audit.json',{'cases':rows,'all_pass':all(r['pass'] for r in rows),'scope':'Declared gates and byte identity; open scientific limitations remain in each manifest.'});print(json.dumps(rows,indent=2));assert all(r['pass'] for r in rows)
++ rows=audit();write_json(ROOT/'evidence/audit.json',{'cases':rows,'all_pass':all(r['pass'] for r in rows),'scope':'Declared gates and byte identity; open scientific limitations remain in each manifest.'});print(json.dumps(rows,indent=2))
++ if not all(r['pass'] for r in rows):raise SystemExit('Release admission is not green: '+', '.join(r['case'] for r in rows if not r['pass']))
+diff --git a/tests/negative_controls.py b/tests/negative_controls.py
+index 3111598..cc8cf11 100644
+--- a/tests/negative_controls.py
++++ b/tests/negative_controls.py
+@@ -17,4 +17,5 @@ with tempfile.TemporaryDirectory() as td:
+   if id=='failed scientific gate':c['witnesses'][0]['pass']=False
+   else:mutate(c)
+   write_json(folder/'case.json',c);observed=audit(root)[0]['failures'];results.append({'defect':id,'expected_witness':expected,'caught':expected in observed,'observed':observed})
+-write_json(ROOT/'evidence/negative-controls.json',results);print(json.dumps(results,indent=2));assert all(r['caught'] for r in results)
++write_json(ROOT/'evidence/negative-controls.json',results);print(json.dumps(results,indent=2))
++if not all(r['caught'] for r in results):raise SystemExit('Surviving negative control')
+diff --git a/tests/deformation.py b/tests/deformation.py
+index 01c40a9..f652aaf 100644
+--- a/tests/deformation.py
++++ b/tests/deformation.py
+@@ -9,4 +9,5 @@ for p in (ROOT/'cases/phononic').glob('*/mode*.json'):
+   xi=np.array(xi);deriv=np.array([sgn[:,j]*np.prod(1+sgn[:,[k for k in range(3) if k!=j]]*xi[[k for k in range(3) if k!=j]],axis=1)/8*2*n for j in range(3)]).T;grad=np.einsum('eac,ad->ecd',u,deriv)
+   for t in np.linspace(0,2*np.pi,24,endpoint=False):mn=min(mn,float(np.linalg.det(np.eye(3)+d['amplification']*(grad*np.exp(-1j*t)).real).min()))
+  out.append({'case':p.parent.name,'mode':d['band'],'minimum_sampled_det_F':mn,'minimum_required':.05,'pass':mn>=.05,'samples':n**3*27*24,'source_sha256':sha(p.read_bytes()),'scope':'Sampled deformation Jacobian; not a proof of positivity everywhere in space and phase.'})
+-write_json(ROOT/'evidence/deformation.json',out);print(json.dumps(out,indent=2));assert all(r['pass'] for r in out)
++write_json(ROOT/'evidence/deformation.json',out);print(json.dumps(out,indent=2))
++if not all(r['pass'] for r in out):raise SystemExit('Deformation witness failed')
+diff --git a/tools/report.py b/tools/report.py
+index 3d54b5e..f3c5aa2 100644
+--- a/tools/report.py
++++ b/tools/report.py
+@@ -8,7 +8,7 @@ def esc(x):return html.escape(str(x))
+ def table(headers,rows):return '<table><thead><tr>'+''.join('<th>'+esc(x)+'</th>' for x in headers)+'</tr></thead><tbody>'+''.join('<tr>'+''.join('<td>'+str(x)+'</td>' for x in r)+'</tr>' for r in rows)+'</tbody></table>'
+ def main():
+  cases=[json.loads(p.read_text()) for p in sorted((ROOT/'cases').glob('*/*/case.json'))];audit=load('evidence/audit.json');browser=load('evidence/browser.json');transitions=load('evidence/transitions.json');surface=load('evidence/surface-geometry.json');deformation=load('evidence/deformation.json');spatial=load('evidence/spatial-study.json');profiles=load('evidence/software-profile.json');recons={n:load('evidence/'+n+'.json') for n in ['reconstruction-vortex','reconstruction-matter','reconstruction-matter-precision']}
+- assert audit['all_pass'] and browser['all_pass'] and transitions['all_pass'] and surface['all_pass'] and all(v['all_pass'] for v in recons.values())
++ if not (audit['all_pass'] and browser['all_pass'] and transitions['all_pass'] and surface['all_pass'] and all(v['all_pass'] for v in recons.values())):raise SystemExit('Report admission is not green')
+  def by(id):return next(c for c in cases if c['id']==id)
+  fig,axs=plt.subplots(1,3,figsize=(12.3,3.4));fig.set_facecolor('#f6f8f8')
+  for ax in axs:ax.set_facecolor('#f6f8f8');ax.spines[['top','right']].set_visible(False);ax.grid(alpha=.17);ax.tick_params(labelsize=8)
+diff --git a/scenes/field.x3d b/scenes/field.x3d
+index 875efa7..89dc841 100644
+--- a/scenes/field.x3d
++++ b/scenes/field.x3d
+@@ -1 +1 @@
+-<?xml version="1.0" encoding="UTF-8"?><X3D profile="Immersive" version="4.0"><Scene><WorldInfo title="Scientific Loom — quantitative field renderer"/><NavigationInfo type='"NONE"' headlight="false"/><Viewpoint position="0 0 3"/><Shape><Appearance alphaMode="OPAQUE"><ComposedShader DEF="FieldShader" language="GLSL"><field name="fieldTexture" type="SFNode" accessType="inputOutput"><ImageTexture  repeatS="false" repeatT="false"><TextureProperties boundaryModeS="CLAMP_TO_EDGE" boundaryModeT="CLAMP_TO_EDGE" magnificationFilter="AVG_PIXEL" minificationFilter="AVG_PIXEL" generateMipMaps="false"/></ImageTexture></field><field name="aspect" type="SFFloat" accessType="inputOutput" value="1.5"/><field name="exposure" type="SFFloat" accessType="inputOutput" value="1.25"/><field name="viewMode" type="SFInt32" accessType="inputOutput" value="0"/><field name="gridSize" type="SFFloat" accessType="inputOutput" value="80"/><field name="tiles" type="SFFloat" accessType="inputOutput" value="9"/><field name="isoValue" type="SFFloat" accessType="inputOutput" value=".38"/><field name="clipX" type="SFFloat" accessType="inputOutput" value="1"/><field name="roughness" type="SFFloat" accessType="inputOutput" value=".31"/><field name="study" type="SFInt32" accessType="inputOutput" value="0"/><field name="samples" type="SFInt32" accessType="inputOutput" value="384"/><field name="diagnostic" type="SFInt32" accessType="inputOutput" value="0"/><field name="diagnosticPoint" type="SFVec3f" accessType="inputOutput" value="0 0 0"/><field name="eye" type="SFVec3f" accessType="inputOutput" value="2.5 1.5 2.8"/><field name="rightAxis" type="SFVec3f" accessType="inputOutput" value="1 0 0"/><field name="upAxis" type="SFVec3f" accessType="inputOutput" value="0 1 0"/><field name="forwardAxis" type="SFVec3f" accessType="inputOutput" value="0 0 -1"/><ShaderPart type="VERTEX" url='"../shaders/screen.vert"'/><ShaderPart type="FRAGMENT" url='"../shaders/field.frag"'/></ComposedShader></Appearance><IndexedFaceSet coordIndex="0 1 2 -1 0 2 3 -1" solid="false"><Coordinate point="-1 -1 0 1 -1 0 1 1 0 -1 1 0"/></IndexedFaceSet></Shape></Scene></X3D>
+\ No newline at end of file
++<?xml version="1.0" encoding="UTF-8"?><X3D profile="Immersive" version="4.0"><head><component name="Shaders" level="1"/><component name="Texturing" level="2"/></head><Scene><WorldInfo title="Scientific Loom — quantitative field renderer"/><NavigationInfo type='"NONE"' headlight="false"/><Viewpoint position="0 0 3"/><Shape><Appearance alphaMode="OPAQUE"><ComposedShader DEF="FieldShader" language="GLSL"><field name="fieldTexture" type="SFNode" accessType="inputOutput"><ImageTexture  repeatS="false" repeatT="false"><TextureProperties boundaryModeS="CLAMP_TO_EDGE" boundaryModeT="CLAMP_TO_EDGE" magnificationFilter="AVG_PIXEL" minificationFilter="AVG_PIXEL" generateMipMaps="false"/></ImageTexture></field><field name="aspect" type="SFFloat" accessType="inputOutput" value="1.5"/><field name="exposure" type="SFFloat" accessType="inputOutput" value="1.25"/><field name="viewMode" type="SFInt32" accessType="inputOutput" value="0"/><field name="gridSize" type="SFFloat" accessType="inputOutput" value="80"/><field name="tiles" type="SFFloat" accessType="inputOutput" value="9"/><field name="isoValue" type="SFFloat" accessType="inputOutput" value=".38"/><field name="clipX" type="SFFloat" accessType="inputOutput" value="1"/><field name="roughness" type="SFFloat" accessType="inputOutput" value=".31"/><field name="study" type="SFInt32" accessType="inputOutput" value="0"/><field name="samples" type="SFInt32" accessType="inputOutput" value="384"/><field name="diagnostic" type="SFInt32" accessType="inputOutput" value="0"/><field name="diagnosticPoint" type="SFVec3f" accessType="inputOutput" value="0 0 0"/><field name="eye" type="SFVec3f" accessType="inputOutput" value="2.5 1.5 2.8"/><field name="rightAxis" type="SFVec3f" accessType="inputOutput" value="1 0 0"/><field name="upAxis" type="SFVec3f" accessType="inputOutput" value="0 1 0"/><field name="forwardAxis" type="SFVec3f" accessType="inputOutput" value="0 0 -1"/><ShaderPart type="VERTEX" url='"../shaders/screen.vert"'/><ShaderPart type="FRAGMENT" url='"../shaders/field.frag"'/></ComposedShader></Appearance><IndexedFaceSet coordIndex="0 1 2 -1 0 2 3 -1" solid="false"><Coordinate point="-1 -1 0 1 -1 0 1 1 0 -1 1 0"/></IndexedFaceSet></Shape></Scene></X3D>
+\ No newline at end of file
+diff --git a/scenes/kerr.x3d b/scenes/kerr.x3d
+index 763d398..524cb80 100644
+--- a/scenes/kerr.x3d
++++ b/scenes/kerr.x3d
+@@ -1 +1 @@
+-<?xml version="1.0" encoding="UTF-8"?><X3D profile="Immersive" version="4.0"><Scene><WorldInfo title="Scientific Loom — quantitative field renderer"/><NavigationInfo type='"NONE"' headlight="false"/><Viewpoint position="0 0 3"/><Shape><Appearance alphaMode="OPAQUE"><ComposedShader DEF="FieldShader" language="GLSL"><field name="fieldTexture" type="SFNode" accessType="inputOutput"><ImageTexture  repeatS="false" repeatT="false"><TextureProperties boundaryModeS="CLAMP_TO_EDGE" boundaryModeT="CLAMP_TO_EDGE" magnificationFilter="AVG_PIXEL" minificationFilter="AVG_PIXEL" generateMipMaps="false"/></ImageTexture></field><field name="aspect" type="SFFloat" accessType="inputOutput" value="1.5"/><field name="exposure" type="SFFloat" accessType="inputOutput" value="1.25"/><field name="viewMode" type="SFInt32" accessType="inputOutput" value="0"/><field name="transferTexture" type="SFNode" accessType="inputOutput"><ImageTexture  repeatS="false" repeatT="false"><TextureProperties boundaryModeS="CLAMP_TO_EDGE" boundaryModeT="CLAMP_TO_EDGE" magnificationFilter="AVG_PIXEL" minificationFilter="AVG_PIXEL" generateMipMaps="false"/></ImageTexture></field><field name="imageAspect" type="SFFloat" accessType="inputOutput" value="1.5"/><field name="zoom" type="SFFloat" accessType="inputOutput" value="1"/><ShaderPart type="VERTEX" url='"../shaders/screen.vert"'/><ShaderPart type="FRAGMENT" url='"../shaders/kerr.frag"'/></ComposedShader></Appearance><IndexedFaceSet coordIndex="0 1 2 -1 0 2 3 -1" solid="false"><Coordinate point="-1 -1 0 1 -1 0 1 1 0 -1 1 0"/></IndexedFaceSet></Shape></Scene></X3D>
+\ No newline at end of file
++<?xml version="1.0" encoding="UTF-8"?><X3D profile="Immersive" version="4.0"><head><component name="Shaders" level="1"/><component name="Texturing" level="2"/></head><Scene><WorldInfo title="Scientific Loom — quantitative field renderer"/><NavigationInfo type='"NONE"' headlight="false"/><Viewpoint position="0 0 3"/><Shape><Appearance alphaMode="OPAQUE"><ComposedShader DEF="FieldShader" language="GLSL"><field name="fieldTexture" type="SFNode" accessType="inputOutput"><ImageTexture  repeatS="false" repeatT="false"><TextureProperties boundaryModeS="CLAMP_TO_EDGE" boundaryModeT="CLAMP_TO_EDGE" magnificationFilter="AVG_PIXEL" minificationFilter="AVG_PIXEL" generateMipMaps="false"/></ImageTexture></field><field name="aspect" type="SFFloat" accessType="inputOutput" value="1.5"/><field name="exposure" type="SFFloat" accessType="inputOutput" value="1.25"/><field name="viewMode" type="SFInt32" accessType="inputOutput" value="0"/><field name="transferTexture" type="SFNode" accessType="inputOutput"><ImageTexture  repeatS="false" repeatT="false"><TextureProperties boundaryModeS="CLAMP_TO_EDGE" boundaryModeT="CLAMP_TO_EDGE" magnificationFilter="AVG_PIXEL" minificationFilter="AVG_PIXEL" generateMipMaps="false"/></ImageTexture></field><field name="imageAspect" type="SFFloat" accessType="inputOutput" value="1.5"/><field name="zoom" type="SFFloat" accessType="inputOutput" value="1"/><ShaderPart type="VERTEX" url='"../shaders/screen.vert"'/><ShaderPart type="FRAGMENT" url='"../shaders/kerr.frag"'/></ComposedShader></Appearance><IndexedFaceSet coordIndex="0 1 2 -1 0 2 3 -1" solid="false"><Coordinate point="-1 -1 0 1 -1 0 1 1 0 -1 1 0"/></IndexedFaceSet></Shape></Scene></X3D>
+\ No newline at end of file

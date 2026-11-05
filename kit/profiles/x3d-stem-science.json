@@ -1,0 +1,43 @@
+{
+  "schema": "loom.profile/1",
+  "name": "x3d-stem-science/v1",
+  "purpose": "First x3d.STEM acceptance profile, for numerical X3D observatories that ship loom.scientific-case/1 manifests (Scientific Loom pass 1). Accepting under it means: the scenes are grammatical and meaningful on the fork, no known trap, every case declares its model and limits, every required scientific witness is present and internally consistent, display payloads are unclipped and decodable, and each bank was produced by the builder that ships. It says nothing about rendering on a GPU, visual parity with ParaView, topology convergence or a full-Brillouin-zone gap.",
+  "required": [
+    {"witness": "grammar"},
+    {"witness": "meaning"},
+    {"witness": "traps", "coverage": {"rules": 11}},
+    {"witness": "science", "coverage": {"kinds": 4}}
+  ],
+  "visible_not_run": ["behaviour", "eyes", "host", "gpu-location", "paired-visual-review", "topology-convergence", "full-bz-gap"],
+  "science": {
+    "min_cases": 9,
+    "min_witnesses": 5,
+    "quantization_max": 0.0019607843137254902,
+    "builders": {"vortex": "tools/vortex.py", "kerr": "tools/kerr.py", "matter": "tools/matter.py", "phononic": "tools/phononic.py"},
+    "kinds": {
+      "vortex": {"evolving": true, "required_witnesses": ["particle-number", "Hamiltonian", "phase winding", "reversibility", "temporal refinement", "clipping"]},
+      "kerr": {"evolving": false, "required_witnesses": ["unresolved rays", "constraint", "Schwarzschild analytic capture", "refined ray", "clipping"]},
+      "matter": {"evolving": true, "required_witnesses": ["mean composition drift", "free-energy", "conduction linear residual", "uniform conduction reference", "clipping"]},
+      "phononic": {"evolving": false, "required_witnesses": ["Hermitian", "generalized eigen residual", "mass orthogonality", "homogeneous continuum", "Gamma rigid-body"]}
+    }
+  },
+  "gate_map": {
+    "SCI-MODEL-SCOPE": "sci.model_scope",
+    "SCI-INVARIANTS": "required witnesses: particle-number, Hamiltonian, mean composition, free-energy, constraint",
+    "SCI-REFERENCE-CONTROL": "required witnesses: Schwarzschild analytic capture, uniform conduction reference, homogeneous continuum",
+    "SCI-REFINEMENT": "required witnesses: temporal refinement, refined ray",
+    "SCI-DEGENERACY": "required witness: mass orthogonality",
+    "SCI-DISPLAY-RANGE": "sci.frames: clipping and quantization",
+    "SCI-PUBLICATION": "sci.frames: size, hash and decodability; R26",
+    "SCI-FAIL-CLOSED": "every predicate raises; tested under python -O",
+    "SCI-CASE-DOMAIN, SCI-FRAME-COHERENCE, SCI-RECONSTRUCTION, SCI-SURFACE-PROXY, SCI-DEFORMATION, SCI-GPU-LOCATION": "project and browser witnesses; not in this static profile",
+    "SCI-PAIRED-VISUAL-REVIEW, SCI-TOPOLOGY-CONVERGENCE, SCI-FULL-BZ-GAP": "open in the source; listed as visible_not_run"
+  },
+  "limitations": [
+    "Reconstructed from the Scientific Loom's GATES.md and debrief; the original governance patch was not delivered (grade L for fidelity to it).",
+    "Static profile: browser, GPU, reconstruction and visual-review witnesses did not run here.",
+    "Builder binding covers the named builder file only, not modules it imports (tools/common.py).",
+    "Grammar and Meaning ran on the local x3d_mcp fork checkout, not the family pin.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ]
+}
