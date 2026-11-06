@@ -14,6 +14,7 @@ The X3D Loom, consolidated: one definition, its sources, what the other model's 
 | [REVIEW-scientific.md](REVIEW-scientific.md) | Review of the first x3d.STEM delivery, the Scientific Loom Observatory: measurements, six findings, the hardening patch, 13 lessons |
 | [ZINC-FINGER.md](ZINC-FINGER.md) | **Zinc fingers under the Loom** (6 Nov): a reference animation audited for truth, the study card filled in, seven phases, and the first molecular witness, `kit/loom metalsite` (zinc coordination, ligand class, histidine donor, distances, geometry, intact fraction, units), with 13 negative controls and a rehearsal receipt on synthetic sites |
 | [X3D-STEM.md](X3D-STEM.md) | **x3d.STEM direction**: one case with four lenses (K-12 to researcher), three fidelity tiers, 11 wow-factor techniques, about 30 project ideas each with its reference control, a roadmap and a maturity ladder |
+| [PLATFORMER.md](PLATFORMER.md) | **A game under the Loom** (6 Nov): NIB, an original physics platformer whose levels are X3D files ([x3d.platformer/](x3d.platformer/)), and what it added: the proof-of-play witness `kit/loom play`, the `sim-nonportable-math` page trap, the `x3d-game` profile and a feel card, plus a fix for `kit/loom traps` |
 | [proposals/](proposals/) | Patches proposed back to projects (Scientific Loom hardening) |
 | [kit/](kit/) | `loomkit` (Python standard library), profiles, templates, examples, tests |
 | [runs/](runs/) | This repo's own evidence: Data City through the kit, the fold-back survey, the traps corpus run |
@@ -34,6 +35,9 @@ kit/loom command  PROJECT --evidence RUN/evidence --name truth -- python3 -m you
 ```
 ```bash
 kit/loom foldback PROJECT --evidence RUN/evidence --patch PROJECT/integration/your.patch
+```
+```bash
+kit/loom play     PROJECT --evidence RUN/evidence --tapes 'tapes/*.tape.json' --levels 'levels/*.x3d' --runner tools/replay.mjs
 ```
 ```bash
 kit/loom record   PROJECT --evidence RUN/evidence --name eyes --status not_run --reason "why"
@@ -66,7 +70,7 @@ python3 -I kit/tests/test_metalsite.py && kit/examples/run_zinc_site.sh
 python3 -I kit/examples/check_all_foldbacks.py
 ```
 
-The first runs 41 negative controls and 11 two-sided trap rules under normal Python and `-O`. The second takes the delivered Data City Loom (copied, never edited), accepts it under `x3d-static/v1`, writes a receipt, then shows that a post-witness edit and a planted trap are both rejected. The third applies every PR patch from the project zips in an empty repo and runs its smoke test both ways.
+The first runs 56 negative controls, 11 two-sided trap rules and 7 page-trap rules (with 10 page forms) under normal Python and `-O`, including the play witness and the CLI itself. The second takes the delivered Data City Loom (copied, never edited), accepts it under `x3d-static/v1`, writes a receipt, then shows that a post-witness edit and a planted trap are both rejected. The third applies every PR patch from the project zips in an empty repo and runs its smoke test both ways.
 
 ## Where it stands (3 Nov)
 

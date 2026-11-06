@@ -88,6 +88,17 @@
             "expected": "CANDIDATE_CHANGED_DURING_WITNESS"
           }
         ],
+        "cli": [
+          {
+            "case": "CLI: traps runs end to end and says what it read",
+            "result": "exit 0, seen 1 scene"
+          },
+          {
+            "case": "CLI: a bug inside a witness exits 2 (instrument), never 1 (violation)",
+            "caught": "exit 2",
+            "expected": "exit 2"
+          }
+        ],
         "optimized": false,
         "pagetraps": [
           {
@@ -119,6 +130,35 @@
             "failing_fixture": "caught",
             "passing_fixture": "clean",
             "rule": "js-syntax"
+          },
+          {
+            "failing_fixture": "caught",
+            "passing_fixture": "clean",
+            "rule": "sim-nonportable-math"
+          },
+          {
+            "failing_fixture": "caught",
+            "form": "sim marker scopes the rule",
+            "passing_fixture": "clean",
+            "rule": "sim-nonportable-math"
+          },
+          {
+            "failing_fixture": "caught",
+            "form": "sim exponent operator",
+            "passing_fixture": "clean",
+            "rule": "sim-nonportable-math"
+          },
+          {
+            "failing_fixture": "caught",
+            "form": "sim randomness and clocks",
+            "passing_fixture": "clean",
+            "rule": "sim-nonportable-math"
+          },
+          {
+            "failing_fixture": "caught",
+            "form": "sim inline script",
+            "passing_fixture": "clean",
+            "rule": "sim-nonportable-math"
           },
           {
             "failing_fixture": "caught",
@@ -215,6 +255,72 @@
             "case": "duplicate flag",
             "caught": "PICTURE_DUPLICATE",
             "expected": "PICTURE_DUPLICATE"
+          }
+        ],
+        "play": [
+          {
+            "case": "clean fixture",
+            "levels_proven": 1,
+            "result": "pass"
+          },
+          {
+            "case": "level edited after the run was recorded",
+            "caught": "PLAY_LEVEL_STALE",
+            "expected": "PLAY_LEVEL_STALE"
+          },
+          {
+            "case": "level widened and the tape re-stamped",
+            "caught": "PLAY_GOAL_NOT_REACHED",
+            "expected": "PLAY_GOAL_NOT_REACHED"
+          },
+          {
+            "case": "tape truncated",
+            "caught": "PLAY_GOAL_NOT_REACHED",
+            "expected": "PLAY_GOAL_NOT_REACHED"
+          },
+          {
+            "case": "recorded outcome tampered",
+            "caught": "PLAY_HASH_DRIFT",
+            "expected": "PLAY_HASH_DRIFT"
+          },
+          {
+            "case": "engine version changed",
+            "caught": "PLAY_ENGINE_DRIFT",
+            "expected": "PLAY_ENGINE_DRIFT"
+          },
+          {
+            "case": "runner that is not deterministic",
+            "caught": "PLAY_NONDETERMINISTIC",
+            "expected": "PLAY_NONDETERMINISTIC"
+          },
+          {
+            "case": "a listed level with no tape",
+            "caught": "PLAY_LEVEL_UNPROVEN",
+            "expected": "PLAY_LEVEL_UNPROVEN"
+          },
+          {
+            "case": "a tape for a level not listed",
+            "caught": "PLAY_LEVEL_MISSING",
+            "expected": "PLAY_LEVEL_MISSING"
+          },
+          {
+            "case": "no tapes",
+            "caught": "PLAY_NO_TAPES",
+            "expected": "PLAY_NO_TAPES"
+          },
+          {
+            "case": "runner exits non-zero",
+            "caught": "InstrumentError",
+            "expected": "InstrumentError"
+          },
+          {
+            "case": "CLI: crashing runner exits 2",
+            "caught": "exit 2",
+            "expected": "exit 2"
+          },
+          {
+            "case": "CLI: clean fixture",
+            "result": "exit 0, witness pass"
           }
         ],
         "receipt": [
@@ -383,10 +489,10 @@
           }
         ]
       },
-      "negative_controls_caught": 44,
+      "negative_controls_caught": 56,
       "optimized": false,
-      "page_trap_forms_two_sided": 6,
-      "page_trap_rules_two_sided": 6,
+      "page_trap_forms_two_sided": 10,
+      "page_trap_rules_two_sided": 7,
       "trap_rules_two_sided": 11
     },
     {
@@ -477,6 +583,17 @@
             "expected": "CANDIDATE_CHANGED_DURING_WITNESS"
           }
         ],
+        "cli": [
+          {
+            "case": "CLI: traps runs end to end and says what it read",
+            "result": "exit 0, seen 1 scene"
+          },
+          {
+            "case": "CLI: a bug inside a witness exits 2 (instrument), never 1 (violation)",
+            "caught": "exit 2",
+            "expected": "exit 2"
+          }
+        ],
         "optimized": true,
         "pagetraps": [
           {
@@ -508,6 +625,35 @@
             "failing_fixture": "caught",
             "passing_fixture": "clean",
             "rule": "js-syntax"
+          },
+          {
+            "failing_fixture": "caught",
+            "passing_fixture": "clean",
+            "rule": "sim-nonportable-math"
+          },
+          {
+            "failing_fixture": "caught",
+            "form": "sim marker scopes the rule",
+            "passing_fixture": "clean",
+            "rule": "sim-nonportable-math"
+          },
+          {
+            "failing_fixture": "caught",
+            "form": "sim exponent operator",
+            "passing_fixture": "clean",
+            "rule": "sim-nonportable-math"
+          },
+          {
+            "failing_fixture": "caught",
+            "form": "sim randomness and clocks",
+            "passing_fixture": "clean",
+            "rule": "sim-nonportable-math"
+          },
+          {
+            "failing_fixture": "caught",
+            "form": "sim inline script",
+            "passing_fixture": "clean",
+            "rule": "sim-nonportable-math"
           },
           {
             "failing_fixture": "caught",
@@ -604,6 +750,72 @@
             "case": "duplicate flag",
             "caught": "PICTURE_DUPLICATE",
             "expected": "PICTURE_DUPLICATE"
+          }
+        ],
+        "play": [
+          {
+            "case": "clean fixture",
+            "levels_proven": 1,
+            "result": "pass"
+          },
+          {
+            "case": "level edited after the run was recorded",
+            "caught": "PLAY_LEVEL_STALE",
+            "expected": "PLAY_LEVEL_STALE"
+          },
+          {
+            "case": "level widened and the tape re-stamped",
+            "caught": "PLAY_GOAL_NOT_REACHED",
+            "expected": "PLAY_GOAL_NOT_REACHED"
+          },
+          {
+            "case": "tape truncated",
+            "caught": "PLAY_GOAL_NOT_REACHED",
+            "expected": "PLAY_GOAL_NOT_REACHED"
+          },
+          {
+            "case": "recorded outcome tampered",
+            "caught": "PLAY_HASH_DRIFT",
+            "expected": "PLAY_HASH_DRIFT"
+          },
+          {
+            "case": "engine version changed",
+            "caught": "PLAY_ENGINE_DRIFT",
+            "expected": "PLAY_ENGINE_DRIFT"
+          },
+          {
+            "case": "runner that is not deterministic",
+            "caught": "PLAY_NONDETERMINISTIC",
+            "expected": "PLAY_NONDETERMINISTIC"
+          },
+          {
+            "case": "a listed level with no tape",
+            "caught": "PLAY_LEVEL_UNPROVEN",
+            "expected": "PLAY_LEVEL_UNPROVEN"
+          },
+          {
+            "case": "a tape for a level not listed",
+            "caught": "PLAY_LEVEL_MISSING",
+            "expected": "PLAY_LEVEL_MISSING"
+          },
+          {
+            "case": "no tapes",
+            "caught": "PLAY_NO_TAPES",
+            "expected": "PLAY_NO_TAPES"
+          },
+          {
+            "case": "runner exits non-zero",
+            "caught": "InstrumentError",
+            "expected": "InstrumentError"
+          },
+          {
+            "case": "CLI: crashing runner exits 2",
+            "caught": "exit 2",
+            "expected": "exit 2"
+          },
+          {
+            "case": "CLI: clean fixture",
+            "result": "exit 0, witness pass"
           }
         ],
         "receipt": [
@@ -772,10 +984,10 @@
           }
         ]
       },
-      "negative_controls_caught": 44,
+      "negative_controls_caught": 56,
       "optimized": true,
-      "page_trap_forms_two_sided": 6,
-      "page_trap_rules_two_sided": 6,
+      "page_trap_forms_two_sided": 10,
+      "page_trap_rules_two_sided": 7,
       "trap_rules_two_sided": 11
     }
   ],
