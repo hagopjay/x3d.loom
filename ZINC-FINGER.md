@@ -125,6 +125,38 @@ Another model returned a single-file three.js re-render of the private Site Atla
 
 The full record, the fold-back list and the proposed law are in [runs/zinc-remix-review-20261106/REVIEW.md](runs/zinc-remix-review-20261106/REVIEW.md).
 
+### F10. Look v2: the remix's gains folded back into the generator, and checked
+
+The question asked of F9 was whether the remix's zinc bug explains why its look still felt flat. **Partly.** The zinc took the carbon slate because the material table was keyed "ZN" and the data said "Zn". Patching that key in the remix makes the zinc chrome, but the frame stays flat (S, two frames read side by side). The larger causes were elsewhere: nothing to reflect (a metal with no environment renders near black), no tone curve, and labels buried inside the atoms.
+
+`kit/examples/zinc_site_scene_v2.py` builds the same geometry as v1 (it calls v1's builder, so it repeats no rules) and changes only the look. Each item is declared as look, not data (law 34):
+
+- **Format:** X3D 4.1.
+- **Materials:** PhysicalMaterial per element, with zinc a metal (metallic 0.85, roughness 0.18).
+- **Light:** an EnvironmentLight over a generated studio cube map (`zinc_studio_env.py`, 32 px faces so software GL can render it), plus key, fill and rim lights placed in the first site's camera frame. The headlight is off.
+- **Tubes:** thicker, dark and glossy, with caps.
+- **Labels:** each label moves 1.2 Å toward the eye inside its Billboard, so its anchor on the bond line stays where the data puts it. Each label gains a donor name ("CYS 159 SG") and a backing card.
+- **Cage:** a translucent tetrahedron joins the four donors only where all four bonds glow. The remix drew one over two dark contacts.
+- **Viewer:** the renderer (`zinc_render_v2.cjs`) sets X_ITE's KHR_PBR_NEUTRAL tone mapping and records it in the rig.
+
+The new parts that carry data are checked. `zinc_scene_truth_v2.py` keeps every v1 check and adds three:
+
+- **ATOM_COLOUR:** every atom draws its own element's shape (zinc as zinc), and the element colours are pairwise distinct.
+- **CAGE:** a cage appears exactly where it is due, and its face and edge vertices are the donors to 3 decimals.
+- **DONOR_NAME:** every name line reads its donor as deposited.
+
+Fifteen negative controls (nine from v1, six new) are each caught with their own code. The first of the new controls is the remix's own bug: a zinc drawn with carbon's material.
+
+The run `runs/zinc-scenes-v2-20261106` (C) passes on all 14 scenes and 32 sites:
+
+- grammar (14 of 14 valid against the X3D 4.1 XSD, fork pin);
+- meaning;
+- traps;
+- data-true v2: 25 cages on 32 sites and 122 donor names;
+- 15 of 15 controls.
+
+The eyes record (S) reads all 32 frames: every zinc reads as metal, every label sits in front and names its donor, and the long cryo-EM sites draw dark with no cage. The receipt is bb6c79667bc9, under the profile `kit/profiles/zinc-scenes-v2.json`; it points back to 1922186dac97, issued before the eyes record. The v1 run is untouched.
+
 ## 2. The study card
 
 The template is `kit/templates/SCIENCE-STUDY-CARD.md`. Empty fields are decisions not yet made.
