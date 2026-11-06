@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:x3d-io:x3d.bench:1:receipt",
+  "title": "x3d.bench/1 run receipt",
+  "description": "One benchmark run: one scene, one arm, one window, one run index. See x3d.webgpu/BENCHMARK.md. Data only. Timings from software rasterizers are not allowed: machine.gpu_is_software must be false for any receipt that carries frame timings.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "run_id", "utc", "machine", "arm", "scene", "window", "protocol", "parity", "frames", "load", "errors", "verdict", "frames_csv_sha256", "receipt_sha256"],
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "semver": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([-+][0-9A-Za-z.-]+)?$" },
+    "ms": { "type": "number", "minimum": 0 },
+    "quantiles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["p50", "p95", "p99"],
+      "properties": {
+        "p50": { "$ref": "#/$defs/ms" },
+        "p95": { "$ref": "#/$defs/ms" },
+        "p99": { "$ref": "#/$defs/ms" },
+        "mean": { "$ref": "#/$defs/ms" },
+        "max": { "$ref": "#/$defs/ms" }
+      }
+    },
+    "size2": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 1 },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "grade": { "type": "string", "enum": ["C", "L", "S"] }
+  },
+  "properties": {
+    "schema": { "const": "x3d.bench/1" },
+    "run_id": { "type": "string", "minLength": 8, "description": "Unique id, for example scene-arm-window-run-utc." },
+    "utc": { "type": "string", "format": "date-time" },
+    "machine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "os", "browser", "browser_version", "flags", "gpu_is_software", "consent"],
+      "properties": {
+        "role": { "type": "string", "enum": ["floor", "discrete", "sandbox", "other"] },
+        "os": { "type": "string" },
+        "cpu": { "type": "string" },
+        "cores": { "type": "integer", "minimum": 1 },
+        "gpu": { "type": "string", "description": "Make and model as the OS reports it." },
+        "gpu_is_software": { "type": "boolean", "description": "True for SwiftShader, llvmpipe, WARP or any CPU rasterizer." },
+        "power": { "type": "string", "enum": ["mains", "battery", "unknown"] },
+        "power_mode": { "type": "string" },
+        "browser": { "type": "string", "enum": ["chrome", "chromium", "edge", "firefox", "safari", "other"] },
+        "browser_version": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]+){0,3}$" },
+        "flags": { "type": "array", "items": { "type": "string" } },
+        "webgl_renderer": { "type": "string", "description": "UNMASKED_RENDERER_WEBGL, or empty if unavailable." },
+        "webgpu_adapter_info": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "vendor": { "type": "string" },
+            "architecture": { "type": "string" },
+            "device": { "type": "string" },
+            "description": { "type": "string" },
+            "is_fallback_adapter": { "type": "boolean" },
+            "features": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+            "limits": { "type": "object", "additionalProperties": { "type": "number" } },
+            "wgsl_language_features": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+          }
+        },
+        "timer_query": { "type": "string", "enum": ["none", "EXT_disjoint_timer_query_webgl2", "timestamp-query", "both"] },
+        "timestamp_quantized": { "type": "boolean", "description": "True when the browser rounds GPU timestamps (for example to 100 microseconds)." },
+        "consent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["given", "by", "date"],
+          "properties": {
+            "given": { "type": "boolean" },
+            "by": { "type": "string", "description": "Role, not a personal name or address, for example 'machine owner'." },
+            "date": { "type": "string", "format": "date" },
+            "scope": { "type": "string" }
+          }
+        }
+      }
+    },
+    "arm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "engine", "engine_version", "backend", "shader_route"],
+      "properties": {
+        "id": { "type": "string", "enum": ["A", "B", "C", "D", "E", "F"] },
+        "name": { "type": "string" },
+        "engine": { "type": "string", "enum": ["x_ite", "three", "babylonjs", "x3dio", "other"] },
+        "engine_version": { "$ref": "#/$defs/semver" },
+        "backend": { "type": "string", "enum": ["webgl2", "webgpu"] },
+        "shader_route": { "type": "string", "enum": ["glsl-as-authored", "glsl-renamed", "tsl-transpiled", "wgsl-hand", "glslang-twgsl", "naga"] },
+        "converter_sha256": { "$ref": "#/$defs/sha256" },
+        "shader_sha256": {
+          "type": "object",
+          "description": "Shader DEF name to hash of the source actually compiled.",
+          "additionalProperties": { "$ref": "#/$defs/sha256" }
+        },
+        "idiomatic": { "type": "boolean", "default": false, "description": "True for side arms that use engine-native effects. Never counted in the decision." },
+        "msaa": { "type": "integer", "enum": [1, 4] },
+        "dependencies": {
+          "type": "object",
+          "description": "Package name to exact version.",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "x3d_sha256"],
+      "properties": {
+        "id": { "type": "string", "enum": ["hero", "pu7", "pu24", "L1k", "L10k", "L10k-split", "L50k", "L100k"] },
+        "x3d_sha256": { "$ref": "#/$defs/sha256" },
+        "builder_sha256": { "$ref": "#/$defs/sha256" },
+        "event_fixture_sha256": { "$ref": "#/$defs/sha256" },
+        "tracks": { "type": "integer", "minimum": 0 },
+        "track_shapes": { "type": "integer", "minimum": 0 },
+        "vertices": { "type": "integer", "minimum": 0 },
+        "shapes": { "type": "integer", "minimum": 0 },
+        "sparks": { "type": "boolean", "const": false, "description": "Particle sparks are off in every arm." }
+      }
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["css_px", "canvas_px", "rt_px", "dpr", "tier"],
+      "properties": {
+        "css_px": { "$ref": "#/$defs/size2" },
+        "canvas_px": { "$ref": "#/$defs/size2" },
+        "rt_px": { "$ref": "#/$defs/size2" },
+        "dpr": { "type": "number", "exclusiveMinimum": 0 },
+        "tier": { "type": "integer", "enum": [720, 1080, 1440, 2160] }
+      }
+    },
+    "protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["warmup_s", "duration_s", "run_index", "runs", "arm_order", "vsync_off"],
+      "properties": {
+        "warmup_s": { "type": "number", "minimum": 0 },
+        "duration_s": { "type": "number", "exclusiveMinimum": 0 },
+        "run_index": { "type": "integer", "minimum": 1 },
+        "runs": { "type": "integer", "minimum": 1 },
+        "arm_order": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "idle_between_s": { "type": "number", "minimum": 0 },
+        "vsync_off": { "type": "boolean" },
+        "profile": { "type": "string", "enum": ["cold", "warm"] },
+        "page_origin": { "type": "string", "enum": ["file", "https", "localhost"], "description": "Never about:blank or data:, where navigator.gpu is absent." },
+        "preserve_drawing_buffer": { "type": "boolean" }
+      }
+    },
+    "parity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference", "views", "pass"],
+      "properties": {
+        "reference": { "type": "string", "description": "Arm id and engine version of the reference frames, for example 'A x_ite 16.7.0'." },
+        "t_s": { "type": "number", "minimum": 0 },
+        "views": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["view", "ssim", "psnr_db", "nonblank"],
+            "properties": {
+              "view": { "type": "string", "enum": ["end-on", "three-quarter", "side"] },
+              "ssim": { "type": "number", "minimum": -1, "maximum": 1 },
+              "psnr_db": { "type": "number" },
+              "mean_abs_diff_255": { "type": "number", "minimum": 0 },
+              "luma_delta": { "type": "number" },
+              "nonblank": { "type": "boolean" }
+            }
+          }
+        },
+        "pass": { "type": "boolean", "description": "SSIM >= 0.95 and PSNR >= 30 dB on every view." }
+      }
+    },
+    "frames": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["n", "counted_by", "interval_ms"],
+      "properties": {
+        "n": { "type": "integer", "minimum": 0 },
+        "counted_by": { "type": "string", "enum": ["finishEvents", "render-loop", "raf"] },
+        "raf_calls": { "type": "integer", "minimum": 0 },
+        "interval_ms": { "$ref": "#/$defs/quantiles" },
+        "cpu_ms": { "$ref": "#/$defs/quantiles" },
+        "gpu_ms": { "$ref": "#/$defs/quantiles" },
+        "gpu_valid_fraction": { "type": "number", "minimum": 0, "maximum": 1, "description": "Share of frames with a non-disjoint GPU timer sample." },
+        "low1_fps": { "type": "number", "minimum": 0 },
+        "over_33ms": { "type": "integer", "minimum": 0 },
+        "drift_pct": { "type": "number", "description": "Difference between the first and last 10 s medians, in percent." },
+        "pinned_at_vsync": { "type": "boolean", "description": "True when the interval median sits at the display refresh: the run is Inconclusive." },
+        "draws_per_frame": { "type": "integer", "minimum": 0 },
+        "primitives_per_frame": { "type": "integer", "minimum": 0 },
+        "pipelines_or_programs": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "load": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ttfp_ms", "load_ms", "dnf"],
+      "properties": {
+        "ttfp_ms": { "$ref": "#/$defs/ms", "description": "Time to the first frame with more than 0.5% of pixels off the background." },
+        "load_ms": { "$ref": "#/$defs/ms" },
+        "compile_ms": { "$ref": "#/$defs/ms" },
+        "dnf": { "type": "boolean", "description": "True when the load missed the 300 s cap." }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "js_heap_used_mb": { "type": "number", "minimum": 0 },
+        "gpu_uploaded_mb": { "type": "number", "minimum": 0 }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "message"],
+        "properties": {
+          "kind": { "type": "string", "enum": ["console", "page", "http", "shader", "device-lost", "harness"] },
+          "message": { "type": "string" },
+          "code": { "type": "string" }
+        }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "grade"],
+      "properties": {
+        "status": { "type": "string", "enum": ["reference", "go", "no-go", "inconclusive", "dnf", "correctness-only"] },
+        "grade": { "$ref": "#/$defs/grade" },
+        "p95_ratio_to_A": { "type": "number", "exclusiveMinimum": 0 },
+        "p95_ratio_to_same_engine_webgl2": { "type": "number", "exclusiveMinimum": 0 },
+        "spread_pct": { "type": "number", "minimum": 0 },
+        "note": { "type": "string" }
+      }
+    },
+    "frames_csv_sha256": { "$ref": "#/$defs/sha256" },
+    "receipt_sha256": { "$ref": "#/$defs/sha256", "description": "Hash of this receipt with receipt_sha256 set to 64 zeros." }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "machine": { "properties": { "gpu_is_software": { "const": true } } } } },
+      "then": {
+        "properties": {
+          "verdict": { "properties": { "status": { "const": "correctness-only" } } },
+          "frames": { "not": { "anyOf": [ { "required": ["cpu_ms"] }, { "required": ["gpu_ms"] } ] } }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "machine": { "properties": { "role": { "const": "floor" } } } } },
+      "then": { "properties": { "machine": { "properties": { "consent": { "properties": { "given": { "const": true } } } } } } }
+    }
+  ]
+}
