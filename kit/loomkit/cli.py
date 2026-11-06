@@ -7,6 +7,7 @@
   python -m loomkit foldback  ROOT --evidence DIR --patch FILE
   python -m loomkit sci       ROOT --evidence DIR --profile kit/profiles/x3d-stem-science.json
   python -m loomkit play      ROOT --evidence DIR --tapes GLOB --levels GLOB --runner FILE [--repeats 2]
+  python -m loomkit hepevent  ROOT --evidence DIR --events GLOB --spec FILE
   python -m loomkit command   ROOT --evidence DIR --name NAME -- CMD ...
   python -m loomkit record    ROOT --evidence DIR --name NAME --status not_run --reason TEXT
   python -m loomkit accept    ROOT --evidence DIR --profile FILE
@@ -25,7 +26,7 @@ import sys
 from pathlib import Path
 
 from . import accept as acc
-from . import foldback, grammar, metalsite, pagetraps, picture, play, receipt, sci, sweep, traps
+from . import foldback, grammar, hepevent, metalsite, pagetraps, picture, play, receipt, sci, sweep, traps
 from .core import GateError, InstrumentError, candidate, need, portable, sha256_file, write_witness
 
 
@@ -160,6 +161,30 @@ def cmd_metalsite(a) -> dict:
                          reason=reason)
 
 
+def cmd_hepevent(a) -> dict:
+    """Hep-event plausibility witness (a demo witness) over event JSON files and the X3D scenes they name; writes 'hep-event'."""
+    root = Path(a.root)
+    subject = candidate(root)["sha256"]
+    spec = json.loads(Path(a.spec).read_text())
+    files = _files(root, a.events)
+    try:
+        res = hepevent.check_files(files, spec)
+        res = {portable(Path(k).relative_to(root)): v for k, v in res.items()}
+        status, reason = "pass", ""
+    except GateError as e:
+        res, status, reason = {"rejected": e.code, "detail": e.detail}, "fail", f"{e.code}: {e.detail}"
+    inv = [v["inventory"] for v in res.values() if isinstance(v, dict) and "inventory" in v]
+    return write_witness(a.evidence, root, subject, "hep-event", status, "C",
+                         {"tool": "loomkit.hepevent", "rules_sha256": sha256_file(Path(hepevent.__file__)),
+                          "spec_sha256": sha256_file(Path(a.spec))},
+                         measurements=res,
+                         coverage={"events": len(files), "scenes": sum(1 for i in inv if i["scene"]),
+                                   "tracks": sum(i["tracks"] for i in inv), "towers": sum(i["towers"] for i in inv)},
+                         limitations=["Demo plausibility only: loose physics tolerances, declared in the spec; no mass shell, resonance or calorimeter sum rule.",
+                                      "Nothing is rendered and no GLSL is compiled here: the shader check proves the binding (shader, attributes, clock route), not the look."],
+                         reason=reason)
+
+
 def cmd_play(a) -> dict:
     """Play witness: every listed level has a tape that replays, deterministically, to its recorded finish."""
     root = Path(a.root)
@@ -259,6 +284,7 @@ def main(argv: list[str] | None = None) -> int:
     p = common("foldback"); p.add_argument("--patch", required=True)
     p = common("sci"); p.add_argument("--profile", required=True)
     p = common("metalsite"); p.add_argument("--files", required=True); p.add_argument("--spec", required=True)
+    p = common("hepevent"); p.add_argument("--events", required=True); p.add_argument("--spec", required=True)
     p = common("play"); p.add_argument("--tapes", required=True); p.add_argument("--levels", required=True)
     p.add_argument("--runner", required=True); p.add_argument("--node", default="node"); p.add_argument("--repeats", type=int, default=2)
     p = common("command"); p.add_argument("--name", required=True)
@@ -292,7 +318,7 @@ def main(argv: list[str] | None = None) -> int:
         elif a.cmd_name == "picture":
             out = picture.validate(json.loads(Path(a.review).read_text()), a.subject, json.loads(Path(a.frames).read_text()))
         else:
-            out = {"sci": cmd_sci, "metalsite": cmd_metalsite, "play": cmd_play, "pagetraps": cmd_pagetraps, "traps": cmd_traps, "grammar": cmd_grammar, "foldback": cmd_foldback, "command": cmd_command,
+            out = {"sci": cmd_sci, "metalsite": cmd_metalsite, "hepevent": cmd_hepevent, "play": cmd_play, "pagetraps": cmd_pagetraps, "traps": cmd_traps, "grammar": cmd_grammar, "foldback": cmd_foldback, "command": cmd_command,
                    "record": cmd_record, "accept": cmd_accept, "receipt": cmd_receipt}[a.cmd_name](a)
     except GateError as e:
         print(json.dumps({"rejected": e.code, "detail": e.detail}))

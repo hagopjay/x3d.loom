@@ -268,6 +268,16 @@ def receipt_controls() -> list[dict]:
         rows.append({"case": "overwrite refused", **expect("RECEIPT_EXISTS", lambda: receipt.write(r, dest))})
         t = json.loads(dest.read_text()); t["grade"] = "S"; dest.write_text(json.dumps(t))
         rows.append({"case": "edited receipt", **expect("RECEIPT_DRIFT", lambda: receipt.verify(dest))})
+        # two outputs that share a basename (look v1 and look v2 of one event) are both kept, by their path
+        for sub in ("a", "b"):
+            (root / sub).mkdir()
+            (root / sub / "world.x3d").write_text(sub)
+        two = receipt.build("synthetic", result, candidate(root)["files"], [root / "a/world.x3d", root / "b/world.x3d"], {}, {}, [], [], {}, None, [])
+        if sorted(two["outputs"]) != ["a/world.x3d", "b/world.x3d"]:
+            raise RuntimeError(f"SURVIVING_CONTROL: an output with a shared basename was dropped: {sorted(two['outputs'])}")
+        rows.append({"case": "two outputs with one basename both kept, named by path", "result": "kept"})
+        rows.append({"case": "the same output listed twice", **expect("RECEIPT_OUTPUTS", lambda: receipt.build(
+            "synthetic", result, candidate(root)["files"], [root / "a/world.x3d", root / "a/world.x3d"], {}, {}, [], [], {}, None, []))})
     return rows
 
 
