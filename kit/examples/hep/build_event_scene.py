@@ -480,7 +480,7 @@ def _fade() -> str:
     return f"smoothstep(0.0, 0.5, t) * (1.0 - smoothstep({flt(CYCLE_S - 1.6)}, {flt(CYCLE_S - 0.1)}, t))"
 
 
-def shaders_v2() -> dict[str, tuple[str, str]]:
+def shaders_v2(look: str = "v2") -> dict[str, tuple[str, str]]:
     cyc, t0, spd = flt(CYCLE_S), flt(FLASH_AT), flt(SPEED)
     mats = "uniform mat4 x3d_ModelViewMatrix; uniform mat4 x3d_ProjectionMatrix; attribute vec4 x3d_Vertex;"
     off = f"vec3({flt(OFF[0])}, {flt(OFF[1])}, {flt(OFF[2])})"
@@ -658,8 +658,198 @@ def shaders_v2() -> dict[str, tuple[str, str]]:
         vec3 col = vec3(0.016, 0.040, 0.085) * vign + vec3(0.045, 0.090, 0.160) * smoke * (0.5 + 0.5 * r);
         col += vec3(0.05, 0.10, 0.19) * smoothstep(0.86, 0.70, r) * (0.6 + 0.4 * smoke);
         gl_FragColor = vec4(col, 1.0); }}"""
-    return {n: (glsl(v), glsl(f)) for n, (v, f) in {"trk2": (trk_v, trk_f), "twr2": (twr_v, twr_f), "shell2": (shell_v, shell_f),
-                                                      "flash2": (flash_v, flash_f), "haze2": (haze_v, haze_f)}.items()}
+    src = {"trk2": (trk_v, trk_f), "twr2": (twr_v, twr_f), "shell2": (shell_v, shell_f), "flash2": (flash_v, flash_f), "haze2": (haze_v, haze_f)}
+    if look == "v3":
+        src = _v3_sources(src)
+    return {n: (glsl(v), glsl(f)) for n, (v, f) in src.items()}
+
+
+# LOOK V3 (2026-11-06): look v2 folded together with the best of an outside fidelity pass made on the published demo page
+# (docs/COLLIDER-LOOK-V3.md lists what was taken, what was left and why). Same geometry, same attributes, same shader
+# names and the same clock as v2, so the witness reads a v3 scene exactly as it reads v2. Taken from the outside pass:
+# tighter ribbon cores with a soft edge and a resolution scale (u_resolutionScale, 1 = 900 rows), the machined shell
+# (panel seams, ribs, readout traces, key-light glints, a lit lip), the sharper flash with a shock ring, the haze
+# structure (rotated fbm, two light shafts). Kept from v2 against the outside pass: the haze level (the target's
+# mid-tones are brighter than v2, so the outside pass's 6x darker haze moved away from it) and the vertex sparks.
+# New in v3: a red end on the crown's energy ramp (red was 0.3% against the target's 7.5% in look v2).
+def _v3_sources(src: dict) -> dict:
+    cyc, t0, rip = flt(CYCLE_S), flt(FLASH_AT), flt(RIPPLE)
+    fade = _fade()
+    out = dict(src)
+    tv, tf = src["trk2"]
+    def res(v: str) -> str:
+        assert v.count("uniform float u_phase;") == 1 and v.count("a_look.x * w;") == 1
+        return v.replace("uniform float u_phase;", "uniform float u_phase; uniform float u_resolutionScale;").replace("a_look.x * w;", "a_look.x * w * u_resolutionScale;")
+    for a, b in (("vec3 c = vec3(0.10, 0.92, 1.0);", "vec3 c = vec3(0.08, 0.78, 1.0);"),
+                 ("c = vec3(1.0, 0.14, 0.72);", "c = vec3(1.0, 0.12, 0.51);"),
+                 ("float core = exp(-v * v * 9.0);", "float core = exp(-v * v * 18.0);"),
+                 ("float halo = exp(-v * v * 2.2);", "float halo = exp(-v * v * 3.6) * (1.0 - smoothstep(0.7, 1.0, abs(v)));"),
+                 ("float gain = (0.28 + 1.35 * bright)", "float gain = (0.34 + 1.65 * bright)"),
+                 ("vec3 col = c * (halo * 0.34 + core * 0.9) * gain;", "vec3 col = c * (halo * 0.33 + core * 1.28) * gain;")):
+        assert tf.count(a) == 1, a
+        tf = tf.replace(a, b)
+    out["trk2"] = (res(tv), tf)
+    wv, wf = src["twr2"]
+    a = "vec3 c = mix(heat, vec3(1.0, 0.78, 0.30), 0.35 * v_cell.z);"
+    assert wf.count(a) == 1
+    wf = wf.replace(a, a + " c = mix(c, vec3(1.0, 0.20, 0.07), smoothstep(0.80, 1.0, eh) * (1.0 - 0.5 * v_cell.z));")
+    out["twr2"] = (res(wv), wf)
+    shell_f = f"""precision highp float; uniform float u_phase;
+      varying vec3 v_n; varying vec3 v_p; varying vec3 v_obj; varying vec4 v_shell; varying vec4 v_geo;
+      float stripe(float x, float wd) {{ float d = abs(fract(x) - 0.5); return 1.0 - smoothstep(wd, wd + 0.04, d); }}
+      void main() {{
+        float t = u_phase * {cyc};
+        float kind = v_shell.x;
+        float b = v_shell.w;
+        float radius = max(v_geo.x, 0.04);
+        float hl = max(v_geo.y, 0.02);
+        float z = v_obj.z;
+        float phi = atan(v_obj.y, v_obj.x);
+        vec3 N = normalize(v_n);
+        vec3 V = normalize(-v_p);
+        if (dot(N, V) < 0.0) {{ N = -N; }}
+        float facing = max(dot(N, V), 0.0);
+        float rim = pow(1.0 - facing, 3.5);
+        float calo = step(0.5, kind) * (1.0 - step(1.5, kind));
+        float steel = step(1.5, kind) * (1.0 - step(2.5, kind));
+        float tracker = 1.0 - step(0.5, kind);
+        float ring = step(2.5, kind);
+        vec3 cold = mix(vec3(0.18, 0.44, 0.67), vec3(0.21, 0.59, 0.78), tracker);
+        cold = mix(cold, vec3(0.17, 0.26, 0.39), steel);
+        cold = mix(cold, vec3(0.22, 0.42, 0.61), ring);
+        vec3 cyan = vec3(0.39, 0.84, 1.0);
+        vec3 warm = vec3(1.0, 0.50, 0.16);
+        float sectors = max(v_geo.z, mix(48.0, 24.0, steel));
+        float u = phi / 6.2831853 * sectors;
+        float panel = floor(u);
+        float alt = 0.72 + 0.28 * sin(panel * 2.39996 + floor(z * 2.0) * 1.7);
+        float seam = stripe(u, 0.012);
+        float ribs = stripe(z * v_shell.y / 3.14159265, 0.032);
+        float fine = stripe(z * v_shell.y * 2.0 / 3.14159265, 0.012);
+        float lip = exp(-max(hl - abs(z), 0.0) * 24.0);
+        float band = max(exp(-max(hl - abs(z) - 0.075, 0.0) * 48.0) - lip, 0.0);
+        vec3 key = normalize(vec3(-0.55, 0.65, 0.50));
+        vec3 fill = normalize(vec3(0.72, -0.22, 0.50));
+        float diffuse = max(dot(N, key), 0.0);
+        float glint = pow(max(dot(N, normalize(key + V)), 0.0), 76.0);
+        float broad = pow(max(dot(N, normalize(fill + V)), 0.0), 15.0);
+        float brush = 0.85 + 0.15 * sin(z * 35.0 + sin(phi * 8.0) * 0.9);
+        vec3 col = cold * b * alt * (0.026 + 0.035 * diffuse + 0.19 * rim);
+        col += cold * b * ribs * (0.12 + 0.25 * rim) * (1.0 - 0.45 * steel);
+        col += cyan * b * fine * (0.035 + 0.07 * rim);
+        col += cold * b * seam * (0.13 + 0.19 * rim);
+        col += vec3(0.65, 0.79, 0.86) * b * (0.16 * glint * brush + 0.045 * broad);
+        col += cyan * b * lip * (0.45 + 0.65 * rim) * (1.0 - 0.45 * steel);
+        col += warm * b * band * (0.12 + 0.25 * calo);
+        float trace = stripe(u * 0.25 + 0.12, 0.009);
+        float marks = stripe(z * 3.0 + 0.25, 0.045) * stripe(u, 0.09);
+        col += cyan * b * trace * (0.08 + 0.22 * rim) * (1.0 - steel);
+        col += cyan * b * marks * 0.19;
+        col += warm * v_shell.z * smoothstep(2.0, 3.6, t) * (0.025 + 0.32 * rim * rim + 0.09 * seam);
+        float front = (t - {t0}) * {rip};
+        col += cyan * exp(-pow((front - radius) * 3.1, 2.0)) * step({t0}, t) * b * (0.20 + 0.40 * rim);
+        col = vec3(1.0) - exp(-col * 1.32);
+        gl_FragColor = vec4(col * (0.42 + 0.58 * {fade}), 1.0); }}"""
+    out["shell2"] = (src["shell2"][0], shell_f)
+    flash_f = f"""precision highp float; uniform float u_phase; varying vec2 v_uv;
+      void main() {{
+        float t = u_phase * {cyc};
+        float s = t - {t0};
+        float birth = step(0.0, s);
+        float bang = exp(-max(s, 0.0) * 4.2) * birth;
+        float after = exp(-max(s, 0.0) * 1.05) * birth;
+        vec2 p = v_uv;
+        float r = length(p);
+        float edge = 1.0 - smoothstep(0.78, 1.0, r);
+        float core = exp(-r * r * 170.0);
+        float aura = exp(-r * r * 17.0);
+        float hor = exp(-abs(p.y) * 155.0) * exp(-abs(p.x) * 2.5);
+        float sho = exp(-abs(p.y) * 44.0) * exp(-abs(p.x) * 5.5);
+        float ver = exp(-abs(p.x) * 170.0) * exp(-abs(p.y) * 6.0);
+        float dg = exp(-abs(p.x - p.y) * 145.0) * exp(-abs(p.x + p.y) * 6.0) + exp(-abs(p.x + p.y) * 145.0) * exp(-abs(p.x - p.y) * 6.0);
+        float wave = exp(-pow((r - max(s, 0.0) * 1.65) * 85.0, 2.0)) * exp(-max(s, 0.0) * 4.0) * birth;
+        float steady = smoothstep(0.0, 0.5, t) * 0.12;
+        vec3 col = vec3(0.76, 0.91, 1.0) * (core * (steady + bang * 3.5) + aura * (steady * 0.16 + after * 0.45));
+        col += vec3(0.38, 0.73, 1.0) * (hor * 0.75 + sho * 0.20) * (steady + bang * 1.7);
+        col += vec3(0.86, 0.87, 1.0) * (ver * 0.34 + dg * 0.13) * (steady + bang);
+        col += vec3(0.33, 0.69, 1.0) * wave * 0.38;
+        col += vec3(1.0, 0.65, 0.28) * exp(-r * r * 48.0) * bang * 0.50;
+        col = vec3(1.0) - exp(-col * 1.35);
+        gl_FragColor = vec4(col * edge * (1.0 - smoothstep({flt(CYCLE_S - 1.6)}, {flt(CYCLE_S - 0.1)}, t)), 1.0); }}"""
+    out["flash2"] = (src["flash2"][0], flash_f)
+    haze_f = f"""precision highp float; uniform float u_phase; varying vec2 v_uv;
+      float h(vec2 p) {{ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }}
+      float n(vec2 p) {{
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(h(i), h(i + vec2(1.0, 0.0)), f.x), mix(h(i + vec2(0.0, 1.0)), h(i + vec2(1.0, 1.0)), f.x), f.y); }}
+      float fbm(vec2 p) {{
+        float a = 0.5;
+        float s = 0.0;
+        for (int i = 0; i < 4; i++) {{ s += a * n(p); p = mat2(1.61, 1.21, -1.21, 1.61) * p + vec2(3.1, 7.2); a *= 0.48; }}
+        return s; }}
+      void main() {{
+        float t = u_phase * {cyc};
+        vec2 p = v_uv * vec2(1.7777778, 1.0);
+        float r = length(p);
+        vec2 drift = vec2(t * 0.012, -t * 0.008);
+        float f = fbm(p * 2.1 + drift);
+        float g = fbm(p * 5.3 - drift * 1.8);
+        float mist = smoothstep(0.42, 0.86, f) * (0.35 + 0.65 * g);
+        float centre = exp(-dot(p, p) * 0.7);
+        float halo = exp(-pow((r - 0.82) * 2.5, 2.0));
+        vec3 col = vec3(0.010, 0.024, 0.050) * (0.45 + 0.55 * centre);
+        col += vec3(0.034, 0.068, 0.118) * mist * (0.35 + 0.65 * halo);
+        col += vec3(0.036, 0.072, 0.135) * smoothstep(0.86, 0.70, r) * (0.6 + 0.4 * mist);
+        float cold = exp(-pow(p.y + p.x * 0.14 - 0.15, 2.0) * 12.0) * exp(-pow(p.x + 0.65, 2.0) * 1.9);
+        float warm = exp(-pow(p.y - p.x * 0.32 + 0.30, 2.0) * 9.0) * exp(-pow(p.x - 1.0, 2.0) * 2.6);
+        col += vec3(0.024, 0.068, 0.108) * cold * (0.35 + 0.65 * mist);
+        col += vec3(0.060, 0.030, 0.012) * warm * (0.35 + 0.65 * mist);
+        gl_FragColor = vec4(col, 1.0); }}"""
+    out["haze2"] = (src["haze2"][0], haze_f)
+    return out
+
+
+def bloom_shaders_v3() -> tuple[str, str]:
+    """Look v3 bloom (from the outside pass): an edge-aware 5-tap smooth of thin bright lines, a tight and a wide ring of
+    taps, a faint horizontal streak, then exposure, a soft shoulder above 0.72, a 0.94 gamma lift and a vignette."""
+    v = bloom_shaders()[0]
+    f = """precision highp float; uniform sampler2D u_tex; uniform vec2 u_px; uniform float u_gain; uniform float u_thr; uniform float u_sigma; uniform float u_exposure;
+      varying vec2 v_uv;
+      float lum(vec3 c) { return dot(c, vec3(0.2126, 0.7152, 0.0722)); }
+      vec3 bright(vec3 c) { float l = lum(c); float k = max(l - u_thr + 0.15, 0.0); return c * (k * k / (k + 0.20)) / max(l, 0.001); }
+      void main() {
+        vec3 c = texture2D(u_tex, v_uv).rgb;
+        vec3 n = texture2D(u_tex, v_uv + vec2(0.0, u_px.y)).rgb;
+        vec3 s = texture2D(u_tex, v_uv - vec2(0.0, u_px.y)).rgb;
+        vec3 e = texture2D(u_tex, v_uv + vec2(u_px.x, 0.0)).rgb;
+        vec3 w = texture2D(u_tex, v_uv - vec2(u_px.x, 0.0)).rgb;
+        float l = lum(c);
+        float hi = max(l, max(max(lum(n), lum(s)), max(lum(e), lum(w))));
+        float lo = min(l, min(min(lum(n), lum(s)), min(lum(e), lum(w))));
+        c = mix(c, (c * 4.0 + n + s + e + w) / 8.0, smoothstep(0.08, 0.5, hi - lo) * 0.26);
+        vec3 tight = vec3(0.0);
+        vec3 wide = vec3(0.0);
+        for (int i = 0; i < 12; i++) {
+          float a = 6.2831853 * (float(i) + 0.5) / 12.0;
+          vec2 d = vec2(cos(a), sin(a)) * u_px * u_sigma;
+          tight += bright(texture2D(u_tex, v_uv + d * 0.28).rgb);
+          wide += bright(texture2D(u_tex, v_uv + d).rgb);
+          wide += bright(texture2D(u_tex, v_uv + d * 2.5).rgb) * 0.36; }
+        vec3 glow = tight / 12.0 * 0.85 + wide / 16.32 * 0.70;
+        vec3 streak = vec3(0.0);
+        for (int i = 1; i < 5; i++) {
+          vec2 d = vec2(u_px.x * u_sigma * float(i) * 1.8, 0.0);
+          streak += (bright(texture2D(u_tex, v_uv + d).rgb) + bright(texture2D(u_tex, v_uv - d).rgb)) / float(i + 1); }
+        vec3 col = (c + (glow * 1.5 + streak * 0.08) * u_gain) * u_exposure;
+        float peak = max(col.r, max(col.g, col.b));
+        col /= 1.0 + max(peak - 0.72, 0.0) * 0.48;
+        col = pow(max(col, 0.0), vec3(0.94));
+        vec2 p = v_uv * 2.0 - 1.0;
+        col *= 1.0 - 0.22 * smoothstep(0.3, 1.5, length(p));
+        gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0); }"""
+    return v, glsl(f)
 
 
 def bloom_shaders() -> tuple[str, str]:
@@ -860,10 +1050,10 @@ ADD_APP = ("<BlendMode DEF='add' sourceColorFactor='ONE' destinationColorFactor=
 ADD_USE = "<BlendMode USE='add'/><DepthMode USE='nodepth'/>"
 
 
-def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: float = 2.5, sparks: int = 160) -> tuple[str, dict]:
+def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: float = 2.5, sparks: int = 160, look: str = "v2") -> tuple[str, dict]:
     det = ev["detector"]
     tr, ca = det["tracker"], det["calorimeter"]
-    sh = shaders_v2()
+    sh = shaders_v2(look)
     out: list[str] = []
     w = out.append
     title = esc("Collider event " + str(ev.get("id", "")))
@@ -874,8 +1064,11 @@ def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: flo
     for comp, lvl in (("Shaders", 3), ("Rendering", 3), ("ParticleSystems", 2), ("X_ITE", 1)):
         w(f"<component name='{comp}' level='{lvl}'/>")
     w(f"<meta name='title' content='{title}'/>")
-    w("<meta name='description' content='One generated collider event, look v2: screen-space ribbon tracks in merged strips, a spiky calorimeter crown from the real tower energies, Fresnel shells, flash, haze and sparks.'/>")
-    w("<meta name='generator' content='kit/examples/hep/build_event_scene.py --look v2'/>")
+    if look == "v3":
+        w("<meta name='description' content='One generated collider event, look v3: resolution-scaled ribbon tracks in merged strips, a calorimeter crown from the real tower energies with a red hot end, machined glass shells, a flash with a shock ring, lit haze and sparks.'/>")
+    else:
+        w("<meta name='description' content='One generated collider event, look v2: screen-space ribbon tracks in merged strips, a spiky calorimeter crown from the real tower energies, Fresnel shells, flash, haze and sparks.'/>")
+    w(f"<meta name='generator' content='kit/examples/hep/build_event_scene.py --look {look}'/>")
     w(f"<meta name='event-id' content='{esc(str(ev.get('id', '')))}'/>")
     w(f"<meta name='event-sha256' content='{event_sha256}'/>")
     w(f"<meta name='slow-motion' content='track heads advance at {SPEED} m/s; light moves 2.998e8 m/s'/>")
@@ -899,6 +1092,8 @@ def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: flo
     e90 = es[min(len(es) - 1, int(0.9 * len(es)))] if es else 1.0     # the event's own 90th percentile tower energy
     for key, nm in names.items():
         extra = f"<field name='u_e90' type='SFFloat' accessType='inputOutput' value='{sig(e90)}'/>" if key == "twr2" else ""
+        if look == "v3" and key in ("trk2", "twr2"):
+            extra += "<field name='u_resolutionScale' type='SFFloat' accessType='inputOutput' value='1'/>"
         w(shader_node_v2(nm, *sh[key], extra))
     w(ADD_APP)
     w("</Appearance></Shape></Switch>")
@@ -1029,15 +1224,16 @@ def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: flo
         w(f"<ROUTE fromNode='clock' fromField='fraction_changed' toNode='{nm}' toField='u_phase'/>")
     w("</Scene></X3D>")
     text = "\n".join(out) + "\n"
-    return text, {"look": "v2", "tracks": len(tracks), "track_points": npoints, "track_shapes": len(chunks), "track_vertices": sum(c.vertices() for c in chunks),
+    return text, {"look": look, "tracks": len(tracks), "track_points": npoints, "track_shapes": len(chunks), "track_vertices": sum(c.vertices() for c in chunks),
                   "muon_extensions": nmu, "towers": len(towers), "tower_spikes": nspikes, "species": species_count,
                   "bytes": len(text.encode()), "shader_nodes": len(names), "route_count": len(names)}
 
 
 BLOOM_GAIN = {"endon": 0.55, "three_quarter": 0.22, "side": 0.22}   # the oblique views see the face wall and the glass broadside
+BLOOM_GAIN_V3 = {"endon": 0.65, "three_quarter": 0.45, "side": 0.45}  # v3 adds the glow to the image instead of screening it
 
 
-def bloom_wrapper(scene_text: str, view: str, w: int = 960, h: int = 540, gain: float | None = None, thr: float = 0.65, sigma: float = 11.0) -> str:
+def bloom_wrapper(scene_text: str, view: str, w: int = 960, h: int = 540, gain: float | None = None, thr: float = 0.65, sigma: float = 11.0, look: str = "v2") -> str:
     """The un-bloomed scene inside a RenderedTexture, drawn by a full-screen threshold-blur shader (X3D 4.1; Texturing 4).
     X_ITE's RenderedTexture renders from the LAST Viewpoint among its children, so each view gets its own wrapper:
     the chosen Viewpoint is moved after the others. The ROUTEs move out of the texture, after every DEF."""
@@ -1052,16 +1248,19 @@ def bloom_wrapper(scene_text: str, view: str, w: int = 960, h: int = 540, gain: 
     body = re.sub(r"<Viewpoint [^>]*/>\n?", "", body)
     body = body.replace("<TimeSensor ", "".join(v for v in vps if v is not chosen) + chosen + "<TimeSensor ", 1)
     head = head.replace("<component name='X_ITE' level='1'/>", "<component name='X_ITE' level='1'/>\n<component name='Texturing' level='4'/>")
-    head = re.sub(r"<meta name='generator' content='[^']*'/>", "<meta name='generator' content='kit/examples/hep/build_event_scene.py --look v2 --bloom (wrapper of the witnessed scene)'/>", head)
-    v, f = bloom_shaders()
-    fld = lambda n, t, val: f"<field name='{n}' type='{t}' accessType='initializeOnly' value='{val}'/>"  # noqa: E731
+    head = re.sub(r"<meta name='generator' content='[^']*'/>", f"<meta name='generator' content='kit/examples/hep/build_event_scene.py --look {look} --bloom (wrapper of the witnessed scene)'/>", head)
+    v, f = bloom_shaders_v3() if look == "v3" else bloom_shaders()
+    acc = "inputOutput" if look == "v3" else "initializeOnly"     # v3: the page tunes gain, exposure and size live
+    if look == "v3" and gain is None:
+        gain, thr = BLOOM_GAIN_V3[view], 0.42
+    fld = lambda n, t, val: f"<field name='{n}' type='{t}' accessType='{acc}' value='{val}'/>"  # noqa: E731
     return ("<?xml version='1.0' encoding='UTF-8'?>\n<X3D profile='Immersive' version='4.1'>\n<head>" + head + "</head>\n<Scene>\n"
             "<NavigationInfo type='\"NONE\"' headlight='false'/>\n<Viewpoint DEF='vp_screen' description='screen' position='0 0 5'/>\n"
             "<Shape DEF='bloom'><Appearance><ComposedShader DEF='bloomShader' language='GLSL'>"
             f"<field name='u_tex' type='SFNode' accessType='inputOutput'><RenderedTexture DEF='scene_rt' width='{w}' height='{h}' "
             "singleFrame='false' updateInterval='0' repeatS='false' repeatT='false'>" + body + "</RenderedTexture></field>"
             + fld("u_px", "SFVec2f", f"{1.0 / w:.6g} {1.0 / h:.6g}") + fld("u_gain", "SFFloat", f"{gain:g}") + fld("u_thr", "SFFloat", f"{thr:g}")
-            + fld("u_sigma", "SFFloat", f"{sigma:g}")
+            + fld("u_sigma", "SFFloat", f"{sigma:g}") + (fld("u_exposure", "SFFloat", "1.08") if look == "v3" else "")
             + f"<ShaderPart type='VERTEX' url='\"data:x-shader/x-vertex,{esc(v)}\"'/>"
             f"<ShaderPart type='FRAGMENT' url='\"data:x-shader/x-fragment,{esc(f)}\"'/></ComposedShader></Appearance>"
             "<IndexedFaceSet solid='false' coordIndex='0 1 2 3 -1'><Coordinate point='-1 -1 0 1 -1 0 1 1 0 -1 1 0'/></IndexedFaceSet></Shape>\n"
@@ -1075,25 +1274,25 @@ def main(argv=None) -> int:
     ap.add_argument("--cycle", type=float, default=CYCLE_S)
     ap.add_argument("--max-turns", type=float, default=2.5)
     ap.add_argument("--labels", type=int, default=8)
-    ap.add_argument("--look", choices=("v1", "v2"), default=None, help="v2: merged ribbons, spiky crown, glass shells (default: v1, unchanged)")
-    ap.add_argument("--bloom", action="store_true", help="v2 only: also write <stem>.bloom.<view>.x3d, the RenderedTexture bloom wrapper per view")
-    ap.add_argument("--sparks", type=int, default=420, help="v2 only: ParticleSystem sparks at the vertex (0 for none)")
+    ap.add_argument("--look", choices=("v1", "v2", "v3"), default=None, help="v2: merged ribbons, spiky crown, glass shells; v3: v2 with the fidelity pass of docs/COLLIDER-LOOK-V3.md (default: v1, unchanged)")
+    ap.add_argument("--bloom", action="store_true", help="v2 and v3: also write <stem>.bloom.<view>.x3d, the RenderedTexture bloom wrapper per view")
+    ap.add_argument("--sparks", type=int, default=420, help="v2 and v3: ParticleSystem sparks at the vertex (0 for none)")
     a = ap.parse_args(argv)
     raw = Path(a.event).read_bytes()
     ev = json.loads(raw)
     stem = Path(a.event).name.split(".")[0]
     out = Path(a.outdir)
     out.mkdir(parents=True, exist_ok=True)
-    if a.look == "v2":
-        text, stats = build_v2(ev, hashlib.sha256(raw).hexdigest(), a.cycle, a.max_turns, a.sparks)
+    if a.look in ("v2", "v3"):
+        text, stats = build_v2(ev, hashlib.sha256(raw).hexdigest(), a.cycle, a.max_turns, a.sparks, a.look)
     else:
         if a.bloom:
-            ap.error("--bloom needs --look v2")
+            ap.error("--bloom needs --look v2 or v3")
         text, stats = build(ev, hashlib.sha256(raw).hexdigest(), a.cycle, a.max_turns, a.labels)
     (out / f"{stem}.x3d").write_text(text, encoding="utf-8")
     if a.bloom:
         for view in V2_VIEWS:
-            (out / f"{stem}.bloom.{view}.x3d").write_text(bloom_wrapper(text, view), encoding="utf-8")
+            (out / f"{stem}.bloom.{view}.x3d").write_text(bloom_wrapper(text, view, look=a.look), encoding="utf-8")
     ev["scene"] = f"{stem}.x3d"
     (out / f"{stem}.event.json").write_text(json.dumps(ev, separators=(",", ":")) + "\n", encoding="utf-8")
     print(json.dumps({"scene": f"{stem}.x3d", **stats}, sort_keys=True))

@@ -628,6 +628,20 @@ def merged_controls():
     if v2(EV) != B2:
         raise RuntimeError("DETERMINISM: two v2 builds of one event differ")
     rows.append({"case": "look v2 build is deterministic (two builds byte-identical; positive control)", "passed": True})
+    k = LOW["i"]
+
+    # ---- look v3 (the fidelity pass): new shaders over the SAME geometry and attributes, so it must read exactly as v2
+    v3 = lambda ev: bs.build_v2(ev, SHA, look="v3")[0]  # noqa: E731
+    B3, Z3 = v3(EV), v3(ZMM)
+    ok("look v3: exact Z -> mu mu (positive control)", lambda: run(ZMM, Z3))
+    ok("look v3: toy shower of 40 (positive control)", lambda: run(EV, B3))
+    geo = lambda txt: [(e.tag, sorted(e.attrib.items())) for e in ET.fromstring(txt.split("?>", 1)[1]).iter()  # noqa: E731
+                       if e.tag in ("Coordinate", "FloatVertexAttribute", "TriangleStripSet", "IndexedTriangleSet", "Normal")]
+    if geo(B3) != geo(B2) or geo(Z3) != geo(Z2) or B3 == B2:
+        raise RuntimeError("LOOK V3: v3 must change only shaders, never coordinates, strips or attributes")
+    rows.append({"case": "look v3 keeps every coordinate, strip and vertex attribute of v2 and changes the shaders (positive control)", "passed": True})
+    bad("look v3: one track's strip deleted from the merged set", "EVT_SCENE_BIJECTION",
+        lambda: run(EV, mut(B3, strip_mut("trkset_0", lambda st, _r: st.pop(strip_of_track(st, k))))), f"trk_{k}")
 
     k = LOW["i"]
     # ---- the convention must be declared, or a merged shape is never read
