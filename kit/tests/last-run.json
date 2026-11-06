@@ -99,6 +99,28 @@
             "expected": "exit 2"
           }
         ],
+        "cli_subprocess": [
+          {
+            "command": "traps",
+            "fixture": "clean",
+            "status": "pass"
+          },
+          {
+            "command": "traps",
+            "fixture": "trap",
+            "status": "fail"
+          },
+          {
+            "command": "pagetraps",
+            "fixture": "clean",
+            "status": "pass"
+          },
+          {
+            "command": "pagetraps",
+            "fixture": "trap",
+            "status": "fail"
+          }
+        ],
         "optimized": false,
         "pagetraps": [
           {
@@ -601,6 +623,28 @@
             "case": "CLI: a bug inside a witness exits 2 (instrument), never 1 (violation)",
             "caught": "exit 2",
             "expected": "exit 2"
+          }
+        ],
+        "cli_subprocess": [
+          {
+            "command": "traps",
+            "fixture": "clean",
+            "status": "pass"
+          },
+          {
+            "command": "traps",
+            "fixture": "trap",
+            "status": "fail"
+          },
+          {
+            "command": "pagetraps",
+            "fixture": "clean",
+            "status": "pass"
+          },
+          {
+            "command": "pagetraps",
+            "fixture": "trap",
+            "status": "fail"
           }
         ],
         "optimized": true,

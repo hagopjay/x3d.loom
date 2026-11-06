@@ -144,6 +144,8 @@ def cmd_metalsite(a) -> dict:
     """Metal-site witness over PDB-format structures or trajectories; writes the 'metal-site' witness."""
     root = Path(a.root)
     subject = candidate(root)["sha256"]
+    need(Path(a.spec).resolve().is_relative_to(root.resolve()), "SITE_SPEC",
+         "the spec must be a file inside the candidate, so the candidate hash covers its thresholds")
     spec = json.loads(Path(a.spec).read_text())
     files = _files(root, a.files)
     try:
@@ -152,11 +154,18 @@ def cmd_metalsite(a) -> dict:
         status, reason = "pass", ""
     except GateError as e:
         res, status, reason = {"rejected": e.code, "detail": e.detail}, "fail", f"{e.code}: {e.detail}"
+    except Exception as e:  # an instrument crash is an error record, never a pass and never a missing record (law 19)
+        res, status, reason = {"error": type(e).__name__, "detail": str(e)[:600]}, "error", f"{type(e).__name__}: {e}"
     sites = sum(v["inventory"]["metals_checked"] for v in res.values() if isinstance(v, dict) and "inventory" in v)
-    return write_witness(a.evidence, root, subject, "metal-site", status, "C",
+    declared = [s for s in spec.get("sites", []) if isinstance(s, dict)] if isinstance(spec, dict) else []
+    coverage = {"files": len(files), "sites": sites,
+                "class_declared": sum(bool(s.get("class")) for s in declared),
+                "tau4_floor_declared": sum(s.get("tau4_min") is not None for s in declared),
+                "min_intact_fraction": spec.get("min_intact_fraction", 1.0) if isinstance(spec, dict) else None}
+    return write_witness(a.evidence, root, subject, a.name, status, "C",
                          {"tool": "loomkit.metalsite", "rules_sha256": sha256_file(Path(metalsite.__file__)),
                           "spec_sha256": sha256_file(Path(a.spec))},
-                         measurements=res, coverage={"files": len(files), "sites": sites},
+                         measurements=res, coverage=coverage,
                          limitations=["PDB format only; distance windows are typical values (L), declared in the spec."],
                          reason=reason)
 
@@ -284,6 +293,7 @@ def main(argv: list[str] | None = None) -> int:
     p = common("foldback"); p.add_argument("--patch", required=True)
     p = common("sci"); p.add_argument("--profile", required=True)
     p = common("metalsite"); p.add_argument("--files", required=True); p.add_argument("--spec", required=True)
+    p.add_argument("--name", default="metal-site")
     p = common("hepevent"); p.add_argument("--events", required=True); p.add_argument("--spec", required=True)
     p = common("play"); p.add_argument("--tapes", required=True); p.add_argument("--levels", required=True)
     p.add_argument("--runner", required=True); p.add_argument("--node", default="node"); p.add_argument("--repeats", type=int, default=2)

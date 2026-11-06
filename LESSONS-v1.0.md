@@ -99,12 +99,25 @@ The two Mashtots standalones arrived well tested: 148 and 74 feature checks, cle
 29. **Authored beside measured.** The slide show labels design choices "Authored" and shows the measured counterpart next to them, with their agreement measured (here, none: Spearman +0.02). The Loom adopts **Authored** as a label like Synthetic, never a grade.
 30. **Money and keys stay on the server and survive restarts.** The cap is rebuilt from a ledger, the key stays server-side, and recorded mode is the default. The demo launcher strips keys, so the demo page cannot spend. *(Law 11; failure mode 100.)*
 
+## 6b. From recreating Manifold of Emotion (6 Nov)
+
+31. **Test the artefact alone.** A saved X3D moment looked right inside its page and drew opaque sheets without it, because the blending lived in the page. Loaded alone, it is now checked against the live view. *(Law 37; failure mode 103.)*
+32. **Where the frame is drawn, read it there.** A post pass on its own animation-frame loop sometimes saw a cleared canvas. Reading in a microtask from the renderer's own frame callback fixed it. Evidence waits for drawn frames, never for seconds. *(Failure mode 104.)*
+33. **Valid in the runtime is not valid in the standard.** X_ITE drew vertex attributes on a PointSet that X3D 4.0's schema forbids. Run the XSD before the browser. *(Failure mode 102.)*
+34. **The same three traps, again:**
+    - a capture that did not change when its cause did (unbubbled events);
+    - a look tuned on the easy case (occlusion on Reverie);
+    - replace-all edits that hit a second place.
+
+    The Loom's existing laws named each one. Reading them earlier would have saved the red runs. *(Laws 26, 28, 33; failure modes 105 to 107.)*
+35. **Fidelity is a number.** Matched frames of the original and the recreation, with controls that must fail, turned "looks close" into SSIM 0.906 to 0.960 and showed exactly which layer differed. *(Pattern G.)*
+
 ## 7. What v1.0 contains
 
 - **[LOOM-v1.md](LOOM-v1.md):**
-  - 36 laws;
+  - 37 laws;
   - the ten-step loop;
-  - 101 failure modes, each with its fix and source;
+  - 108 failure modes, each with its fix and source;
   - acceptance profiles for the Scientific Loom and each x3d.STEM study;
   - the roadmap, including the X_ITE fixture catalogue.
 - **`kit/loomkit`:** candidate binding, Grammar and Meaning on the x3d_mcp fork, 11 trap rules, science gates (builder and dependency hashes, payloads opened before they are hashed), receipts, a leak sweep. Page traps add six more two-sided rules (syntax, guarded callbacks, clock, navigation, globals, load budget) and six two-sided reading forms (inline HTML scripts, callbacks passed by name, module scope), and report what they saw. 44 negative controls pass, normal and under `python -O`.
@@ -123,5 +136,5 @@ The two Mashtots standalones arrived well tested: 148 and 74 feature checks, cle
 - ~~Wrap callbacks in the five accepted study pages.~~ **Done 5 Nov:** all six pages hardened (guarded callbacks, budgeted world loads, navigation after the scene). A new `page-traps` witness (6 rules, including a syntax check) is required by every x3d.STEM profile. Each page's browser evidence now includes a resilience probe, and all six are re-accepted.
 - **X_ITE versions differ across deliveries:** 16.5.0 (Tether), 16.5.1 (x3d.STEM), 16.6.1 (the teardown) and 16.7.0 (the MuJoCo bridge). Pin one for v1.0 fixtures and re-run EVT03 (failure mode 88) on it.
 - **Signing receipts** (law 35) is a design decision for you, not a default.
-- ~~The Mashtots slide show's callback guard.~~ **Applied 5 Nov** to `projects/mashtots-slideshow` (two pages). Re-checked live: the clock keeps running past a deliberate throw, 150 of 150 feature checks, page traps pass. The source repo `~/Projects/x3d/work/mashtots-standalones/slideshow` does not have it yet.
+- ~~The Mashtots slide show's callback guard.~~ **Applied 5 Nov** to `projects/mashtots-slideshow` (two pages). Re-checked live: the clock keeps running past a deliberate throw, 150 of 150 feature checks, page traps pass. Committed to the source repo `~/Projects/x3d/work/mashtots-standalones/slideshow` as eae4235; demo copy and repo match.
 - **Armenian text** in both Mashtots pieces waits for a native reader (flagged by the delivery).

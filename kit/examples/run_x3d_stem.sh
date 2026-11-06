@@ -26,7 +26,7 @@ case "$STUDY" in
     for w in behaviour host gpu-location paired-visual-review; do
       "$LOOM" record "$ROOT" --evidence "$EV" --name "$w" --status not_run --grade L --reason "Not run in pass 1: no scripted interaction test, no strict host copy, no GPU timing, no paired human review."
     done ;;
-  turing-garden|electron-cloud|chirp|living-heart|vortex-sound)
+  turing-garden|electron-cloud|chirp|living-heart|vortex-sound|manifold)
     "$LOOM" command "$ROOT" --evidence "$EV" --name behaviour -- python3 -E -s tools/check_browser.py
     if [ "$STUDY" = chirp ]; then
       "$LOOM" record "$ROOT" --evidence "$EV" --name listening-test --status not_run --grade L --reason "No person has listened to the published tracks on calibrated speakers; the browser run was muted and checked clocks only."
