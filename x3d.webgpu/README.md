@@ -12,7 +12,7 @@ No X3D runtime ships a WebGPU renderer as of 2026-11-06. X_ITE, the reference br
 
 | file | what it is |
 |---|---|
-| [SPEC.md](SPEC.md) | **The normative scaffold.** Goals, non-goals, terms, 5 conformance levels (L0 static Interchange to L4 Immersive-plus, mapped to X3D profiles and components), 106 numbered requirements in 11 groups (R-PARSE, R-SCENE, R-EVENT, R-SAI, R-RENDER, R-SHADER, R-SPLAT, R-PICK, R-PERF, R-TETHER, R-SEC), each with MUST, SHOULD or MAY, a rationale and a verification method; 32 TBD items with owners left blank |
+| [SPEC.md](SPEC.md) | **The normative scaffold.** Goals, non-goals, terms, 5 conformance levels (L0 static Interchange to L4 Immersive-plus, mapped to X3D profiles and components), 106 numbered requirements in 11 groups (R-PARSE, R-SCENE, R-EVENT, R-SAI, R-RENDER, R-SHADER, R-SPLAT, R-PICK, R-PERF, R-TETHER, R-SEC), each with MUST, SHOULD or MAY, a rationale and a verification method; 32 TBD items with owners left blank (TBD-04 closed on 2026-11-06) |
 | [STATE.md](STATE.md) | X_ITE today (scorecard, cadence, coupling, roadmap evidence), the X3D runtime field, the spec status, the comparables, the WebGPU platform matrix, the owner's machine, the sandbox probe |
 | [PATHS.md](PATHS.md) | Options A to G scored, what each keeps and loses, the component-to-WebGPU map and field-level friction, KHR_interactivity against ROUTE, the GLSL to WGSL and TSL port notes, the recommendation |
 | [BABYLON.md](BABYLON.md) | **Path G**, written separately: how Babylon.js should speak X3D (a renderer-agnostic TypeScript X3D runtime plus a thin Babylon SceneLoader plugin; 17.5 to 32 person-weeks for the project's scenes, 25.5 to 52 for roughly X_ITE's coverage) |

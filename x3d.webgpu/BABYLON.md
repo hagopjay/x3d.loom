@@ -89,7 +89,7 @@ Babylon's glTF loader has 43 named `KHR_`/`EXT_`/`MSFT_` extension handlers, 32 
 
 ## 3. ROUTEs, the event cascade, Script and SAI
 
-### 3.1 The frame loop (L, mapped from 19775-1 section 4.4.8)
+### 3.1 The frame loop (19775-1 clause 4.4.8.3 opened, C; this mapping onto Babylon hooks is L)
 
 | step, once per Babylon frame | hook | what the runtime does |
 |---|---|---|

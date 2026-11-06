@@ -4,7 +4,7 @@ Date 2026-11-06. Status: design scaffold, docs only, nothing built. This is path
 
 Grades: **C** is measured here with the named instrument, **L** is read or reasoned from sources, **S** is suspected. Crate versions and dates are from the index.crates.io sparse index (`pubtime`, fetched 2026-11-06, C). Every engineer-week figure is S.
 
-**The answer.** A Rust X3D browser on wgpu can be built on today's stack: wgpu and naga 30.0.1 were published 2026-08-22T02:53Z, with WebGPU and WebGL2 for the web and Vulkan, Metal and DX12 native (C). The problem is spec breadth, not the GPU API: X3DUOM 4.0 has 260 concrete entries in 36 components and 4,197 field declarations, 4.1 has 267 (C). Interchange is 52 nodes, the Collider uses 33 node types and Immersive is 92 (L, componentInfo filter). Someone already published an X_ITE-faithful Rust parser (`vrml97`, `vrml`, `x3d` 0.1.0, 2026-10-11, MIT, C), and its README claims an unpublished wgpu port (S). Evaluate it first. M0 to M4 is about 40 to 70 engineer-weeks (S).
+**The answer.** A Rust X3D browser on wgpu can be built on today's stack: wgpu and naga 30.0.1 were published 2026-08-22T02:53Z, with WebGPU and WebGL2 for the web and Vulkan, Metal and DX12 native (C). The problem is spec breadth, not the GPU API: X3DUOM 4.0 has 260 concrete entries in 36 components and 4,197 field declarations, 4.1 has 267 (C). Interchange is 52 nodes, the Collider uses 33 node types and Immersive is 92 (L, componentInfo filter). Someone already published an X_ITE-faithful Rust parser (`vrml97`, `vrml`, `x3d` 0.1.0, 2026-10-11, MIT, C), and its README claims an unpublished wgpu port (S; crates.io lists no repository or homepage link for it and 11 downloads, C, 2026-11-06). Evaluate it first. M0 to M4 is about 40 to 70 engineer-weeks (S).
 
 ## 1. Prior art
 
@@ -78,7 +78,7 @@ Firefox's WebGPU is itself built on wgpu (C, gpuweb wiki). The crate name `x3d` 
 | 7 | draw (section 5) | |
 | 8 | `finishEvents` callbacks; render report if requested | R-SAI-03, R-TETHER-02 |
 
-The 19775-1 clause text was not opened (web3d.org is blocked here), so the rules above are L until TBD-04 closes. A throw out of a host callback or a Script is caught, reported and routing continues (R-EVENT-08): on X_ITE 16.5.1 one such throw froze all routing at the 13th event (C, Collider study).
+The 19775-1 V4.0 clause text is now opened (4.4.8.3 to 4.4.8.5, C, 2026-11-06): one timestamp per cascade, at most one event per field and per ROUTE per timestamp, the same rule breaks loops, and fan-in order is not significant. The spec's own per-timestamp order is camera, sensors, routes (repeated while events were generated), then particle systems, then physics; the table above maps that onto a renderer frame (L). A throw out of a host callback or a Script is caught, reported and routing continues (R-EVENT-08): on X_ITE 16.5.1 one such throw froze all routing at the 13th event (C, Collider study).
 
 ### 4.2 SAI facade
 

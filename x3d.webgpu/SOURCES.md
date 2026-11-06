@@ -86,7 +86,8 @@ All research and the adversarial re-check (43 claims, 42 verdict rows, 4 refuted
 | Web3D example archives and ConformanceNist directory pages | sourceforge.net/p/x3d/code/HEAD/tree/www.web3d.org/x3d/content/examples/ | opened | 2026-11-06 | SPEC V-CORPUS |
 | create3000/x_ite-tests `package.json` (vitest) | raw.githubusercontent.com/create3000/x_ite-tests/main/ | opened | 2026-11-06 | |
 | the x3d_mcp validator fork's schemas (`x3d-4.1.xsd`, `x3d-4.1.dtd`, `X3dUnifiedObjectModel-4.1.xml`) | the x3d_mcp clone, `src/validation/schemas/` | local | 2026-11-06 | SPEC R-TETHER-06 |
-| 19775-1 clause 4.4.8 event model | working knowledge; web3d.org blocked | not opened (L) | n/a | SPEC TBD-04 |
+| 19775-1 V4.0 Part 1 concepts, clauses 4.4.8.3 to 4.4.8.5 (execution model, loops, fan-in and fan-out) | web3d.org/documents/specifications/19775-1/V4.0/Part01/concepts.html | opened (after the network opened, 23:23Z) | 2026-11-06 | SPEC R-EVENT-01 to 03; TBD-04 closed |
+| crates.io API for the `x3d` crate (owners, repository, downloads) | crates.io/api/v1/crates/x3d | opened | 2026-11-06 | ARCHITECTURE section 1 |
 
 ## BENCHMARK.md
 

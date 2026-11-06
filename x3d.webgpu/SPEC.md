@@ -124,9 +124,9 @@ Columns: **id**, **lvl** (lowest conformance level that needs it), **key**, the 
 
 | id | lvl | key | requirement | rationale | verify |
 |---|---|---|---|---|---|
-| R-EVENT-01 | L1 | MUST | Give every event in a cascade the initiating timestamp, and let a field send or receive at most one event per timestamp | 19775-1 clause 4.4.8 as known (L; the clause text is TBD-04) | V-TRACE, V-UNIT |
-| R-EVENT-02 | L1 | MUST | Where the spec leaves fan-in order undefined, use X_ITE's recorded order | "matches X_ITE" must have one meaning (L); TBD-05 | V-TRACE |
-| R-EVENT-03 | L1 | MUST | Run each frame in this order: time, sensors, cascade until empty, Script `eventsProcessed`, bind stacks, sync, draw, `finishEvents` | X_ITE 16.7.0's render callback steps (C, source read); the mapping is L | V-TRACE |
+| R-EVENT-01 | L1 | MUST | Give every event in a cascade the initiating timestamp; let a node send at most one event per field per timestamp and one event per ROUTE per timestamp; use the same rule to break loops | 19775-1 V4.0 clauses 4.4.8.3 and 4.4.8.4 (C, clause text opened 2026-11-06) | V-TRACE, V-UNIT |
+| R-EVENT-02 | L1 | MUST | Where the spec leaves fan-in order undefined, use X_ITE's recorded order | 19775-1 4.4.8.5 (C): fan-in order is not significant and conforming worlds must accept any order, so pinning X_ITE's order is a determinism choice for V-TRACE (L); TBD-05 | V-TRACE |
+| R-EVENT-03 | L1 | MUST | Run each frame in this order: time, sensors, cascade until empty, Script `eventsProcessed`, bind stacks, sync, draw, `finishEvents` | 19775-1 4.4.8.3 (C) orders each timestamp as: camera from the bound Viewpoint, sensors, routes, repeat while events were generated, then particle systems, then physics; X_ITE 16.7.0's render callback steps (C, source read); the mapping is L | V-TRACE |
 | R-EVENT-04 | L1 | MUST | Implement TimeSensor, the 13 interpolators and SFTime as seconds since 1970 | Time 1, Interpolation 2 (C, profile table) | V-TRACE |
 | R-EVENT-05 | L2 | MUST | Implement the 7 EventUtilities nodes | Interactive (C) | V-TRACE |
 | R-EVENT-06 | L3 | MUST | Call Script `initialize` on load, `shutdown` on removal and `eventsProcessed` after its events | spec (L) | V-TRACE |
@@ -262,7 +262,7 @@ Owners are left blank on purpose. "Hand fetch" means the source sits on a host t
 | TBD-01 | The 19775-1 Annex profile tables, to confirm X_ITE's component levels | section 4 | hand fetch: web3d.org 19775-1 V4.0 | |
 | TBD-02 | Runtime node counts for Interactive and Immersive-plus | section 4 | a `python3 -I` filter over X3DUOM 4.1 | |
 | TBD-03 | What "Shaders 3" in the Collider's component list means when X_ITE's Full profile lists Shaders 1 | L4, Collider claim | X3DUOM componentInfo read | |
-| TBD-04 | Exact wording and clause numbers of the event model (cascade, loop breaking, fan-in) | R-EVENT-01 | hand fetch: web3d.org 19775-1 V4.0 concepts.html | |
+| TBD-04 | CLOSED 2026-11-06. Exact wording and clause numbers of the event model (cascade, loop breaking, fan-in) | R-EVENT-01 to 03 | opened: 19775-1 V4.0 Part 1 concepts.html, clauses 4.4.8.3 to 4.4.8.5 | |
 | TBD-05 | X_ITE's fan-in and Script order within one timestamp | R-EVENT-02 | `x_ite-node` traces | |
 | TBD-06 | Whether any body can deliver id-buffer hits within the frame, and how sensor timing changes if not | R-EVENT-07, R-PICK-02 | prototype | |
 | TBD-07 | ClipPlane minimum count and line-width semantics in 4.1 prose | R-RENDER-09, R-RENDER-04 | hand fetch: 4.1 CD prose | |
