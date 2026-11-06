@@ -12,6 +12,7 @@ The X3D Loom, consolidated: one definition, its sources, what the other model's 
 | [GLOSSARY.md](GLOSSARY.md) | The words |
 | [REVIEW-loom2.md](REVIEW-loom2.md) | Review of the 4 Nov delivery: Cabinet of Worlds, Linked Observatory, Living Archive, Constellation 3 |
 | [REVIEW-scientific.md](REVIEW-scientific.md) | Review of the first x3d.STEM delivery, the Scientific Loom Observatory: measurements, six findings, the hardening patch, 13 lessons |
+| [ZINC-FINGER.md](ZINC-FINGER.md) | **Zinc fingers under the Loom** (6 Nov): a reference animation audited for truth, the study card filled in, seven phases, and the first molecular witness, `kit/loom metalsite` (zinc coordination, ligand class, histidine donor, distances, geometry, intact fraction, units), with 13 negative controls and a rehearsal receipt on synthetic sites |
 | [X3D-STEM.md](X3D-STEM.md) | **x3d.STEM direction**: one case with four lenses (K-12 to researcher), three fidelity tiers, 11 wow-factor techniques, about 30 project ideas each with its reference control, a roadmap and a maturity ladder |
 | [proposals/](proposals/) | Patches proposed back to projects (Scientific Loom hardening) |
 | [kit/](kit/) | `loomkit` (Python standard library), profiles, templates, examples, tests |
@@ -57,6 +58,9 @@ python3 -I kit/tests/test_gates.py
 ```
 ```bash
 kit/examples/run_data_city.sh
+```
+```bash
+python3 -I kit/tests/test_metalsite.py && kit/examples/run_zinc_site.sh
 ```
 ```bash
 python3 -I kit/examples/check_all_foldbacks.py

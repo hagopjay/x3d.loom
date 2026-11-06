@@ -24,7 +24,7 @@ import sys
 from pathlib import Path
 
 from . import accept as acc
-from . import foldback, grammar, pagetraps, picture, receipt, sci, sweep, traps
+from . import foldback, grammar, metalsite, pagetraps, picture, receipt, sci, sweep, traps
 from .core import GateError, InstrumentError, candidate, need, portable, sha256_file, write_witness
 
 
@@ -136,6 +136,27 @@ def cmd_sci(a) -> dict:
                          reason=reason)
 
 
+def cmd_metalsite(a) -> dict:
+    """Metal-site witness over PDB-format structures or trajectories; writes the 'metal-site' witness."""
+    root = Path(a.root)
+    subject = candidate(root)["sha256"]
+    spec = json.loads(Path(a.spec).read_text())
+    files = _files(root, a.files)
+    try:
+        res = metalsite.check_files(files, spec)
+        res = {portable(Path(k).relative_to(root)): v for k, v in res.items()}
+        status, reason = "pass", ""
+    except GateError as e:
+        res, status, reason = {"rejected": e.code, "detail": e.detail}, "fail", f"{e.code}: {e.detail}"
+    sites = sum(v["inventory"]["metals_checked"] for v in res.values() if isinstance(v, dict) and "inventory" in v)
+    return write_witness(a.evidence, root, subject, "metal-site", status, "C",
+                         {"tool": "loomkit.metalsite", "rules_sha256": sha256_file(Path(metalsite.__file__)),
+                          "spec_sha256": sha256_file(Path(a.spec))},
+                         measurements=res, coverage={"files": len(files), "sites": sites},
+                         limitations=["PDB format only; distance windows are typical values (L), declared in the spec."],
+                         reason=reason)
+
+
 def cmd_command(a) -> dict:
     """Adapter for a project's own gate: exit 0 pass, 1 fail, anything else error."""
     root = Path(a.root)
@@ -213,6 +234,7 @@ def main(argv: list[str] | None = None) -> int:
     p = common("grammar"); p.add_argument("--files", required=True); p.add_argument("--fork", default=str(grammar.DEFAULT_FORK))
     p = common("foldback"); p.add_argument("--patch", required=True)
     p = common("sci"); p.add_argument("--profile", required=True)
+    p = common("metalsite"); p.add_argument("--files", required=True); p.add_argument("--spec", required=True)
     p = common("command"); p.add_argument("--name", required=True)
     p = common("record"); p.add_argument("--name", required=True); p.add_argument("--status", required=True)
     p.add_argument("--grade", default="L"); p.add_argument("--reason", required=True); p.add_argument("--by", default="operator")
@@ -244,7 +266,7 @@ def main(argv: list[str] | None = None) -> int:
         elif a.cmd_name == "picture":
             out = picture.validate(json.loads(Path(a.review).read_text()), a.subject, json.loads(Path(a.frames).read_text()))
         else:
-            out = {"sci": cmd_sci, "pagetraps": cmd_pagetraps, "traps": cmd_traps, "grammar": cmd_grammar, "foldback": cmd_foldback, "command": cmd_command,
+            out = {"sci": cmd_sci, "metalsite": cmd_metalsite, "pagetraps": cmd_pagetraps, "traps": cmd_traps, "grammar": cmd_grammar, "foldback": cmd_foldback, "command": cmd_command,
                    "record": cmd_record, "accept": cmd_accept, "receipt": cmd_receipt}[a.cmd_name](a)
     except GateError as e:
         print(json.dumps({"rejected": e.code, "detail": e.detail}))
