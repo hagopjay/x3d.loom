@@ -1,4 +1,4 @@
-"""Data-true witness for the zinc finger Site scenes (law 21: no visual event without a data event).
+"""Data-true witness for the zinc finger Site scenes (the study's data-true rule: no visual event without a data event; not a numbered Loom law).
 
   python3 scene_truth.py      # run from the candidate root (structures/, specs/, scenes/); needs MDAnalysis and numpy
 

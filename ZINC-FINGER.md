@@ -87,7 +87,7 @@ P1 ran the metal-site witness on every model of 14 deposited structures (32 zinc
 
 ### F7. Fourteen Site scenes, data-true, read in a browser
 
-`kit/examples/run_zinc_scenes.sh` builds one X3D world per structure from model 1 by a stated rule (`kit/examples/zinc_site_scene.py`): every atom a Transform named after its PDB atom at its deposited coordinate; the zinc, every ligand atom, and each named side-chain donor's side chain; a bond to each ligand that **glows only while it measures under 2.5 Å** and is labelled with its length. The 2.5 Å line is a display rule, not the witness window: a bond can glow and still fail the witness (Zn–S 2.461 Å in 6FUW). Receipt `a6092f4eb0f5` over candidate `979dec13377e`, profile `zinc-scenes/v0` (C):
+`kit/examples/run_zinc_scenes.sh` builds one X3D world per structure from model 1 by a stated rule (`kit/examples/zinc_site_scene.py`): every atom a Transform named after its PDB atom at its deposited coordinate; the zinc, every ligand atom, and each named side-chain donor's side chain; a bond to each ligand that **glows only while it measures under 2.5 Å** and is labelled with its length. The 2.5 Å line is a display rule, not the witness window: a bond can glow and still fail the witness (Zn–S 2.461 Å in 6FUW). Receipt `2674de4d55a0` over candidate `979dec13377e`, profile `zinc-scenes/v0` (C):
 
 - **Grammar and meaning:** 14 of 14 valid, 0 errors and 0 warnings, at the family validator pin (x3d_mcp fork 327c5c4).
 - **Traps:** pass, and the record says what the rules judged (1,218 colour fields, 781 Materials; no ROUTE or shader, so those rules judged nothing).
@@ -104,6 +104,26 @@ An adversarial review of P0 (each finding retried by a second reviewer told to r
 - a lower-case donor key silently skipped its rule; empty windows fell back to the defaults while the record said they were declared; a tau4 floor on a five-coordinate site was ignored; the spec could sit outside the candidate.
 
 Run against the first version, 8 of the 10 new negative controls pass silently and the other 2 fail for the wrong reason (C). The same review found a bug in the public kit's own `kit/loom traps`: it raised `NameError` on every run (it referred to a variable from the page-traps command), and the tests never ran the command itself. Public snapshot 4 fixed it upstream and added CLI controls that drive the command end to end; this branch takes that fix and drops its own, so the scenes traps witness was run again on the upstream instrument and the scenes receipt re-issued.
+
+### F9. A second model's re-render: the data held, the look improved, the provenance did not
+
+Another model returned a single-file three.js re-render of the private Site Atlas, built from our 14 receipted X3D scenes. Three audits and a skeptic per audit found the following (C unless marked):
+
+- **The data held.** All 554 atoms sit at 0.000 Å from our scenes and PDB model 1. All 122 distances and the under-2.5 Å glow rule are exact.
+- **The look is genuinely better** (S for the look itself): physically based materials, tone mapping, darker opaque tubes, donor-naming label cards, a coordination cage, and a file that stands alone (law 37).
+- **It also introduced new faults:**
+  - zinc drawn with carbon's material (an "Zn" versus "ZN" key);
+  - a provenance line naming X_ITE as its viewer;
+  - a superseded receipt cited;
+  - a self-graded "[ C ]";
+  - 4K stills that drop the red verdict;
+  - a cage drawn over two dark contacts.
+- **It exposed three faults of ours, now fixed:**
+  - a re-issued receipt with no back-link (now chained: scenes receipt 2674de4d55a0 points back to fc37e514b2a7);
+  - a lost output entry in that receipt;
+  - our witness misquoting law 21.
+
+The full record, the fold-back list and the proposed law are in [runs/zinc-remix-review-20261106/REVIEW.md](runs/zinc-remix-review-20261106/REVIEW.md).
 
 ## 2. The study card
 
