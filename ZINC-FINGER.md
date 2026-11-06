@@ -252,6 +252,6 @@ This repository is a public snapshot of a private working repository, and the ne
 
 - `kit/loomkit/metalsite.py`; the `metalsite` subcommand in `kit/loomkit/cli.py`;
 - `kit/tests/test_metalsite.py`, the traps CLI controls in `kit/tests/test_gates.py`;
-- `kit/profiles/zinc-site.json`, `zinc-structures.json`, `zinc-structures-full.json`, `zinc-scenes.json`;
-- `kit/examples/`: `zinc_site_fixtures.py`, `run_zinc_site.sh`, `zinc_structures.py`, `zinc_cross_check.py`, `zinc_census.py`, `run_zinc_structures.sh`, `zinc_site_scene.py`, `zinc_scene_truth.py`, `zinc_scene_truth_controls.py`, `zinc_render.cjs`, `run_zinc_scenes.sh`;
-- `runs/zinc-site-20261106/`, `runs/zinc-structures-20261106/`, `runs/zinc-scenes-20261106/`, this page and its README row.
+- `kit/profiles/zinc-site.json`, `zinc-structures.json`, `zinc-structures-full.json`, `zinc-scenes.json`, `zinc-scenes-v2.json`;
+- `kit/examples/`: `zinc_site_fixtures.py`, `run_zinc_site.sh`, `zinc_structures.py`, `zinc_cross_check.py`, `zinc_census.py`, `run_zinc_structures.sh`, `zinc_site_scene.py`, `zinc_scene_truth.py`, `zinc_scene_truth_controls.py`, `zinc_render.cjs`, `run_zinc_scenes.sh`, and for look v2 `zinc_site_scene_v2.py`, `zinc_studio_env.py`, `zinc_scene_truth_v2.py`, `zinc_scene_truth_v2_controls.py`, `zinc_render_v2.cjs`, `run_zinc_scenes_v2.sh`;
+- `runs/zinc-site-20261106/`, `runs/zinc-structures-20261106/`, `runs/zinc-scenes-20261106/`, `runs/zinc-scenes-v2-20261106/`, `runs/zinc-remix-review-20261106/`, this page and its README row.
