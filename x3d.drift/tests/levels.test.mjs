@@ -1,7 +1,7 @@
 // The shipped circuits against the track contract (CONTRACT.md section 3), read exactly as the sim
 // reads them (engine/sim.js parseTrack on the level bytes), plus the geometry the sim relies on:
 //   node tests/levels.test.mjs           (about 2 s)
-// Per level in levels/MANIFEST.json: manifest sha256 and sample count match the file; samples about
+// Per level in levels/MANIFEST.json: manifest sha256, sample count and medal targets match the file; samples about
 // 2 m apart on a closed loop with no kinks; half widths and walls sane; at least 12 checkpoints in
 // order; sectors inside the checkpoint list; a 6-slot grid behind the line on the asphalt, facing
 // along the road with room between cars; zones and props well formed and inside the walls; the
@@ -25,6 +25,9 @@ for (const lv of man.levels) {
   const T = parseTrack(text), n = T.n, id = lv.id;
   check(`${id}: manifest sha256, bytes and samples match the file`, sha === lv.sha256 && Buffer.byteLength(text) === lv.bytes && n === lv.samples && T.id === id,
     `n ${n}, L ${T.L.toFixed(1)} m`);
+  const mt = lv.targets || {};
+  check(`${id}: manifest medal targets (what the page shows before loading) equal the level's metadata`,
+    Object.keys(T.targets).every(k => mt[k] === T.targets[k]), JSON.stringify(mt));
   // spacing, closure, kinks
   let lo = 1e9, hi = 0, kink = 0, kinkAt = -1;
   for (let i = 0; i < n; i++) {

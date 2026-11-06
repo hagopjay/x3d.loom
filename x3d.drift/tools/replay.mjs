@@ -2,13 +2,15 @@
 //   node tools/replay.mjs <tape.json> [--level path/to/level.x3d]
 // The level is found by the tape's file name in levels/, then tests/fixtures/ (the one whose
 // sha256 matches the tape wins). state is "won" when the recorded goal is met: a valid lap for an
-// attack tape, the stated medal or better for a rush tape (CONTRACT.md section 10).
+// attack tape, the stated medal or better for a rush tape (CONTRACT.md section 10), the finish of
+// a race or tandem tape (the player crossed the line; AI rivals and contact replay inside the sim),
+// the last tick of a free tape. The rule lives in engine/goal.js (the page uses the same one).
 import { readFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { parseTrack, createSim, step, hashSim, summary, ENGINE_VERSION } from '../engine/sim.js';
 import { decodeTape, simOptionsFromTape } from '../engine/tape.js';
-import { medalRank } from '../engine/race.js';
+import { goalReached, goalState } from '../engine/goal.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 
@@ -23,20 +25,16 @@ export function replay(tape, text) {
   for (let i = 0; i < words.length; i++) {
     one[0] = words[i];
     step(sim, one);
-    if (goalTick < 0) {
-      const r = sim.race;
-      if (tape.mode === 'attack' && r.lapTimes.some(l => l.valid)) goalTick = sim.tick;
-      if (tape.mode === 'rush' && r.phase === 'finished' && medalRank(r.medal) >= medalRank(want)) goalTick = sim.tick;
-      if (tape.mode !== 'attack' && tape.mode !== 'rush' && i === words.length - 1) goalTick = sim.tick;
-    }
+    if (goalTick < 0 && goalReached(sim, tape.mode, want, i === words.length - 1)) goalTick = sim.tick;
   }
   const s = summary(sim), r = sim.race;
   const cpu = Number(process.hrtime.bigint() - t0) / 1e6;
   const out = { tape: tape.level.replace(/\.x3d$/, '') + '-' + tape.mode, level: tape.level, level_sha256: sha, level_sha256_tape: tape.level_sha256,
     engine: ENGINE_VERSION, engine_tape: tape.engine, mode: tape.mode, car: tape.car, ticks: words.length,
-    state: goalTick >= 0 ? 'won' : (r.phase === 'finished' ? 'lost' : 'unfinished'), hash: hashSim(sim), frame: sim.tick, goal_tick: goalTick };
+    state: goalState(goalTick, sim), hash: hashSim(sim), frame: sim.tick, goal_tick: goalTick };
   if (tape.mode === 'attack') { out.lapTime = r.bestLap > 0 ? +r.bestLap.toFixed(4) : null; out.validLaps = s.validLaps; out.medal = r.medal; }
   else if (tape.mode === 'rush') { out.score = s.score; out.medal = r.medal; out.medal_stated = want; }
+  else if (tape.mode === 'race' || tape.mode === 'tandem') { out.position = s.position; out.results = s.results; }
   out.expect = tape.expect; out.cpu_ms = +cpu.toFixed(1); out.node = process.version;
   return out;
 }

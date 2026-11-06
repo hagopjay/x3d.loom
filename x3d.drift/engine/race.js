@@ -4,13 +4,17 @@
 // clipping zones, positions and overtakes, tandem scoring and grades, medals. Events go into
 // race.events, which sim.step() clears at the start of every tick.
 import { arcDelta } from './track.js';
-import { clamp, DEG } from './fmath.js';
+import { clamp, DEG, datan2, wrapPi } from './fmath.js';
 
 export const HZ = 120;
 export const MEDALS = ['none', 'bronze', 'silver', 'gold', 'platinum'];
 export const RULES = {
   driftSlip: 12 * DEG, driftSpeed: 25 / 3.6, maxOffWheels: 2,
   grace: 2.0, multStep: 0.5, multEvery: 2.0, multMax: 6, transitionWindow: 1.0, continuityGap: 0.5,
+  // a transition (+1) needs a real slide on the old side (>= 20 deg for 0.35 s), the new side to reach
+  // 20 deg within the window, and 1.2 s since the last one; the car's course must also have turned 15 deg
+  // during the old side's slide, so a wobble (manji) down a straight is not a transition
+  transitionSlip: 20 * DEG, transitionHold: 0.35, transitionCooldown: 1.2, transitionStep: 1, transitionTurn: 15 * DEG,
   crashDv: 1.2,              // m/s of impulse/mass that loses a pending chain
   conePenalty: 250,
   clipDist: 2.0, perfectDist: 1.0, perfectSlip: 35 * DEG,
@@ -33,6 +37,7 @@ export function createRace(sim) {
     // drift scoring (player car)
     score: 0, banked: 0, chain: 0, chainActive: false, multiplier: 1, grace: 0, bestChain: 0,
     contTime: 0, multTimer: 0, lastSign: 0, lastDriftTime: -10, driftTicks: 0, cones: 0,
+    sideHold: 0, sideTurn: 0, course: 0, flipOK: false, flipTime: -10, lastTransition: -10,
     zone: null, zonePass: -1, zoneClipDone: false, zonePerfectDone: false,
     timer: mode === 'rush' ? RULES.rushTime : 0, startTick: -1,
     // racing
@@ -40,6 +45,8 @@ export function createRace(sim) {
     tandem: mode === 'tandem' ? { lead: -1, distance: 0, proximity: 0, angleMatch: 0, lineMatch: 0, score: 0, leadTicks: 0, bothTicks: 0, contacts: 0, quality: 0, grade: 'D' } : null,
     medal: 'none', results: null, events: [],
   };
+  const pc = sim.cars[r.player];
+  r.targets = medalTargets(T.targets, pc.id, pc.tune.grip, sim.surface);
   for (let i = 0; i < sim.cars.length; i++) r.positions.push(i);
   if (mode === 'free' || mode === 'attack') { r.phase = 'running'; r.startTick = 0; }
   else if (mode === 'race' || mode === 'tandem') { r.phase = 'countdown'; r.countdown = RULES.countdown; }
@@ -53,16 +60,44 @@ export function createRace(sim) {
 /** True while cars must stay on the grid (brakes held, engine may rev). */
 export function heldCars(race) { return race.phase === 'countdown' || (race.phase === 'grid' && race.mode !== 'rush'); }
 
-function medalRush(T, score) {
-  const t = T.targets;
+/**
+ * Medal targets for one run. The level's targets are for a stock RONIN on the dry; every car, the
+ * wet and the grip tune move them by the pace the bots measured (tools/bot.mjs on the five circuits,
+ * geometric means against RONIN), so a medal means the same drive whatever was picked:
+ *   lap targets x MEDAL_PACE[car].lap x (wet ? 1.16) x gripLap(grip)
+ *   rush targets x MEDAL_PACE[car].rush x (wet ? 1.3) x gripRush(grip)
+ * grip fits: lap ~ grip^-0.45, rush ~ grip^-1.5 (2nd-order expansions about 1, inside 0.8..1.2).
+ * Laps round to 0.1 s and scores to 50 points.
+ */
+export const MEDAL_PACE = {
+  koi: { lap: 1.04, rush: 0.85 }, ronin: { lap: 1, rush: 1 }, tempest: { lap: 0.957, rush: 0.35 }, banshee: { lap: 0.974, rush: 1.4 },
+};
+export const MEDAL_WET = { lap: 1.16, rush: 1.3 };
+export function medalScale(carId, grip, surface) {
+  const p = MEDAL_PACE[carId] || MEDAL_PACE.ronin, wet = surface === 'wet';
+  const d = (grip > 0 ? grip : 1) - 1;
+  const lap = p.lap * (wet ? MEDAL_WET.lap : 1) * (1 - 0.45 * d + 0.326 * d * d);
+  const rush = p.rush * (wet ? MEDAL_WET.rush : 1) * (1 - 1.5 * d + 1.875 * d * d);
+  return { lap, rush };
+}
+export function medalTargets(base, carId, grip, surface) {
+  const k = medalScale(carId, grip, surface);
+  const l = v => v > 0 ? Math.round(v * k.lap * 10) / 10 : 0, r = v => v > 0 ? Math.round(v * k.rush / 50) * 50 : 0;
+  return { goldLap: l(base.goldLap), silverLap: l(base.silverLap), bronzeLap: l(base.bronzeLap),
+    rushBronze: r(base.rushBronze), rushSilver: r(base.rushSilver), rushGold: r(base.rushGold), rushPlatinum: r(base.rushPlatinum),
+    lapScale: k.lap, rushScale: k.rush };
+}
+
+function medalRush(race, score) {
+  const t = race.targets;
   if (t.rushPlatinum > 0 && score >= t.rushPlatinum) return 'platinum';
   if (t.rushGold > 0 && score >= t.rushGold) return 'gold';
   if (t.rushSilver > 0 && score >= t.rushSilver) return 'silver';
   if (t.rushBronze > 0 && score >= t.rushBronze) return 'bronze';
   return 'none';
 }
-function medalLap(T, lap) {
-  const t = T.targets;
+function medalLap(race, lap) {
+  const t = race.targets;
   if (!(lap > 0)) return 'none';
   if (t.goldLap > 0 && lap <= t.goldLap) return 'gold';
   if (t.silverLap > 0 && lap <= t.silverLap) return 'silver';
@@ -152,7 +187,7 @@ function closeLap(sim, race, car, ci, lapTime, start, at, ev, lapNo) {
   if (isBest) {
     race.bestLap = lapTime; race.bestLapTicks = [start, at]; race.bestSectors = race.sectors.slice();
     if (race.mode === 'attack') {
-      const m = medalLap(T, lapTime);
+      const m = medalLap(race, lapTime);
       if (medalRank(m) > medalRank(race.medal)) { race.medal = m; ev.push({ type: 'medal', car: ci, medal: m, lapTime, tick: sim.tick }); }
       race.results = { bestLap: race.bestLap, laps: race.lapTimes.length, medal: race.medal, bestLapTicks: race.bestLapTicks };
     }
@@ -175,6 +210,7 @@ function bankChain(race, ev, ci, tick) {
     ev.push({ type: 'chainBank', car: ci, points: race.chain, multiplier: race.multiplier, tick });
   }
   race.chain = 0; race.chainActive = false; race.multiplier = 1; race.contTime = 0; race.multTimer = 0; race.lastSign = 0;
+  race.sideHold = 0; race.sideTurn = 0; race.flipOK = false;
 }
 
 function inZone(T, z, s) {
@@ -190,11 +226,16 @@ function driftScore(sim, race, car, ci, ev, dt) {
   const ab = car.slip < 0 ? -car.slip : car.slip;
   const forward = car.dsTick > 0.02;
   const scoring = race.phase === 'running' && car.drifting && forward && car.offWheels <= RULES.maxOffWheels;
-  // crash loses the pending chain (banked points stay)
-  if (race.chainActive && car.collided / car.P.m > RULES.crashDv) {
+  // a crash or a reset loses the pending chain (banked points stay): R is not a way to save a chain
+  if (race.chainActive && (car.collided / car.P.m > RULES.crashDv || car.resetTick === tick)) {
     ev.push({ type: 'chainLost', car: ci, points: race.chain, tick });
     race.chain = 0; race.chainActive = false; race.multiplier = 1; race.contTime = 0; race.multTimer = 0; race.lastSign = 0;
+    race.sideHold = 0; race.sideTurn = 0; race.flipOK = false;
   }
+  // course (velocity heading) change this tick, for the transition rule
+  const course = car.speed > 0.5 ? datan2(car.vx, car.vz) : race.course;
+  const dCourse = wrapPi(course - race.course);
+  race.course = course;
   // zones
   let zmul = 1;
   race.zone = null;
@@ -220,10 +261,24 @@ function driftScore(sim, race, car, ci, ev, dt) {
     const sinceLast = race.time - race.lastDriftTime;
     if (!race.chainActive) {
       race.chainActive = true; race.chain = 0; race.multiplier = 1; race.contTime = 0; race.multTimer = 0;
+      race.sideHold = 0; race.sideTurn = 0; race.flipOK = false;
       ev.push({ type: 'chainStart', car: ci, tick });
     } else if (race.lastSign !== 0 && sign !== race.lastSign && sinceLast <= RULES.transitionWindow) {
-      race.multiplier = Math.min(RULES.multMax, race.multiplier + 1);
-      ev.push({ type: 'transition', car: ci, multiplier: race.multiplier, tick });
+      // the slide changed sides: it may count once the new side is a real slide too
+      race.flipOK = race.sideHold >= RULES.transitionHold && (race.sideTurn < 0 ? -race.sideTurn : race.sideTurn) >= RULES.transitionTurn;
+      race.flipTime = race.time; race.sideHold = 0; race.sideTurn = 0;
+    }
+    race.sideTurn += dCourse;
+    if (ab >= RULES.transitionSlip) {
+      race.sideHold += dt;
+      if (race.flipOK) {
+        race.flipOK = false;
+        if (race.time - race.flipTime <= RULES.transitionWindow && race.time - race.lastTransition >= RULES.transitionCooldown) {
+          race.lastTransition = race.time;
+          race.multiplier = Math.min(RULES.multMax, race.multiplier + RULES.transitionStep);
+          ev.push({ type: 'transition', car: ci, multiplier: race.multiplier, tick });
+        }
+      }
     }
     if (sinceLast > RULES.continuityGap) { race.contTime = 0; race.multTimer = 0; }
     race.contTime += dt; race.multTimer += dt;
@@ -301,7 +356,7 @@ export function updateRace(sim) {
       race.offTime += dt;
       if (race.offTime > RULES.offLimit && race.valid && pc.cpCount >= 1) { race.valid = false; ev.push({ type: 'lapInvalid', car: race.player, reason: 'off', tick: t0 }); }
     }
-    if (pc.resetTick === sim.tick && race.valid && pc.cpCount >= 1 && race.mode === 'attack') { race.valid = false; ev.push({ type: 'lapInvalid', car: race.player, reason: 'reset', tick: t0 }); }
+    if (pc.resetTick === sim.tick && race.valid && pc.cpCount >= 1 && (race.mode === 'attack' || race.mode === 'race')) { race.valid = false; ev.push({ type: 'lapInvalid', car: race.player, reason: 'reset', tick: t0 }); }
   }
   if (race.phase === 'running') race.time += dt;
   // drift scoring
@@ -320,7 +375,7 @@ export function updateRace(sim) {
       bankChain(race, ev, race.player, t0);
       race.score = race.banked;
       race.phase = 'finished';
-      race.medal = medalRush(T, race.score);
+      race.medal = medalRush(race, race.score);
       race.results = { score: race.score, medal: race.medal, bestChain: race.bestChain, cones: race.cones };
       ev.push({ type: 'finish', car: race.player, score: race.score, tick: t0 });
       ev.push({ type: 'medal', car: race.player, medal: race.medal, score: race.score, tick: t0 });
@@ -383,6 +438,7 @@ export function raceState(race, mix) {
   mix(race.lapStart); mix(race.bestLap); mix(race.valid ? 1 : 0); mix(race.offTime); mix(race.lapTimes.length);
   mix(race.score); mix(race.banked); mix(race.chain); mix(race.chainActive ? 1 : 0); mix(race.multiplier); mix(race.grace);
   mix(race.bestChain); mix(race.contTime); mix(race.multTimer); mix(race.lastSign); mix(race.lastDriftTime); mix(race.cones);
+  mix(race.sideHold); mix(race.sideTurn); mix(race.course); mix(race.flipOK ? 1 : 0); mix(race.flipTime); mix(race.lastTransition);
   mix(race.zonePass); mix(race.timer); mix(race.startTick); mix(race.raceStart); mix(race.finishOrder.length);
   for (let k = 0; k < race.positions.length; k++) mix(race.positions[k]);
   if (race.tandem) { mix(race.tandem.score); mix(race.tandem.leadTicks); mix(race.tandem.bothTicks); mix(race.tandem.contacts); }

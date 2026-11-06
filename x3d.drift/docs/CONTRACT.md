@@ -37,7 +37,7 @@ x3d.drift/
 
 Files that start with `// loom:sim` may not use `Math.sin cos tan asin acos atan atan2 sinh cosh tanh exp expm1 log log1p log2 log10 pow cbrt hypot random`, the `**` operator, `Date`, or `performance`. `Math.sqrt`, `abs`, `min`, `max`, `floor`, `round`, `sign`, `trunc` are fine (IEEE exact). `engine/fmath.js` provides `dsin dcos datan2 datan dexp dtanh` as fixed polynomials or rational approximations with range reduction (copy NIB's dsin; write the rest; unit-test them against Math.* to 1e-6). Iteration order must be fixed (arrays, never `for…in` over objects with numeric-looking keys, never Map iteration that depends on insertion from non-deterministic sources). The page never writes sim state.
 
-`ENGINE_VERSION = 'kansei-engine/1'` in `engine/sim.js`. Bump it on any change that alters a replay.
+`ENGINE_VERSION = 'kansei-engine/4'` in `engine/sim.js`. Bump it on any change that alters a replay.
 
 ## 3. Track metadata (the sim reads only this)
 
@@ -96,7 +96,7 @@ Each car file is a complete X3D 4.0 scene whose root is `DEF='Car'` Transform co
 ## 6. Sim API (`engine/sim.js`)
 
 ```js
-export const ENGINE_VERSION = 'kansei-engine/1';
+export const ENGINE_VERSION = 'kansei-engine/4';
 export const HZ = 120;
 export function parseTrack(x3dText) -> track          // engine/x3d.js + engine/track.js
 export function createSim({ track, mode, surface, laps, entrants }) -> sim
@@ -153,8 +153,8 @@ Handling card windows (tests/handling.test.mjs measures each; docs/HANDLING-CARD
 ## 8. Modes and scoring (`engine/race.js`)
 
 - **Free roam**: open session, drift scoring live, no clock.
-- **Drift Rush**: 90 s from the first roll. Drift points per tick = angleFactor × speedFactor × multiplier, where drifting means body slip ≥ 12°, speed ≥ 25 km/h, moving forward along the track (progress increasing) and at most 2 wheels off the asphalt. Chain grace 2.0 s; multiplier grows +0.5 every 2 s of continuous drift and +1 on a clean transition (slip sign flips while drifting), max ×6. Wall contact over a threshold loses the pending chain (`chainLost`); banked points stay. **Clipping zones**: drifting with the car's rear within 2.0 m of the zone's edge gives `zoneClip` (×2 points while inside), within 1.0 m and slip ≥ 35° gives `zonePerfect` (×3). Knocking a cone costs 250 points. Medals from `targets` (Bronze, Silver, Gold, Platinum).
-- **Time Attack**: laps until stopped; checkpoints in order and forward; a lap is invalid if any wheel set (≥ 3 wheels) spends more than 1.0 s beyond halfWidth + 1.2, or if the car resets; three sectors with split deltas; the best valid lap's tape is the ghost (the page re-simulates it in a second sim, it never collides).
+- **Drift Rush**: 90 s from the first roll. Drift points per tick = angleFactor × speedFactor × multiplier, where drifting means body slip ≥ 12°, speed ≥ 25 km/h, moving forward along the track (progress increasing) and at most 2 wheels off the asphalt. Chain grace 2.0 s; multiplier grows +0.5 every 2 s of continuous drift and +1 on a clean transition, max ×6. A transition counts when the slide changes sides within 1.0 s, the old side held ≥ 20° for ≥ 0.35 s while the car's course turned ≥ 15°, the new side reaches 20°, and the last transition was ≥ 1.2 s ago (a wobble down a straight is not a transition; `tests/exploits.test.mjs`). Wall contact over a threshold, or a reset, loses the pending chain (`chainLost`); banked points stay. **Clipping zones**: drifting with the car's rear within 2.0 m of the zone's edge gives `zoneClip` (×2 points while inside), within 1.0 m and slip ≥ 35° gives `zonePerfect` (×3). Knocking a cone costs 250 points. Medals from `targets` (Bronze, Silver, Gold, Platinum), which are written for a stock RONIN on the dry and scaled per run by `engine/race.js medalTargets(base, car, grip, surface)`: per-car pace (lap × KOI 1.04, TEMPEST 0.957, BANSHEE 0.974; rush × KOI 0.85, TEMPEST 0.35, BANSHEE 1.4), the wet (lap × 1.16, rush × 1.3) and the grip tune (lap ≈ grip^-0.45, rush ≈ grip^-1.5). `sim.race.targets` holds the run's targets.
+- **Time Attack**: 1, 3 or 5 laps, or until stopped (∞); checkpoints in order and forward; a lap is invalid if any wheel set (≥ 3 wheels) spends more than 1.0 s beyond halfWidth + 1.2, or if the car resets (a reset voids the lap in Race too); three sectors with split deltas; the best valid lap's tape for the same car and surface is the ghost (the page re-simulates it in a second sim, it never collides; a setup toggle turns it off).
 - **Race**: player plus 3 AI on the 6-slot grid, 3 laps (configurable), countdown 3 s with lights, car-to-car contact (oriented boxes or two-circle approximation with impulses), positions by laps + progress, finish order, `overtake` events.
 - **Tandem**: an AI lead car drifts the circuit (AI drift mode); the player chases. Per tick, while both drift: proximity score (best at 1.5–4 m behind, nothing beyond 12 m), angle match (|slip_p − slip_lead|), line match (lateral offset difference), contact penalty. Two laps. Grades D C B A S.
 
@@ -169,9 +169,9 @@ Handling card windows (tests/handling.test.mjs measures each; docs/HANDLING-CARD
 
 ## 10. Tapes and the Loom
 
-`engine/tape.js`: schema `kansei.tape/1`, `{ level, level_sha256, engine, hz, ticks, mode, car, tune, surface, entrants, rle: [[u32, count], ...], expect: { hash, state, lapTime?, score? } }`. `tools/bot.mjs` drives the player entrant with the AI (race line for Time Attack, drift mode for Drift Rush) and records tapes; `tools/replay.mjs <tape>` replays headless and prints one JSON line with at least `level_sha256 engine state hash frame` where `state` is `"won"` when the recorded goal is met (a valid lap for attack tapes; a medal at or above the tape's stated medal for rush tapes). The Loom's `kit/loom play` runs that runner on every tape twice.
+`engine/tape.js`: schema `kansei.tape/1`, `{ level, level_sha256, engine, hz, ticks, mode, car, tune, surface, entrants, rle: [[u32, count], ...], expect: { hash, state, lapTime?, score? } }`. `tools/bot.mjs` drives the player entrant with the AI (race line for Time Attack, drift mode for Drift Rush) and records tapes; `tools/replay.mjs <tape>` replays headless and prints one JSON line with at least `level_sha256 engine state hash frame` where `state` is `"won"` when the recorded goal is met (a valid lap for attack tapes; a medal at or above the tape's stated medal for rush tapes; the finish for race and tandem; the last tick for free). The rule lives in `engine/goal.js`, shared by the runner, the bot, the page's witness mode and the tapes the page saves. The Loom's `kit/loom play` runs that runner on every tape twice.
 
-Per track: one Time Attack tape (a valid lap) and one Drift Rush tape (Gold or better). The bot's lap and rush score set the track's `targets` (gold lap = bot lap × 1.02, silver × 1.08, bronze × 1.16; rush gold = bot score × 0.85, platinum = bot score × 1.1 …) so medals are honest.
+Per track: one Time Attack tape (a valid lap) and one Drift Rush tape (Gold or better). The bot's lap and rush score set the track's `targets` (except the Practice Pad's rush tiers, which come from the keyboard driver in `tests/keyboard.test.mjs`, since the bot's near-perfect circle is no measure of a person) (gold lap = bot lap × 1.02, silver × 1.08, bronze × 1.16; rush gold = bot score × 0.85, platinum = bot score × 1.1 …) so medals are honest. Race and Tandem tapes (`--mode race|tandem`) have the finish line as their goal: they prove the AI field replays from the player's inputs alone.
 
 ## 11. Page (`index.html`, `main.js`, picture files)
 

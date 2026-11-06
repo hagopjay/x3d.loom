@@ -8,10 +8,10 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { parseTrack, createSim, step, packInput, unpackInput, hashSim, CAR_IDS } from '../engine/sim.js';
 import { createDriver, driveAI, DRIFT } from '../engine/ai.js';
-import { RULES, GRADES, MEDALS } from '../engine/race.js';
+import { RULES, GRADES, MEDALS, medalTargets } from '../engine/race.js';
 import { encodeTape, decodeTape } from '../engine/tape.js';
 import { readTrackMeta } from '../engine/x3d.js';
-import { buildTrack, pointAtS } from '../engine/track.js';
+import { buildTrack, pointAtS, project, arcDelta } from '../engine/track.js';
 import { placeOnTrack } from '../engine/car.js';
 import { ihash } from '../engine/fmath.js';
 import { DRIFT_SETUPS } from '../engine/cars.js';
@@ -33,6 +33,8 @@ function botSim(track, mode, { car = 'ronin', ai = mode === 'attack' ? 'race' : 
   return { sim, drv, car: sim.cars[sim.playerIndex], next(override) { driveAI(sim, drv, inp); if (override) override(inp); const w = packInput(inp); step(sim, [w]); return w; } };
 }
 const evs = (sim, type) => sim.race.events.filter(e => e.type === type);
+const PQ = { seg: 0, u: 0, s: 0, lat: 0, dist: 0, ex: 0, ez: 0 };
+const arcDeltaS = (T, from, to) => { project(T, from.x, from.z, -1, PQ); const a = PQ.s; project(T, to.x, to.z, -1, PQ); return arcDelta(T, a, PQ.s); };
 
 // ---- 1. determinism ------------------------------------------------------------------------------
 {
@@ -77,8 +79,14 @@ function scoringAudit(track, car, mode, secs) {
   const bad = { formula: 0, noCond: 0, mult: 0, trans: 0, grace: 0, bank: 0 };
   let scoredTicks = 0, lastScoreTick = -1, transitions = 0, banks = 0, multEvents = 0, zoneTicks = 0;
   let prevChain = 0, prevMult = 1, prevSign = 0, prevBanked = 0, prevActive = false;
+  // an independent model of the transition rule: old side held >= 20 deg for 0.35 s while the course
+  // turned >= 15 deg, new side reaches 20 deg within 1.0 s of the flip, 1.2 s since the last one
+  const wrapA = a => { while (a > Math.PI) a -= 2 * Math.PI; while (a < -Math.PI) a += 2 * Math.PI; return a; };
+  let course = 0, hold = 0, turn = 0, flipOK = false, flipAt = -10, lastTr = -10, lastDrift = -10;
   for (let t = 0; t < 120 * secs && r.phase !== 'finished'; t++) {
+    const timeBefore = r.time;
     b.next();
+    const crs = c.speed > 0.5 ? Math.atan2(c.vx, c.vz) : course, dC = wrapA(crs - course); course = crs;
     const ev = r.events, has = ty => ev.some(e => e.type === ty);
     const ab = Math.abs(c.slip);
     const cond = r.phase === 'running' && c.drifting && c.dsTick > 0.02 && c.offWheels <= RULES.maxOffWheels;
@@ -91,13 +99,24 @@ function scoringAudit(track, car, mode, secs) {
       const pts = RULES.pointsPerTick * Math.min(ab, 60 * DEG) / (30 * DEG) * Math.min(c.speed * 3.6, 180) / 80 * r.multiplier * zm;
       const base = has('chainStart') || has('chainLost') ? 0 : prevChain;
       if (Math.abs(r.chain - (base + pts)) > 1e-9 * Math.max(1, r.chain)) bad.formula++;
+      const s = c.slip > 0 ? 1 : -1;
+      if (has('chainStart') || !prevActive) { hold = 0; turn = 0; flipOK = false; }
+      else if (prevSign !== 0 && s !== prevSign && timeBefore - lastDrift <= RULES.transitionWindow) { flipOK = hold >= RULES.transitionHold && Math.abs(turn) >= RULES.transitionTurn; flipAt = timeBefore; hold = 0; turn = 0; }
+      turn += dC;
+      let expectTr = false;
+      if (ab >= RULES.transitionSlip) {
+        hold += 1 / 120;
+        if (flipOK) { flipOK = false; if (timeBefore - flipAt <= RULES.transitionWindow && timeBefore - lastTr >= RULES.transitionCooldown) { expectTr = true; lastTr = timeBefore; } }
+      }
+      if (has('transition') !== expectTr) bad.trans++;
       if (has('transition')) {
         transitions++;
-        const s = c.slip > 0 ? 1 : -1;
-        if (!(s !== prevSign && prevSign !== 0 && r.multiplier === Math.min(RULES.multMax, prevMult + 1 + (has('multiplier') ? RULES.multStep : 0)))) bad.trans++;
+        if (!(r.multiplier === Math.min(RULES.multMax, prevMult + RULES.transitionStep + (has('multiplier') ? RULES.multStep : 0)))) bad.trans++;
       }
+      lastDrift = timeBefore + 1 / 120;
       lastScoreTick = b.sim.tick;
     } else if (!has('chainStart') && !has('chainBank') && !has('chainLost') && r.chain !== prevChain) bad.formula++;
+    if (has('chainLost') || has('chainBank')) { hold = 0; turn = 0; flipOK = false; }
     for (const e of ev) if (e.type === 'multiplier') { multEvents++; if (!(e.multiplier <= RULES.multMax)) bad.mult++; }
     if (has('chainBank')) {
       banks++;
@@ -110,15 +129,21 @@ function scoringAudit(track, car, mode, secs) {
     if (r.multiplier > RULES.multMax) bad.mult++;
     prevChain = r.chain; prevMult = r.multiplier; prevBanked = r.banked; prevActive = r.chainActive;
     if (cond) prevSign = c.slip > 0 ? 1 : -1;
+    if (!r.chainActive) prevSign = 0;
   }
   return { bad, scoredTicks, transitions, banks, multEvents, zoneTicks, score: r.score };
 }
-for (const [trk, car] of [['oval', 'banshee'], ['twisty', 'ronin'], ['oval', 'koi']]) {
-  const a = scoringAudit(TR[trk], car, 'rush', 95);
-  const nb = Object.values(a.bad).reduce((x, y) => x + y, 0);
-  check(`scoring in place, ${car} Drift Rush on ${trk}: points = 3 x angle/30deg x km/h/80 x multiplier x zone each drifting tick; ` +
-    'drifting = slip >= 12 deg, >= 25 km/h, forward, <= 2 wheels off; transitions +1; 2.0 s grace; banks keep the chain',
-    nb === 0 && a.scoredTicks > 600 && a.banks > 0 && a.transitions > 0, `${a.scoredTicks} scoring ticks, ${a.transitions} transitions, ${a.banks} banks, score ${a.score}, violations ${JSON.stringify(a.bad)}`);
+{
+  let allTr = 0;
+  for (const [trk, car] of [['oval', 'banshee'], ['twisty', 'ronin'], ['oval', 'koi'], ['twisty', 'banshee']]) {
+    const a = scoringAudit(TR[trk], car, 'rush', 95);
+    const nb = Object.values(a.bad).reduce((x, y) => x + y, 0);
+    allTr += a.transitions;
+    check(`scoring in place, ${car} Drift Rush on ${trk}: points = 3 x angle/30deg x km/h/80 x multiplier x zone each drifting tick; ` +
+      'drifting = slip >= 12 deg, >= 25 km/h, forward, <= 2 wheels off; transitions +1 (20 deg held 0.35 s, course turned 15 deg, 1.2 s apart); 2.0 s grace; banks keep the chain',
+      nb === 0 && a.scoredTicks > 600 && a.banks > 0, `${a.scoredTicks} scoring ticks, ${a.transitions} transitions, ${a.banks} banks, score ${a.score.toFixed(0)}, violations ${JSON.stringify(a.bad)}`);
+  }
+  check('real transitions still count (the drift AI linking bends on the fixtures)', allTr > 0, `${allTr} transitions over the four audits`);
 }
 {
   // the multiplier on a continuous slide: +0.5 every 2.0 s, capped at x6
@@ -146,6 +171,20 @@ for (const [trk, car] of [['oval', 'banshee'], ['twisty', 'ronin'], ['oval', 'ko
   for (let k = 0; k < 240 && !lost; k++) { b.next(); lost = evs(b.sim, 'chainLost')[0] || null; if (evs(b.sim, 'chainBank').length) break; }
   check('a crash loses the pending chain, banked points stay', !!lost && Math.abs(lost.points - chain) < chain * 0.5 + 50 && r.banked === banked && r.chain === 0,
     lost ? `lost ${Math.round(lost.points)} pending, banked ${Math.round(r.banked)} kept` : 'no chainLost');
+}
+{
+  // a reset (R) with a chain pending loses it too: the chain is not banked after the grace
+  const b = botSim(TR.oval, 'free', { car: 'banshee' });
+  const r = b.sim.race;
+  let t = 0;
+  while (t++ < 120 * 120 && !(r.banked > 500 && r.chainActive && r.chain > 300 && b.car.drifting)) b.next();
+  const banked = r.banked, chain = r.chain;
+  b.next(inp => { inp.reset = true; });
+  const lost = evs(b.sim, 'chainLost')[0] || null;
+  let banks = 0;
+  for (let k = 0; k < 240; k++) { b.next(inp => { inp.throttle = 0; inp.steer = 0; }); banks += evs(b.sim, 'chainBank').length; }
+  check('a reset loses the pending chain, banked points stay', !!lost && banks === 0 && r.banked === banked && Math.abs(lost.points - chain) < chain * 0.1 + 50,
+    lost ? `lost ${Math.round(lost.points)} pending on the reset tick, banked ${Math.round(r.banked)} kept, ${banks} banks after` : 'no chainLost on reset');
 }
 {
   // a knocked cone costs 250 in the drift modes and nothing in Time Attack
@@ -209,9 +248,14 @@ for (const [trk, car] of [['oval', 'banshee'], ['twisty', 'ronin'], ['oval', 'ko
     Math.abs(row[0].time + row[1].time + row[2].time - laps[k].time) < 1e-9 && Math.abs(row[2].split - laps[k].time) < 1e-12);
   const deltaOk = sectorRows.length === 2 && Math.abs(sectorRows[1][0].delta - (sectorRows[1][0].time - sectorRows[0][0].time)) < 1e-9;
   check('three sectors per lap: splits add up to the lap, deltas against the best', sectorsOk && deltaOk, laps.map(l => l.sectors.map(x => x.toFixed(2)).join('+') + '=' + l.time.toFixed(3)).join('  '));
-  const T = TR.twisty.targets;
-  const want = laps[1].time <= T.goldLap ? 'gold' : laps[1].time <= T.silverLap ? 'silver' : laps[1].time <= T.bronzeLap ? 'bronze' : 'none';
-  check('Time Attack medal from the track targets', laps.every(l => l.valid) && r.medal === (MEDALS.indexOf(want) > 0 ? want : r.medal), `best ${r.bestLap.toFixed(3)} s vs gold ${T.goldLap} -> ${r.medal}`);
+  // TEMPEST's targets: the track's (written for RONIN) x its measured pace, rounded to 0.1 s
+  const T = medalTargets(TR.twisty.targets, 'tempest', 1, 'dry');
+  check('TEMPEST medal targets are the track targets x 0.957 (its pace against RONIN)', T.goldLap === Math.round(TR.twisty.targets.goldLap * 0.957 * 10) / 10 &&
+    r.targets.goldLap === T.goldLap && r.targets.rushGold === Math.round(TR.twisty.targets.rushGold * 0.35 / 50) * 50, `gold ${TR.twisty.targets.goldLap} -> ${T.goldLap}`);
+  const best = Math.min(...laps.filter(l => l.valid).map(l => l.time));
+  const want = best <= T.goldLap ? 'gold' : best <= T.silverLap ? 'silver' : best <= T.bronzeLap ? 'bronze' : 'none';
+  check('Time Attack medal from the scaled targets', laps.every(l => l.valid) && want !== 'none' && r.medal === want,
+    `best ${best.toFixed(3)} s vs gold ${T.goldLap} -> expected ${want}, got ${r.medal}`);
 }
 {
   // backwards: turn the car round on the grid and drive the wrong way; nothing counts
@@ -405,6 +449,47 @@ for (const [trk, car] of [['oval', 'banshee'], ['twisty', 'ronin'], ['oval', 'ko
     }
     check(`${f}: race AI laps valid with no wall contact, drift AI 60 s with no wall hit, every car`, ok, rows.join(', '));
   }
+}
+// ---- 8b. contact edge cases ------------------------------------------------------------------------
+{
+  // two cars dropped onto each other, crossed at 1.5 rad: they must come apart, not lock together
+  const rows = [];
+  let ok = true;
+  for (const off of [0, 0.2, 0.58, 1.0]) {
+    const sim = createSim({ track: TR.oval, mode: 'free', entrants: [{ car: 'koi', driver: 'player' }, { car: 'tempest', driver: 'player', slot: 1 }] });
+    const a = sim.cars[0], b = sim.cars[1], T = TR.oval, i = 40;
+    placeOnTrack(a, T, T.x[i], T.z[i], T.heading[i], false); placeOnTrack(b, T, T.x[i] + off, T.z[i] + 0.3, T.heading[i] + 1.5, false);
+    a.vx = 40 * Math.sin(a.yaw); a.vz = 40 * Math.cos(a.yaw);
+    let locked = 0;
+    for (let t = 0; t < 360; t++) { step(sim, [packInput({}), packInput({})]); if (Math.hypot(a.x - b.x, a.z - b.z) < 1.2) locked++; }
+    const sep = Math.hypot(a.x - b.x, a.z - b.z);
+    ok = ok && sep > 2 && locked < 30;
+    rows.push(`${off} m: ${sep.toFixed(1)} m apart after 3 s, ${locked} ticks overlapped`);
+  }
+  check('cars dropped deep into each other separate (no locked pair)', ok, rows.join(', '));
+}
+{
+  // a reset beside a stopped car never lands on it: it slides back along the lap
+  const sim = createSim({ track: TR.oval, mode: 'free', entrants: [{ car: 'ronin', driver: 'player' }, { car: 'koi', driver: 'player', slot: 1 }] });
+  const A = sim.cars[0], B = sim.cars[1], T = TR.oval, i = 60, h = T.heading[i];
+  placeOnTrack(B, T, T.x[i], T.z[i], h, false);
+  placeOnTrack(A, T, T.x[i] + 3 * Math.cos(h), T.z[i] - 3 * Math.sin(h), h + 2, false);
+  step(sim, [packInput({ reset: true }), packInput({})]);
+  const sep = Math.hypot(A.x - B.x, A.z - B.z), ds = arcDeltaS(T, B, A);
+  check('reset next to another car places at least 5 m clear, behind it', sep >= 5 && ds < 0, `${sep.toFixed(2)} m from the other car, ${ds.toFixed(1)} m along the lap`);
+}
+{
+  // a reset in Race voids the lap too (as in Time Attack), and loses nothing else
+  const sim = createSim({ track: TR.oval, mode: 'race', laps: 2, entrants: [{ car: 'ronin', driver: 'player' }] });
+  const drv = createDriver(sim, 0, 'race', 1), inp = {};
+  let inval = null;
+  for (let t = 0; t < 120 * 30 && !inval; t++) {
+    driveAI(sim, drv, inp);
+    if (sim.cars[0].cpCount >= 2 && sim.race.phase === 'running') inp.reset = true;
+    step(sim, [packInput(inp)]); inp.reset = false;
+    inval = evs(sim, 'lapInvalid')[0] || null;
+  }
+  check('a reset in Race voids the lap', !!inval && inval.reason === 'reset', inval ? 'lapInvalid reason ' + inval.reason : 'no lapInvalid event');
 }
 // ---- 9. performance --------------------------------------------------------------------------------
 {

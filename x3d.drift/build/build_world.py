@@ -20,16 +20,21 @@ sys.dont_write_bytecode = True          # keep build/ free of __pycache__
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 # ============================================================================================
-# TARGETS: provisional medal targets per circuit (the proof builder recalibrates these from
-# bot runs: gold lap = bot lap x 1.02, silver x 1.08, bronze x 1.16; rush gold = bot score x 0.85,
-# platinum = bot score x 1.1). Laps in seconds, rush in points.
+# TARGETS: medal targets per circuit for a stock RONIN on the dry (engine/race.js medalTargets scales
+# them for the other cars, the wet and the grip tune). Laps and the four circuits' rush tiers are
+# calibrated from tools/bot.mjs runs (RONIN, dry, skill 1, two attack laps and one 90 s Drift Rush;
+# docs/HANDLING-CARD.md lists the runs): gold lap = bot lap x 1.02, silver x 1.08, bronze x 1.16;
+# rush bronze = bot score x 0.35, silver x 0.6, gold x 0.85, platinum x 1.1 (CONTRACT.md section 10).
+# The Practice Pad is for learning to hold angle, and the bot's near-perfect circle (177268) is no
+# measure of a person, so its rush tiers come from the keyboard driver in tests/keyboard.test.mjs
+# (55-70k for the RWD cars on the dry): bronze 25k, silver 45k, gold 70k, platinum 120k.
 #            goldLap silverLap bronzeLap  rushBronze rushSilver rushGold rushPlatinum
 TARGETS = {
-    "kessel-pass":   (96.0, 101.6, 109.2,  12000, 26000, 42000, 60000),
-    "neon-overpass": (88.0,  93.2, 100.0,  14000, 30000, 48000, 68000),
-    "salt-ring":     (52.0,  55.1,  59.1,  16000, 34000, 54000, 76000),
-    "cliffside":     (104.0, 110.1, 118.3, 11000, 24000, 39000, 56000),
-    "practice-pad":  (24.0,  25.4,  27.3,  14000, 30000, 48000, 68000),
+    "kessel-pass":   (80.3, 85.0, 91.3,  3650,   6250,   8850,  11500),   # bot lap 78.745, rush 10435
+    "neon-overpass": (78.8, 83.5, 89.6,  9800,  16850,  23850,  30900),   # bot lap 77.277, rush 28070
+    "salt-ring":     (49.8, 52.8, 56.7, 12500,  21400,  30300,  39250),   # bot lap 48.864, rush 35666
+    "cliffside":     (86.6, 91.7, 98.5,  3900,   6700,   9500,  12300),   # bot lap 84.886, rush 11170
+    "practice-pad":  (14.6, 15.5, 16.6, 25000,  45000,  70000, 120000),   # bot lap 14.317; keyboard rush 61k
 }
 # ============================================================================================
 
@@ -1244,7 +1249,9 @@ def build(only: str | None = None) -> dict[str, bytes]:
         doc, info, sky = fn()
         data = doc.encode("utf-8")
         files[f"levels/{fid}.x3d"] = data
-        info.update(file=f"{fid}.x3d", bytes=len(data), sha256=hashlib.sha256(data).hexdigest())
+        tg = TARGETS[fid]   # the page shows medal targets before it loads a level (scaled per car there)
+        info.update(file=f"{fid}.x3d", bytes=len(data), sha256=hashlib.sha256(data).hexdigest(),
+                    targets=dict(zip(("goldLap", "silverLap", "bronzeLap", "rushBronze", "rushSilver", "rushGold", "rushPlatinum"), tg)))
         infos.append(info)
         skies.append(sky)
     if infos:

@@ -3,8 +3,12 @@
 // sha256 and the engine version (CONTRACT.md section 10).
 //   node tools/bot.mjs <level.x3d> [--mode attack|rush|both] [--car ronin] [--tune '{"traction":1}']
 //                      [--surface dry|wet] [--skill 1] [--laps 2] [--out DIR] [--dry-run]
+//         --mode race|tandem are recorded only when asked for (not by 'both').
 // attack: race-line AI, two laps (the first starts rolling from the grid); the goal is a valid lap.
 // rush:   drift-mode AI for the 90 s Drift Rush; the goal is the medal the tape states (gold).
+// race:   race-line AI from the back of the page's default 4-car grid; the goal is the finish line.
+// tandem: drift-mode AI chasing the drift-AI lead, throttle held back inside 6 m (there is no
+//         chase AI in the sim, so this grades D); the goal is the finish line.
 // Prints one JSON line per tape with the result and the targets it suggests for the track:
 //   gold lap = bot lap x 1.02, silver x 1.08, bronze x 1.16; rush gold = score x 0.85,
 //   platinum x 1.1, silver x 0.6, bronze x 0.35 (so a medal is something a good run earns).
@@ -15,31 +19,39 @@ import { fileURLToPath } from 'node:url';
 import { parseTrack, createSim, step, packInput, hashSim, summary, ENGINE_VERSION } from '../engine/sim.js';
 import { createDriver, driveAI } from '../engine/ai.js';
 import { encodeTape, createRecorder } from '../engine/tape.js';
-import { medalRank } from '../engine/race.js';
+import { goalReached } from '../engine/goal.js';
 
 export const LAP_FACTORS = { gold: 1.02, silver: 1.08, bronze: 1.16 };
 export const RUSH_FACTORS = { bronze: 0.35, silver: 0.6, gold: 0.85, platinum: 1.1 };
 
 /** Drive the player entrant of a fresh sim with the AI and record it. Returns { words, sim, goalTick }. */
+export const RACE_GRID = [{ car: 'tempest', driver: 'ai', skill: 0.92, slot: 0, ai: 'race' }, { car: 'banshee', driver: 'ai', skill: 0.86, slot: 1, ai: 'race' },
+  { car: 'koi', driver: 'ai', skill: 0.95, slot: 2, ai: 'race' }];
+export const TANDEM_GAP = 6;
+
 export function botRun({ track, mode, car = 'ronin', tune = {}, surface = 'dry', skill = 1, laps = 2, maxSeconds = 600, stateMedal = 'gold' }) {
-  const entrants = [{ car, tune, driver: 'player', slot: 0 }];
-  const sim = createSim({ track, mode, surface, entrants });
-  const drv = createDriver(sim, 0, mode === 'attack' ? 'race' : 'drift', skill);
+  const me = { car, tune, driver: 'player', slot: 0 };
+  const entrants = mode === 'race' ? [{ ...me, slot: 3 }, ...RACE_GRID]
+    : mode === 'tandem' ? [{ car: 'ronin', driver: 'ai', skill: 1, slot: 0, ai: 'drift' }, { ...me, slot: 1 }] : [me];
+  const sim = createSim({ track, mode, surface, entrants, laps: mode === 'race' || mode === 'tandem' ? laps : undefined });
+  const pi = sim.playerIndex;
+  const drv = createDriver(sim, pi, mode === 'attack' || mode === 'race' ? 'race' : 'drift', skill);
   const rec = createRecorder();
   const inp = {};
   let goalTick = -1;
   for (let i = 0; i < maxSeconds * 120; i++) {
     driveAI(sim, drv, inp);
+    if (mode === 'tandem') {  // a chaser that lifts when it closes on the lead
+      const gap = sim.cars[0].raceDist - sim.cars[pi].raceDist;
+      if (gap < TANDEM_GAP) { inp.throttle = Math.round(inp.throttle * Math.max(0, (gap - 1) / (TANDEM_GAP - 1))); if (gap < 1.2) inp.brake = 4; }
+    }
     const w = packInput(inp);
     rec.push(w);
     step(sim, [w]);
     const r = sim.race;
-    if (mode === 'attack') {
-      if (goalTick < 0 && r.lapTimes.some(l => l.valid)) goalTick = sim.tick;
-      if (r.lapTimes.length >= laps) break;
-    } else if (mode === 'rush') {
-      if (r.phase === 'finished') { if (medalRank(r.medal) >= medalRank(stateMedal)) goalTick = sim.tick; break; }
-    } else if (sim.tick >= maxSeconds * 120) break;
+    if (goalTick < 0 && goalReached(sim, mode, stateMedal, i === maxSeconds * 120 - 1)) goalTick = sim.tick;   // engine/goal.js, as replay.mjs
+    if (mode === 'attack') { if (r.lapTimes.length >= laps) break; }
+    else if (r.phase === 'finished') break;
   }
   return { words: rec.words, sim, goalTick, entrants };
 }
@@ -72,9 +84,13 @@ function main() {
     const s = summary(sim), r = sim.race;
     const expect = { hash: hashSim(sim), state: goalTick >= 0 ? 'won' : 'lost', frame: sim.tick };
     if (mode === 'attack') { expect.lapTime = +r.bestLap.toFixed(4); expect.medal = r.medal; expect.validLaps = s.validLaps; }
-    else { expect.score = s.score; expect.medal = 'gold'; expect.medalReached = r.medal; }
+    else if (mode === 'rush') { expect.score = s.score; expect.medal = 'gold'; expect.medalReached = r.medal; }
+    else { expect.position = s.position; expect.results = s.results; }
     const tape = encodeTape({ level, level_sha256: sha, engine: ENGINE_VERSION, mode, car, tune, surface, laps: sim.laps, entrants, words, expect,
-      note: mode === 'attack' ? `bot: race-line AI, ${laps} laps, best valid lap ${r.bestLap.toFixed(3)} s` : `bot: drift-mode AI, Drift Rush score ${s.score}` });
+      note: mode === 'attack' ? `bot: race-line AI, ${laps} laps, best valid lap ${r.bestLap.toFixed(3)} s`
+        : mode === 'rush' ? `bot: drift-mode AI, Drift Rush score ${s.score}`
+          : mode === 'race' ? `bot: race-line AI from the back of a 4-car grid, ${laps} laps, finished P${s.position}`
+            : `bot: drift-mode AI chasing the drift-AI lead, ${laps} laps, tandem grade ${s.results && s.results.grade}` });
     const name = level.replace(/\.x3d$/, '') + '-' + mode + '.tape.json';
     if (!dry) { mkdirSync(out, { recursive: true }); writeFileSync(out + '/' + name, JSON.stringify(tape) + '\n'); }
     res[mode] = { lap: r.bestLap, score: s.score };

@@ -13,7 +13,7 @@
 //   so wheel spin, lock-up and clutch slip are stable at any stiffness.
 // Every function here is deterministic: no Math.sin/cos/atan2/exp/pow, fixed iteration order.
 import { dsin, dcos, datan, datan2, wrapPi, clamp, smooth, ihash, DEG, PI } from './fmath.js';
-import { project, surfaceAt, surfaceName, CURB_BAND } from './track.js';
+import { project, surfaceAt, surfaceName, CURB_BAND, pointAtS } from './track.js';
 import { CARS, resolveTune } from './cars.js';
 
 export const SUBSTEPS = 4;
@@ -148,10 +148,25 @@ export function placeOnTrack(car, T, x, z, yaw, initial) {
 }
 
 /** Reset to the nearest centreline point, facing along the track (input bit 20). */
-export function resetToTrack(car, T, events, tick) {
+const RP = { seg: 0, u: 0, x: 0, z: 0, y: 0, tx: 0, tz: 0 };
+const RESET_CLEAR = 5, RESET_BACK = 6, RESET_TRIES = 6;
+const clearOf = (car, others, x, z) => {
+  if (others) for (const o of others) if (o !== car && (o.x - x) * (o.x - x) + (o.z - z) * (o.z - z) < RESET_CLEAR * RESET_CLEAR) return false;
+  return true;
+};
+export function resetToTrack(car, T, events, tick, others) {
   project(T, car.x, car.z, car.seg, Q);
-  const x = car.x - Q.ex, z = car.z - Q.ez;
-  const yaw = T.heading[Q.seg];
+  let x = car.x - Q.ex, z = car.z - Q.ez;
+  let yaw = T.heading[Q.seg];
+  // never drop the car onto another one: slide back along the lap (never forward, so a reset gains nothing)
+  if (!clearOf(car, others, x, z)) {
+    const s0 = Q.s;
+    for (let k = 1; k <= RESET_TRIES; k++) {
+      pointAtS(T, s0 - k * RESET_BACK, RP);
+      x = RP.x; z = RP.z; yaw = T.heading[RP.seg];
+      if (clearOf(car, others, x, z)) break;
+    }
+  }
   placeOnTrack(car, T, x, z, yaw, false);
   car.resets++; car.resetTick = tick;
   if (events) events.push({ type: 'reset', car: car.index, tick });
@@ -320,7 +335,7 @@ export function stepCar(car, inp, env, events) {
   const resetEdge = inp.reset && !car.prevReset; car.prevReset = !!inp.reset;
   const upEdge = inp.shiftUp && !car.prevUp; car.prevUp = !!inp.shiftUp;
   const downEdge = inp.shiftDown && !car.prevDown; car.prevDown = !!inp.shiftDown;
-  if (resetEdge) { resetToTrack(car, T, events, tick); car.collided = 0; return; }
+  if (resetEdge) { resetToTrack(car, T, events, tick, env.cars); car.collided = 0; return; }
   if (env.held) brkIn = 1;
   // body-frame velocity at the start of the tick
   let c = dcos(car.yaw), sn = dsin(car.yaw);
@@ -726,6 +741,25 @@ export function collideCars(A, B, events, tick) {
   const ra = pa.halfW * 1.02, rb = pb.halfW * 1.02;
   const oa = pa.halfL - pa.halfW, ob = pb.halfL - pb.halfW;
   let total = 0, hx = 0, hz = 0;
+  // Deep overlap (centres closer than 3/4 of the two widths, e.g. two cars crossed over each other):
+  // the four circle pairs push in directions that cancel, so first separate along the line between
+  // the centres (A's lateral axis when they coincide) and stop the closing speed along it.
+  const dc2 = dx0 * dx0 + dz0 * dz0, deep = 0.75 * (ra + rb);
+  if (dc2 < deep * deep) {
+    let nx = ca, nz = -sa;
+    const dc = Math.sqrt(dc2);
+    if (dc > 1e-6) { nx = dx0 / dc; nz = dz0 / dc; }
+    const pen = (ra + rb) - dc, im = 1 / pa.m + 1 / pb.m;
+    A.x -= nx * pen * (1 / pa.m) / im; A.z -= nz * pen * (1 / pa.m) / im;
+    B.x += nx * pen * (1 / pb.m) / im; B.z += nz * pen * (1 / pb.m) / im;
+    const vn = (B.vx - A.vx) * nx + (B.vz - A.vz) * nz;
+    if (vn < 0) {
+      const jn = -(1 + 0.2) * vn / im;
+      A.vx -= jn * nx / pa.m; A.vz -= jn * nz / pa.m; B.vx += jn * nx / pb.m; B.vz += jn * nz / pb.m;
+      total += jn;
+    }
+    hx = 0.5 * (A.x + B.x); hz = 0.5 * (A.z + B.z);
+  }
   for (let i = 0; i < 2; i++) {
     const fa = i === 0 ? oa : -oa;
     const ax = A.x + fa * sa, az = A.z + fa * ca;

@@ -9,7 +9,7 @@ import { createDriver, driveAI } from './ai.js';
 import { dsin, dcos, clamp } from './fmath.js';
 import { CAR_IDS, CARS, resolveTune, DRIFT_SETUPS } from './cars.js';
 
-export const ENGINE_VERSION = 'kansei-engine/1';
+export const ENGINE_VERSION = 'kansei-engine/4';
 export const HZ = 120;
 export const DT = 1 / HZ;
 export const MODES = ['free', 'rush', 'attack', 'race', 'tandem'];
@@ -93,7 +93,7 @@ export function step(sim, inputs) {
   race.events.length = 0;
   const ev = race.events;
   const held = heldCars(race);
-  const env = { track: sim.track, wet: sim.surface === 'wet', tick: sim.tick, held, dt: DT };
+  const env = { track: sim.track, wet: sim.surface === 'wet', tick: sim.tick, held, dt: DT, cars: sim.cars };
   // inputs first, from the state at the start of the tick (AI sees only the sim)
   let pi = 0;
   for (let i = 0; i < sim.cars.length; i++) {
@@ -188,6 +188,7 @@ function stepProps(sim, ev) {
 const F64 = new Float64Array(1), U8 = new Uint8Array(F64.buffer);
 /** 64-bit FNV-style hash over every car, the race and the props, in a fixed order: 16 hex chars. */
 const PHASE_CODE = { cruise: 0, entry: 1, hold: 2, exit: 3, save: 4 };
+const strCode = t => { if (!t) return 0; let h = 0; for (let i = 0; i < t.length; i++) h = (Math.imul(h, 31) + t.charCodeAt(i)) | 0; return h; };
 export function hashSim(sim) {
   let a = 0x811c9dc5, c = 0x9e3779b9;
   const mix = v => {
@@ -202,6 +203,9 @@ export function hashSim(sim) {
     mix(d.timer); mix(d.stuck); mix(d.resetCool); mix(PHASE_CODE[d.phase] ?? 9); mix(d.dir);
     mix(d.bT); mix(d.vhPrev); mix(d.kAct); mix(d.thrI); mix(d.rI); mix(d.bAdj); mix(d.rPrev); mix(d.rDotF); mix(d.vPrev); mix(d.accF); mix(d.hbTimer); mix(d.hbCool); mix(d.latPrev); mix(d.latRateF);
     mix((d.vhInit ? 1 : 0) + (d.rInit ? 2 : 0) + (d.vInit ? 4 : 0) + (d.latInit ? 8 : 0)); mix(d.betaTarget);
+    // race traffic and corner linking also carry forward from tick to tick
+    mix(d.link); mix(d.merged ? 1 : 0); mix(d.pace); mix(d.passK); mix(d.passSide); mix(d.offLat); mix(d.wantLat === undefined ? 0 : d.wantLat);
+    mix((d.mode === 'drift' ? 1 : 0) + (d.linkOK ? 2 : 0)); mix(strCode(d.saveWhy));
   }
   return (a >>> 0).toString(16).padStart(8, '0') + (c >>> 0).toString(16).padStart(8, '0');
 }

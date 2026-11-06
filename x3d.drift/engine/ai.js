@@ -16,8 +16,9 @@ const LINE_PASSES = [[12, 60], [8, 60], [5, 60], [3, 50], [2, 40]];
 /** Drift-mode constants (tools/ and tests/ read them; the sim treats them as fixed). */
 export const DRIFT = {
   wetBeta: 8, wetMargin: 0.6, wetAn: 0.56,   // the wet: deg off the held angle, m of extra margin, sliding-grip share
-  lineScale: 1,
-  inRoad: 0,        // share of the road's own curvature (v^2 k) counted as stopping an approach to the inside edge     // drift line offsets as a share of the racing line's (1 = the racing line)
+  awdBeta: 5,       // deg off the held angle for an AWD car (driven fronts pull it straight: it slides shallower)
+  lineScale: 1,     // drift line offsets as a share of the racing line's (1 = the racing line)
+  inRoad: 0,        // share of the road's own curvature (v^2 k) counted as stopping an approach to the inside edge
   margin: 2.4,      // m beyond the half width kept clear of the edges while sliding
   an: 0.56,         // share of mu*g a held 30-40 deg slide carries sideways (sets the drift speeds)
   beta: 42,         // deg, the slide angle aimed for through a corner (the line trim takes some back: it holds 30-40)
@@ -33,6 +34,7 @@ export const DRIFT = {
   vLo: 0.98, vHi: 1.10,          // entry speed window around the corner's drift speed
   carry: 1.03,      // cruise speed into a corner, relative to its drift speed
   tapGap: 10, tapRate: -0.05, tapK: 0.3,   // handbrake tap: angle short of target (deg), falling (rad/s), rears hooked up
+  linkMax: 160, linkBeta: 22, linkMin: 16,  // linking corners: a straight shorter than linkMax m is drifted through at linkBeta deg (never under linkMin) so the chain lives
 };
 
 /** Race-AI constants (traffic, starts, skill and the pack). */
@@ -182,9 +184,11 @@ export function createDriver(sim, ci, mode, skill) {
   const vDrift = mode === 'drift' ? speedProfile(T, dline, { mu: lim.mu * (wet ? DRIFT.wetAn : DRIFT.an), vTop: Math.min(lim.vTop, 42), aAcc: lim.aAcc * 0.8, aBrake: lim.aBrake * 0.6, vMin: 11 }) : null;
   return {
     ci, mode, skill: clamp(skill, 0, 1), seed: 1009 * (ci + 1) + 17, line, vRace, vMax, vDrift, dline, lim, gf: wet ? 0.72 : 1,
-    lane0: car.lat, merged: sim.cars.length < 2, pace: 1,
-    phase: 'cruise', timer: 0, dir: 0, stuck: 0, resetCool: 0,
-    betaTarget: (DRIFT.beta - (wet ? DRIFT.wetBeta : 0)) * DEG, bT: 0, vhPrev: 0, vhInit: false, kAct: 0, thrI: 0.6, rI: 0, bAdj: 0, rPrev: 0, rInit: false, rDotF: 0, vPrev: 0, vInit: false, accF: 0, hbTimer: 0, hbCool: 0, latPrev: 0, latInit: false, latRateF: 0,
+    lane0: car.lat, merged: sim.cars.length < 2, pace: 1, passK: -1, passSide: 0, offLat: 0,
+    // linking corners is a Drift Rush habit (the chain is the score); on the wet a straight-line slide is too much to ask
+    linkOK: mode === 'drift' && sim.mode === 'rush' && !wet,
+    phase: 'cruise', timer: 0, dir: 0, link: 0, stuck: 0, resetCool: 0,
+    betaTarget: (DRIFT.beta - (wet ? DRIFT.wetBeta : 0) - (car.P.awd ? DRIFT.awdBeta : 0)) * DEG, bT: 0, vhPrev: 0, vhInit: false, kAct: 0, thrI: 0.6, rI: 0, bAdj: 0, rPrev: 0, rInit: false, rDotF: 0, vPrev: 0, vInit: false, accF: 0, hbTimer: 0, hbCool: 0, latPrev: 0, latInit: false, latRateF: 0,
   };
 }
 
@@ -292,7 +296,14 @@ export function driveAI(sim, drv, out) {
       if (w <= 0) drv.merged = true;
       want = lineLat + (clamp(drv.lane0, -edge, edge) - lineLat) * w;
     }
-    let lo = -edge, hi = edge, pass = 0, wPass = 0;
+    let lo = -edge, hi = edge, pass = 0, wPass = 0, passK = -1, passSide = 0;
+    // the speed this driver wants just ahead: a car in front slower than that is worth passing,
+    // even while we are held behind it (our own speed then only matches its)
+    const vWish = sampleV(drv.vRace, LP.i, LP.u, T.n) * drv.pace;
+    // a pass is started only where the road runs straight (pulling out under braking into a bend
+    // spins the car); one already under way carries on into the bend only once it is half alongside
+    const kSeg = T.kappaS[car.seg];
+    const straight = (LP.k < 0 ? -LP.k : LP.k) < 1 / 250 && (kSeg < 0 ? -kSeg : kSeg) < 1 / 250;
     for (let k = 0; k < sim.cars.length; k++) {
       if (k === drv.ci) continue;
       const o = sim.cars[k];
@@ -310,26 +321,31 @@ export function driveAI(sim, drv, out) {
       }
       // ahead: in our way if our lane (want) comes within a car's width of it
       const inWay = (want - o.lat < 0 ? o.lat - want : want - o.lat) < need;
-      const closing = car.speed - o.speed;
+      const closing = (vWish > car.speed ? vWish : car.speed) - o.speed;
       if (!inWay) continue;
-      if (closing > -0.5 && gap < 22) {
-        // pass on the side we are already on, or the one with more room
+      const gapWant = car.P.halfL + o.P.halfL + 1.5 + 0.25 * v;   // the following gap
+      const passing = drv.passK === k;          // already committed to passing this car: hold the decision
+      if (closing > (passing ? -2 : -0.5) && gap < 22 && (straight || (passing && adl > 0.5 * need))) {
+        // pass on the side we are already on (or committed to), or the one with more room
         const roomL = edge - o.lat, roomR = edge + o.lat;
-        let side = dl > 0.3 ? 1 : dl < -0.3 ? -1 : (roomL >= roomR ? 1 : -1);
+        let side = passing && drv.passSide ? drv.passSide : dl > 0.3 ? 1 : dl < -0.3 ? -1 : (roomL >= roomR ? 1 : -1);
         if ((side > 0 ? roomL : roomR) < need) side = -side;
         if ((side > 0 ? roomL : roomR) >= need) {
-          const wk = gap < 8 ? 1 : (22 - gap) / 14;
-          if (wk > wPass) { wPass = wk; pass = clamp(o.lat + side * need, -edge, edge); }
+          // fully committed to the passing lane from a little beyond the following gap (a car that
+          // only half pulls out sits behind for good)
+          const wk = clamp((22 - gap) / Math.max(1, 16 - gapWant), 0, 1);
+          if (wk > wPass) { wPass = wk; pass = clamp(o.lat + side * need, -edge, edge); passK = k; passSide = side; }
         }
       }
       // keep a following gap behind a car we cannot pass yet
-      const gapWant = car.P.halfL + o.P.halfL + 1.5 + 0.25 * v;
       if (adl < need) { const vf = o.speed + 0.8 * (gap - gapWant); if (vf < vCap) vCap = vf; }
     }
     if (wPass > 0) want += (pass - want) * wPass;
+    drv.passK = passK; drv.passSide = passSide;
     if (lo > hi) { want = 0.5 * (lo + hi); } else want = clamp(want, lo, hi);
     drv.wantLat = want;
     const off = want - lineLat;
+    drv.offLat = off;
     tx += LP.nx * off; tz += LP.nz * off;
     // the pack: race AI well clear of the player eases off, one well behind pushes (never past its
     // skill-1 profile). Deterministic: it reads only positions in the sim.
@@ -351,7 +367,9 @@ export function driveAI(sim, drv, out) {
   // speed control from the profile, looking a little ahead
   const sAhead = car.s + clamp(v * 0.35, 2, 30);
   lineAt(T, line, sAhead, LP);
-  const vProf = sampleV(drv.vRace, LP.i, LP.u, T.n) * drv.pace;
+  // off the line (passing, or holding a lane) on the inside of a bend the radius is tighter: v ~ sqrt(R)
+  const kOff = drv.offLat ? LP.k * drv.offLat : 0;
+  const vProf = sampleV(drv.vRace, LP.i, LP.u, T.n) * drv.pace * (kOff > 0 ? Math.sqrt(1 - (kOff < 0.4 ? kOff : 0.4)) : 1);
   const vt = Math.max(0, Math.min(vProf, sampleV(drv.vMax, LP.i, LP.u, T.n), vCap));
   const err = vt - v;
   let thr = 0, brk = 0;
@@ -470,7 +488,19 @@ function driftDrive(sim, drv, car, out, v) {
     drv.timer += dt;
     if (drv.timer > 0.6 && ab < 14 * DEG && room > 2 * need + 1 && Math.abs(car.slipRate) < 1.0) drv.phase = 'cruise';   // not while the angle still swings
   }
-  if (drv.phase === 'hold' && Math.abs(kHere) < 1 / DRIFT.exitR && Math.abs(kAhead) < 1 / 130) { drv.phase = 'exit'; drv.timer = 0; }
+  if (drv.phase === 'hold' && Math.abs(kHere) < 1 / DRIFT.exitR && Math.abs(kAhead) < 1 / 130) {
+    // the bend is over: link to the next one if it is near (keep a shallower slide down the straight), else ease out
+    let dN = -1;
+    if (drv.linkOK && DRIFT.linkMax > 0 && -drv.dir * beta > DRIFT.linkMin * DEG) {
+      let d0 = 0;                       // past the tail of this bend first
+      for (; d0 < 60; d0 += 2) { lineAt(T, line, car.s + d0, LP); if (LP.k * drv.dir < 1 / 170) break; }
+      dN = cornerAhead(T, line, car.s, d0, DRIFT.linkMax);
+    }
+    if (dN >= 0 && CA.len >= 14) {
+      drv.link = 1;
+      if (CA.k * drv.dir < 0 && dN < clamp(1.2 * v, 10, 40)) drv.dir = -drv.dir;   // the next bend turns the other way: swing across
+    } else { drv.phase = 'exit'; drv.timer = 0; drv.link = 0; }
+  } else if (drv.phase !== 'hold' || Math.abs(kHere) >= 1 / DRIFT.exitR) drv.link = 0;
   if (drv.phase === 'hold' && kAhead * drv.dir < 0 && Math.abs(kAhead) > 1 / 100 && Math.abs(kHere) < 1 / 160) {
     drv.dir = -drv.dir;                 // transition: swing the slide the other way
   }
@@ -511,9 +541,10 @@ function driftDrive(sim, drv, car, out, v) {
     return quantise(out, steerInputFor(car, delta), thr, brk, false, false);
   }
   // a hold that lost its slide flicks again
-  if (drv.phase === 'hold' && b < 10 * DEG && b > -12 * DEG && drv.bT > 20 * DEG && v > 0.8 * vt && dir * car.yawRate < 0.6) { drv.phase = 'entry'; drv.timer = 0; return driftDrive(sim, drv, car, out, v); }
+  if (drv.link && b < DRIFT.linkMin * DEG - 2 * DEG) { drv.phase = 'exit'; drv.timer = 0; drv.link = 0; }   // a link that lost its slide just ends
+  if (drv.phase === 'hold' && !drv.link && b < 10 * DEG && b > -12 * DEG && drv.bT > 20 * DEG && v > 0.8 * vt && dir * car.yawRate < 0.6) { drv.phase = 'entry'; drv.timer = 0; return driftDrive(sim, drv, car, out, v); }
   // ---- hold and exit share the two loops ------------------------------------------------------
-  const target = drv.phase === 'hold' ? drv.betaTarget : 0;
+  const target = drv.phase === 'hold' ? (drv.link ? Math.min(drv.betaTarget, DRIFT.linkBeta * DEG) : drv.betaTarget) : 0;
   drv.bT += clamp(target - drv.bT, -0.9 * dt, 0.9 * dt);   // ramp the target (rad/s)
   if (drv.phase === 'exit') { drv.timer += dt; if (ab < 6 * DEG && drv.bT < 4 * DEG) { drv.phase = 'cruise'; } }
   // path: the velocity heading should turn at v*k_line, corrected toward the line (2nd-order,
