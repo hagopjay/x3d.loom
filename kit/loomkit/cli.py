@@ -51,7 +51,7 @@ def cmd_traps(a) -> dict:
     return write_witness(a.evidence, root, subject, "traps", status, "C",
                          {"tool": "loomkit.traps", "rules": sorted(traps.RULES),
                           "rules_sha256": sha256_file(Path(traps.__file__))},
-                         measurements={"files": len(rows), "errors": errors, "warnings": warnings, "seen": seen, "hits": rows},
+                         measurements={"files": len(rows), "errors": errors, "warnings": warnings, "hits": rows},
                          coverage={"rules": len(traps.RULES)},
                          limitations=["Portable subset of x3d.onto loom_gate.py rules; the family gate itself is not on this machine.",
                                       "Runtime-labelled rules describe the runtime they were observed on."])

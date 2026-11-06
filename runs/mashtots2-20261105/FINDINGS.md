@@ -90,4 +90,4 @@ The patch (sha256 `e2321435…4950`) was applied to `projects/mashtots-slideshow
 | Resilience probe | Clock 1.5 s in 1.5 s before the throw and 2.0 s in 2.0 s after; the TimeSensor advanced 2.0 s; only the probe's own error in the console |
 | Director page | Loads, and its clock advances 1.52 s in 1.5 s |
 
-The source repo `~/Projects/x3d/work/mashtots-standalones/slideshow` does not have the fix. The demo copy now differs from it in these two files.
+At the user's word the same patch was then committed to the source repo `~/Projects/x3d/work/mashtots-standalones/slideshow` as `eae4235`, on top of `809600a`. The demo copy and the repo's HEAD match file for file, logs aside.

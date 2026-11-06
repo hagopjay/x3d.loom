@@ -1,0 +1,36 @@
+{
+  "schema": "loom.profile/1",
+  "name": "x3d-stem-manifold/v1",
+  "purpose": "Manifold of Emotion in X3D (x3d.STEM study 7, a recreation of Manifold-of-Emotion.html). Accepting under it means: the scene is grammatical and meaningful X3D 4.0 on the fork with no known scene or page trap; the case declares its model and limits; the page's curvature formula agrees with Brioschi's general formula, the Gauss-Bonnet flux identity holds on the drawn square, the page's geodesic equation agrees with the affine geodesic equation with general Christoffel symbols, its RK4 converges at order 4 and its error at the page's step is bounded, and Clairaut's invariant holds on the reference; the sources, heights and curvature match the page's own JavaScript under Node; the rest heights are the builder's payload; and a browser drew the scene with every shader valid, matched the builder's field, kept running through a thrown callback, matched the original page's frames in four moods (with controls that fail), and saved a moment that redraws alone.",
+  "required": [
+    {"witness": "grammar"},
+    {"witness": "meaning"},
+    {"witness": "traps", "coverage": {"rules": 11}},
+    {"witness": "page-traps", "coverage": {"rules": 6}},
+    {"witness": "science", "coverage": {"kinds": 1}},
+    {"witness": "behaviour"}
+  ],
+  "visible_not_run": ["eyes", "host", "gpu-location", "paired-visual-review"],
+  "science": {
+    "min_cases": 1,
+    "min_witnesses": 10,
+    "quantization_max": 5e-05,
+    "case_glob": "cases/*/case.json",
+    "builders": {"manifold": "tools/manifold.py"},
+    "kinds": {
+      "manifold": {
+        "evolving": false,
+        "required_witnesses": ["curvature_general_metric", "gauss_bonnet", "geodesic_formulation", "geodesic_rk4_order", "geodesic_rk4_error", "clairaut", "heights_match_page_js", "curvature_matches_page_js"]
+      }
+    }
+  },
+  "limitations": [
+    "The field is authored (label Authored): its sources, breathing and moods are an artistic model, not measurements of emotion; the witnesses check its geometry, not its psychology.",
+    "Behaviour is one headless Chromium with software GL on one machine: correctness, fidelity to the original and portability, not frame rate or a GPU's look.",
+    "Fidelity is measured against the original page in the same browser; the X3D frame's own improvements (multisampled edges, the denser mesh, analytic occlusion) count against it. The light layers' blend curve and the ribbon width and gain are fitted (grade L).",
+    "Eyes as an offline render, a strict host copy, GPU timing and a paired human review were not run.",
+    "The shared library lib/stemkit lies outside the candidate; its hashes are recorded but not gated.",
+    "Grammar and Meaning ran on the local x3d_mcp fork checkout, not the family pin.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ]
+}

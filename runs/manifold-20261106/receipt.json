@@ -1,0 +1,113 @@
+{
+  "budget": {
+    "cloud_resources": 0,
+    "paid_calls": 0
+  },
+  "candidate_files": 91,
+  "candidate_sha256": "0e2dffb4dda05a38c5dc4d406e468157aff9b492901ddb5cfd22b9182fec77c6",
+  "grade": "C",
+  "inputs": {
+    "candidate_sha256": "0e2dffb4dda05a38c5dc4d406e468157aff9b492901ddb5cfd22b9182fec77c6"
+  },
+  "kind": "artifact",
+  "limitations": [
+    "The field is authored (label Authored): its sources, breathing and moods are an artistic model, not measurements of emotion; the witnesses check its geometry, not its psychology.",
+    "Behaviour is one headless Chromium with software GL on one machine: correctness, fidelity to the original and portability, not frame rate or a GPU's look.",
+    "Fidelity is measured against the original page in the same browser; the X3D frame's own improvements (multisampled edges, the denser mesh, analytic occlusion) count against it. The light layers' blend curve and the ribbon width and gain are fitted (grade L).",
+    "Eyes as an offline render, a strict host copy, GPU timing and a paired human review were not run.",
+    "The shared library lib/stemkit lies outside the candidate; its hashes are recorded but not gated.",
+    "Grammar and Meaning ran on the local x3d_mcp fork checkout, not the family pin.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ],
+  "model_calls": [],
+  "not_run": [
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "eyes"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "host"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "gpu-location"
+    },
+    {
+      "reason": "Not run in pass 1: no offline-render comparison of frames, no strict host copy, no GPU timing, no paired human review.",
+      "status": "not_run",
+      "witness": "paired-visual-review"
+    }
+  ],
+  "outputs": {},
+  "prev": null,
+  "profile": "x3d-stem-manifold/v1",
+  "schema": "loom.receipt/1",
+  "sha256": "f6d0ec8730be78c1bc7880335cf94b12632f636d6505f591d422c54571e76dd5",
+  "signed": false,
+  "subject": "x3d.STEM manifold, pass 1",
+  "tools": {
+    "behaviour": {
+      "tool": "project gate (adapter)"
+    },
+    "grammar": {
+      "commit": "fa0b3899666fbd61962fffea0c21a29b445c1c8d",
+      "tool": "x3d_mcp fork (validate_xml + semantic_diagnostics)"
+    },
+    "meaning": {
+      "commit": "fa0b3899666fbd61962fffea0c21a29b445c1c8d",
+      "tool": "x3d_mcp fork (validate_xml + semantic_diagnostics)"
+    },
+    "page-traps": {
+      "tool": "loomkit.pagetraps"
+    },
+    "science": {
+      "tool": "loomkit.sci (reconstructed SCI gates)"
+    },
+    "traps": {
+      "tool": "loomkit.traps"
+    }
+  },
+  "witnesses": [
+    {
+      "grade": "C",
+      "record_sha256": "d620f66ef868b0b911bbe307e96eaac18bda150e3bd386bf23c6067dd2f1409f",
+      "status": "pass",
+      "witness": "grammar"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "e655c09acfb0255a971cf267894e1973c8bf35b1fcbf8723b4c8058b991a6682",
+      "status": "pass",
+      "witness": "meaning"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "59b91278ece7ca3c8168fdacf934d0ec8cba2c58a55295e4222cc25524c71969",
+      "status": "pass",
+      "witness": "traps"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "3df37202061bc1247700a7655c176d63f2f86971b0a4f9d8a805439b31bc99bb",
+      "status": "pass",
+      "witness": "page-traps"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "933732599ca67f7f7cc4685fa5d62e505b2a8fbcc81a3ef069d3d3904135244d",
+      "status": "pass",
+      "witness": "science"
+    },
+    {
+      "grade": "C",
+      "record_sha256": "eb27f805306954d0914641959f18baac37dc2f1b174a6d85086181d0d55dc6e6",
+      "status": "pass",
+      "witness": "behaviour"
+    }
+  ],
+  "written_at": "2026-11-06T03:50:33+00:00"
+}

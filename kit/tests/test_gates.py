@@ -353,10 +353,35 @@ def sci_controls() -> list[dict]:
     return rows
 
 
+def cli_controls() -> list[dict]:
+    """Run the witness commands themselves (kit/loom traps, pagetraps), not only their libraries: a replace-all
+    edit once broke cmd_traps with an undefined name while every library-level test passed (6 Nov)."""
+    rows = []
+    loom = KIT / "loom"
+    with tempfile.TemporaryDirectory(prefix="loomkit-cli-") as d:
+        root, ev = Path(d) / "cand", Path(d) / "ev"
+        (root / "src").mkdir(parents=True)
+        good_x3d, bad_x3d = TRAP_CASES["shader-raw-source"]
+        cases = [("traps", "scene.x3d", good_x3d, bad_x3d, "scene.x3d"),
+                 ("pagetraps", "src/app.js", CLEAN_PAGE, PAGE_CASES["xite-callback-unguarded"], "src/*.js")]
+        for cmd, rel, good, bad, glob in cases:
+            for label, text, want in (("clean", good, "pass"), ("trap", bad, "fail")):
+                (root / rel).write_text(text)
+                r = subprocess.run([str(loom), cmd, str(root), "--evidence", str(ev), "--files", glob], capture_output=True, text=True)
+                if r.returncode != 0:
+                    raise RuntimeError(f"CLI_CRASH {cmd}: {r.stderr.strip().splitlines()[-1] if r.stderr.strip() else r.returncode}")
+                got = json.loads(r.stdout)["status"]
+                if got != want:
+                    raise RuntimeError(f"CLI_STATUS {cmd} {label}: {got}, expected {want}")
+                rows.append({"command": cmd, "fixture": label, "status": got})
+            (root / rel).unlink()
+    return rows
+
+
 def run_all() -> dict:
     return {"acceptance": acceptance_controls(), "traps": trap_controls(),
             "picture": picture_controls(), "receipt": receipt_controls(), "sweep": sweep_controls(), "sci": sci_controls(),
-            "pagetraps": page_controls(), "optimized": bool(sys.flags.optimize)}
+            "pagetraps": page_controls(), "cli": cli_controls(), "optimized": bool(sys.flags.optimize)}
 
 
 if __name__ == "__main__":
