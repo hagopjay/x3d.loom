@@ -314,7 +314,7 @@ def part_scene(kind='flash'):
     pos = (0, 0, 6)
     o.append('    <NavigationInfo type=\'"NONE"\' headlight="false"/>\n    <Viewpoint DEF="VP" position="0 0 6" fieldOfView="0.8"/>\n    <Background skyColor="0.005 0.01 0.02"/>\n')
     o.append('    <TimeSensor DEF="TS" cycleInterval="2" loop="true"/>\n')
-    app = ('<Appearance><BlendMode sourceColorFactor="SRC_ALPHA" destinationColorFactor="ONE"/><DepthMode readOnly="true"/>'
+    app = ('<Appearance><BlendMode sourceColorFactor="SRC_ALPHA" destinationColorFactor="ONE"/><DepthMode depthMask="false"/>'
            '<Material emissiveColor="1 1 1" diffuseColor="0 0 0"/><ImageTexture url=\'"glow.png"\'/></Appearance>')
     if kind == 'flash':
         o.append('    <ParticleSystem geometryType="QUAD" maxParticles="1500" particleLifetime="1.4" lifetimeVariation="0.4" particleSize="0.22 0.22" colorKey="0 0.3 0.7 1">'
@@ -324,7 +324,7 @@ def part_scene(kind='flash'):
                  '</ParticleSystem>\n')
     else:
         o.append('    <ParticleSystem geometryType="LINE" maxParticles="600" particleLifetime="1.1" lifetimeVariation="0.5" particleSize="0.3 0.3" colorKey="0 1">'
-                 '<Appearance><BlendMode sourceColorFactor="SRC_ALPHA" destinationColorFactor="ONE"/><DepthMode readOnly="true"/><Material emissiveColor="1 0.8 0.4" diffuseColor="0 0 0"/><LineProperties linewidthScaleFactor="2"/></Appearance>'
+                 '<Appearance><BlendMode sourceColorFactor="SRC_ALPHA" destinationColorFactor="ONE"/><DepthMode depthMask="false"/><Material emissiveColor="1 0.8 0.4" diffuseColor="0 0 0"/><LineProperties linewidthScaleFactor="2"/></Appearance>'
                  '<ConeEmitter position="0 0 0" direction="1 0 0" angle="3.14" speed="3.0" variation="0.8" mass="0" surfaceArea="0"/>'
                  '<ColorRGBA containerField="color" color="1 0.9 0.5 1, 1 0.4 0.1 0"/></ParticleSystem>\n')
     o.append(TAIL)

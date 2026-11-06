@@ -1,6 +1,6 @@
 # HEP-EVENT-WITNESS: a demo witness for collider-event scenes
 
-Status: prototype, `hep-demo/v1` (v1 adds look v2 and the merged convention, section 6b; v0 covered look v1 only and was never published). This is a **demo plausibility witness**. It is not a physics validation and it makes no STEM-grade claim. It decides whether a generated collider event and the X3D scene drawn from it are *plausible enough to show*: the numbers have sane units, the charges add up, the tracks bend the way their momentum and the field say, everything sits inside the detector, every particle above the drawing cuts is drawn exactly once, and every drawn track carries the shared shader with the right per-track data. The witness itself still renders nothing and compiles no GLSL. Since 2026-11-06 the look v2 scenes have been rendered in X_ITE with 0 shader or console errors, but by the stills harness, not by this witness (see `runs/hep-demo-20261106/frames-v2/LOOK-V2.md`; behaviour and look-match stay visibly not run in the profile).
+Status: prototype, `hep-demo/v2` (v2, after an independent review: the scene graph is read fail-closed and every drawing is bound to its own event, section 6c; v1 added look v2 and the merged convention, section 6b; v0 covered look v1 only and was never published). This is a **demo plausibility witness**. It is not a physics validation and it makes no STEM-grade claim. It decides whether a generated collider event and the X3D scene drawn from it are *plausible enough to show*: the numbers have sane units, the charges add up, the tracks bend the way their momentum and the field say, everything sits inside the detector, every particle above the drawing cuts is drawn exactly once, and every drawn track carries the shared shader with the right per-track data. The witness itself still renders nothing and compiles no GLSL. Since 2026-11-06 the look v2 scenes have been rendered in X_ITE with 0 shader or console errors, but by the stills harness, not by this witness (see `runs/hep-demo-v2-20261106/frames/LOOK-V2.md`; behaviour and look-match stay visibly not run in the profile).
 
 The look comes from a generated reference video (two stills: the quiet "before" frame and the "hero" frame). The workflow is: reference video sets the look, the builder writes X3D, the witness checks the binding, an eye still has to check the look.
 
@@ -15,8 +15,9 @@ The look comes from a generated reference video (two stills: the quiet "before" 
 | curvature = 0.2998 B / pT on the declared helix, on the hits, and on the drawn polyline (15 percent + 0.01 /m + rounding noise) | bends smaller than the rounding of the stored points (counted as unresolved, section 8) |
 | bend sense from charge and field direction | the sign of B in the scene's own camera handedness |
 | containment of hits, vertices, drawn points and tower corners in the declared volumes | material, shower shape, energy loss |
-| bijection: every drawable particle has one drawn track, every `trk_` and `twr_` shape maps to the event, none hidden, none twice | that the shape *looks* like a track |
-| shader binding: one ComposedShader per track with data: URLs, attributes supplied with the right count and per-track values (id, charge, pT, birth), clock ROUTE from a TimeSensor | that the GLSL compiles, runs, or looks right |
+| bijection: every drawable particle has one drawn track, every `trk_` and `twr_` shape maps to the event, none hidden (Switch, Collision proxy), none twice, none reused or tucked where the reader does not look | that the shape *looks* like a track |
+| binding of each drawing to its own event: the drawn path starts at its vertex, leaves along its phi, dips along its eta and reaches as far as its helix goes; tower needles sit in their own cell | the exact drawn length past the tracker (extensions are judged on join, angle and containment) |
+| shader binding: one ComposedShader per track with data: URLs, attributes supplied with the right count and per-track values (id, charge, pT, birth time inside its window, species from the pdg, arc length from zero along the drawn path, look rows), clock ROUTE from a TimeSensor | that the GLSL compiles, runs, or looks right |
 
 ## 2. Pipeline and files
 
@@ -29,12 +30,12 @@ The look comes from a generated reference video (two stills: the quiet "before" 
 | spec | `kit/examples/hep/hep-demo-spec.json` | n/a | every threshold (change it here, never in code) |
 | build scene | `kit/examples/hep/build_event_scene.py` | stdlib | `<stem>.x3d` plus `<stem>.event.json` naming it; `--look v2` for merged ribbons, muon extensions and the spiky crown, `--bloom` for the RenderedTexture wrappers (look v1 output is byte-identical to before) |
 | witness | `kit/loomkit/hepevent.py`, CLI `loom hepevent` | stdlib | witness record `hep-event`, grade C |
-| profile | `kit/profiles/hep-demo.json` | n/a | `hep-demo/v1`: required hep-event (8 events, 8 scenes: every fixture in look v1 and look v2), traps (11 rules); visible not run: grammar, meaning, behaviour, look-match, eyes, real-gpu |
+| profile | `kit/profiles/hep-demo.json` | n/a | `hep-demo/v2`: required hep-event (10 events, 10 scenes: every fixture in look v1 and look v2), traps (11 rules); visible not run: grammar, meaning, behaviour, look-match, eyes, real-gpu |
 | rehearsal | `kit/examples/run_hep_event.sh` | stdlib | candidate (look v1 in `events/`, look v2 in `events-v2/`), witnesses, acceptance, receipt, three negative controls |
-| tests | `kit/tests/test_hepevent.py`, `kit/tests/hepevent-last-run.json` | stdlib | 155 negative, 15 positive, 2 CLI controls in both modes |
+| tests | `kit/tests/test_hepevent.py`, `kit/tests/hepevent-last-run.json` | stdlib | 206 negative, 17 positive, 2 CLI controls in both modes |
 | render | `kit/examples/hep/render/` (`fetch_xite.sh`, `shots.cjs`, `site/shot.html`, `site/glspy.js`) | Node, Playwright, X_ITE 16.5.1 fetched by npm (not committed) | stills, load CPU time, program and draw counts, shader logs, console errors |
 
-Fixtures (`kit/examples/hep/fixtures/`, four files, each under 200 KB):
+Fixtures (`kit/examples/hep/fixtures/`, five files, each under 200 KB):
 
 | File | Source | Final-state | Tracks (charged) | Hits | Towers | Bytes |
 |---|---|---|---|---|---|---|
@@ -42,6 +43,7 @@ Fixtures (`kit/examples/hep/fixtures/`, four files, each under 200 KB):
 | `pythia-zmumu.event.json` | Pythia 8.318, Z to mu mu, event 027 of the seed-11 run | 542 | 462 (240) | 1018 | 124 | 177,865 |
 | `pythia-qcd-demo.event.json` | Pythia 8.318, HardQCD pTHat above 30 GeV, event 014 of the seed-22 run (the hero scene) | 607 | 497 (235) | 917 | 132 | 189,695 |
 | `pythia-qcd-inflight.event.json` | same, decays in flight allowed (event 002 of the seed-22 in-flight run) | 496 | 382 (194) | 756 | 118 | 157,840 |
+| `pythia-dijet-hero.event.json` | Pythia 8.318, HardQCD pTHat above 400 GeV, event 026 of 30 of the seed-41 run: the most charged tracks above 5 GeV at abs(eta) below 1 (41); the look v2 hero | 512 | 456 (204) | 1100 | 168 | 179,211 |
 
 ## 3. Event format `loom.hep-event/1`
 
@@ -89,17 +91,17 @@ Order (the first broken rule raises, with its code): units, charge, four-momentu
 
 | Code | Raised when | Why it matters for a demo | Negative controls |
 |---|---|---|---|
-| `EVT_PARSE` | not JSON, NaN/Infinity, wrong schema, missing or mistyped field, dangling mother, scene not XML, entity declarations, USE before DEF, unreadable node, bad coordIndex, scene path escapes or is missing; merged strips whose stripCount, Coordinate or numComponents do not add up | a malformed event must stop here, not draw half a scene or throw inside the viewer | 44 |
-| `EVT_SPEC` | threshold file malformed or inconsistent (including `scene.merged`: an offset tolerance as wide as the ribbon is refused) | the thresholds are the contract; a typo in the spec must not loosen a check silently | 28 |
-| `EVT_UNITS` | MeV read as GeV, millimetres read as metres (detector, helix radius, scene extent) | the failure that silently shrinks or blows up a scene by 1000 | 4 |
+| `EVT_PARSE` | not JSON, NaN/Infinity, wrong schema, missing or mistyped field, dangling mother, scene not XML, entity declarations, USE before DEF, a USE cycle or a reuse that expands past the budget, unreadable or unknown node, LOD, bad coordIndex, scene path escapes or is missing; merged strips whose stripCount, Coordinate or numComponents do not add up | a malformed event must stop here, not draw half a scene or throw inside the viewer | 48 |
+| `EVT_SPEC` | threshold file malformed or inconsistent (including `scene.merged`: an offset tolerance as wide as the ribbon is refused; reach, birth, arc, species, tower-cell, look and join-angle sections bounded) | the thresholds are the contract; a typo in the spec must not loosen a check silently | 36 |
+| `EVT_UNITS` | MeV read as GeV, millimetres read as metres (detector, helix radius, scene extent) | the failure that silently shrinks or blows up a scene by 1000; also a field outside 1 mT to 100 T, a scene scaled to nothing or onto the axis | 8 |
 | `EVT_CHARGE` | final-state charge differs from incoming, or a track differs from its particle | the hue (magenta or cyan) and the bend direction come from the charge | 3 |
 | `EVT_4MOM` | final-state four-momentum differs from incoming by more than 0.5 GeV + 1e-4 E, beams differ from incoming, or no final state | catches a dropped or duplicated particle and a wrong pz; loose on purpose | 3 |
 | `EVT_CURVATURE` | declared, measured or drawn bend disagrees with pT, charge and B (fitted circle, or straight-line departure for unresolved paths) | the one visual cue a viewer can check by eye: soft tracks curl, stiff tracks run straight | 10 |
 | `EVT_SENSE` | bends clockwise where counter-clockwise is required | a mirrored detector is a plausible-looking wrong picture | 2 |
-| `EVT_CONTAINMENT` | hit, vertex, drawn track point or tower corner outside its volume; tower beyond the barrel; a non-muon drawn on past the tracker; a muon extension outside the declared muon system | tracks poking through the calorimeter crown break the picture; only muons pass it | 8 |
-| `EVT_SCENE_BIJECTION` | a drawable particle with no track, a `trk_`/`twr_` shape (or merged strip) with no event row, a shape or strip drawn twice or hidden by a Switch, a non-Shape DEF, fewer points than `min_points`, a track on a non-final-state particle, two tracks on one particle, scene required but absent; a merged shape with no declared convention, a strip that is not the declared ribbon (odd count, pair not offset by the declared amount, id not an index), a muon that leaves the tracker without its extension, an extension not joined to its track | "all 300 or 3000 particles" is a claim about count; this is the check that counts | 31 |
-| `EVT_SHADER` | a track without the shared ComposedShader, raw shader text instead of a data: URL, missing clock field or ROUTE, missing or short vertex attribute, attribute not declared in the vertex source, `a_ident` id, charge, pT or birth wrong, `a_ident` varying along a track; the two edges of a ribbon disagreeing; a tower's `a_cell` energy, em fraction or arrival wrong or varying between its spikes; an extension whose ident row is not its track's | the flat default look is what a missing shader draws, with no error | 22 |
-| total | | | 155 (15 positive, 2 CLI) |
+| `EVT_CONTAINMENT` | hit, vertex, drawn track point or tower corner outside its volume; tower beyond the barrel; a non-muon drawn on past the tracker; a muon extension outside the declared muon system | tracks poking through the calorimeter crown break the picture; only muons pass it; a tower needle drawn outside its own cell | 12 |
+| `EVT_SCENE_BIJECTION` | a drawable particle with no track, a `trk_`/`twr_` shape (or merged strip) with no event row, a shape or strip drawn twice or hidden by a Switch, a non-Shape DEF, fewer points than `min_points`, a track on a non-final-state particle, two tracks on one particle, scene required but absent; a merged shape with no declared convention, a strip that is not the declared ribbon (odd count, pair not offset by the declared amount, id not an index), a muon that leaves the tracker without its extension, an extension not joined to its track, or joined inside the tracker, or turning more than the declared angle, or running back in; a track hidden as a Collision proxy, inside a Billboard, reused by USE, or in a place the reader does not look; **a drawn path that does not start at its vertex, points or dips the wrong way, or stops short of its own helix (it is not this track's path)** | "all 300 or 3000 particles" is a claim about count, and each drawing must be the particle it counts for | 46 |
+| `EVT_SHADER` | a track without the shared ComposedShader, raw shader text instead of a data: URL, missing clock field or ROUTE, missing or short vertex attribute, attribute not declared in the vertex source, `a_ident` id, charge, pT or birth wrong, `a_ident` varying along a track; the two edges of a ribbon disagreeing; a tower's `a_cell` energy, em fraction or arrival wrong or varying between its spikes; an extension whose ident row is not its track's; a birth time outside its production window, a species code that is not the particle's, an arc length that runs backwards, starts off zero or spans more than the drawn path; a strip without its look attribute or whose side or id changes along it; a tower set without the crown clock | the flat default look is what a missing shader draws, with no error; wrong data draws a wrong colour or a wrong time with no error either | 38 |
+| total | | | 206 (17 positive, 2 CLI) |
 
 ## 6. The look: reference still to builder to witness
 
@@ -169,44 +171,57 @@ Names: `trkset_<n>` (tracks), `muext_<n>` (muon extensions), `twrset_<n>` (tower
 
 What a pass reports for look v2 (from the rehearsal record): hero 497 tracks in 1 merged Shape with 497 strips, 132 towers in 1 merged Shape; pythia-zmumu 462 tracks and both muons extended; every drawn path judged (`scene_curvature_judged` equals the track count).
 
+## 6c. After review: fail-closed reading and binding to the event (v2, added 2026-11-06)
+
+An independent three-lens review of v1 (witness, look, hygiene; its 32 crafted attacks are now all refused with a fitting reason) found that a pass could be bought. The fixes, each with its own controls in `review_controls()` of `kit/tests/test_hepevent.py` (51 negatives, 2 positives):
+
+| v1 hole | v2 rule | spec |
+|---|---|---|
+| a `<Group USE='tracks'/>` drew every track twice and passed; LOD, unknown grouping nodes and a Collision proxy were read as drawn | every USE is followed into its DEF (cycle check, expansion budget 2,000,000 nodes); a USE of track geometry is a bad DEF; LOD and unknown nodes outside a Shape are unreadable; a Collision proxy and a Switch that does not select a child hide it (metadata children are not choices); a named shape inside a Billboard, ParticleSystem or any node the reader does not walk is refused | none |
+| curvature was graded against the drawing's own fit, so any circle of the right radius passed: a 1 mm stub, a shifted, rotated or squashed copy | each drawn path must start within `start_tol_m` of its vertex, leave within `dir_tol_rad` of its phi, rise with the dip angle of its eta within `pitch_tol_rad` (well conditioned at every eta), and reach at least its own helix's extent inside the tracker minus `reach_tol_m` | `scene.reach` |
+| shader data was checked for presence: a late birth, a pion coloured as an electron, an arc that ran backwards all passed | birth time inside its production window, species code from the pdg, arc from zero (or from where the track ends, for an extension), monotone, spanning the drawn path | `shader.birth`, `shader.species`, `shader.arc` |
+| tower spikes were checked for energy only | each spike pair carries one `a_cell` row; its base sits in its own (eta, phi) cell and its tip in its phi cell at the same z | `merged.tower_cell` |
+| an extension was joined by distance only | it must start on the tracker boundary heading out, turn less than `join_angle_deg` where it joins, stay in the muon system and never run back inside the tracker | `merged.extensions.join_angle_deg` |
+| strips were read without their look | `a_look` (side, seed, drawn_m, kind) must exist, alternate sides, keep its id along the strip, match the kind of the particle and the length it fades along | `merged.look` |
+
 ## 7. Controls and results
 
 Run (both modes, real output):
 
 ```
 $ python3 -I kit/tests/test_hepevent.py
-optimized=False: 155 negative controls caught with the intended code, 15 positive controls pass, 2 CLI controls
-optimized=True: 155 negative controls caught with the intended code, 15 positive controls pass, 2 CLI controls
+optimized=False: 206 negative controls caught with the intended code, 17 positive controls pass, 2 CLI controls
+optimized=True: 206 negative controls caught with the intended code, 17 positive controls pass, 2 CLI controls
 ```
 
-Each negative control names the code it must raise and a distinctive phrase of the diagnostic it must carry (`WRONG_DIAGNOSTIC` and `WRONG_REASON` are test failures, a surviving negative is `SURVIVING_CONTROL`). Negatives by code: EVT_PARSE 44, EVT_SCENE_BIJECTION 31, EVT_SPEC 28, EVT_SHADER 22, EVT_CURVATURE 10, EVT_CONTAINMENT 8, EVT_UNITS 4, EVT_CHARGE 3, EVT_4MOM 3, EVT_SENSE 2. Of these, 43 target look v2 and the merged convention (section 6b).
+Each negative control names the code it must raise and a distinctive phrase of the diagnostic it must carry (`WRONG_DIAGNOSTIC` and `WRONG_REASON` are test failures, a surviving negative is `SURVIVING_CONTROL`). Negatives by code: EVT_PARSE 48, EVT_SCENE_BIJECTION 46, EVT_SHADER 38, EVT_SPEC 36, EVT_CONTAINMENT 12, EVT_CURVATURE 10, EVT_UNITS 8, EVT_CHARGE 3, EVT_4MOM 3, EVT_SENSE 2. 51 of them came from the review (section 6c); every control that existed before v2 also names a phrase of its reason.
 
-Positive controls (11): exact Z to mu mu with its scene and the inventory read back; toy shower of 40 with loopers; toy shower of 400 (scale); scene in millimetres under `Transform scale 0.001` (the reader applies transforms); a track inside a Switch that selects it; event alone with a spec lacking a scene section (reports `scene: None`); declared radius 10 percent off (inside 15 percent); exactly 3 hits on the right circle (regression, section 8 finding 4); a particle born 2 m from the axis owes no track (finding 6); forward tracks whose bend is below the rounding are passed as unresolved and the pass counts them (finding 7); builder shader hygiene.
+Positive controls (17): exact Z to mu mu with its scene and the inventory read back; toy shower of 40 with loopers; toy shower of 400 (scale); scene in millimetres under `Transform scale 0.001` (the reader applies transforms); a track inside a Switch that selects it; event alone with a spec lacking a scene section (reports `scene: None`); declared radius 10 percent off (inside 15 percent); a particle born 2 m from the axis owes no track (finding 6); forward tracks whose bend is below the rounding are passed as unresolved and the pass counts them (finding 7); builder shader hygiene; look v2: exact Z to mu mu with both muons extended, toy shower of 40, toy shower of 400, two builds byte-identical; a Switch whose first child is metadata selects the tracks with whichChoice 0; a looping muon that never leaves the tracker is drawn with no extension.
 
 CLI controls (2): `loom hepevent` writes `status pass` on the clean candidate and `status fail`, `EVT_SCENE_BIJECTION: event tracks not drawn: trk_1`, when a track is deleted from the scene.
 
-Mutation pass (`kit/tests/mutate_hepevent.py`: disable one `need(...)` at a time and re-run the suite; last run `kit/tests/hepevent-mutation-last-run.json`): 127 `need` sites, 127 caught. History: the v0 pass caught 33 of 102 at first, and the controls were added until all 102 were caught; the look v2 extension added 25 sites, the first pass over them left 14 uncaught, and 13 new controls plus one dead gate removed (an extension on a track the bijection had already required) closed them. Limit: it mutates the raising predicates only, not thresholds or the arithmetic inside them.
+Mutation pass (`kit/tests/mutate_hepevent.py`: disable one `need(...)` at a time and re-run the suite; last run `kit/tests/hepevent-mutation-last-run.json`): 161 `need` sites, 161 caught: 126 by a control failing its own assertion, 35 by the witness crashing further on because the gate was gone (the suite still fails, but law 19 counts only the first kind as a gate with its own control; the 35 are mostly parse-stage guards whose absence makes a later read throw). History: v2 (after review) added gates for the scene graph and the event binding, and one more survivor was removed as dead (a birth-time sign check that the birth window subsumes); the v0 pass caught 33 of 102 at first, and the controls were added until all 102 were caught; the look v2 extension added 25 sites, the first pass over them left 14 uncaught, and 13 new controls plus one dead gate removed (an extension on a track the bijection had already required) closed them. Limit: it mutates the raising predicates only, not thresholds or the arithmetic inside them.
 
 Rehearsal on the committed fixtures (`kit/examples/run_hep_event.sh`, run in both modes; the second with `LOOM_PYFLAGS=-O` into a scratch directory). Real output of the last lines of the first run (JSON objects compacted onto one line each, absolute paths shortened to `.../`):
 
 ```
 {
   "status": "accepted",
-  "profile": "hep-demo/v1",
-  "subject_sha256": "fd8301241b5ca8870b391426d1d9ce56cc13e4e20eb510956a182d036d228101",
+  "profile": "hep-demo/v2",
+  "subject_sha256": "9685212a2e9367604eeccc06ce1fe8de9aa959354f67805d4021588f87e27542",
   "witnesses": [
-    {"witness": "hep-event", "status": "pass", "grade": "C", "record_sha256": "a8e41a6332a8904a42301f3aa0af5391e9f138b93e6001899d9098d2bcbbb68e"},
+    {"witness": "hep-event", "status": "pass", "grade": "C", "record_sha256": "71b4b89f655766aa70505f1bbb3c87f3648615998f0a721d6d1e09d410bb9579"},
     {"witness": "traps",     "status": "pass", "grade": "C", ...}
   ],
   "visible_not_run": ["grammar", "meaning", "behaviour", "look-match", "eyes", "real-gpu"]
 }
 {
-  "receipt": ".../runs/hep-demo-20261106/receipt.json",
-  "sha256": "36d222ae0fad1b20660b913c04d46f52b1344a4e55c15b6800ce0f15af28d629",
-  "candidate_sha256": "fd8301241b5ca8870b391426d1d9ce56cc13e4e20eb510956a182d036d228101",
+  "receipt": ".../runs/hep-demo-v2-20261106/receipt.json",
+  "sha256": "fb0ae36a15c55b39d682b6253d2e680235ecc7fe4fd103c640a87ec65e9c072a",
+  "candidate_sha256": "9685212a2e9367604eeccc06ce1fe8de9aa959354f67805d4021588f87e27542",
   "evidence_files": 8
 }
-{ "receipt": "intact", "sha256": "36d222ae0fad1b20660b913c04d46f52b1344a4e55c15b6800ce0f15af28d629" }
+{ "receipt": "intact", "sha256": "fb0ae36a15c55b39d682b6253d2e680235ecc7fe4fd103c640a87ec65e9c072a" }
 --- control: edit a scene after the witness ran -> STALE_WITNESS
 {"rejected": "STALE_WITNESS", "detail": "hep-event"}
 --- control: one track deleted from the hero scene -> EVT_SCENE_BIJECTION, acceptance rejects
@@ -217,7 +232,7 @@ Rehearsal on the committed fixtures (`kit/examples/run_hep_event.sh`, run in bot
 {"rejected": "WITNESS_NOT_PASS", "detail": "hep-event: fail"}
 ```
 
-(The full record is `runs/hep-demo-20261106/evidence/hep-event.json`, with coverage `{"events": 8, "scenes": 8, "towers": 752, "tracks": 2686}`: each fixture counted once per look.)
+(The full record is `runs/hep-demo-v2-20261106/evidence/hep-event.json`, with coverage `{"events": 10, "scenes": 10, "towers": 1088, "tracks": 3598}`: each fixture counted once per look.)
 
 What a pass reports it read (per fixture, from the witness record):
 
@@ -227,8 +242,9 @@ What a pass reports it read (per fixture, from the witness record):
 | pythia-zmumu | 545 | 542 | 462 | 240 | 1018 | 124 | 668 | 5659 | 462 judged, 32 unresolved, 222 two-point | 2 | 1.2e-05 |
 | pythia-qcd-demo | 609 | 607 | 497 | 235 | 917 | 132 | 684 | 5614 | 497 judged, 36 unresolved, 262 two-point | 3 | 1.6e-05 |
 | pythia-qcd-inflight | 498 | 496 | 382 | 194 | 756 | 118 | 589 | 4772 | 382 judged, 31 unresolved, 188 two-point | 0 | 6e-06 |
+| pythia-dijet-hero | 514 | 512 | 456 | 204 | 1100 | 168 | 568 | 3126 | 456 judged, 25 unresolved, 252 two-point | 1 | 4e-06 |
 
-(Two-point paths are the neutrals, drawn as straight segments and checked against the straight rule. Witness time is 0.6 s for all four.)
+(Two-point paths are the neutrals, drawn as straight segments and checked against the straight rule. Witness time is 0.6 s for the first four; the look v1 numbers are shown.)
 
 ## 8. Findings from real generator output (Pythia 8.318, 300 events plus a pile-up stress)
 
@@ -287,16 +303,16 @@ So "all 300 or 3000 particles" is true of the visible, above-threshold ones: 84.
 
 | Limit | Consequence |
 |---|---|
-| Nothing was rendered, nothing was compiled | the GLSL has only been checked lexically (no `#`, `%`, quote, `//`, `active`, int literal; balanced brackets). No GLSL compiler could be installed here. Every statement about the look is grade S until a browser loads the scene (the Behaviour witness) and an eye compares it with the reference stills (look-match, eyes) |
+| The witness renders nothing and compiles nothing | inside the acceptance the GLSL is checked lexically only (no `#`, `%`, quote, `//`, `active`, int literal; balanced brackets). X_ITE 16.5.1 stills of the same look v2 scenes, 0 shader or console errors under software GL, are recorded beside the receipt (`runs/hep-demo-v2-20261106/frames/`), not inside it; behaviour, look-match and eyes stay visibly not run |
 | `<component name='Shaders' level='3'/>` | the level was taken from memory (grade L); the grammar and meaning witnesses (X3D fork) were not run |
-| WebGL draws lines one pixel wide | the glow of a filament is colour and density, not thickness; the reference's soft thick strands are not reproduced |
-| no haze | the reference background has a faint haze; the builder has a Background gradient only |
+| WebGL draws lines one pixel wide (look v1) | look v1's filaments are 1 px; look v2 draws screen-space ribbons instead |
+| no backdrop | look v2 has a faint shader haze; the reference's lit machinery backdrop is not built |
 | truth-level response | tracks, hits and towers are placed from the generator's particles: no smearing, no energy loss, no showers; muons deposit a fixed 0.8 GeV; the calorimeter is a barrel only |
 | plausibility physics | momentum balance is 0.5 GeV loose; no mass shell, no resonance peak, no calorimeter sum rule; qcd-118's 6.9 MeV residual passes by design |
 | unresolved bends | 15 to 17 percent of the charged tracks in the real events (mostly very forward ones, whose xy path in the tracker is millimetres long) draw a bend below the rounding of their coordinates. They are checked only as straight lines within the expected sagitta, and the sense is not checked. The pass says how many |
 | sense floor | the sense is checked only when the expected sagitta exceeds 2 mm, so a central track above about 70 GeV is not sense-checked |
 | two-point rule | a two-point path is a straight segment; it is accepted if the expected sagitta over its chord is at most 2 mm |
-| direction is not checked | the witness does not compare a drawn track's pointing (eta, phi) with the track row, only its bend, containment and shader data; a track redrawn in a wrong direction inside the volume would pass |
+| direction is checked at the start only | since v2 the first drawn segment must point along the track's phi and dip along its eta, and the path must reach its helix's extent; a path that starts right and then wanders inside the tolerance of the bend fit is still judged by curvature only |
 | slow motion | the head advances at 0.9 m/s; the scene says so in a meta tag; towers light by that same speed, so the arrival order is right and the magnitudes are not |
 | tower arrival is not cross-checked against the tracks | `a_tower.arrival` is data in the scene; the witness requires the shader to be bound, not that the arrival times are consistent |
 | mutation pass | deletes `need` calls only; thresholds and the arithmetic inside predicates are covered by controls, not by mutation |
@@ -333,11 +349,13 @@ LOOM_PYFLAGS=-O kit/examples/run_hep_event.sh /tmp/hep-run-O
 |---|---|
 | `kit/loomkit/hepevent.py` | new: the witness (stdlib only) |
 | `kit/loomkit/cli.py` | changed, additive: `hepevent` import, `cmd_hepevent`, subparser, dispatch entry, docstring line |
-| `kit/profiles/hep-demo.json` | new: acceptance profile `hep-demo/v1` |
+| `kit/profiles/hep-demo.json` | new: acceptance profile `hep-demo/v2` (v1 was the first push of the PR) |
 | `kit/tests/test_hepevent.py`, `kit/tests/hepevent-last-run.json`, `kit/tests/mutate_hepevent.py`, `kit/tests/hepevent-mutation-last-run.json` | new |
 | `kit/examples/hep/render/`, `kit/examples/hep/feas/` | new: stills harness, feasibility harness (X_ITE itself is fetched, not committed) |
-| `COLLIDER.md`, `docs/COLLIDER-XITE-FEASIBILITY.md`, `docs/COLLIDER-SURVEY.md`, `runs/hep-demo-20261106/frames-v2/` | new: the demo's entry point, the X_ITE measurements, the survey, first light |
+| `COLLIDER.md`, `docs/COLLIDER-XITE-FEASIBILITY.md`, `docs/COLLIDER-SURVEY.md`, `runs/hep-demo-20261106/frames-v2/`, `runs/hep-demo-v2-20261106/frames/` | new: the demo's entry point, the X_ITE measurements, the survey, first light, the frames after review |
 | `kit/examples/run_hep_event.sh` | new |
-| `kit/examples/hep/` : `hep-demo-spec.json`, `hep_response.py`, `exact_events.py`, `build_event_scene.py`, `pythia_fixtures.py`, `select_fixtures.py`, `fixtures/` (4 files) | new |
+| `kit/examples/hep/` : `hep-demo-spec.json`, `hep_response.py`, `exact_events.py`, `build_event_scene.py`, `pythia_fixtures.py`, `select_fixtures.py`, `fixtures/` (5 files) | new |
 | `docs/HEP-EVENT-WITNESS.md` | new (this file) |
-| `runs/hep-demo-20261106/` | new: the rehearsal's evidence, receipt and candidate (regenerate with the script) |
+| `runs/hep-demo-20261106/` | new: the v1 rehearsal (8 events), kept as history |
+| `runs/hep-demo-v2-20261106/` | new: the v2 rehearsal's evidence, receipt and candidate (regenerate with the script) |
+| `kit/loomkit/receipt.py`, `kit/tests/test_gates.py` | changed: receipt output keys stay unique when two outputs share a basename (`RECEIPT_OUTPUTS` for a file listed twice), with two controls |

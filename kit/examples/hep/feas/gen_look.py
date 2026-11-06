@@ -361,7 +361,7 @@ def shader_xml(vs, fs, fields, def_name=None, per_track=''):
 
 
 ADD_BLEND = '<BlendMode DEF="BM_ADD" sourceColorFactor="ONE" destinationColorFactor="ONE" sourceAlphaFactor="ONE" destinationAlphaFactor="ONE"/>'
-NODEPTH = '<DepthMode DEF="DM_RO" readOnly="true"/>'
+NODEPTH = '<DepthMode DEF="DM_RO" depthMask="false"/>'   # was readOnly="true", not an X_ITE 16.5.1 field (ignored): the measured runs wrote depth
 
 
 def appearance(shader_xml_, use_modes=False, first=True):

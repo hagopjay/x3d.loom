@@ -1,14 +1,14 @@
 #!/bin/sh
-# Rehearse the hep-demo path on the committed fixtures (one hand-computed Z -> mu mu decay and three Pythia 8 events):
+# Rehearse the hep-demo path on the committed fixtures (one hand-computed Z -> mu mu decay and four Pythia 8 events):
 # 1. build the candidate: the scene builder writes one X3D scene per fixture (generator, not file) beside an event file
 #    that names it, once in look v1 (events/, one Shape per track) and once in look v2 (events-v2/, ribbons merged into
 #    strips, muon extensions, tower spikes), and the spec is copied in so it is part of the candidate hash;
-# 2. run the hep-event witness and the traps witness, record what did not run, accept under hep-demo/v0, write a receipt;
+# 2. run the hep-event witness and the traps witness, record what did not run, accept under hep-demo/v2, write a receipt;
 # 3. prove the gate bites: an edit after the witness ran rejects (STALE_WITNESS), and a hero scene with one track
 #    deleted fails the witness with EVT_SCENE_BIJECTION so acceptance rejects it (WITNESS_NOT_PASS), in v1 and in v2.
 set -eu
 V1="$(cd "$(dirname "$0")/../.." && pwd)"
-RUN="${1:-$V1/runs/hep-demo-$(date -u +%Y%m%d)}"
+RUN="${1:-$V1/runs/hep-demo-v2-$(date -u +%Y%m%d)}"
 CAND="$RUN/candidate"
 EV="$RUN/evidence"
 WORK="$V1/.work/hep-demo"
@@ -31,16 +31,16 @@ cp "$HEP/hep-demo-spec.json" "$CAND/hep-demo-spec.json"
 "$LOOM" record "$CAND" --evidence "$EV" --name meaning --status not_run --grade L \
   --reason "The X3D fork is not on this machine; DEF before USE and ROUTE order are read by the hep-event and traps witnesses only."
 "$LOOM" record "$CAND" --evidence "$EV" --name behaviour --status not_run --grade L \
-  --reason "No browser ran: the GLSL has not been compiled and the scene has not been loaded in X_ITE. Another worker is measuring X_ITE rendering separately."
+  --reason "Not run as a Loom witness in this rehearsal. X_ITE 16.5.1 stills of these exact look v2 scenes (0 shader or console errors, software GL) are recorded outside this receipt in the run's frames/ folder (LOOK-V2.md, frames.jsonl)."
 "$LOOM" record "$CAND" --evidence "$EV" --name look-match --status not_run --grade S \
-  --reason "No frame was rendered, so the scene has not been compared with the reference stills (end-on framing, nested shells, filaments, tower crown)."
-"$LOOM" record "$CAND" --evidence "$EV" --name eyes --status not_run --grade L --reason "No eye has looked at the scene."
+  --reason "Not run as a witness: the frames/ pixel statistics against the private reference still (frames/stats.json) are an instrument reading, not an acceptance gate."
+"$LOOM" record "$CAND" --evidence "$EV" --name eyes --status not_run --grade L --reason "Not run as a witness: the frames/ stills were looked at by the builder of the scene, which is not an independent eye."
 "$LOOM" record "$CAND" --evidence "$EV" --name real-gpu --status not_run --grade L --reason "No GPU timing or frame-rate measurement."
 
 "$LOOM" accept  "$CAND" --evidence "$EV" --profile "$PROFILE"
 "$LOOM" receipt "$CAND" --evidence "$EV" --profile "$PROFILE" \
-  --subject "Collider-event demo scenes (one exact decay, three Pythia 8 events; instrument rehearsal, not rendered)" \
-  --out "$RUN/receipt.json" --outputs "$CAND/events/pythia-qcd-demo.x3d" "$CAND/events/exact-zmumu.x3d" "$CAND/events-v2/pythia-qcd-demo.x3d" "$CAND/events-v2/pythia-zmumu.x3d" --force
+  --subject "Collider-event demo scenes (one exact decay, four Pythia 8 events, look v1 and look v2; instrument rehearsal)" \
+  --out "$RUN/receipt.json" --outputs "$CAND/events/pythia-qcd-demo.x3d" "$CAND/events/exact-zmumu.x3d" "$CAND/events-v2/pythia-qcd-demo.x3d" "$CAND/events-v2/pythia-zmumu.x3d" "$CAND/events-v2/pythia-dijet-hero.x3d" --force
 "$LOOM" verify-receipt "$RUN/receipt.json"
 
 echo "--- control: edit a scene after the witness ran -> STALE_WITNESS"

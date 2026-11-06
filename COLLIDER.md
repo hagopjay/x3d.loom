@@ -1,6 +1,6 @@
 # The Loom Collider: a collider-event demo in X3D
 
-Date 2026-11-06. Status: spec and first light. **A demo, not STEM:** the physics only has to be plausible, and the effort goes into graphics. Every particle gets its own animated shader look, and the X3D file is still one an AI can be held accountable to.
+Date 2026-11-06. Status: look v2 after an independent review (witness v2, profile `hep-demo/v2`), a score and a time-dilation page. **A demo, not STEM:** the physics only has to be plausible, and the effort goes into graphics. Every particle gets its own animated shader look, and the X3D file is still one an AI can be held accountable to.
 
 Grades follow the Loom: **C** is measured here with the named instrument, **L** is read or reasoned from sources, **S** is suspected.
 
@@ -11,9 +11,9 @@ Grades follow the Loom: **C** is measured here with the named instrument, **L** 
  hosted image and video  -> keep: end-on view,       -> Pythia 8 pp events        -> scene builder              -> hep-event (plausibility)
  models make a hero still   loopers, crown;             (13.6 TeV, committed         build_event_scene.py          traps (11 known traps)
  and an 8 s film (private)  fix: only muons pass the    fixtures, plus pile-up)      --look v1 | --look v2          receipt, acceptance under
-                            calorimeter, tracks curve   + truth-level toy             (one DEF'd shader per role,   hep-demo/v1
+                            calorimeter, tracks curve   + truth-level toy             (one DEF'd shader per role,   hep-demo/v2
                             by pT, crown follows the    response (hep_response.py)    per-vertex identity)         render: X_ITE stills
-                            energy, colour = meaning                                                                (frames-v2, 0 errors)
+                            energy, colour = meaning                                                                (frames, 0 errors)  
 ```
 
 The reference media and their ledger are private: they stay off this public snapshot. Only what was built from them is here.
@@ -25,25 +25,27 @@ The reference media and their ledger are private: they stay off this public snap
 | [docs/HEP-EVENT-WITNESS.md](docs/HEP-EVENT-WITNESS.md) | The witness: event format `loom.hep-event/1`, spec, ten stable codes, controls, findings from real generator output, limits |
 | [docs/COLLIDER-XITE-FEASIBILITY.md](docs/COLLIDER-XITE-FEASIBILITY.md) | X_ITE 16.5.1 measured: load matrix, a shader on every particle at 300 and 3,000 tracks, the zero-area crash trap, transparency, the freeze trap, picking, glTF, the look recipes (GLSL that rendered) |
 | [docs/COLLIDER-SURVEY.md](docs/COLLIDER-SURVEY.md) | Survey of generators, detector toolkits, event formats, open data and event displays, each graded |
-| [runs/hep-demo-20261106/frames-v2/LOOK-V2.md](runs/hep-demo-20261106/frames-v2/LOOK-V2.md) | First light: 14 stills, load times, pixel statistics against the target, what still differs |
+| [runs/hep-demo-v2-20261106/frames/LOOK-V2.md](runs/hep-demo-v2-20261106/frames/LOOK-V2.md) | After review: 13 stills of the accepted scenes (dijet hero, soft QCD, Z to mu mu, pile-up 7 and 24), load times, pixel statistics v2 against the target, what still differs |
+| [runs/hep-demo-20261106/frames-v2/LOOK-V2.md](runs/hep-demo-20261106/frames-v2/LOOK-V2.md) | First light, kept as history: those frames wrote depth (see the correction in the new LOOK-V2.md) |
 | `kit/loomkit/hepevent.py`, `kit/loom hepevent` | The witness (standard library) |
-| `kit/examples/hep/` | Scene builder (look v1 and v2), exact events, Pythia converter, toy response, fixture selection, four committed fixtures, the spec |
+| `kit/examples/hep/` | Scene builder (look v1 and v2), exact events, Pythia converter, toy response, fixture selection, five committed fixtures (the dijet hero added), the spec |
 | `kit/examples/hep/render/` | Stills harness (`fetch_xite.sh`, `shots.cjs`, `site/shot.html`) |
 | `kit/examples/hep/feas/` | The feasibility harness and generators behind the measurements |
-| `kit/profiles/hep-demo.json` | Acceptance profile `hep-demo/v1` |
-| `kit/examples/run_hep_event.sh`, `runs/hep-demo-20261106/` | The rehearsal and its receipt |
+| `kit/profiles/hep-demo.json` | Acceptance profile `hep-demo/v2` |
+| `kit/examples/run_hep_event.sh`, `runs/hep-demo-v2-20261106/` | The rehearsal and its receipt (`runs/hep-demo-20261106/` is the v1 run) |
 
 ## Results
 
 | claim | number | instrument | grade |
 |---|---|---|---|
-| the witness catches what it should | 155 negative controls, each with its intended code and reason; 15 positive; 2 CLI | `python3 -I kit/tests/test_hepevent.py`, normal and `-O` | C |
-| look v2 is witnessed, not exempt | 43 of those negatives target the merged convention (deleted strip, duplicated strip, a USE of the set, a hidden set, a collapsed ribbon pair, a hadron drawn through the calorimeter, a muon left inside, a tower energy that lies, and more) | same | C |
-| every gate has a control | 127 of 127 `need(...)` sites caught when disabled one at a time (the first pass over the look v2 gates missed 14; 13 controls were added and one dead gate removed) | `kit/tests/mutate_hepevent.py` | C |
-| the rehearsal accepts and the gates bite | accepted under `hep-demo/v1` with 8 events and 8 scenes (look v1 and v2); a stale edit, a track deleted in v1 and a strip deleted in v2 all reject | `kit/examples/run_hep_event.sh` | C |
-| a shader on every particle | 8,855 tracks of a 24-collision pile-up drawn with 9 shader programs in the page, 0 errors, load 9.9 s CPU | X_ITE 16.5.1, headless Chromium, software GL | C |
-| the hero event loads fast | 497 tracks, 132 towers: about 1 s CPU, 9 programs | same | C |
-| it looks like the target | magenta 12% vs 13%, orange 4.5% vs 7.5%, crown and framing matched; blue over, cyan under | `imgtools.py stats`, and eyes on every frame | C for the numbers, S for "beautiful" |
+| the witness catches what it should | 206 negative controls, each with its intended code and reason; 17 positive; 2 CLI | `python3 -I kit/tests/test_hepevent.py`, normal and `-O` | C |
+| a pass cannot be bought | an independent review's 32 crafted attacks (a USE of the track group, an LOD, a Collision proxy, a 1 mm stub with the right curvature, a rotated or squashed copy, a late birth, a pion coloured as an electron, a needle in the wrong cell, and more) all refused with a fitting reason; 51 controls added for them | the reviewer's attack tools, then `review_controls()` | C |
+| every gate has a control | 161 of 161 `need(...)` sites caught when disabled one at a time: 126 by a control failing its own assertion, 35 by a later crash | `kit/tests/mutate_hepevent.py` | C |
+| the rehearsal accepts and the gates bite | accepted under `hep-demo/v2` with 10 events and 10 scenes (5 fixtures, look v1 and v2; 3,598 tracks, 1,088 towers); a stale edit, a track deleted in v1 and a strip deleted in v2 all reject; same result under `-O` | `kit/examples/run_hep_event.sh` | C |
+| a shader on every particle | 8,855 tracks of a 24-collision pile-up drawn with 9 shader programs in the page, 0 errors, load 10.1 s CPU | X_ITE 16.5.1, headless Chromium, software GL | C |
+| the hero event loads fast | dijet hero, 456 tracks, 168 towers, 2,399 needles: about 1 s CPU, 9 programs (10 with bloom) | same | C |
+| it looks like the target | dijet hero end-on with bloom: mean luma 0.179 vs 0.190, blue 63% vs 63%, white 25% vs 20%, cyan 7% vs 9%; red missing (0.3% vs 7.5%), mid-tones dark | `imgtools.py stats` v2, and eyes on every frame | C for the numbers, S for "beautiful" |
+| first light was not order independent | its `DepthMode readOnly` is not an X_ITE 16.5.1 field and was dropped, so those frames wrote depth; fixed with `depthMask='false'` | X_ITE source and re-render, after review | C |
 | frame rate | not measured | only software GL ran | none |
 
 ## Rules this demo keeps
@@ -53,6 +55,7 @@ The reference media and their ledger are private: they stay off this public snap
 - Offset ribbon vertex pairs: zero-area strips crash the software renderer from about 33,000 vertices (C).
 - Tone-map in the shader; X_ITE's ToneMapping option does not reach ComposedShader output (C).
 - Guard every host field callback with try/catch (law 32, reproduced on 16.5.1: routing froze at the 13th event) (C).
+- Additive glow without depth writes is `DepthMode depthMask='false'`; X_ITE drops unknown fields such as `readOnly` silently, so check a field against the X_ITE source before trusting it (C, found by review).
 - Never quote a software-GL frame rate.
 
 ## Phases
@@ -60,8 +63,8 @@ The reference media and their ledger are private: they stay off this public snap
 | phase | what | state |
 |---|---|---|
 | P0 | survey, feasibility, witness, spec, reference media and truth audit | done |
-| P1 | look v2 from real events, witnessed, rendered | first light (this branch) |
-| P2 | the page: one clock, guided camera from the reference film's moves, a corner UI with live per-track data on hover (proxies for picking), bloom on or off | next |
+| P1 | look v2 from real events, witnessed, rendered | done after review (this branch) |
+| P2 | the page: the page owns the clock and writes it into the shaders, a time-dilation dial from 1/1000 to 4 times demo speed that runs through zero into reverse, a score generated by a hosted music model that follows the clock like a tape (slows, drops in pitch, plays backwards), three views with a camera fly, bloom on or off, two events | first version built (private); still to do: guided camera from the film's moves, per-track hover data (proxies for picking) |
 | P3 | Blender theatre: a baked machinery backdrop exported to X3D, the event inside it | planned |
 | P4 | a short film rendered from the X3D scene and set beside the reference film | planned |
 | P5 | real GPU measurements, then a public demo page | planned |
@@ -71,5 +74,5 @@ The reference media and their ledger are private: they stay off this public snap
 ```
 python3 -I kit/tests/test_hepevent.py            # both modes
 bash kit/examples/run_hep_event.sh               # candidate, witnesses, acceptance, receipt, three controls
-kit/loom verify-receipt runs/hep-demo-20261106/receipt.json
+kit/loom verify-receipt runs/hep-demo-v2-20261106/receipt.json
 ```

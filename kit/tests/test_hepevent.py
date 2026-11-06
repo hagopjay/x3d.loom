@@ -162,7 +162,7 @@ def controls():
     ok("a track with exactly 3 hits on the right circle is fitted, not called straight (regression: real displaced tracks)",
        lambda: run(three, None, edit(lambda s: s.pop("scene"))))
     bad("3 collinear hits for a track that pT says must curl", "EVT_CURVATURE",
-        lambda: run(with_ev(EV, lambda e: e["tracks"][k].update(hits=[[0.6, 0.0, 0.0], [0.8, 0.0, 0.0], [1.0, 0.0, 0.0]])), None, edit(lambda s: s.pop("scene"))))
+        lambda: run(with_ev(EV, lambda e: e["tracks"][k].update(hits=[[0.6, 0.0, 0.0], [0.8, 0.0, 0.0], [1.0, 0.0, 0.0]])), None, edit(lambda s: s.pop("scene"))), 'curvature 0/m')
 
     def born_outside(e):
         pi = e["tracks"][k]["particle"]
@@ -186,30 +186,30 @@ def controls():
         t = next(t for t in e["tracks"] if t["pt"] > 40)
         t["hits"][1][1] += 0.005
     bad("an unresolved (50 GeV) track whose hits kink by 5 mm: judged as a straight line, so it is still caught", "EVT_CURVATURE",
-        lambda: run(with_ev(fwd, kinked_hits), None, edit(lambda s_: s_.pop("scene"))))
+        lambda: run(with_ev(fwd, kinked_hits), None, edit(lambda s_: s_.pop("scene"))), 'departs from a straight line')
     fk = next(t["i"] for t in fwd["tracks"] if t["charge"] != 0 and t["eta"] > 6)
 
     def kinked_scene(root):
         co = next(shape(root, f"trk_{fk}").iter("Coordinate"))
         v = [float(x) for x in co.get("point").split()]
-        v[3] += 0.003
+        v[6] += 0.003   # an interior point: the first segment (the heading) stays on the event phi
         co.set("point", " ".join(f"{x:.4f}" for x in v))
-    bad("a forward soft track (eta 6.6, 8 mm of xy path) drawn with a 3 mm kink", "EVT_CURVATURE", lambda: run(fwd, mut(scene_of(fwd), kinked_scene)))
-    bad("spec without the point resolution of the stored coordinates", "EVT_SPEC", lambda: run(EV, BASE, edit(lambda s_: s_["curvature"].pop("point_resolution_m"))))
+    bad("a forward soft track (eta 6.6, 8 mm of xy path) drawn with a 3 mm kink", "EVT_CURVATURE", lambda: run(fwd, mut(scene_of(fwd), kinked_scene)), 'departs from a straight line')
+    bad("spec without the point resolution of the stored coordinates", "EVT_SPEC", lambda: run(EV, BASE, edit(lambda s_: s_["curvature"].pop("point_resolution_m"))), 'point_resolution_m')
     bad("spec that resolves a bend smaller than the rounding it also declares", "EVT_SPEC",
-        lambda: run(EV, BASE, edit(lambda s_: s_["curvature"].update(resolvable_sagitta_m=s_["curvature"]["point_resolution_m"] / 10))))
+        lambda: run(EV, BASE, edit(lambda s_: s_["curvature"].update(resolvable_sagitta_m=s_["curvature"]["point_resolution_m"] / 10))), 'must be at least point_resolution_m')
 
     # ---- negative controls: parse and spec
-    bad("event is not JSON", "EVT_PARSE", lambda: hepevent.check("{not json", SPEC))
-    bad("a NaN energy (Python writes it, JSON forbids it)", "EVT_PARSE", lambda: run(with_ev(EV, lambda e: e["particles"][0].update(E=float("nan")))))
-    bad("a mother index that does not exist", "EVT_PARSE", lambda: run(with_ev(EV, lambda e: e["particles"][3].update(mothers=[99]))))
-    bad("scene file truncated mid-element", "EVT_PARSE", lambda: run(EV, BASE[: len(BASE) // 2]))
+    bad("event is not JSON", "EVT_PARSE", lambda: hepevent.check("{not json", SPEC), 'event is not JSON')
+    bad("a NaN energy (Python writes it, JSON forbids it)", "EVT_PARSE", lambda: run(with_ev(EV, lambda e: e["particles"][0].update(E=float("nan")))), 'non-finite number NaN')
+    bad("a mother index that does not exist", "EVT_PARSE", lambda: run(with_ev(EV, lambda e: e["particles"][3].update(mothers=[99]))), 'must be earlier particle indices')
+    bad("scene file truncated mid-element", "EVT_PARSE", lambda: run(EV, BASE[: len(BASE) // 2]), 'scene is not XML')
     bad("a USE before any DEF in the scene", "EVT_PARSE",
-        lambda: run(EV, mut(BASE, lambda r: ET.SubElement(shape(r, "tracks"), "Shape", {"USE": "ghost"}))))
-    bad("a Script node the reader cannot expand", "EVT_PARSE", lambda: run(EV, mut(BASE, lambda r: ET.SubElement(shape(r, "tracks"), "Script"))))
-    bad("spec without a curvature section", "EVT_SPEC", lambda: run(EV, BASE, edit(lambda s: s.pop("curvature"))))
+        lambda: run(EV, mut(BASE, lambda r: ET.SubElement(shape(r, "tracks"), "Shape", {"USE": "ghost"}))), 'before any DEF')
+    bad("a Script node the reader cannot expand", "EVT_PARSE", lambda: run(EV, mut(BASE, lambda r: ET.SubElement(shape(r, "tracks"), "Script"))), 'cannot expand: Script')
+    bad("spec without a curvature section", "EVT_SPEC", lambda: run(EV, BASE, edit(lambda s: s.pop("curvature"))), 'missing section curvature')
     bad("spec whose ident layout is not id, charge, pt, birth_s", "EVT_SPEC",
-        lambda: run(EV, BASE, edit(lambda s: s["scene"]["shader"]["ident"].update(layout=["id", "pt", "charge", "birth_s"]))))
+        lambda: run(EV, BASE, edit(lambda s: s["scene"]["shader"]["ident"].update(layout=["id", "pt", "charge", "birth_s"]))), 'scene.shader.ident')
 
     # ---- units
     def mev(e):
@@ -818,18 +818,18 @@ def merged_controls():
                     row[2] = 1.5
     bad("look v2: tower 0's em fraction is 1.5", "EVT_SHADER", lambda: run(EV, mut(B2, strip_mut("twrset_0", tower_em))), "em_frac or arrival_s")
 
-    def ext_birth(st, _r):
+    def ext_pt_close(st, _r):
         for row in st[0]["attrs"]["a_ident"]:
-            row[3] = row[3] + 1.0
-    bad("look v2: a muon extension born one second after its track (ident rows differ)", "EVT_SHADER",
-        lambda: run(ZMM, mut(Z2, strip_mut("muext_0", ext_birth))), "one particle, one row")
+            row[2] = row[2] * 1.005
+    bad("look v2: a muon extension whose pT is 0.5 percent off its track's (inside the pT tolerance, so only the one-row rule sees it)", "EVT_SHADER",
+        lambda: run(ZMM, mut(Z2, strip_mut("muext_0", ext_pt_close))), "one particle, one row")
 
     def ext_one(st, _r):
         s = st[0]
         s["v"] = s["v"][:2]
         for n in s["attrs"]:
             s["attrs"][n] = s["attrs"][n][:2]
-    bad("look v2: a muon extension of a single point", "EVT_SCENE_BIJECTION", lambda: run(ZMM, mut(Z2, strip_mut("muext_0", ext_one))), "extension has 1 points")
+    bad("look v2: a muon extension of a single point (one vertex pair draws nothing)", "EVT_SCENE_BIJECTION", lambda: run(ZMM, mut(Z2, strip_mut("muext_0", ext_one))), "two vertex pairs at least")
 
     def hide_ext(root):
         s = shape(root, "muext_0")
@@ -868,6 +868,315 @@ def merged_controls():
             ("scene.merged.extensions.r_max_m of 0", lambda m: m["extensions"].__setitem__("r_max_m", 0), "r_max_m"),
             ("scene.merged.extensions.join_tol_m of half a metre", lambda m: m["extensions"].__setitem__("join_tol_m", 0.5), "join_tol_m")):
         bad(label, "EVT_SPEC", lambda fn=fn: run(EV, B2, edit(lambda s: fn(s["scene"]["merged"]))), why)
+    return rows
+
+
+def review_controls():
+    """Controls for the holes an independent review of look v2 found (2026-11-06). Each attack it made passed the
+    witness then; each is now refused for its own reason. Scene graph first, then the path bound to the event, then the
+    shader data that decides whether and how a track shows, then towers and muon extensions, then the spec."""
+    rows = []
+    ok = lambda name, fn: rows.append({"case": name, **passes(fn)})  # noqa: E731
+    bad = lambda name, code, fn, why=None: rows.append({"case": name, **expect(code, fn, why)})  # noqa: E731
+    v2 = lambda ev: bs.build_v2(ev, SHA)[0]  # noqa: E731
+    B2, Z2 = v2(EV), v2(ZMM)
+    k = LOW["i"]
+    pion = next(t["i"] for t in EV["tracks"] if abs(EV["particles"][t["particle"]]["pdg"]) == 211)
+
+    def scene_el(root):
+        return next(c for c in root if c.tag == "Scene")
+
+    def wrap(name, tag, attrs=None, first=None, child_attrs=None):
+        """Move DEF `name` into a new `tag` element at its place; `first` is put inside before it."""
+        def f(root):
+            el = shape(root, name)
+            p = parents(root)[el]
+            i = list(p).index(el)
+            p.remove(el)
+            w = ET.Element(tag, attrs or {})
+            for c in first or []:
+                w.append(c)
+            for a, v in (child_attrs or {}).items():
+                el.set(a, v)
+            w.append(el)
+            p.insert(i, w)
+        return f
+
+    def add(xml):
+        return lambda root: scene_el(root).append(ET.fromstring(xml))
+
+    # ---- scene graph: what a browser would draw twice, not at all, or somewhere unknown
+    bad("look v1: a rotated Group USE='tracks' draws every track a second time", "EVT_SCENE_BIJECTION",
+        lambda: run(EV, mut(BASE, add("<Transform rotation='0 0 1 1'><Group USE='tracks'/></Transform>"))), "drawn 2 times")
+    bad("look v2: Group USE='tracks' draws every ribbon and muon extension a second time", "EVT_SCENE_BIJECTION",
+        lambda: run(ZMM, mut(Z2, add("<Transform scale='3 3 3'><Group USE='tracks'/></Transform>"))), "drawn 2 times")
+    bad("the tracks inside an LOD, which shows one level picked at run time", "EVT_PARSE",
+        lambda: run(EV, mut(BASE, wrap("tracks", "LOD", {"range": "1e6"}, [ET.Element("Group")]))), "cannot expand: LOD")
+    bad("the tracks inside a grouping node this reader does not model (CADAssembly)", "EVT_PARSE",
+        lambda: run(ZMM, mut(Z2, wrap("tracks", "CADAssembly"))), "cannot expand: CADAssembly")
+    bad("the tracks as a Collision proxy, which is never rendered", "EVT_SCENE_BIJECTION",
+        lambda: run(ZMM, mut(Z2, wrap("tracks", "Collision", child_attrs={"containerField": "proxy"}))), "or a Collision proxy")
+    meta = lambda: ET.Element("MetadataString", {"name": "note", "value": '"x"'})  # noqa: E731
+    bad("a Switch whose first XML child is metadata: whichChoice 1 selects nothing, the tracks are choice 0", "EVT_SCENE_BIJECTION",
+        lambda: run(ZMM, mut(Z2, wrap("tracks", "Switch", {"whichChoice": "1"}, [meta()]))), "hidden")
+    ok("a Switch whose first XML child is metadata selects the tracks with whichChoice 0 (positive control: metadata is not a choice)",
+       lambda: run(ZMM, mut(Z2, wrap("tracks", "Switch", {"whichChoice": "0"}, [meta()]))))
+    bad("a track inside a Billboard, which turns it toward the viewer at run time", "EVT_SCENE_BIJECTION",
+        lambda: run(EV, mut(BASE, wrap("trk_3", "Billboard"))), "inside a Billboard")
+
+    def reuse_geometry(root):
+        g = next(c for c in shape(root, f"trk_{k}") if c.tag == "IndexedLineSet")
+        g.set("DEF", "lineK")
+        scene_el(root).append(ET.fromstring("<Shape><IndexedLineSet USE='lineK'/></Shape>"))
+    bad("a second Shape that USEs one track's IndexedLineSet", "EVT_SCENE_BIJECTION", lambda: run(EV, mut(BASE, reuse_geometry)), "reuses the geometry of trk_")
+    bad("a track Shape tucked inside a ParticleSystem, where the reader does not look", "EVT_SCENE_BIJECTION",
+        lambda: run(EV, mut(BASE, wrap("trk_3", "ParticleSystem"))), "where this reader does not look")
+    bad("a Group USE='tracks' tucked inside a ParticleSystem", "EVT_SCENE_BIJECTION",
+        lambda: run(EV, mut(BASE, add("<ParticleSystem><Group USE='tracks'/></ParticleSystem>"))), "a USE of tracks sits inside")
+    bad("a Group that USEs itself (a cycle)", "EVT_PARSE",
+        lambda: run(EV, mut(BASE, add("<Group DEF='loopG'><Group USE='loopG'/></Group>"))), "a cycle")
+
+    def laughs(root):
+        sc = scene_el(root)
+        sc.append(ET.fromstring("<Group DEF='lg0'><Shape/></Group>"))
+        for lv in range(1, 7):
+            sc.append(ET.fromstring(f"<Group DEF='lg{lv}'>" + f"<Group USE='lg{lv - 1}'/>" * 20 + "</Group>"))
+    bad("USE nested six deep, twenty wide (64 million node visits)", "EVT_PARSE", lambda: run(EV, mut(BASE, laughs)), "expands to more than")
+
+    # ---- the drawn path is bound to the event's own track
+    def stub(st, _r):
+        s = st[strip_of_track(st, k)]
+        for i in range(len(s["v"]) // 2):
+            move_pair(s, i, lambda c: tuple(q * 1e-3 for q in c))
+    bad("look v2: one looping track drawn as a 1 mm stub at the vertex", "EVT_SCENE_BIJECTION",
+        lambda: run(EV, mut(B2, strip_mut("trkset_0", stub))), "the drawing stops short")
+
+    def shift(st, _r):
+        s = st[strip_of_track(st, k)]
+        for i in range(len(s["v"]) // 2):
+            move_pair(s, i, lambda c: (c[0] + 0.015, c[1], c[2]))
+    bad("look v2: one track's ribbon moved 15 mm off its vertex", "EVT_SCENE_BIJECTION",
+        lambda: run(EV, mut(B2, strip_mut("trkset_0", shift))), "from its vertex")
+    bad("look v2: the tracks rotated 0.5 rad about the beam (they no longer point at their towers)", "EVT_SCENE_BIJECTION",
+        lambda: run(EV, mut(B2, wrap("tracks", "Transform", {"rotation": "0 0 1 0.5"}))), "points the wrong way")
+    bad("look v2: the tracks squashed to half their z (every dip angle wrong)", "EVT_SCENE_BIJECTION",
+        lambda: run(EV, mut(B2, wrap("tracks", "Transform", {"scale": "1 1 0.5"}))), "it is not this track's path")
+    bad("look v1: the tracks shrunk a million times (every track below what can be fitted)", "EVT_UNITS",
+        lambda: run(EV, mut(BASE, wrap("tracks", "Transform", {"scale": "1e-6 1e-6 1e-6"}))), "the drawing is shrunk")
+    bad("look v1: the tracks scaled to 0 (every point on the beam axis)", "EVT_UNITS",
+        lambda: run(EV, mut(BASE, wrap("tracks", "Transform", {"scale": "0 0 0"}))), "on the beam axis")
+    bad("a field of 1 microtesla (gauss read as tesla)", "EVT_UNITS",
+        lambda: run(with_ev(EV, lambda e: e["detector"].update(b_field_t=1e-6))), "outside 0.001 to 100 T")
+    bad("a declared helix radius of 1e300 m for a track of pT 1e-300 GeV (no finite radius ratio)", "EVT_UNITS",
+        lambda: run(with_ev(EV, lambda e: (e["tracks"][k]["helix"].update(radius_m=1e300), e["tracks"][k].update(pt=1e-300)))), "no finite radius ratio")
+
+    # ---- shader data that decides when, whether and in what colour a track shows
+    def birth_late(st, _r):
+        for row in st[strip_of_track(st, k)]["attrs"]["a_ident"]:
+            row[3] += 1.0
+    bad("look v2: a track born one second late (its production time says now)", "EVT_SHADER",
+        lambda: run(EV, mut(B2, strip_mut("trkset_0", birth_late))), "appear at the wrong time")
+
+    def electron(st, _r):
+        for row in st[strip_of_track(st, pion)]["attrs"]["a_species"]:
+            row[0] = 1.0
+    bad("look v2: a pion coloured as an electron", "EVT_SHADER", lambda: run(EV, mut(B2, strip_mut("trkset_0", electron))), "the colour would be wrong")
+
+    def arc_swap(st, _r):
+        a = st[strip_of_track(st, k)]["attrs"]["a_arc"]
+        a[2], a[3], a[4], a[5] = a[4], a[5], a[2], a[3]
+    bad("look v2: two interior points' a_arc swapped (the growth front would jump back)", "EVT_SHADER",
+        lambda: run(EV, mut(B2, strip_mut("trkset_0", arc_swap))), "runs backwards")
+
+    def v1_arc(fn):
+        def f(root):
+            fva = next(c for c in shape(root, f"trk_{k}").iter("FloatVertexAttribute") if c.get("name") == "a_arc")
+            fva.set("value", " ".join(f"{fn(float(x)):g}" for x in fva.get("value").split()))
+        return f
+    bad("look v1: a_arc starts 5 cm along instead of at the vertex", "EVT_SHADER", lambda: run(EV, mut(BASE, v1_arc(lambda a: a + 0.05))), "starts at")
+    bad("look v1: a_arc runs twice as long as the drawn path (the pulses would outrun it)", "EVT_SHADER",
+        lambda: run(EV, mut(BASE, v1_arc(lambda a: 2 * a))), "the drawn path is")
+
+    def ext_arc(root):
+        for name in ("trkset_0", "muext_0"):
+            _s, g, st = strips_of(root, name)
+            for s in st:
+                if int(s["attrs"]["a_ident"][0][0]) != 0:
+                    continue
+                for row in s["attrs"]["a_look"]:
+                    row[2] += 0.05
+                if name == "muext_0":
+                    for row in s["attrs"]["a_arc"]:
+                        row[0] += 0.05
+            write_strips(g, st)
+    bad("look v2: a muon extension's a_arc starts 5 cm past where its track ends", "EVT_SHADER", lambda: run(ZMM, mut(Z2, ext_arc)), "where its track ends")
+
+    # ---- every vertex of a merged strip is read
+    def no_look(root):
+        g = next(c for c in shape(root, "twrset_0") if c.tag == "TriangleStripSet")
+        g.remove(next(c for c in g if c.tag == "FloatVertexAttribute" and c.get("name") == "a_look"))
+    bad("look v2: the tower set without a_look (the shader could not take the offset off)", "EVT_SHADER", lambda: run(EV, mut(B2, no_look)), "take the ribbon offset off")
+
+    def side_swap(st, _r):
+        s = st[strip_of_track(st, k)]
+        s["attrs"]["a_look"][0][0], s["attrs"]["a_look"][1][0] = 1.0, -1.0
+    bad("look v2: a_look side signs swapped on one ribbon pair", "EVT_SHADER", lambda: run(EV, mut(B2, strip_mut("trkset_0", side_swap))), "a_look.side is")
+
+    def id_change(st, _r):
+        s = st[strip_of_track(st, k)]
+        other = next(int(q["attrs"]["a_ident"][0][0]) for q in st if int(q["attrs"]["a_ident"][0][0]) != k)
+        s["attrs"]["a_ident"][-1][0] = s["attrs"]["a_ident"][-2][0] = float(other)
+    bad("look v2: the last pair of one strip names another track", "EVT_SCENE_BIJECTION",
+        lambda: run(EV, mut(B2, strip_mut("trkset_0", id_change))), "changes along the strip")
+
+    # ---- towers: both vertices, their own cell, their own shader and clock
+    def tower0(fn):
+        def f(st, _r):
+            for s in st:
+                if int(s["attrs"]["a_cell"][0][0]) == 0:
+                    fn(s)
+        return f
+
+    def odd_e(s):
+        for i in range(1, len(s["v"]), 2):
+            s["attrs"]["a_cell"][i][1] *= 1.005
+    bad("look v2: tower 0's odd vertices carry 0.5 percent more energy (inside the energy tolerance)", "EVT_SHADER",
+        lambda: run(EV, mut(B2, strip_mut("twrset_0", tower0(odd_e)))), "two vertices of a spike pair")
+
+    def turn(s):
+        for i in range(len(s["v"]) // 2):
+            move_pair(s, i, lambda c: (c[0] * math.cos(0.2) - c[1] * math.sin(0.2), c[0] * math.sin(0.2) + c[1] * math.cos(0.2), c[2]))
+    bad("look v2: tower 0's spikes turned 0.2 rad into another phi cell", "EVT_CONTAINMENT",
+        lambda: run(EV, mut(B2, strip_mut("twrset_0", tower0(turn)))), "drawn in another cell")
+
+    def tip_up(s):
+        move_pair(s, len(s["v"]) // 2 - 1, lambda c: (c[0], c[1], c[2] + 0.03))
+    bad("look v2: a spike of tower 0 tilted 3 cm in z (no longer radial in its cell)", "EVT_CONTAINMENT",
+        lambda: run(EV, mut(B2, strip_mut("twrset_0", tower0(tip_up)))), "m in z off")
+
+    def tower_app(xml):
+        def f(root):
+            s = shape(root, "twrset_0")
+            ap = next(c for c in s if c.tag == "Appearance")
+            s.remove(ap)
+            s.insert(0, ET.fromstring(xml))
+        return f
+    bad("look v2: the tower set drawn with a Material, no shader", "EVT_SHADER",
+        lambda: run(EV, mut(B2, tower_app("<Appearance><Material emissiveColor='1 0.5 0'/></Appearance>"))), "twrset_0 has no ComposedShader")
+    bad("look v2: the tower set bound to the haze shader, which declares no a_cell", "EVT_SHADER",
+        lambda: run(EV, mut(B2, tower_app("<Appearance><ComposedShader USE='hazeShader2'/></Appearance>"))), "never declares attribute a_cell")
+
+    def unclock(root):
+        for r in list(root.iter("ROUTE")):
+            if r.get("toNode") == "twrShader2":
+                parents(root)[r].remove(r)
+    bad("look v2: the tower shader's clock ROUTE removed", "EVT_SHADER", lambda: run(EV, mut(B2, unclock)), "the crown would never light")
+
+    # ---- a_look: one row per particle, the right kind, the right fade length
+    def look3(root):
+        g = next(c for c in shape(root, "trkset_0") if c.tag == "TriangleStripSet")
+        f = next(c for c in g if c.tag == "FloatVertexAttribute" and c.get("name") == "a_look")
+        v = f.get("value").split()
+        f.set("value", " ".join(x for i, x in enumerate(v) if i % 4 != 3))
+        f.set("numComponents", "3")
+    bad("look v2: a_look with 3 components (the kind is gone)", "EVT_SHADER", lambda: run(EV, mut(B2, look3)), "has 3 components")
+
+    def seed_change(st, _r):
+        s = st[strip_of_track(st, k)]
+        s["attrs"]["a_look"][2][1] = s["attrs"]["a_look"][3][1] = 0.999
+    bad("look v2: a_look seed changes at one point of a ribbon", "EVT_SHADER",
+        lambda: run(EV, mut(B2, strip_mut("trkset_0", seed_change))), "differ along the strip")
+
+    def neutral_as_charged(st, _r):
+        for row in st[strip_of_track(st, NEUTRAL["i"])]["attrs"]["a_look"]:
+            row[3] = 0.0
+    bad("look v2: a neutral drawn with the charged kind (solid, not dashed)", "EVT_SHADER",
+        lambda: run(EV, mut(B2, strip_mut("trkset_0", neutral_as_charged))), "drawn as another kind")
+
+    def drawn_long(st, _r):
+        for row in st[strip_of_track(st, k)]["attrs"]["a_look"]:
+            row[2] += 1.0
+    bad("look v2: a_look.drawn_m one metre longer than the path", "EVT_SHADER",
+        lambda: run(EV, mut(B2, strip_mut("trkset_0", drawn_long))), "the path it fades along ends at")
+
+    # ---- muon extensions: only for muons that leave, starting on the boundary, straight on, outward
+    lev = copy.deepcopy(EV)
+    det = lev["detector"]
+    loop = next(t for t in lev["tracks"] if t["charge"] != 0
+                and math.hypot(*bs.sample_track(t, det, 2.5, bs.V2_DPHI)[0][-1][:2]) < det["tracker"]["r_max_m"] - 0.1
+                and abs(bs.sample_track(t, det, 2.5, bs.V2_DPHI)[0][-1][2]) < det["tracker"]["half_length_m"] - 0.1)
+    lev["particles"][loop["particle"]]["pdg"] = -13 if loop["charge"] > 0 else 13
+    LS = v2(lev)
+    ok("a looping muon that never leaves the tracker, drawn with no extension (positive control)", lambda: run(lev, LS))
+
+    def looper_ext(root):
+        _sh, _g, trk = strips_of(root, "trkset_0")
+        s = trk[strip_of_track(trk, loop["i"])]
+        a, b = s["v"][-2], s["v"][-1]
+        end = tuple(0.5 * (a[q] + b[q]) for q in range(3))
+        r = math.hypot(end[0], end[1])
+        u = (end[0] / r, end[1] / r)
+        centre = [(end[0] + u[0] * d, end[1] + u[1] * d, end[2]) for d in (0.0, 0.5, 1.0, 1.5, 2.0)]
+        n = len(centre)
+        st = ribbon(centre, {"a_ident": [s["attrs"]["a_ident"][0]] * n, "a_arc": [[s["attrs"]["a_arc"][-1][0] + 0.5 * i] for i in range(n)],
+                             "a_species": [s["attrs"]["a_species"][0]] * n, "a_next": [list(q) for q in bs._forward(centre)],
+                             "a_look": [list(s["attrs"]["a_look"][0][:3]) + [2.0]] * n})
+        for i, rr in enumerate(st["attrs"]["a_look"]):
+            rr[0] = -1.0 if i % 2 == 0 else 1.0
+        ext = ET.fromstring(ET.tostring(shape(root, "trkset_0")))
+        ext.set("DEF", "muext_9")
+        write_strips(next(c for c in ext if c.tag == "TriangleStripSet"), [st])
+        parents(root)[shape(root, "trkset_0")].append(ext)
+    bad("look v2: that looping muon given an extension straight out from its looping end", "EVT_CONTAINMENT",
+        lambda: run(lev, mut(LS, looper_ext)), "never leaves the tracker")
+
+    fwd = forward_event()
+    F2 = v2(fwd)
+    mu = next(t["i"] for t in fwd["tracks"] if abs(fwd["particles"][t["particle"]]["pdg"]) == 13)
+
+    def pull_back(root):
+        # the forward muon's last point and its extension's first point moved 3 cm back along the line, together:
+        # the xy reach barely changes (eta 3.6), the join still holds, but the extension now starts inside the tracker
+        for name in ("trkset_0", "muext_0"):
+            _s, g, st = strips_of(root, name)
+            for s in st:
+                if int(s["attrs"]["a_ident"][0][0]) != mu:
+                    continue
+                i = len(s["v"]) // 2 - 1 if name == "trkset_0" else 0
+                move_pair(s, i, lambda c: tuple(q * (1 - 0.03 / 2.8) for q in c))
+            write_strips(g, st)
+    bad("look v2: a forward muon's extension starting 3 cm inside the endcap face", "EVT_SCENE_BIJECTION",
+        lambda: run(fwd, mut(F2, pull_back)), "not on its boundary")
+
+    def ext_turn(st, _r):
+        s = st[0]
+        o = [0.5 * (s["v"][0][q] + s["v"][1][q]) for q in range(3)]
+        c, sn = math.cos(0.35), math.sin(0.35)
+        for i in range(1, len(s["v"]) // 2):
+            move_pair(s, i, lambda p: (o[0] + c * (p[0] - o[0]) - sn * (p[1] - o[1]), o[1] + sn * (p[0] - o[0]) + c * (p[1] - o[1]), p[2]))
+    bad("look v2: a muon extension turned 20 degrees where it joins its track", "EVT_SCENE_BIJECTION",
+        lambda: run(ZMM, mut(Z2, strip_mut("muext_0", ext_turn))), "degrees where it joins")
+
+    def ext_back(st, _r):
+        s = st[0]
+        move_pair(s, len(s["v"]) // 2 - 1, lambda p: (0.5, 0.0, 0.0))
+    bad("look v2: a muon extension whose last point is back inside the tracker", "EVT_CONTAINMENT",
+        lambda: run(ZMM, mut(Z2, strip_mut("muext_0", ext_back))), "back inside the tracker")
+
+    # ---- the spec must declare what binds a drawing to its event
+    bad("spec without scene.reach", "EVT_SPEC", lambda: run(EV, BASE, edit(lambda s: s["scene"].pop("reach"))), "scene.reach")
+    bad("spec whose reach start tolerance is half a metre", "EVT_SPEC",
+        lambda: run(EV, BASE, edit(lambda s: s["scene"]["reach"].update(start_tol_m=0.5))), "looser is not the same path")
+    bad("spec without scene.shader.birth", "EVT_SPEC", lambda: run(EV, BASE, edit(lambda s: s["scene"]["shader"].pop("birth"))), "scene.shader.birth")
+    bad("spec whose arc attribute is not one it lists", "EVT_SPEC",
+        lambda: run(EV, BASE, edit(lambda s: s["scene"]["shader"]["arc"].update(name="a_nowhere"))), "scene.shader.arc")
+    bad("spec without scene.shader.species", "EVT_SPEC", lambda: run(EV, BASE, edit(lambda s: s["scene"]["shader"].pop("species"))), "scene.shader.species")
+    bad("spec whose a_look layout is reordered", "EVT_SPEC",
+        lambda: run(EV, B2, edit(lambda s: s["scene"]["merged"]["look"].update(track_layout=["seed", "side", "drawn_m", "kind"]))), "scene.merged.look")
+    bad("spec without the tower cell size", "EVT_SPEC",
+        lambda: run(EV, B2, edit(lambda s: s["scene"]["merged"]["tower_cell"].pop("cell_dphi"))), "cell_deta and cell_dphi")
+    bad("spec without the extension join angle", "EVT_SPEC",
+        lambda: run(EV, B2, edit(lambda s: s["scene"]["merged"]["extensions"].pop("join_angle_deg"))), "join_angle_deg")
     return rows
 
 
@@ -918,7 +1227,7 @@ def cli_controls():
 
 if __name__ == "__main__":
     if "--child" in sys.argv:
-        print(json.dumps({"controls": controls() + merged_controls(), "cli": cli_controls(), "optimized": bool(sys.flags.optimize)}))
+        print(json.dumps({"controls": controls() + merged_controls() + review_controls(), "cli": cli_controls(), "optimized": bool(sys.flags.optimize)}))
         sys.exit(0)
     report = {"schema": "loomkit.self-test/1", "suite": "hepevent",
               "scope": "Synthetic events (an exact two-body decay and a deterministic toy shower) and scenes written by the scene builder, then damaged one way at a time; not generator output and not rendered.",

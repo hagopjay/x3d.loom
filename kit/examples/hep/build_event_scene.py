@@ -30,8 +30,9 @@ needed); every component is declared in the head (Shaders level 3, which FloatVe
 ROUTEs come after every DEF; metadata is not used.
 
 Slow motion, declared: a track head advances at SPEED m/s where light moves 3.0e8 m/s. The scene says so in a meta tag.
-Limits: nothing here is rendered or compiled; the shaders are written for X_ITE's WebGL, unverified until a Behaviour
-witness loads them. WebGL draws lines one pixel wide, so the glow is colour and density, not thickness.
+Limits: the builder renders nothing itself. Look v2 scenes were loaded and rendered in X_ITE 16.5.1 (headless Chromium,
+software GL) by kit/examples/hep/render, with 0 shader or console errors (runs/hep-demo-20261106/frames-v2); look v1 was
+not. WebGL draws look v1's lines one pixel wide, so its glow is colour and density, not thickness.
 """
 from __future__ import annotations
 
@@ -447,19 +448,21 @@ def build(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: float 
 #   The witness reads the merged strips through the declared convention in the spec (scene.merged).
 # - Muons: only muons pass the calorimeter. Each muon that leaves the tracker continues straight along its exit
 #   tangent, out through the muon stations, in one Shape DEF="muext_<n>" (same shader, same a_ident).
-# - Towers: a thin spiky crown. Every event tower becomes 3 to 14 thin radial spikes inside its own (eta, phi) cell,
-#   lengths from its real energy, merged into one Shape DEF="twrset_<n>" with a_cell (tower id, E, em fraction,
-#   arrival s). Hue is energy (blue low, orange high: the jets run hot), electromagnetic towers lean gold and get a
-#   brighter white base (EM showers are compact); the calorimeter face glows where the energy landed.
+# - Towers: a comb of needles. Every event tower becomes 6 to 24 thin radial needles spread over its own (eta, phi)
+#   cell, lengths from its real energy, merged into one Shape DEF="twrset_<n>" with a_cell (tower id, E, em fraction,
+#   arrival s). Hue is energy relative to the event (blue below its median tower, amber toward its 90th percentile,
+#   u_e90), electromagnetic towers lean gold and get a brighter white base; the calorimeter face glows where the energy landed.
 # - Detector: Fresnel glass shells (one shared shellShader), muon stations and struts as dark steel with lit edges,
 #   a billboard flash, an fbm haze drawn in screen space behind everything, native ParticleSystem sparks at the vertex.
-# - Everything additive (BlendMode ONE ONE, DepthMode readOnly: order independent), tone-mapped inside each shader
+# - Everything additive (BlendMode ONE ONE, DepthMode depthMask false: nothing writes depth, so the draw order does not
+#   matter; X_ITE 16.5.1's DepthMode has no readOnly field and drops unknown attributes silently), tone-mapped inside each shader
 #   (1 - exp(-k c)): X_ITE's ToneMapping option does not touch ComposedShader output. ONE TimeSensor (clock) drives
 #   every shader through u_phase: growth front, travelling pulses, tower light-up, flash, ripple, haze drift.
 # - Bloom: optional, a separate file per view (bloom_wrapper): the whole scene inside a RenderedTexture sampled by a
 #   full-screen threshold-blur shader (X3D 4.1). The un-bloomed scene is the witnessed candidate.
-# Colour = meaning: + hadron azure, - hadron magenta, electron emerald, muon violet-white, proton coral, photon orange
-# (dashed: a photon leaves no hits), neutral hadron gold (dashed); brightness and width from pT.
+# Colour = meaning: + hadron cyan, - hadron magenta, electron emerald, muon violet-white, proton coral, photon orange
+# (dashed: a photon leaves no hits), neutral hadron gold (faint stitching); brightness and width from pT, steeply, so the
+# hard tracks read as spokes and the soft loopers stay faint.
 
 EPS = 0.004                         # anti-degeneracy offset, m (measured fix for the SwiftShader zero-area crash)
 OFF = (EPS, EPS * 0.7, EPS * 0.3)
@@ -495,9 +498,9 @@ def shaders_v2() -> dict[str, tuple[str, str]]:
         vec4 c0 = x3d_ProjectionMatrix * (x3d_ModelViewMatrix * vec4(c, 1.0));
         vec4 c1 = x3d_ProjectionMatrix * (x3d_ModelViewMatrix * vec4(a_next, 1.0));
         {ribbon_dir}
-        float bright = clamp(log(1.0 + a_ident.z) / log(61.0), 0.0, 1.0);
+        float bright = clamp(log(1.0 + a_ident.z) / log(41.0), 0.0, 1.0);
         float mu = step(1.5, a_species) * (1.0 - step(2.5, a_species));
-        float w = 1.7 + 2.3 * bright + 1.6 * mu;
+        float w = 1.0 + 3.2 * pow(bright, 1.3) + 1.6 * mu;
         vec2 o = vec2(-d.y, d.x) * a_look.x * w;
         gl_Position = c0 + vec4(o / hv * c0.w, 0.0, 0.0);
         v_ident = a_ident; v_arc = a_arc; v_species = a_species; v_look = a_look; v_rad = length(c.xy); }}"""
@@ -505,7 +508,7 @@ def shaders_v2() -> dict[str, tuple[str, str]]:
       varying vec4 v_ident; varying float v_arc; varying float v_species; varying vec4 v_look; varying float v_rad;
       float hash(float n) {{ return fract(sin(n * 91.3458) * 47453.5453); }}
       vec3 hue(float sp, float q) {{
-        vec3 c = vec3(0.12, 0.58, 1.0);
+        vec3 c = vec3(0.10, 0.92, 1.0);
         if (q < 0.0) {{ c = vec3(1.0, 0.14, 0.72); }}
         if (sp > 0.5 && sp < 1.5) {{ c = vec3(0.14, 1.0, 0.40); }}
         if (sp > 1.5 && sp < 2.5) {{ c = vec3(0.80, 0.62, 1.0); }}
@@ -522,21 +525,21 @@ def shaders_v2() -> dict[str, tuple[str, str]]:
         float v = v_look.x;
         float core = exp(-v * v * 9.0);
         float halo = exp(-v * v * 2.2);
-        float bright = clamp(log(1.0 + v_ident.z) / log(61.0), 0.0, 1.0);
+        float bright = clamp(log(1.0 + v_ident.z) / log(41.0), 0.0, 1.0);
         float seed = v_look.y;
         float neutral = step(0.5, v_look.w) * (1.0 - step(1.5, v_look.w));
         float freq = 1.1 + 2.2 * hash(seed * 7.13);
         float pulse = pow(1.0 - fract(v_arc * freq - age * (0.6 + 0.7 * hash(seed * 3.7)) + hash(seed)), 6.0);
-        float dash = mix(1.0, 0.18 + 0.82 * step(0.45, fract(v_arc * 7.0 + seed)), neutral);
+        float dash = mix(1.0, 0.18 + 0.82 * step(0.4, fract(v_arc * 14.0 + seed)), neutral);
         float growing = 1.0 - smoothstep(v_look.z, v_look.z + 0.25, head);
         float tip = exp(-max(head - v_arc, 0.0) * 9.0) * growing;
         float knot = 0.0;
         if (v_look.w > 1.5) {{ float a1 = (v_rad - 2.60) * 9.0; float a2 = (v_rad - 3.00) * 9.0; knot = exp(-a1 * a1) + exp(-a2 * a2); }}
         vec3 c = hue(v_species, v_ident.y);
-        float gain = (0.55 + 0.95 * bright) * (0.62 + 0.95 * pulse) * dash * (1.0 - 0.35 * neutral);
+        float gain = (0.28 + 1.35 * bright) * (0.62 + 0.95 * pulse) * dash * (1.0 - 0.65 * neutral);
         vec3 col = c * (halo * 0.34 + core * 0.9) * gain;
         col += vec3(1.0) * core * (0.22 * pulse * bright + 1.6 * tip + 0.9 * knot);
-        {tone.format(k='1.55')}
+        {tone.format(k='1.15')}
         gl_FragColor = vec4(col * {fade}, 1.0); }}"""
     twr_v = f"""precision highp float; {mats} uniform ivec4 x3d_Viewport; uniform float u_phase;
       attribute vec4 a_cell; attribute vec3 a_next; attribute vec4 a_look;
@@ -551,16 +554,16 @@ def shaders_v2() -> dict[str, tuple[str, str]]:
         vec4 c1 = x3d_ProjectionMatrix * (x3d_ModelViewMatrix * vec4(a_next, 1.0));
         {ribbon_dir}
         float e = clamp(log(1.0 + a_cell.y) / log(31.0), 0.0, 1.0);
-        float w = 1.6 + 2.2 * e;
+        float w = 0.8 + 1.4 * e;
         vec2 o = vec2(-d.y, d.x) * a_look.x * w;
         gl_Position = c0 + vec4(o / hv * c0.w, 0.0, 0.0);
         v_cell = a_cell; v_look = a_look; }}"""
-    twr_f = f"""precision highp float; uniform float u_phase; varying vec4 v_cell; varying vec4 v_look;
+    twr_f = f"""precision highp float; uniform float u_phase; uniform float u_e90; varying vec4 v_cell; varying vec4 v_look;
       void main() {{
         float t = u_phase * {cyc};
         float e = clamp(log(1.0 + v_cell.y) / log(31.0), 0.0, 1.0);
-        float eh = clamp(log(1.0 + v_cell.y) / log(16.0), 0.0, 1.0);
-        vec3 heat = mix(vec3(0.16, 0.48, 1.0), vec3(1.0, 0.46, 0.04), smoothstep(0.15, 0.65, eh));
+        float eh = clamp(log(1.0 + v_cell.y) / log(1.0 + max(u_e90, 0.05)), 0.0, 1.0);
+        vec3 heat = mix(vec3(0.16, 0.48, 1.0), vec3(1.0, 0.56, 0.10), smoothstep(0.25, 0.80, eh));
         vec3 c = mix(heat, vec3(1.0, 0.78, 0.30), 0.35 * v_cell.z);
         float lit = smoothstep(v_cell.w, v_cell.w + 0.15, t);
         float flare = exp(-max(t - v_cell.w, 0.0) * 2.0) * lit;
@@ -570,9 +573,9 @@ def shaders_v2() -> dict[str, tuple[str, str]]:
         float halo = exp(-v * v * 2.0);
         float shimmer = 0.86 + 0.14 * sin(t * 9.0 + v_look.y * 40.0);
         vec3 col = c * (core * 1.25 + halo * 0.4) * (0.4 + 1.1 * e) * (1.0 - 0.5 * u) * lit * shimmer;
-        col += vec3(1.0, 0.93, 0.82) * core * exp(-u * 4.0) * (0.2 + 0.6 * e) * (0.5 + 0.5 * v_cell.z) * lit * 0.6;
+        col += vec3(1.0, 0.93, 0.82) * core * exp(-u * 4.0) * (0.2 + 0.6 * e) * (0.5 + 0.5 * v_cell.z) * lit * 0.3;
         col += vec3(1.0) * core * flare * 0.7;
-        {tone.format(k='1.5')}
+        {tone.format(k='0.95')}
         gl_FragColor = vec4(col * {fade}, 1.0); }}"""
     shell_v = f"""precision highp float; {mats} uniform mat3 x3d_NormalMatrix; attribute vec3 x3d_Normal;
       attribute vec4 a_shell; attribute vec4 a_geo;
@@ -592,22 +595,24 @@ def shaders_v2() -> dict[str, tuple[str, str]]:
         float r = v_geo.x;
         float hl = v_geo.y;
         float ang = atan(v_obj.y, v_obj.x);
-        float rib = smoothstep(0.88, 1.0, abs(sin(z * v_shell.y)));
+        float face = abs(dot(N, V));
+        float rib = smoothstep(0.88, 1.0, abs(sin(z * v_shell.y))) * smoothstep(0.12, 0.35, face);
         float pan = smoothstep(0.965, 1.0, abs(sin(ang * v_geo.z * 0.5)));
         float steel = step(1.5, v_shell.x) * (1.0 - step(2.5, v_shell.x));
         float endg = exp(-max(hl - abs(z), 0.0) * 14.0) * (1.0 - steel);
         float front = (t - {t0}) * {flt(RIPPLE)};
         float rip = exp(-(front - r) * (front - r) * 6.0) * step(0.0, t - {t0});
         float k = v_shell.x;
-        vec3 c = vec3(0.30, 0.58, 1.0);
+        vec3 c = vec3(0.34, 0.52, 0.80);
         if (k > 0.5) {{ c = vec3(0.50, 0.74, 1.0); }}
-        if (k > 1.5) {{ c = vec3(0.20, 0.28, 0.40); }}
+        if (k > 1.5) {{ c = vec3(0.14, 0.22, 0.36) * smoothstep(0.05, 0.30, face); }}
         if (k > 2.5) {{ c = vec3(0.24, 0.46, 0.85); }}
         float b = v_shell.w;
-        vec3 col = c * (fres * 0.8 + 0.025) * b;
-        col += c * (rib * 0.5 + pan * 0.3) * (0.18 + 0.82 * fres) * b;
+        float lip = smoothstep(hl - 0.12, hl, abs(z));
+        vec3 col = c * (fres * 0.8 * mix(0.3, 1.0, lip) + 0.025) * b;
+        col += c * (rib * 0.5 + pan * 0.3) * (0.18 + 0.82 * fres) * b * (1.0 - 0.4 * steel);
         col += vec3(0.72, 0.86, 1.0) * endg * b * 0.85;
-        col += vec3(1.0, 0.52, 0.12) * v_shell.z * (0.35 + 0.65 * fres) * smoothstep(2.0, 3.6, t);
+        col += vec3(1.0, 0.52, 0.12) * v_shell.z * (0.06 + 0.94 * fres * fres) * smoothstep(2.0, 3.6, t);
         col += vec3(0.6, 0.85, 1.0) * rip * 0.7 * b;
         {tone.format(k='1.35')}
         gl_FragColor = vec4(col * (0.35 + 0.65 * {fade}), 1.0); }}"""
@@ -618,7 +623,7 @@ def shaders_v2() -> dict[str, tuple[str, str]]:
         float t = u_phase * {cyc};
         float s = t - {t0};
         float bang = exp(-max(s, 0.0) * 1.8) * step(0.0, s);
-        float level = (0.15 + 0.85 * smoothstep(0.0, 0.5, t)) * (0.55 + 2.4 * bang);
+        float level = (0.15 + 0.85 * smoothstep(0.0, 0.5, t)) * (0.35 + 2.4 * bang);
         vec2 p = v_uv;
         float r = length(p);
         float glow = exp(-r * r * 16.0) * 1.1 + 0.22 / (1.0 + r * r * 140.0);
@@ -650,7 +655,8 @@ def shaders_v2() -> dict[str, tuple[str, str]]:
         float g = fbm(p * 4.2 - vec2(t * 0.05, 0.0));
         float smoke = smoothstep(0.38, 0.95, f) * (0.55 + 0.45 * g);
         float vign = exp(-r * r * 0.3);
-        vec3 col = vec3(0.010, 0.026, 0.055) * vign + vec3(0.030, 0.062, 0.110) * smoke * (0.5 + 0.5 * r);
+        vec3 col = vec3(0.016, 0.040, 0.085) * vign + vec3(0.045, 0.090, 0.160) * smoke * (0.5 + 0.5 * r);
+        col += vec3(0.05, 0.10, 0.19) * smoothstep(0.86, 0.70, r) * (0.6 + 0.4 * smoke);
         gl_FragColor = vec4(col, 1.0); }}"""
     return {n: (glsl(v), glsl(f)) for n, (v, f) in {"trk2": (trk_v, trk_f), "twr2": (twr_v, twr_f), "shell2": (shell_v, shell_f),
                                                       "flash2": (flash_v, flash_f), "haze2": (haze_v, haze_f)}.items()}
@@ -672,7 +678,9 @@ def bloom_shaders() -> tuple[str, str]:
           for (float k = 0.0; k < 11.5; k += 1.0) {
             float a = 6.2831853 * (k + 0.5 * r) / 12.0;
             vec3 s = texture2D(u_tex, v_uv + vec2(cos(a), sin(a)) * rad * u_px).rgb;
-            b += max(s - vec3(u_thr), vec3(0.0)) * w;
+            float l = dot(s, vec3(0.2126, 0.7152, 0.0722));
+            float kn = max(l - u_thr, 0.0);
+            b += s * (kn * kn / (kn + 0.25)) / max(l, 0.001) * w;
             ws += w; } }
         b = b / ws;
         vec3 col = c + (vec3(1.0) - c) * (vec3(1.0) - exp(-b * u_gain * 12.0));
@@ -765,20 +773,23 @@ def muon_extension(pts: list, arcs: list, det: dict):
     return ext, [arcs[-1] + s_max * i / (m - 1) for i in range(m)]
 
 
-def tower_spikes(x: dict, ca: dict) -> list[tuple]:
-    """Thin radial spikes inside one tower's own (eta, phi) cell: (base, tip, seed) each. Count and length come from
-    the tower's energy; the per-spike scatter is a fixed hash of the tower id, so the build is deterministic."""
+def tower_spikes(x: dict, ca: dict, e90: float = 15.0) -> list[tuple]:
+    """Thin radial needles spread over one tower's own (eta, phi) cell: (base, tip, seed, length) each. Count and length
+    come from the tower's energy (length relative to the event's 90th percentile tower e90); phi is stratified over the
+    whole cell with a small jitter, so neighbouring cells join into one comb instead of wedges. The scatter is a fixed
+    hash of the tower id, so the build is deterministic, and every needle stays inside its cell (the witness checks)."""
     rnd = random.Random(x["i"] * 7919 + 13)
     e = x["E"]
     r0 = ca["r_min_m"]
-    n = min(14, 3 + int(round(3.0 * math.sqrt(max(e, 0.0)))))
-    full = 0.08 + 0.40 * min(1.0, math.log(1.0 + e) / math.log(16.0))
+    n = min(24, 6 + int(round(5.0 * math.sqrt(max(e, 0.0)))))
+    full = 0.06 + 0.42 * min(1.0, math.log(1.0 + e) / math.log(1.0 + max(e90, 0.05)))
+    dph, deta = 2 * math.pi / 72, 0.0873
     out = []
-    for _ in range(n):
-        ph = x["phi"] + rnd.uniform(-0.032, 0.032)
-        eta = x["eta"] + rnd.uniform(-0.034, 0.034)
+    for j in range(n):
+        ph = x["phi"] + ((j + 0.5) / n - 0.5) * dph + rnd.uniform(-0.25, 0.25) * dph / n
+        eta = x["eta"] + rnd.uniform(-0.45, 0.45) * deta
         z = max(-ca["half_length_m"] + 0.005, min(ca["half_length_m"] - 0.005, r0 * math.sinh(eta)))
-        ln = full * (0.45 + 0.55 * rnd.random())
+        ln = full * (0.35 + 0.65 * rnd.random())
         cp, sp = math.cos(ph), math.sin(ph)
         out.append(((r0 * cp, r0 * sp, z), ((r0 + ln) * cp, (r0 + ln) * sp, z), round(rnd.random(), 3), ln))
     return out
@@ -845,11 +856,11 @@ def _its(pts, nrm, idx, sh, gm) -> str:
 
 
 ADD_APP = ("<BlendMode DEF='add' sourceColorFactor='ONE' destinationColorFactor='ONE' sourceAlphaFactor='ONE' destinationAlphaFactor='ONE'/>"
-           "<DepthMode DEF='nodepth' readOnly='true'/>")
+           "<DepthMode DEF='nodepth' depthMask='false'/>")
 ADD_USE = "<BlendMode USE='add'/><DepthMode USE='nodepth'/>"
 
 
-def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: float = 2.5, sparks: int = 420) -> tuple[str, dict]:
+def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: float = 2.5, sparks: int = 160) -> tuple[str, dict]:
     det = ev["detector"]
     tr, ca = det["tracker"], det["calorimeter"]
     sh = shaders_v2()
@@ -869,7 +880,7 @@ def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: flo
     w(f"<meta name='event-sha256' content='{event_sha256}'/>")
     w(f"<meta name='slow-motion' content='track heads advance at {SPEED} m/s; light moves 2.998e8 m/s'/>")
     w("<meta name='units' content='metres, GeV, tesla; z is the beam axis'/>")
-    w("<meta name='colour' content='+ hadron azure, - hadron magenta, electron emerald, muon violet-white, proton coral, photon orange dashed, neutral hadron gold dashed; tower orange EM, blue hadronic'/>")
+    w("<meta name='colour' content='tracks: + hadron cyan, - hadron magenta, electron emerald, muon violet-white, proton coral, photon orange dashed, neutral hadron gold dashed; brightness and width = pT. towers: hue = energy relative to this event (blue low, amber at its 90th percentile tower energy u_e90), EM-rich towers shifted toward gold; needle length = energy'/>")
     w("<meta name='license' content='MIT'/>")
     w("</head>")
     w("<Scene>")
@@ -884,8 +895,11 @@ def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: flo
     w(f"<TimeSensor DEF='clock' cycleInterval='{cycle:g}' loop='true'/>")
     names = {"trk2": "trkShader2", "twr2": "twrShader2", "shell2": "shellShader2", "flash2": "flashShader2", "haze2": "hazeShader2"}
     w("<Switch DEF='shader_defs' whichChoice='-1'><Shape><Appearance>")
+    es = sorted(x["E"] for x in ev.get("towers", []))
+    e90 = es[min(len(es) - 1, int(0.9 * len(es)))] if es else 1.0     # the event's own 90th percentile tower energy
     for key, nm in names.items():
-        w(shader_node_v2(nm, *sh[key]))
+        extra = f"<field name='u_e90' type='SFFloat' accessType='inputOutput' value='{sig(e90)}'/>" if key == "twr2" else ""
+        w(shader_node_v2(nm, *sh[key], extra))
     w(ADD_APP)
     w("</Appearance></Shape></Switch>")
 
@@ -908,6 +922,9 @@ def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: flo
         hl = tr["half_length_m"] * (0.25 if r < 0.2 else 1.0)
         _cyl(r, hl, 96, f"3 {flt(5.0)} 0 {fmt(0.22 if r < 0.2 else 0.3, 2)}", f"{fmt(r)} {fmt(hl)} 0 0", pts, nrm, idx, sha, gma)
     _cyl(tr["r_max_m"], tr["half_length_m"], 192, "0 6 0 0.6", f"{fmt(tr['r_max_m'])} {fmt(tr['half_length_m'])} 24 0", pts, nrm, idx, sha, gma)
+    # hairline glass: short rings that read as layered glass end-on and fill the barrel up to the calorimeter face
+    for r_h, b_h in ((0.15, 0.12), (0.2, 0.12), (0.33, 0.14), (0.5, 0.14), (0.7, 0.16), (0.9, 0.16), (1.05, 0.18), (1.15, 0.18), (1.21, 0.2), (1.26, 0.2)):
+        _cyl(r_h, 0.05, 192, f"3 {flt(5.0)} 0 {fmt(b_h, 2)}", f"{fmt(r_h)} 0.05 0 0", pts, nrm, idx, sha, gma)
     # calorimeter face: one column of vertices per glow sample, so the energy glow follows phi
     base = len(pts)
     r, hl = ca["r_min_m"], ca["half_length_m"]
@@ -948,11 +965,12 @@ def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: flo
       "<ComposedShader USE='flashShader2'/></Appearance><IndexedFaceSet solid='false' coordIndex='0 1 2 3 -1'>"
       "<Coordinate point='-1 -1 0 1 -1 0 1 1 0 -1 1 0'/></IndexedFaceSet></Shape></Transform></Billboard>")
     if sparks:
-        w(f"<ParticleSystem DEF='sparks' geometryType='LINE' maxParticles='{int(sparks)}' particleLifetime='1.1' lifetimeVariation='0.5' "
-          "particleSize='0.06 0.06' colorKey='0 0.35 1'><Appearance>" + ADD_USE +
-          "<Material diffuseColor='0 0 0' emissiveColor='1 0.78 0.42'/></Appearance>"
+        # decoration, not event particles: neutral white-blue (no species colour), short-lived, so they stay near the vertex
+        w(f"<ParticleSystem DEF='sparks' geometryType='LINE' maxParticles='{int(sparks)}' particleLifetime='0.45' lifetimeVariation='0.5' "
+          "particleSize='0.05 0.05' colorKey='0 0.35 1'><Appearance>" + ADD_USE +
+          "<Material diffuseColor='0 0 0' emissiveColor='0.75 0.88 1'/></Appearance>"
           "<ConeEmitter position='0 0 0' direction='0 0 1' angle='3.14159' speed='0.55' variation='0.7' mass='0' surfaceArea='0'/>"
-          "<ColorRGBA containerField='color' color='1 0.95 0.8 1 1 0.55 0.15 0.7 0.5 0.15 0.05 0'/></ParticleSystem>")
+          "<ColorRGBA containerField='color' color='0.85 0.93 1 1 0.3 0.5 0.9 0.6 0.1 0.15 0.35 0'/></ParticleSystem>")
     w("</Group>")
 
     # --- tracks (merged ribbons) and muon extensions
@@ -999,7 +1017,7 @@ def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: flo
     for x in towers:
         arrive = round(x.get("t_arr_ns", ca["r_min_m"] * math.cosh(x["eta"]) / C_M_PER_NS) * C_M_PER_NS / SPEED + FLASH_AT, 4)
         cell = f"{x['i']} {sig(x['E'])} {fmt(x.get('em_frac', 0.5), 3)} {fmt(arrive)}"
-        for b0, tip, seed, ln in tower_spikes(x, ca):
+        for b0, tip, seed, ln in tower_spikes(x, ca, e90):
             beyond = (2 * tip[0] - b0[0], 2 * tip[1] - b0[1], 2 * tip[2] - b0[2])
             tw.add([b0, tip], [tip, beyond], {"a_cell": [cell, cell], "a_look": [f"{fmt(seed, 3)} 0 {fmt(ln, 3)}", f"{fmt(seed, 3)} 1 {fmt(ln, 3)}"]})
             nspikes += 1
@@ -1016,11 +1034,15 @@ def build_v2(ev: dict, event_sha256: str, cycle: float = CYCLE_S, max_turns: flo
                   "bytes": len(text.encode()), "shader_nodes": len(names), "route_count": len(names)}
 
 
-def bloom_wrapper(scene_text: str, view: str, w: int = 960, h: int = 540, gain: float = 0.55, thr: float = 0.42, sigma: float = 11.0) -> str:
+BLOOM_GAIN = {"endon": 0.55, "three_quarter": 0.22, "side": 0.22}   # the oblique views see the face wall and the glass broadside
+
+
+def bloom_wrapper(scene_text: str, view: str, w: int = 960, h: int = 540, gain: float | None = None, thr: float = 0.65, sigma: float = 11.0) -> str:
     """The un-bloomed scene inside a RenderedTexture, drawn by a full-screen threshold-blur shader (X3D 4.1; Texturing 4).
     X_ITE's RenderedTexture renders from the LAST Viewpoint among its children, so each view gets its own wrapper:
     the chosen Viewpoint is moved after the others. The ROUTEs move out of the texture, after every DEF."""
     name = V2_VIEWS[view][0]
+    gain = BLOOM_GAIN[view] if gain is None else gain
     head = re.search(r"<head>(.*?)</head>", scene_text, re.S).group(1)
     body = re.search(r"<Scene>(.*)</Scene>", scene_text, re.S).group(1)
     routes = re.findall(r"<ROUTE [^>]*/>", body)

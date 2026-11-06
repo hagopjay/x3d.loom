@@ -14,31 +14,36 @@ def load(p):
     return np.asarray(Image.open(p).convert('RGB')).astype(np.float32)
 
 
+HUE_BINS = (("red", 345, 15), ("orange", 15, 45), ("yellow", 45, 70), ("green", 70, 160), ("cyan", 160, 200),
+            ("blue", 200, 260), ("violet/magenta", 260, 345))
+
+
 def stats(p):
+    """Pixel statistics, instrument "imgtools stats v2" (2026-11-06). Hue shares count only pixels bright enough to
+    carry colour (brightest channel above 0.25) AND saturated enough to have a hue (saturation above 0.2); bright
+    pixels below that saturation (white, clipped highlights, grey) are reported as their own share, achromatic, and
+    never given a hue. v1 gave hue 0 (red) to every grey and white pixel and had no orange bin: its red/orange and
+    magenta shares are not comparable."""
     a = load(p) / 255.0
     lum = 0.2126 * a[..., 0] + 0.7152 * a[..., 1] + 0.0722 * a[..., 2]
     mx, mn = a.max(-1), a.min(-1)
-    sat = np.where(mx > 0.08, (mx - mn) / np.maximum(mx, 1e-6), 0)
-    # hue bins on pixels bright enough to carry colour
-    sel = mx > 0.25
-    hue = np.zeros(a.shape[:2])
+    sat = np.where(mx > 0.0, (mx - mn) / np.maximum(mx, 1e-6), 0)
+    bright = mx > 0.25
+    chroma = bright & (sat > 0.2)
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
     d = np.maximum(mx - mn, 1e-6)
     h = np.where(mx == r, ((g - b) / d) % 6, np.where(mx == g, (b - r) / d + 2, (r - g) / d + 4)) * 60
-    names = ['red/orange', 'amber/yellow', 'green', 'cyan', 'blue', 'violet/magenta']
-    edges = [(345, 360), (0, 15), (15, 70), (70, 160), (160, 200), (200, 260), (260, 345)]
+    tot = max(1, int(chroma.sum()))
     hist = {}
-    tot = max(1, int(sel.sum()))
-    hist['red/orange'] = float(((h < 15) | (h >= 345))[sel].sum()) / tot
-    hist['amber/yellow'] = float(((h >= 15) & (h < 70))[sel].sum()) / tot
-    hist['green'] = float(((h >= 70) & (h < 160))[sel].sum()) / tot
-    hist['cyan'] = float(((h >= 160) & (h < 200))[sel].sum()) / tot
-    hist['blue'] = float(((h >= 200) & (h < 260))[sel].sum()) / tot
-    hist['violet/magenta'] = float(((h >= 260) & (h < 345))[sel].sum()) / tot
-    return dict(file=p, size=list(a.shape[1::-1]), mean_luma=round(float(lum.mean()), 4), p50=round(float(np.percentile(lum, 50)), 4), p99=round(float(np.percentile(lum, 99)), 4),
-                frac_luma_gt_0_9=round(float((lum > 0.9).mean()), 5), frac_any_channel_255=round(float((a.max(-1) >= 0.999).mean()), 5),
-                frac_luma_gt_0_05=round(float((lum > 0.05).mean()), 4), mean_sat_bright=round(float(sat[sel].mean()) if sel.any() else 0, 3),
-                hue_share={k: round(v, 3) for k, v in hist.items()}, bright_px_frac=round(float(sel.mean()), 4))
+    for name, lo, hi in HUE_BINS:
+        m = ((h >= lo) | (h < hi)) if lo > hi else ((h >= lo) & (h < hi))
+        hist[name] = round(float(m[chroma].sum()) / tot, 3)
+    return dict(instrument="imgtools stats v2", file=p, size=list(a.shape[1::-1]), mean_luma=round(float(lum.mean()), 4),
+                p50=round(float(np.percentile(lum, 50)), 4), p99=round(float(np.percentile(lum, 99)), 4),
+                frac_luma_gt_0_9=round(float((lum > 0.9).mean()), 5), frac_any_channel_255=round(float((mx >= 0.999).mean()), 5),
+                frac_luma_gt_0_05=round(float((lum > 0.05).mean()), 4), bright_px_frac=round(float(bright.mean()), 4),
+                achromatic_share_of_bright=round(float((bright & ~chroma).sum()) / max(1, int(bright.sum())), 3),
+                mean_sat_bright=round(float(sat[bright].mean()) if bright.any() else 0, 3), hue_share=hist)
 
 
 def diff(a, b):

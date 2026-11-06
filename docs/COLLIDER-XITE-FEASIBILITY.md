@@ -119,7 +119,7 @@ Pixel statistics [I4]: mean luma 0.190 vs 0.186; p50 0.105 vs 0.059 (mine darker
 **Native toolbox in X_ITE 16.5.1**
 | effect | native? | best in-scene substitute / result | grade |
 |---|---|---|---|
-| additive glow | yes: `BlendMode` ONE/ONE + `DepthMode readOnly` (component `X_ITE`) | used everywhere; order independent | C |
+| additive glow | yes: `BlendMode` ONE/ONE + `DepthMode depthMask='false'` (component `X_ITE`) | used everywhere | C for the blend; **corrected 2026-11-06:** these measurements used `readOnly='true'`, which is not an X_ITE 16.5.1 DepthMode field (its fields are polygonOffset, depthRange, depthTest, depthFunction, depthMask) and is dropped silently, so depth writes were ON here and the result was not order independent (an independent review found it; the generators now write `depthMask='false'`, not re-measured) |
 | per-fragment glow, energy pulses | yes: ComposedShader + uniform routed from TimeSensor | ribbon recipe | C |
 | Fresnel rim shells | yes: shader with N.V | shell recipe | C |
 | tone mapping | browser option `ToneMapping` (NONE, ACES_NARKOWICZ, ACES_HILL, ACES_HILL_EXPOSURE_BOOST, KHR_PBR_NEUTRAL), built-in shaders only | in-shader soft clip | C |
@@ -133,7 +133,7 @@ Pixel statistics [I4]: mean luma 0.190 vs 0.186; p50 0.105 vs 0.059 (mine darker
 ```xml
 <component name="Shaders" level="1"/><component name="Rendering" level="3"/><component name="X_ITE" level="1"/>
 <BlendMode DEF="BM_ADD" sourceColorFactor="ONE" destinationColorFactor="ONE" sourceAlphaFactor="ONE" destinationAlphaFactor="ONE"/>
-<DepthMode DEF="DM_RO" readOnly="true"/>
+<DepthMode DEF="DM_RO" depthMask="false"/>   <!-- readOnly is not an X_ITE 16.5.1 field and was ignored in the measured runs -->
 ```
 **Track ribbon shape** (one shared shader; each centre-line point appears twice with side -1/+1, shifted by side*0.004*(1,0.7,0.3) to avoid zero-area triangles; aNext = next point, the last one extrapolated; uBoost is optional and defaults to 0):
 ```xml
