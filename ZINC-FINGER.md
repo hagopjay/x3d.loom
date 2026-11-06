@@ -95,13 +95,19 @@ The template is `kit/templates/SCIENCE-STUDY-CARD.md`. Empty fields are decision
 | Word or number in a caption | Measured how | Threshold (declared now) |
 |---|---|---|
 | "zinc held" | Metal-site intact fraction | ≥ 0.99 of frames, windows as in F3 |
-| "the finger keeps its fold" | Backbone RMSD to the experimental structure after equilibration | < 2 Å in ≥ 90 % of frames |
+| "the finger keeps its fold" | Backbone RMSD to the experimental structure after equilibration, per finger | < 2 Å in ≥ 90 % of frames; never claimed for a finger the experiment finds disordered (§5) |
 | "contact" | Heavy-atom distance between protein and RNA or DNA | < 4.0 Å in ≥ 50 % of frames |
 | "flexible" | Per-residue RMSF, colour bar in Å | fixed transfer range 0–3 Å, clipping counted |
 | "binds tighter" or "weaker" | Not from simulation alone | needs the Experiment witness (law 10) |
 
 ### 5. Exploration (before declaring limits)
 - **Easy case:** the synthetic ideal sites (F3).
+- **Published precedent for the worst cases** (L: read through a literature search, to confirm against the papers before P2):
+  - an earlier MD study of the tandem-finger RNA complex (1RGO) found that a fixed-charge nonbonded zinc did not keep tetrahedral geometry;
+  - even a polarizable zinc model lost coordination at the second finger of human TTP in 1 of 3 100-ns runs, with the ligand histidine turned into a rotamer that cannot bind zinc.
+
+  These are the failures `SITE_COORDINATION` and `SITE_INTACT_FRACTION` exist to catch.
+- **A measured fact the Fold witness must respect** (L): by NMR, the second finger of free human TTP is molten-globule-like and folds only on RNA, while both fingers of its relative TIS11d fold without RNA. A run that folds free TTP's second finger is a red result, however stable it looks.
 - **Worst cases named, not yet run:** a nonbonded zinc with a neutral cysteine (expected to lose the zinc: the negative control for the whole simulation chain); the spread across the models of an NMR ensemble; a metal swap to iron or cobalt, where published parameters are scarce.
 
 ### 6. Witnesses
