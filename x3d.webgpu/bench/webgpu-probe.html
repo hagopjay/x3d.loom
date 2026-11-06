@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WebGPU Probe</title>
+<style>
+  :root { --bg:#fbfaf7; --ink:#1d1b18; --quiet:#6b665e; --line:#e2ded6; --ok:#1f7a4a; --no:#b3261e; --chip:#f1eee8; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161513; --ink:#ece9e3; --quiet:#a29d94; --line:#34312c; --ok:#5fd18f; --no:#ff8a80; --chip:#24221f; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  p.sub { color:var(--quiet); margin:0 0 20px; }
+  .verdict { font-size:18px; font-weight:600; padding:14px 16px; border:1px solid var(--line); border-radius:10px; margin-bottom:18px; }
+  .ok { color:var(--ok); } .no { color:var(--no); }
+  table { width:100%; border-collapse:collapse; margin:0 0 18px; font-size:14px; }
+  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--quiet); font-weight:500; width:40%; }
+  code, pre { font-family: ui-monospace, Consolas, monospace; font-size:12.5px; }
+  pre { background:var(--chip); padding:12px; border-radius:8px; overflow:auto; max-height:320px; white-space:pre-wrap; word-break:break-all; }
+  button { font:inherit; padding:8px 14px; border-radius:8px; border:1px solid var(--line); background:var(--chip); color:var(--ink); cursor:pointer; }
+  h2 { font-size:15px; margin:22px 0 8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>WebGPU probe</h1>
+  <p class="sub">Answers one question: does this browser on this machine give WebGPU an adapter? It takes no timings and sends nothing anywhere. Copy the result below and paste it back in the thread.</p>
+  <div id="verdict" class="verdict">Probing...</div>
+  <table id="summary"></table>
+  <button id="copy" type="button">Copy result</button>
+  <h2>Full result</h2>
+  <pre id="out"></pre>
+</main>
+<script>
+(async () => {
+  const r = { probe: 'webgpu-probe/1', utc: new Date().toISOString(), userAgent: navigator.userAgent,
+              secureContext: window.isSecureContext, page: location.protocol };
+  // WebGL2 renderer string and timer query: context only, no drawing.
+  try {
+    const gl = document.createElement('canvas').getContext('webgl2');
+    if (gl) {
+      const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+      r.webgl2 = { renderer: dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER),
+                   timerQuery: !!gl.getExtension('EXT_disjoint_timer_query_webgl2'),
+                   maxTextureSize: gl.getParameter(gl.MAX_TEXTURE_SIZE) };
+    } else r.webgl2 = null;
+  } catch (e) { r.webgl2 = { error: String(e) }; }
+  // WebGPU adapter, features and limits.
+  r.navigatorGpu = 'gpu' in navigator;
+  if (r.navigatorGpu) {
+    try {
+      const a = await navigator.gpu.requestAdapter();
+      if (a) {
+        const info = a.info || (a.requestAdapterInfo ? await a.requestAdapterInfo() : {});
+        const lim = {};
+        for (const k in a.limits) lim[k] = a.limits[k];
+        r.adapter = { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description,
+                      isFallbackAdapter: a.isFallbackAdapter ?? info.isFallbackAdapter ?? null,
+                      features: [...a.features].sort(), limits: lim };
+        r.preferredCanvasFormat = navigator.gpu.getPreferredCanvasFormat();
+        try { const d = await a.requestDevice(); r.device = 'ok'; d.destroy(); } catch (e) { r.device = String(e); }
+      } else r.adapter = null;
+    } catch (e) { r.adapter = { error: String(e) }; }
+  }
+  const has = f => !!(r.adapter && r.adapter.features && r.adapter.features.includes(f));
+  const yes = !!(r.adapter && r.adapter.features);
+  const v = document.getElementById('verdict');
+  v.textContent = yes ? (r.adapter.isFallbackAdapter ? 'WebGPU works, but only on a software fallback adapter.' : 'WebGPU works here: a hardware adapter answered.')
+                      : (r.navigatorGpu ? 'WebGPU is present but gave no adapter here.' : 'WebGPU is not available in this browser.');
+  v.className = 'verdict ' + (yes && !r.adapter.isFallbackAdapter ? 'ok' : 'no');
+  const rows = [
+    ['Adapter', yes ? [r.adapter.vendor, r.adapter.architecture, r.adapter.description].filter(Boolean).join(' / ') || '(no details exposed)' : 'none'],
+    ['shader-f16', yes ? (has('shader-f16') ? 'yes' : 'no') : '-'],
+    ['subgroups', yes ? (has('subgroups') ? 'yes' : 'no') : '-'],
+    ['timestamp-query', yes ? (has('timestamp-query') ? 'yes' : 'no') : '-'],
+    ['Max texture size (WebGPU)', yes ? r.adapter.limits.maxTextureDimension2D : '-'],
+    ['WebGL2 renderer', r.webgl2 && r.webgl2.renderer ? r.webgl2.renderer : 'none'],
+    ['WebGL2 GPU timer', r.webgl2 && 'timerQuery' in r.webgl2 ? (r.webgl2.timerQuery ? 'yes' : 'no') : '-'],
+    ['Page', r.page + (r.secureContext ? ' (secure context)' : ' (not a secure context)')],
+  ];
+  const t = document.getElementById('summary');
+  for (const [k, val] of rows) { const tr = t.insertRow(); const th = document.createElement('th'); th.textContent = k; tr.appendChild(th); tr.insertCell().textContent = String(val); }
+  const text = JSON.stringify(r, null, 2);
+  document.getElementById('out').textContent = text;
+  window.__probe = r;
+  document.getElementById('copy').onclick = async () => {
+    try { await navigator.clipboard.writeText(text); document.getElementById('copy').textContent = 'Copied'; }
+    catch { const s = getSelection(), rg = document.createRange(); rg.selectNodeContents(document.getElementById('out')); s.removeAllRanges(); s.addRange(rg); }
+  };
+})();
+</script>
+</body>
+</html>
