@@ -1,9 +1,10 @@
 #!/usr/bin/env python3 -I
 """Build the Chirp WebGPU page: the study's own index.html, src/app.js and cases drawn by Babylon WebGPU through the x3d reader (src/brain/ + src/drift/ + src/chirp/).
 
-  python3 -I build-chirp.py --study PATH_TO_CHIRP_FOLDER --out OUTDIR [--babylon URL_OR_PATH] [--sri HASH]
+  python3 -I build-chirp.py --study PATH_TO_CHIRP_FOLDER --out OUTDIR [--single] [--babylon URL_OR_PATH] [--sri HASH]
 
 --study  the Chirp study folder (index.html, src/, scenes/, cases/), for example docs/demos/stem/v1/chirp in hagopjay/x3d.demo.
+--single also writes OUT/single.html: one offline file (scenes, cases, script and style inlined; Babylon from the pinned CDN tag).
 --out    a new folder; it gets index.html, src/app.js, src/app.css, scenes/, cases/ and bundle.js. Serve it over http.
 The study's app.js is copied byte for byte; only index.html changes (the script tags, which now load app.js after the Babylon body is up, and the title). Nothing in the study folder changes.
 """
@@ -22,7 +23,7 @@ def sub1(text, old, new):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--study', required=True); ap.add_argument('--out', required=True)
-    ap.add_argument('--babylon', default=''); ap.add_argument('--sri', default=os.environ.get('BABYLON_SRI', BABYLON_SRI))
+    ap.add_argument('--single', action='store_true'); ap.add_argument('--babylon', default=''); ap.add_argument('--sri', default=os.environ.get('BABYLON_SRI', BABYLON_SRI))
     a = ap.parse_args()
     study, out = os.path.abspath(a.study), os.path.abspath(a.out)
     os.makedirs(os.path.join(out, 'src'), exist_ok=True)
@@ -42,6 +43,24 @@ def main():
     html = sub1(html, '<script src="src/app.js"></script>', '<script>(window.__chirpReady || Promise.resolve()).then(function () { var s = document.createElement("script"); s.src = "src/app.js"; document.body.appendChild(s); });</script>')
     html = sub1(html, '<title>Chirp · x3d.STEM</title>', '<title>Chirp · WebGPU</title>')
     open(os.path.join(out, 'index.html'), 'w', encoding='utf-8').write(html)
+    if a.single:   # one offline file: the cases, the scene, the script and the style are inlined; fetch() answers them from window.__VFS
+        import base64
+        vfs = {}
+        for d in ('cases', 'scenes'):
+            for root, _, files in os.walk(os.path.join(out, d)):
+                for f in files:
+                    full = os.path.join(root, f); vfs[os.path.relpath(full, out).replace(os.sep, '/')] = base64.b64encode(open(full, 'rb').read()).decode()
+        shim = ('window.__VFS=' + __import__('json').dumps(vfs) + ';(function(){var of=window.fetch;window.fetch=function(u,o){var k=String(u).replace(/^\\.\\//,\'\');'
+                'if(window.__VFS[k]){var b=atob(window.__VFS[k]),n=b.length,a=new Uint8Array(n);for(var i=0;i<n;i++)a[i]=b.charCodeAt(i);'
+                'return Promise.resolve(new Response(a,{status:200}));}return of.call(window,u,o);};})();')
+        single = open(os.path.join(out, 'index.html'), encoding='utf-8').read()
+        css = open(os.path.join(out, 'src', 'app.css'), encoding='utf-8').read()
+        single = sub1(single, '<link rel="stylesheet" href="src/app.css">', '<style>' + css + '</style>')
+        single = sub1(single, '<script src="bundle.js"></script>', '<script>' + shim + '</script>\n<script>' + open(os.path.join(out, 'bundle.js'), encoding='utf-8').read().replace('</script', '<\\/script') + '</script>')
+        single = sub1(single, 's.src = \"src/app.js\"; document.body.appendChild(s);', 's.textContent = window.__APPJS; document.body.appendChild(s);')
+        single = sub1(single, '<script>(window.__chirpReady', '<script>window.__APPJS = ' + __import__('json').dumps(open(os.path.join(out, 'src', 'app.js'), encoding='utf-8').read()).replace('</', '<\\/') + ';</script>\n<script>(window.__chirpReady')
+        open(os.path.join(out, 'single.html'), 'w', encoding='utf-8').write(single)
+        print('wrote', os.path.join(out, 'single.html'), len(single) // 1024, 'KB')
     print('wrote', out, 'build', tag)
 
 main()
