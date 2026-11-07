@@ -108,6 +108,7 @@ A small "Timing" pill at the lower left (lower right on Neural Canvas, which has
 8. **Appearance `alphaMode` (MASK with a cutoff) was ignored**, so the pines were opaque boxes. `refreshPBR` resets the transparency mode: apply it again after.
 9. **The plain `requestAdapter()` first** (as in PR 14) and a visible message when none answers, because the owner's Windows GPU is blocklisted until a flag is set.
 10. **The test page and the frame queue** are as in the brain port: stub the swap chain and slow `requestAnimationFrame` to 1.2 s. The game then advances its own capped 0.25 s of sim per frame, so a drive takes few frames but long wall time.
+11. **A texture list with fallbacks costs a failed request per node on a sub-folder.** KANSEI lists `../textures/x.png` then `textures/x.png` so one page works from two depths. Served from `/kansei/v1/` the first never exists, and Babylon asked for it for every node (about 2,350 404s on the live page) before trying the second. `createX3DFromString` now probes each distinct candidate once and puts the live one first. Test a built page from a sub-folder, not only from the server root, where the first candidate resolves and hides this.
 
 ### Not done, and known deviations
 
