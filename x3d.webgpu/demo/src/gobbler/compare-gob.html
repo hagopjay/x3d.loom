@@ -1,0 +1,34 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#000"><canvas id=stage style="width:100vw;height:100vh;display:block"></canvas>
+<script>
+/* The Gobbler scene on the Babylon body without the page around it, for frame comparisons against X_ITE (compare-xite.html shows the same scene the same way).
+   ?stub=1 draws to an offscreen texture (headless Chrome here cannot present a WebGPU swap chain). ?scene=NAME ?vp=NAME ?t=SECONDS (hold the clock at this many
+   seconds after the bind so animated shaders compare) ?phase=0..1 (set the shader phase directly). window.__done is set when the first frames are drawn. */
+if(location.search.includes('stub')){
+window.requestAnimationFrame=(cb)=>setTimeout(()=>cb(performance.now()),600);
+const origGC = HTMLCanvasElement.prototype.getContext;
+HTMLCanvasElement.prototype.getContext = function(t, o){ if(t!=='webgpu') return origGC.call(this,t,o);
+  const canvas=this; const ctx={ _t:null,_d:null,_f:'bgra8unorm', canvas,
+   configure(c){ this._d=c.device; this._f=c.format; window.__fmt=c.format; }, unconfigure(){},
+   getCurrentTexture(){ const w=canvas.width,h=canvas.height; if(!this._t||this._t.width!==w||this._t.height!==h){ this._t=this._d.createTexture({size:[w,h],format:this._f,usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.COPY_SRC|GPUTextureUsage.TEXTURE_BINDING}); window.__sc=this._t;} return this._t; } };
+  window.__ctx=ctx; return ctx; };
+}
+</script>
+<script src="/babylon.js"></script>
+<script src="/shared/adapter.js"></script><script src="/src/reader.js"></script><script src="/gob/reader-ext.js"></script><script src="/src/wgsl.js"></script><script src="/gob/wgsl-core.js"></script>
+<script src="/gob/wgsl-sky.js"></script><script src="/gob/wgsl-eye.js"></script><script src="/gob/wgsl-facet.js"></script><script src="/gob/wgsl-line.js"></script><script src="/gob/wgsl-point.js"></script>
+<script src="/src/body.js"></script><script src="/src/body-cam.js"></script><script src="/gob/body-gob.js"></script><script src="/src/sai.js"></script>
+<script>
+(async()=>{ try{
+  const q=new URLSearchParams(location.search);
+  const notes=window.__notes=[];
+  const body=new Body(document.getElementById('stage'),{onNote:m=>{notes.push(m);console.log('note',m)}, tone:'none'});
+  await body.init(); X3DSAI.setBody(body); window.__body=body;
+  const B=X3DSAI.B; await B.loadURL(['/scenes/'+(q.get('scene')||'gobbler3.x3d')]);
+  const sc=B.currentScene;
+  const vp=sc.getNamedNode(q.get('vp')||'Wide'); vp.set_bind=true;
+  if(q.get('phase')!==null){ // freeze the assembly clock: the Intro TimeSensor never starts, the phase is set by hand
+    const intro=sc.getNamedNode('Intro'); intro.enabled=false; for(const n of ['FacetShader','LineShader','PointShader','EyeShader']) sc.getNamedNode(n).phase=+q.get('phase');
+  }
+  window.__info=body.engine.name+' '+BABYLON.Engine.Version; window.__done=true;
+}catch(e){ window.__err=String(e&&e.stack||e); window.__done=true; } })();
+</script>
