@@ -2,7 +2,7 @@
 python3 -I src/build-v3.py SCENE.x3d OUT.html [--title T --h1 H --sub S]
 No scene is embedded in this repository except demo/splat-test.x3d (procedural, made by src/gen-splat-test.py);
 the page is built from whatever X3D 4.1 file with a GaussianSplats node you pass."""
-import json, pathlib, sys, argparse
+import json, os, pathlib, sys, argparse
 here = pathlib.Path(__file__).resolve().parent
 ap = argparse.ArgumentParser()
 ap.add_argument('scene'); ap.add_argument('out')
@@ -10,7 +10,7 @@ ap.add_argument('--title', default='Gaussian splats on WebGPU'); ap.add_argument
 ap.add_argument('--sub', default='A scene written as X3D 4.1 with a GaussianSplats node. This page parses it, sorts the splats on the GPU and draws them with WebGPU.')
 ap.add_argument('--about', action='append', default=[])
 a = ap.parse_args()
-tpl = (here / 'viewer-v3.tpl.html').read_text()
+tpl = (here / os.environ.get('TPL', 'viewer-v3.tpl.html')).read_text()
 x3d = pathlib.Path(a.scene).read_text().strip()
 assert '</script' not in x3d.lower()
 # ComposedShader ports are not used on this page; the template still names their keys

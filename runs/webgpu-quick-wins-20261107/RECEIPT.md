@@ -33,3 +33,7 @@ Not done here: the brain port thread already covers the torso scene.
 ## Not done
 
 No timings. No spherical-harmonic degrees above 0. No second view per comparison.
+
+## Follow-up: "returned no adapter" on the reporting machine (same day)
+
+The reporting machine passed the G1 probe (plain `requestAdapter()`), but the v2/v3 viewers asked `requestAdapter({ powerPreference: 'high-performance' })` and stopped on null. Test (headless Chromium 153, SwiftShader, `requestAdapter` wrapped to return null whenever an option is passed): the old page shows exactly "navigator.gpu is present, but requestAdapter() returned no adapter."; the new templates `viewer-v2-1.tpl.html` and `viewer-v3-1.tpl.html` load and report `via: default`. The new templates try plain, high-performance, low-power, then the software adapter. Cause on the reporting machine: Likely this (the difference between the probe and the pages), not confirmed. The old templates are unchanged; `TPL=viewer-v2-1.tpl.html python3 -I src/build-events.py OUTDIR` builds with the fix (`build-v3.py` the same).
