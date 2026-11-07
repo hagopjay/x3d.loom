@@ -69,6 +69,10 @@ Learnings carried forward:
 4. An export button inside a hosted frame needs a visible preview and a link the viewer clicks; a scripted download click can be ignored without a word.
 5. Defaults belong to the weakest target GPU; the expensive options stay one click away.
 
+## The five event pages and a splat facade (quick wins)
+
+`python3 -I src/build-events.py OUTDIR` writes one Collider-v2 page per HEP event (Dijet, QCD, Z to two muons, QCD in flight, exact Z to two muons). It regenerates the five look-v3 scenes from `kit/examples/hep/fixtures` with `build_event_scene.py --look v3` (three of the five reproduce the hashes in `runs/hep-demo-v3-20261106/scenes.sha256`) and fails if any scene's GLSL hash differs from the Collider's, because that scene would silently fall back to no shader. No viewer code changed; the pages are not committed (2.4 to 2.8 MB each, reproducible). A splat scene with viewpoints goes through `build-v3.py`. Receipt: `runs/webgpu-quick-wins-20261107/RECEIPT.md`.
+
 ## Renderer choices beyond the spec
 
 Both pages state these. Ambient light is taken from the Background (a 512-step gradient table and its 9-term spherical-harmonic irradiance); bloom and tone mapping in the HDR look; additive particles with a glow gain; a particle `mass` of 0 makes the physics models do nothing. Viewpoint changes follow NavigationInfo `transitionType` and `transitionTime` (LINEAR, 1 s by default), eased with smoothstep, and keep the centre of rotation framed by interpolating the half-width there and the field of view in log space. LINE particles are drawn as screen-space streaks `particleSize.y` long. A PointEmitter with a non-zero direction spreads by `variation x 90 degrees`. The page sets the collider's `u_resolutionScale` field to the canvas height over 900 whenever the canvas resizes.
