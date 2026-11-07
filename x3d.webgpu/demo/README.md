@@ -112,6 +112,16 @@ A small "Timing" pill at the lower left. Nothing runs until it is pressed. Then,
 
 Same body, so Sound/AudioClip, Layout/ScreenGroup and Transform shear are still not in the Babylon body. **The game's sound is its own WebAudio synthesiser and it runs unchanged** (the page reports the audio context as running; it was not rebuilt on Babylon's audio engine and nobody has listened to it in this port). Visual deviations from X_ITE, none tuned away: the normal maps are drawn at 0.6 of their `normalScale` (full strength scored lower), the tail-light emissive texture shows stripes, the far ridges are browner than X_ITE's paler grey, the sky clouds are a little stronger. No timings were taken here: this machine has only a software adapter.
 
+## Manifold of Emotion on Babylon WebGPU (the manifold port)
+
+Port #4. The Manifold page (the Riemannian emotional-field manifold; source in `hagopjay/x3d.STEM` `studies/manifold`) with its own HUD, math and `app.js`, drawn by Babylon.js 9.32.0 in WebGPU mode through our X3D reader. **The scene file is the master; Babylon is the body.** Seven GLSL shaders are hand-ported to WGSL and keyed by hash (the builder refuses a scene with an unported shader). The page's old 2D-canvas lens cannot read a WebGPU swap chain, so the lens switch now drives Babylon's own chain (bloom, vignette, grain, chromatic aberration); the look is deliberately not the original's, "lens off" is the as-authored frame, and the page says so on screen. An opt-in **Timing** button (gate G0, opened by the owner for this demo only) prints a copy-paste block in the same format as the KANSEI page.
+
+```sh
+python3 -I x3d.webgpu/demo/src/build-manifold.py --site <manifold Pages folder> --out <new folder>   # then serve the folder over http
+```
+
+Against X_ITE 16.5.1 (software renderer, 640 x 360, lens off, correctness only): Reverie 49.3 dB, Euphoria 48.5 dB. Other rows, the bugs found, and the later-work list are in [runs/webgpu-manifold-20261107/RECEIPT.md](../../runs/webgpu-manifold-20261107/RECEIPT.md). No frame rate is quoted: timing is for the owner's own devices. Source: [src/manifold/](src/manifold/README.md), plan: [MANIFOLD-PORT-PLAN.md](../MANIFOLD-PORT-PLAN.md). The built page is not committed.
+
 ## The Collider
 
 Two protons meet at the centre every 12 seconds. Tracks grow out from the vertex and curl in the field (colour is the particle kind, brightness and width the momentum), the calorimeter crown lights up with the energy each tower caught, and a burst of sparks leaves the vertex. The event is generated and drawn as a demo, not a measurement.
