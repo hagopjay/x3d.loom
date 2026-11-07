@@ -1,0 +1,27 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#000"><canvas id=stage style="width:100vw;height:100vh;display:block"></canvas>
+<script>
+if(location.search.includes('stub')){
+/*SLOWRAF*/ window.requestAnimationFrame=(cb)=>setTimeout(()=>cb(performance.now()),1200);
+const origGC = HTMLCanvasElement.prototype.getContext;
+HTMLCanvasElement.prototype.getContext = function(t, o){ if(t!=='webgpu') return origGC.call(this,t,o);
+  const canvas=this; const ctx={ _t:null,_d:null,_f:'bgra8unorm', canvas,
+   configure(c){ this._d=c.device; this._f=c.format; window.__fmt=c.format; }, unconfigure(){},
+   getCurrentTexture(){ const w=canvas.width,h=canvas.height; if(!this._t||this._t.width!==w||this._t.height!==h){ this._t=this._d.createTexture({size:[w,h],format:this._f,usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.COPY_SRC|GPUTextureUsage.TEXTURE_BINDING}); window.__sc=this._t;} return this._t; } };
+  window.__ctx=ctx; return ctx; };
+}
+</script>
+<script src="babylon.js"></script>
+<script src="src/reader.js"></script><script src="src/wgsl.js"></script><script src="src/body.js"></script><script src="src/body-cam.js"></script><script src="src/sai.js"></script>
+<script>
+// classic scripts: top-level const are shared across scripts in the page's global lexical scope
+(async()=>{ try{
+  const q=new URLSearchParams(location.search);
+  const body=new Body(document.getElementById('stage'),{onNote:m=>console.log('note',m), lightScale:+(q.get('ls')||1), envScale:+(q.get('es')||1), tone:q.get('tm')||'neutral', exposure:+(q.get('ex')||1), envOrder:q.get('eo')||undefined, envDiffuse:q.get('ed')!=='0', lightFlip:q.get('lf')||'none', twoSided:q.get('ts')!=='0', ccw:q.get('ccw')!=='0'});
+  await body.init(); X3DSAI.setBody(body); window.__body=body;
+  const B=X3DSAI.B; await B.loadURL(['scenes/'+(q.get('scene')||'brain_hero_lite.x3dz')]);
+  const sc=B.currentScene;
+  (q.get('sw')||'').split(',').filter(Boolean).forEach(x=>{const [d,v]=x.split(':'); sc.getNamedNode(d).whichChoice=+v;});
+  const vp=sc.getNamedNode(q.get('vp')||'VP_HOME'); vp.set_bind=true;
+  window.__info=body.engine.name; window.__done=true;
+}catch(e){ window.__err=String(e&&e.stack||e);} })();
+</script>

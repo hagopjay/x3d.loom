@@ -22,6 +22,54 @@ Drag to orbit, scroll or pinch to zoom. Every page: Space pauses, R resets the v
 
 `src/viewer-v3.tpl.html` is the v2 core plus the X3D 4.1 draft `GaussianSplats` node: a GPU bitonic depth sort and quads that follow X_ITE 16.4.3's splat shader. `python3 -I src/build-v3.py SCENE.x3d OUT.html` builds a page from any X3D 4.1 file with a `GaussianSplats` node. This repository holds one splat scene, [splat-test.x3d](splat-test.x3d) (6,100 procedural splats, CC0, made by `src/gen-splat-test.py`). The Pantheon page was built from a separate 50,058-splat scene and matches X_ITE 16.4.3 at 50.2 and 51.0 dB on two views; see [the receipt](../../runs/webgpu-pantheon-splats-20261107/RECEIPT.md). Not drawn yet: spherical-harmonic degrees above 0 and `Inline url` splat files.
 
+## Neural Canvas on Babylon WebGPU (the brain port)
+
+Port #2 from the port map. The Brain Loom page ([x3d.brain/page](../../x3d.brain/page/README.md), "Neural Canvas") with its own HUD, data and scenes, drawn by [Babylon.js](https://www.babylonjs.com) 9.32.0 in WebGPU mode instead of X_ITE. **Babylon is the body, our own X3D reader is the brain**: the reader parses the scene, runs the TimeSensors, interpolators and ROUTEs, and keeps the node tree; a Babylon body turns that tree into meshes, materials and lights. The page's `app.js` is not edited. It calls `X3D.getBrowser()` and the scene access interface (SAI) as it does for X_ITE, and a small shim answers those calls from the reader. X_ITE 16.6.0 stays the reference renderer; this is not a parity witness.
+
+```sh
+sh x3d.brain/tools/fetch_xite.sh            # only for the X_ITE reference pages in the receipt
+python3 -I x3d.webgpu/demo/src/build-brain.py --page x3d.brain/page --out /tmp/neural-webgpu.html
+python3 -m http.server -d x3d.brain/page 8000   # copy the built file into that folder first, then open it over http
+```
+
+`--single` inlines the page's `data/` and `scenes/` into one file for private hosting. The built page is **not committed**: it embeds the lite cortex scene, whose source licence is graded Suspected in [NOTICE-BRAIN-DATA.md](../../x3d.brain/page/NOTICE-BRAIN-DATA.md). The page loads Babylon from the CDN at the exact version above with a subresource-integrity hash. Chrome or Edge 113 or later; without WebGPU the page says so and draws nothing.
+
+| file | role |
+|---|---|
+| [src/brain/reader.js](src/brain/reader.js) | parser, node field tables, ROUTE and event model, TimeSensor, the interpolators (the v3 core, extended with Text, FontStyle, ImageTexture, IndexedLineSet, LineProperties, ClipPlane, ComposedCubeMapTexture, EnvironmentLight, Sound) |
+| [src/brain/body.js](src/brain/body.js) | the Babylon body: Group, Switch, Transform, Billboard, Shape, lights, environment, materials, lines, text, ClipPlane, change handling |
+| [src/brain/body-cam.js](src/brain/body-cam.js) | viewpoints and animated transitions, orbit, pan and zoom, picking and TouchSensor, billboards, the frame loop |
+| [src/brain/sai.js](src/brain/sai.js) | the SAI shim (`window.X3D`, field types, `getNamedNode`, `createNode`, `addRoute`, `rootNodes`, `setBrowserOption`) |
+| [src/brain/wgsl.js](src/brain/wgsl.js) | the WGSL ports and the wide-line and unlit shaders |
+| [src/brain/boot.js](src/brain/boot.js), [src/build-brain.py](src/build-brain.py) | start-up and the page builder (it refuses to build if a scene carries GLSL with no port) |
+
+### Shader ports
+
+Same rule as the Collider: a port is chosen by the FNV-1a hash of the vertex and fragment GLSL with whitespace collapsed, so it only runs on the program it was written from.
+
+| shader | key (vertex-fragment) | scene |
+|---|---|---|
+| cortex glass (fresnel, thin film) | `c89ae27e-c9456c60` | brain |
+| aura (halo shell) | `c89ae27e-0afe3b95` | brain |
+| torso glass | `4e142744-2250c51b` | torso CT (16 shapes) |
+| torso halo | `4e142744-f37b0ce5` | torso CT |
+
+The glass is drawn in two passes (back faces, then front) with the blend the shader expects. Wide lines (`LineProperties.linewidthScaleFactor`) are ribbons: one quad per segment, widened in screen space in the vertex shader, because WebGPU has no wide lines. The wet cortex, the deep structures and the stage sprites are Babylon PBR and unlit materials set up from the scene's PhysicalMaterial and Appearance values.
+
+### What cost time (read before the next port)
+
+1. **PhysicalMaterial colours are linear.** Converting them to linear again made the deep structures and the wet cortex far too dark.
+2. **Counter-clockwise faces are the front in X3D; Babylon's default winding is the other one in a right-handed scene.** The wet cortex looked cool and inside-out until PBR materials were set to counter-clockwise with two-sided lighting. No light, environment or exposure setting fixes this.
+3. **Babylon draws transparent meshes with `alphaIndex` default `Number.MAX_VALUE` after everything else.** The core glow sprite drew over the glass until every non-glass mesh got an explicit `alphaIndex`.
+4. **Babylon's billboard mode points +Z away from the eye in a right-handed scene.** Text came out mirrored with its drop shadow on top. Billboards are now turned by the body each frame (X_ITE's rule: +Z at the eye, +Y from the viewer's up; about the axis when one is given).
+5. **A material's `clipPlane` is per material; `scene.clipPlane1` clips everything.** X3D's ClipPlane clips only the shapes in its own Group.
+6. **Unlit text is `emissiveColor`.** Setting the diffuse colour of a `disableLighting` StandardMaterial draws black.
+7. **Do not let the test page queue frames.** On a software adapter the render loop submits frames faster than they finish and the next read-back waits for all of them; the harness slows `requestAnimationFrame` to 1.2 s.
+
+### Not done
+
+`Sound` and `AudioClip` (the repo build of the page has its music switched off), `Layout` and `ScreenGroup` (the page uses HTML for its HUD), a Transform's shear (a `scaleOrientation` with non-uniform scale is decomposed to translation, rotation and scale; the page logs it), bloom and HDR grading (this is the "as authored" path; the look is X_ITE's with KHR_PBR_Neutral tone mapping), and anything timed: gate G0 (timing on the owner's machine) is still open, so no frame rate is quoted. The receipt has the numbers against X_ITE: [runs/webgpu-brain-20261107/RECEIPT.md](../../runs/webgpu-brain-20261107/RECEIPT.md).
+
 ## The Collider
 
 Two protons meet at the centre every 12 seconds. Tracks grow out from the vertex and curl in the field (colour is the particle kind, brightness and width the momentum), the calorimeter crown lights up with the energy each tower caught, and a burst of sparks leaves the vertex. The event is generated and drawn as a demo, not a measurement.
