@@ -1,0 +1,2743 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>X3D First Light</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #06070b;
+    --panel: rgba(12, 14, 21, 0.64);
+    --panel-solid: #10131b;
+    --ink: #e9ecf2;
+    --quiet: #9aa3b2;
+    --line: rgba(255, 255, 255, 0.10);
+    --accent: #6fd8f5;
+    --accent-soft: rgba(111, 216, 245, 0.16);
+    --warm: #ffb46e;
+    --bad: #ff8a80;
+    --pad-l: max(16px, env(safe-area-inset-left));
+    --pad-r: max(16px, env(safe-area-inset-right));
+    --mono: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 13px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
+  #stage { position: fixed; inset: 0; }
+  #gfx { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; outline: none; }
+  #gfx.over { cursor: pointer; }
+  #gfx.drag { cursor: grabbing; }
+  .hud { position: fixed; z-index: 2; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px;
+          backdrop-filter: blur(12px) saturate(1.15); -webkit-backdrop-filter: blur(12px) saturate(1.15);
+          box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35); }
+  #tl { top: 16px; left: var(--pad-l); width: min(360px, calc(100% - var(--pad-l) - var(--pad-r))); }
+  #tl .card { max-height: calc(100vh - 290px); overflow: auto; }
+  #tl h1 { font-size: 15px; letter-spacing: 0.02em; margin: 0 0 2px; font-weight: 650; }
+  #tl .sub { margin: 0 0 8px; color: var(--quiet); }
+  .gpu { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--quiet); flex: none; box-shadow: 0 0 0 3px rgba(255,255,255,0.05); }
+  .dot.ok { background: #5fe0a0; box-shadow: 0 0 10px rgba(95, 224, 160, 0.7); }
+  .dot.no { background: var(--bad); }
+  details { margin-top: 8px; color: var(--quiet); }
+  summary { cursor: pointer; color: var(--ink); }
+  details ul { margin: 6px 0 0; padding-left: 18px; }
+  details li { margin: 3px 0; }
+  #tr { top: 16px; right: var(--pad-r); display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; max-width: calc(100% - 400px); }
+  .btn { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; cursor: pointer;
+         backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); white-space: nowrap; }
+  .btn:hover { border-color: rgba(111, 216, 245, 0.55); }
+  .btn:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn.primary { background: var(--accent-soft); border-color: rgba(111, 216, 245, 0.5); }
+  #bl { bottom: 16px; left: var(--pad-l); width: min(360px, calc(100% - var(--pad-l) - var(--pad-r))); }
+  .row { display: grid; grid-template-columns: 78px 1fr 68px; align-items: center; gap: 8px; margin: 2px 0 6px; }
+  .row label { color: var(--quiet); }
+  .row output { font-family: var(--mono); font-size: 12px; text-align: right; }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  select { font: inherit; color: var(--ink); background: var(--panel-solid); border: 1px solid var(--line); border-radius: 8px; padding: 3px 6px; grid-column: 2 / 4; justify-self: start; }
+  .nums { font-family: var(--mono); font-size: 12px; color: var(--ink); display: grid; grid-template-columns: repeat(3, auto); gap: 2px 14px; justify-content: start; margin-top: 2px; }
+  .nums span b { font-weight: 500; color: var(--quiet); margin-right: 5px; }
+  .fine { color: var(--quiet); font-size: 11.5px; margin-top: 6px; }
+  #br { bottom: 16px; right: var(--pad-r); width: min(400px, calc(100% - 400px - var(--pad-l) - var(--pad-r))); }
+  .logh { color: var(--quiet); margin-bottom: 4px; display: flex; justify-content: space-between; gap: 8px; }
+  .logh span { font-family: var(--mono); font-size: 11.5px; }
+  #log { list-style: none; margin: 0; padding: 0; font-family: var(--mono); font-size: 11.5px; min-height: 96px; }
+  #log li { display: grid; grid-template-columns: 54px 1fr auto; gap: 8px; padding: 1px 0; white-space: nowrap; }
+  #log li .t { color: var(--quiet); }
+  #log li .l { overflow: hidden; text-overflow: ellipsis; }
+  #log li .v { color: var(--warm); }
+  #log li.err .l, #log li.err .v { color: var(--bad); white-space: normal; }
+  #log li.empty { color: var(--quiet); display: block; white-space: normal; font-family: inherit; }
+  .ghost { position: fixed; z-index: 2; bottom: 16px; right: var(--pad-r); font: inherit; font-size: 12px; color: var(--quiet); background: rgba(10, 12, 18, 0.35);
+           border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; cursor: pointer; }
+  #src { position: fixed; z-index: 3; top: 16px; bottom: 16px; right: var(--pad-r); width: min(600px, calc(100% - var(--pad-l) - var(--pad-r)));
+         display: flex; flex-direction: column; gap: 8px; background: #090b11; border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+  #src[hidden] { display: none; }
+  .srch, .srcf { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .srch .x { margin-left: auto; padding: 3px 10px; }
+  .quiet { color: var(--quiet); }
+  #srcText { flex: 1; width: 100%; resize: none; background: #05060a; color: #d8dee9; border: 1px solid var(--line); border-radius: 8px; padding: 10px;
+             font-family: var(--mono); font-size: 12px; line-height: 1.5; tab-size: 2; white-space: pre; overflow: auto; }
+  #srcMsg.bad { color: var(--bad); }
+  #srcMsg.good { color: #5fe0a0; }
+  .overlay { position: fixed; inset: 0; z-index: 4; display: grid; place-items: center; padding: 16px var(--pad-r) 16px var(--pad-l); background: radial-gradient(ellipse at center, rgba(20, 24, 36, 0.7), rgba(4, 5, 8, 0.92)); }
+  .overlay[hidden] { display: none; }
+  .overlay .card { max-width: 520px; padding: 18px 20px; }
+  .overlay h2 { margin: 0 0 8px; font-size: 17px; }
+  .overlay p { margin: 6px 0; color: var(--quiet); }
+  .overlay p.why { color: var(--ink); font-family: var(--mono); font-size: 12px; }
+  #motion { background: transparent; pointer-events: none; place-items: end center; padding-bottom: 120px; }
+  #motion .card { pointer-events: auto; display: flex; gap: 12px; align-items: center; }
+  #motion p { margin: 0; color: var(--ink); }
+  body.noui .hud { display: none !important; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--panel);
+         backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .seg .btn { border: 0; border-radius: 0; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .seg .btn + .btn { border-left: 1px solid var(--line); }
+  .btn[aria-pressed="true"] { background: var(--accent-soft); border-color: rgba(111, 216, 245, 0.5); }
+  .seg .btn[aria-pressed="true"] { background: var(--accent-soft); }
+  [hidden] { display: none !important; }
+  #legend { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 8px; font-size: 11.5px; color: var(--quiet); }
+  #legend span { display: inline-flex; align-items: center; gap: 5px; }
+  #legend i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+  @media (max-width: 900px) {
+    #tr { max-width: none; top: auto; bottom: 16px; right: var(--pad-r); left: var(--pad-l); justify-content: flex-start; }
+    #bl { bottom: 112px; }
+    #br { display: none; }
+    #tl details { display: none; }
+    #tl .card { max-height: none; }
+  }
+  @media (max-width: 520px) {
+    #tl .sub { display: none; }
+    .btn { padding: 6px 10px; font-size: 12px; }
+    #bSource, #bView { display: none; }
+    #bl { bottom: 136px; }
+    #bl .nums, #bl .fine, #bl .row.res { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<div id="stage"><canvas id="gfx" tabindex="0" aria-label="X3D scene drawn with WebGPU: a gold orb above a pedestal inside a turning ring of steel monoliths, with a fountain of embers"></canvas></div>
+
+<div class="hud" id="tl">
+  <div class="card">
+    <h1>X3D First Light</h1>
+    <p class="sub">An X3D 4.0 scene, parsed and run by this page, drawn with WebGPU on your GPU.</p>
+    <div class="gpu"><span class="dot" id="gpuDot"></span><span id="gpuLine">Asking the browser for a WebGPU adapter</span></div>
+
+    <details id="about">
+      <summary>What you're looking at</summary>
+      <ul>
+        <li id="aboutCounts">Loading the scene.</li>
+        <li>Drag to orbit, scroll or pinch to zoom. Touch the orb: its TouchSensor starts a TimeSensor, and three interpolators drive the ember speed, a light and the orb's glow, all through ROUTEs.</li>
+        <li>Renderer choices beyond the X3D spec: ambient light taken from the Background, bloom, ACES tone mapping and additive embers. X_ITE stays the reference renderer.</li>
+        <li>Nothing here is timed for a benchmark, and nothing leaves this page.</li>
+      </ul>
+    </details>
+  </div>
+</div>
+
+<div class="hud" id="tr">
+  <span class="seg" id="vpSeg" hidden></span>
+  <button class="btn" id="bTour" type="button" title="Visit each viewpoint in turn (T)" aria-pressed="false" hidden>Tour</button>
+  <button class="btn primary" id="bBurst" type="button" title="Touch the first TouchSensor (B)" hidden>Touch</button>
+  <button class="btn" id="bLook" type="button" title="Switch the look (L)" aria-pressed="true" hidden>HDR + bloom</button>
+  <button class="btn" id="bSlow" type="button" title="Slow motion (M)" aria-pressed="false" hidden>Slow motion</button>
+  <button class="btn" id="bSource" type="button" title="Show the X3D (S)">X3D source</button>
+  <button class="btn" id="bPause" type="button" title="Pause or play (Space)">Pause</button>
+  <button class="btn" id="bView" type="button" title="Back to the bound viewpoint (R)">Reset view</button>
+  <button class="btn" id="bHide" type="button" title="Hide the panels (H)">Hide UI</button>
+</div>
+
+<div class="hud" id="bl">
+  <div class="card">
+    <div class="row" id="rowTime" hidden><label for="sTime" id="lTime">Time</label><input id="sTime" type="range" min="0" max="1000" step="1" value="0"><output id="oTime" for="sTime">0.0 s</output></div>
+    <div class="row" id="rowPart" hidden><label for="sPart" id="lPart">Particles</label><input id="sPart" type="range" min="0" max="1000" step="1" value="0"><output id="oPart" for="sPart">0</output></div>
+    <div class="row res"><label for="sScale">Resolution</label><select id="sScale"><option value="1">100%</option><option value="0.75">75%</option><option value="0.5">50%</option></select></div>
+    <div class="nums" id="nums"></div>
+    <div class="fine">The frame interval shows on your screen only. Nothing is recorded or sent.</div>
+  </div>
+</div>
+
+<div class="hud" id="br">
+  <div class="card">
+    <div class="logh">Events<span id="evRate"></span></div>
+    <ol id="log"><li class="empty">Touch the orb to watch a cascade go by.</li></ol>
+  </div>
+</div>
+
+<button class="ghost" id="bShow" type="button" hidden>Show UI</button>
+
+<aside id="src" hidden aria-label="X3D source">
+  <div class="srch"><strong>X3D source</strong><span class="quiet">Edit it and press Apply; the page parses it again.</span><button class="btn x" id="bSrcClose" type="button" aria-label="Close the source panel">×</button></div>
+  <textarea id="srcText" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="X3D source text"></textarea>
+  <div class="srcf"><button class="btn primary" id="bApply" type="button">Apply</button><button class="btn" id="bRestore" type="button">Restore original</button><span id="srcMsg" class="quiet"></span></div>
+</aside>
+
+<div class="overlay" id="fallback" hidden>
+  <div class="card">
+    <h2>WebGPU isn't available here</h2>
+    <p class="why" id="fbWhy"></p>
+    <p>This page needs a browser that exposes WebGPU, such as Chrome or Edge 113 or later on Windows. If it is open inside another page that blocks WebGPU, download the standalone copy from the x3d.loom repository (x3d.webgpu/demo/first-light-v1.1.html) and open the file directly.</p>
+  </div>
+</div>
+<div class="overlay" id="lost" hidden>
+  <div class="card">
+    <h2>The GPU device was lost</h2>
+    <p class="why" id="lostWhy"></p>
+    <p>This can happen when the graphics driver resets. Reloading the page asks for a fresh device.</p>
+    <button class="btn primary" id="bReload" type="button">Reload</button>
+  </div>
+</div>
+<div class="overlay" id="motion" hidden>
+  <div class="card"><p>Motion is paused because your system asks for reduced motion.</p><button class="btn primary" id="bPlay" type="button">Play motion</button></div>
+</div>
+
+<script type="model/x3d+xml" id="x3d-scene">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <component name='Shape' level='2'/>
+    <component name='ParticleSystems' level='3'/>
+    <meta name='title' content='First Light'/>
+    <meta name='description' content='A gold orb over a pedestal, a turning ring of steel monoliths, a crown of glints and a fountain of embers. Touch the orb.'/>
+    <meta name='generator' content='hand-written for the x3d.webgpu first-light demo'/>
+  </head>
+  <Scene>
+    <WorldInfo title='First Light' info='"X3D 4.0 scene drawn by the x3d.webgpu first-light demo"'/>
+    <NavigationInfo type='"EXAMINE" "ANY"' headlight='false'/>
+    <Viewpoint DEF='Front' description='First light' position='0 2.4 8.2' orientation='1 0 0 -0.145' fieldOfView='0.75' centerOfRotation='0 1.2 0'/>
+    <Background skyColor='0.004 0.007 0.025, 0.015 0.035 0.09, 0.05 0.05 0.11, 0.42 0.2 0.11' skyAngle='0.8 1.25 1.5708'
+                groundColor='0.004 0.004 0.005, 0.05 0.03 0.025, 0.36 0.18 0.1' groundAngle='1.2 1.5708'/>
+    <Fog color='0.36 0.18 0.1' fogType='EXPONENTIAL' visibilityRange='110'/>
+
+    <!-- Lights. Root-level lights light the whole scene. -->
+    <DirectionalLight DEF='Key' global='true' direction='-0.45 -0.8 -0.4' color='1 0.86 0.7' intensity='3.2' shadows='true'/>
+    <DirectionalLight DEF='Rim' global='true' direction='0.2 -0.75 0.63' color='0.5 0.68 1' intensity='1.2'/>
+    <PointLight DEF='EmberLight' location='0 2.3 0' color='1 0.5 0.18' intensity='3' attenuation='0 0 1' radius='12'/>
+    <PointLight DEF='PlateLight' location='0 0.95 0' color='0.2 0.8 1' intensity='1.2' attenuation='0 0 1' radius='4'/>
+
+    <!-- Floor: wide enough that the fog meets the sky at the horizon. -->
+    <Transform translation='0 -0.05 0'>
+      <Shape castShadow='false'>
+        <Appearance>
+          <PhysicalMaterial baseColor='0.02 0.02 0.025' metallic='0' roughness='0.42'/>
+        </Appearance>
+        <Cylinder radius='120' height='0.1'/>
+      </Shape>
+    </Transform>
+
+    <!-- Pedestal and its glowing plate. -->
+    <Transform translation='0 0.45 0'>
+      <Shape>
+        <Appearance>
+          <PhysicalMaterial baseColor='0.06 0.06 0.07' metallic='0.2' roughness='0.42'/>
+        </Appearance>
+        <Cylinder radius='0.55' height='0.9'/>
+      </Shape>
+    </Transform>
+    <Transform translation='0 0.915 0'>
+      <Shape>
+        <Appearance>
+          <PhysicalMaterial baseColor='0.02 0.08 0.1' metallic='0' roughness='0.5' emissiveColor='0.1 0.75 0.95'/>
+        </Appearance>
+        <Cylinder radius='0.5' height='0.03'/>
+      </Shape>
+    </Transform>
+
+    <!-- The orb. The TouchSensor watches its sibling geometry. -->
+    <Transform DEF='Orb' translation='0 1.6 0'>
+      <TouchSensor DEF='Touch' description='Touch the orb'/>
+      <Shape>
+        <Appearance>
+          <PhysicalMaterial DEF='OrbMat' baseColor='1 0.766 0.336' metallic='1' roughness='0.16'/>
+        </Appearance>
+        <Sphere radius='0.5'/>
+      </Shape>
+    </Transform>
+
+    <!-- Ring of twelve monoliths with lit strips: one DEF, eleven USE. -->
+    <Transform DEF='Ring'>
+      <Transform translation='0 0.55 2.2'>
+        <Group DEF='Monolith'>
+          <Shape>
+            <Appearance>
+              <PhysicalMaterial baseColor='0.32 0.33 0.36' metallic='1' roughness='0.3'/>
+            </Appearance>
+            <Box size='0.22 1.1 0.08'/>
+          </Shape>
+          <!-- a lit strip on the face that looks at the orb -->
+          <Transform translation='0 0 -0.042'>
+            <Shape castShadow='false'>
+              <Appearance><UnlitMaterial emissiveColor='0.35 0.95 1'/></Appearance>
+              <Box size='0.03 0.92 0.004'/>
+            </Shape>
+          </Transform>
+        </Group>
+      </Transform>
+      <Transform translation='1.1 0.55 1.9053' rotation='0 1 0 0.5236'><Group USE='Monolith'/></Transform>
+      <Transform translation='1.9053 0.55 1.1' rotation='0 1 0 1.0472'><Group USE='Monolith'/></Transform>
+      <Transform translation='2.2 0.55 0' rotation='0 1 0 1.5708'><Group USE='Monolith'/></Transform>
+      <Transform translation='1.9053 0.55 -1.1' rotation='0 1 0 2.0944'><Group USE='Monolith'/></Transform>
+      <Transform translation='1.1 0.55 -1.9053' rotation='0 1 0 2.618'><Group USE='Monolith'/></Transform>
+      <Transform translation='0 0.55 -2.2' rotation='0 1 0 3.1416'><Group USE='Monolith'/></Transform>
+      <Transform translation='-1.1 0.55 -1.9053' rotation='0 1 0 3.6652'><Group USE='Monolith'/></Transform>
+      <Transform translation='-1.9053 0.55 -1.1' rotation='0 1 0 4.1888'><Group USE='Monolith'/></Transform>
+      <Transform translation='-2.2 0.55 0' rotation='0 1 0 4.7124'><Group USE='Monolith'/></Transform>
+      <Transform translation='-1.9053 0.55 1.1' rotation='0 1 0 5.236'><Group USE='Monolith'/></Transform>
+      <Transform translation='-1.1 0.55 1.9053' rotation='0 1 0 5.7596'><Group USE='Monolith'/></Transform>
+    </Transform>
+
+    <!-- Crown of sixteen glints, two DEFs alternating. -->
+    <Transform DEF='Crown'>
+      <Transform translation='0 1.3 3' rotation='0.7071 0 0.7071 0.9553'>
+        <Shape DEF='GlintCool' castShadow='false'>
+          <Appearance><UnlitMaterial emissiveColor='0.35 0.95 1'/></Appearance>
+          <Box size='0.07 0.07 0.07'/>
+        </Shape>
+      </Transform>
+      <Transform translation='1.1481 1.6 2.7716' rotation='0.7071 0 0.7071 0.9553'>
+        <Shape DEF='GlintWarm' castShadow='false'>
+          <Appearance><UnlitMaterial emissiveColor='1 0.72 0.36'/></Appearance>
+          <Box size='0.07 0.07 0.07'/>
+        </Shape>
+      </Transform>
+      <Transform translation='2.1213 1.3 2.1213' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintCool'/></Transform>
+      <Transform translation='2.7716 1.6 1.1481' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintWarm'/></Transform>
+      <Transform translation='3 1.3 0' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintCool'/></Transform>
+      <Transform translation='2.7716 1.6 -1.1481' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintWarm'/></Transform>
+      <Transform translation='2.1213 1.3 -2.1213' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintCool'/></Transform>
+      <Transform translation='1.1481 1.6 -2.7716' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintWarm'/></Transform>
+      <Transform translation='0 1.3 -3' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintCool'/></Transform>
+      <Transform translation='-1.1481 1.6 -2.7716' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintWarm'/></Transform>
+      <Transform translation='-2.1213 1.3 -2.1213' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintCool'/></Transform>
+      <Transform translation='-2.7716 1.6 -1.1481' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintWarm'/></Transform>
+      <Transform translation='-3 1.3 0' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintCool'/></Transform>
+      <Transform translation='-2.7716 1.6 1.1481' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintWarm'/></Transform>
+      <Transform translation='-2.1213 1.3 2.1213' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintCool'/></Transform>
+      <Transform translation='-1.1481 1.6 2.7716' rotation='0.7071 0 0.7071 0.9553'><Shape USE='GlintWarm'/></Transform>
+    </Transform>
+
+    <!-- Ember fountain from the crown of the orb. -->
+    <Transform DEF='Fountain' translation='0 2.2 0'>
+      <ParticleSystem DEF='Embers' geometryType='SPRITE' maxParticles='40000' particleLifetime='2.8' lifetimeVariation='0.35'
+                      particleSize='0.035 0.035' colorKey='0 0.12 1 2.4'>
+        <Appearance><UnlitMaterial emissiveColor='1 1 1'/></Appearance>
+        <ColorRGBA color='1 0.85 0.55 1, 1 0.45 0.08 1, 0.75 0.12 0.02 0.6, 0.2 0.02 0.01 0'/>
+        <PointEmitter DEF='Spout' direction='0 1 0' speed='1.8' variation='0.4' mass='0.05' surfaceArea='0.06'/>
+        <ForcePhysicsModel force='0 -0.05 0'/>
+        <WindPhysicsModel direction='0.958 0 0.287' speed='0.6' gustiness='0.4' turbulence='0.55'/>
+      </ParticleSystem>
+    </Transform>
+
+    <!-- Motion: one clock fans out to the ring and the crown; a slower one breathes the orb. -->
+    <TimeSensor DEF='Clock' cycleInterval='40' loop='true'/>
+    <OrientationInterpolator DEF='Spin' key='0 0.25 0.5 0.75 1'
+        keyValue='0 1 0 0, 0 1 0 1.5708, 0 1 0 3.1416, 0 1 0 4.7124, 0 1 0 6.2832'/>
+    <OrientationInterpolator DEF='CounterSpin' key='0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1'
+        keyValue='0 1 0 0, 0 1 0 -1.5708, 0 1 0 -3.1416, 0 1 0 -4.7124, 0 1 0 -6.2832, 0 1 0 -7.854, 0 1 0 -9.4248, 0 1 0 -10.9956, 0 1 0 -12.5664'/>
+    <TimeSensor DEF='Breath' cycleInterval='6' loop='true'/>
+    <PositionInterpolator DEF='Bob' key='0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1'
+        keyValue='0 1.6 0, 0 1.6424 0, 0 1.66 0, 0 1.6424 0, 0 1.6 0, 0 1.5576 0, 0 1.54 0, 0 1.5576 0, 0 1.6 0'/>
+
+    <!-- Touch: one pulse drives the ember speed, the ember light and the orb's glow. -->
+    <TimeSensor DEF='Pulse' cycleInterval='1.8'/>
+    <ScalarInterpolator DEF='BurstSpeed' key='0 0.08 1' keyValue='1.8 6 1.8'/>
+    <ScalarInterpolator DEF='Flash' key='0 0.06 1' keyValue='3 16 3'/>
+    <ColorInterpolator DEF='Glow' key='0 0.15 1' keyValue='0 0 0, 1 0.38 0.06, 0 0 0'/>
+
+    <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Spin' toField='set_fraction'/>
+    <ROUTE fromNode='Spin' fromField='value_changed' toNode='Ring' toField='set_rotation'/>
+    <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='CounterSpin' toField='set_fraction'/>
+    <ROUTE fromNode='CounterSpin' fromField='value_changed' toNode='Crown' toField='set_rotation'/>
+    <ROUTE fromNode='Breath' fromField='fraction_changed' toNode='Bob' toField='set_fraction'/>
+    <ROUTE fromNode='Bob' fromField='value_changed' toNode='Orb' toField='set_translation'/>
+    <ROUTE fromNode='Touch' fromField='touchTime' toNode='Pulse' toField='set_startTime'/>
+    <ROUTE fromNode='Pulse' fromField='fraction_changed' toNode='BurstSpeed' toField='set_fraction'/>
+    <ROUTE fromNode='BurstSpeed' fromField='value_changed' toNode='Spout' toField='set_speed'/>
+    <ROUTE fromNode='Pulse' fromField='fraction_changed' toNode='Flash' toField='set_fraction'/>
+    <ROUTE fromNode='Flash' fromField='value_changed' toNode='EmberLight' toField='set_intensity'/>
+    <ROUTE fromNode='Pulse' fromField='fraction_changed' toNode='Glow' toField='set_fraction'/>
+    <ROUTE fromNode='Glow' fromField='value_changed' toNode='OrbMat' toField='set_emissiveColor'/>
+  </Scene>
+</X3D>
+</script>
+
+<script type="module">
+'use strict';
+const $ = (id) => document.getElementById(id);
+const ORIGINAL_X3D = $('x3d-scene').textContent.trim();
+const OPTS = {"look": "hdr", "displayReferred": false, "bloom": 0.12, "exposure": 1.0, "floorY": 0.15, "zoomIn": 0.16, "zoomOut": 7, "particleLabel": "Embers", "particleRange": [10000, 250000], "partGain": 1.25, "partGainHDR": 1.25, "slowMotion": false};
+const PI = Math.PI;
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+const srgbToLin = (x) => (x <= 0.04045 ? Math.max(x, 0) / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4));
+
+/* ------------------------------------------------------------------ math */
+const v3 = {
+  add: (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]],
+  sub: (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]],
+  scale: (a, s) => [a[0] * s, a[1] * s, a[2] * s],
+  dot: (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2],
+  cross: (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]],
+  len: (a) => Math.hypot(a[0], a[1], a[2]),
+  norm: (a) => { const l = Math.hypot(a[0], a[1], a[2]); return l > 1e-12 ? [a[0] / l, a[1] / l, a[2] / l] : [0, 0, 0]; },
+};
+const m4 = {
+  ident() { const m = new Float32Array(16); m[0] = m[5] = m[10] = m[15] = 1; return m; },
+  mul(a, b) {
+    const o = new Float32Array(16);
+    for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++)
+      o[c * 4 + r] = a[r] * b[c * 4] + a[4 + r] * b[c * 4 + 1] + a[8 + r] * b[c * 4 + 2] + a[12 + r] * b[c * 4 + 3];
+    return o;
+  },
+  translate(v) { const m = m4.ident(); m[12] = v[0]; m[13] = v[1]; m[14] = v[2]; return m; },
+  scale(v) { const m = m4.ident(); m[0] = v[0]; m[5] = v[1]; m[10] = v[2]; return m; },
+  rot(r) { // SFRotation: axis x y z, angle
+    let x = r[0], y = r[1], z = r[2]; const a = r[3]; const l = Math.hypot(x, y, z);
+    if (l < 1e-12 || a === 0) return m4.ident();
+    x /= l; y /= l; z /= l;
+    const c = Math.cos(a), s = Math.sin(a), t = 1 - c, m = m4.ident();
+    m[0] = t * x * x + c;     m[1] = t * x * y + s * z; m[2] = t * x * z - s * y;
+    m[4] = t * x * y - s * z; m[5] = t * y * y + c;     m[6] = t * y * z + s * x;
+    m[8] = t * x * z + s * y; m[9] = t * y * z - s * x; m[10] = t * z * z + c;
+    return m;
+  },
+  invert(a) {
+    const o = new Float32Array(16);
+    const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
+    const a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11], a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+    const b00 = a00 * a11 - a01 * a10, b01 = a00 * a12 - a02 * a10, b02 = a00 * a13 - a03 * a10, b03 = a01 * a12 - a02 * a11;
+    const b04 = a01 * a13 - a03 * a11, b05 = a02 * a13 - a03 * a12, b06 = a20 * a31 - a21 * a30, b07 = a20 * a32 - a22 * a30;
+    const b08 = a20 * a33 - a23 * a30, b09 = a21 * a32 - a22 * a31, b10 = a21 * a33 - a23 * a31, b11 = a22 * a33 - a23 * a32;
+    let det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+    if (!det) return m4.ident();
+    det = 1 / det;
+    o[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det; o[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
+    o[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det; o[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det;
+    o[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det; o[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
+    o[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det; o[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det;
+    o[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det; o[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
+    o[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det; o[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det;
+    o[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det; o[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
+    o[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det; o[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
+    return o;
+  },
+  perspective(fovy, aspect, near, far) { // WebGPU clip z in [0, 1]
+    const f = 1 / Math.tan(fovy / 2), m = new Float32Array(16);
+    m[0] = f / aspect; m[5] = f; m[10] = far / (near - far); m[11] = -1; m[14] = near * far / (near - far);
+    return m;
+  },
+  ortho(l, r, b, t, n, f) {
+    const m = m4.ident();
+    m[0] = 2 / (r - l); m[5] = 2 / (t - b); m[10] = 1 / (n - f);
+    m[12] = -(r + l) / (r - l); m[13] = -(t + b) / (t - b); m[14] = n / (n - f);
+    return m;
+  },
+  lookAt(eye, target, up) {
+    const z = v3.norm(v3.sub(eye, target)), x = v3.norm(v3.cross(up, z)), y = v3.cross(z, x), m = m4.ident();
+    m[0] = x[0]; m[1] = y[0]; m[2] = z[0]; m[4] = x[1]; m[5] = y[1]; m[6] = z[1]; m[8] = x[2]; m[9] = y[2]; m[10] = z[2];
+    m[12] = -v3.dot(x, eye); m[13] = -v3.dot(y, eye); m[14] = -v3.dot(z, eye);
+    return m;
+  },
+  point: (m, p) => [m[0] * p[0] + m[4] * p[1] + m[8] * p[2] + m[12], m[1] * p[0] + m[5] * p[1] + m[9] * p[2] + m[13], m[2] * p[0] + m[6] * p[1] + m[10] * p[2] + m[14]],
+  dir: (m, d) => [m[0] * d[0] + m[4] * d[1] + m[8] * d[2], m[1] * d[0] + m[5] * d[1] + m[9] * d[2], m[2] * d[0] + m[6] * d[1] + m[10] * d[2]],
+  vec4: (m, p) => [0, 1, 2, 3].map((r) => m[r] * p[0] + m[4 + r] * p[1] + m[8 + r] * p[2] + m[12 + r] * p[3]),
+};
+const quat = {
+  fromAxisAngle(ax, ang) { const n = v3.norm(ax); if (!n[0] && !n[1] && !n[2]) return [0, 0, 0, 1]; const s = Math.sin(ang / 2); return [n[0] * s, n[1] * s, n[2] * s, Math.cos(ang / 2)]; },
+  mul: (a, b) => [a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1], a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0],
+                  a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3], a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2]],
+  norm(a) { const l = Math.hypot(a[0], a[1], a[2], a[3]) || 1; return [a[0] / l, a[1] / l, a[2] / l, a[3] / l]; },
+  rotate(q, v) {
+    const u = [q[0], q[1], q[2]], w = q[3], uv = v3.cross(u, v), uuv = v3.cross(u, uv);
+    return [v[0] + 2 * (w * uv[0] + uuv[0]), v[1] + 2 * (w * uv[1] + uuv[1]), v[2] + 2 * (w * uv[2] + uuv[2])];
+  },
+  slerp(a, b, t) { // shortest path, as 19775-1 asks of OrientationInterpolator
+    let d = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+    if (d < 0) { b = b.map((x) => -x); d = -d; }
+    if (d > 0.9995) return quat.norm(a.map((x, i) => x + (b[i] - x) * t));
+    const th = Math.acos(d), s = Math.sin(th), wa = Math.sin((1 - t) * th) / s, wb = Math.sin(t * th) / s;
+    return a.map((x, i) => x * wa + b[i] * wb);
+  },
+  toAxisAngle(q) {
+    const w = clamp(q[3], -1, 1), s = Math.sqrt(1 - w * w);
+    if (s < 1e-6) return [0, 0, 1, 0];
+    return [q[0] / s, q[1] / s, q[2] / s, 2 * Math.acos(w)];
+  },
+  toMat(q) {
+    const [x, y, z, w] = q, m = m4.ident();
+    m[0] = 1 - 2 * (y * y + z * z); m[1] = 2 * (x * y + w * z); m[2] = 2 * (x * z - w * y);
+    m[4] = 2 * (x * y - w * z); m[5] = 1 - 2 * (x * x + z * z); m[6] = 2 * (y * z + w * x);
+    m[8] = 2 * (x * z + w * y); m[9] = 2 * (y * z - w * x); m[10] = 1 - 2 * (x * x + y * y);
+    return m;
+  },
+};
+
+/* ------------------------------------------------- X3D fields and nodes */
+const num = (s) => { const v = parseFloat(s); return Number.isFinite(v) ? v : 0; };
+const numList = (s) => { const t = String(s).replace(/,/g, ' ').trim(); return t ? t.split(/\s+/).map(num) : []; };
+const chunk = (a, n) => { const o = []; for (let i = 0; i + n <= a.length; i += n) o.push(a.slice(i, i + n)); return o; };
+const fixed = (n, d) => (s) => { const a = numList(s); while (a.length < n) a.push(d[a.length] ?? 0); return a.slice(0, n); };
+function mfString(s) { const out = []; const re = /"((?:[^"\\]|\\.)*)"/g; let m; while ((m = re.exec(s))) out.push(m[1].replace(/\\(.)/g, '$1')); return out.length || !s.trim() ? out : [s.trim()]; }
+const PARSE = {
+  SFBool: (s) => /^\s*true\s*$/i.test(s), SFString: (s) => s, SFInt32: (s) => parseInt(s, 10) || 0,
+  SFFloat: num, SFTime: num, SFDouble: num,
+  SFVec2f: fixed(2, [0, 0]), SFVec3f: fixed(3, [0, 0, 0]), SFColor: fixed(3, [0, 0, 0]), SFColorRGBA: fixed(4, [0, 0, 0, 1]), SFRotation: fixed(4, [0, 0, 1, 0]),
+  MFFloat: numList, MFInt32: (s) => numList(s).map(Math.trunc), MFTime: numList,
+  MFVec2f: (s) => chunk(numList(s), 2), MFVec3f: (s) => chunk(numList(s), 3), MFColor: (s) => chunk(numList(s), 3),
+  MFColorRGBA: (s) => chunk(numList(s), 4), MFRotation: (s) => chunk(numList(s), 4), MFString: mfString,
+};
+const IO = 'io', IN = 'in', OUT = 'out', INIT = 'init';
+const LIGHT = { on: ['SFBool', IO, true], color: ['SFColor', IO, [1, 1, 1]], intensity: ['SFFloat', IO, 1], ambientIntensity: ['SFFloat', IO, 0],
+                global: ['SFBool', IO, false], shadows: ['SFBool', IO, false], shadowIntensity: ['SFFloat', IO, 1] };
+const GROUP = { children: ['MFNode', IO, []], visible: ['SFBool', IO, true] };
+const interp = (t) => ({ key: ['MFFloat', IO, []], keyValue: ['MF' + t, IO, []], set_fraction: ['SFFloat', IN, 0], value_changed: ['SF' + t, OUT, null] });
+const solid = { solid: ['SFBool', INIT, true] };
+const geomNodes = { coord: ['SFNode', IO, null], normal: ['SFNode', IO, null], color: ['SFNode', IO, null], texCoord: ['SFNode', IO, null], attrib: ['MFNode', IO, []],
+                    ccw: ['SFBool', INIT, true], colorPerVertex: ['SFBool', INIT, true], normalPerVertex: ['SFBool', INIT, true], ...solid };
+const emitter = { position: ['SFVec3f', IO, [0, 0, 0]], direction: ['SFVec3f', IO, [0, 1, 0]], speed: ['SFFloat', IO, 0], variation: ['SFFloat', IO, 0.25],
+                  mass: ['SFFloat', IO, 0], surfaceArea: ['SFFloat', IO, 0], on: ['SFBool', IO, true] };
+const DEFS = {
+  WorldInfo: { title: ['SFString', IO, ''], info: ['MFString', IO, []] },
+  NavigationInfo: { type: ['MFString', IO, ['EXAMINE', 'ANY']], headlight: ['SFBool', IO, true], speed: ['SFFloat', IO, 1], set_bind: ['SFBool', IN, false],
+                    transitionType: ['MFString', IO, ['LINEAR']], transitionTime: ['SFTime', IO, 1], visibilityLimit: ['SFFloat', IO, 0],
+                    avatarSize: ['MFFloat', IO, [0.25, 1.6, 0.75]], isBound: ['SFBool', OUT, false], bindTime: ['SFTime', OUT, 0] },
+  Viewpoint: { position: ['SFVec3f', IO, [0, 0, 10]], orientation: ['SFRotation', IO, [0, 0, 1, 0]], fieldOfView: ['SFFloat', IO, 0.7854],
+               centerOfRotation: ['SFVec3f', IO, [0, 0, 0]], description: ['SFString', IO, ''], set_bind: ['SFBool', IN, false], jump: ['SFBool', IO, true],
+               retainUserOffsets: ['SFBool', IO, false], nearDistance: ['SFFloat', IO, -1], farDistance: ['SFFloat', IO, -1],
+               isBound: ['SFBool', OUT, false], bindTime: ['SFTime', OUT, 0] },
+  Background: { skyColor: ['MFColor', IO, [[0, 0, 0]]], skyAngle: ['MFFloat', IO, []], groundColor: ['MFColor', IO, []], groundAngle: ['MFFloat', IO, []],
+                transparency: ['SFFloat', IO, 0], set_bind: ['SFBool', IN, false] },
+  Fog: { color: ['SFColor', IO, [1, 1, 1]], fogType: ['SFString', IO, 'LINEAR'], visibilityRange: ['SFFloat', IO, 0], set_bind: ['SFBool', IN, false] },
+  DirectionalLight: { ...LIGHT, direction: ['SFVec3f', IO, [0, 0, -1]] },
+  PointLight: { ...LIGHT, global: ['SFBool', IO, true], location: ['SFVec3f', IO, [0, 0, 0]], radius: ['SFFloat', IO, 100], attenuation: ['SFVec3f', IO, [1, 0, 0]] },
+  SpotLight: { ...LIGHT, global: ['SFBool', IO, true], location: ['SFVec3f', IO, [0, 0, 0]], direction: ['SFVec3f', IO, [0, 0, -1]], radius: ['SFFloat', IO, 100],
+               attenuation: ['SFVec3f', IO, [1, 0, 0]], beamWidth: ['SFFloat', IO, 0.589049], cutOffAngle: ['SFFloat', IO, 1.570796] },
+  Transform: { ...GROUP, translation: ['SFVec3f', IO, [0, 0, 0]], rotation: ['SFRotation', IO, [0, 0, 1, 0]], scale: ['SFVec3f', IO, [1, 1, 1]],
+               scaleOrientation: ['SFRotation', IO, [0, 0, 1, 0]], center: ['SFVec3f', IO, [0, 0, 0]] },
+  Group: { ...GROUP },
+  Switch: { ...GROUP, whichChoice: ['SFInt32', IO, -1] },
+  Billboard: { ...GROUP, axisOfRotation: ['SFVec3f', IO, [0, 1, 0]] },
+  Shape: { appearance: ['SFNode', IO, null], geometry: ['SFNode', IO, null], castShadow: ['SFBool', IO, true], visible: ['SFBool', IO, true] },
+  Appearance: { material: ['SFNode', IO, null], shaders: ['MFNode', IO, []], blendMode: ['SFNode', IO, null], depthMode: ['SFNode', IO, null] },
+  ComposedShader: { language: ['SFString', INIT, ''], parts: ['MFNode', IO, []], activate: ['SFBool', IN, false], isSelected: ['SFBool', OUT, false], isValid: ['SFBool', OUT, false] },
+  ShaderPart: { url: ['MFString', IO, []], type: ['SFString', INIT, 'VERTEX'] },
+  BlendMode: { blendColor: ['SFColorRGBA', IO, [0, 0, 0, 0]], sourceColorFactor: ['SFString', IO, 'SRC_ALPHA'], sourceAlphaFactor: ['SFString', IO, 'ONE'],
+               destinationColorFactor: ['SFString', IO, 'ONE_MINUS_SRC_ALPHA'], destinationAlphaFactor: ['SFString', IO, 'ONE_MINUS_SRC_ALPHA'],
+               colorEquation: ['SFString', IO, 'FUNC_ADD'], alphaEquation: ['SFString', IO, 'FUNC_ADD'] },
+  DepthMode: { polygonOffset: ['SFVec2f', IO, [0, 0]], depthRange: ['SFVec2f', IO, [0, 1]], depthTest: ['SFBool', IO, true], depthFunction: ['SFString', IO, 'LESS_EQUAL'],
+               depthMask: ['SFBool', IO, true] },
+  Material: { diffuseColor: ['SFColor', IO, [0.8, 0.8, 0.8]], specularColor: ['SFColor', IO, [0, 0, 0]], emissiveColor: ['SFColor', IO, [0, 0, 0]],
+              shininess: ['SFFloat', IO, 0.2], ambientIntensity: ['SFFloat', IO, 0.2], transparency: ['SFFloat', IO, 0] },
+  PhysicalMaterial: { baseColor: ['SFColor', IO, [1, 1, 1]], metallic: ['SFFloat', IO, 1], roughness: ['SFFloat', IO, 1], emissiveColor: ['SFColor', IO, [0, 0, 0]],
+                      occlusionStrength: ['SFFloat', IO, 1], transparency: ['SFFloat', IO, 0] },
+  UnlitMaterial: { emissiveColor: ['SFColor', IO, [1, 1, 1]], transparency: ['SFFloat', IO, 0] },
+  Box: { size: ['SFVec3f', INIT, [2, 2, 2]], ...solid },
+  Sphere: { radius: ['SFFloat', INIT, 1], ...solid },
+  Cylinder: { radius: ['SFFloat', INIT, 1], height: ['SFFloat', INIT, 2], top: ['SFBool', IO, true], bottom: ['SFBool', IO, true], side: ['SFBool', IO, true], ...solid },
+  Cone: { bottomRadius: ['SFFloat', INIT, 1], height: ['SFFloat', INIT, 2], side: ['SFBool', IO, true], bottom: ['SFBool', IO, true], ...solid },
+  Coordinate: { point: ['MFVec3f', IO, []] },
+  Normal: { vector: ['MFVec3f', IO, []] },
+  FloatVertexAttribute: { name: ['SFString', INIT, ''], numComponents: ['SFInt32', INIT, 4], value: ['MFFloat', IO, []] },
+  IndexedTriangleSet: { ...geomNodes, index: ['MFInt32', INIT, []], set_index: ['MFInt32', IN, []] },
+  TriangleStripSet: { ...geomNodes, stripCount: ['MFInt32', IO, []] },
+  IndexedFaceSet: { ...geomNodes, coordIndex: ['MFInt32', INIT, []], normalIndex: ['MFInt32', INIT, []], colorIndex: ['MFInt32', INIT, []], texCoordIndex: ['MFInt32', INIT, []],
+                    convex: ['SFBool', INIT, true], creaseAngle: ['SFFloat', INIT, 0], set_coordIndex: ['MFInt32', IN, []] },
+  TimeSensor: { cycleInterval: ['SFTime', IO, 1], enabled: ['SFBool', IO, true], loop: ['SFBool', IO, false], startTime: ['SFTime', IO, 0], stopTime: ['SFTime', IO, 0],
+                pauseTime: ['SFTime', IO, 0], resumeTime: ['SFTime', IO, 0], description: ['SFString', IO, ''],
+                fraction_changed: ['SFFloat', OUT, 0], time: ['SFTime', OUT, 0], cycleTime: ['SFTime', OUT, 0], isActive: ['SFBool', OUT, false],
+                elapsedTime: ['SFTime', OUT, 0], isPaused: ['SFBool', OUT, false] },
+  TouchSensor: { enabled: ['SFBool', IO, true], description: ['SFString', IO, ''], touchTime: ['SFTime', OUT, 0], isActive: ['SFBool', OUT, false],
+                 isOver: ['SFBool', OUT, false], hitPoint_changed: ['SFVec3f', OUT, [0, 0, 0]], hitNormal_changed: ['SFVec3f', OUT, [0, 0, 1]] },
+  ScalarInterpolator: interp('Float'), PositionInterpolator: interp('Vec3f'), OrientationInterpolator: interp('Rotation'), ColorInterpolator: interp('Color'),
+  ParticleSystem: { enabled: ['SFBool', IO, true], createParticles: ['SFBool', IO, true], geometryType: ['SFString', INIT, 'QUAD'], maxParticles: ['SFInt32', IO, 200],
+                    particleLifetime: ['SFFloat', IO, 5], lifetimeVariation: ['SFFloat', IO, 0.25], particleSize: ['SFVec2f', IO, [0.02, 0.02]],
+                    colorKey: ['MFFloat', INIT, []], color: ['SFNode', INIT, null], emitter: ['SFNode', INIT, null], physics: ['MFNode', INIT, []],
+                    appearance: ['SFNode', IO, null], geometry: ['SFNode', IO, null], castShadow: ['SFBool', IO, true], visible: ['SFBool', IO, true],
+                    isActive: ['SFBool', OUT, false] },
+  PointEmitter: { ...emitter },
+  ConeEmitter: { ...emitter, angle: ['SFFloat', IO, 0.7854] },
+  ForcePhysicsModel: { force: ['SFVec3f', IO, [0, -9.8, 0]], enabled: ['SFBool', IO, true] },
+  WindPhysicsModel: { direction: ['SFVec3f', IO, [1, 0, 0]], speed: ['SFFloat', IO, 0.1], gustiness: ['SFFloat', IO, 0.1], turbulence: ['SFFloat', IO, 0], enabled: ['SFBool', IO, true] },
+  Color: { color: ['MFColor', IO, []] },
+  ColorRGBA: { color: ['MFColorRGBA', IO, []] },
+};
+const CONTAINER = { Appearance: 'appearance', Material: 'material', PhysicalMaterial: 'material', UnlitMaterial: 'material',
+  Box: 'geometry', Sphere: 'geometry', Cylinder: 'geometry', Cone: 'geometry', IndexedTriangleSet: 'geometry', TriangleStripSet: 'geometry', IndexedFaceSet: 'geometry',
+  Color: 'color', ColorRGBA: 'color', Coordinate: 'coord', Normal: 'normal', FloatVertexAttribute: 'attrib',
+  ComposedShader: 'shaders', ShaderPart: 'parts', BlendMode: 'blendMode', DepthMode: 'depthMode',
+  PointEmitter: 'emitter', ConeEmitter: 'emitter', ForcePhysicsModel: 'physics', WindPhysicsModel: 'physics', BoundedPhysicsModel: 'physics' };
+// big arrays stay flat typed arrays (a 9,000-track event has about 400,000 vertices)
+const FLAT = { 'Coordinate.point': Float32Array, 'Normal.vector': Float32Array, 'FloatVertexAttribute.value': Float32Array, 'IndexedTriangleSet.index': Int32Array,
+  'IndexedFaceSet.coordIndex': Int32Array, 'IndexedFaceSet.normalIndex': Int32Array, 'TriangleStripSet.stripCount': Int32Array };
+function flatNums(s, T) { const t = String(s).trim(); if (!t) return new T(0); const parts = t.split(/[\s,]+/), a = new T(parts.length); for (let i = 0; i < parts.length; i++) a[i] = +parts[i] || 0; return a; }
+const ACCESS = { initializeOnly: INIT, inputOnly: IN, outputOnly: OUT, inputOutput: IO };
+const fdefsOf = (n) => n.fdefs || DEFS[n.type];
+const fieldType = (n, f) => (fdefsOf(n)[f] || ['SFString'])[0];
+const INTERPOLATORS = new Set(['ScalarInterpolator', 'PositionInterpolator', 'OrientationInterpolator', 'ColorInterpolator']);
+const SKIP_ATTR = new Set(['DEF', 'USE', 'containerField', 'class', 'id', 'style']);
+const clone = (v) => (Array.isArray(v) ? v.map(clone) : v);
+
+function parseX3D(text) {
+  const doc = new DOMParser().parseFromString(text, 'application/xml');
+  const perr = doc.getElementsByTagName('parsererror')[0];
+  if (perr) throw new Error('The XML does not parse: ' + perr.textContent.replace(/\s+/g, ' ').trim().slice(0, 220));
+  const root = doc.documentElement;
+  if (root.nodeName !== 'X3D') throw new Error('The root element is <' + root.nodeName + '>, not <X3D>.');
+  const sceneEl = [...root.children].find((e) => e.nodeName === 'Scene');
+  if (!sceneEl) throw new Error('There is no <Scene> element.');
+  const ctx = { defs: new Map(), nodes: [], routeEls: [], warnings: [], skipped: new Map() };
+  const children = [];
+  for (const el of sceneEl.children) { const r = parseNode(el, ctx); if (r) children.push(r.node); }
+  const routes = [];
+  for (const el of ctx.routeEls) {
+    const fn = el.getAttribute('fromNode'), ff = el.getAttribute('fromField'), tn = el.getAttribute('toNode'), tf = el.getAttribute('toField');
+    const label = `${fn}.${ff} → ${tn}.${tf}`;
+    const a = ctx.defs.get(fn), b = ctx.defs.get(tn);
+    if (!a || !b) { ctx.warnings.push(`ROUTE ${label}: no node named ${!a ? fn : tn}.`); continue; }
+    const from = resolveField(a, ff, 'out'), to = resolveField(b, tf, 'in');
+    if (!from || !to) { ctx.warnings.push(`ROUTE ${label}: ${!from ? a.type + ' has no output ' + ff : b.type + ' has no input ' + tf}.`); continue; }
+    const ta = fieldType(a, from), tb = fieldType(b, to);
+    if (ta !== tb) { ctx.warnings.push(`ROUTE ${label}: ${ta} cannot feed ${tb}.`); continue; }
+    const r = { from: a, fromField: from, to: b, toField: to, label, discrete: /^(SFBool|SFTime|SFInt32|SFString)$/.test(ta) };
+    (a.out ||= {})[from] ||= [];
+    a.out[from].push(r);
+    routes.push(r);
+  }
+  for (const [k, n] of ctx.skipped) ctx.warnings.push(`${n} × <${k}> is not supported by this small runtime and was skipped.`);
+  return { children, nodes: ctx.nodes, defs: ctx.defs, routes, warnings: ctx.warnings };
+}
+function resolveField(node, name, dir) {
+  const fields = fdefsOf(node);
+  const f = fields[name];
+  if (f && (f[1] === IO || f[1] === (dir === 'out' ? OUT : IN))) return name;
+  if (dir === 'out' && name.endsWith('_changed')) { const b = name.slice(0, -8); if (fields[b] && fields[b][1] === IO) return b; }
+  if (dir === 'in' && name.startsWith('set_')) { const b = name.slice(4); if (fields[b] && fields[b][1] === IO) return b; }
+  return null;
+}
+function parseNode(el, ctx) {
+  const tag = el.nodeName;
+  if (tag === 'ROUTE') { ctx.routeEls.push(el); return null; }
+  const use = el.getAttribute('USE');
+  if (use) {
+    const n = ctx.defs.get(use);
+    if (!n) { ctx.warnings.push(`USE='${use}' comes before any DEF='${use}'.`); return null; }
+    return { node: n, field: el.getAttribute('containerField') || CONTAINER[n.type] || 'children' };
+  }
+  const def = DEFS[tag];
+  if (!def) { if (!/^(IS|connect|field|fieldValue|meta|head|component|unit)$/.test(tag)) ctx.skipped.set(tag, (ctx.skipped.get(tag) || 0) + 1); return null; }
+  const node = { type: tag, def: el.getAttribute('DEF') || null, f: {}, id: ctx.nodes.length, out: null };
+  for (const [name, [type, , dflt]] of Object.entries(def)) node.f[name] = type === 'MFNode' ? [] : clone(dflt);
+  for (const a of el.attributes) {
+    if (SKIP_ATTR.has(a.name) || a.name.includes(':')) continue;
+    const fd = def[a.name];
+    if (!fd || fd[1] === OUT || fd[1] === IN) { ctx.warnings.push(`<${tag}> has no field ${a.name}; ignored.`); continue; }
+    const flat = FLAT[tag + '.' + a.name];
+    node.f[a.name] = flat ? flatNums(a.value, flat) : PARSE[fd[0]] ? PARSE[fd[0]](a.value) : a.value;
+  }
+  if (tag === 'ComposedShader') { // author-defined fields (u_phase and friends) join this node's own field table
+    node.fdefs = { ...def };
+    for (const c of el.children) {
+      if (c.nodeName !== 'field') continue;
+      const name = c.getAttribute('name'), type = c.getAttribute('type'), acc = ACCESS[c.getAttribute('accessType')];
+      if (!name || !type || !acc || /Node$/.test(type) || !PARSE[type]) { ctx.warnings.push(`ComposedShader ${node.def || ''}: field ${name || '?'} (${type}) is not supported here; ignored.`); continue; }
+      node.fdefs[name] = [type, acc, null];
+      const v = c.getAttribute('value');
+      node.f[name] = v != null ? PARSE[type](v) : PARSE[type](type.startsWith('MF') ? '' : type === 'SFBool' ? 'false' : '0');
+    }
+  }
+  if (tag === 'ShaderPart' && !node.f.url.length && el.textContent.trim()) node.f.url = [el.textContent];
+  if (node.def) ctx.defs.set(node.def, node);
+  ctx.nodes.push(node);
+  for (const c of el.children) {
+    const r = parseNode(c, ctx);
+    if (!r) continue;
+    let fld = r.field;
+    if (tag === 'ParticleSystem' && fld === 'colorRamp') fld = 'color'; // the X3D 3 name for the same field
+    if (tag === 'Switch' && fld === 'choice') fld = 'children';        // the X3D 3 name for Switch children
+    const fd = def[fld];
+    if (!fd || (fd[0] !== 'MFNode' && fd[0] !== 'SFNode')) { ctx.warnings.push(`<${c.nodeName}> cannot go in ${tag}.${fld}; ignored.`); continue; }
+    if (fd[0] === 'MFNode') node.f[fld].push(r.node); else node.f[fld] = r.node;
+  }
+  return { node, field: el.getAttribute('containerField') || CONTAINER[tag] || 'children' };
+}
+
+/* ------------------------------------------------------------ the event model
+   One timestamp per frame. Each output field fires at most once per timestamp and each
+   ROUTE carries at most one event per timestamp, which also breaks loops (19775-1 4.4.8.3). */
+const events = {
+  queue: [], firedRoutes: new Set(), firedOut: new Set(), traced: new Set(), ts: 0, count: 0, onLog: null,
+  begin(ts) { this.ts = ts; this.firedRoutes.clear(); this.firedOut.clear(); this.traced.clear(); this.count = 0; },
+  emit(node, field, value) {
+    const key = node.id + '.' + field;
+    if (this.firedOut.has(key)) return;
+    this.firedOut.add(key);
+    const rs = node.out && node.out[field];
+    if (!rs) return;
+    for (const r of rs) { if (this.firedRoutes.has(r)) continue; this.firedRoutes.add(r); this.queue.push(r, value); }
+  },
+  drain() {
+    let guard = 0;
+    while (this.queue.length && guard++ < 100000) {
+      const r = this.queue.shift(), v = this.queue.shift();
+      this.count++;
+      // the log follows a cascade that a discrete event (a touch, a start time) set off in this timestamp
+      if ((r.discrete || this.traced.has(r.from.id)) && this.onLog) { this.traced.add(r.to.id); this.onLog(r.label, v, fieldType(r.from, r.fromField)); }
+      receive(r.to, r.toField, v);
+    }
+  },
+};
+function receive(node, field, value) {
+  if (field === 'set_bind') { if (node.type === 'Viewpoint') bindViewpoint(node, !!value); return; } // other bindables keep the first one
+  if (field === 'set_fraction' && INTERPOLATORS.has(node.type)) {
+    const out = interpolate(node, value);
+    if (out != null) { node.f.value_changed = out; events.emit(node, 'value_changed', out); }
+    return;
+  }
+  if (node.type === 'TimeSensor' && node.state && node.state.active) {
+    if (field === 'startTime' || field === 'cycleInterval') return;               // ignored while active
+    if (field === 'stopTime' && value <= node.f.startTime) return;
+  }
+  node.f[field] = clone(value);
+  node.version = (node.version || 0) + 1;
+  events.emit(node, field, value);
+}
+function rgb2hsv([r, g, b]) {
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn; let h = 0;
+  if (d > 0) { if (mx === r) h = ((g - b) / d) % 6; else if (mx === g) h = (b - r) / d + 2; else h = (r - g) / d + 4; h /= 6; if (h < 0) h += 1; }
+  return [h, mx > 0 ? d / mx : 0, mx];
+}
+function hsv2rgb([h, s, v]) {
+  const i = Math.floor(h * 6), f = h * 6 - i, p = v * (1 - s), q = v * (1 - f * s), t = v * (1 - (1 - f) * s);
+  switch (((i % 6) + 6) % 6) { case 0: return [v, t, p]; case 1: return [q, v, p]; case 2: return [p, v, t]; case 3: return [p, q, v]; case 4: return [t, p, v]; default: return [v, p, q]; }
+}
+function hsvLerp(a, b, s) { // ColorInterpolator interpolates in HSV space (19775-1 19.4.2)
+  const A = rgb2hsv(a), B = rgb2hsv(b);
+  if (A[1] === 0) A[0] = B[0];
+  if (B[1] === 0) B[0] = A[0];
+  let dh = B[0] - A[0]; if (dh > 0.5) dh -= 1; if (dh < -0.5) dh += 1;
+  let h = A[0] + dh * s; h -= Math.floor(h);
+  return hsv2rgb([h, A[1] + (B[1] - A[1]) * s, A[2] + (B[2] - A[2]) * s]);
+}
+function interpolate(n, frac) {
+  const k = n.f.key, kv = n.f.keyValue, N = Math.min(k.length, kv.length);
+  if (!N) return null;
+  let i = 0, j = 0, s = 0;
+  if (frac <= k[0]) i = j = 0;
+  else if (frac >= k[N - 1]) i = j = N - 1;
+  else { while (i < N - 1 && frac >= k[i + 1]) i++; j = Math.min(i + 1, N - 1); const span = k[j] - k[i]; s = span > 0 ? (frac - k[i]) / span : 0; }
+  const a = kv[i], b = kv[j];
+  switch (n.type) {
+    case 'ScalarInterpolator': return a + (b - a) * s;
+    case 'PositionInterpolator': return [0, 1, 2].map((c) => a[c] + (b[c] - a[c]) * s);
+    case 'ColorInterpolator': return hsvLerp(a, b, s);
+    case 'OrientationInterpolator': return quat.toAxisAngle(quat.slerp(quat.fromAxisAngle(a, a[3]), quat.fromAxisAngle(b, b[3]), s));
+  }
+  return null;
+}
+function tickTimeSensor(n, now) {
+  const f = n.f, st = n.state || (n.state = { active: false, cycle: -1 });
+  const ci = f.cycleInterval > 0 ? f.cycleInterval : 1;
+  const stopValid = f.stopTime > f.startTime;
+  if (!f.enabled) { if (st.active) { st.active = false; f.isActive = false; events.emit(n, 'isActive', false); } return; }
+  if (!st.active) {
+    if (now >= f.startTime && !(stopValid && now >= f.stopTime) && (f.loop || now < f.startTime + ci)) {
+      st.active = true; f.isActive = true; events.emit(n, 'isActive', true);
+      st.cycle = Math.floor((now - f.startTime) / ci);
+      f.cycleTime = now; events.emit(n, 'cycleTime', now);
+    } else return;
+  }
+  const elapsed = now - f.startTime;
+  let frac, ending = false;
+  if (stopValid && now >= f.stopTime) { ending = true; const e = f.stopTime - f.startTime, k = e / ci; frac = k - Math.floor(k); if (frac === 0 && e > 0) frac = 1; }
+  else if (!f.loop && elapsed >= ci) { ending = true; frac = 1; }
+  else {
+    const k = elapsed / ci; frac = k - Math.floor(k); if (frac === 0 && elapsed > 0) frac = 1;
+    const c = Math.floor(k); if (c !== st.cycle) { st.cycle = c; f.cycleTime = now; events.emit(n, 'cycleTime', now); }
+  }
+  f.fraction_changed = frac; events.emit(n, 'fraction_changed', frac);
+  f.time = now; events.emit(n, 'time', now);
+  f.elapsedTime = elapsed; events.emit(n, 'elapsedTime', elapsed);
+  if (ending) { st.active = false; f.isActive = false; events.emit(n, 'isActive', false); }
+}
+
+/* --------------------------------------------------------------- geometry */
+function meshData(g) {
+  const P = [], I = [];
+  const vert = (p, n) => { P.push(p[0], p[1], p[2], n[0], n[1], n[2]); return P.length / 6 - 1; };
+  const f = g.f;
+  if (g.type === 'Box') {
+    const h = f.size.map((x) => x / 2);
+    const faces = [[[1, 0, 0], [0, 0, -1], [0, 1, 0]], [[-1, 0, 0], [0, 0, 1], [0, 1, 0]], [[0, 1, 0], [1, 0, 0], [0, 0, -1]],
+                   [[0, -1, 0], [1, 0, 0], [0, 0, 1]], [[0, 0, 1], [1, 0, 0], [0, 1, 0]], [[0, 0, -1], [-1, 0, 0], [0, 1, 0]]];
+    for (const [n, u, v] of faces) {
+      const c = (su, sv) => [0, 1, 2].map((k) => (n[k] + u[k] * su + v[k] * sv) * h[k]);
+      const a = vert(c(-1, -1), n), b = vert(c(1, -1), n), cc = vert(c(1, 1), n), d = vert(c(-1, 1), n);
+      I.push(a, b, cc, a, cc, d);
+    }
+    return { P, I, pick: { kind: 'box', h } };
+  }
+  if (g.type === 'Sphere') {
+    const r = f.radius, R = 64, S = 96;
+    for (let i = 0; i <= R; i++) {
+      const th = (i / R) * PI, st = Math.sin(th), ct = Math.cos(th);
+      for (let j = 0; j <= S; j++) { const ph = (j / S) * 2 * PI, n = [st * Math.sin(ph), ct, st * Math.cos(ph)]; vert(v3.scale(n, r), n); }
+    }
+    for (let i = 0; i < R; i++) for (let j = 0; j < S; j++) { const a = i * (S + 1) + j, b = a + S + 1; I.push(a, b, a + 1, a + 1, b, b + 1); }
+    return { P, I, pick: { kind: 'sphere', r } };
+  }
+  if (g.type === 'Cylinder' || g.type === 'Cone') {
+    const cone = g.type === 'Cone', r = cone ? f.bottomRadius : f.radius, hh = f.height / 2, S = 96;
+    if (f.side) {
+      const base = P.length / 6;
+      for (let j = 0; j <= S; j++) {
+        const ph = (j / S) * 2 * PI, s = Math.sin(ph), c = Math.cos(ph);
+        const n = cone ? v3.norm([s * f.height, r, c * f.height]) : [s, 0, c];
+        vert(cone ? [0, hh, 0] : [r * s, hh, r * c], cone ? v3.norm([Math.sin(ph + PI / S) * f.height, r, Math.cos(ph + PI / S) * f.height]) : n);
+        vert([r * s, -hh, r * c], n);
+      }
+      for (let j = 0; j < S; j++) { const t0 = base + 2 * j, b0 = t0 + 1, t1 = t0 + 2, b1 = t0 + 3; I.push(t0, b0, t1, t1, b0, b1); }
+    }
+    const cap = (y, up) => {
+      const n = [0, up ? 1 : -1, 0], c = vert([0, y, 0], n), base = P.length / 6;
+      for (let j = 0; j <= S; j++) { const ph = (j / S) * 2 * PI; vert([r * Math.sin(ph), y, r * Math.cos(ph)], n); }
+      for (let j = 0; j < S; j++) up ? I.push(c, base + j, base + j + 1) : I.push(c, base + j + 1, base + j);
+    };
+    if (!cone && f.top) cap(hh, true);
+    if (f.bottom) cap(-hh, false);
+    return { P, I, pick: { kind: 'cyl', r, hh } };
+  }
+  if (TRI_SETS.has(g.type)) return triMesh(g);
+  return null;
+}
+/* Triangle sets. Indices are in the geometry's own vertex numbering: the Coordinate index for IndexedTriangleSet and
+   IndexedFaceSet, the running vertex number for TriangleStripSet. Per-vertex data (Normal, FloatVertexAttribute) uses
+   the same numbering, which is what 19775-1 asks of these nodes when normalPerVertex is TRUE and normalIndex is empty. */
+const TRI_SETS = new Set(['IndexedTriangleSet', 'TriangleStripSet', 'IndexedFaceSet']);
+function triIndices(g) {
+  const f = g.f, nv = f.coord ? Math.floor(f.coord.f.point.length / 3) : 0, out = [];
+  let bad = 0;
+  const tri = (a, b, c) => { if (a < 0 || b < 0 || c < 0 || a >= nv || b >= nv || c >= nv) { bad++; return; } if (f.ccw === false) out.push(a, c, b); else out.push(a, b, c); };
+  if (g.type === 'IndexedTriangleSet') { const ix = f.index; for (let i = 0; i + 2 < ix.length; i += 3) tri(ix[i], ix[i + 1], ix[i + 2]); }
+  else if (g.type === 'TriangleStripSet') {
+    let base = 0;
+    for (const c of f.stripCount) { for (let i = 0; i + 2 < c; i++) { if (i & 1) tri(base + i + 1, base + i, base + i + 2); else tri(base + i, base + i + 1, base + i + 2); } base += c; }
+  } else if (g.type === 'IndexedFaceSet') {
+    const ix = f.coordIndex; let face = [];
+    const flush = () => { for (let i = 1; i + 1 < face.length; i++) tri(face[0], face[i], face[i + 1]); face = []; };
+    for (let i = 0; i < ix.length; i++) { if (ix[i] < 0) flush(); else face.push(ix[i]); }
+    flush();
+  }
+  if (bad && W) W.notes.add(`${g.type}${g.def ? ' ' + g.def : ''}: ${bad} triangle(s) point past the end of the Coordinate list and were dropped.`);
+  return { I: Uint32Array.from(out), nv };
+}
+function triMesh(g) { // position + normal for the lit pipelines
+  const f = g.f, { I, nv } = triIndices(g), pt = f.coord ? f.coord.f.point : new Float32Array(0);
+  const nrm = f.normal && f.normal.f.vector.length >= nv * 3 && f.normalPerVertex !== false && !(g.type === 'IndexedFaceSet' && f.normalIndex.length) ? f.normal.f.vector : null;
+  const flat = !nrm && (g.type === 'IndexedFaceSet' ? !(f.creaseAngle > 0) : f.normalPerVertex === false);
+  let P, J;
+  const fn = (a, b, c) => v3.norm(v3.cross(v3.sub([pt[b * 3], pt[b * 3 + 1], pt[b * 3 + 2]], [pt[a * 3], pt[a * 3 + 1], pt[a * 3 + 2]]),
+                                          v3.sub([pt[c * 3], pt[c * 3 + 1], pt[c * 3 + 2]], [pt[a * 3], pt[a * 3 + 1], pt[a * 3 + 2]])));
+  if (flat) { // one vertex per corner, the face normal on each (creaseAngle 0)
+    P = new Float32Array(I.length * 6); J = new Uint32Array(I.length);
+    for (let t = 0; t < I.length; t += 3) { const n = fn(I[t], I[t + 1], I[t + 2]); for (let k = 0; k < 3; k++) { const v = I[t + k], o = (t + k) * 6; P.set([pt[v * 3], pt[v * 3 + 1], pt[v * 3 + 2], ...n], o); J[t + k] = t + k; } }
+  } else {
+    P = new Float32Array(nv * 6); J = I;
+    let acc = nrm;
+    if (!acc) { acc = new Float32Array(nv * 3); for (let t = 0; t < I.length; t += 3) { const n = fn(I[t], I[t + 1], I[t + 2]); for (let k = 0; k < 3; k++) { const v = I[t + k] * 3; acc[v] += n[0]; acc[v + 1] += n[1]; acc[v + 2] += n[2]; } } }
+    for (let v = 0; v < nv; v++) { const n = v3.norm([acc[v * 3], acc[v * 3 + 1], acc[v * 3 + 2]]); P.set([pt[v * 3], pt[v * 3 + 1], pt[v * 3 + 2], ...n], v * 6); }
+  }
+  let lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
+  for (let v = 0; v < nv; v++) for (let k = 0; k < 3; k++) { const x = pt[v * 3 + k]; if (x < lo[k]) lo[k] = x; if (x > hi[k]) hi[k] = x; }
+  if (!nv) lo = hi = [0, 0, 0];
+  return { P, I: J, pick: { kind: 'tri', P, I: J, lo, hi } };
+}
+function hitTris(pk, o, d) {
+  if (hitBox([0, 1, 2].map((k) => (pk.hi[k] - pk.lo[k]) / 2 + 1e-6), v3.sub(o, pk.lo.map((x, k) => (x + pk.hi[k]) / 2)), d) === null) return null;
+  const P = pk.P, I = pk.I; let best = null;
+  if (I.length > 600000) return null; // too big to test triangle by triangle on the CPU every pick
+  for (let t = 0; t < I.length; t += 3) {
+    const a = I[t] * 6, b = I[t + 1] * 6, c = I[t + 2] * 6;
+    const e1 = [P[b] - P[a], P[b + 1] - P[a + 1], P[b + 2] - P[a + 2]], e2 = [P[c] - P[a], P[c + 1] - P[a + 1], P[c + 2] - P[a + 2]];
+    const h = v3.cross(d, e2), det = v3.dot(e1, h); if (Math.abs(det) < 1e-12) continue;
+    const inv = 1 / det, s = [o[0] - P[a], o[1] - P[a + 1], o[2] - P[a + 2]], u = v3.dot(s, h) * inv; if (u < 0 || u > 1) continue;
+    const q = v3.cross(s, e1), v = v3.dot(d, q) * inv; if (v < 0 || u + v > 1) continue;
+    const tt = v3.dot(e2, q) * inv; if (tt >= 0 && (best === null || tt < best)) best = tt;
+  }
+  return best;
+}
+function hitSphere(r, o, d) { const a = v3.dot(d, d), b = 2 * v3.dot(o, d), c = v3.dot(o, o) - r * r, disc = b * b - 4 * a * c; if (disc < 0) return null; const s = Math.sqrt(disc); let t = (-b - s) / (2 * a); if (t < 0) t = (-b + s) / (2 * a); return t >= 0 ? t : null; }
+function hitBox(h, o, d) {
+  let tmin = -Infinity, tmax = Infinity;
+  for (let i = 0; i < 3; i++) {
+    if (Math.abs(d[i]) < 1e-12) { if (o[i] < -h[i] || o[i] > h[i]) return null; continue; }
+    let t1 = (-h[i] - o[i]) / d[i], t2 = (h[i] - o[i]) / d[i]; if (t1 > t2) [t1, t2] = [t2, t1];
+    tmin = Math.max(tmin, t1); tmax = Math.min(tmax, t2); if (tmin > tmax) return null;
+  }
+  return tmin >= 0 ? tmin : tmax >= 0 ? tmax : null;
+}
+function hitCyl(r, hh, o, d) {
+  let best = null; const a = d[0] * d[0] + d[2] * d[2];
+  if (a > 1e-12) {
+    const b = 2 * (o[0] * d[0] + o[2] * d[2]), c = o[0] * o[0] + o[2] * o[2] - r * r, disc = b * b - 4 * a * c;
+    if (disc >= 0) { const s = Math.sqrt(disc); for (const t of [(-b - s) / (2 * a), (-b + s) / (2 * a)]) if (t >= 0 && Math.abs(o[1] + t * d[1]) <= hh && (best === null || t < best)) best = t; }
+  }
+  if (Math.abs(d[1]) > 1e-12) for (const y of [hh, -hh]) { const t = (y - o[1]) / d[1]; if (t >= 0) { const x = o[0] + t * d[0], z = o[2] + t * d[2]; if (x * x + z * z <= r * r && (best === null || t < best)) best = t; } }
+  return best;
+}
+
+/* ------------------------------------------------------------ background */
+function bgColorAt(theta, bg) { // theta measured from the zenith; ground angles from the nadir
+  const grad = (cols, angs, a) => {
+    if (!cols.length) return [0, 0, 0];
+    if (cols.length === 1 || a <= 0) return cols[0];
+    for (let i = 1; i < cols.length; i++) {
+      const a0 = i === 1 ? 0 : angs[i - 2], a1 = angs[i - 1];
+      if (a1 === undefined) return cols[i - 1];
+      if (a <= a1) { const t = a1 > a0 ? (a - a0) / (a1 - a0) : 1; return [0, 1, 2].map((c) => cols[i - 1][c] + (cols[i][c] - cols[i - 1][c]) * t); }
+    }
+    return cols[cols.length - 1];
+  };
+  const gc = bg.groundColor, phi = PI - theta;
+  if (gc.length) { const lim = gc.length > 1 ? bg.groundAngle[Math.min(bg.groundAngle.length, gc.length - 1) - 1] ?? PI / 2 : PI / 2; if (phi <= lim + 1e-6) return grad(gc, bg.groundAngle, phi); }
+  return grad(bg.skyColor, bg.skyAngle, theta);
+}
+function bakeBackground(bg, lin) { // lin: read the colours as display values and linearise them (power 2.2)
+  const at = (th) => { const c = bgColorAt(th, bg); return lin ? c.map(srgbToLin) : c; };
+  const lut = new Float32Array(512 * 4);
+  for (let i = 0; i < 512; i++) { const c = at((i / 511) * PI); lut.set([c[0], c[1], c[2], 1], i * 4); }
+  const sh = Array.from({ length: 9 }, () => [0, 0, 0]), NT = 48, NP = 96;
+  for (let i = 0; i < NT; i++) {
+    const th = ((i + 0.5) / NT) * PI, st = Math.sin(th), ct = Math.cos(th), col = at(th), w0 = st * (PI / NT) * ((2 * PI) / NP);
+    for (let j = 0; j < NP; j++) {
+      const ph = ((j + 0.5) / NP) * 2 * PI, x = st * Math.cos(ph), y = ct, z = st * Math.sin(ph);
+      const Y = [0.282095, 0.488603 * y, 0.488603 * z, 0.488603 * x, 1.092548 * x * y, 1.092548 * y * z, 0.315392 * (3 * z * z - 1), 1.092548 * x * z, 0.546274 * (x * x - y * y)];
+      for (let k = 0; k < 9; k++) for (let c = 0; c < 3; c++) sh[k][c] += col[c] * Y[k] * w0;
+    }
+  }
+  const A = [PI, (2 * PI) / 3, (2 * PI) / 3, (2 * PI) / 3, PI / 4, PI / 4, PI / 4, PI / 4, PI / 4]; // cosine-lobe convolution, then / PI
+  return { lut, sh: sh.map((v, k) => v.map((x) => (x * A[k]) / PI)) };
+}
+
+/* ------------------------------------------------------------------ WGSL */
+const WGSL_COMMON = /* wgsl */ `
+const PI = 3.14159265359;
+struct Light { color: vec4f, pos: vec4f, dir: vec4f, atten: vec4f, spot: vec4f };
+struct Frame {
+  viewProj: mat4x4f, invViewProj: mat4x4f, lightViewProj: mat4x4f,
+  camPos: vec4f, camRight: vec4f, camUp: vec4f, fogColor: vec4f, misc: vec4f,
+  counts: vec4u,
+  sh: array<vec4f, 9>,
+  lights: array<Light, 8>,
+};
+struct Draw { model: mat4x4f, n0: vec4f, n1: vec4f, n2: vec4f, base: vec4f, emis: vec4f, pbr: vec4f, spec: vec4f, flags: vec4f };
+struct BgLut { c: array<vec4f, 512> };
+struct Particle { pos: vec3f, age: f32, vel: vec3f, life: f32 };
+struct PSys {
+  model: mat4x4f,
+  emitPos: vec4f,   // xyz, speed
+  emitDir: vec4f,   // xyz, cos of the cone half-angle (below -1.5: any direction)
+  accel: vec4f,     // xyz, dt
+  wind: vec4f,      // xyz acceleration, turbulence
+  life: vec4f,      // lifetime, lifetimeVariation, time, gustiness
+  size: vec4f,      // particleSize x, y, gain, speed variation
+  ctl: vec4u,       // seed, count, spawn, geometry (0 sprite, 1 line)
+  emis: vec4f,      // tint rgb, linearise
+  rinfo: vec4f,     // ramp end time, ramp on, wind speed, line width in pixels
+  ramp: array<vec4f, 32>, // colorKey/color baked on the CPU, HSV between keys (19775-1 40.4.5)
+};
+fn toLin(c: vec3f) -> vec3f { return select(pow((c + 0.055) / 1.055, vec3f(2.4)), c / 12.92, c <= vec3f(0.04045)); }
+fn pcg(v: u32) -> u32 {
+  let s = v * 747796405u + 2891336453u;
+  let w = ((s >> ((s >> 28u) + 4u)) ^ s) * 277803737u;
+  return (w >> 22u) ^ w;
+}
+`;
+const WGSL_FRAME = /* wgsl */ `
+@group(0) @binding(0) var<uniform> F: Frame;
+@group(0) @binding(1) var<storage, read> draws: array<Draw>;
+@group(0) @binding(2) var shadowTex: texture_depth_2d;
+@group(0) @binding(3) var shadowSmp: sampler_comparison;
+@group(0) @binding(4) var<uniform> BG: BgLut;
+
+fn bgAt(theta0: f32) -> vec3f {
+  var th = abs(theta0);
+  if (th > PI) { th = 2.0 * PI - th; }
+  let x = clamp(th / PI, 0.0, 1.0) * 511.0;
+  let i0 = u32(floor(x));
+  let i1 = min(i0 + 1u, 511u);
+  return mix(BG.c[i0].rgb, BG.c[i1].rgb, fract(x));
+}
+fn bgDir(d: vec3f) -> vec3f { return bgAt(acos(clamp(d.y, -1.0, 1.0))); }
+fn shEval(n: vec3f) -> vec3f {
+  var r = F.sh[0].rgb * 0.282095;
+  r += F.sh[1].rgb * (0.488603 * n.y);
+  r += F.sh[2].rgb * (0.488603 * n.z);
+  r += F.sh[3].rgb * (0.488603 * n.x);
+  r += F.sh[4].rgb * (1.092548 * n.x * n.y);
+  r += F.sh[5].rgb * (1.092548 * n.y * n.z);
+  r += F.sh[6].rgb * (0.315392 * (3.0 * n.z * n.z - 1.0));
+  r += F.sh[7].rgb * (1.092548 * n.x * n.z);
+  r += F.sh[8].rgb * (0.546274 * (n.x * n.x - n.y * n.y));
+  return max(r, vec3f(0.0));
+}
+fn fogFactor(wpos: vec3f) -> f32 {
+  let vr = F.fogColor.w;
+  if (vr <= 0.0) { return 1.0; }
+  let dist = length(wpos - F.camPos.xyz);
+  if (dist >= vr) { return 0.0; }
+  if (F.misc.x > 0.5) { return exp(-dist / (vr - dist)); }
+  return (vr - dist) / vr;
+}
+`;
+const WGSL_MESH = /* wgsl */ `
+struct VOut { @builtin(position) pos: vec4f, @location(0) wpos: vec3f, @location(1) nrm: vec3f, @location(2) @interpolate(flat) id: u32 };
+@vertex fn vsMesh(@location(0) p: vec3f, @location(1) n: vec3f, @builtin(instance_index) ii: u32) -> VOut {
+  let d = draws[ii];
+  let wp = d.model * vec4f(p, 1.0);
+  var o: VOut;
+  o.pos = F.viewProj * wp;
+  o.wpos = wp.xyz;
+  o.nrm = mat3x3f(d.n0.xyz, d.n1.xyz, d.n2.xyz) * n;
+  o.id = ii;
+  return o;
+}
+fn shadowAt(wpos: vec3f, N: vec3f, L: vec3f) -> f32 {
+  let nl = clamp(dot(N, L), 0.0, 1.0);
+  let p = F.lightViewProj * vec4f(wpos + N * (F.misc.z * (1.5 + 2.5 * (1.0 - nl))), 1.0);
+  let ndc = p.xyz / p.w;
+  let uv = vec2f(ndc.x * 0.5 + 0.5, 0.5 - ndc.y * 0.5);
+  if (uv.x <= 0.0 || uv.x >= 1.0 || uv.y <= 0.0 || uv.y >= 1.0 || ndc.z >= 1.0) { return 1.0; }
+  let ts = 1.0 / f32(textureDimensions(shadowTex).x);
+  var s = 0.0;
+  for (var y = -2; y <= 2; y++) {
+    for (var x = -2; x <= 2; x++) {
+      s += textureSampleCompareLevel(shadowTex, shadowSmp, uv + vec2f(f32(x), f32(y)) * (ts * 0.9), ndc.z - 0.0005);
+    }
+  }
+  return s / 25.0;
+}
+struct LightHit { L: vec3f, att: f32, ok: bool };
+fn lightAt(li: Light, wpos: vec3f) -> LightHit {
+  var h: LightHit;
+  h.att = 1.0;
+  h.ok = true;
+  let kind = u32(li.pos.w + 0.5);
+  if (kind == 0u) { h.L = -normalize(li.dir.xyz); return h; }
+  let dv = li.pos.xyz - wpos;
+  let dist = length(dv);
+  if (dist > li.dir.w) { h.ok = false; return h; }
+  h.L = dv / max(dist, 1e-4);
+  h.att = 1.0 / max(li.atten.x + li.atten.y * dist + li.atten.z * dist * dist, 1.0);
+  if (kind == 2u) {
+    let ang = acos(clamp(dot(-h.L, normalize(li.dir.xyz)), -1.0, 1.0));
+    var sf = 1.0;
+    if (ang >= li.spot.y) { sf = 0.0; } else if (ang > li.spot.x) { sf = (li.spot.y - ang) / max(li.spot.y - li.spot.x, 1e-4); }
+    h.att *= sf;
+  }
+  return h;
+}
+fn envBRDF(f0: vec3f, rough: f32, NoV: f32) -> vec3f {
+  let c0 = vec4f(-1.0, -0.0275, -0.572, 0.022);
+  let c1 = vec4f(1.0, 0.0425, 1.04, -0.04);
+  let r = rough * c0 + c1;
+  let a004 = min(r.x * r.x, exp2(-9.28 * NoV)) * r.x + r.y;
+  let ab = vec2f(-1.04, 1.04) * a004 + r.zw;
+  return f0 * ab.x + ab.y;
+}
+fn envSpec(R: vec3f, rough: f32) -> vec3f {
+  let th = acos(clamp(R.y, -1.0, 1.0));
+  let spread = rough * rough * 0.55;
+  var c = vec3f(0.0);
+  var w = 0.0;
+  for (var i = -3; i <= 3; i++) {
+    let fi = f32(i);
+    let wi = exp(-0.5 * fi * fi / 2.25);
+    c += bgAt(th + fi * spread) * wi;
+    w += wi;
+  }
+  return mix(c / w, shEval(R), smoothstep(0.45, 1.0, rough));
+}
+fn shadePBR(d: Draw, wpos: vec3f, N: vec3f, V: vec3f) -> vec3f {
+  let base = d.base.rgb;
+  let metal = clamp(d.pbr.x, 0.0, 1.0);
+  let rough = clamp(d.pbr.y, 0.045, 1.0);
+  let a = rough * rough;
+  let a2 = a * a;
+  let f0 = mix(vec3f(0.04), base, metal);
+  let diffC = base * (1.0 - metal);
+  let NoV = clamp(dot(N, V), 1e-4, 1.0);
+  var lo = vec3f(0.0);
+  for (var i = 0u; i < F.counts.x; i++) {
+    let li = F.lights[i];
+    let h = lightAt(li, wpos);
+    if (!h.ok) { continue; }
+    lo += diffC * li.color.rgb * (li.spot.w * h.att);
+    let NoL = dot(N, h.L);
+    if (NoL <= 0.0) { continue; }
+    var sh = 1.0;
+    if (li.atten.w > 0.5) { sh = mix(1.0, shadowAt(wpos, N, h.L), li.spot.z); }
+    let H = normalize(h.L + V);
+    let NoH = clamp(dot(N, H), 0.0, 1.0);
+    let VoH = clamp(dot(V, H), 0.0, 1.0);
+    let Fr = f0 + (vec3f(1.0) - f0) * pow(1.0 - VoH, 5.0);
+    let dd = NoH * NoH * (a2 - 1.0) + 1.0;
+    let D = a2 / (PI * dd * dd);
+    let gv = NoL * sqrt(NoV * NoV * (1.0 - a2) + a2);
+    let gl = NoV * sqrt(NoL * NoL * (1.0 - a2) + a2);
+    let Vis = 0.5 / max(gv + gl, 1e-5);
+    let spec = Fr * (D * Vis);
+    let diff = (vec3f(1.0) - Fr) * diffC / PI;
+    lo += (diff + spec) * li.color.rgb * (li.color.w * NoL * h.att * sh);
+  }
+  let R = reflect(-V, N);
+  let kS = envBRDF(f0, rough, NoV);
+  let horizon = clamp(1.0 + dot(R, N), 0.0, 1.0);
+  let amb = diffC * shEval(N) * (vec3f(1.0) - kS) * d.pbr.z + envSpec(R, rough) * kS * (horizon * horizon);
+  return lo + amb * F.misc.y + d.emis.rgb;
+}
+fn shadePhong(d: Draw, wpos: vec3f, N: vec3f, V: vec3f) -> vec3f { // 19775-1 17.2.2.4
+  let dif = d.base.rgb;
+  let spc = d.spec.rgb;
+  let shin = max(d.spec.w * 128.0, 1.0);
+  var sum = vec3f(0.0);
+  for (var i = 0u; i < F.counts.x; i++) {
+    let li = F.lights[i];
+    let h = lightAt(li, wpos);
+    if (!h.ok) { continue; }
+    let NoL = max(dot(N, h.L), 0.0);
+    var sh = 1.0;
+    if (li.atten.w > 0.5 && NoL > 0.0) { sh = mix(1.0, shadowAt(wpos, N, h.L), li.spot.z); }
+    let NoH = max(dot(N, normalize(h.L + V)), 0.0);
+    var sp = vec3f(0.0);
+    if (NoL > 0.0) { sp = spc * pow(NoH, shin); }
+    sum += li.color.rgb * h.att * (li.spot.w * d.pbr.w * dif + sh * li.color.w * (dif * NoL + sp));
+  }
+  return d.emis.rgb + sum;
+}
+@fragment fn fsMesh(v: VOut, @builtin(front_facing) ff: bool) -> @location(0) vec4f {
+  let d = draws[v.id];
+  var N = normalize(v.nrm);
+  if (!ff) { N = -N; }
+  let V = normalize(F.camPos.xyz - v.wpos);
+  let kind = u32(d.emis.w + 0.5);
+  var c: vec3f;
+  if (kind == 2u) { c = d.emis.rgb; }
+  else if (kind == 1u) { c = shadePhong(d, v.wpos, N, V); }
+  else { c = shadePBR(d, v.wpos, N, V); }
+  c = mix(F.fogColor.rgb, c, fogFactor(v.wpos));
+  return vec4f(min(c, vec3f(8192.0)), d.base.a);
+}
+struct BOut { @builtin(position) pos: vec4f, @location(0) ndc: vec2f };
+@vertex fn vsBg(@builtin(vertex_index) i: u32) -> BOut {
+  let p = vec2f(f32((i << 1u) & 2u), f32(i & 2u)) * 2.0 - 1.0;
+  var o: BOut;
+  o.pos = vec4f(p, 0.0, 1.0);
+  o.ndc = p;
+  return o;
+}
+@fragment fn fsBg(b: BOut) -> @location(0) vec4f {
+  let pf = F.invViewProj * vec4f(b.ndc, 1.0, 1.0);
+  let pn = F.invViewProj * vec4f(b.ndc, 0.0, 1.0);
+  let d = normalize(pf.xyz / pf.w - pn.xyz / pn.w);
+  return vec4f(bgDir(d), 1.0);
+}
+`;
+const WGSL_SHADOW = /* wgsl */ `
+@group(0) @binding(0) var<uniform> F: Frame;
+@group(0) @binding(1) var<storage, read> draws: array<Draw>;
+@vertex fn vsShadow(@location(0) p: vec3f, @builtin(instance_index) ii: u32) -> @builtin(position) vec4f {
+  return F.lightViewProj * (draws[ii].model * vec4f(p, 1.0));
+}
+`;
+const WGSL_SIM = /* wgsl */ `
+@group(0) @binding(0) var<storage, read_write> P: array<Particle>;
+@group(0) @binding(1) var<uniform> S: PSys;
+fn rnd(s: ptr<function, u32>) -> f32 { *s = pcg(*s); return f32(*s >> 8u) / 16777216.0; }
+fn h3(p: vec3i) -> f32 {
+  let n = pcg((u32(p.x) * 73856093u) ^ (u32(p.y) * 19349663u) ^ (u32(p.z) * 83492791u));
+  return f32(n >> 8u) / 16777216.0;
+}
+fn vnoise(x: vec3f) -> f32 {
+  let i = vec3i(floor(x));
+  let f = fract(x);
+  let u = f * f * (3.0 - 2.0 * f);
+  let n000 = h3(i);
+  let n100 = h3(i + vec3i(1, 0, 0));
+  let n010 = h3(i + vec3i(0, 1, 0));
+  let n110 = h3(i + vec3i(1, 1, 0));
+  let n001 = h3(i + vec3i(0, 0, 1));
+  let n101 = h3(i + vec3i(1, 0, 1));
+  let n011 = h3(i + vec3i(0, 1, 1));
+  let n111 = h3(i + vec3i(1, 1, 1));
+  return mix(mix(mix(n000, n100, u.x), mix(n010, n110, u.x), u.y), mix(mix(n001, n101, u.x), mix(n011, n111, u.x), u.y), u.z);
+}
+@compute @workgroup_size(64)
+fn simulate(@builtin(global_invocation_id) gid: vec3u) {
+  let i = gid.x;
+  if (i >= S.ctl.y) { return; }
+  var p = P[i];
+  let dt = S.accel.w;
+  p.age += dt;
+  if (p.age >= p.life) {
+    if (S.ctl.z == 0u) { P[i] = p; return; }
+    var seed = pcg(i * 9781u + S.ctl.x * 6271u + 17u);
+    let carry = clamp(p.age - p.life, 0.0, dt);
+    var dir = S.emitDir.xyz;
+    let u1 = rnd(&seed);
+    let u2 = rnd(&seed);
+    if (S.emitDir.w < -1.5 || dot(dir, dir) < 1e-8) {
+      let z = u1 * 2.0 - 1.0;
+      let r = sqrt(max(1.0 - z * z, 0.0));
+      let ph = 2.0 * PI * u2;
+      dir = vec3f(r * cos(ph), z, r * sin(ph));
+    } else {
+      dir = normalize(dir);
+      let cosMax = clamp(S.emitDir.w, -1.0, 1.0);
+      let ca = 1.0 - u1 * (1.0 - cosMax);
+      let sa = sqrt(max(1.0 - ca * ca, 0.0));
+      let ph = 2.0 * PI * u2;
+      var t1 = cross(dir, vec3f(0.0, 0.0, 1.0));
+      if (dot(t1, t1) < 1e-6) { t1 = cross(dir, vec3f(1.0, 0.0, 0.0)); }
+      t1 = normalize(t1);
+      let t2 = cross(dir, t1);
+      dir = normalize(t1 * (cos(ph) * sa) + t2 * (sin(ph) * sa) + dir * ca);
+    }
+    let spd = S.emitPos.w * (1.0 + S.size.w * (rnd(&seed) * 2.0 - 1.0)); // variation bounds the speed as a share of it (40.2.4)
+    p.vel = dir * max(spd, 0.0);
+    p.life = max(S.life.x * (1.0 + S.life.y * (rnd(&seed) * 2.0 - 1.0)), 0.05);
+    p.age = carry;
+    p.pos = S.emitPos.xyz + p.vel * carry;
+  } else if (p.age >= 0.0) {
+    var a = S.accel.xyz;
+    let wl = length(S.wind.xyz);
+    if (wl > 0.0) {
+      let t = S.life.z;
+      let gust = max(1.0 + S.life.w * (vnoise(vec3f(t * 0.8, 1.7, 4.2)) * 2.0 - 1.0), 0.0);
+      let q = p.pos * 1.25 + vec3f(t * 0.15, -t * 0.55, t * 0.2);
+      let nv = vec3f(vnoise(q), vnoise(q + vec3f(31.7, 11.3, 5.9)), vnoise(q + vec3f(-7.1, 23.9, 47.3))) * 2.0 - 1.0;
+      let m = mix(S.wind.xyz / wl, nv, S.wind.w);
+      let wa = m / max(length(m), 1e-4) * (wl * gust);
+      // the wind never pushes a particle faster than the wind itself (40.4.9)
+      let wd = S.wind.xyz / wl;
+      let room = S.rinfo.z * gust - dot(p.vel, wd);
+      a += wa * clamp(room / max(dot(wa, wd) * dt, 1e-6), 0.0, 1.0);
+    }
+    p.vel += a * dt;
+    p.pos += p.vel * dt;
+  }
+  P[i] = p;
+}
+`;
+const WGSL_PART = /* wgsl */ `
+@group(1) @binding(0) var<storage, read> P: array<Particle>;
+@group(1) @binding(1) var<uniform> S: PSys;
+struct POut { @builtin(position) pos: vec4f, @location(0) uv: vec2f, @location(1) col: vec4f };
+fn ramp(t: f32) -> vec4f {
+  if (S.rinfo.y < 0.5) { return vec4f(1.0); }
+  let x = clamp(t / max(S.rinfo.x, 1e-5), 0.0, 1.0) * 31.0;
+  let i0 = u32(floor(x));
+  let i1 = min(i0 + 1u, 31u);
+  return mix(S.ramp[i0], S.ramp[i1], fract(x));
+}
+@vertex fn vsPart(@builtin(vertex_index) vi: u32, @builtin(instance_index) ii: u32) -> POut {
+  var o: POut;
+  let p = P[ii];
+  if (p.age < 0.0 || p.age >= p.life) {
+    o.pos = vec4f(0.0, 0.0, 2.0, 1.0);
+    o.uv = vec2f(0.0);
+    o.col = vec4f(0.0);
+    return o;
+  }
+  var corners = array<vec2f, 6>(vec2f(-1.0, -1.0), vec2f(1.0, -1.0), vec2f(1.0, 1.0), vec2f(-1.0, -1.0), vec2f(1.0, 1.0), vec2f(-1.0, 1.0));
+  let c = corners[vi];
+  let wp = (S.model * vec4f(p.pos, 1.0)).xyz;
+  if (S.ctl.w == 1u) { // LINE: a segment particleSize.y long along the direction of travel, drawn as a thin screen-space quad
+    let vel = (S.model * vec4f(p.vel, 0.0)).xyz;
+    let vl = length(vel);
+    var dir = vec3f(0.0, 0.0, 1.0);
+    if (vl > 1e-6) { dir = vel / vl; }
+    let hl2 = dir * (S.size.y * 0.5);
+    let ca = F.viewProj * vec4f(wp - hl2, 1.0);
+    let cb = F.viewProj * vec4f(wp + hl2, 1.0);
+    let hv = vec2f(F.camRight.w, F.camUp.w) * 0.5;
+    var d = (cb.xy / cb.w - ca.xy / ca.w) * hv;
+    let dl = length(d);
+    if (dl > 1e-4) { d = d / dl; } else { d = vec2f(1.0, 0.0); }
+    var base = ca;
+    if (c.x > 0.0) { base = cb; }
+    let off = (vec2f(-d.y, d.x) * c.y + d * c.x) * S.rinfo.w;
+    o.pos = base + vec4f(off / hv * base.w, 0.0, 0.0);
+  } else {
+    let hs = S.size.xy * 0.5;
+    let corner = wp + F.camRight.xyz * (c.x * hs.x) + F.camUp.xyz * (c.y * hs.y);
+    o.pos = F.viewProj * vec4f(corner, 1.0);
+  }
+  o.uv = c;
+  var col = ramp(p.age);
+  col.a *= fogFactor(wp) * smoothstep(0.0, 0.06, p.age);
+  o.col = col;
+  return o;
+}
+@fragment fn fsPart(v: POut) -> @location(0) vec4f {
+  var glow = 0.0;
+  if (S.ctl.w == 1u) {
+    glow = exp(-v.uv.y * v.uv.y * 2.5) * (0.25 + 0.75 * (v.uv.x * 0.5 + 0.5));
+  } else {
+    let r2 = dot(v.uv, v.uv);
+    if (r2 > 1.0) { discard; }
+    glow = exp(-r2 * 3.5) * (1.0 - r2) + exp(-r2 * 22.0) * 1.4;
+  }
+  var c = v.col.rgb * S.emis.rgb * (glow * v.col.a);
+  if (S.emis.w > 0.5) { c = toLin(max(c, vec3f(0.0))); }
+  return vec4f(min(c * S.size.z, vec3f(8192.0)), 0.0);
+}
+`;
+const WGSL_POST = /* wgsl */ `
+struct PostU { texel: vec4f, params: vec4f };
+@group(0) @binding(0) var src: texture_2d<f32>;
+@group(0) @binding(1) var smp: sampler;
+@group(0) @binding(2) var<uniform> U: PostU;
+@group(0) @binding(3) var bloomTex: texture_2d<f32>;
+struct FOut { @builtin(position) pos: vec4f, @location(0) uv: vec2f };
+@vertex fn vsFull(@builtin(vertex_index) i: u32) -> FOut {
+  let p = vec2f(f32((i << 1u) & 2u), f32(i & 2u));
+  var o: FOut;
+  o.pos = vec4f(p * 2.0 - 1.0, 0.0, 1.0);
+  o.uv = vec2f(p.x, 1.0 - p.y);
+  return o;
+}
+fn tap(uv: vec2f) -> vec3f { return min(textureSampleLevel(src, smp, uv, 0.0).rgb, vec3f(8192.0)); }
+fn luma(c: vec3f) -> f32 { return dot(c, vec3f(0.2126, 0.7152, 0.0722)); }
+@fragment fn fsDown(v: FOut) -> @location(0) vec4f {
+  let t = U.texel.xy;
+  let uv = v.uv;
+  let a = tap(uv + t * vec2f(-2.0, -2.0));
+  let b = tap(uv + t * vec2f(0.0, -2.0));
+  let c = tap(uv + t * vec2f(2.0, -2.0));
+  let d = tap(uv + t * vec2f(-2.0, 0.0));
+  let e = tap(uv);
+  let f = tap(uv + t * vec2f(2.0, 0.0));
+  let g = tap(uv + t * vec2f(-2.0, 2.0));
+  let h = tap(uv + t * vec2f(0.0, 2.0));
+  let k = tap(uv + t * vec2f(2.0, 2.0));
+  let j = tap(uv + t * vec2f(-1.0, -1.0));
+  let l = tap(uv + t * vec2f(1.0, -1.0));
+  let m = tap(uv + t * vec2f(-1.0, 1.0));
+  let n = tap(uv + t * vec2f(1.0, 1.0));
+  var col: vec3f;
+  if (U.params.w > 0.5) {
+    let g0 = (a + b + d + e) * 0.25;
+    let g1 = (b + c + e + f) * 0.25;
+    let g2 = (d + e + g + h) * 0.25;
+    let g3 = (e + f + h + k) * 0.25;
+    let g4 = (j + l + m + n) * 0.25;
+    let w0 = 0.125 / (1.0 + luma(g0));
+    let w1 = 0.125 / (1.0 + luma(g1));
+    let w2 = 0.125 / (1.0 + luma(g2));
+    let w3 = 0.125 / (1.0 + luma(g3));
+    let w4 = 0.5 / (1.0 + luma(g4));
+    col = (g0 * w0 + g1 * w1 + g2 * w2 + g3 * w3 + g4 * w4) / (w0 + w1 + w2 + w3 + w4);
+    let br = max(col.r, max(col.g, col.b));
+    let knee = U.params.y;
+    var soft = clamp(br - U.params.x + knee, 0.0, 2.0 * knee);
+    soft = soft * soft / (4.0 * knee + 1e-5);
+    col *= max(soft, br - U.params.x) / max(br, 1e-5);
+  } else {
+    col = e * 0.125 + (a + c + g + k) * 0.03125 + (b + d + f + h) * 0.0625 + (j + l + m + n) * 0.125;
+  }
+  return vec4f(max(col, vec3f(0.0)), 1.0);
+}
+@fragment fn fsUp(v: FOut) -> @location(0) vec4f {
+  let t = U.texel.xy * U.params.z;
+  var c = tap(v.uv) * 4.0;
+  c += (tap(v.uv + vec2f(-t.x, 0.0)) + tap(v.uv + vec2f(t.x, 0.0)) + tap(v.uv + vec2f(0.0, -t.y)) + tap(v.uv + vec2f(0.0, t.y))) * 2.0;
+  c += tap(v.uv + vec2f(-t.x, -t.y)) + tap(v.uv + vec2f(t.x, -t.y)) + tap(v.uv + vec2f(-t.x, t.y)) + tap(v.uv + vec2f(t.x, t.y));
+  return vec4f(c / 16.0, 1.0);
+}
+fn aces(x: vec3f) -> vec3f {
+  let m1 = mat3x3f(0.59719, 0.07600, 0.02840, 0.35458, 0.90834, 0.13383, 0.04823, 0.01566, 0.83777);
+  let m2 = mat3x3f(1.60475, -0.10208, -0.00327, -0.53108, 1.10813, -0.07276, -0.07367, -0.00605, 1.07602);
+  let v = m1 * x;
+  let a = v * (v + 0.0245786) - 0.000090537;
+  let b = v * (0.983729 * v + 0.4329510) + 0.238081;
+  return clamp(m2 * (a / b), vec3f(0.0), vec3f(1.0));
+}
+fn neutral(color: vec3f) -> vec3f { // Khronos PBR Neutral: close to identity below 0.76, then a soft shoulder that keeps hue
+  let start = 0.8 - 0.04;
+  let desat = 0.15;
+  let x = min(color.r, min(color.g, color.b));
+  var off = 0.04;
+  if (x < 0.08) { off = x - 6.25 * x * x; }
+  var c = color - off;
+  let peak = max(c.r, max(c.g, c.b));
+  if (peak < start) { return c; }
+  let dd = 1.0 - start;
+  let np = 1.0 - dd * dd / (peak + dd - start);
+  c *= np / peak;
+  let g = 1.0 - 1.0 / (desat * (peak - np) + 1.0);
+  return mix(c, vec3f(np), g);
+}
+fn srgb(c: vec3f) -> vec3f {
+  return select(1.055 * pow(c, vec3f(1.0 / 2.4)) - 0.055, c * 12.92, c <= vec3f(0.0031308));
+}
+@fragment fn fsComp(v: FOut) -> @location(0) vec4f {
+  let n = f32(pcg(u32(v.pos.x) + u32(v.pos.y) * 4099u + u32(U.params.z) * 7919u) >> 8u) / 16777216.0;
+  var c = min(textureSampleLevel(src, smp, v.uv, 0.0).rgb, vec3f(8192.0));
+  if (U.params.w > 0.5 && U.params.w < 1.5) { // as authored: the values go to the screen as they are, as on an 8-bit WebGL canvas
+    return vec4f(clamp(c, vec3f(0.0), vec3f(1.0)) + (n - 0.5) / 255.0, 1.0);
+  }
+  let b = textureSampleLevel(bloomTex, smp, v.uv, 0.0).rgb;
+  c = (c + b * U.params.y) * U.params.x;
+  let q = v.uv - 0.5;
+  c *= 1.0 - dot(q, q) * 0.6;
+  if (U.params.w > 2.5) { c = srgb(vec3f(1.0) - exp(-max(c, vec3f(0.0)))); }       // per channel, so hot colours run to yellow and white
+  else if (U.params.w > 1.5) { c = srgb(clamp(neutral(max(c, vec3f(0.0))), vec3f(0.0), vec3f(1.0))); }
+  else { c = srgb(aces(c)); }
+  return vec4f(c + (n - 0.5) / 255.0, 1.0);
+}
+`;
+
+/* ------------------------------------------------- ComposedShader ports
+   WebGPU cannot run GLSL. Each program below is a hand port of one GLSL program to WGSL, line for line. The page
+   picks a port only when the GLSL text in the scene matches the text it was ported from (an FNV-1a hash of the
+   vertex and fragment source, whitespace collapsed). Any other GLSL falls back as 19775-1 31.2.2 asks: the shape
+   is drawn as if it had no shader. Two deliberate differences, both stated in the page: pow(x, 2.0) is written x*x
+   (a negative base is undefined for pow in both languages), and the HDR look replaces each program's closing tone
+   curve. */
+const WGSL_PORT_HEAD = /* wgsl */ `
+struct SU {
+  mv: mat4x4f, proj: mat4x4f,
+  nm0: vec4f, nm1: vec4f, nm2: vec4f,
+  viewport: vec4f,  // x3d_Viewport: x, y, width, height in pixels
+  fl: vec4f,        // the program's SFFloat fields, in the port's order
+  look: vec4f,      // HDR on, HDR gain, plain-colour gain, unused
+};
+@group(0) @binding(0) var<uniform> U: SU;
+fn sq(x: f32) -> f32 { return x * x; }
+fn toLin(c: vec3f) -> vec3f { return select(pow((c + 0.055) / 1.055, vec3f(2.4)), c / 12.92, c <= vec3f(0.04045)); }
+// As authored, each program ends with 1 - exp(-c k) for an 8-bit canvas. In the HDR look the page drops that curve:
+// the pre-curve colour is read as a display value, decoded to linear light (the sRGB curve, extended above 1) and
+// added up in 16-bit float; the page's tone mapper then rolls the highlights off.
+fn finish(col: vec3f, k: f32, fade: f32) -> vec4f {
+  if (U.look.x > 0.5) { return vec4f(min(toLin(max(col * (k * fade), vec3f(0.0))) * U.look.y, vec3f(8192.0)), 1.0); }
+  return vec4f((vec3f(1.0) - exp(-col * k)) * fade, 1.0);
+}
+fn finishPlain(col: vec3f) -> vec4f {
+  if (U.look.x > 0.5) { return vec4f(toLin(max(col, vec3f(0.0))) * U.look.z, 1.0); }
+  return vec4f(col, 1.0);
+}
+`;
+const WGSL_TRACKS = /* wgsl */ `
+struct VIn { @location(0) v: vec3f, @location(1) ident: vec4f, @location(2) arc: f32, @location(3) species: f32, @location(4) nxt: vec3f, @location(5) look: vec4f };
+struct VOut { @builtin(position) pos: vec4f, @location(0) ident: vec4f, @location(1) arc: f32, @location(2) species: f32, @location(3) look: vec4f, @location(4) rad: f32 };
+@vertex fn vs(i: VIn) -> VOut {
+  let c = i.v - i.look.x * vec3f(0.004, 0.0028, 0.0012);
+  let c0 = U.proj * (U.mv * vec4f(c, 1.0));
+  let c1 = U.proj * (U.mv * vec4f(i.nxt, 1.0));
+  let hv = U.viewport.zw * 0.5;
+  var d = (c1.xy / c1.w - c0.xy / c0.w) * hv;
+  let l = length(d);
+  if (l > 0.0001) { d = d / l; } else { d = vec2f(1.0, 0.0); }
+  let bright = clamp(log(1.0 + i.ident.z) / log(41.0), 0.0, 1.0);
+  let mu = step(1.5, i.species) * (1.0 - step(2.5, i.species));
+  let w = 1.0 + 3.2 * pow(bright, 1.3) + 1.6 * mu;
+  let o = vec2f(-d.y, d.x) * i.look.x * w * U.fl.y;
+  var out: VOut;
+  out.pos = c0 + vec4f(o / hv * c0.w, 0.0, 0.0);
+  out.ident = i.ident;
+  out.arc = i.arc;
+  out.species = i.species;
+  out.look = i.look;
+  out.rad = length(c.xy);
+  return out;
+}
+fn hash1(n: f32) -> f32 { return fract(sin(n * 91.3458) * 47453.5453); }
+fn hue(sp: f32, q: f32) -> vec3f {
+  var c = vec3f(0.08, 0.78, 1.0);
+  if (q < 0.0) { c = vec3f(1.0, 0.12, 0.51); }
+  if (sp > 0.5 && sp < 1.5) { c = vec3f(0.14, 1.0, 0.40); }
+  if (sp > 1.5 && sp < 2.5) { c = vec3f(0.80, 0.62, 1.0); }
+  if (sp > 3.5 && sp < 4.5) { c = vec3f(1.0, 0.34, 0.14); }
+  if (sp > 4.5 && sp < 5.5) { c = vec3f(1.0, 0.52, 0.06); }
+  if (sp > 5.5 && sp < 6.5) { c = vec3f(1.0, 0.80, 0.20); }
+  if (sp > 6.5) { c = vec3f(0.80, 0.85, 0.90); }
+  return c;
+}
+@fragment fn fs(v: VOut) -> @location(0) vec4f {
+  let t = U.fl.x * 12.0;
+  let age = t - 0.5 - v.ident.w;
+  let head = age * 0.9;
+  if (v.arc > head) { discard; }
+  let x = v.look.x;
+  let core = exp(-x * x * 18.0);
+  let halo = exp(-x * x * 3.6) * (1.0 - smoothstep(0.7, 1.0, abs(x)));
+  let bright = clamp(log(1.0 + v.ident.z) / log(41.0), 0.0, 1.0);
+  let seed = v.look.y;
+  let neutral = step(0.5, v.look.w) * (1.0 - step(1.5, v.look.w));
+  let freq = 1.1 + 2.2 * hash1(seed * 7.13);
+  let pulse = pow(1.0 - fract(v.arc * freq - age * (0.6 + 0.7 * hash1(seed * 3.7)) + hash1(seed)), 6.0);
+  let dash = mix(1.0, 0.18 + 0.82 * step(0.4, fract(v.arc * 14.0 + seed)), neutral);
+  let growing = 1.0 - smoothstep(v.look.z, v.look.z + 0.25, head);
+  let tip = exp(-max(head - v.arc, 0.0) * 9.0) * growing;
+  var knot = 0.0;
+  if (v.look.w > 1.5) {
+    let a1 = (v.rad - 2.60) * 9.0;
+    let a2 = (v.rad - 3.00) * 9.0;
+    knot = exp(-a1 * a1) + exp(-a2 * a2);
+  }
+  let c = hue(v.species, v.ident.y);
+  let gain = (0.34 + 1.65 * bright) * (0.62 + 0.95 * pulse) * dash * (1.0 - 0.65 * neutral);
+  var col = c * (halo * 0.33 + core * 1.28) * gain;
+  col += vec3f(1.0) * core * (0.22 * pulse * bright + 1.6 * tip + 0.9 * knot);
+  return finish(col, 1.15, smoothstep(0.0, 0.5, t) * (1.0 - smoothstep(10.4, 11.9, t)));
+}
+`;
+const WGSL_TOWERS = /* wgsl */ `
+struct VIn { @location(0) v: vec3f, @location(1) cell: vec4f, @location(2) nxt: vec3f, @location(3) look: vec4f };
+struct VOut { @builtin(position) pos: vec4f, @location(0) cell: vec4f, @location(1) look: vec4f };
+@vertex fn vs(i: VIn) -> VOut {
+  let t = U.fl.x * 12.0;
+  let c = i.v - i.look.x * vec3f(0.004, 0.0028, 0.0012);
+  let b = select(c, 2.0 * c - i.nxt, i.look.z > 0.5);
+  let g = smoothstep(i.cell.w, i.cell.w + 0.5, t);
+  let p = mix(b, c, max(g, 0.02));
+  let c0 = U.proj * (U.mv * vec4f(p, 1.0));
+  let c1 = U.proj * (U.mv * vec4f(i.nxt, 1.0));
+  let hv = U.viewport.zw * 0.5;
+  var d = (c1.xy / c1.w - c0.xy / c0.w) * hv;
+  let l = length(d);
+  if (l > 0.0001) { d = d / l; } else { d = vec2f(1.0, 0.0); }
+  let e = clamp(log(1.0 + i.cell.y) / log(31.0), 0.0, 1.0);
+  let w = 0.8 + 1.4 * e;
+  let o = vec2f(-d.y, d.x) * i.look.x * w * U.fl.z;
+  var out: VOut;
+  out.pos = c0 + vec4f(o / hv * c0.w, 0.0, 0.0);
+  out.cell = i.cell;
+  out.look = i.look;
+  return out;
+}
+@fragment fn fs(v: VOut) -> @location(0) vec4f {
+  let t = U.fl.x * 12.0;
+  let e = clamp(log(1.0 + v.cell.y) / log(31.0), 0.0, 1.0);
+  let eh = clamp(log(1.0 + v.cell.y) / log(1.0 + max(U.fl.y, 0.05)), 0.0, 1.0);
+  let heat = mix(vec3f(0.16, 0.48, 1.0), vec3f(1.0, 0.56, 0.10), smoothstep(0.25, 0.80, eh));
+  var c = mix(heat, vec3f(1.0, 0.78, 0.30), 0.35 * v.cell.z);
+  c = mix(c, vec3f(1.0, 0.20, 0.07), smoothstep(0.80, 1.0, eh) * (1.0 - 0.5 * v.cell.z));
+  let lit = smoothstep(v.cell.w, v.cell.w + 0.15, t);
+  let flare = exp(-max(t - v.cell.w, 0.0) * 2.0) * lit;
+  let u = v.look.z;
+  let x = v.look.x;
+  let core = exp(-x * x * 8.0);
+  let halo = exp(-x * x * 2.0);
+  let shimmer = 0.86 + 0.14 * sin(t * 9.0 + v.look.y * 40.0);
+  var col = c * (core * 1.25 + halo * 0.4) * (0.4 + 1.1 * e) * (1.0 - 0.5 * u) * lit * shimmer;
+  col += vec3f(1.0, 0.93, 0.82) * core * exp(-u * 4.0) * (0.2 + 0.6 * e) * (0.5 + 0.5 * v.cell.z) * lit * 0.3;
+  col += vec3f(1.0) * core * flare * 0.7;
+  return finish(col, 0.95, smoothstep(0.0, 0.5, t) * (1.0 - smoothstep(10.4, 11.9, t)));
+}
+`;
+const WGSL_SHELLS = /* wgsl */ `
+struct VIn { @location(0) v: vec3f, @location(1) n: vec3f, @location(2) shell: vec4f, @location(3) geo: vec4f };
+struct VOut { @builtin(position) pos: vec4f, @location(0) n: vec3f, @location(1) p: vec3f, @location(2) obj: vec3f, @location(3) shell: vec4f, @location(4) geo: vec4f };
+@vertex fn vs(i: VIn) -> VOut {
+  let p = U.mv * vec4f(i.v, 1.0);
+  var o: VOut;
+  o.p = p.xyz;
+  o.n = mat3x3f(U.nm0.xyz, U.nm1.xyz, U.nm2.xyz) * i.n;
+  o.obj = i.v;
+  o.shell = i.shell;
+  o.geo = i.geo;
+  o.pos = U.proj * p;
+  return o;
+}
+fn stripe(x: f32, wd: f32) -> f32 {
+  let d = abs(fract(x) - 0.5);
+  return 1.0 - smoothstep(wd, wd + 0.04, d);
+}
+@fragment fn fs(v: VOut) -> @location(0) vec4f {
+  let t = U.fl.x * 12.0;
+  let kind = v.shell.x;
+  let b = v.shell.w;
+  let radius = max(v.geo.x, 0.04);
+  let hl = max(v.geo.y, 0.02);
+  let z = v.obj.z;
+  let phi = atan2(v.obj.y, v.obj.x);
+  var N = normalize(v.n);
+  let V = normalize(-v.p);
+  if (dot(N, V) < 0.0) { N = -N; }
+  let facing = max(dot(N, V), 0.0);
+  let rim = pow(1.0 - facing, 3.5);
+  let calo = step(0.5, kind) * (1.0 - step(1.5, kind));
+  let steel = step(1.5, kind) * (1.0 - step(2.5, kind));
+  let tracker = 1.0 - step(0.5, kind);
+  let ring = step(2.5, kind);
+  var cold = mix(vec3f(0.18, 0.44, 0.67), vec3f(0.21, 0.59, 0.78), tracker);
+  cold = mix(cold, vec3f(0.17, 0.26, 0.39), steel);
+  cold = mix(cold, vec3f(0.22, 0.42, 0.61), ring);
+  let cyan = vec3f(0.39, 0.84, 1.0);
+  let warm = vec3f(1.0, 0.50, 0.16);
+  let sectors = max(v.geo.z, mix(48.0, 24.0, steel));
+  let u = phi / 6.2831853 * sectors;
+  let panel = floor(u);
+  let alt = 0.72 + 0.28 * sin(panel * 2.39996 + floor(z * 2.0) * 1.7);
+  let seam = stripe(u, 0.012);
+  let ribs = stripe(z * v.shell.y / 3.14159265, 0.032);
+  let fine = stripe(z * v.shell.y * 2.0 / 3.14159265, 0.012);
+  let lip = exp(-max(hl - abs(z), 0.0) * 24.0);
+  let band = max(exp(-max(hl - abs(z) - 0.075, 0.0) * 48.0) - lip, 0.0);
+  let keyL = normalize(vec3f(-0.55, 0.65, 0.50));
+  let fillL = normalize(vec3f(0.72, -0.22, 0.50));
+  let diffuse = max(dot(N, keyL), 0.0);
+  let glint = pow(max(dot(N, normalize(keyL + V)), 0.0), 76.0);
+  let broad = pow(max(dot(N, normalize(fillL + V)), 0.0), 15.0);
+  let brush = 0.85 + 0.15 * sin(z * 35.0 + sin(phi * 8.0) * 0.9);
+  var col = cold * b * alt * (0.026 + 0.035 * diffuse + 0.19 * rim);
+  col += cold * b * ribs * (0.12 + 0.25 * rim) * (1.0 - 0.45 * steel);
+  col += cyan * b * fine * (0.035 + 0.07 * rim);
+  col += cold * b * seam * (0.13 + 0.19 * rim);
+  col += vec3f(0.65, 0.79, 0.86) * b * (0.16 * glint * brush + 0.045 * broad);
+  col += cyan * b * lip * (0.45 + 0.65 * rim) * (1.0 - 0.45 * steel);
+  col += warm * b * band * (0.12 + 0.25 * calo);
+  let traceL = stripe(u * 0.25 + 0.12, 0.009);
+  let marks = stripe(z * 3.0 + 0.25, 0.045) * stripe(u, 0.09);
+  col += cyan * b * traceL * (0.08 + 0.22 * rim) * (1.0 - steel);
+  col += cyan * b * marks * 0.19;
+  col += warm * v.shell.z * smoothstep(2.0, 3.6, t) * (0.025 + 0.32 * rim * rim + 0.09 * seam);
+  let front = (t - 0.5) * 3.0;
+  col += cyan * exp(-sq((front - radius) * 3.1)) * step(0.5, t) * b * (0.20 + 0.40 * rim);
+  return finish(col, 1.32, 0.42 + 0.58 * smoothstep(0.0, 0.5, t) * (1.0 - smoothstep(10.4, 11.9, t)));
+}
+`;
+const WGSL_FLASH = /* wgsl */ `
+struct VIn { @location(0) v: vec3f };
+struct VOut { @builtin(position) pos: vec4f, @location(0) uv: vec2f };
+@vertex fn vs(i: VIn) -> VOut {
+  var o: VOut;
+  o.uv = i.v.xy;
+  o.pos = U.proj * (U.mv * vec4f(i.v, 1.0));
+  return o;
+}
+@fragment fn fs(v: VOut) -> @location(0) vec4f {
+  let t = U.fl.x * 12.0;
+  let s = t - 0.5;
+  let birth = step(0.0, s);
+  let bang = exp(-max(s, 0.0) * 4.2) * birth;
+  let glowAfter = exp(-max(s, 0.0) * 1.05) * birth;
+  let p = v.uv;
+  let r = length(p);
+  let edge = 1.0 - smoothstep(0.78, 1.0, r);
+  let core = exp(-r * r * 170.0);
+  let aura = exp(-r * r * 17.0);
+  let hor = exp(-abs(p.y) * 155.0) * exp(-abs(p.x) * 2.5);
+  let sho = exp(-abs(p.y) * 44.0) * exp(-abs(p.x) * 5.5);
+  let ver = exp(-abs(p.x) * 170.0) * exp(-abs(p.y) * 6.0);
+  let dg = exp(-abs(p.x - p.y) * 145.0) * exp(-abs(p.x + p.y) * 6.0) + exp(-abs(p.x + p.y) * 145.0) * exp(-abs(p.x - p.y) * 6.0);
+  let wave = exp(-sq((r - max(s, 0.0) * 1.65) * 85.0)) * exp(-max(s, 0.0) * 4.0) * birth;
+  let steady = smoothstep(0.0, 0.5, t) * 0.12;
+  var col = vec3f(0.76, 0.91, 1.0) * (core * (steady + bang * 3.5) + aura * (steady * 0.16 + glowAfter * 0.45));
+  col += vec3f(0.38, 0.73, 1.0) * (hor * 0.75 + sho * 0.20) * (steady + bang * 1.7);
+  col += vec3f(0.86, 0.87, 1.0) * (ver * 0.34 + dg * 0.13) * (steady + bang);
+  col += vec3f(0.33, 0.69, 1.0) * wave * 0.38;
+  col += vec3f(1.0, 0.65, 0.28) * exp(-r * r * 48.0) * bang * 0.50;
+  return finish(col, 1.35, edge * (1.0 - smoothstep(10.4, 11.9, t)));
+}
+`;
+const WGSL_HAZE = /* wgsl */ `
+struct VIn { @location(0) v: vec3f };
+struct VOut { @builtin(position) pos: vec4f, @location(0) uv: vec2f };
+@vertex fn vs(i: VIn) -> VOut {
+  var o: VOut;
+  o.uv = i.v.xy;
+  o.pos = vec4f(i.v.xy, 0.9999, 1.0);
+  return o;
+}
+fn hh(p: vec2f) -> f32 { return fract(sin(dot(p, vec2f(127.1, 311.7))) * 43758.5453); }
+fn vn(p: vec2f) -> f32 {
+  let i = floor(p);
+  var f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hh(i), hh(i + vec2f(1.0, 0.0)), f.x), mix(hh(i + vec2f(0.0, 1.0)), hh(i + vec2f(1.0, 1.0)), f.x), f.y);
+}
+fn fbm(p0: vec2f) -> f32 {
+  var p = p0;
+  var a = 0.5;
+  var s = 0.0;
+  for (var i = 0; i < 4; i++) {
+    s += a * vn(p);
+    p = mat2x2f(1.61, 1.21, -1.21, 1.61) * p + vec2f(3.1, 7.2);
+    a *= 0.48;
+  }
+  return s;
+}
+@fragment fn fs(v: VOut) -> @location(0) vec4f {
+  let t = U.fl.x * 12.0;
+  let p = v.uv * vec2f(1.7777778, 1.0);
+  let r = length(p);
+  let drift = vec2f(t * 0.012, -t * 0.008);
+  let f1 = fbm(p * 2.1 + drift);
+  let g1 = fbm(p * 5.3 - drift * 1.8);
+  let mist = smoothstep(0.42, 0.86, f1) * (0.35 + 0.65 * g1);
+  let centre = exp(-dot(p, p) * 0.7);
+  let halo = exp(-sq((r - 0.82) * 2.5));
+  var col = vec3f(0.010, 0.024, 0.050) * (0.45 + 0.55 * centre);
+  col += vec3f(0.034, 0.068, 0.118) * mist * (0.35 + 0.65 * halo);
+  col += vec3f(0.036, 0.072, 0.135) * smoothstep(0.86, 0.70, r) * (0.6 + 0.4 * mist);
+  let cold = exp(-sq(p.y + p.x * 0.14 - 0.15) * 12.0) * exp(-sq(p.x + 0.65) * 1.9);
+  let warm = exp(-sq(p.y - p.x * 0.32 + 0.30) * 9.0) * exp(-sq(p.x - 1.0) * 2.6);
+  col += vec3f(0.024, 0.068, 0.108) * cold * (0.35 + 0.65 * mist);
+  col += vec3f(0.060, 0.030, 0.012) * warm * (0.35 + 0.65 * mist);
+  return finishPlain(col);
+}
+`;
+const PORTS = [
+  { name: 'tracks', role: 'tracks', key: 'da010848-2732de59', code: WGSL_TRACKS, fields: [['u_phase', 0], ['u_resolutionScale', 1]],
+    attrs: [['x3d_Vertex', 3], ['a_ident', 4], ['a_arc', 1], ['a_species', 1], ['a_next', 3], ['a_look', 4]] },
+  { name: 'towers', role: 'calorimeter towers', key: 'e899d3ba-71ea799c', code: WGSL_TOWERS, fields: [['u_phase', 0], ['u_e90', 1], ['u_resolutionScale', 1]],
+    attrs: [['x3d_Vertex', 3], ['a_cell', 4], ['a_next', 3], ['a_look', 4]] },
+  { name: 'shells', role: 'detector shells', key: '2318d20e-451c1b62', code: WGSL_SHELLS, fields: [['u_phase', 0]],
+    attrs: [['x3d_Vertex', 3], ['x3d_Normal', 3], ['a_shell', 4], ['a_geo', 4]] },
+  { name: 'flash', role: 'collision flash', key: '1bc84a9f-b6fcc411', code: WGSL_FLASH, fields: [['u_phase', 0]], attrs: [['x3d_Vertex', 3]] },
+  { name: 'haze', role: 'backdrop haze', key: '07e052cf-7ecaed2f', code: WGSL_HAZE, fields: [['u_phase', 0]], attrs: [['x3d_Vertex', 3]] },
+];
+const PORT_BY_KEY = new Map(PORTS.map((p) => [p.key, p]));
+const normSrc = (s) => s.replace(/\s+/g, ' ').trim();
+function fnv1a(s) { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
+function shaderSource(part) {
+  for (const u of part.f.url) {
+    if (/^\s*data:/i.test(u)) {
+      const c = u.indexOf(','), head = u.slice(0, c);
+      let body = u.slice(c + 1);
+      if (/;base64/i.test(head)) { try { body = atob(body); } catch { body = ''; } }
+      else if (/%[0-9a-f]{2}/i.test(body)) { try { body = decodeURIComponent(body); } catch { /* keep the raw text */ } }
+      return body;
+    }
+    if (/void\s+main/.test(u)) return u;
+  }
+  return '';
+}
+function glslKey(cs) {
+  const src = { VERTEX: '', FRAGMENT: '' };
+  for (const part of cs.f.parts) if (part.type === 'ShaderPart') src[String(part.f.type || 'VERTEX').toUpperCase()] = shaderSource(part);
+  return fnv1a(normSrc(src.VERTEX)) + '-' + fnv1a(normSrc(src.FRAGMENT));
+}
+function portFor(appearance) { // the first shader in the list that this page can run (31.2.2)
+  for (const cs of appearance.f.shaders) {
+    if (cs.type !== 'ComposedShader' || (cs.f.language && cs.f.language.toUpperCase() !== 'GLSL')) continue;
+    if (cs._key === undefined) cs._key = glslKey(cs);
+    const port = PORT_BY_KEY.get(cs._key);
+    if (port) return { port, cs };
+  }
+  return null;
+}
+
+/* ------------------------------------------------------------ GPU state */
+const G = { frame: 0, errors: [] };
+const MAX_LIGHTS = 8, DRAW_FLOATS = 48, FRAME_FLOATS = 268, PSYS_FLOATS = 180, SU_FLOATS = 64, SHADOW_SIZE = 2048, MSAA = 4, HDR = 'rgba16float';
+class NoGPU extends Error {}
+
+async function initGPU(canvas) {
+  if (!navigator.gpu) throw new NoGPU('navigator.gpu is missing: this browser or this frame does not expose WebGPU.');
+  const adapter = await navigator.gpu.requestAdapter({ powerPreference: 'high-performance' });
+  if (!adapter) throw new NoGPU('navigator.gpu is present, but requestAdapter() returned no adapter.');
+  const device = await adapter.requestDevice();
+  const context = canvas.getContext('webgpu');
+  if (!context) throw new NoGPU('The canvas did not give a webgpu context.');
+  const format = navigator.gpu.getPreferredCanvasFormat();
+  context.configure({ device, format, alphaMode: 'opaque' });
+  Object.assign(G, { adapter, device, context, format, info: adapter.info || {} });
+  device.addEventListener('uncapturederror', (e) => reportError('WebGPU: ' + e.error.message));
+  device.lost.then((info) => { if (info.reason !== 'destroyed') { $('lostWhy').textContent = `${info.reason || 'unknown'}: ${info.message || ''}`; $('lost').hidden = false; G.lost = true; } });
+  G.particleCap = Math.min(1 << 20, Math.floor(device.limits.maxStorageBufferBindingSize / 32), Math.floor(device.limits.maxBufferSize / 32));
+  buildPipelines();
+}
+function shader(code, label) {
+  const mod = G.device.createShaderModule({ code, label });
+  mod.getCompilationInfo().then((info) => { for (const m of info.messages) if (m.type === 'error') reportError(`WGSL ${label} ${m.lineNum}:${m.linePos} ${m.message}`); });
+  return mod;
+}
+function buildPipelines() {
+  const d = G.device, V = GPUShaderStage.VERTEX, Fr = GPUShaderStage.FRAGMENT, C = GPUShaderStage.COMPUTE;
+  G.frameBGL = d.createBindGroupLayout({ entries: [
+    { binding: 0, visibility: V | Fr, buffer: { type: 'uniform' } },
+    { binding: 1, visibility: V | Fr, buffer: { type: 'read-only-storage' } },
+    { binding: 2, visibility: Fr, texture: { sampleType: 'depth' } },
+    { binding: 3, visibility: Fr, sampler: { type: 'comparison' } },
+    { binding: 4, visibility: Fr, buffer: { type: 'uniform' } },
+  ] });
+  G.shadowBGL = d.createBindGroupLayout({ entries: [
+    { binding: 0, visibility: V, buffer: { type: 'uniform' } },
+    { binding: 1, visibility: V, buffer: { type: 'read-only-storage' } },
+  ] });
+  G.partBGL = d.createBindGroupLayout({ entries: [
+    { binding: 0, visibility: V, buffer: { type: 'read-only-storage' } },
+    { binding: 1, visibility: V | Fr, buffer: { type: 'uniform' } },
+  ] });
+  G.simBGL = d.createBindGroupLayout({ entries: [
+    { binding: 0, visibility: C, buffer: { type: 'storage' } },
+    { binding: 1, visibility: C, buffer: { type: 'uniform' } },
+  ] });
+  G.postBGL = d.createBindGroupLayout({ entries: [
+    { binding: 0, visibility: Fr, texture: { sampleType: 'float' } },
+    { binding: 1, visibility: Fr, sampler: { type: 'filtering' } },
+    { binding: 2, visibility: Fr, buffer: { type: 'uniform' } },
+  ] });
+  G.compBGL = d.createBindGroupLayout({ entries: [
+    { binding: 0, visibility: Fr, texture: { sampleType: 'float' } },
+    { binding: 1, visibility: Fr, sampler: { type: 'filtering' } },
+    { binding: 2, visibility: Fr, buffer: { type: 'uniform' } },
+    { binding: 3, visibility: Fr, texture: { sampleType: 'float' } },
+  ] });
+  G.portBGL = d.createBindGroupLayout({ entries: [{ binding: 0, visibility: V | Fr, buffer: { type: 'uniform' } }] });
+  const layout = (...bgls) => d.createPipelineLayout({ bindGroupLayouts: bgls });
+  G.portLayout = layout(G.portBGL);
+  G.portPipes = new Map();
+  G.suPool = [];
+  const meshMod = shader(WGSL_COMMON + WGSL_FRAME + WGSL_MESH, 'mesh');
+  const partMod = shader(WGSL_COMMON + WGSL_FRAME + WGSL_PART, 'particles');
+  const shadowMod = shader(WGSL_COMMON + WGSL_SHADOW, 'shadow');
+  const simMod = shader(WGSL_COMMON + WGSL_SIM, 'simulate');
+  const postMod = shader(WGSL_COMMON + WGSL_POST, 'post');
+  const vbuf = [{ arrayStride: 24, attributes: [{ shaderLocation: 0, offset: 0, format: 'float32x3' }, { shaderLocation: 1, offset: 12, format: 'float32x3' }] }];
+  const ms = { count: MSAA };
+  G.meshPipes = {};
+  for (const cull of [true, false]) for (const blend of [false, true]) {
+    G.meshPipes[`${cull}|${blend}`] = d.createRenderPipeline({
+      label: `mesh cull=${cull} blend=${blend}`, layout: layout(G.frameBGL),
+      vertex: { module: meshMod, entryPoint: 'vsMesh', buffers: vbuf },
+      fragment: { module: meshMod, entryPoint: 'fsMesh', targets: [{ format: HDR, blend: blend ? {
+        color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+        alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' } } : undefined }] },
+      primitive: { topology: 'triangle-list', cullMode: cull ? 'back' : 'none', frontFace: 'ccw' },
+      depthStencil: { format: 'depth24plus', depthWriteEnabled: !blend, depthCompare: 'less' },
+      multisample: ms,
+    });
+  }
+  G.bgPipe = d.createRenderPipeline({
+    label: 'background', layout: layout(G.frameBGL),
+    vertex: { module: meshMod, entryPoint: 'vsBg' },
+    fragment: { module: meshMod, entryPoint: 'fsBg', targets: [{ format: HDR }] },
+    primitive: { topology: 'triangle-list' },
+    depthStencil: { format: 'depth24plus', depthWriteEnabled: false, depthCompare: 'always' },
+    multisample: ms,
+  });
+  G.partPipe = d.createRenderPipeline({
+    label: 'particles', layout: layout(G.frameBGL, G.partBGL),
+    vertex: { module: partMod, entryPoint: 'vsPart' },
+    fragment: { module: partMod, entryPoint: 'fsPart', targets: [{ format: HDR, blend: {
+      color: { srcFactor: 'one', dstFactor: 'one', operation: 'add' }, alpha: { srcFactor: 'zero', dstFactor: 'one', operation: 'add' } } }] },
+    primitive: { topology: 'triangle-list' },
+    depthStencil: { format: 'depth24plus', depthWriteEnabled: false, depthCompare: 'less' },
+    multisample: ms,
+  });
+  G.shadowPipe = d.createRenderPipeline({
+    label: 'shadow', layout: layout(G.shadowBGL),
+    vertex: { module: shadowMod, entryPoint: 'vsShadow', buffers: vbuf },
+    primitive: { topology: 'triangle-list', cullMode: 'none' },
+    depthStencil: { format: 'depth32float', depthWriteEnabled: true, depthCompare: 'less', depthBias: 2, depthBiasSlopeScale: 2.0, depthBiasClamp: 0.01 },
+  });
+  G.simPipe = d.createComputePipeline({ label: 'simulate', layout: layout(G.simBGL), compute: { module: simMod, entryPoint: 'simulate' } });
+  const post = (entry, format, blend) => d.createRenderPipeline({
+    label: entry, layout: layout(entry === 'fsComp' ? G.compBGL : G.postBGL),
+    vertex: { module: postMod, entryPoint: 'vsFull' },
+    fragment: { module: postMod, entryPoint: entry, targets: [{ format, blend }] },
+    primitive: { topology: 'triangle-list' },
+  });
+  G.downPipe = post('fsDown', HDR);
+  G.upPipe = post('fsUp', HDR, { color: { srcFactor: 'one', dstFactor: 'one', operation: 'add' }, alpha: { srcFactor: 'one', dstFactor: 'one', operation: 'add' } });
+  G.compPipe = post('fsComp', G.format);
+  G.frameBuf = d.createBuffer({ size: FRAME_FLOATS * 4, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
+  G.frameData = new Float32Array(FRAME_FLOATS);
+  G.frameU32 = new Uint32Array(G.frameData.buffer);
+  G.bgBuf = d.createBuffer({ size: 512 * 16, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
+  G.shadowTex = d.createTexture({ size: [SHADOW_SIZE, SHADOW_SIZE], format: 'depth32float', usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING });
+  G.shadowView = G.shadowTex.createView();
+  G.shadowSmp = d.createSampler({ compare: 'less', magFilter: 'linear', minFilter: 'linear', addressModeU: 'clamp-to-edge', addressModeV: 'clamp-to-edge' });
+  G.linear = d.createSampler({ magFilter: 'linear', minFilter: 'linear', addressModeU: 'clamp-to-edge', addressModeV: 'clamp-to-edge' });
+  G.drawCap = 0;
+  ensureDrawCapacity(64);
+}
+function ensureDrawCapacity(n) {
+  if (n <= G.drawCap) return;
+  G.drawCap = Math.max(n, G.drawCap * 2);
+  if (G.drawBuf) G.drawBuf.destroy();
+  G.drawBuf = G.device.createBuffer({ size: G.drawCap * DRAW_FLOATS * 4, usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST });
+  G.drawData = new Float32Array(G.drawCap * DRAW_FLOATS);
+  G.frameBG = G.device.createBindGroup({ layout: G.frameBGL, entries: [
+    { binding: 0, resource: { buffer: G.frameBuf } }, { binding: 1, resource: { buffer: G.drawBuf } },
+    { binding: 2, resource: G.shadowView }, { binding: 3, resource: G.shadowSmp }, { binding: 4, resource: { buffer: G.bgBuf } } ] });
+  G.shadowBG = G.device.createBindGroup({ layout: G.shadowBGL, entries: [{ binding: 0, resource: { buffer: G.frameBuf } }, { binding: 1, resource: { buffer: G.drawBuf } }] });
+}
+function ensureTargets(w, h) {
+  if (G.w === w && G.h === h) return;
+  const d = G.device;
+  for (const t of G.targets || []) t.destroy();
+  for (const b of G.postBufs || []) b.destroy();
+  G.w = w; G.h = h;
+  const RA = GPUTextureUsage.RENDER_ATTACHMENT, TB = GPUTextureUsage.TEXTURE_BINDING;
+  const tex = (tw, th, format, usage, sampleCount = 1) => d.createTexture({ size: [tw, th], format, usage, sampleCount });
+  G.msaaTex = tex(w, h, HDR, RA, MSAA);
+  G.depthTex = tex(w, h, 'depth24plus', RA, MSAA);
+  G.hdrTex = tex(w, h, HDR, RA | TB);
+  G.targets = [G.msaaTex, G.depthTex, G.hdrTex];
+  G.levels = [];
+  let lw = Math.max(1, w >> 1), lh = Math.max(1, h >> 1);
+  const n = clamp(Math.floor(Math.log2(Math.min(lw, lh))) - 2, 1, 6);
+  for (let i = 0; i < n; i++) { const t = tex(lw, lh, HDR, RA | TB); G.levels.push({ t, v: t.createView(), w: lw, h: lh }); G.targets.push(t); lw = Math.max(1, lw >> 1); lh = Math.max(1, lh >> 1); }
+  G.postBufs = [];
+  const ubuf = (vals) => { const b = d.createBuffer({ size: 32, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST }); d.queue.writeBuffer(b, 0, new Float32Array(vals)); G.postBufs.push(b); return b; };
+  const bg = (layout, view, buf, extra) => d.createBindGroup({ layout, entries: [{ binding: 0, resource: view }, { binding: 1, resource: G.linear }, { binding: 2, resource: { buffer: buf } }, ...(extra || [])] });
+  G.post = [];
+  const hdrView = G.hdrTex.createView();
+  G.post.push({ pipe: G.downPipe, target: G.levels[0].v, load: 'clear', bg: bg(G.postBGL, hdrView, ubuf([1 / w, 1 / h, 0, 0, OPTS.bloomThreshold ?? 0.95, 0.6, 1, 1])) });
+  for (let i = 1; i < n; i++) { const s = G.levels[i - 1]; G.post.push({ pipe: G.downPipe, target: G.levels[i].v, load: 'clear', bg: bg(G.postBGL, s.v, ubuf([1 / s.w, 1 / s.h, 0, 0, 0, 0, 1, 0])) }); }
+  for (let i = n - 2; i >= 0; i--) { const s = G.levels[i + 1]; G.post.push({ pipe: G.upPipe, target: G.levels[i].v, load: 'load', bg: bg(G.postBGL, s.v, ubuf([1 / s.w, 1 / s.h, 0, 0, 0, 0, 1, 0])) }); }
+  G.compBuf = ubuf([1 / w, 1 / h, 0, 0, 1, 0.1, 0, 0]);
+  G.compBG = bg(G.compBGL, hdrView, G.compBuf, [{ binding: 3, resource: G.levels[0].v }]);
+  G.msaaView = G.msaaTex.createView();
+  G.depthView = G.depthTex.createView();
+  G.hdrView = hdrView;
+}
+const geoVersion = (g) => [g, g.f.coord, g.f.normal, ...(g.f.attrib || [])].map((n) => (n ? n.version || 0 : -1)).join('.');
+function meshFor(geom) {
+  const ver = geoVersion(geom);
+  if (geom._mesh !== undefined && geom._meshVer === ver) return geom._mesh;
+  if (geom._mesh) { geom._mesh.vb.destroy(); geom._mesh.ib.destroy(); }
+  geom._meshVer = ver;
+  const m = meshData(geom);
+  if (!m || !m.I.length) { geom._mesh = null; return null; }
+  const d = G.device;
+  const P = m.P instanceof Float32Array ? m.P : new Float32Array(m.P), I = m.I instanceof Uint32Array ? m.I : new Uint32Array(m.I);
+  const vb = d.createBuffer({ size: P.byteLength, usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST });
+  d.queue.writeBuffer(vb, 0, P);
+  const ib = d.createBuffer({ size: I.byteLength, usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST });
+  d.queue.writeBuffer(ib, 0, I);
+  geom._mesh = { vb, ib, count: I.length, pick: m.pick };
+  W.gpuBuffers.push(vb, ib);
+  return geom._mesh;
+}
+function shaderGeo(geom, port) { // one vertex buffer per attribute the port reads, by name (x3d_Vertex, x3d_Normal, FloatVertexAttribute.name)
+  if (!TRI_SETS.has(geom.type)) { W.notes.add(`A ComposedShader port draws ${geom.type} here only as a triangle set; that geometry was skipped.`); return null; }
+  const ver = geoVersion(geom), cache = geom._sgeo || (geom._sgeo = {});
+  const hit = cache[port.name];
+  if (hit && hit.ver === ver) return hit;
+  if (hit) { hit.ib.destroy(); hit.vbs.forEach((b) => b.destroy()); }
+  const { I, nv } = triIndices(geom);
+  if (!I.length || !nv) { cache[port.name] = null; return null; }
+  const f = geom.f, src = new Map();
+  if (f.coord) src.set('x3d_Vertex', { data: f.coord.f.point, n: 3 });
+  if (f.normal) src.set('x3d_Normal', { data: f.normal.f.vector, n: 3 });
+  for (const a of f.attrib) if (a.type === 'FloatVertexAttribute') src.set(a.f.name, { data: a.f.value, n: clamp(a.f.numComponents | 0, 1, 4) });
+  const d = G.device;
+  const vbs = port.attrs.map(([name, n]) => {
+    const s = src.get(name);
+    let data = new Float32Array(nv * n);
+    if (!s) W.notes.add(`${geom.def || geom.type} has no vertex data named ${name} for the ${port.name} port; zeros were used.`);
+    else if (s.n === n) data.set(s.data.subarray(0, Math.min(s.data.length, nv * n)));
+    else { for (let v = 0; v < nv; v++) for (let k = 0; k < Math.min(n, s.n); k++) data[v * n + k] = s.data[v * s.n + k] || 0; W.notes.add(`${name} has ${s.n} components where the ${port.name} port reads ${n}; repacked.`); }
+    const b = d.createBuffer({ size: data.byteLength, usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST });
+    d.queue.writeBuffer(b, 0, data);
+    W.gpuBuffers.push(b);
+    return b;
+  });
+  const ib = d.createBuffer({ size: I.byteLength, usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST });
+  d.queue.writeBuffer(ib, 0, I);
+  W.gpuBuffers.push(ib);
+  return (cache[port.name] = { ver, vbs, ib, count: I.length, nv });
+}
+const BF = { ZERO: 'zero', ONE: 'one', SRC_COLOR: 'src', ONE_MINUS_SRC_COLOR: 'one-minus-src', DST_COLOR: 'dst', ONE_MINUS_DST_COLOR: 'one-minus-dst',
+  SRC_ALPHA: 'src-alpha', ONE_MINUS_SRC_ALPHA: 'one-minus-src-alpha', DST_ALPHA: 'dst-alpha', ONE_MINUS_DST_ALPHA: 'one-minus-dst-alpha',
+  SRC_ALPHA_SATURATE: 'src-alpha-saturated', CONSTANT_COLOR: 'constant', ONE_MINUS_CONSTANT_COLOR: 'one-minus-constant', CONSTANT_ALPHA: 'constant', ONE_MINUS_CONSTANT_ALPHA: 'one-minus-constant' };
+const BE = { FUNC_ADD: 'add', FUNC_SUBTRACT: 'subtract', FUNC_REVERSE_SUBTRACT: 'reverse-subtract', MIN: 'min', MAX: 'max' };
+const DF = { NEVER: 'never', LESS: 'less', EQUAL: 'equal', LESS_EQUAL: 'less-equal', GREATER: 'greater', NOT_EQUAL: 'not-equal', GREATER_EQUAL: 'greater-equal', ALWAYS: 'always' };
+function portPipeline(port, app, solidFlag) { // BlendMode and DepthMode (X_ITE's nodes) become the pipeline's blend and depth state
+  const bm = app.f.blendMode, dm = app.f.depthMode;
+  const fac = (v, dflt) => BF[String(v).toUpperCase()] || dflt;
+  const blend = bm ? {
+    color: { srcFactor: fac(bm.f.sourceColorFactor, 'src-alpha'), dstFactor: fac(bm.f.destinationColorFactor, 'one-minus-src-alpha'), operation: BE[String(bm.f.colorEquation).toUpperCase()] || 'add' },
+    alpha: { srcFactor: fac(bm.f.sourceAlphaFactor, 'one'), dstFactor: fac(bm.f.destinationAlphaFactor, 'one-minus-src-alpha'), operation: BE[String(bm.f.alphaEquation).toUpperCase()] || 'add' } } : undefined;
+  if (blend) for (const c of [blend.color, blend.alpha]) if (c.operation === 'min' || c.operation === 'max') { c.srcFactor = 'one'; c.dstFactor = 'one'; }
+  const write = dm ? dm.f.depthMask !== false : true;
+  const cmp = dm ? (dm.f.depthTest === false ? 'always' : DF[String(dm.f.depthFunction).toUpperCase()] || 'less-equal') : 'less';
+  const cull = solidFlag ? 'back' : 'none';
+  const key = [port.name, JSON.stringify(blend || null), write, cmp, cull].join('|');
+  let e = G.portPipes.get(key);
+  if (!e) {
+    e = { pipe: null, blended: !!blend };
+    G.portPipes.set(key, e);
+    if (!port._mod) port._mod = shader(WGSL_PORT_HEAD + port.code, 'port ' + port.name);
+    G.device.createRenderPipelineAsync({
+      label: 'port ' + port.name, layout: G.portLayout,
+      vertex: { module: port._mod, entryPoint: 'vs', buffers: port.attrs.map(([, n], i) => ({ arrayStride: n * 4, attributes: [{ shaderLocation: i, offset: 0, format: n === 1 ? 'float32' : 'float32x' + n }] })) },
+      fragment: { module: port._mod, entryPoint: 'fs', targets: [{ format: HDR, blend }] },
+      primitive: { topology: 'triangle-list', cullMode: cull, frontFace: 'ccw' },
+      depthStencil: { format: 'depth24plus', depthWriteEnabled: write, depthCompare: cmp },
+      multisample: { count: MSAA },
+    }).then((pp) => { e.pipe = pp; }, (err) => reportError(`The ${port.name} port's pipeline failed: ${err.message}`));
+  }
+  return e;
+}
+function portSlot(i) {
+  while (G.suPool.length <= i) {
+    const buf = G.device.createBuffer({ size: SU_FLOATS * 4, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
+    G.suPool.push({ buf, bg: G.device.createBindGroup({ layout: G.portBGL, entries: [{ binding: 0, resource: { buffer: buf } }] }), data: new Float32Array(SU_FLOATS) });
+  }
+  return G.suPool[i];
+}
+function particleGPU(node, want) { // sized to what the scene asks for, rounded up to a power of two, and grown when it asks for more
+  let gp = node._gpu;
+  if (gp && gp.cap >= want) return gp;
+  const d = G.device, cap = Math.min(G.particleCap, Math.max(256, 2 ** Math.ceil(Math.log2(Math.max(want, 1)))));
+  if (gp) { gp.buf.destroy(); gp.ubuf.destroy(); }
+  const buf = d.createBuffer({ size: cap * 32, usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST });
+  const ubuf = d.createBuffer({ size: PSYS_FLOATS * 4, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
+  W.gpuBuffers.push(buf, ubuf);
+  gp = { buf, ubuf, cap, count: 0, data: new Float32Array(PSYS_FLOATS),
+    simBG: d.createBindGroup({ layout: G.simBGL, entries: [{ binding: 0, resource: { buffer: buf } }, { binding: 1, resource: { buffer: ubuf } }] }),
+    drawBG: d.createBindGroup({ layout: G.partBGL, entries: [{ binding: 0, resource: { buffer: buf } }, { binding: 1, resource: { buffer: ubuf } }] }) };
+  gp.u32 = new Uint32Array(gp.data.buffer);
+  node._gpu = gp;
+  return gp;
+}
+function seedParticles(gp, from, to, lifetime) { // newcomers wait a random share of one lifetime, so the stream is even
+  if (to <= from) return;
+  const a = new Float32Array((to - from) * 8);
+  for (let i = 0; i < to - from; i++) { a[i * 8 + 3] = -Math.random() * Math.max(lifetime, 0.05); a[i * 8 + 7] = 0; }
+  G.device.queue.writeBuffer(gp.buf, from * 32, a);
+}
+function bakeRamp(node) { // colorKey and color as 32 samples over [0, last key]: HSV between keys, alpha linear (40.4.5)
+  const f = node.f, cols = f.color ? f.color.f.color : [], keys = f.colorKey, nk = Math.min(keys.length, cols.length);
+  const ver = (node.version || 0) + ':' + (f.color ? f.color.version || 0 : -1);
+  if (node._ramp && node._ramp.ver === ver) return node._ramp;
+  const lut = new Float32Array(128);
+  const end = nk ? Math.max(keys[nk - 1], 1e-3) : 1;
+  for (let i = 0; i < 32 && nk; i++) {
+    const t = (i / 31) * end;
+    let c;
+    if (nk === 1 || t <= keys[0]) c = cols[0];
+    else if (t >= keys[nk - 1]) c = cols[nk - 1];
+    else {
+      let j = 0; while (j < nk - 2 && t > keys[j + 1]) j++;
+      const s = (t - keys[j]) / Math.max(keys[j + 1] - keys[j], 1e-6), a0 = cols[j][3] ?? 1, a1 = cols[j + 1][3] ?? 1;
+      c = [...hsvLerp(cols[j].slice(0, 3), cols[j + 1].slice(0, 3), s), a0 + (a1 - a0) * s];
+    }
+    lut.set([c[0], c[1], c[2], c.length > 3 ? c[3] : 1], i * 4);
+  }
+  return (node._ramp = { ver, lut, end, on: nk ? 1 : 0 });
+}
+
+/* ------------------------------------------------------------ the world */
+let W = null; // the loaded world
+function loadWorld(text) {
+  const p = parseX3D(text);
+  if (W) for (const b of W.gpuBuffers) b.destroy();
+  const w = { ...p, gpuBuffers: [], notes: new Set(), notesShown: new Set(), vpM: new Map(), timeSensors: p.nodes.filter((n) => n.type === 'TimeSensor') };
+  const first = (t) => p.nodes.find((n) => n.type === t) || null;
+  w.viewpoints = p.nodes.filter((n) => n.type === 'Viewpoint');
+  w.viewpoint = w.viewpoints[0] || null; w.background = first('Background'); w.fog = first('Fog'); w.nav = first('NavigationInfo');
+  w.title = first('WorldInfo')?.f.title || '';
+  w.hasSensors = p.nodes.some((n) => n.type === 'TouchSensor');
+  w.clock = (OPTS.clock && p.defs.get(OPTS.clock)) || w.timeSensors.find((t) => t.f.loop) || null;
+  w.psys0 = first('ParticleSystem');
+  w.resScaleNodes = OPTS.resolutionScale ? p.nodes.filter((n) => n.fdefs && n.fdefs[OPTS.resolutionScale.field]) : [];
+  W = w;
+  W.bgVersion = -1;
+  W.lastRows = 0;
+  if (W.viewpoint) W.viewpoint.f.isBound = true;
+  if (W.nav) W.nav.f.isBound = true;
+  collect();
+  resetCamera();
+  buildSceneControls();
+  return W;
+}
+function transformMatrix(f) { // T × C × R × SR × S × −SR × −C (19775-1 10.4.4)
+  let m = m4.translate(f.translation);
+  m = m4.mul(m, m4.translate(f.center));
+  m = m4.mul(m, m4.rot(f.rotation));
+  m = m4.mul(m, m4.rot(f.scaleOrientation));
+  m = m4.mul(m, m4.scale(f.scale));
+  m = m4.mul(m, m4.rot([f.scaleOrientation[0], f.scaleOrientation[1], f.scaleOrientation[2], -f.scaleOrientation[3]]));
+  return m4.mul(m, m4.translate(v3.scale(f.center, -1)));
+}
+function billboardRot(n, M) { // 10.4.1: rotate about axisOfRotation so local Z faces the viewer; (0 0 0) keeps local Y on the viewer's up
+  const inv = m4.invert(M), a = n.f.axisOfRotation;
+  let x, y, z;
+  if (!a[0] && !a[1] && !a[2]) {
+    z = v3.norm(m4.dir(inv, quat.rotate(cam.rot, [0, 0, 1])));
+    const up = v3.norm(m4.dir(inv, quat.rotate(cam.rot, [0, 1, 0])));
+    x = v3.norm(v3.cross(up, z)); y = v3.cross(z, x);
+  } else {
+    y = v3.norm(a);
+    const eye = m4.point(inv, cam.pos);
+    z = v3.sub(eye, v3.scale(y, v3.dot(eye, y)));
+    if (v3.len(z) < 1e-9) return m4.ident();
+    z = v3.norm(z); x = v3.cross(y, z);
+  }
+  const m = m4.ident();
+  m.set([...x, 0, ...y, 0, ...z, 0], 0);
+  return m;
+}
+function collect() {
+  const out = { shapes: [], lights: [], psys: [] };
+  const walk = (nodes, M, sensors) => {
+    const local = nodes.filter((n) => n.type === 'TouchSensor' && n.f.enabled);
+    const sens = local.length ? local : sensors;
+    for (const n of nodes) {
+      switch (n.type) {
+        case 'Transform': if (n.f.visible !== false) walk(n.f.children, m4.mul(M, transformMatrix(n.f)), sens); break;
+        case 'Group': if (n.f.visible !== false) walk(n.f.children, M, sens); break;
+        case 'Switch': { const k = n.f.whichChoice; if (k >= 0 && k < n.f.children.length) walk([n.f.children[k]], M, sens); break; }
+        case 'Billboard': if (n.f.visible !== false) walk(n.f.children, m4.mul(M, billboardRot(n, M)), sens); break;
+        case 'Shape': if (n.f.visible && n.f.geometry) out.shapes.push({ node: n, M, sensors: sens }); break;
+        case 'DirectionalLight': case 'PointLight': case 'SpotLight': if (n.f.on) out.lights.push({ node: n, M }); break;
+        case 'ParticleSystem': if (n.f.visible && n.f.enabled) out.psys.push({ node: n, M }); break;
+        case 'Viewpoint': W.vpM.set(n, M); break;
+      }
+    }
+  };
+  walk(W.children, m4.ident(), []);
+  return out;
+}
+const sameNodes = (a, b) => !!a && !!b && a.length === b.length && a.every((x) => b.includes(x));
+function materialOf(shape) {
+  const mat = shape.f.appearance && shape.f.appearance.f.material;
+  if (!mat) return { kind: 2, emis: [1, 1, 1], base: [1, 1, 1], alpha: 1 };
+  const f = mat.f, alpha = 1 - clamp(f.transparency || 0, 0, 1);
+  if (mat.type === 'PhysicalMaterial') return { kind: 0, base: f.baseColor, emis: f.emissiveColor, metallic: f.metallic, roughness: f.roughness, occ: f.occlusionStrength, alpha };
+  if (mat.type === 'Material') return { kind: 1, base: f.diffuseColor, emis: f.emissiveColor, spec: f.specularColor, shin: f.shininess, amb: f.ambientIntensity, alpha };
+  return { kind: 2, base: [1, 1, 1], emis: f.emissiveColor, alpha };
+}
+function looksOf(shape) {
+  const app = shape.f.appearance;
+  if (app && app.f.shaders.length) {
+    const pc = portFor(app);
+    if (pc) return { kind: 'port', ...pc, app };
+    W.notes.add('A ComposedShader here has no WGSL port: its GLSL is not text this page was ported from, so its Shape is drawn as if it had no shader (31.2.2).');
+  }
+  return materialOf(shape);
+}
+
+/* --------------------------------------------------------------- camera */
+const cam = { pos: [0, 0, 10], rot: [0, 0, 0, 1], center: [0, 0, 0], fov: 0.7854, d0: 10, tr: null };
+const qinv = (q) => [-q[0], -q[1], -q[2], q[3]];
+function viewOf(vp) {
+  const M = (W && W.vpM.get(vp)) || m4.ident();
+  return { pos: m4.point(M, vp.f.position), rot: quat.norm(quat.fromAxisAngle(vp.f.orientation, vp.f.orientation[3])), center: m4.point(M, vp.f.centerOfRotation),
+           fov: vp.f.fieldOfView > 0 ? vp.f.fieldOfView : 0.7854 };
+}
+function setCam(v) { cam.pos = v.pos.slice(); cam.rot = v.rot.slice(); cam.center = v.center.slice(); cam.fov = v.fov; cam.d0 = Math.max(v3.len(v3.sub(v.pos, v.center)), 0.5); }
+function resetCamera() {
+  cam.tr = null;
+  if (W && W.viewpoint) setCam(viewOf(W.viewpoint));
+  else setCam({ pos: [0, 0, 10], rot: [0, 0, 0, 1], center: [0, 0, 0], fov: 0.7854 });
+}
+function camLerp(a, b, s) { // keeps the centre of rotation framed: the view's width at the centre and the lens move in log space
+  const offA = quat.rotate(qinv(a.rot), v3.sub(a.pos, a.center)), offB = quat.rotate(qinv(b.rot), v3.sub(b.pos, b.center));
+  const da = Math.max(v3.len(offA), 1e-3), db = Math.max(v3.len(offB), 1e-3);
+  const ta = Math.tan(a.fov / 2), tb = Math.tan(b.fov / 2);
+  const tf = Math.exp(Math.log(ta) + (Math.log(tb) - Math.log(ta)) * s);
+  const wv = Math.exp(Math.log(da * ta) + (Math.log(db * tb) - Math.log(da * ta)) * s);
+  let u = v3.add(v3.scale(offA, (1 - s) / da), v3.scale(offB, s / db));
+  u = v3.len(u) > 1e-6 ? v3.norm(u) : [0, 0, 1];
+  const rot = quat.norm(quat.slerp(a.rot, b.rot, s));
+  const center = v3.add(a.center, v3.scale(v3.sub(b.center, a.center), s));
+  return { pos: v3.add(center, quat.rotate(rot, v3.scale(u, wv / tf))), rot, center, fov: 2 * Math.atan(tf) };
+}
+function bindViewpoint(vp, on) { // set_bind on a Viewpoint (23.2.2), with the NavigationInfo transition
+  if (vp.type !== 'Viewpoint') return;
+  if (!on) {
+    if (vp !== W.viewpoint) return;
+    const next = W.viewpoints.find((x) => x !== vp);
+    if (!next) return;
+    vp = next;
+  }
+  const prev = W.viewpoint;
+  if (prev && prev !== vp) { prev.f.isBound = false; events.emit(prev, 'isBound', false); }
+  W.viewpoint = vp; vp.f.isBound = true; vp.f.bindTime = events.ts;
+  events.emit(vp, 'isBound', true); events.emit(vp, 'bindTime', events.ts);
+  syncViewButtons();
+  if (!vp.f.jump) return;
+  const to = viewOf(vp), nav = W.nav;
+  const types = (nav ? nav.f.transitionType : ['LINEAR']).map((t) => String(t).toUpperCase());
+  const dur = nav ? nav.f.transitionTime : 1;
+  if (types.includes('TELEPORT') || !(dur > 0) || state.reduced) { setCam(to); cam.tr = null; return; }
+  cam.tr = { from: { pos: cam.pos.slice(), rot: cam.rot.slice(), center: cam.center.slice(), fov: cam.fov }, to, t0: performance.now(), dur: dur * 1000 };
+}
+function stepTransition(now) {
+  const t = cam.tr; if (!t) return;
+  const s = clamp((now - t.t0) / t.dur, 0, 1), e = s * s * (3 - 2 * s);
+  const v = camLerp(t.from, t.to, e);
+  cam.pos = v.pos; cam.rot = v.rot; cam.center = v.center; cam.fov = v.fov;
+  if (s >= 1) { setCam(t.to); cam.tr = null; }
+}
+function userMoved() { if (cam.tr) { cam.d0 = Math.max(v3.len(v3.sub(cam.tr.to.pos, cam.tr.to.center)), 0.5); cam.tr = null; } if (state.tour) setTour(false); }
+function orbit(dx, dy) {
+  userMoved();
+  const k = 0.0055, off = v3.sub(cam.pos, cam.center);
+  const yaw = quat.fromAxisAngle([0, 1, 0], -dx * k);
+  const pitch = quat.fromAxisAngle(quat.rotate(cam.rot, [1, 0, 0]), -dy * k);
+  let r = quat.mul(pitch, yaw), nr = quat.norm(quat.mul(r, cam.rot));
+  if (quat.rotate(nr, [0, 1, 0])[1] < 0.08) { r = yaw; nr = quat.norm(quat.mul(yaw, cam.rot)); }
+  const np = v3.add(cam.center, quat.rotate(r, off));
+  const floor = OPTS.floorY;
+  if (floor != null && np[1] < floor && r !== yaw) { r = yaw; nr = quat.norm(quat.mul(yaw, cam.rot)); cam.pos = v3.add(cam.center, quat.rotate(r, off)); }
+  else cam.pos = np;
+  cam.rot = nr;
+}
+function zoom(f) {
+  userMoved();
+  const off = v3.sub(cam.pos, cam.center), d = v3.len(off), nd = clamp(d * f, cam.d0 * (OPTS.zoomIn ?? 0.16), cam.d0 * (OPTS.zoomOut ?? 7));
+  cam.pos = v3.add(cam.center, v3.scale(off, nd / d));
+  if (OPTS.floorY != null && cam.pos[1] < OPTS.floorY) cam.pos[1] = OPTS.floorY;
+}
+function cameraMatrices(aspect) {
+  const fovy = aspect >= 1 ? cam.fov : 2 * Math.atan(Math.tan(cam.fov / 2) / aspect); // fieldOfView spans the smaller side
+  const view = m4.invert(m4.mul(m4.translate(cam.pos), quat.toMat(cam.rot)));
+  const dist = v3.len(v3.sub(cam.pos, cam.center));
+  const proj = m4.perspective(fovy, aspect, 0.1, Math.max(400, dist * 2 + 100));
+  const viewProj = m4.mul(proj, view);
+  return { view, proj, viewProj, inv: m4.invert(viewProj), right: quat.rotate(cam.rot, [1, 0, 0]), up: quat.rotate(cam.rot, [0, 1, 0]), fwd: quat.rotate(cam.rot, [0, 0, -1]) };
+}
+
+/* --------------------------------------------------------- input, picking */
+const canvas = $('gfx');
+const pending = [];  // sensor and HUD inputs, applied at the next timestamp
+const deferred = []; // inputs that must land one timestamp later (a release after a press)
+let drag = null, hoverSensors = [], lastPickXY = null;
+const pointers = new Map();
+function pickRay(cx, cy) {
+  const r = canvas.getBoundingClientRect();
+  const nx = ((cx - r.left) / r.width) * 2 - 1, ny = 1 - ((cy - r.top) / r.height) * 2;
+  const inv = G.lastInv; if (!inv) return null;
+  const a = m4.vec4(inv, [nx, ny, 0, 1]), b = m4.vec4(inv, [nx, ny, 1, 1]);
+  const o = [a[0] / a[3], a[1] / a[3], a[2] / a[3]], e = [b[0] / b[3], b[1] / b[3], b[2] / b[3]];
+  return { o, d: v3.sub(e, o) };
+}
+function pick(cx, cy) {
+  if (!W || !W.hasSensors) return null;
+  const ray = pickRay(cx, cy); if (!ray || !G.lastShapes) return null;
+  let best = null;
+  for (const s of G.lastShapes) {
+    const mesh = s.mesh; if (!mesh) continue;
+    const inv = m4.invert(s.M), o = m4.point(inv, ray.o), d = m4.dir(inv, ray.d), pk = mesh.pick;
+    const t = pk.kind === 'sphere' ? hitSphere(pk.r, o, d) : pk.kind === 'box' ? hitBox(pk.h, o, d) : pk.kind === 'cyl' ? hitCyl(pk.r, pk.hh, o, d) : hitTris(pk, o, d);
+    if (t !== null && (!best || t < best.t)) best = { t, shape: s, local: v3.add(o, v3.scale(d, t)) };
+  }
+  return best;
+}
+function setHover(sensors) {
+  const was = new Set(hoverSensors), now = new Set(sensors);
+  for (const s of was) if (!now.has(s)) pending.push([s, 'isOver', false]);
+  for (const s of now) if (!was.has(s)) pending.push([s, 'isOver', true]);
+  hoverSensors = sensors;
+  canvas.classList.toggle('over', sensors.length > 0);
+}
+canvas.addEventListener('pointerdown', (e) => {
+  canvas.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 1) {
+    drag = { x: e.clientX, y: e.clientY, moved: 0, sensors: null };
+    const h = pick(e.clientX, e.clientY);
+    if (h && h.shape.sensors.length) { drag.sensors = h.shape.sensors; for (const s of drag.sensors) { pending.push([s, 'isActive', true]); pending.push([s, 'hitPoint_changed', h.local]); } }
+    else canvas.classList.add('drag');
+  } else if (pointers.size === 2) { drag = null; canvas.classList.remove('drag'); }
+});
+canvas.addEventListener('pointermove', (e) => {
+  const prev = pointers.get(e.pointerId);
+  if (pointers.size === 2 && prev) {
+    const [a, b] = [...pointers.values()], d0 = Math.hypot(a.x - b.x, a.y - b.y);
+    prev.x = e.clientX; prev.y = e.clientY;
+    const [c, dd] = [...pointers.values()], d1 = Math.hypot(c.x - dd.x, c.y - dd.y);
+    if (d0 > 0 && d1 > 0) zoom(d0 / d1);
+    return;
+  }
+  if (prev) { prev.x = e.clientX; prev.y = e.clientY; }
+  if (drag) {
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY; drag.moved += Math.abs(dx) + Math.abs(dy);
+    if (!drag.sensors && (dx || dy)) orbit(dx, dy);
+  } else if (e.pointerType === 'mouse') lastPickXY = [e.clientX, e.clientY];
+});
+const endPointer = (e) => {
+  pointers.delete(e.pointerId);
+  if (drag && drag.sensors) { // touchTime: pressed over the geometry, released over the same sensors (20.4.4)
+    const h = pick(e.clientX, e.clientY), still = h && sameNodes(h.shape.sensors, drag.sensors);
+    for (const s of drag.sensors) { if (still && e.type === 'pointerup') pending.push([s, 'touchTime', null]); pending.push([s, 'isActive', false]); }
+  }
+  if (pointers.size === 0) { drag = null; canvas.classList.remove('drag'); }
+};
+canvas.addEventListener('pointerup', endPointer);
+canvas.addEventListener('pointercancel', endPointer);
+canvas.addEventListener('pointerleave', () => { if (!drag) setHover([]); });
+canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoom(Math.exp(clamp(e.deltaY, -200, 200) * 0.0015)); }, { passive: false });
+function touchFirstSensor(label) {
+  const s = W && (W.defs.get('Touch') || W.nodes.find((n) => n.type === 'TouchSensor'));
+  if (!s) return;
+  pending.push([s, 'isActive', true]);
+  deferred.push([s, 'touchTime', null], [s, 'isActive', false]); // the release lands one timestamp after the press
+  logLine(label, '', 'note');
+}
+
+/* ------------------------------------------------------------------ HUD */
+const fmtInt = (n) => n.toLocaleString('en-US');
+const PRANGE = OPTS.particleRange || [10000, 250000];
+const sliderToCount = (v) => { const n = PRANGE[0] * Math.pow(PRANGE[1] / PRANGE[0], v / 1000); return n >= 10000 ? Math.round(n / 1000) * 1000 : n >= 1000 ? Math.round(n / 100) * 100 : Math.round(n / 10) * 10; };
+const countToSlider = (n) => Math.round((1000 * Math.log(n / PRANGE[0])) / Math.log(PRANGE[1] / PRANGE[0]));
+const logEl = $('log');
+let t0Wall = 0;
+function fmtValue(v, type) {
+  if (type === 'SFBool') return v ? 'TRUE' : 'FALSE';
+  if (type === 'SFTime') return `t+${(v - G.timeBase).toFixed(2)}s`;
+  if (Array.isArray(v)) return v.map((x) => (+x).toFixed(2)).join(' ');
+  if (typeof v === 'number') return Number.isInteger(v) ? fmtInt(v) : v.toFixed(3);
+  return String(v);
+}
+function logLine(label, value, kind) {
+  const empty = logEl.querySelector('.empty'); if (empty) empty.remove();
+  const li = document.createElement('li');
+  if (kind === 'err') li.className = 'err';
+  const t = document.createElement('span'); t.className = 't'; t.textContent = ((performance.now() - t0Wall) / 1000).toFixed(2) + 's';
+  const l = document.createElement('span'); l.className = 'l'; l.textContent = label; l.title = label;
+  const v = document.createElement('span'); v.className = 'v'; v.textContent = value;
+  li.append(t, l, v);
+  logEl.prepend(li);
+  while (logEl.children.length > 9) logEl.lastChild.remove();
+}
+events.onLog = (label, v, type) => logLine(label, fmtValue(v, type));
+function reportError(msg) {
+  if (G.errors.length >= 200) return;
+  G.errors.push(msg);
+  console.error(msg);
+  if (G.errors.length <= 20) logLine(msg, '', 'err');
+}
+const state = { paused: false, scale: 1, hidden: false, rate: 1, look: OPTS.look || 'hdr', tour: false, tourNext: 0, forceTick: false, scrubbing: false, reduced: false };
+function setPaused(p) { state.paused = p; $('bPause').textContent = p ? 'Play' : 'Pause'; }
+$('bPause').onclick = () => setPaused(!state.paused);
+$('bPlay').onclick = () => { $('motion').hidden = true; state.reduced = false; setPaused(false); };
+$('bBurst').onclick = () => touchFirstSensor('Button: touch');
+$('bView').onclick = () => resetCamera();
+$('bReload').onclick = () => location.reload();
+function setHidden(h) { state.hidden = h; document.body.classList.toggle('noui', h); $('bShow').hidden = !h; }
+$('bHide').onclick = () => setHidden(true);
+$('bShow').onclick = () => setHidden(false);
+function setLook(l) {
+  state.look = l;
+  const hdr = l === 'hdr';
+  $('bLook').textContent = hdr ? 'HDR + bloom' : 'As authored';
+  $('bLook').setAttribute('aria-pressed', String(hdr));
+  if (W) W.bgVersion = -1;
+}
+$('bLook').onclick = () => { setLook(state.look === 'hdr' ? 'authored' : 'hdr'); logLine(state.look === 'hdr' ? 'Look: HDR, bloom, ACES (renderer setting)' : 'Look: as authored for an 8-bit WebGL canvas', '', 'note'); };
+function setSlow(on) { state.rate = on ? OPTS.slowRate || 0.25 : 1; $('bSlow').setAttribute('aria-pressed', String(on)); $('bSlow').textContent = on ? `Slow ×${state.rate}` : 'Slow motion'; }
+$('bSlow').onclick = () => setSlow(state.rate === 1);
+function setTour(on) {
+  state.tour = on; $('bTour').setAttribute('aria-pressed', String(on)); $('bTour').textContent = on ? 'Touring' : 'Tour';
+  state.tourNext = performance.now() + (OPTS.tourDwell || 12) * 1000;
+}
+$('bTour').onclick = () => { setTour(!state.tour); if (state.tour) nextViewpoint('Tour'); };
+function requestBind(vp, how) { pending.push([vp, 'set_bind', true, `${how} → ${vp.def || 'Viewpoint'}.set_bind`]); }
+function nextViewpoint(how) { const vs = W.viewpoints; if (vs.length < 2) return; requestBind(vs[(vs.indexOf(W.viewpoint) + 1) % vs.length], how); }
+function syncViewButtons() { for (const vp of W ? W.viewpoints : []) if (vp._btn) vp._btn.setAttribute('aria-pressed', String(vp === W.viewpoint)); }
+function buildSceneControls() {
+  const seg = $('vpSeg'); seg.innerHTML = '';
+  const vps = W.viewpoints;
+  vps.forEach((vp, i) => {
+    const b = document.createElement('button'); b.className = 'btn'; b.type = 'button';
+    const d = vp.f.description || vp.def || `View ${i + 1}`;
+    b.textContent = d.length > 14 ? d.split(/\s+/)[0] : d; b.title = `${d} (${i + 1})`;
+    b.onclick = () => { setTour(false); requestBind(vp, 'Button'); };
+    vp._btn = b; seg.append(b);
+  });
+  seg.hidden = vps.length < 2;
+  $('bTour').hidden = vps.length < 2;
+  $('bBurst').hidden = !W.hasSensors;
+  $('bLook').hidden = !W.nodes.some((n) => n.type === 'Appearance' && n.f.shaders.length && portFor(n));
+  $('bSlow').hidden = !OPTS.slowMotion;
+  $('rowTime').hidden = !W.clock;
+  if (OPTS.clockLabel) $('lTime').textContent = OPTS.clockLabel;
+  $('rowPart').hidden = !W.psys0;
+  if (OPTS.particleLabel) $('lPart').textContent = OPTS.particleLabel;
+  syncViewButtons();
+  syncSliderFromScene();
+}
+function toggleSource(show) {
+  const s = $('src');
+  s.hidden = show === undefined ? !s.hidden : !show;
+  if (!s.hidden && !$('srcText').value) $('srcText').value = ORIGINAL_X3D;
+}
+$('bSource').onclick = () => toggleSource();
+$('bSrcClose').onclick = () => toggleSource(false);
+$('bRestore').onclick = () => { $('srcText').value = ORIGINAL_X3D; applySource(); };
+$('bApply').onclick = () => applySource();
+function applySource() {
+  const msg = $('srcMsg');
+  try {
+    loadWorld($('srcText').value);
+    msg.className = 'good';
+    msg.textContent = W.warnings.length ? `Loaded with ${W.warnings.length} note(s); see the event log.` : 'Loaded.';
+    for (const wmsg of W.warnings.slice(0, 6)) logLine(wmsg, '', 'err');
+    describeWorld();
+  } catch (err) { msg.className = 'bad'; msg.textContent = err.message; }
+}
+$('sPart').addEventListener('input', () => {
+  const n = sliderToCount(+$('sPart').value);
+  $('oPart').textContent = fmtInt(n);
+  if (W && W.psys0) pending.push([W.psys0, 'maxParticles', n, 'Slider → ' + (W.psys0.def || 'ParticleSystem') + '.set_maxParticles']);
+});
+function syncSliderFromScene() {
+  const ps = W && W.psys0;
+  if (!ps) return;
+  $('sPart').value = countToSlider(clamp(ps.f.maxParticles, PRANGE[0], PRANGE[1]));
+  $('oPart').textContent = fmtInt(ps.f.maxParticles);
+}
+function seek(ft) { // moves the X3D clock forward to a fraction of the cycle; time never runs backwards
+  const ck = W && W.clock; if (!ck) return;
+  const ci = ck.f.cycleInterval > 0 ? ck.f.cycleInterval : 1;
+  let delta = (((ft - (ck.f.fraction_changed || 0)) % 1) + 1) % 1;
+  if (delta > 0.9995) delta = 0;
+  G.timeBase += delta * ci;
+  state.forceTick = true;
+}
+$('sTime').addEventListener('input', () => seek(+$('sTime').value / 1000));
+$('sTime').addEventListener('pointerdown', () => { state.scrubbing = true; });
+window.addEventListener('pointerup', () => { state.scrubbing = false; });
+$('sScale').addEventListener('change', () => { state.scale = +$('sScale').value; resize(); });
+window.addEventListener('keydown', (e) => {
+  if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (k === ' ') { e.preventDefault(); setPaused(!state.paused); }
+  else if (k === 'b' && W && W.hasSensors) touchFirstSensor('Key B: touch');
+  else if (k === 'h') setHidden(!state.hidden);
+  else if (k === 'r') resetCamera();
+  else if (k === 's') toggleSource();
+  else if (k === 'escape') toggleSource(false);
+  else if (k === 'l' && !$('bLook').hidden) $('bLook').click();
+  else if (k === 'm' && !$('bSlow').hidden) $('bSlow').click();
+  else if (k === 't' && !$('bTour').hidden) $('bTour').click();
+  else if (k === 'c' && W && W.clock) { seek(0); logLine('Key C: the clock to the start of the cycle', '', 'note'); }
+  else if (/^[1-9]$/.test(k) && W && W.viewpoints[+k - 1]) { setTour(false); requestBind(W.viewpoints[+k - 1], `Key ${k}`); }
+  else if ((k === 'pagedown' || k === 'v') && W) { setTour(false); nextViewpoint('Key ' + e.key); }
+});
+function describeWorld() {
+  const count = (t) => W.nodes.filter((n) => n.type === t).length;
+  const interps = W.nodes.filter((n) => INTERPOLATORS.has(n.type)).length;
+  const c = collect();
+  const ported = c.shapes.filter((s) => looksOf(s.node).kind === 'port');
+  const roles = [...new Set(ported.map((s) => looksOf(s.node).port.role))];
+  const ps = W.psys0;
+  const parts = [`${c.shapes.length} shapes on screen` + (ported.length ? ` (${ported.length} drawn by WGSL ports of the scene's own GLSL: ${roles.join(', ')})` : ' (DEF/USE reuses a few templates)')];
+  if (c.lights.length) parts.push(`${c.lights.length} lights`);
+  if (W.viewpoints.length > 1) parts.push(`${W.viewpoints.length} Viewpoints`);
+  parts.push(`${count('TimeSensor')} TimeSensor${count('TimeSensor') === 1 ? '' : 's'}`);
+  if (interps) parts.push(`${interps} interpolators`);
+  if (count('TouchSensor')) parts.push(`${count('TouchSensor')} TouchSensor`);
+  parts.push(`${W.routes.length} ROUTEs`);
+  $('aboutCounts').textContent = `This page read ${fmtInt(W.nodes.length)} X3D nodes from the source: ${parts.join(', ')}` +
+    (ps ? `, and a ParticleSystem of ${fmtInt(ps.f.maxParticles)} ${(OPTS.particleLabel || 'particles').toLowerCase()} simulated in a compute shader.` : '.');
+}
+
+/* --------------------------------------------------------------- frame */
+function resize() { // device pixels, at most 1.5 per CSS pixel and about 2.2 million in all
+  const cw = Math.max(1, canvas.clientWidth), ch = Math.max(1, canvas.clientHeight);
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5, Math.sqrt(2.2e6 / (cw * ch))) * state.scale;
+  const max = G.device ? G.device.limits.maxTextureDimension2D : 8192;
+  const w = clamp(Math.round(cw * dpr), 1, max), h = clamp(Math.round(ch * dpr), 1, max);
+  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+}
+new ResizeObserver(resize).observe(canvas);
+const perf = { acc: 0, n: 0, shown: 0, last: 0 };
+let simTime = 0, lastNow = 0;
+const displayReferred = () => !!OPTS.displayReferred && state.look === 'hdr';
+
+function packFrame(cm, lights, shadow) {
+  const f = G.frameData, u = G.frameU32;
+  f.fill(0);
+  f.set(cm.viewProj, 0); f.set(cm.inv, 16); f.set(shadow ? shadow.vp : m4.ident(), 32);
+  f.set([...cam.pos, simTime % 1000], 48); f.set([...cm.right, canvas.width], 52); f.set([...cm.up, canvas.height], 56);
+  const fog = W.fog;
+  if (fog && fog.f.visibilityRange > 0) { f.set([...fog.f.color.map((x) => (displayReferred() ? srgbToLin(x) : x)), fog.f.visibilityRange], 60); f[64] = /^EXP/i.test(fog.f.fogType) ? 1 : 0; }
+  f[65] = 1.0;                       // ambient from the Background (renderer choice)
+  f[66] = shadow ? shadow.texel : 0;
+  f[67] = simTime;
+  u[68] = lights.length; u[69] = G.frame;
+  for (let k = 0; k < 9; k++) f.set([...(W.sh ? W.sh[k] : [0, 0, 0]), 0], 72 + k * 4);
+  lights.forEach((L, i) => f.set(L, 108 + i * 20));
+  G.device.queue.writeBuffer(G.frameBuf, 0, f);
+}
+function lightRecord(item, shadowOn) {
+  const n = item.node, f = n.f, M = item.M;
+  const kind = n.type === 'DirectionalLight' ? 0 : n.type === 'PointLight' ? 1 : 2;
+  const pos = kind ? m4.point(M, f.location) : [0, 0, 0];
+  const dir = kind !== 1 ? v3.norm(m4.dir(M, f.direction)) : [0, -1, 0];
+  const bw = kind === 2 ? Math.min(f.beamWidth, f.cutOffAngle) : 0;
+  return [...f.color, f.intensity, ...pos, kind, ...dir, f.radius ?? 100, ...(f.attenuation || [1, 0, 0]), shadowOn ? 1 : 0,
+          bw, kind === 2 ? f.cutOffAngle : 0, clamp(f.shadowIntensity ?? 1, 0, 1), f.ambientIntensity || 0];
+}
+function flushNotes() { for (const n of W.notes) if (!W.notesShown.has(n)) { W.notesShown.add(n); logLine(n, '', 'err'); } }
+
+function frame(nowMs) {
+  if (G.lost) return;
+  requestAnimationFrame(frame);
+  const realDt = lastNow ? (nowMs - lastNow) / 1000 : 0;
+  lastNow = nowMs;
+  if (realDt > 0 && realDt < 1) { perf.acc += realDt; perf.n++; }
+  const dt = state.paused ? 0 : Math.min(realDt, 0.1) * state.rate;
+  simTime += dt;
+  const ts = G.timeBase + simTime;
+  const d = G.device;
+  if (state.tour && !state.paused && nowMs >= state.tourNext) { nextViewpoint('Tour'); state.tourNext = nowMs + (OPTS.tourDwell || 12) * 1000; }
+
+  // 1. one X3D timestamp: inputs, sensors, ROUTE cascade
+  events.begin(ts);
+  const lastFrac = W.clock ? W.clock.f.fraction_changed : 0;
+  for (const [n, field, v, label] of pending.splice(0)) {
+    if (label) logLine(label, field === 'set_bind' ? 'TRUE' : fmtValue(v, fieldType(n, field)));
+    if (n.type === 'TouchSensor') { if (!n.f.enabled) continue; const val = field === 'touchTime' ? ts : v; n.f[field] = val; events.emit(n, field, val); }
+    else receive(n, field, v);
+  }
+  pending.push(...deferred.splice(0));
+  events.drain();
+  if (!state.paused || state.forceTick) for (const s of W.timeSensors) tickTimeSensor(s, ts);
+  state.forceTick = false;
+  events.drain();
+  G.evAcc = (G.evAcc || 0) + events.count;
+  if (W.clock && OPTS.cycleNote && W.clock.f.fraction_changed < lastFrac - 0.5) logLine(OPTS.cycleNote, '', 'note');
+
+  // 2. the camera: a viewpoint transition in progress, then hover picking
+  stepTransition(nowMs);
+  if (lastPickXY && !drag) { const h = pick(lastPickXY[0], lastPickXY[1]); setHover(h ? h.shape.sensors : []); lastPickXY = null; }
+
+  // 3. gather what to draw
+  const c = collect();
+  const lin = displayReferred();
+  if (W.bgVersion === -1 || (W.background && (W.background.version || 0) !== W.bgVersion) || W.bgLin !== lin) {
+    const baked = bakeBackground(W.background ? W.background.f : { skyColor: [[0, 0, 0]], skyAngle: [], groundColor: [], groundAngle: [] }, lin);
+    d.queue.writeBuffer(G.bgBuf, 0, baked.lut); W.sh = baked.sh; W.bgVersion = W.background ? (W.background.version || 0) : 0; W.bgLin = lin;
+  }
+  resize();
+  ensureTargets(canvas.width, canvas.height);
+  if (OPTS.resolutionScale && W.resScaleNodes.length && W.lastRows !== canvas.height) { // the scene's own convention: 1 = this many rows
+    W.lastRows = canvas.height;
+    const v = Math.round((canvas.height / OPTS.resolutionScale.rows) * 1000) / 1000;
+    W.resScaleNodes.forEach((n, i) => pending.push([n, OPTS.resolutionScale.field, v, i ? null : `Page → ${OPTS.resolutionScale.field} on ${W.resScaleNodes.length} shaders (rows / ${OPTS.resolutionScale.rows})`]));
+  }
+  const cm = cameraMatrices(canvas.width / canvas.height);
+  G.lastInv = cm.inv;
+
+  const shapes = [], ports = [];
+  for (const s of c.shapes) {
+    const lk = looksOf(s.node);
+    if (lk.kind === 'port') { const sg = shaderGeo(s.node.f.geometry, lk.port); if (sg) ports.push({ ...s, lk, sg }); continue; }
+    const mesh = meshFor(s.node.f.geometry);
+    if (mesh) shapes.push({ ...s, mesh, mat: lk });
+  }
+  const opaque = shapes.filter((s) => s.mat.alpha >= 0.999), trans = shapes.filter((s) => s.mat.alpha < 0.999);
+  trans.sort((a, b) => v3.len(v3.sub(m4.point(b.M, [0, 0, 0]), cam.pos)) - v3.len(v3.sub(m4.point(a.M, [0, 0, 0]), cam.pos)));
+  const ordered = opaque.concat(trans);
+  G.lastShapes = ordered;
+  ensureDrawCapacity(Math.max(1, ordered.length));
+  const D = G.drawData;
+  ordered.forEach((s, i) => {
+    const o = i * DRAW_FLOATS, inv = m4.invert(s.M), m = s.mat;
+    D.set(s.M, o);
+    D.set([inv[0], inv[4], inv[8], 0, inv[1], inv[5], inv[9], 0, inv[2], inv[6], inv[10], 0], o + 16);
+    D.set([...m.base, m.alpha, ...m.emis, m.kind, m.metallic ?? 0, m.roughness ?? 1, m.occ ?? 1, m.amb ?? 0, ...(m.spec || [0, 0, 0]), m.shin ?? 0.2,
+           s.node.f.geometry.f.solid === false ? 1 : 0, 0, 0, 0], o + 28);
+  });
+  if (ordered.length) d.queue.writeBuffer(G.drawBuf, 0, D, 0, ordered.length * DRAW_FLOATS);
+
+  // lights: the first DirectionalLight with shadows TRUE gets the shadow map; no NavigationInfo means a headlight (23.4.4)
+  const headlight = W.nav ? W.nav.f.headlight : true;
+  const lightItems = c.lights.slice(0, MAX_LIGHTS - (headlight ? 1 : 0));
+  const sl = lightItems.find((l) => l.node.type === 'DirectionalLight' && l.node.f.shadows);
+  let shadow = null;
+  if (sl) {
+    const casters = ordered.filter((s) => s.node.f.castShadow !== false);
+    let lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
+    for (const s of casters) {
+      const pk = s.mesh.pick;
+      const box = pk.kind === 'tri' ? [pk.lo, pk.hi] : (() => { const e = pk.kind === 'sphere' ? [pk.r, pk.r, pk.r] : pk.kind === 'box' ? pk.h : [pk.r, pk.hh, pk.r]; return [e.map((x) => -x), e]; })();
+      for (const sx of [0, 1]) for (const sy of [0, 1]) for (const sz of [0, 1]) { const p = m4.point(s.M, [box[sx][0], box[sy][1], box[sz][2]]); lo = lo.map((x, k) => Math.min(x, p[k])); hi = hi.map((x, k) => Math.max(x, p[k])); }
+    }
+    if (casters.length) {
+      const ctr = lo.map((x, k) => (x + hi[k]) / 2), rad = v3.len(v3.sub(hi, lo)) / 2 * 1.15 + 0.5;
+      const L = v3.norm(m4.dir(sl.M, sl.node.f.direction));
+      const eye = v3.sub(ctr, v3.scale(L, rad * 3));
+      const view = m4.lookAt(eye, ctr, Math.abs(L[1]) > 0.98 ? [0, 0, 1] : [0, 1, 0]);
+      shadow = { vp: m4.mul(m4.ortho(-rad, rad, -rad, rad, rad * 0.5, rad * 5.5), view), texel: (2 * rad) / SHADOW_SIZE, casters, light: sl };
+    }
+  }
+  const lights = lightItems.map((l) => lightRecord(l, shadow && l === shadow.light));
+  if (headlight) lights.push([1, 1, 1, 1, 0, 0, 0, 0, ...cm.fwd, 0, 1, 0, 0, 0, 0, 0, 1, 0]);
+  packFrame(cm, lights, shadow);
+
+  // particle systems
+  const psys = [], rows = canvas.height / 900;
+  for (const p of c.psys) {
+    const n = p.node, f = n.f, em = f.emitter;
+    if (!em || (em.type !== 'PointEmitter' && em.type !== 'ConeEmitter')) { W.notes.add(`ParticleSystem ${n.def || ''}: only PointEmitter and ConeEmitter are simulated here; it was skipped.`); continue; }
+    const want = clamp(f.maxParticles | 0, 0, G.particleCap);
+    const gp = particleGPU(n, want);
+    if (want > gp.count) seedParticles(gp, gp.count, want, f.particleLifetime);
+    gp.count = want;
+    const mass = em.f.mass;
+    let acc = [0, 0, 0], wind = [0, 0, 0], turb = 0, gust = 0, wspeed = 0;
+    if (mass > 0) for (const ph of f.physics) { // zero mass: the physics models have no effect (40.4.4)
+      if (!ph.f.enabled) continue;
+      if (ph.type === 'ForcePhysicsModel') acc = v3.add(acc, v3.scale(ph.f.force, 1 / mass));
+      if (ph.type === 'WindPhysicsModel') { // pressure = 10^(2 log10 speed) * 0.64615 Pa, force = pressure * surfaceArea
+        const pr = ph.f.speed * ph.f.speed * 0.64615, a = (pr * em.f.surfaceArea) / mass;
+        wind = v3.add(wind, v3.scale(v3.norm(ph.f.direction), a)); turb = Math.max(turb, clamp(ph.f.turbulence, 0, 1)); gust = Math.max(gust, ph.f.gustiness); wspeed = Math.max(wspeed, ph.f.speed);
+      }
+    }
+    const gt = String(f.geometryType).toUpperCase(), geomType = gt === 'LINE' ? 1 : 0;
+    if (gt !== 'SPRITE' && gt !== 'LINE' && gt !== 'POINT') W.notes.add(`ParticleSystem geometryType ${gt} is drawn here as camera-facing sprites.`);
+    const cosMax = em.type === 'ConeEmitter' ? Math.cos(clamp(em.f.angle, 0, PI))
+      : (!em.f.direction[0] && !em.f.direction[1] && !em.f.direction[2]) ? -2 : Math.cos(clamp(em.f.variation, 0, 1) * PI * 0.5); // PointEmitter spread: renderer choice
+    const pm = f.appearance && f.appearance.f.material, tint = pm ? (pm.f.emissiveColor || [1, 1, 1]) : [1, 1, 1];
+    const rp = bakeRamp(n);
+    const u = gp.data; u.fill(0);
+    u.set(p.M, 0);
+    u.set([...em.f.position, em.f.on ? em.f.speed : 0], 16);
+    u.set([...em.f.direction, cosMax], 20);
+    u.set([...acc, dt], 24);
+    u.set([...wind, turb], 28);
+    u.set([f.particleLifetime, clamp(f.lifetimeVariation, 0, 1), simTime % 1000, gust], 32);
+    u.set([f.particleSize[0], f.particleSize[1], lin ? OPTS.partGainHDR ?? 1.25 : OPTS.partGain ?? 1.25, Math.max(em.f.variation, 0)], 36);
+    gp.u32[40] = G.frame; gp.u32[41] = gp.count; gp.u32[42] = f.createParticles && em.f.on ? 1 : 0; gp.u32[43] = geomType;
+    u.set([...tint, lin ? 1 : 0], 44);
+    u.set([rp.end, rp.on, wspeed, (OPTS.lineWidthPx ?? 1.2) * Math.max(rows, 0.5)], 48);
+    u.set(rp.lut, 52);
+    d.queue.writeBuffer(gp.ubuf, 0, u);
+    psys.push(gp);
+  }
+
+  // ComposedShader ports: one uniform block per drawn Shape
+  ports.forEach((s, i) => {
+    const slot = portSlot(i), su = slot.data, mv = m4.mul(cm.view, s.M), inv = m4.invert(mv);
+    su.fill(0);
+    su.set(mv, 0); su.set(cm.proj, 16);
+    su.set([inv[0], inv[4], inv[8], 0, inv[1], inv[5], inv[9], 0, inv[2], inv[6], inv[10], 0], 32);
+    su.set([0, 0, canvas.width, canvas.height], 44);
+    s.lk.port.fields.forEach(([name, dflt], k) => { const v = s.lk.cs.f[name]; su[48 + k] = typeof v === 'number' ? v : dflt; });
+    su.set([state.look === 'hdr' ? 1 : 0, OPTS.hdrGain ?? 1, OPTS.plainGain ?? 1, 0], 52);
+    d.queue.writeBuffer(slot.buf, 0, su);
+    s.slot = slot;
+    s.pp = portPipeline(s.lk.port, s.lk.app, s.node.f.geometry.f.solid !== false);
+  });
+  const portOpaque = ports.filter((s) => !s.pp.blended), portBlend = ports.filter((s) => s.pp.blended);
+
+  const enc = d.createCommandEncoder();
+  if (dt > 0 && psys.length) {
+    const cp = enc.beginComputePass({ label: 'particles' });
+    cp.setPipeline(G.simPipe);
+    for (const gp of psys) if (gp.count) { cp.setBindGroup(0, gp.simBG); cp.dispatchWorkgroups(Math.ceil(gp.count / 64)); }
+    cp.end();
+  }
+  const drawShape = (pass, s, i) => { pass.setVertexBuffer(0, s.mesh.vb); pass.setIndexBuffer(s.mesh.ib, 'uint32'); pass.drawIndexed(s.mesh.count, 1, 0, 0, i); };
+  if (shadow) {
+    const sp = enc.beginRenderPass({ label: 'shadow', colorAttachments: [], depthStencilAttachment: { view: G.shadowView, depthClearValue: 1, depthLoadOp: 'clear', depthStoreOp: 'store' } });
+    sp.setPipeline(G.shadowPipe); sp.setBindGroup(0, G.shadowBG);
+    ordered.forEach((s, i) => { if (s.node.f.castShadow !== false) drawShape(sp, s, i); });
+    sp.end();
+  }
+  const mp = enc.beginRenderPass({ label: 'scene',
+    colorAttachments: [{ view: G.msaaView, resolveTarget: G.hdrView, loadOp: 'clear', clearValue: { r: 0, g: 0, b: 0, a: 1 }, storeOp: 'discard' }],
+    depthStencilAttachment: { view: G.depthView, depthClearValue: 1, depthLoadOp: 'clear', depthStoreOp: 'discard' } });
+  mp.setBindGroup(0, G.frameBG);
+  mp.setPipeline(G.bgPipe); mp.draw(3);
+  let tris = 0, current = null;
+  const use = (key) => { if (current !== key) { mp.setPipeline(G.meshPipes[key]); current = key; } };
+  const drawPorts = (list) => {
+    let drew = false;
+    for (const s of list) {
+      if (!s.pp.pipe) continue;
+      mp.setPipeline(s.pp.pipe); mp.setBindGroup(0, s.slot.bg);
+      const bm = s.lk.app.f.blendMode; if (bm) mp.setBlendConstant(bm.f.blendColor);
+      s.sg.vbs.forEach((b, k) => mp.setVertexBuffer(k, b));
+      mp.setIndexBuffer(s.sg.ib, 'uint32'); mp.drawIndexed(s.sg.count);
+      tris += s.sg.count / 3; drew = true;
+    }
+    if (drew) { mp.setBindGroup(0, G.frameBG); current = null; }
+  };
+  opaque.forEach((s, i) => { use(`${s.node.f.geometry.f.solid !== false}|false`); drawShape(mp, s, i); tris += s.mesh.count / 3; });
+  drawPorts(portOpaque);
+  if (psys.length) {
+    mp.setPipeline(G.partPipe); current = null;
+    for (const gp of psys) if (gp.count) { mp.setBindGroup(1, gp.drawBG); mp.draw(6, gp.count); }
+  }
+  drawPorts(portBlend);
+  trans.forEach((s, j) => { use(`${s.node.f.geometry.f.solid !== false}|true`); drawShape(mp, s, opaque.length + j); tris += s.mesh.count / 3; });
+  mp.end();
+  const authored = state.look !== 'hdr' && ports.length > 0;
+  if (!authored) for (const p of G.post) {
+    const pp = enc.beginRenderPass({ colorAttachments: [{ view: p.target, loadOp: p.load, clearValue: { r: 0, g: 0, b: 0, a: 1 }, storeOp: 'store' }] });
+    pp.setPipeline(p.pipe); pp.setBindGroup(0, p.bg); pp.draw(3); pp.end();
+  }
+  d.queue.writeBuffer(G.compBuf, 16, new Float32Array([OPTS.exposure ?? 1.0, ((OPTS.bloom ?? 0.12) / Math.max(1, G.levels.length)) * 3, G.frame & 0xffff, authored ? 1 : ({ neutral: 2, exp: 3 })[OPTS.tonemap] || 0]));
+  const cpass = enc.beginRenderPass({ colorAttachments: [{ view: G.context.getCurrentTexture().createView(), loadOp: 'clear', clearValue: { r: 0, g: 0, b: 0, a: 1 }, storeOp: 'store' }] });
+  cpass.setPipeline(G.compPipe); cpass.setBindGroup(0, G.compBG); cpass.draw(3); cpass.end();
+  d.queue.submit([enc.finish()]);
+  G.frame++;
+  if (W.notes.size !== W.notesShown.size) flushNotes();
+
+  if (W.clock && !state.scrubbing) { const fr = W.clock.f.fraction_changed || 0, ci = W.clock.f.cycleInterval; $('sTime').value = Math.round(fr * 1000); $('oTime').textContent = `${(fr * ci).toFixed(1)} s`; }
+  if (nowMs - perf.last > 400) {
+    perf.last = nowMs;
+    const ms = perf.n ? (perf.acc / perf.n) * 1000 : 0; perf.acc = 0; perf.n = 0;
+    const evps = G.evAcc || 0; G.evAcc = 0;
+    const live = psys.reduce((a, g) => a + g.count, 0);
+    $('nums').innerHTML = '';
+    const rowsOut = [['shapes', fmtInt(ordered.length + ports.length)], ['triangles', fmtInt(Math.round(tris))]];
+    if (ports.length) rowsOut.push(['programs', String(new Set(ports.map((s) => s.lk.port)).size)]); else rowsOut.push(['lights', String(lights.length)]);
+    rowsOut.push([(OPTS.particleLabel || 'particles').toLowerCase(), fmtInt(live)], ['pixels', `${canvas.width}×${canvas.height}`], ['frame', ms ? ms.toFixed(1) + ' ms' : '–']);
+    for (const [k, v] of rowsOut) { const s = document.createElement('span'), b = document.createElement('b'); b.textContent = k; s.append(b, v); $('nums').append(s); }
+    $('evRate').textContent = `${fmtInt(Math.round(evps / 0.4))}/s through ROUTEs`;
+    window.__demo.stats = { shapes: ordered.length + ports.length, ports: ports.length, portsReady: ports.filter((s) => s.pp.pipe).length, tris: Math.round(tris), lights: lights.length, particles: live, w: canvas.width, h: canvas.height, frame: G.frame, look: state.look };
+  }
+}
+
+/* --------------------------------------------------------------- start */
+window.__demo = { ready: false, errors: G.errors, get world() { return W; }, burst: () => touchFirstSensor('Test: touch'), stats: null, G, cam,
+  seek: (f) => seek(f), bind: (i) => requestBind(W.viewpoints[i], 'Test'), setLook: (l) => setLook(l), setPaused: (p) => setPaused(p), state, OPTS,
+  project: (pt) => { const c = m4.vec4(m4.invert(G.lastInv), [...pt, 1]), r = canvas.getBoundingClientRect(); return [r.left + (c[0] / c[3] * 0.5 + 0.5) * r.width, r.top + (0.5 - c[1] / c[3] * 0.5) * r.height]; } };
+(async () => {
+  t0Wall = performance.now();
+  G.timeBase = Date.now() / 1000;
+  setLook(state.look);
+  try {
+    loadWorld(ORIGINAL_X3D);
+    $('srcText').value = ORIGINAL_X3D;
+    for (const wmsg of W.warnings) reportError(wmsg);
+  } catch (err) { reportError('X3D: ' + err.message); }
+  try {
+    await initGPU(canvas);
+  } catch (err) {
+    const why = err instanceof NoGPU ? err.message : 'WebGPU setup failed: ' + err.message;
+    $('fbWhy').textContent = why; $('fallback').hidden = false;
+    $('gpuDot').className = 'dot no'; $('gpuLine').textContent = 'No WebGPU here';
+    window.__demo.fallback = why;
+    return;
+  }
+  const info = G.info, soft = !!(G.adapter.isFallbackAdapter ?? info.isFallbackAdapter ?? false);
+  $('gpuDot').className = soft ? 'dot no' : 'dot ok';
+  $('gpuLine').textContent = `${[info.vendor, info.architecture].filter(Boolean).join(' · ') || 'adapter'} · ${soft ? 'software fallback' : 'hardware'} · core WebGPU only`;
+  if (W) {
+    describeWorld();
+    const pc = new Set(); for (const n of W.nodes) if (n.type === 'Appearance' && n.f.shaders.length) { const r = portFor(n); if (r) pc.add(r.port.name); }
+    if (pc.size) logLine(`${pc.size} GLSL programs matched their WGSL ports: ${[...pc].join(', ')}`, '', 'note');
+  }
+  if (OPTS.startAtCycle && W && W.clock) { seek(0); logLine('Page: the clock moved forward to the start of a cycle', '', 'note'); }
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { state.reduced = true; setPaused(true); $('motion').hidden = false; }
+  else if (OPTS.tourOnStart && W && W.viewpoints.length > 1) setTour(true);
+  window.__demo.ready = true;
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body>
+</html>
