@@ -21,6 +21,7 @@ No X3D runtime ships a WebGPU renderer as of 2026-11-06. X_ITE, the reference br
 | [bench/receipt.schema.json](bench/receipt.schema.json) | JSON Schema (draft 2020-12) for one benchmark run receipt, `x3d.bench/1`; data only |
 | [bench/webgpu-probe.html](bench/webgpu-probe.html) | gate G1 probe: one self-contained page that asks for a WebGPU adapter and lists its features and limits; no timings, no network |
 | [bench/receipts/](bench/receipts/) | probe and run receipts; `g1-probe-2026-11-07.json` is the owner machine's G1 result |
+| [demo/](demo/) | **First light**: one self-contained page that parses an X3D 4.0 scene, runs its events and draws it with WebGPU (no libraries, no network); see [demo/README.md](demo/README.md) |
 | [HYPER.md](HYPER.md) | 17 far-out ideas ranked, each with an X3D node sketch and a first experiment; the top three can start with no paid services |
 | [SOURCES.md](SOURCES.md) | Every source, how it was read (opened, measured, local, search only, notes) and its as-of date, grouped by file |
 
