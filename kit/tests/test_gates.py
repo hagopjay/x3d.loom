@@ -121,6 +121,20 @@ TRAP_CASES = {  # rule: (passing XML, failing XML). Synthetic fixtures.
                                 "<X3D><Scene><Shape><MetadataSet name='row'/></Shape></Scene></X3D>"),
     "glsl-reserved-active": ("<X3D><Scene><ShaderPart>data:x-shader/x-fragment,in float sounding;void main(){}</ShaderPart></Scene></X3D>",
                              "<X3D><Scene><ShaderPart>data:x-shader/x-fragment,in float active;void main(){}</ShaderPart></Scene></X3D>"),
+    # 7 Nov, two renderers on one file. Passing sides are the repairs that were shipped.
+    "color-keys-sparse": ("<X3D><Scene><ColorInterpolator key='0 0.5 1' keyValue='0.1 0.1 0.6 0.35 0.1 0.45 0.6 0.1 0.3'/></Scene></X3D>",
+                          "<X3D><Scene><ColorInterpolator key='0 1' keyValue='0.1 0.1 0.6 0.9 0.5 0.1'/></Scene></X3D>"),
+    "xite-light-zero-pop": ("<X3D><Scene><ScalarInterpolator DEF='F' key='0 1' keyValue='1 0'/><PointLight DEF='L' ambientIntensity='0.3'/>"
+                            "<ROUTE fromNode='F' fromField='value_changed' toNode='L' toField='set_intensity'/>"
+                            "<ROUTE fromNode='F' fromField='value_changed' toNode='L' toField='set_ambientIntensity'/></Scene></X3D>",
+                            "<X3D><Scene><ScalarInterpolator DEF='F' key='0 1' keyValue='1 0'/><PointLight DEF='L' ambientIntensity='0.3'/>"
+                            "<ROUTE fromNode='F' fromField='value_changed' toNode='L' toField='set_intensity'/></Scene></X3D>"),
+    "xite-transparent-shadow": ("<X3D><Scene><DirectionalLight shadows='true'/><Shape castShadow='false'><Appearance><Material transparency='1'/></Appearance><Box/></Shape></Scene></X3D>",
+                                "<X3D><Scene><DirectionalLight shadows='true'/><Shape><Appearance><Material transparency='1'/></Appearance><Box/></Shape></Scene></X3D>"),
+    "loop-seam": ("<X3D><Scene><TimeSensor DEF='T' loop='true'/><OrientationInterpolator DEF='O' key='0 0.5 1' keyValue='0 1 0 0 0 1 0 3.14 1 0 0 0'/>"
+                  "<ROUTE fromNode='T' fromField='fraction_changed' toNode='O' toField='set_fraction'/></Scene></X3D>",
+                  "<X3D><Scene><TimeSensor DEF='T' loop='true'/><PositionInterpolator DEF='P' key='0 1' keyValue='0 0 0 0 1 0'/>"
+                  "<ROUTE fromNode='T' fromField='fraction_changed' toNode='P' toField='set_fraction'/></Scene></X3D>"),
 }
 
 
@@ -157,6 +171,7 @@ PAGE_CASES = {
     "loadurl-unbudgeted": CLEAN_PAGE.replace(_LOAD, "  await B.load" + "URL(u);\n"),
     "js-syntax": CLEAN_PAGE.replace("console.error(e); } });", "console.error(e); } }););"),
     "sim-nonportable-math": "// loom" + ":sim\n" + CLEAN_PAGE.replace("const t = B.getCurrentTime();", "const t = Math." + "sin(B.getCurrentTime());"),
+    "anchor-download-hosted": CLEAN_PAGE.replace("const t = B.getCurrentTime();", "const t = B.getCurrentTime();\n  const a = document.createElement('a'); a.href = url; a." + "download = 'still.png'; a.click();"),
 }
 
 

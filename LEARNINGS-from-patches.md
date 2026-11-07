@@ -117,3 +117,48 @@ Cathedral staging, the brass palette, the flower resonators, the eight-shot edit
 - That any rule works on the family corpus (798 to 883 files in x3d.onto): none was run there.
 - Anything about real GPUs, physical A/V latency, flash safety or human taste: all are explicitly unmeasured in every project.
 - Authenticity: every receipt is unsigned byte integrity, and every project says so.
+
+## 9. Two rebuilds by another model, and a shader study's notes (7 Nov)
+
+The user handed another model two of our private study scenes (a tomb moment and a face relief drawn from a cloth image); it rebuilt each as a cinematic three.js page and shipped each as a zip plus a git patch [RB1, RB2]. A third study, a palette-cycling cloth-image shader, arrived as notes only [PCS]. The scenes themselves stay private; what follows is what they teach the Loom. Grades: C = re-checked here (instrument named); as reported = the rebuild's own record, not re-run.
+
+### 9.1 The method: review a rebuild like a fold-back
+
+1. **Source survived?** RB2 kept the face scene byte for byte (sha256 matches ours, C) and kept our page unchanged as `proof.html` (our published page plus the host's wrapper, C). RB1 also kept our tomb scene byte for byte (same sha256 as our v1, C), so every change it shows lives in its renderer.
+2. **Master or copy?** Both rebuilds draw from a converted copy (`data/scene.json` + a binary), not from the X3D. RB2 checks its copy against the X3D with 66 interval checks and corruption controls (as reported); RB1's copy held geometry the scene did not. Law 38.
+3. **Every critique tested.** RB1: five held (a cut at the loop, clipped cloth, a night too dark, a stone texture too small, cracks), two fell (its "compact binary" is 50 % larger than the gzipped X3D, C; and our own "X_ITE shared-Coordinate bug", retracted on a minimal repro, C). RB2's nine findings: the scene claims were re-read from the X3D and hold (12 of 12 interpolators close their loop, the cloth is two flat quads, one 96 × 128 relief shared by three fills through USE, 2,563 points, 26 ROUTEs; C).
+4. **Everything added checked against the scene.** RB1 added a moon inside a sealed tomb and miswired the reveal; RB2 adds only decoration it labels as decoration.
+5. **Under the host's policy.** RB1's page broke there; both rebuilds' 4K buttons save nothing in a hosting sandbox (C, page trap anchor-download-hosted on both).
+
+### 9.2 What was adopted
+
+| From | Enhancement | Where it went |
+|---|---|---|
+| RB1 critiques | Loop fade with every reset in the dark; clipping fixed in the light values; denser sky keys; fades that drive ambientIntensity | The tomb generator (C); traps loop-seam, color-keys-sparse, xite-light-zero-pop, xite-transparent-shadow |
+| RB1 merge | One X3D master read by two views: a three.js reader of nodes and ROUTEs (48 of 48) and X_ITE as reference | Law 38 |
+| RB2 | Generated fill marked ART in exported pixels and filenames; a source-1× switch beside the 1.6× display depth; start paused on an inspectable frame; reduced motion freezes decoration | Law 39; a candidate for the face study's next version |
+| RB2 | Occlusion passes exclude translucent shapes, points, lines and decoration | Failure mode 119 |
+| RB2 | Depth targets recreated and checked on every size change; export projection set before resizing; size restored in finally | Failure mode 120 |
+| RB2 | A loop that already closes is left alone: one study's fix is not applied to another unmeasured | Law 30 (an instance, L) |
+| PCS | A silent fallback was reviewed as the real thing | Law 40 |
+| PCS | Code nobody could compile is labelled "reviewed, not built" | Law 34 (reproduction level), L |
+
+### 9.3 The rules, and what they found
+
+Five rules joined the kit, each with a passing and a failing fixture in `kit/tests/test_gates.py`, normal and `-O` (C). Run record: `runs/rebuilds-20261107/report.json`.
+
+| Rule | Witness | Tomb v1 | Tomb v3 (merged) | Face scene | 66 repo scenes |
+|---|---|---|---|---|---|
+| color-keys-sparse | traps | 1 | 0 | 0 | 0 |
+| xite-light-zero-pop | traps | 4 | 0 | 0 | 0 |
+| xite-transparent-shadow | traps | 0 | 0 | 0 | 0 |
+| loop-seam | traps | 3 | 1 (the ray reset, inside the fade) | 0 | 0 |
+| anchor-download-hosted | pagetraps | both rebuilds' save buttons; x3d.platformer's replay save (works on its own site; a warning) | | | |
+
+The repo's scenes have no ColorInterpolator and few faded lights, so the 0 there is no false hit, not a strong negative (24 loop, 6 shadowed, 5 with ambientIntensity).
+
+### 9.4 What these rebuilds do not prove
+
+- Nothing was checked on a real GPU; every browser number is SwiftShader.
+- RB2's browser record and its patch's clean apply are its own (as reported); neither was re-run here.
+- PCS's science and platform claims are model output (S) except the image-distance fit and the reflectivity numbers, which match our own earlier reading of the source.
