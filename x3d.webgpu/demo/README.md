@@ -4,12 +4,13 @@ Date 2026-11-07. Status: **working demos, not the runtime the spec describes.** 
 
 | file | what it is |
 |---|---|
-| [collider.html](collider.html) | **the showpiece**: the look v3 collider dijet event, its five GLSL shaders ported to WGSL, with an A/B between the authored look and HDR + bloom |
+| [collider-v2.html](collider-v2.html) | **the showpiece, v2**: the Collider with an outside pass folded in (studio-lit glass, flash diffraction, grades, quality tiers, captioned PNG export); see [Collider v2](#collider-v2) |
+| [collider.html](collider.html) | the Collider V1: the look v3 collider dijet event, its five GLSL shaders ported to WGSL, with an A/B between the authored look and HDR + bloom |
 | [collider.x3d](collider.x3d) | the scene it embeds: 2,195,797 bytes, sha256 `59dfeb32e9efefebfcae2c8a716e7805e3858a06688cf74f47688345719ca400`, the same bytes as `docs/scenes/dijet.xml` in `hagopjay/dirac` and as `runs/hep-demo-v3-20261106/scenes.sha256` |
 | [first-light-v1.1.html](first-light-v1.1.html) | First Light on the v1.1 core (the click fix and the review fixes below) |
 | [first-light.html](first-light.html) | First Light V1, kept unchanged |
 | [first-light.x3d](first-light.x3d) | the First Light scene (both First Light pages embed this text) |
-| [src/](src/) | `viewer.tpl.html` (the shared page) and `build.py`; `python3 -I src/build.py` rebuilds `collider.html` and `first-light-v1.1.html` byte for byte |
+| [src/](src/) | `viewer.tpl.html` and `build.py` rebuild `collider.html` and `first-light-v1.1.html` byte for byte; `viewer-v2.tpl.html` and `build-v2.py` rebuild `collider-v2.html` byte for byte |
 
 ## How to open them
 
@@ -43,6 +44,26 @@ Edit any GLSL in the source panel and the key no longer matches: that shape is d
 
 - **As authored**: each shader ends with its own tone curve (`1 - exp(-c * k)`) and writes straight to the screen, clamped to 0..1, no bloom. This matches an 8-bit WebGL canvas; by eye it matches the X_ITE frame `runs/hep-demo-v3-20261106/frames/look-v3_dijet_endon.jpg`.
 - **HDR + bloom** (the default): the closing curve is dropped, the colour before it is decoded to linear light and extended above 1, added up in a 16-bit float target, bloomed, and tone-mapped per channel with `1 - exp(-c)` at exposure 1.3 before sRGB. The Background and Fog colours are linearised to match.
+
+## Collider v2
+
+An outside pass rebuilt the Collider page on our runtime. Its review is in [../../runs/webgpu-collider-rebuild-20261107/REBUILD-REVIEW.md](../../runs/webgpu-collider-rebuild-20261107/REBUILD-REVIEW.md). v2 keeps the scene byte for byte and "As authored" unchanged (its frames differ from V1 only in the spark burst), and takes from the pass:
+
+- **Glass that reads as glass**, in the cinematic look only: studio reflections, an edge coat and an event light on the detector shells (at half the pass's strength, so the shells do not out-shine the tracks), a six-blade diffraction flare and corona on the flash, a veil in the haze. These are art the scene does not hold, and the page says so.
+- **Filtered fine detail**: shell stripes, neutral-track dashes and track heads are filtered with screen-space derivatives, because MSAA does not filter shader patterns.
+- **Bloom that does not change with size**: V1 divided the bloom by the number of bloom levels, which depends on the canvas size; v2 weights each coarser level by 0.72 and takes the bloom setting as a direct gain.
+- **Grades and quality**: Luminance (the default: exponential curve at exposure 1.35, bloom 0.45, no glare), Radiant (adds a horizontal glare) and Precision (Neutral curve, little bloom), with a Light and lens panel; quality tiers Balanced (2.2 MP, the default), High (4.2 MP) and Ultra (8.3 MP).
+- **A clean still**: 2K or 4K PNG read back from an offscreen GPU target (rows padded to 256 bytes, BGRA swapped), with a caption burned in ("a generated event · artistic render") and the word render in the filename. It opens in a preview with a Save link, because a page inside a frame may have its downloads blocked.
+- **The first frame is the hero**: the page binds the three-quarter Viewpoint through `set_bind` and opens on a developed moment.
+
+What we kept from V1 over the pass, and why: the exponential tone curve, because the pass's Neutral curve at exposure 1.65 turned the hot calorimeter towers pink-white (13.9 % near-white lit pixels in the crown against 1.2 % in V1), and the crown is meant to read blue to amber to red; no glare by default, because it costs 14 extra bloom reads per pixel on an integrated GPU; Balanced quality and 2K export by default; the line that nothing is recorded or sent.
+
+Learnings carried forward:
+1. In this scene almost every visible pixel comes from the five shader ports, so the look is made in the ports and the composite, not in the mesh PBR.
+2. A second look must leave the first bit for bit alone: every addition is gated on the look uniform, and the authored frames were diffed.
+3. A tone curve can hide meaning: check a colour-coded quantity (here the energy crown) after every change to the curve, not just the overall beauty.
+4. An export button inside a hosted frame needs a visible preview and a link the viewer clicks; a scripted download click can be ignored without a word.
+5. Defaults belong to the weakest target GPU; the expensive options stay one click away.
 
 ## Renderer choices beyond the spec
 
