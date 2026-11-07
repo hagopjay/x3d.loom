@@ -10,17 +10,7 @@
     document.body.appendChild(d);
   };
   try {
-    // the plain requestAdapter() answers on machines where the high-performance hint does not (see x3d.loom PR 14): Babylon asks with its own options, so try the plain call first
-    const gpu = navigator.gpu;
-    if (gpu && !gpu.__plainFirst) {
-      const orig = gpu.requestAdapter.bind(gpu);
-      gpu.requestAdapter = async (opts) => {
-        let a = null;
-        for (const o of [undefined, opts, { powerPreference: 'low-power' }, { forceFallbackAdapter: true }]) { try { a = await orig(o); } catch (e) { a = null; } if (a) { window.__adapter = a; window.__adapterVia = o === undefined ? 'default' : JSON.stringify(o); break; } }
-        return a;
-      };
-      gpu.__plainFirst = true;
-    }
+    // adapter retry: shared/adapter.js wraps navigator.gpu.requestAdapter before the body starts
     const canvas = document.createElement('canvas');
     canvas.style.cssText = 'width:100%;height:100%;display:block;touch-action:none';
     host.appendChild(canvas);
@@ -32,6 +22,16 @@
     body.noNav = true;
     host.browser = X3DSAI.B;
     window.__driftWebGPU = { body, babylon: BABYLON.Engine.Version, adapter: body.adapterInfo, via: window.__adapterVia };
+    window.__timingHooks = {
+      name: 'KANSEI', schema: 'x3d.kansei.timing/1', engine: () => body.engine, babylon: BABYLON.Engine.Version, adapter: body.adapterInfo,
+      inside: 'the game simulation and the Babylon draw', adaptive: true,
+      scene() {
+        const k = window.KANSEI && window.KANSEI.state ? window.KANSEI.state() : {};
+        return { key: [k.screen || null, k.track || null, k.car || null], label: [k.screen, k.track, k.car, k.camera, k.sel && k.sel.quality],
+          fields: { screen: k.screen || null, track: k.track || null, car: k.car || null, camera: k.camera || null, quality: k.sel ? k.sel.quality : null } };
+      },
+    };
+    if (window.__timingPlace) window.__timingPlace();
     customElements.define('x3d-canvas', class extends HTMLElement {});
   } catch (e) {
     console.error(e); window.__driftWebGPUError = String(e && e.message || e);
