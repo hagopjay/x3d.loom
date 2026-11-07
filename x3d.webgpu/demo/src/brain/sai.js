@@ -68,6 +68,19 @@
   }
   function unwrap(p) { return (p && rawOf.get(p)) || p; }
 
+  /* a field whose value can be large (vertex attributes, index lists, uniform arrays): reading does not copy, setValue takes a typed array as is */
+  function fieldView(raw, prop, type) {
+    return {
+      getTypeName() { return type; },
+      get length() { return raw.f[prop].length; },
+      getValue() { return raw.f[prop]; },
+      setValue(v) {
+        const out = isTyped(v) ? (type === 'MFInt32' ? Int32Array.from(v) : Float32Array.from(v)) : (type === 'MFInt32' ? Int32Array.from(Array.from(v, Number)) : Float32Array.from(Array.from(v, Number)));
+        R.receive(raw, prop, out);
+      },
+    };
+  }
+
   const METHODS = new Set(['getNodeName', 'getNodeTypeName', 'addFieldCallback', 'removeFieldCallback', 'getTypeName', 'getType', 'getName', 'dispose', 'valueOf', 'toString']);
   function wrap(raw) {
     let p = wrappers.get(raw); if (p) return p;
@@ -79,12 +92,14 @@
           case 'getNodeName': return () => raw.def || '';
           case 'getNodeTypeName': return () => raw.type;
           case 'getTypeName': return () => 'SFNode';
+          case 'getFieldDefinitions': return () => Object.entries(R.fdefsOf(raw)).map(([name, d]) => ({ name, dataType: d[0], accessType: d[1], getName() { return name; } }));
           case 'addFieldCallback': return (key, field, fn) => { ((raw.cbs ||= {})[field] ||= new Map()).set(key, fn); };
           case 'removeFieldCallback': return (field, key) => { raw.cbs && raw.cbs[field] && raw.cbs[field].delete(key); };
           case 'valueOf': case 'toString': return () => `[${raw.type}${raw.def ? ' ' + raw.def : ''}]`;
         }
         const fd = R.fdefsOf(raw)[prop];
         if (!fd) return undefined;
+        if (fd[0] === 'MFVec4f' || (R.saiLazy && R.saiLazy.has(raw.type + '.' + prop))) return fieldView(raw, prop, fd[0]);
         const v = raw.f[prop];
         if (fd[0] === 'MFNode') return mfNode(v, raw);
         return toSAI(fd[0], v);
@@ -129,6 +144,11 @@
     if (rs) for (const r of rs) { R.events.queue.push(r, value); }
     R.events.drain();
   }
+  /* callbacks only (an output event raised inside the reader, such as a TimeSensor's elapsedTime): no route work, the reader's own emit does that */
+  R.hooks.cb = (node, field, value) => {
+    const cb = node.cbs && node.cbs[field];
+    if (cb) { const fd = R.fdefsOf(node)[field], sv = toSAI(fd ? fd[0] : '', value); for (const fn of cb.values()) { try { fn(sv); } catch (e) { console.error(e); } } }
+  };
   R.hooks.fire = fire;
   R.hooks.changed = (node, field) => { if (BODY) BODY.changed(node, field); const cb = node.cbs && node.cbs[field]; if (cb) { const fd = R.fdefsOf(node)[field], sv = toSAI(fd ? fd[0] : '', node.f[field]); for (const fn of cb.values()) { try { fn(sv); } catch (e) { console.error(e); } } } };
   R.hooks.bind = (node, on) => { if (BODY) BODY.bindViewpoint(node, on); };
@@ -174,7 +194,9 @@
   const B = {
     version: 'Babylon ' + (typeof BABYLON !== 'undefined' ? BABYLON.Engine.Version : '?') + ' WebGPU',
     currentScene: null,
-    setBrowserOption(k, v) { if (k === 'ContentScale' && BODY) { BODY.engine.setHardwareScalingLevel(1 / Math.max(0.25, v)); } B._opts = B._opts || {}; B._opts[k] = v; },
+    setBrowserOption(k, v) { if (k === 'ContentScale' && BODY) { BODY.engine.setHardwareScalingLevel(1 / Math.max(0.25, v)); } if (BODY && BODY.browserOption) BODY.browserOption(k, v); B._opts = B._opts || {}; B._opts[k] = v; },
+    getBrowserOption(k) { return (B._opts || {})[k]; },
+    getContext() { return { canvas: BODY.canvas }; },
     addBrowserCallback() {},
     baseURL: '',
     getComponent() { return {}; },
@@ -221,7 +243,7 @@
 
   const X3D = {
     SFColor, SFVec2f, SFVec3f, SFVec4f, SFRotation, SFColorRGBA, MFColor, MFColorRGBA, MFVec3f, MFVec2f, MFFloat, MFInt32, MFString, MFNode, X3DConstants: {},
-    getBrowser(sel) { const c = document.querySelector(sel); return c && c.__browser ? c.__browser : null; },
+    getBrowser(sel) { const c = typeof sel === 'string' ? document.querySelector(sel) : sel; return c && c.__browser ? c.__browser : null; },
   };
   window.X3DSAI = { X3D, B, wrap, unwrap, setBody(b) { BODY = b; const c = b.canvas; c.__browser = B; c.browser = B; }, vfsResolve, vfsBytes };
   window.X3D = X3D;
