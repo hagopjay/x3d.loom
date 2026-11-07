@@ -55,7 +55,7 @@
       case 'MFColorRGBA': return Array.from(v, (c) => [c.r, c.g, c.b, c.a]);
       case 'MFVec2f': return Array.from(v, (c) => [c.x, c.y]);
       case 'SFRotation': return Array.isArray(v) ? v : [v.x, v.y, v.z, v.angle];
-      case 'MFColor': case 'MFVec3f': { const f = flat3(v); if (isTyped(cur)) return Float32Array.from(f); const o = []; for (let i = 0; i + 2 < f.length; i += 3) o.push([f[i], f[i + 1], f[i + 2]]); return o; }
+      case 'MFColor': case 'MFVec3f': { const f = isTyped(v) ? v : flat3(v); if (isTyped(cur)) return Float32Array.from(f); const o = []; for (let i = 0; i + 2 < f.length; i += 3) o.push([f[i], f[i + 1], f[i + 2]]); return o; }
       case 'MFString': return Array.from(v, String);
       case 'MFFloat': case 'MFInt32': case 'MFTime': return isTyped(cur) ? (cur instanceof Int32Array ? Int32Array.from(v) : Float32Array.from(v)) : Array.from(v);
       case 'SFNode': return v ? unwrap(v) : null;
@@ -65,6 +65,22 @@
       case 'SFString': return String(v);
       default: return v;
     }
+  }
+  /* an MF field read from a node answers like X_ITE's field object: the list itself plus setValue / getValue (a flat typed array is accepted, as X_ITE does) */
+  function mfField(raw, prop, type, list) {
+    return new Proxy(list, {
+      get(l, k) {
+        if (k === 'setValue') return (v) => { R.receive(raw, prop, coerceFlat(raw, prop, fromSAI(type, v, raw.f[prop]))); };
+        if (k === 'getValue') return () => toSAI(type, raw.f[prop]);
+        const x = l[k]; return typeof x === 'function' ? x.bind(l) : x;
+      },
+    });
+  }
+  /* a field the body reads as a flat typed array (R.FLAT) is kept flat whichever way the page set it: an empty Coordinate parsed from the file starts as a plain list */
+  function coerceFlat(raw, prop, r) {
+    const T = R.FLAT && R.FLAT[raw.type + '.' + prop];
+    if (!T || r instanceof T) return r;
+    return T.from(Array.isArray(r) && Array.isArray(r[0]) ? r.flat() : r);
   }
   function unwrap(p) { return (p && rawOf.get(p)) || p; }
 
@@ -87,13 +103,14 @@
         if (!fd) return undefined;
         const v = raw.f[prop];
         if (fd[0] === 'MFNode') return mfNode(v, raw);
+        if (/^MF/.test(fd[0])) return mfField(raw, prop, fd[0], toSAI(fd[0], v));
         return toSAI(fd[0], v);
       },
       set(_t, prop, value) {
         const fd = R.fdefsOf(raw)[prop];
         if (!fd) throw new Error(`${raw.type} has no field ${prop}`);
         if (prop === 'children' && fd[0] === 'MFNode') { raw.f.children = Array.from(value, unwrap); raw.version = (raw.version || 0) + 1; R.hooks.changed(raw, 'children'); return true; }
-        const v = fromSAI(fd[0], value, raw.f[prop]);
+        const v = coerceFlat(raw, prop, fromSAI(fd[0], value, raw.f[prop]));
         R.receive(raw, prop, v);
         return true;
       },
@@ -130,6 +147,13 @@
     R.events.drain();
   }
   R.hooks.fire = fire;
+  /* an output the body itself produces (a TimeSensor's fraction_changed, time, isActive) also reaches the page's addFieldCallback listeners, once per timestamp */
+  const emitBase = R.events.emit;
+  R.events.emit = function (node, field, value) {
+    const cb = node.cbs && node.cbs[field];
+    if (cb && cb.size && !this.firedOut.has(node.id + '.' + field)) { const fd = R.fdefsOf(node)[field], sv = toSAI(fd ? fd[0] : '', value); for (const fn of cb.values()) { try { fn(sv); } catch (e) { console.error(e); } } }
+    return emitBase.call(this, node, field, value);
+  };
   R.hooks.changed = (node, field) => { if (BODY) BODY.changed(node, field); const cb = node.cbs && node.cbs[field]; if (cb) { const fd = R.fdefsOf(node)[field], sv = toSAI(fd ? fd[0] : '', node.f[field]); for (const fn of cb.values()) { try { fn(sv); } catch (e) { console.error(e); } } } };
   R.hooks.bind = (node, on) => { if (BODY) BODY.bindViewpoint(node, on); };
 
@@ -144,7 +168,7 @@
       createNode(type) {
         const def = R.DEFS[type]; if (!def) throw new Error(`Unknown node type ${type}`);
         const n = { type, def: null, f: {}, id: 1e6 + (makeScene.k = (makeScene.k || 0) + 1), out: null };
-        for (const [name, [t, , d]] of Object.entries(def)) n.f[name] = t === 'MFNode' ? [] : R.clone(d);
+        for (const [name, [t, , d]] of Object.entries(def)) { const T = R.FLAT && R.FLAT[type + '.' + name]; n.f[name] = T ? new T(0) : t === 'MFNode' ? [] : R.clone(d); }
         world.nodes.push(n);
         return wrap(n);
       },
@@ -190,6 +214,7 @@
       BODY.timeSensors = world.nodes.filter((n) => n.type === 'TimeSensor');
       BODY.setWorld(world, sc._base || location.href, (u, base) => vfsResolve(new URL(u, base).href));
     },
+    getCurrentTime() { return (performance.timeOrigin + performance.now()) / 1000; },   // the clock the body's TimeSensors run on
     getCurrentFrameRate() { return BODY ? BODY.fps() : 0; },
     nextFrame() { return new Promise((res) => { (BODY.frameWaiters ||= []).push(res); }); },
     getActiveLayer() { return { getViewpoint: () => ({ get description() { return BODY.bound ? BODY.bound.f.description : ''; }, getUserPosition: () => BODY.userPosition() }) }; },

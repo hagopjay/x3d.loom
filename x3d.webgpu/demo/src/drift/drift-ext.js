@@ -501,7 +501,7 @@ B_.emitterChanged = function (em, field) {
 B_.psAnchorMoved = function () {};
 
 /* the game owns the camera: no orbit, pan, zoom or picking from the pointer */
-for (const k of ['orbit', 'pan', 'zoom', 'userMoved', 'queuePick', 'click']) B_[k] = function () {};
+if (!window.__keepNav) for (const k of ['orbit', 'pan', 'zoom', 'userMoved', 'queuePick', 'click']) B_[k] = function () {};   // a page that is not a game (Chirp) keeps the EXAMINE navigation
 
 /* a far ridge sits 3 to 4 km out: the page's NavigationInfo says visibilityLimit 9000 */
 const _applyCamera = B_.applyCamera;

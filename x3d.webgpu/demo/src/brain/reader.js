@@ -375,6 +375,6 @@ for (const t of ['Appearance','Shape','Group','Switch','Transform','Billboard','
 Object.assign(DEFS.Shape, {});
 const R_NOTE = new Set(['MetadataString']);
 
-R.DEFS = DEFS; R.parseX3D = parseX3D; R.events = events; R.receive = receive; R.tickTimeSensor = tickTimeSensor; R.fieldType = fieldType; R.fdefsOf = fdefsOf; R.clone = clone;
+R.FLAT = FLAT; R.DEFS = DEFS; R.parseX3D = parseX3D; R.events = events; R.receive = receive; R.tickTimeSensor = tickTimeSensor; R.fieldType = fieldType; R.fdefsOf = fdefsOf; R.clone = clone;
 R.v3 = v3; R.quat = quat; R.clamp = clamp; R.INTERPOLATORS = INTERPOLATORS; R.mfString = mfString; R.PARSE = PARSE; R.CONTAINER = CONTAINER;
 R.resolveField = resolveField; R.FLAT = FLAT;

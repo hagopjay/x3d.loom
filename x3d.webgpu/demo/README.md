@@ -190,3 +190,8 @@ Still not implemented: ClassicVRML and JSON encodings, PROTO, Inline, Script, IM
 Tested in headless Chromium on a software Vulkan adapter (SwiftShader) for correctness only. Collider: zero WebGPU validation errors and zero WGSL compile errors, all five ports compile and draw, all three viewpoints in both looks, the tour, slow motion, the scrubber and the spark slider work, a drag stops the tour, a GLSL edit falls back as described, a malformed source is refused, a phone-width layout has no horizontal overflow, and a browser without WebGPU gets the message instead of a broken page. First Light v1.1: the touch cascade drives the emitter speed, light and glow, including on a press held across frames.
 
 Frame rates from that adapter mean nothing and are not quoted. Nothing is timed for a benchmark. The pages show a frame interval on the viewer's own screen and record or send nothing; gate G0 (timing consent) is still open.
+
+
+## Chirp on Babylon WebGPU (port #4)
+
+`python3 -I src/build-chirp.py --study <the Chirp study folder> --out OUT` draws the Chirp study (two black holes spiralling in, heard) with Babylon 9.32.0 WebGPU through the same reader and SAI shim as the brain and KANSEI ports. The study's `src/app.js` is copied byte for byte; `index.html` changes only in its script tags. Source files: `src/chirp/chirp-pre.js`, `chirp-look.js`, `chirp-boot.js`. The look (HDR bloom, a WGSL gravitational-lens post-process, an unlit glowing wave sheet, glowing trails) is optional: a pill on the page, or `?look=0`, gives the As-authored picture. Receipt, run scripts and the parity-gap log: `runs/webgpu-chirp-20261107/` (RECEIPT.md, GAPS.md). No timings are claimed.
