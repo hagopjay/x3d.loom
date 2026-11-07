@@ -217,7 +217,7 @@ class Body {
   /* geometry nodes of the same raw node share one Babylon.Geometry */
   babylonGeometry(g, wantColor) {
     const d = this.geometryData(g);
-    const key = g.id + (wantColor ? 'c' : '');
+    const key = g.id + (wantColor ? 'c' : 'n');   // 'n', not the bare id: the bare id is where geometryData keeps its data, and a rebuild read the Babylon geometry back as data (0 vertices)
     const c = this.geoCache.get(key);
     if (c && c.ver === d.ver) return c.geo;
     if (c) c.geo.dispose();
@@ -480,7 +480,7 @@ class Body {
     for (const x of this.world.nodes) {
       if ((x.type === 'IndexedTriangleSet' || x.type === 'IndexedFaceSet' || x.type === 'IndexedLineSet') && (x.f.color === n || x.f.coord === n || x.f.normal === n)) {
         this.geoCache.delete(x.id);
-        for (const key of [x.id, x.id + 'c']) { const c = this.geoCache.get(key); if (c) { c.geo.dispose(); this.geoCache.delete(key); } }
+        for (const key of [x.id, x.id + 'c', x.id + 'n']) { const c = this.geoCache.get(key); if (c) { c.geo.dispose(); this.geoCache.delete(key); } }
         for (const r of this.rec.values()) if (r.node && r.node.type === 'Shape' && r.node.f.geometry === x) { if (r.tn) { this.rebuildShapeIn(r); } }
       }
     }

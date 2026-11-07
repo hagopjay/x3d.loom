@@ -127,6 +127,7 @@ const DEFS = {
                 elapsedTime: ['SFTime', OUT, 0], isPaused: ['SFBool', OUT, false] },
   TouchSensor: { enabled: ['SFBool', IO, true], description: ['SFString', IO, ''], touchTime: ['SFTime', OUT, 0], isActive: ['SFBool', OUT, false],
                  isOver: ['SFBool', OUT, false], hitPoint_changed: ['SFVec3f', OUT, [0, 0, 0]], hitNormal_changed: ['SFVec3f', OUT, [0, 0, 1]] },
+  IntegerSequencer: interp('Int32'),
   ScalarInterpolator: interp('Float'), PositionInterpolator: interp('Vec3f'), OrientationInterpolator: interp('Rotation'), ColorInterpolator: interp('Color'),
   ParticleSystem: { enabled: ['SFBool', IO, true], createParticles: ['SFBool', IO, true], geometryType: ['SFString', INIT, 'QUAD'], maxParticles: ['SFInt32', IO, 200],
                     particleLifetime: ['SFFloat', IO, 5], lifetimeVariation: ['SFFloat', IO, 0.25], particleSize: ['SFVec2f', IO, [0.02, 0.02]],
@@ -153,7 +154,7 @@ function flatNums(s, T) { const t = String(s).trim(); if (!t) return new T(0); c
 const ACCESS = { initializeOnly: INIT, inputOnly: IN, outputOnly: OUT, inputOutput: IO };
 const fdefsOf = (n) => n.fdefs || DEFS[n.type];
 const fieldType = (n, f) => (fdefsOf(n)[f] || ['SFString'])[0];
-const INTERPOLATORS = new Set(['ScalarInterpolator', 'PositionInterpolator', 'OrientationInterpolator', 'ColorInterpolator']);
+const INTERPOLATORS = new Set(['IntegerSequencer', 'ScalarInterpolator', 'PositionInterpolator', 'OrientationInterpolator', 'ColorInterpolator']);
 const SKIP_ATTR = new Set(['DEF', 'USE', 'containerField', 'class', 'id', 'style']);
 const clone = (v) => (Array.isArray(v) ? v.map(clone) : v);
 
@@ -307,6 +308,7 @@ function interpolate(n, frac) {
   else if (frac >= k[N - 1]) i = j = N - 1;
   else { while (i < N - 1 && frac >= k[i + 1]) i++; j = Math.min(i + 1, N - 1); const span = k[j] - k[i]; s = span > 0 ? (frac - k[i]) / span : 0; }
   const a = kv[i], b = kv[j];
+  if (n.type === 'IntegerSequencer') return kv[frac >= k[N - 1] ? N - 1 : Math.max(0, i)];   // a sequencer steps: the value of the last key at or before the fraction
   switch (n.type) {
     case 'ScalarInterpolator': return a + (b - a) * s;
     case 'PositionInterpolator': return [0, 1, 2].map((c) => a[c] + (b[c] - a[c]) * s);

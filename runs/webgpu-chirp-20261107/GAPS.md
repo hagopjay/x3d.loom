@@ -12,4 +12,4 @@ Owner rule (7 Nov 22:12Z): no pixel perfection; log the gaps. Nothing below was 
 | G6 | Timing | no Timing button on this page yet; no real-GPU numbers (the owner runs his own); G0 consent was given for ports in his typed words, so the button can be added from `drift-timing.js` | L |
 | G7 | Lens strength | a readable, capped thin-lens look, not a physical ray trace; the second image of each hole it draws is a look, not data | C |
 | G8 | Safari, Firefox, mobile | not tested | S |
-| G9 | Shared-file edits | brain/sai.js, brain/reader.js, drift/drift-ext.js changed (additive). KANSEI smoke: pass. Brain smoke: pass (9 states, 0 errors). KANSEI and brain PSNR receipts were not re-run | C |
+| G9 | Shared-file edits | brain/sai.js, brain/reader.js, drift/drift-ext.js changed (additive), plus brain/body.js and drift/drift-ext.js for the geometry cache key fix found on the Electron Cloud port (RECEIPT of `runs/webgpu-cloud-20261107/`, F5). After all of them: Chirp play pass (browser witness pass, Watch advances), KANSEI smoke pass, Neural Canvas 9 states 0 errors. KANSEI, brain and Chirp PSNR receipts were not re-run | C |
