@@ -70,6 +70,48 @@ The glass is drawn in two passes (back faces, then front) with the blend the sha
 
 `Sound` and `AudioClip` (the repo build of the page has its music switched off), `Layout` and `ScreenGroup` (the page uses HTML for its HUD), a Transform's shear (a `scaleOrientation` with non-uniform scale is decomposed to translation, rotation and scale; the page logs it), bloom and HDR grading (this is the "as authored" path; the look is X_ITE's with KHR_PBR_Neutral tone mapping), and anything timed: gate G0 (timing on the owner's machine) is still open, so no frame rate is quoted. The receipt has the numbers against X_ITE: [runs/webgpu-brain-20261107/RECEIPT.md](../../runs/webgpu-brain-20261107/RECEIPT.md).
 
+## KANSEI on Babylon WebGPU (the drift port)
+
+Port #3 from the port map. The KANSEI drift game ([x3d.drift](../../x3d.drift/README.md)) with its own engine, HUD, five circuits, four cars, garage and tapes, drawn by [Babylon.js](https://www.babylonjs.com) 9.32.0 in WebGPU mode instead of X_ITE. Same arrangement as the brain port: **our X3D reader is the brain, Babylon is the body**, and an SAI shim answers `X3D.getBrowser()`. The game's `engine/*.js` and `main.js` run as they are; the builder makes two text edits in the COPY (the version label in `main.js`, the script tag in `index.html`). The simulation (`kansei-engine/4`, 120 Hz, deterministic) never touches the renderer: a tape replayed to the same frame gives the same sim hash in both pages (6 of 6 views, C), so the two pictures are comparable frame for frame.
+
+```sh
+python3 -I x3d.webgpu/demo/src/build-drift.py --game x3d.drift --out /tmp/kansei-webgpu
+python3 -m http.server -d /tmp/kansei-webgpu 8000      # open http://localhost:8000/index.html
+```
+
+The output folder (about 14 MB with levels, cars, textures and tapes) is the game's page, so it is not committed. Babylon loads from the CDN at the exact version with a subresource-integrity hash (`--babylon FILE` points at a local copy instead). Chrome or Edge 113 or later, Safari 26, Firefox 141 or later. If `requestAdapter()` answers nothing the page says so and names the Windows fix (`chrome://flags/#enable-unsafe-webgpu`, see [the playbook](../BABYLON-BRIDGE-PLAYBOOK.md) 4.1); it asks four ways before giving up (plain, the caller's options, low-power, fallback). URL knobs for looks: `?tone=aces|neutral`, `?ls=` light scale (default 2.2), `?env=`, `?shadows=0`, `?revz=0`, plus the game's own `?tape=`, `?frame=`, `?cam=`, `?hud=0`, `?cscale=`.
+
+| file | role |
+|---|---|
+| [src/drift/drift-ext.js](src/drift/drift-ext.js) | what KANSEI needs beyond the brain body: reader tables (ElevationGrid, TextureProperties, TextureTransform, PolylineEmitter, Metadata*, Background `*Url`, alphaMode, normalScale, UnlitMaterial emissive texture), per-file base URLs and node-id offsets, IndexedFaceSet/TriangleSet normals with crease angle, Spot and Point lights with shadows (Poisson), linear fog, a six-face sky, alpha MASK and BLEND, a `Cone` primitive, Babylon particle systems from ParticleSystem and PolylineEmitter, a camera whose far plane follows `visibilityLimit` |
+| [src/drift/drift-boot.js](src/drift/drift-boot.js) | start-up: adapter retry, the Babylon body, the SAI shim, then `<x3d-canvas>` is defined so the game's own boot goes on |
+| [src/drift/drift-timing.js](src/drift/drift-timing.js) | the opt-in Timing button (below) |
+| [src/build-drift.py](src/build-drift.py) | the page builder: copies the game, concatenates the parts into `bundle.js`, edits only the two lines above |
+| [src/brain/sai.js](src/brain/sai.js) (additive), [src/brain/body.js](src/brain/body.js) (one fix) | the shim gained `createX3DFromURL`, `createX3DFromString(xml, baseUrl)`, `replaceWorld`, `addRootNode`, `loadComponents`, the colour-RGBA and multi-field types; `body.js` read `face[0]` where it needed `face[0][0]`, so every IndexedFaceSet without a Normal node had zero normals (the brain page is unaffected where its meshes carry their own normals) |
+
+The scenes are 29 node types in 10 files (no shaders, so no hash-matched ports; this page has no GLSL to port), plus what the effects code creates at run time (Transform, Switch, Shape, Cone, UnlitMaterial, SpotLight, Viewpoint, ParticleSystem, PolylineEmitter).
+
+### The Timing button (opt-in, off by default)
+
+A small "Timing" pill at the lower left. Nothing runs until it is pressed. Then, for about 22 s (2 s warm-up thrown away, 20 s measured), it records the interval between `requestAnimationFrame` callbacks of whatever the page is doing, and shows p50, p95, p99, max, mean fps, the 1% low and the count of frames over 33 and 50 ms. It keeps the numbers on the page: no fetch, no beacon, nothing is sent. "Copy numbers" copies a JSON block that also holds the GPU adapter (vendor, architecture, description, fallback flag, timestamp-query support), the browser string, cores, power state, the circuit, car, camera and quality tier, the canvas size and render scale, and the build id of the bundle, so a figure is never separated from the machine and the code that made it. A software adapter (SwiftShader, WARP, llvmpipe, or a fallback adapter) is labelled "these numbers do not count"; a hidden tab or fewer than 30 frames is labelled not valid. `?timing=0` hides the button; `?tsec=N` and `?twarm=N` change the windows. What it is not: it is the displayed-frame interval (a 60 Hz screen caps it near 16.7 ms) with the game physics and the Babylon draw inside it, not GPU-only time. [runs/webgpu-drift-20261107/test-timing.js](../../runs/webgpu-drift-20261107/test-timing.js) checks the statistics and the warnings with a stub DOM.
+
+### What cost time (read before the next port)
+
+1. **Babylon mixes fog in after tone mapping and sRGB encoding; X_ITE mixes it in linear.** Give Babylon the display-space fog colour (tone-mapped, encoded) or the whole distance goes orange and dark. With the fix the close view of Kessel Pass (kp-2600) reached about 26 dB.
+2. **The sky box is tone mapped too, and X_ITE tone maps its sky as well**, so leave the scene's ACES on it. A cube texture drawn on a canvas must be sRGB-encoded and every face must be the same size (a 4 x 4 solid fallback beside 256 x 256 faces fails with "Error while trying to load image").
+3. **A sky box 1 km out hides the far ridges.** Put it in rendering group 0 with depth write off, everything else in group 1, set `camera.maxZ` from `NavigationInfo.visibilityLimit` (9000 here) and turn on `useReverseDepthBuffer`.
+4. **A node that is not a Shape child is dropped without a word.** `ElevationGrid` had no entry in the reader's container table, so the terrain vanished.
+5. **Node ids collide across separately parsed files** (the car, the level, the garage), which corrupted the texture cache and the route table until each parse got an id offset.
+6. **`VertexData.ComputeNormals` needs `{ useRightHandedSystem: true }`**, or the road and ground are lit from inside.
+7. **Babylon's PCF shadows drew nothing visible here; Poisson did.** Every shape receives shadows, only `castShadow=true` shapes cast.
+8. **Appearance `alphaMode` (MASK with a cutoff) was ignored**, so the pines were opaque boxes. `refreshPBR` resets the transparency mode: apply it again after.
+9. **The plain `requestAdapter()` first** (as in PR 14) and a visible message when none answers, because the owner's Windows GPU is blocklisted until a flag is set.
+10. **The test page and the frame queue** are as in the brain port: stub the swap chain and slow `requestAnimationFrame` to 1.2 s. The game then advances its own capped 0.25 s of sim per frame, so a drive takes few frames but long wall time.
+
+### Not done, and known deviations
+
+Same body, so Sound/AudioClip, Layout/ScreenGroup and Transform shear are still not in the Babylon body. **The game's sound is its own WebAudio synthesiser and it runs unchanged** (the page reports the audio context as running; it was not rebuilt on Babylon's audio engine and nobody has listened to it in this port). Visual deviations from X_ITE, none tuned away: the normal maps are drawn at 0.6 of their `normalScale` (full strength scored lower), the tail-light emissive texture shows stripes, the far ridges are browner than X_ITE's paler grey, the sky clouds are a little stronger. No timings were taken here: this machine has only a software adapter.
+
 ## The Collider
 
 Two protons meet at the centre every 12 seconds. Tracks grow out from the vertex and curl in the field (colour is the particle kind, brightness and width the momentum), the calorimeter crown lights up with the energy each tower caught, and a burst of sparks leaves the vertex. The event is generated and drawn as a demo, not a measurement.

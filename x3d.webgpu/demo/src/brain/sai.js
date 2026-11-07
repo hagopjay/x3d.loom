@@ -5,6 +5,7 @@
 
 (function () {
   class SFColor { constructor(r = 0, g = 0, b = 0) { this.r = r; this.g = g; this.b = b; } getTypeName() { return 'SFColor'; } toString() { return `${this.r} ${this.g} ${this.b}`; } }
+  class SFColorRGBA { constructor(r = 0, g = 0, b = 0, a = 1) { this.r = r; this.g = g; this.b = b; this.a = a; } getTypeName() { return 'SFColorRGBA'; } }
   class SFVec2f { constructor(x = 0, y = 0) { this.x = x; this.y = y; } getTypeName() { return 'SFVec2f'; } toString() { return `${this.x} ${this.y}`; } }
   class SFVec3f { constructor(x = 0, y = 0, z = 0) { this.x = x; this.y = y; this.z = z; } getTypeName() { return 'SFVec3f'; } toString() { return `${this.x} ${this.y} ${this.z}`; } }
   class SFVec4f { constructor(x = 0, y = 0, z = 0, w = 0) { this.x = x; this.y = y; this.z = z; this.w = w; } getTypeName() { return 'SFVec4f'; } }
@@ -12,6 +13,11 @@
   class MFList extends Array { getTypeName() { return this._t; } }
   const mf = (t, a) => { const l = new MFList(); l._t = t; for (const x of a) l.push(x); return l; };
   function MFColor(...a) { return mf('MFColor', a.length === 1 && Array.isArray(a[0]) ? a[0] : a); }
+  function MFColorRGBA(...a) { return mf('MFColorRGBA', a.length === 1 && Array.isArray(a[0]) ? a[0] : a); }
+  function MFVec3f(...a) { return mf('MFVec3f', a.length === 1 && Array.isArray(a[0]) ? a[0] : a); }
+  function MFVec2f(...a) { return mf('MFVec2f', a.length === 1 && Array.isArray(a[0]) ? a[0] : a); }
+  function MFFloat(...a) { return mf('MFFloat', a.length === 1 && Array.isArray(a[0]) ? a[0] : a); }
+  function MFInt32(...a) { return mf('MFInt32', a.length === 1 && Array.isArray(a[0]) ? a[0] : a); }
   function MFString(...a) { return mf('MFString', a.length === 1 && Array.isArray(a[0]) ? a[0] : a); }
   function MFNode(...a) { return mf('MFNode', a.length === 1 && Array.isArray(a[0]) ? a[0] : a); }
 
@@ -23,11 +29,14 @@
     switch (type) {
       case 'SFColor': return new SFColor(v[0], v[1], v[2]);
       case 'SFVec2f': return new SFVec2f(v[0], v[1]);
+      case 'MFVec2f': return mf('MFVec2f', Array.from(v, (c) => new SFVec2f(c[0], c[1])));
       case 'SFVec3f': return new SFVec3f(v[0], v[1], v[2]);
       case 'SFVec4f': return new SFVec4f(v[0], v[1], v[2], v[3]);
       case 'SFRotation': return new SFRotation(v[0], v[1], v[2], v[3]);
       case 'MFColor': { const o = []; if (isTyped(v)) for (let i = 0; i + 2 < v.length; i += 3) o.push(new SFColor(v[i], v[i + 1], v[i + 2])); else for (const c of v) o.push(new SFColor(c[0], c[1], c[2])); return mf('MFColor', o); }
       case 'MFVec3f': { const o = []; if (isTyped(v)) for (let i = 0; i + 2 < v.length; i += 3) o.push(new SFVec3f(v[i], v[i + 1], v[i + 2])); else for (const c of v) o.push(new SFVec3f(c[0], c[1], c[2])); return mf('MFVec3f', o); }
+      case 'SFColorRGBA': return new SFColorRGBA(v[0], v[1], v[2], v[3]);
+      case 'MFColorRGBA': { const o = []; for (const c of v) o.push(new SFColorRGBA(c[0], c[1], c[2], c[3])); return mf('MFColorRGBA', o); }
       case 'MFString': return mf('MFString', v);
       case 'MFFloat': case 'MFInt32': case 'MFTime': return Array.from(v);
       case 'SFNode': return v ? wrap(v) : null;
@@ -42,6 +51,9 @@
       case 'SFVec2f': return [v.x, v.y];
       case 'SFVec3f': return Array.isArray(v) ? v : [v.x, v.y, v.z];
       case 'SFVec4f': return [v.x, v.y, v.z, v.w];
+      case 'SFColorRGBA': return Array.isArray(v) ? v : [v.r, v.g, v.b, v.a];
+      case 'MFColorRGBA': return Array.from(v, (c) => [c.r, c.g, c.b, c.a]);
+      case 'MFVec2f': return Array.from(v, (c) => [c.x, c.y]);
       case 'SFRotation': return Array.isArray(v) ? v : [v.x, v.y, v.z, v.angle];
       case 'MFColor': case 'MFVec3f': { const f = flat3(v); if (isTyped(cur)) return Float32Array.from(f); const o = []; for (let i = 0; i + 2 < f.length; i += 3) o.push([f[i], f[i + 1], f[i + 2]]); return o; }
       case 'MFString': return Array.from(v, String);
@@ -126,6 +138,8 @@
     const sc = {
       _world: world,
       get rootNodes() { return mfNode(world.children, null); },
+      addRootNode(n) { const r = unwrap(n); world.children.push(r); if (BODY && sc === MAINSCENE) BODY.adopt(r, null); },
+      addComponent() {},
       getNamedNode(name) { const n = world.defs.get(name) || (MAINSCENE && MAINSCENE._world.defs.get(name)); if (!n) throw new Error(`Node named '${name}' not found.`); return wrap(n); },
       createNode(type) {
         const def = R.DEFS[type]; if (!def) throw new Error(`Unknown node type ${type}`);
@@ -162,6 +176,20 @@
     currentScene: null,
     setBrowserOption(k, v) { if (k === 'ContentScale' && BODY) { BODY.engine.setHardwareScalingLevel(1 / Math.max(0.25, v)); } B._opts = B._opts || {}; B._opts[k] = v; },
     addBrowserCallback() {},
+    baseURL: '',
+    getComponent() { return {}; },
+    async loadComponents() {},
+    async createX3DFromURL(mfs) {
+      const url = new URL(String(mfs[0]), location.href).href;
+      const text = await fetchWorldText(url);
+      return B.createX3DFromString(text, url);
+    },
+    async replaceWorld(sc) {
+      const world = sc._world;
+      MAINSCENE = sc; B.currentScene = sc; WORLD = world;
+      BODY.timeSensors = world.nodes.filter((n) => n.type === 'TimeSensor');
+      BODY.setWorld(world, sc._base || location.href, (u, base) => vfsResolve(new URL(u, base).href));
+    },
     getCurrentFrameRate() { return BODY ? BODY.fps() : 0; },
     nextFrame() { return new Promise((res) => { (BODY.frameWaiters ||= []).push(res); }); },
     getActiveLayer() { return { getViewpoint: () => ({ get description() { return BODY.bound ? BODY.bound.f.description : ''; }, getUserPosition: () => BODY.userPosition() }) }; },
@@ -169,16 +197,18 @@
       const url = new URL(String(mfs[0]), location.href).href;
       const text = await fetchWorldText(url);
       const world = R.parseX3D(text);
-      const sc = makeScene(world, true);
+      const sc = makeScene(world, true); sc._base = url; for (const n of world.nodes) n.base = url;
       MAINSCENE = sc; B.currentScene = sc; WORLD = world;
       BODY.timeSensors = world.nodes.filter((n) => n.type === 'TimeSensor');
       BODY.setWorld(world, url, (u, base) => vfsResolve(new URL(u, base).href));
       if (world.warnings.length) console.info('[x3d reader]', world.warnings.slice(0, 8).join(' | '));
       return sc;
     },
-    async createX3DFromString(xml) {
+    async createX3DFromString(xml, baseUrl) {
       const world = R.parseX3D(xml);
       const sc = makeScene(world, false);
+      sc._base = baseUrl || B.baseURL || location.href;
+      for (const n of world.nodes) n.base = sc._base;
       // nodes the imported scene owns: its timers run with the body's, and its roots join the main scene when pushed
       if (BODY) { BODY.timeSensors = (BODY.timeSensors || []).concat(world.nodes.filter((n) => n.type === 'TimeSensor')); }
       if (MAINSCENE) for (const [k, v] of world.defs) if (!MAINSCENE._world.defs.has(k)) MAINSCENE._world.defs.set(k, v);
@@ -190,7 +220,7 @@
   function vfsResolve(url) { const v = window.__VFS, k = v && relOf(url); return k && v[k] && /\.png$/i.test(k) ? 'data:image/png;base64,' + v[k] : url; }
 
   const X3D = {
-    SFColor, SFVec2f, SFVec3f, SFVec4f, SFRotation, MFColor, MFString, MFNode, X3DConstants: {},
+    SFColor, SFVec2f, SFVec3f, SFVec4f, SFRotation, SFColorRGBA, MFColor, MFColorRGBA, MFVec3f, MFVec2f, MFFloat, MFInt32, MFString, MFNode, X3DConstants: {},
     getBrowser(sel) { const c = document.querySelector(sel); return c && c.__browser ? c.__browser : null; },
   };
   window.X3DSAI = { X3D, B, wrap, unwrap, setBody(b) { BODY = b; const c = b.canvas; c.__browser = B; c.browser = B; }, vfsResolve, vfsBytes };

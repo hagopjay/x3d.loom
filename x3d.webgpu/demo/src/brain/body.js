@@ -193,7 +193,7 @@ class Body {
       let face = [];
       const flush = () => {
         if (face.length >= 3) {
-          const a = face[0], b = face[1], c = face[2];
+          const a = face[0][0], b = face[1][0], c = face[2][0];
           const pa = [P[a * 3], P[a * 3 + 1], P[a * 3 + 2]], pb = [P[b * 3], P[b * 3 + 1], P[b * 3 + 2]], pc = [P[c * 3], P[c * 3 + 1], P[c * 3 + 2]];
           const nn = R.v3.norm(R.v3.cross(R.v3.sub(pb, pa), R.v3.sub(pc, pa)));
           const base = pos.length / 3;
