@@ -200,8 +200,8 @@ W3C status: WebGPU Candidate Recommendation Draft 15 Sep 2026, WGSL 21 Sep 2026 
 |---|---|---|
 | does Chromium's default blocklist block it? | no: on Windows the Intel, AMD and Microsoft cases fall through with no reason; the default pattern list holds only Qualcomm and `*:*:PowerVR*25.1*`; CPU adapters and D3D11 are blocked separately; Finch or the command line can override | C (corrects an earlier "matches Intel by driver" claim) |
 | is the UHD 620 Gen9 to Dawn? | yes: Dawn's `gpu_info.json` Gen 9 masks (0x5900, 0x3E00, 0x8700, 0x9B00) cover every UHD 620 SKU | C |
-| what it loses | `subgroups` is off on Gen9 and Gen9.5 unless the `enable_subgroups_intel_gen9` toggle is set (crbug 391680973); `shader-f16` needs SM 6.2 and native 16-bit ops (driver-dependent) | C for the code, S for this driver |
-| WebGPU on by default there? | probably | L until a probe runs on the machine (TBD-14) |
+| what it loses | `subgroups` is off on Gen9 and Gen9.5 unless the `enable_subgroups_intel_gen9` toggle is set (crbug 391680973); `shader-f16` needs SM 6.2 and native 16-bit ops (driver-dependent) | C for the code; the probe confirms `subgroups` off and `shader-f16` on for this driver |
+| WebGPU on by default there? | **yes**: the owner's probe on 2026-11-07 01:49Z got a hardware adapter (vendor intel, architecture gen-9, `isFallbackAdapter` false) and a device; 19 features incl. `shader-f16`, `timestamp-query`, `texture-compression-bc`, `clip-distances`, `float32-filterable`; limits incl. 16,384 px 2D textures, 4 bind groups, 16 storage buffers per stage (vertex stage too), 2 GB buffers, 32 KB workgroup storage, 64 B immediates; canvas format `bgra8unorm`. WebGL2 there is ANGLE on Direct3D 11 with `EXT_disjoint_timer_query_webgl2` | C (`bench/receipts/g1-probe-2026-11-07.json`; TBD-14 closed) |
 | version skew | Chrome 156 reached stable about 2026-10-20 (S); the sandbox is Chromium 153, three releases behind | S |
 
 ### 4.3 Features and limits that matter

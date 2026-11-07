@@ -151,7 +151,7 @@ Conformance corpus (C, SVN directory pages): Basic, ConformanceNist (12 categori
 | Script node | X_ITE is JS-native (ScriptingComponent 9,716 B minified, C); the X3D JS classes must be rebuilt | H x M | web: host JS shim over the SAI; native: rquickjs |
 | PROTO expansion | nested PROTO, IS, EXTERNPROTO fetch | M x H | reuse `vrml97`'s tested parser; trace tests |
 | wasm size | no current figure; 2021 WebGPU-only wgpu about 708 KB raw / 222 KB compressed (S) | H x M | separate WebGPU and WebGL2 builds, `-Oz` and wasm-opt, budget gate at M0 |
-| WebGPU on the floor machine | Chrome on Windows since 113 (C); Chromium's default blocklist has **no Intel rule** (C; corrects an earlier claim that it matches Intel by driver); Dawn turns `subgroups` off on Gen9 (C); not yet probed on the machine (L) | M x H | WebGL2 build required; probe first (TBD-14); design without subgroups |
+| WebGPU on the floor machine | Chrome on Windows since 113 (C); Chromium's default blocklist has **no Intel rule** (C; corrects an earlier claim that it matches Intel by driver); Dawn turns `subgroups` off on Gen9 (C); the owner's probe on 2026-11-07 got a hardware gen-9 adapter with `shader-f16` and `timestamp-query`, without `subgroups` (C) | L x H | WebGL2 build still required for other visitors; design without subgroups |
 | no compatibility mode in wgpu | issue #8124, not implemented (C) | M x M | reach below core goes through the WebGL2 build |
 | wgpu churn | majors 2025-10-01, 2025-12-17, 2026-03-18, 2026-07-01 (C) | H x L | pin; one upgrade a quarter |
 | moving parity target | 7 X_ITE releases between 10-04 and 10-31 (C) | H x M | pin X_ITE per gate (R-TETHER-07) |

@@ -19,17 +19,19 @@ No X3D runtime ships a WebGPU renderer as of 2026-11-06. X_ITE, the reference br
 | [ARCHITECTURE.md](ARCHITECTURE.md) | **Path E**: the Rust/wgpu design (layers, crate layout, event model, SAI, renderer passes, tether hooks), milestones M0 to M6 with gates, risk register |
 | [BENCHMARK.md](BENCHMARK.md) | The Dirac collider benchmark: the scene measured, six arms in two 2x2s, a track ladder to 100k, the harness, metrics, fairness rules, the decision rule, an empty results table |
 | [bench/receipt.schema.json](bench/receipt.schema.json) | JSON Schema (draft 2020-12) for one benchmark run receipt, `x3d.bench/1`; data only |
+| [bench/webgpu-probe.html](bench/webgpu-probe.html) | gate G1 probe: one self-contained page that asks for a WebGPU adapter and lists its features and limits; no timings, no network |
+| [bench/receipts/](bench/receipts/) | probe and run receipts; `g1-probe-2026-11-07.json` is the owner machine's G1 result |
 | [HYPER.md](HYPER.md) | 17 far-out ideas ranked, each with an X3D node sketch and a first experiment; the top three can start with no paid services |
 | [SOURCES.md](SOURCES.md) | Every source, how it was read (opened, measured, local, search only, notes) and its as-of date, grouped by file |
 
 ## Decision gates
 
-Building starts only after G0 to G2. Owners are left blank.
+Building starts only after G0 to G2. Owners are left blank. Status on 2026-11-07: G1 passed; G0 is deferred by the owner ("probe only, decide later"), so no timing runs anywhere yet.
 
 | gate | question | pass condition | evidence it produces | owner |
 |---|---|---|---|---|
 | **G0** consent | May any timing run on the owner's machine? He asked that his GPU not be used for metrics (S, project note, 28 Oct) | his explicit yes on one decision card: (a) his PC as a ratio-only floor machine, (b) another machine with a discrete GPU, (c) wait | `machine.consent` in every receipt (the schema refuses a floor-machine receipt without it) | |
-| **G1** adapter | Does Chrome 156 on his UHD 620 give a WebGPU adapter, and with which features and limits? | a probe page served from file:// or localhost, never about:blank (C: `navigator.gpu` is absent there) | turns "WebGPU on by default there" from L to C; `subgroups` is expected off on Gen9 (C, Dawn) | |
+| **G1** adapter | Does Chrome 156 on his UHD 620 give a WebGPU adapter, and with which features and limits? | a probe page served from file:// or localhost, never about:blank (C: `navigator.gpu` is absent there) | **passed 2026-11-07 (C):** a hardware Intel gen-9 adapter (not the fallback), device opened; `shader-f16` and `timestamp-query` on, `subgroups` off; receipt `bench/receipts/g1-probe-2026-11-07.json` from `bench/webgpu-probe.html` | |
 | **G2** shaders | Do the Collider's ComposedShader programs compile through the default body's GLSL path (Babylon glslang plus twgsl, self-hosted) and match X_ITE? | 0 compile errors and `parity/look` (SPEC R-TETHER-04) on the hero scene | picks the body: Babylon (G) on pass, three.js with hand TSL or WGSL (C) on fail | |
 | **G3** benchmark | Is the WebGPU body faster where it matters? | the four-clause rule in BENCHMARK.md section 9 | Go, No-go or Inconclusive, with receipts | |
 | **G4** parity, per showpiece | Is the showpiece what X_ITE shows? | `parity/look` on three views, event traces equal, 0 blank frames, a load receipt with every approximation coded | the showpiece may ship on WebGPU | |

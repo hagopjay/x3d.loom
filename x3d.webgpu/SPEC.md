@@ -272,7 +272,7 @@ Owners are left blank on purpose. "Hand fetch" means the source sits on a host t
 | TBD-11 | The WGSL proposal's detail: bind-group layout for `x3d_*`, an `entryPoint` field, how url and inline source form one module, when a COMPUTE part dispatches relative to the cascade and the render traversal; PackagedShader and ProgramShader | R-SHADER-05 | a written proposal with an example scene (asked for on x3d-public in April 2026, S) | |
 | TBD-12 | Are the 13 silent stubs and the splat culling hang still in X_ITE 16.7.0? | R-SPLAT-03, STATE.md | field-guide harness re-run | |
 | TBD-13 | Calibrate the tolerance profiles: X_ITE against itself on two GPUs and two browsers | R-TETHER-04 | two real machines | |
-| TBD-14 | Does Chrome 156 on the owner's UHD 620 grant an adapter, with which features and limits (shader-f16, timestamp-query)? | R-RENDER-01, BENCHMARK | probe page run on his machine, with consent | |
+| TBD-14 | CLOSED 2026-11-07. Does Chrome 156 on the owner's UHD 620 grant an adapter, with which features and limits (shader-f16, timestamp-query)? Yes: hardware Intel gen-9 adapter, device ok, shader-f16 and timestamp-query on, subgroups off, 16,384 px 2D textures, 16 storage buffers per stage | R-RENDER-01, BENCHMARK | `bench/receipts/g1-probe-2026-11-07.json` | |
 | TBD-15 | Does a Collider ComposedShader compile unchanged through Babylon's glslang plus twgsl? | gate G2, R-SHADER-01 | test with the Collider's programs | |
 | TBD-16 | Does glslang with relaxed Vulkan rules accept loose uniforms and `x3d_*` names? Does naga accept rewritten GLSL ES 3.00 (combined samplers, precision)? | R-SHADER-01 | test | |
 | TBD-17 | How much of full-stage GLSL ES 3.00 does three.js's GLSLDecoder to TSLEncoder transpiler handle? | path C | test | |
