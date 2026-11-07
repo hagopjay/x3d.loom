@@ -5,12 +5,12 @@ kit/examples/hep/build_event_scene.py --look v3 (pythia-dijet-hero, pythia-qcd-d
 sha256 values in runs/hep-demo-v3-20261106/scenes.sha256). The viewer template and the five hash-matched WGSL ports are
 those of collider-v2; every scene's ComposedShader keys are checked against the collider's, and a scene whose GLSL differs
 would fall back to no shader, so the build fails instead."""
-import json, pathlib, re, sys, urllib.parse, hashlib
+import json, os, pathlib, re, sys, urllib.parse, hashlib
 import xml.etree.ElementTree as ET
 
 here = pathlib.Path(__file__).resolve().parent
 d = here.parent
-tpl = (here / 'viewer-v2.tpl.html').read_text()
+tpl = (here / os.environ.get('TPL', 'viewer-v2.tpl.html')).read_text()
 
 def mfstring(s):
     out = [re.sub(r'\\(.)', r'\1', m) for m in re.findall(r'"((?:[^"\\]|\\.)*)"', s)]
