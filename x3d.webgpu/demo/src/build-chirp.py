@@ -64,7 +64,7 @@ def main():
         css = open(os.path.join(out, 'src', 'app.css'), encoding='utf-8').read()
         single = sub1(single, '<link rel="stylesheet" href="src/app.css">', '<style>' + css + '</style>')
         import re as _re
-        for m_ in _re.findall(r'<script src="(src/[^"]+\\.js)"></script>', single):   # classic scripts the study loads before app.js (nets.js)
+        for m_ in _re.findall(r'<script src="(src/[^"]+\.js)"></script>', single):   # classic scripts the study loads before app.js (nets.js)
             single = single.replace('<script src="%s"></script>' % m_, '<script>' + open(os.path.join(out, m_), encoding='utf-8').read().replace('</script', '<\\/script') + '</script>')
         single = sub1(single, '<script src="bundle.js"></script>', '<script>' + shim + '</script>\n<script>' + open(os.path.join(out, 'bundle.js'), encoding='utf-8').read().replace('</script', '<\\/script') + '</script>')
         single = sub1(single, 's.src = \"src/app.js\"; document.body.appendChild(s);', 's.textContent = window.__APPJS; document.body.appendChild(s);')
