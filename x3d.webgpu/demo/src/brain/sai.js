@@ -171,6 +171,24 @@
     if (u[0] === 0x1f && u[1] === 0x8b) return gz(u);
     return new TextDecoder().decode(u);
   }
+  /* An ImageTexture may list fallbacks (KANSEI lists "../textures/x.png" then "textures/x.png", so one page works from two folder depths). Babylon would request the first one for
+     every node, get a 404 each time and only then try the next: thousands of failed requests on a page served from a sub-folder. Probe each distinct candidate once (HEAD, remembered)
+     and put the first one that exists at the front. A candidate whose probe fails for a reason other than "not found" keeps its place. Nothing is probed for embedded (single-file) pages. */
+  const probed = new Map();
+  const probe = (href) => { if (!probed.has(href)) probed.set(href, fetch(href, { method: 'HEAD' }).then((r) => (r.ok ? 1 : r.status === 404 ? 0 : 1), () => 1)); return probed.get(href); };
+  async function preferLiveTextureUrls(world, base) {
+    if (window.__VFS) return;
+    const todo = world.nodes.filter((n) => n.type === 'ImageTexture' && n.f.url && n.f.url.length > 1);
+    if (!todo.length) return;
+    const abs = (n, u) => { try { return new URL(u, n.base || base).href; } catch { return null; } };
+    const lists = new Map();
+    for (const n of todo) { const key = n.f.url.map((u) => abs(n, u)).join('|'); if (!lists.has(key)) lists.set(key, []); lists.get(key).push(n); }
+    await Promise.all([...lists].map(async ([key, nodes]) => {
+      const hrefs = key.split('|'); let pick = 0;
+      for (let i = 0; i < hrefs.length; i++) { if (hrefs[i] && (await probe(hrefs[i]))) { pick = i; break; } }
+      if (pick > 0) for (const n of nodes) n.f.url = [n.f.url[pick], ...n.f.url.filter((_, i) => i !== pick)];
+    }));
+  }
   const B = {
     version: 'Babylon ' + (typeof BABYLON !== 'undefined' ? BABYLON.Engine.Version : '?') + ' WebGPU',
     currentScene: null,
@@ -209,6 +227,7 @@
       const sc = makeScene(world, false);
       sc._base = baseUrl || B.baseURL || location.href;
       for (const n of world.nodes) n.base = sc._base;
+      await preferLiveTextureUrls(world, sc._base);
       // nodes the imported scene owns: its timers run with the body's, and its roots join the main scene when pushed
       if (BODY) { BODY.timeSensors = (BODY.timeSensors || []).concat(world.nodes.filter((n) => n.type === 'TimeSensor')); }
       if (MAINSCENE) for (const [k, v] of world.defs) if (!MAINSCENE._world.defs.has(k)) MAINSCENE._world.defs.set(k, v);
