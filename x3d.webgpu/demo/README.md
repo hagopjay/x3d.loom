@@ -18,6 +18,10 @@ Download the `.html` file and open it in Chrome or Edge 113 or later (file:// wo
 
 Drag to orbit, scroll or pinch to zoom. Every page: Space pauses, R resets the view, S opens the X3D source, H hides the panels. The source panel is editable: change a value or a ROUTE, press Apply, and the page parses it again; a malformed edit is refused with the parser's message and the old scene keeps running.
 
+## Splats (Pantheon port)
+
+`src/viewer-v3.tpl.html` is the v2 core plus the X3D 4.1 draft `GaussianSplats` node: a GPU bitonic depth sort and quads that follow X_ITE 16.4.3's splat shader. `python3 -I src/build-v3.py SCENE.x3d OUT.html` builds a page from any X3D 4.1 file with a `GaussianSplats` node. This repository holds one splat scene, [splat-test.x3d](splat-test.x3d) (6,100 procedural splats, CC0, made by `src/gen-splat-test.py`). The Pantheon page was built from a separate 50,058-splat scene and matches X_ITE 16.4.3 at 50.2 and 51.0 dB on two views; see [the receipt](../../runs/webgpu-pantheon-splats-20261107/RECEIPT.md). Not drawn yet: spherical-harmonic degrees above 0 and `Inline url` splat files.
+
 ## The Collider
 
 Two protons meet at the centre every 12 seconds. Tracks grow out from the vertex and curl in the field (colour is the particle kind, brightness and width the momentum), the calorimeter crown lights up with the energy each tower caught, and a burst of sparks leaves the vertex. The event is generated and drawn as a demo, not a measurement.
