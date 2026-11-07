@@ -15,7 +15,7 @@ SRC = os.path.join(HERE, 'brain')
 BABYLON_VERSION = '9.32.0'                      # published 2026-10-22, more than two weeks old
 BABYLON_URL = f'https://cdn.jsdelivr.net/npm/babylonjs@{BABYLON_VERSION}/babylon.js'
 BABYLON_SRI = 'sha384-1XDybi1454WehNQaPHwhcTlpJ6oDdq/L4KKyDu7JiWPOBUzoBC0yEcuKDzHpdXyo'  # of babylonjs@9.32.0/babylon.js as the CDN serves it; --sri overrides
-PARTS = ['reader.js', 'wgsl.js', 'body.js', 'body-cam.js', 'sai.js', 'boot.js']
+PARTS = ['../shared/adapter.js', 'reader.js', 'wgsl.js', 'body.js', 'body-cam.js', 'sai.js', '../shared/timing.js', 'boot.js']
 
 def fnv(s):
     h = 0x811c9dc5
@@ -57,7 +57,9 @@ def main():
     html, n = re.subn(r'<title>[^<]*</title>', '<title>Neural Canvas WebGPU - Brain Loom demo</title>', html); assert n == 1
 
     # 3. the bundle, placed before the page's own config and script so window.X3D exists first
-    bundle = '(function () {\n"use strict";\n' + '\n'.join(open(os.path.join(SRC, p), encoding='utf-8').read() for p in PARTS) + '\n})();\n'
+    parts = '\n'.join(open(os.path.join(SRC, p), encoding='utf-8').read() for p in PARTS)
+    tag = hashlib.sha256(parts.encode('utf-8')).hexdigest()[:12]  # names the build in the Timing panel, so a number is tied to the code that made it
+    bundle = '(function () {\n"use strict";\nwindow.__x3dBuild = "%s";\n' % tag + parts + '\n})();\n'
     tags = ''
     if a.single:
         vfs = {}
