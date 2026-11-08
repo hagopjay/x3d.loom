@@ -1,0 +1,278 @@
+{
+ "node": "SplinePositionInterpolator",
+ "mode": "events",
+ "steps": [
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    -1
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     0,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    0
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     0,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    0.1
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     0.208,
+     0.608,
+     -0.048
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    0.25
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     1,
+     2,
+     0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    0.4
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     2.152,
+     2.288,
+     0.504
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     3,
+     2,
+     1
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    0.8
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     3.744,
+     0.64,
+     1.712
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    1
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     4,
+     0,
+     2
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    2
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     4,
+     0,
+     2
+    ]
+   ]
+  },
+  {
+   "set": [
+    "Lin",
+    "set_fraction",
+    0.25
+   ]
+  },
+  {
+   "event": [
+    "Lin",
+    "value_changed",
+    [
+     1,
+     2,
+     3
+    ]
+   ]
+  },
+  {
+   "set": [
+    "Lin",
+    "set_fraction",
+    0.375
+   ]
+  },
+  {
+   "event": [
+    "Lin",
+    "value_changed",
+    [
+     1.5,
+     3,
+     4.5
+    ]
+   ]
+  },
+  {
+   "set": [
+    "Lin",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "event": [
+    "Lin",
+    "value_changed",
+    [
+     2,
+     4,
+     6
+    ]
+   ]
+  },
+  {
+   "set": [
+    "Lin",
+    "set_fraction",
+    0.625
+   ]
+  },
+  {
+   "event": [
+    "Lin",
+    "value_changed",
+    [
+     2.5,
+     5,
+     7.5
+    ]
+   ]
+  },
+  {
+   "set": [
+    "Lin",
+    "set_fraction",
+    0.75
+   ]
+  },
+  {
+   "event": [
+    "Lin",
+    "value_changed",
+    [
+     3,
+     6,
+     9
+    ]
+   ]
+  },
+  {
+   "set": [
+    "Vel",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "event": [
+    "Vel",
+    "value_changed",
+    [
+     0.5,
+     0,
+     0
+    ]
+   ]
+  }
+ ],
+ "expected": "8 analytic (hold at the keys, linear data stays linear, plain Hermite midpoint) and 5 recorded from X_ITE 16.6.0 (Chrome for Testing 153, SwiftShader); ours agrees with X_ITE to 1e-8 or better on every recorded value",
+ "note": "Lin: linear data stays linear in the interior segments; the first and last segment ease because an open spline has zero end velocity (both engines agree, so no end-segment point is pinned here)"
+}

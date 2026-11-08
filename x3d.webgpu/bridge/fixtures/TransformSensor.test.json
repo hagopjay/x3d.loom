@@ -1,0 +1,206 @@
+{
+ "node": "TransformSensor",
+ "mode": "scene",
+ "note": "origin test of the target in the sensor frame, as X_ITE 16.6.0 does it; the body sees a moved target one frame late",
+ "steps": [
+  {
+   "setnode": [
+    "N",
+    "targetObject",
+    "T"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     1,
+     2,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "position_changed",
+    [
+     1,
+     2,
+     0
+    ],
+    0.0001
+   ]
+  },
+  {
+   "record": [
+    "N",
+    "position_changed",
+    "pos"
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "rotation",
+    [
+     0,
+     1,
+     0,
+     1.2
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "nearv": [
+    "N",
+    "orientation_changed",
+    [
+     0,
+     1,
+     0,
+     1.2
+    ],
+    0.0001
+   ]
+  },
+  {
+   "record": [
+    "N",
+    "orientation_changed",
+    "rot"
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     10,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "size",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "size",
+    [
+     -1,
+     -1,
+     -1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     100,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "pos",
+   0.0001
+  ],
+  [
+   "rot",
+   0.0001
+  ]
+ ],
+ "gaps": [
+  "the sensor frame is its parent's; a parent that itself moves is followed through the world matrix, tested only with the root",
+  "a target that is a Shape uses its group's matrix",
+  "the official x3d-4.0.xsd cannot express TransformSensor.targetObject (containerField is limited to children, proxy, rootNode, shape, skin), so the fixture leaves it out and the test sets it through the SAI"
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "node": "TwoSidedMaterial",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/TwoSidedMaterial.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 9/9",
+  "xite": "pass 7/7",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "X_ITE is compared on loading and picking the shapes; which side shows which colour is checked in our body only (two passes, culled front and back)",
+   "specular, shininess and ambient are read and not shown"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 9eb5457e1d2d",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "5187367"
+}

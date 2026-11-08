@@ -1,0 +1,32 @@
+{
+ "node": "LoadSensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/LoadSensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 18/18",
+  "xite": "pass 16/16",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "a change of children after load does not restart the count (X_ITE restarts)",
+   "Inline, audio and movie children are fetched, not decoded: loaded means the url answered",
+   "only the first working url of a child is used",
+   "X_ITE 16.6.0 hands the world over only after every resource has loaded, so the in-flight timeOut state (aborted, not yet loaded) can only be checked in our reader; the end state is compared"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ffe12499d3dc",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "9d9b165"
+}

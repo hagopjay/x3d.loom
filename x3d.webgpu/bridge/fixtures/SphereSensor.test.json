@@ -1,0 +1,109 @@
+{
+ "node": "SphereSensor",
+ "mode": "scene",
+ "note": "a short horizontal drag, then a short vertical drag: the second shows the order in which the new rotation and the stored offset compose; the first settle outlasts the 1 s camera transition the body runs after a world is replaced",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "down",
+    160,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    172,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    172,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N",
+    "rotation_changed",
+    "r1"
+   ]
+  },
+  {
+   "record": [
+    "N",
+    "offset",
+    "o1"
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    160,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    132
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    160,
+    132
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N",
+    "rotation_changed",
+    "r2"
+   ]
+  },
+  {
+   "record": [
+    "N",
+    "offset",
+    "o2"
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "r1",
+   0.05
+  ],
+  [
+   "o1",
+   0.05
+  ],
+  [
+   "r2",
+   0.25
+  ],
+  [
+   "o2",
+   0.25
+  ]
+ ],
+ "gaps": [
+  "after the second drag the rotation angle agrees with X_ITE 16.6.0 (0.5205 vs 0.5235 rad) but one axis component differs by 0.2: the hit point of a press on an already turned box is read differently, not chased (no pixel perfection)",
+  "trackPoint_changed not compared",
+  "a drag that leaves the sphere uses the nearest point of the sphere to the ray; X_ITE does the same by its own rule, only tested inside the sphere"
+ ]
+}

@@ -1,0 +1,109 @@
+{
+ "node": "ArcClose2D",
+ "mode": "scene",
+ "note": "three quarters of a disc: PIE leaves the open quarter empty, CHORD fills up to the chord",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    64,
+    106
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    93,
+    134
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    227,
+    106
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    256,
+    134
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const sh=__body.world.nodes.find(n=>n.def==='S1');return __body.rec.get(sh.id).meshes.reduce((a,m)=>a+m.getTotalIndices()/3,0)})()",
+    29
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('G1').getValue().getVertices().length/12",
+    29
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const sh=__body.world.nodes.find(n=>n.def==='S2');return __body.rec.get(sh.id).meshes.reduce((a,m)=>a+m.getTotalIndices()/3,0)})()",
+    28
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('G2').getValue().getVertices().length/12",
+    28
+   ]
+  }
+ ],
+ "gaps": [
+  "compared by pointer-over probes in both engines and the triangle count; texture mapping and lighting are not compared"
+ ]
+}

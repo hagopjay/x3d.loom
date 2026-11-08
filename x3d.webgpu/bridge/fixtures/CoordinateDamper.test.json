@@ -1,0 +1,64 @@
+{
+ "node": "CoordinateDamper",
+ "mode": "events",
+ "steps": [
+  {
+   "set": [
+    "N",
+    "set_destination",
+    [
+     [
+      1,
+      2,
+      3
+     ],
+     [
+      4,
+      5,
+      6
+     ]
+    ],
+    "MFVec3f"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "reset": true
+  },
+  {
+   "settle": 3
+  },
+  {
+   "event": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "value_changed",
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    0.002
+   ]
+  }
+ ],
+ "note": "bounds and end state only: time is virtual in ours and real in X_ITE"
+}

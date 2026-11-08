@@ -1,0 +1,34 @@
+{
+ "node": "Anchor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/Anchor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 18/18",
+  "xite": "pass 18/18",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "only #Viewpoint urls are followed in the test; other urls go to body.opts.onAnchor, a page without one gets a note and stays",
+   "javascript: urls are refused on purpose",
+   "addChildren and removeChildren are accepted and not acted on",
+   "autoRefresh is not implemented",
+   "target= in parameter is passed to onAnchor, not acted on",
+   "the stock body does not report isBound for the first Viewpoint at load (X_ITE does), so the test binds V1 first"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 9eb5457e1d2d",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "5187367"
+}

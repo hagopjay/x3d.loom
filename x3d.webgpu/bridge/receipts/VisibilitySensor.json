@@ -1,0 +1,30 @@
+{
+ "node": "VisibilitySensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/VisibilitySensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 15/15",
+  "xite": "FAIL step 15: N.isActive is true, expected false",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": false,
+  "msg": "X_ITE differs (X_ITE 16.6.0 keeps a size 0 0 0 sensor active (it treats it as unbounded); the 4.0 text says a zero size sensor never fires)",
+  "gaps": [
+   "occlusion by other shapes is not tested (X_ITE 16.6.0 does not test it either)",
+   "one decision per frame; enterTime and exitTime are the frame timestamps"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 8e11fd9a11ec",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "0f1f1e7"
+}

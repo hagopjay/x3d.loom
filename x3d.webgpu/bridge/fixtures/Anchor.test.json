@@ -1,0 +1,121 @@
+{
+ "node": "Anchor",
+ "mode": "scene",
+ "note": "a click on the box follows #V2 in both engines",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "set": [
+    "V1",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "V1",
+    "isBound",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    160,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "V2",
+    "isBound",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "V1",
+    "isBound",
+    false
+   ]
+  },
+  {
+   "set": [
+    "V1",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "V1",
+    "isBound",
+    true
+   ]
+  },
+  {
+   "set": [
+    "A",
+    "load",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    160,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "V1",
+    "isBound",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "V2",
+    "isBound",
+    false
+   ]
+  }
+ ],
+ "gaps": [
+  "only #Viewpoint urls are followed in the test; other urls go to body.opts.onAnchor, a page without one gets a note and stays",
+  "javascript: urls are refused on purpose",
+  "addChildren and removeChildren are accepted and not acted on",
+  "autoRefresh is not implemented",
+  "target= in parameter is passed to onAnchor, not acted on",
+  "the stock body does not report isBound for the first Viewpoint at load (X_ITE does), so the test binds V1 first"
+ ]
+}

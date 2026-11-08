@@ -1,0 +1,27 @@
+{
+ "node": "Polypoint2D",
+ "mode": "scene",
+ "note": "five points",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const sh=__body.world.nodes.find(n=>n.def==='S1');return __body.rec.get(sh.id).meshes[0].getTotalVertices()})()",
+    5
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('G1').getValue().getVertices().length/4",
+    5
+   ]
+  }
+ ],
+ "gaps": [
+  "points cannot be picked: the point count is compared between the engines; WebGPU draws each point one pixel, X_ITE draws them with its point size; colour is not compared"
+ ]
+}

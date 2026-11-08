@@ -1,0 +1,52 @@
+{
+ "node": "PositionChaser",
+ "mode": "events",
+ "steps": [
+  {
+   "set": [
+    "N",
+    "set_destination",
+    [
+     10,
+     -4,
+     2
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "reset": true
+  },
+  {
+   "settle": 2.5
+  },
+  {
+   "event": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "value_changed",
+    [
+     10,
+     -4,
+     2
+    ]
+   ]
+  }
+ ]
+}

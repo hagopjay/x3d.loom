@@ -1,0 +1,117 @@
+{
+ "node": "MovieTexture",
+ "mode": "scene",
+ "note": "a 6 s clip started, paused, resumed and stopped by the clock",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "M",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "near": [
+    "M",
+    "duration_changed",
+    6,
+    0.2
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "M",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "between": [
+    "M",
+    "elapsedTime",
+    0.2,
+    2.5
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "pauseTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "expect": [
+    "M",
+    "isPaused",
+    true
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "resumeTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "expect": [
+    "M",
+    "isPaused",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "expect": [
+    "M",
+    "isActive",
+    false
+   ]
+  }
+ ],
+ "gaps": [
+  "timing is compared through the fields only; the picture on the box is not compared with X_ITE",
+  "the clip is played muted (a page may not start sound by itself); gain and pitch are read and not used",
+  "a loop and a natural end are not exercised by the test"
+ ],
+ "xite": true
+}

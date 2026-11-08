@@ -1,0 +1,68 @@
+{
+ "node": "TwoSidedMaterial",
+ "mode": "scene",
+ "note": "separateBackColor on and off",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    88,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    232,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const sh=__body.world.nodes.find(n=>n.def==='S1');return __body.rec.get(sh.id).meshes.map(m=>m.material._two+':'+m.material.diffuseColor.asArray().map(v=>Math.round(v)).join(''))})()",
+    [
+     "front:100",
+     "back:001"
+    ]
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const sh=__body.world.nodes.find(n=>n.def==='S2');return __body.rec.get(sh.id).meshes.map(m=>m.material._two+':'+m.material.diffuseColor.asArray().map(v=>Math.round(v)).join(''))})()",
+    [
+     "front:010",
+     "back:010"
+    ]
+   ]
+  }
+ ],
+ "gaps": [
+  "X_ITE is compared on loading and picking the shapes; which side shows which colour is checked in our body only (two passes, culled front and back)",
+  "specular, shininess and ambient are read and not shown"
+ ]
+}
