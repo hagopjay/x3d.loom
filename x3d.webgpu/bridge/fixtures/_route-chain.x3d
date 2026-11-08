@@ -7,6 +7,8 @@
     <BooleanToggle DEF="BG"/>
     <IntegerTrigger DEF="IT" integerKey="1"/>
     <TimeTrigger DEF="TT"/>
+    <ScalarChaser DEF="Ch" duration="0.4"/>
+    <ScalarDamper DEF="Dm" tau="0.1" order="2"/>
     <Switch DEF="Sw" whichChoice="0">
       <Shape><Appearance><Material diffuseColor="1 0 0"/></Appearance><Box/></Shape>
       <Shape><Appearance><Material diffuseColor="0 0 1"/></Appearance><Sphere/></Shape>
@@ -16,5 +18,7 @@
     <ROUTE fromNode="BG" fromField="toggle_changed" toNode="IT" toField="set_boolean"/>
     <ROUTE fromNode="IT" fromField="triggerValue" toNode="Sw" toField="set_whichChoice"/>
     <ROUTE fromNode="BG" fromField="toggle_changed" toNode="TT" toField="set_boolean"/>
+    <ROUTE fromNode="Clock" fromField="fraction_changed" toNode="Ch" toField="set_destination"/>
+    <ROUTE fromNode="Ch" fromField="value_changed" toNode="Dm" toField="set_destination"/>
   </Scene>
 </X3D>

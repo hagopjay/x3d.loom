@@ -249,8 +249,8 @@ def regression_gate(a):
         cmd = ['node', os.path.join(HERE, 'smoke.js'), os.path.join(BR, 'fixtures', '_route-chain.x3d'), '4'] + (['--babylon', a.babylon] if a.babylon else [])
         sm = json.loads(subprocess.run(cmd, capture_output=True, text=True, cwd=BR, timeout=170).stdout.strip().splitlines()[-1])
     except Exception as e: sm = {'error': str(e)[:160]}
-    ok = chain['pass'] and not sm.get('error') and not sm.get('pageErrors') and sm.get('switches') == [1] and not sm.get('notes')
-    g = {'ok': ok, 'chain': chain['pass'], 'body': {k: sm.get(k) for k in ('frames', 'babylon', 'adapter', 'pageErrors', 'notes', 'switches', 'error')}}
+    ok = chain["pass"] and not sm.get('error') and not sm.get('pageErrors') and sm.get('switches') == [1] and not sm.get('notes') and (sm.get('events') or {}).get('Ch.value_changed', 0) >= 4 and (sm.get('events') or {}).get('Dm.value_changed', 0) >= 4
+    g = {'ok': ok, 'chain': chain['pass'], 'body': {k: sm.get(k) for k in ('frames', 'babylon', 'adapter', 'pageErrors', 'notes', 'switches', 'error')}}; g['body']['follower_events'] = {k: (sm.get('events') or {}).get(k) for k in ('Ch.value_changed', 'Dm.value_changed')}
     json.dump(g, open(os.path.join(BR, 'receipts', '_gate.json'), 'w'), indent=1); print('gate', 'PASS' if ok else 'FAIL', json.dumps(g['body'])[:300]); return g
 
 

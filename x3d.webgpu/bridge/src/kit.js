@@ -169,3 +169,79 @@ BR.keySearch = (key, f) => {
   BR.squadAt = (s, i0, i1, t, kv) => qslerp(qslerp(kv[i0], kv[i1], t), qslerp(s[i0], s[i1], t), 2 * t * (1 - t));
   BR.q = { fromRot: (r) => quat.fromAxisAngle(r, r[3]), toRot: (q) => quat.toAxisAngle(q), slerp: qslerp };
 }
+
+/* ---- followers (Followers component) ------------------------------------------------------------------------------------------------------
+   T converts a node value to an array and back: scalars become [x], vectors stay arrays. Chaser: the 60-stage buffer with a cosine step response over `duration`;
+   Damper: `order` cascaded exponential filters with time constant `tau`. Both are driven by the timestamp (tick), not by a frame count, so a slow frame does not slow them. */
+BR.T1 = { toA: (v) => [v], fromA: (a) => a[0] };
+BR.TN = { toA: (v) => Array.from(v), fromA: (a) => a.slice() };
+{
+  const lerp = (a, b, w) => a.map((x, i) => x + (b[i] - x) * w), dist = (a, b) => Math.hypot(...a.map((x, i) => x - b[i])), cp = (a) => a.slice();
+  const setActive = (n, on) => { const st = n._fl; if (st.active === on) return; st.active = on; n.f.isActive = on; events.emit(n, 'isActive', on); };
+  const out = (T, n, a) => { n.f.value_changed = T.fromA(a); events.emit(n, 'value_changed', n.f.value_changed); };
+  BR.chaserSpec = (T) => ({
+    init(n) {
+      const f = n.f, iv = T.toA(f.initialValue), id = T.toA(f.initialDestination);
+      const st = (n._fl = { buf: [cp(id)], prev: cp(iv), dest: cp(id), endTime: null, active: false });
+      for (let i = 1; i < 60; i++) st.buf.push(cp(iv));
+      if (dist(id, iv) < 1e-8) f.value_changed = T.fromA(id); else { st.active = true; f.isActive = true; }
+    },
+    receive(n, field, v) {
+      const st = n._fl; if (!st) return false;
+      if (field === 'set_value') { if (!st.active) st.endTime = events.ts; const a = T.toA(v); st.buf = st.buf.map(() => cp(a)); st.prev = cp(a); out(T, n, a); setActive(n, true); return true; }
+      if (field === 'set_destination') { st.dest = T.toA(v); if (!st.active) st.endTime = events.ts; setActive(n, true); return true; }
+      return false;
+    },
+    tick(n, now) {
+      const st = n._fl; if (!st || !st.active) return;
+      if (st.endTime === null) st.endTime = now;
+      const NB = 60, dur = Math.max(n.f.duration, 1e-9), stepTime = dur / NB;
+      const resp = (t) => (t <= 0 ? 0 : t >= dur ? 1 : 0.5 - 0.5 * Math.cos((t / dur) * Math.PI));
+      let fr = (now - st.endTime) / stepTime;
+      if (fr >= 1) {
+        const s = Math.floor(fr); fr -= s;
+        if (s < NB) {
+          st.prev = cp(st.buf[NB - s]);
+          for (let i = NB - 1; i >= s; --i) st.buf[i] = cp(st.buf[i - s]);
+          for (let i = 0; i < s; ++i) st.buf[i] = lerp(st.dest, st.buf[s], i / s);
+        } else { st.prev = cp(s === NB ? st.buf[0] : st.dest); for (let i = 0; i < NB; ++i) st.buf[i] = cp(st.dest); }
+        st.endTime += s * stepTime;
+      }
+      let o = lerp(st.prev, st.buf[NB - 1], resp((NB - 1 + fr) * stepTime));
+      for (let i = NB - 2; i >= 0; --i) { const r = resp((i + fr) * stepTime); o = o.map((x, c) => x + (st.buf[i][c] - st.buf[i + 1][c]) * r); }
+      out(T, n, o);
+      if (dist(o, st.dest) < 1e-8) setActive(n, false);
+    },
+  });
+  BR.damperSpec = (T) => ({
+    init(n) {
+      const f = n.f, iv = T.toA(f.initialValue), id = T.toA(f.initialDestination), order = clamp(f.order, 0, 5);
+      const st = (n._fl = { buf: [cp(id)], active: false, last: null });
+      for (let i = 1; i <= order; i++) st.buf.push(cp(iv));
+      if (dist(id, iv) < (f.tolerance < 0 ? 1e-4 : f.tolerance)) f.value_changed = T.fromA(id); else { st.active = true; f.isActive = true; }
+    },
+    receive(n, field, v) {
+      const st = n._fl; if (!st) return false;
+      if (field === 'set_value') { const a = T.toA(v); for (let i = 1; i < st.buf.length; i++) st.buf[i] = cp(a); if (!st.active) st.last = events.ts; out(T, n, a); setActive(n, true); return true; }
+      if (field === 'set_destination') { st.buf[0] = T.toA(v); if (!st.active) st.last = events.ts; setActive(n, true); return true; }
+      return false;
+    },
+    tick(n, now) {
+      const st = n._fl; if (!st || !st.active) return;
+      const f = n.f, want = clamp(f.order, 0, 5) + 1, tol = f.tolerance < 0 ? 1e-4 : f.tolerance;
+      while (st.buf.length < want) st.buf.push(cp(st.buf[st.buf.length - 1])); st.buf.length = want;
+      let order = want - 1;
+      if (f.tau) {
+        const dt = st.last == null ? 1 / 60 : Math.max(0, now - st.last); st.last = now; const alpha = Math.exp(-dt / f.tau);
+        for (let i = 0; i < order; i++) st.buf[i + 1] = lerp(st.buf[i], st.buf[i + 1], alpha);
+        out(T, n, st.buf[order]);
+        if (dist(st.buf[order], st.buf[0]) >= tol) return;
+      } else { out(T, n, st.buf[0]); order = 0; }
+      for (let i = 1; i < st.buf.length; i++) st.buf[i] = cp(st.buf[order]);
+      setActive(n, false);
+    },
+  });
+}
+
+/* every node can carry a metadata child (19775-1 7.2.2 X3DNode.metadata): add the field to the older tables that lack it */
+for (const t of Object.keys(DEFS)) if (!DEFS[t].metadata) DEFS[t].metadata = ['SFNode', IO, null];
