@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="_route-chain.x3d"/><meta name="description" content="ROUTE chain through the first bridge nodes: TimeSensor to BooleanTrigger to BooleanToggle to IntegerTrigger to Switch, plus TimeTrigger"/></head>
+  <Scene>
+    <TimeSensor DEF="Clock" loop="true" cycleInterval="0.5" startTime="1"/>
+    <BooleanTrigger DEF="BT"/>
+    <BooleanToggle DEF="BG"/>
+    <IntegerTrigger DEF="IT" integerKey="1"/>
+    <TimeTrigger DEF="TT"/>
+    <Switch DEF="Sw" whichChoice="0">
+      <Shape><Appearance><Material diffuseColor="1 0 0"/></Appearance><Box/></Shape>
+      <Shape><Appearance><Material diffuseColor="0 0 1"/></Appearance><Sphere/></Shape>
+    </Switch>
+    <ROUTE fromNode="Clock" fromField="cycleTime" toNode="BT" toField="set_triggerTime"/>
+    <ROUTE fromNode="BT" fromField="triggerTrue" toNode="BG" toField="set_boolean"/>
+    <ROUTE fromNode="BG" fromField="toggle_changed" toNode="IT" toField="set_boolean"/>
+    <ROUTE fromNode="IT" fromField="triggerValue" toNode="Sw" toField="set_whichChoice"/>
+    <ROUTE fromNode="BG" fromField="toggle_changed" toNode="TT" toField="set_boolean"/>
+  </Scene>
+</X3D>
