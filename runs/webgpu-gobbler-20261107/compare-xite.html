@@ -1,0 +1,15 @@
+<!doctype html><meta charset=utf-8><link rel=stylesheet href="vendor/x_ite/x_ite.css"><style>html,body{margin:0;background:#000}x3d-canvas{width:100vw;height:100vh;display:block}</style>
+<x3d-canvas id=stage splashScreen=false contextMenu=false notifications=false timings=false></x3d-canvas>
+<script src="vendor/x_ite/x_ite.min.js"></script>
+<script>
+(async()=>{ try{
+ const q=new URLSearchParams(location.search);
+ const B=X3D.getBrowser('#stage');
+ B.setBrowserOption('ToneMapping','KHR_PBR_NEUTRAL'); B.setBrowserOption('OrderIndependentTransparency',false); B.setBrowserOption('Notifications',false); B.setBrowserOption('Timings',false);
+ await B.loadURL(new X3D.MFString('scenes/'+(q.get('scene')||'brain_hero_lite.x3dz')));
+ const sc=B.currentScene;
+ (q.get('sw')||'').split(',').filter(Boolean).forEach(s=>{const [d,v]=s.split(':'); sc.getNamedNode(d).whichChoice=+v;});
+ sc.getNamedNode(q.get('vp')||'VP_HOME').set_bind=true;
+ window.__done=true;
+}catch(e){window.__err=String(e&&e.stack||e)}})();
+</script>

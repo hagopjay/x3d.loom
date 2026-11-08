@@ -1,0 +1,54 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#000"><canvas id=stage style="width:100vw;height:100vh;display:block"></canvas>
+<script>
+/* Compile-and-draw check for the Gobbler WGSL ports. Serve the scratch folder (layout in runs/webgpu-gobbler-20261107/RECEIPT.md, section 6), open
+   port-test.html?stub=1[&only=name,name]. Each port gets a dummy mesh with the attributes it declares; the page reports
+   window.__result = { name: { ok, errors[], lit } } and window.__done = true. Headless Chrome here cannot present a WebGPU swap chain, so ?stub=1 draws to an offscreen texture. */
+(()=>{const o=GPUAdapter.prototype.requestDevice;GPUAdapter.prototype.requestDevice=async function(...a){const d=await o.apply(this,a);d.lost.then(i=>console.error('DEVICE LOST '+i.reason+': '+i.message));return d;};})();
+if(location.search.includes('stub')){
+window.requestAnimationFrame=(cb)=>setTimeout(()=>cb(performance.now()),600);
+const origGC = HTMLCanvasElement.prototype.getContext;
+HTMLCanvasElement.prototype.getContext = function(t, o){ if(t!=='webgpu') return origGC.call(this,t,o);
+  const canvas=this; const ctx={ _t:null,_d:null,_f:'bgra8unorm', canvas,
+   configure(c){ this._d=c.device; this._f=c.format; window.__fmt=c.format; }, unconfigure(){},
+   getCurrentTexture(){ const w=canvas.width,h=canvas.height; if(!this._t||this._t.width!==w||this._t.height!==h){ this._t=this._d.createTexture({size:[w,h],format:this._f,usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.COPY_SRC|GPUTextureUsage.TEXTURE_BINDING}); window.__sc=this._t;} return this._t; } };
+  window.__ctx=ctx; return ctx; };
+}
+</script>
+<script src="/babylon.js"></script>
+<script src="/gob/wgsl-core.js"></script>
+<script>
+const q=new URLSearchParams(location.search);
+document.write((q.get('files')||'wgsl-sky,wgsl-eye,wgsl-facet,wgsl-line,wgsl-point').split(',').map(f=>`<script src="/gob/${f}.js"><\/script>`).join(''));
+</script>
+<script>
+window.addEventListener('load', async()=>{ try{
+  const errors=[]; const only=(q.get('only')||'').split(',').filter(Boolean);
+  const engine=new BABYLON.WebGPUEngine(document.getElementById('stage'),{antialias:false}); await engine.initAsync();
+  engine._device.addEventListener('uncapturederror',e=>errors.push(String(e.error&&e.error.message||e.error)));
+  const origErr=console.error; console.error=(...a)=>{errors.push(a.join(' ')); origErr(...a)};
+  const origWarn=console.warn; console.warn=(...a)=>{const t=a.join(' '); if(/error|invalid/i.test(t)) errors.push(t.slice(0,600)); origWarn(...a)};
+  const scene=new BABYLON.Scene(engine); scene.useRightHandedSystem=true; scene.clearColor=new BABYLON.Color4(0,0,0,1);
+  const cam=new BABYLON.FreeCamera('c',new BABYLON.Vector3(0,0,4),scene); cam.minZ=0.1; cam.maxZ=100; cam.setTarget(BABYLON.Vector3.Zero());
+  const res={};
+  for(const [name,port] of Object.entries(GOB_PORTS)){
+    if(only.length&&!only.includes(name)) continue;
+    if(port.kind==='hidden'){ res[name]={ok:true,errors:[],lit:0,note:'hidden'}; continue; }
+    const mesh=new BABYLON.Mesh(name,scene), tri=[0,1,2,0,2,3];
+    const P=[-1,-1,0, 1,-1,0, 1,1,0, -1,1,0], N=[0,0,1, 0,0,1, 0,0,1, 0,0,1], C=[1,.8,.4,.9, 1,.8,.4,.9, 1,.8,.4,.9, 1,.8,.4,.9], T=[0,0,0, 1,0,0, 1,1,0, 0,1,0], K=[-1,-1, 1,-1, 1,1, -1,1];
+    const vd=new BABYLON.VertexData(); vd.positions=P; vd.indices=tri; vd.applyToMesh(mesh);   // position first: Babylon drops a custom attribute that comes first
+    const set=(n,d,s)=>{ if(port.attrs.includes(n)) mesh.setVerticesData(n,d,false,s); };
+    set('normal',N,3); set('color',C,4); set('tc0',T,3); set('corner',K,2);
+    mesh.material=gobMakeMaterial(scene,name,port,'t-'+name);
+    mesh.alwaysSelectAsActiveMesh=true;
+    res[name]={ok:null,errors:[],mesh};
+  }
+  window.__body={engine,scene};
+  engine.runRenderLoop(()=>scene.render());
+  await new Promise(r=>setTimeout(r,5000));
+  await new Promise(r=>setTimeout(r,1500));
+  // read the offscreen target back and count lit pixels
+  let lit=null; try{ const t=window.__sc, d=window.__ctx._d, w=t.width,h=t.height,bpr=Math.ceil(w*4/256)*256; const buf=d.createBuffer({size:bpr*h,usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ}); const e=d.createCommandEncoder(); e.copyTextureToBuffer({texture:t},{buffer:buf,bytesPerRow:bpr},[w,h]); d.queue.submit([e.finish()]); await buf.mapAsync(GPUMapMode.READ); const a=new Uint8Array(buf.getMappedRange().slice(0)); let n=0; for(let y=0;y<h;y++)for(let x=0;x<w;x++){const s=y*bpr+x*4; if(a[s]>6||a[s+1]>6||a[s+2]>6) n++;} lit=n; }catch(e){ errors.push('readback: '+e); }
+  for(const [name,r] of Object.entries(res)){ r.errors=errors.slice(); r.ok=!errors.length; r.lit=lit; delete r.mesh; }
+  window.__result=res; window.__errors=errors; window.__done=true;
+}catch(e){ window.__err=String(e&&e.stack||e); window.__done=true; }});
+</script>

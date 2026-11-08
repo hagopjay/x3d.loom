@@ -202,3 +202,26 @@ Still not implemented: ClassicVRML and JSON encodings, PROTO, Inline, Script, IM
 Tested in headless Chromium on a software Vulkan adapter (SwiftShader) for correctness only. Collider: zero WebGPU validation errors and zero WGSL compile errors, all five ports compile and draw, all three viewpoints in both looks, the tour, slow motion, the scrubber and the spark slider work, a drag stops the tour, a GLSL edit falls back as described, a malformed source is refused, a phone-width layout has no horizontal overflow, and a browser without WebGPU gets the message instead of a broken page. First Light v1.1: the touch cascade drives the emitter speed, light and glow, including on a press held across frames.
 
 Frame rates from that adapter mean nothing and are not quoted. Nothing is timed for a benchmark. The pages show a frame interval on the viewer's own screen and record or send nothing; gate G0 (timing consent) is still open.
+
+## Gobbler 3 on Babylon WebGPU (the knowledge-graph port)
+
+Port #2 of the port map's queue (Pantheon splats was #1). The Gobbler 3 page (`gobbler-v3/` in `hagopjay/x3d.ml`: a scriptless X3D 4.0 knowledge graph, 17 ComposedShaders, 64 ROUTEs) with its **own unmodified `common.js`, explorer and tour**, drawn by Babylon 9.32.0 in WebGPU mode. The build swaps one script tag (X_ITE out, the bundle in) and one kicker line; `<x3d-canvas>` is defined by the bundle, so the page's `PX.boot` runs as written. X_ITE 16.5.1 stays the reference; this is not a parity witness.
+
+```sh
+python3 -I x3d.webgpu/demo/src/build-gobbler.py --page <gobbler-v3/build-public-candidate> --out OUT.html          # needs the page folder next to it
+python3 -I x3d.webgpu/demo/src/build-gobbler.py --page <gobbler-v3/build-public-candidate> --out OUT.html --single # scene, graph, css and js inlined: one file
+```
+
+The built page and its scene are **not committed**: the public candidate names two outside maintainers and waits for its owner's "publish". The build refuses to run if the scene carries GLSL with no WGSL port (it prints the key).
+
+| file | role |
+|---|---|
+| [src/gobbler/reader-ext.js](src/gobbler/reader-ext.js) | PointSet, TextureCoordinate3D, PixelTexture, VolumeEmitter, BooleanFilter, BooleanSequencer, flat RGBA and index arrays; `receive` is wrapped so the Boolean nodes run as events |
+| [src/gobbler/body-gob.js](src/gobbler/body-gob.js) | wraps the brain body without editing it: port lookup by shader hash, per-corner attributes (RGBA, 3D texture coordinates), PointSet as quads, ember particles, bbox-centre sort, first Viewpoint bound at load |
+| [src/gobbler/wgsl-core.js](src/gobbler/wgsl-core.js) | port registry and the one material factory the page and the test harness share |
+| [src/gobbler/wgsl-sky.js](src/gobbler/wgsl-sky.js), [-eye](src/gobbler/wgsl-eye.js), [-point](src/gobbler/wgsl-point.js), [-facet](src/gobbler/wgsl-facet.js), [-line](src/gobbler/wgsl-line.js) | the six GLSL programs as WGSL (733 lines in all), term for term |
+| [src/gobbler/port-test.html](src/gobbler/port-test.html), [port-test.js](src/gobbler/port-test.js) | compile-and-draw check for one port at a time; WGSL errors come back as data |
+| [src/gobbler/compare-gob.html](src/gobbler/compare-gob.html) | the scene on the body without the page, for frame comparisons |
+| [src/gobbler/boot-gob.js](src/gobbler/boot-gob.js) | defines `<x3d-canvas>`, starts the body, lists every fallback on screen, wires the opt-in Timing button |
+
+Shader keys (FNV-1a of the whitespace-collapsed GLSL, vertex-fragment): sky `57378568-b3067a52`, point `8da5fec9-17c8a8f8`, facet `a2e1db0e-7e920071`, line `623a753e-ff5d9002`, hide `1a42dc70-060b0505` (draws nothing, no mesh), eye `50c500f7-7a46fca5`. Receipt, gap log and lessons: [runs/webgpu-gobbler-20261107/RECEIPT.md](../../runs/webgpu-gobbler-20261107/RECEIPT.md).
