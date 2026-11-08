@@ -91,3 +91,22 @@
     for (const x of this.world.nodes) if (specOf(x) && (x.f.color === n || x.f.coord === n || x.f.normal === n || x.f.texCoord === n)) this.regeo(x);
   };
 }
+
+/* line geometry: a bridge node with spec.lines(g) -> { coord (flat xyz, or null for the node's own coord), coordIndex } is drawn by the body's screen-width line path, the one IndexedLineSet uses.
+   The stock code gets a stand-in whose type is IndexedLineSet. */
+{
+  const linesSpec = (g) => { const s = R.bridge.specs.get(g.type); return s && s.lines ? s : null; };
+  const standIn = (g, s) => {
+    const L = s.lines(g), coord = L.coord ? { id: g.id + 'p', type: 'Coordinate', version: g.version || 0, f: { point: L.coord } } : g.f.coord;
+    return Object.create(g, { type: { value: 'IndexedLineSet' }, __src: { value: g }, f: { value: Object.assign({}, g.f, { coord, coordIndex: L.coordIndex }) } });
+  };
+  const _mats = Body.prototype.materialsFor;
+  Body.prototype.materialsFor = function (shape, g, app) { const s = linesSpec(g); return _mats.call(this, shape, s ? standIn(g, s) : g, app); };
+  const _make = Body.prototype.makeMesh;
+  Body.prototype.makeMesh = function (shape, g, spec, pass) { const s = linesSpec(g); return _make.call(this, shape, s ? standIn(g, s) : g, spec, pass); };
+  const _gc = Body.prototype.geometryChanged;
+  Body.prototype.geometryChanged = function (n) {
+    _gc.call(this, n);
+    for (const x of this.world.nodes) if (linesSpec(x) && (x.f.color === n || x.f.coord === n)) this.regeo(x);
+  };
+}

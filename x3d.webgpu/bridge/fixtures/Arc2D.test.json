@@ -1,0 +1,55 @@
+{
+ "node": "Arc2D",
+ "mode": "scene",
+ "note": "three arcs: 0.5 to 3.0, 5 to 1 (through the seam at 2 pi), and equal angles (full turn); segments = max(3, floor(sweep * 40 / 2pi))",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const g=__body.world.nodes.find(n=>n.def==='G1');const ci=__R.bridge.specs.get('Arc2D').lines(g).coordIndex;let s=0,run=0;for(const i of ci){if(i<0){s+=Math.max(run-1,0);run=0}else run++}return s})()",
+    15
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('G1').getValue().getVertices().length/8",
+    15
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const g=__body.world.nodes.find(n=>n.def==='G2');const ci=__R.bridge.specs.get('Arc2D').lines(g).coordIndex;let s=0,run=0;for(const i of ci){if(i<0){s+=Math.max(run-1,0);run=0}else run++}return s})()",
+    14
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('G2').getValue().getVertices().length/8",
+    14
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const g=__body.world.nodes.find(n=>n.def==='G3');const ci=__R.bridge.specs.get('Arc2D').lines(g).coordIndex;let s=0,run=0;for(const i of ci){if(i<0){s+=Math.max(run-1,0);run=0}else run++}return s})()",
+    40
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('G3').getValue().getVertices().length/8",
+    40
+   ]
+  }
+ ],
+ "gaps": [
+  "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared"
+ ]
+}

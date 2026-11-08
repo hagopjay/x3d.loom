@@ -349,3 +349,19 @@ BR.compose = (g, tri, faceOf) => {
 };
 // index lists with -1 separators -> list of runs
 BR.runs = (index) => { const out = []; let cur = []; for (const i of index || []) { if (i < 0) { if (cur.length) out.push(cur); cur = []; } else cur.push(i); } if (cur.length) out.push(cur); return out; };
+
+/* ---- 2D curves and fills ------------------------------------------------------------------------------------------------------------------------
+   Arc2D, ArcClose2D, Circle2D follow X_ITE 16.6.0's tessellation (dimension 40 over a full turn): sweep from start to end angle counter-clockwise, equal start and end is a full turn. */
+BR.TAU = Math.PI * 2;
+BR.interval = (v, lo, hi) => { const d = hi - lo; return (((v - lo) % d) + d) % d + lo; };
+BR.sweep = (s, e) => { const a = BR.interval(s, 0, BR.TAU), b = BR.interval(e, 0, BR.TAU); if (a === b) return BR.TAU; const w = Math.abs(b - a); if (a > b) return BR.TAU - w; return isNaN(w) ? 0 : w; };
+BR.DIM2D = 40;
+/* points of an arc, n of them evenly from start over sweep (the last at start + sweep) */
+BR.arc = (r, start, sweep, n) => { const out = new Float32Array(n * 2); for (let i = 0; i < n; i++) { const t = start + sweep * (n === 1 ? 0 : i / (n - 1)); out[i * 2] = r * Math.cos(t); out[i * 2 + 1] = r * Math.sin(t); } return out; };
+/* fill a set of triangles given as flat xy corners (3 per triangle): +z normals, texture coordinates from a callback, indices in order */
+BR.fill2D = (xy, uvOf) => {
+  const n = xy.length / 2, pos = new Float32Array(n * 3), nrm = new Float32Array(n * 3), idx = new Uint32Array(n), uv = uvOf ? new Float32Array(n * 2) : null;
+  for (let i = 0; i < n; i++) { pos[i * 3] = xy[i * 2]; pos[i * 3 + 1] = xy[i * 2 + 1]; nrm[i * 3 + 2] = 1; idx[i] = i; if (uv) { const u = uvOf(xy[i * 2], xy[i * 2 + 1]); uv[i * 2] = u[0]; uv[i * 2 + 1] = u[1]; } }
+  return { pos, nrm, col: null, uv, idx };
+};
+BR.pt3 = (p) => { const o = new Float32Array(p.length / 2 * 3); for (let i = 0; i < p.length / 2; i++) { o[i * 3] = p[i * 2]; o[i * 3 + 1] = p[i * 2 + 1]; } return o; };   // flat xy -> flat xyz at z = 0
