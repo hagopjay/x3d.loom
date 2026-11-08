@@ -150,24 +150,45 @@
   };
 }
 
-/* MultiTexture: the textures are drawn over each other on a canvas texture; texture i meets the result so far by mode[i] */
+/* MultiTexture: the textures are drawn over each other on a canvas texture; texture i meets the result so far by mode[i], moved by the TextureTransform of stage i (the Appearance's
+   MultiTextureTransform, or one TextureTransform for all stages). MovieTexture: a Babylon VideoTexture on the node's <video> element. */
 {
+  // 3x3 affine as [a b c d e f] (x' = a x + c y + e, y' = b x + d y + f); tc' = T + C + R S (tc - C)
+  const mul = (m, n) => [m[0] * n[0] + m[2] * n[1], m[1] * n[0] + m[3] * n[1], m[0] * n[2] + m[2] * n[3], m[1] * n[2] + m[3] * n[3], m[0] * n[4] + m[2] * n[5] + m[4], m[1] * n[4] + m[3] * n[5] + m[5]];
+  const inv = (m) => { const d = m[0] * m[3] - m[1] * m[2]; return [m[3] / d, -m[1] / d, -m[2] / d, m[0] / d, (m[2] * m[5] - m[3] * m[4]) / d, (m[1] * m[4] - m[0] * m[5]) / d]; };
+  const ttMatrix = (t) => { const f = t.f, c = f.center || [0, 0], s = f.scale || [1, 1], r = f.rotation || 0, T = f.translation || [0, 0], co = Math.cos(r), si = Math.sin(r);
+    return mul(mul(mul([1, 0, 0, 1, T[0] + c[0], T[1] + c[1]], [co, si, -si, co, 0, 0]), [s[0], 0, 0, s[1], 0, 0]), [1, 0, 0, 1, -c[0], -c[1]]); };
   const _tex = Body.prototype.tex;
   Body.prototype.tex = function (node) {
+    if (node && node.type === 'MovieTexture') {
+      const hit = this.texCache.get(node.id); if (hit) return hit;
+      if (!node._video) return null;
+      const t = new BABYLON.VideoTexture('mov-' + node.id, node._video, this.scene, false, true, BABYLON.Texture.TRILINEAR_SAMPLINGMODE, { autoPlay: false, loop: false, muted: true });
+      this.texCache.set(node.id, t); return t;
+    }
     if (!node || node.type !== 'MultiTexture') return _tex.call(this, node);
     const hit = this.texCache.get(node.id); if (hit) return hit;
     const body = this, SZ = 256, dt = new BABYLON.DynamicTexture('mt-' + node.id, { width: SZ, height: SZ }, this.scene, true);
     const imgs = [], ctx = dt.getContext();
+    const app = this.world.nodes.find((x) => x.type === 'Appearance' && x.f.texture === node), tt = app && app.f.textureTransform;
+    const stageTT = (i) => !tt ? null : tt.type === 'MultiTextureTransform' ? (tt.f.textureTransform || [])[i] || null : tt;
     const OPS = { REPLACE: 'source-over', MODULATE: 'multiply', MODULATE2X: 'multiply', MODULATE4X: 'multiply', ADD: 'lighter' };
+    const P = [SZ, 0, 0, -SZ, 0, SZ];                                   // uv -> canvas pixels (v up)
     dt.redraw = () => {
-      ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, SZ, SZ);
+      ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#fff'; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillRect(0, 0, SZ, SZ);
       imgs.forEach((im, i) => {
         if (!im.complete || !im.naturalWidth) return;
         const mode = String((node.f.mode || [])[i] || 'MODULATE').toUpperCase(), op = OPS[mode];
         if (!op && i) body.note('MultiTexture mode ' + mode + ' drawn as MODULATE');
-        ctx.globalCompositeOperation = i === 0 ? 'source-over' : op || 'multiply'; ctx.drawImage(im, 0, 0, SZ, SZ);
+        ctx.globalCompositeOperation = i === 0 ? 'source-over' : op || 'multiply';
+        const t = stageTT(i);
+        if (t) {                                                        // canvas(px) = image(Q px) with Q = P M P^-1; the image is placed by Q^-1 and tiled
+          const Q = mul(mul(P, ttMatrix(t)), inv(P)), D = inv(Q), pat = ctx.createPattern(im, 'repeat');
+          pat.setTransform(new DOMMatrix([D[0] * SZ / im.naturalWidth, D[1] * SZ / im.naturalWidth, D[2] * SZ / im.naturalHeight, D[3] * SZ / im.naturalHeight, D[4], D[5]]));
+          ctx.fillStyle = pat; ctx.fillRect(0, 0, SZ, SZ);
+        } else ctx.drawImage(im, 0, 0, SZ, SZ);
         const extra = mode === 'MODULATE2X' ? 1 : mode === 'MODULATE4X' ? 3 : 0;
-        for (let k = 0; k < extra && i; k++) { ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(dt.getContext().canvas, 0, 0); }
+        for (let k = 0; k < extra && i; k++) { ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(ctx.canvas, 0, 0); }
       });
       ctx.globalCompositeOperation = 'source-over'; dt.update();
     };
@@ -177,4 +198,62 @@
     }
     dt.redraw(); this.texCache.set(node.id, dt); return dt;
   };
+}
+
+/* TwoSidedMaterial: two passes of the same geometry, front faces then back faces, each with its own colours */
+{
+  const _mats = Body.prototype.materialsFor;
+  Body.prototype.materialsFor = function (shape, g, app) {
+    const mat = app && app.f.material;
+    if (!mat || mat.type !== 'TwoSidedMaterial') return _mats.call(this, shape, g, app);
+    return [false, true].map((back) => ({ kind: 'twosided', mat, back, deps: [mat] }));
+  };
+  const _mm = Body.prototype.makeMaterial;
+  Body.prototype.makeMaterial = function (shape, g, spec, mesh) {
+    if (spec.kind !== 'twosided') return _mm.call(this, shape, g, spec, mesh);
+    const f = spec.mat.f, sep = f.separateBackColor, B = spec.back && sep;
+    const src = { f: { diffuseColor: B ? f.backDiffuseColor : f.diffuseColor, emissiveColor: B ? f.backEmissiveColor : f.emissiveColor, transparency: B ? f.backTransparency : f.transparency } };
+    const m = new BABYLON.StandardMaterial('two-' + (spec.back ? 'back-' : 'front-') + shape.id, this.scene);
+    m.specularColor.set(0, 0, 0); m.backFaceCulling = true;
+    m.sideOrientation = spec.back ? BABYLON.Material.ClockWiseSideOrientation : BABYLON.Material.CounterClockWiseSideOrientation;
+    this.refreshPhong(m, src); m._two = spec.back ? 'back' : 'front';
+    return m;
+  };
+}
+
+/* FillProperties: filled=false hides the fill; hatched=true lays a line pattern over the surface (the geometry's own texture coordinates) */
+{
+  const _bs = Body.prototype.buildShape;
+  Body.prototype.buildShape = function (n, parent, chain) {
+    const r = _bs.call(this, n, parent, chain), fp = n.f.appearance && n.f.appearance.f.fillProperties;
+    if (fp && r.meshes && r.meshes.length) this.applyFill(r, fp);
+    return r;
+  };
+  Body.prototype.applyFill = function (r, fp) {
+    const f = fp.f, extra = [];
+    for (const m of r.meshes) {
+      if (f.filled === false) m.visibility = 0;          // not drawn but still picked, as X_ITE 16.6.0 does
+      if (f.hatched !== false) {
+        const SZ = 32, dt = new BABYLON.DynamicTexture('hatch-' + fp.id, { width: SZ, height: SZ }, this.scene, true), c = dt.getContext(), col = f.hatchColor || [1, 1, 1];
+        const style = Math.max(1, Math.min(19, f.hatchStyle | 0)); if (style > 6) this.note('FillProperties hatchStyle ' + style + ' drawn as style 6');
+        c.clearRect(0, 0, SZ, SZ); c.strokeStyle = `rgb(${Math.round(col[0] * 255)},${Math.round(col[1] * 255)},${Math.round(col[2] * 255)})`; c.lineWidth = 3;
+        const line = (x0, y0, x1, y1) => { c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); };
+        const H = style === 1 || style === 5, V = style === 2 || style === 5, U = style === 3 || style >= 6, D = style === 4 || style >= 6;
+        if (H) line(0, SZ / 2, SZ, SZ / 2); if (V) line(SZ / 2, 0, SZ / 2, SZ);
+        if (U) { line(0, SZ, SZ, 0); line(-SZ / 2, SZ / 2, SZ / 2, -SZ / 2); line(SZ / 2, SZ * 1.5, SZ * 1.5, SZ / 2); }
+        if (D) { line(0, 0, SZ, SZ); line(SZ / 2, -SZ / 2, SZ * 1.5, SZ / 2); line(-SZ / 2, SZ / 2, SZ / 2, SZ * 1.5); }
+        dt.hasAlpha = true; dt.update(); dt.wrapU = dt.wrapV = BABYLON.Texture.WRAP_ADDRESSMODE; dt.uScale = dt.vScale = 6;
+        const o = m.clone(m.name + '-hatch'); o.parent = m.parent; o.isPickable = false;
+        const hm = new BABYLON.StandardMaterial('hatchmat-' + fp.id, this.scene);
+        hm.diffuseTexture = dt; hm.useAlphaFromDiffuseTexture = true; hm.disableLighting = true; hm.emissiveColor.set(1, 1, 1); hm.backFaceCulling = false; hm.zOffset = -2; hm.transparencyMode = BABYLON.Material.MATERIAL_ALPHABLEND;
+        o.material = hm; o.metadata = { hatch: true }; o.isVisible = true; extra.push(o);
+      }
+    }
+    r.hatch = extra;
+  };
+}
+
+{ // a rebuilt Shape also drops its hatch overlay meshes
+  const _rb = Body.prototype.rebuildShapeIn;
+  Body.prototype.rebuildShapeIn = function (r) { (r.hatch || []).forEach((m) => m.dispose(false, true)); r.hatch = []; return _rb.call(this, r); };
 }

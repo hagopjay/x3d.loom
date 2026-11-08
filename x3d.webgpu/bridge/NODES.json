@@ -968,10 +968,10 @@
    "inherits": "X3DAppearanceChildNode",
    "container": "fillProperties",
    "nfields": 5,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 11,
+   "receipt": "receipts/FillProperties.json",
+   "note": "a shape with filled=false and hatched=false is not drawn but still answers the pointer, as in X_ITE 16.6.0 (the 4.0 text does not say); compared by pointer-over probes (hidden fill is not hit, hatched and plain fills are) and, in our body only, the hatch overlay mesh; line pattern, thickness and screen-space scaling are not compared with X_ITE; hatchStyle 7 to 19 are drawn as style 6; the pattern follows the geometry's texture coordinates, a geometry without them shows no hatch",
    "rank": 52
   },
   "FloatVertexAttribute": {
@@ -1787,10 +1787,10 @@
    "inherits": "X3DSoundSourceNode",
    "container": "texture",
    "nfields": 22,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 11,
+   "receipt": "receipts/MovieTexture.json",
+   "note": "timing is compared through the fields only; the picture on the box is not compared with X_ITE; the clip is played muted (a page may not start sound by itself); gain and pitch are read and not used; a loop and a natural end are not exercised by the test",
    "rank": 54
   },
   "MultiTexture": {
@@ -1826,10 +1826,10 @@
    "inherits": "X3DTextureTransformNode",
    "container": "textureTransform",
    "nfields": 2,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 11,
+   "receipt": "receipts/MultiTextureTransform.json",
+   "note": "X_ITE is compared on loading and drawing the shapes; the shifted colours are checked in our body only (red|blue image shifted by half a tile swaps the halves); only MultiTexture stages are moved; a plain TextureTransform on a single texture is not applied by the stock body (TextureTransform stays 'base'); edits to the transform after the build are not followed",
    "rank": 51
   },
   "NavigationInfo": {
@@ -2580,10 +2580,10 @@
    "inherits": "X3DScriptNode",
    "container": "children",
    "nfields": 10,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 11,
+   "receipt": "receipts/Script.json",
+   "note": "scripts are OFF unless the page sets R.bridge.allowScripts = true (they run code that comes with the scene); the test pages set it; shutdown(), node-valued fields, directOutput, external script files and the less common methods of the classic vector classes are not provided",
    "rank": 55
   },
   "SegmentedVolumeData": {
@@ -3230,10 +3230,10 @@
    "inherits": "X3DMaterialNode",
    "container": "material",
    "nfields": 14,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 11,
+   "receipt": "receipts/TwoSidedMaterial.json",
+   "note": "X_ITE is compared on loading and picking the shapes; which side shows which colour is checked in our body only (two passes, culled front and back); specular, shininess and ambient are read and not shown",
    "rank": 53
   },
   "UniversalJoint": {

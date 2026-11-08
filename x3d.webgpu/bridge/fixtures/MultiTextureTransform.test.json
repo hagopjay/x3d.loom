@@ -1,0 +1,97 @@
+{
+ "node": "MultiTextureTransform",
+ "mode": "scene",
+ "note": "a red|blue image, shifted by 0.5 in s on stage 0",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    88,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    232,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const t=__body.texCache.get(__body.world.nodes.find(n=>n.def==='M1').id);return Array.from(t.getContext().getImageData(64,128,1,1).data).map(v=>v>127?255:0)})()",
+    [
+     0,
+     0,
+     255,
+     255
+    ]
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const t=__body.texCache.get(__body.world.nodes.find(n=>n.def==='M1').id);return Array.from(t.getContext().getImageData(192,128,1,1).data).map(v=>v>127?255:0)})()",
+    [
+     255,
+     0,
+     0,
+     255
+    ]
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const t=__body.texCache.get(__body.world.nodes.find(n=>n.def==='M2').id);return Array.from(t.getContext().getImageData(64,128,1,1).data).map(v=>v>127?255:0)})()",
+    [
+     255,
+     0,
+     0,
+     255
+    ]
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const t=__body.texCache.get(__body.world.nodes.find(n=>n.def==='M2').id);return Array.from(t.getContext().getImageData(192,128,1,1).data).map(v=>v>127?255:0)})()",
+    [
+     0,
+     0,
+     255,
+     255
+    ]
+   ]
+  }
+ ],
+ "gaps": [
+  "X_ITE is compared on loading and drawing the shapes; the shifted colours are checked in our body only (red|blue image shifted by half a tile swaps the halves)",
+  "only MultiTexture stages are moved; a plain TextureTransform on a single texture is not applied by the stock body (TextureTransform stays 'base')",
+  "edits to the transform after the build are not followed"
+ ]
+}

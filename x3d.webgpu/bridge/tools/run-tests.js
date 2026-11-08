@@ -58,7 +58,7 @@ async function runSpec(eng, spec, xml) {
     out.steps++;
     const fail = (m) => { out.ok = false; out.fails.push('step ' + (i + 1) + ': ' + m); };
     try {
-      if (s.set) { for (const k in events) events[k].length = 0; const [d, f, v, t] = s.set; await eng.apply(() => { node(d)[f] = conv(t, v); }); }
+      if (s.set) { for (const k in events) events[k].length = 0; const [d, f, v0, t] = s.set; const v = v0 === '$now' ? performance.timeOrigin / 1000 + performance.now() / 1000 : v0; await eng.apply(() => { node(d)[f] = conv(t, v); }); }
       else if (s.settle) await eng.settle(s.settle);
       else if (s.expect) { const [d, f, v] = s.expect; const a = plain(node(d)[f]); if (!close(a, v)) fail(d + '.' + f + ' is ' + show(a) + ', expected ' + show(v)); }
       else if (s.event) { const [d, f, v] = s.event; const l = events[d + '.' + f]; if (v === '$any') out.recorded.push(l.length === 1 ? l[0] : l); if (l.length !== 1) fail(d + '.' + f + ' fired ' + l.length + ' times (' + show(l) + '), expected 1'); else if (!close(l[0], v)) fail(d + '.' + f + ' event ' + show(l[0]) + ', expected ' + show(v)); }
@@ -81,12 +81,12 @@ async function runSpec(eng, spec, xml) {
 `;
 const PAGE_OURS = `<!doctype html><meta charset=utf-8><body><script src="/bundle.js"></script><script>${RUNNER}
 let ts = performance.timeOrigin / 1000 + performance.now() / 1000;
-window.runOurs = async (spec, xml) => runSpec({ name: 'ours',
+window.runOurs = async (spec, xml) => (window.__R && (__R.bridge.allowScripts = spec.scripts !== false), runSpec({ name: 'ours',
   open: async (x) => { const sc = await X3DSAI.B.createX3DFromString(x); return sc; },
   apply: async (fn) => { __events.begin(ts += 0.05); fn(); __events.drain(); },
   settle: async (dt) => { const sc = X3DSAI.B.currentScene, steps = Math.max(1, Math.round((dt || 0.05) / 0.05));
     for (let i = 0; i < steps; i++) { __events.begin(ts += 0.05); for (const n of (window.__worlds || [])) for (const t of n.nodes) if (t.type === 'TimeSensor') __R.tickTimeSensor(t, ts); __events.drain(); } },
-}, spec, xml);
+}, spec, xml));
 </script>`;
 const PAGE_XITE = `<!doctype html><meta charset=utf-8><link rel=stylesheet href="/x_ite/x_ite.css"><body><x3d-canvas id=c style="width:64px;height:64px"></x3d-canvas><script src="/x_ite/x_ite.min.js"></script><script>${RUNNER}
 window.runXite = async (spec, xml) => { const b = X3D.getBrowser('#c'); await b.loadComponents?.(b.getProfile ? b.getProfile('Full') : undefined).catch(() => {});
@@ -101,7 +101,7 @@ window.xiteInfo = () => ({ name: X3D.getBrowser('#c').name, version: X3D.getBrow
 const PAGE_OURS_SCENE = `<!doctype html><meta charset=utf-8><body style="margin:0;background:#000"><canvas id=c width=320 height=240 style="width:320px;height:240px;display:block"></canvas><script src="/babylon.js"></script><script src="/bundle-body.js"></script><script>${RUNNER}
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 window.sceneReady = (async () => { const body = new Body(document.getElementById('c'), { onNote: (m) => (window.__notes = window.__notes || []).push(m) }); await body.init(); X3DSAI.setBody(body); window.__body = body; })();
-window.runScene = async (spec, xml) => { await window.sceneReady; return runSpec({ name: 'ours',
+window.runScene = async (spec, xml) => { await window.sceneReady; if (window.__R) __R.bridge.allowScripts = spec.scripts !== false; return runSpec({ name: 'ours',
   open: async (x) => { const sc = await X3DSAI.B.createX3DFromString(x); await X3DSAI.B.replaceWorld(sc); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); return sc; },
   apply: async (fn) => { fn(); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); },
   settle: async (dt) => { await sleep((dt || 0.05) * 1000); await X3DSAI.B.nextFrame(); },
@@ -129,6 +129,7 @@ function serve(files) {
   const mime = { '.js': 'text/javascript', '.css': 'text/css', '.html': 'text/html', '.json': 'application/json', '.wasm': 'application/wasm', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
   return new Promise((res) => { const s = http.createServer((q, r) => {
     const u = decodeURIComponent(q.url.split('?')[0]);
+    if (u === '/clip.webm') { r.setHeader('content-type', 'video/webm'); r.setHeader('cache-control', 'no-store'); return fs.createReadStream(path.join(BR, 'fixtures', 'assets', 'clip.webm')).pipe(r); }
     if (u === '/px.png' || u === '/slow.png') { const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64'); r.setHeader('content-type', 'image/png'); r.setHeader('cache-control', 'no-store'); return u === '/px.png' ? r.end(png) : setTimeout(() => r.end(png), 2500); }
     if (files[u] !== undefined) { r.setHeader('content-type', mime[path.extname(u)] || 'text/html'); return r.end(files[u]); }
     if (u.startsWith('/x_ite/')) { const f = path.join(XITE_DIR, u.slice(7)); if (fs.existsSync(f) && fs.statSync(f).isFile()) { r.setHeader('content-type', mime[path.extname(f)] || 'application/octet-stream'); return fs.createReadStream(f).pipe(r); } }
@@ -139,7 +140,7 @@ function serve(files) {
 (async () => {
   const files = { '/bundle.js': bundle('reader'), '/bundle-body.js': bundle('body'), '/babylon.js': babylon ? fs.readFileSync(babylon, 'utf8') : '', '/ours.html': PAGE_OURS, '/xite.html': PAGE_XITE, '/ours-scene.html': PAGE_OURS_SCENE, '/xite-scene.html': PAGE_XITE_SCENE };
   const server = await serve(files), base = 'http://localhost:' + server.address().port;
-  const b = await chromium.launch({ args: ['--enable-unsafe-webgpu', '--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--use-webgpu-adapter=swiftshader'] });
+  const b = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required', '--enable-unsafe-webgpu', '--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--use-webgpu-adapter=swiftshader'] });
   const env = { chromium: b.version(), ours: 'x3d.webgpu reader + SAI shim, headless, bundle sha ' + require('crypto').createHash('sha256').update(files['/bundle.js']).digest('hex').slice(0, 12) };
   const results = {};
   const po = await b.newPage(), errs = []; po.on('pageerror', (e) => errs.push(e.message.slice(0, 200)));
