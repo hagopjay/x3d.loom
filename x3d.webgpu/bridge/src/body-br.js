@@ -63,3 +63,31 @@
     cv.addEventListener('pointerup', up, true); cv.addEventListener('pointercancel', up, true);
   };
 }
+
+/* geometry sets: a bridge geometry node (spec.geometry) is drawn through the same path as IndexedTriangleSet. makeMesh hands the stock code a stand-in whose type is IndexedTriangleSet and
+   which remembers the real node (__src); geometryData reads the vertex data from the spec instead. The data is cached by node id, keyed on the versions of the node and its coord/normal/color/texCoord. */
+{
+  const specOf = (g) => { const s = R.bridge.specs.get(g.__src ? g.__src.type : g.type); return s && s.geometry ? s : null; };
+  const _data = Body.prototype.geometryData;
+  Body.prototype.geometryData = function (g) {
+    const s = specOf(g); if (!s) return _data.call(this, g);
+    const f = g.f, ver = [g, f.coord, f.normal, f.color, f.texCoord].map((x) => (x ? x.version || 0 : -1)).join('.');
+    const hit = this.geoCache.get(g.id); if (hit && hit.ver === ver) return hit;
+    const out = Object.assign({ ver }, s.geometry(g.__src || g, this)); this.geoCache.set(g.id, out); return out;
+  };
+  const _make = Body.prototype.makeMesh;
+  Body.prototype.makeMesh = function (shape, g, spec, pass) {
+    if (!g.__src && specOf(g)) { const gp = Object.create(g, { type: { value: 'IndexedTriangleSet' }, __src: { value: g } }); return _make.call(this, shape, gp, spec, pass); }
+    return _make.call(this, shape, g, spec, pass);
+  };
+  Body.prototype.regeo = function (x) {            // drop the cached data and Babylon geometry of one geometry node and rebuild the shapes that use it
+    this.geoCache.delete(x.id);
+    for (const key of [x.id + 'c', x.id + 'n']) { const c = this.geoCache.get(key); if (c) { c.geo.dispose(); this.geoCache.delete(key); } }
+    for (const r of this.rec.values()) if (r.node && r.node.type === 'Shape' && r.node.f.geometry === x && r.tn) this.rebuildShapeIn(r);
+  };
+  const _gc = Body.prototype.geometryChanged;
+  Body.prototype.geometryChanged = function (n) {
+    _gc.call(this, n);
+    for (const x of this.world.nodes) if (specOf(x) && (x.f.color === n || x.f.coord === n || x.f.normal === n || x.f.texCoord === n)) this.regeo(x);
+  };
+}

@@ -65,6 +65,7 @@ async function runSpec(eng, spec, xml) {
       else if (s.between) { const [d, f, lo, hi] = s.between; const a = plain(node(d)[f]); if (!(a > lo && a < hi)) fail(d + '.' + f + ' is ' + show(a) + ', expected between ' + lo + ' and ' + hi); }
       else if (s.near) { const [d, f, v, tol] = s.near; const a = plain(node(d)[f]); if (!(Math.abs(a - v) <= tol)) fail(d + '.' + f + ' is ' + show(a) + ', expected ' + v + ' within ' + tol); }
       else if (s.nearv) { const [d, f, v, tol] = s.nearv; const fl = (x) => (Array.isArray(x) ? x.flatMap(fl) : [x]); const a = fl(plain(node(d)[f])), vv = fl(v); if (!(a.length === vv.length && vv.every((x, i) => Math.abs(a[i] - x) <= tol))) fail(d + '.' + f + ' is ' + show(a) + ', expected ' + show(v) + ' within ' + tol); }
+      else if (s.js) { const [code, v] = s.js; const got = await new Function('return (' + code + ')')(); if (!close(got, v)) fail('js ' + show(got) + ', expected ' + show(v)); }
       else if (s.setnode) { const [d, f, d2] = s.setnode; await eng.apply(() => { node(d)[f] = node(d2); }); }
       else if (s.wait) await new Promise((r) => setTimeout(r, s.wait * 1000));
       else if (s.key) { await window.__key(...s.key); await eng.settle(0.1); }

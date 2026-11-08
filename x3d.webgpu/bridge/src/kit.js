@@ -311,3 +311,41 @@ BR.keys = {
 };
 // a url from a node as the page would load it: through the body's resolver when there is one, else against the page
 BR.resolveUrl = (u) => { const b = R.bridge.body; try { return b && b.resolve ? b.resolve(u, b.baseUrl) : new URL(u, document.baseURI).href; } catch (e) { return u; } };
+
+/* ---- geometry sets -------------------------------------------------------------------------------------------------------------------------------
+   The node gives its triangles as source vertex numbers (3 per triangle) and the face each triangle belongs to (a fan, a strip, a quad); compose() turns that into the vertex data
+   the body draws: one corner per triangle vertex, so per-face colours and normals work. Winding follows ccw. A missing normal is made here: smooth over the shared source vertex when
+   normalPerVertex, else flat per face. Colours drop alpha (the body draws RGB). */
+BR.compose = (g, tri, faceOf) => {
+  const f = g.f, P = (f.coord && f.coord.f.point) || [], nc = tri.length, flip = f.ccw === false;
+  const pos = new Float32Array(nc * 3), idx = new Uint32Array(nc), nrm = new Float32Array(nc * 3), perV = f.normalPerVertex !== false, cperV = f.colorPerVertex !== false;
+  const C = f.color && f.color.f.color, cw = f.color && f.color.type === 'ColorRGBA' ? 4 : 3, N = f.normal && f.normal.f.vector, T = f.texCoord && f.texCoord.f.point;
+  const col = C ? new Float32Array(nc * 3) : null, uv = T ? new Float32Array(nc * 2) : null;
+  for (let c = 0; c < nc; c++) {
+    const v = tri[c], face = faceOf[(c / 3) | 0];
+    pos[c * 3] = P[v * 3]; pos[c * 3 + 1] = P[v * 3 + 1]; pos[c * 3 + 2] = P[v * 3 + 2];
+    if (uv) { uv[c * 2] = T[v * 2]; uv[c * 2 + 1] = T[v * 2 + 1]; }
+    if (col) { const k = (cperV ? v : face) * cw; col[c * 3] = C[k]; col[c * 3 + 1] = C[k + 1]; col[c * 3 + 2] = C[k + 2]; }
+  }
+  for (let t = 0; t < nc; t += 3) { if (flip) { idx[t] = t; idx[t + 1] = t + 2; idx[t + 2] = t + 1; } else { idx[t] = t; idx[t + 1] = t + 1; idx[t + 2] = t + 2; } }
+  const fn = new Float32Array(nc);                    // face normal of each triangle, from the emitted order, unnormalised
+  const tn = new Array(nc / 3);
+  for (let t = 0; t < nc; t += 3) {
+    const a = idx[t] * 3, b = idx[t + 1] * 3, d = idx[t + 2] * 3;
+    const u = [pos[b] - pos[a], pos[b + 1] - pos[a + 1], pos[b + 2] - pos[a + 2]], w = [pos[d] - pos[a], pos[d + 1] - pos[a + 1], pos[d + 2] - pos[a + 2]];
+    tn[t / 3] = [u[1] * w[2] - u[2] * w[1], u[2] * w[0] - u[0] * w[2], u[0] * w[1] - u[1] * w[0]];
+  }
+  const nl = (v) => { const l = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / l, v[1] / l, v[2] / l]; };
+  if (N) {
+    for (let c = 0; c < nc; c++) { const k = (perV ? tri[c] : faceOf[(c / 3) | 0]) * 3; nrm[c * 3] = N[k]; nrm[c * 3 + 1] = N[k + 1]; nrm[c * 3 + 2] = N[k + 2]; }
+  } else if (perV) {
+    const acc = new Map();
+    for (let t = 0; t < nc / 3; t++) for (let k = 0; k < 3; k++) { const v = tri[t * 3 + k], a = acc.get(v) || [0, 0, 0]; a[0] += tn[t][0]; a[1] += tn[t][1]; a[2] += tn[t][2]; acc.set(v, a); }
+    for (let c = 0; c < nc; c++) { const n = nl(acc.get(tri[c])); nrm[c * 3] = n[0]; nrm[c * 3 + 1] = n[1]; nrm[c * 3 + 2] = n[2]; }
+  } else {
+    for (let c = 0; c < nc; c++) { const n = nl(tn[(c / 3) | 0]); nrm[c * 3] = n[0]; nrm[c * 3 + 1] = n[1]; nrm[c * 3 + 2] = n[2]; }
+  }
+  return { pos, nrm, col, uv, idx };
+};
+// index lists with -1 separators -> list of runs
+BR.runs = (index) => { const out = []; let cur = []; for (const i of index || []) { if (i < 0) { if (cur.length) out.push(cur); cur = []; } else cur.push(i); } if (cur.length) out.push(cur); return out; };

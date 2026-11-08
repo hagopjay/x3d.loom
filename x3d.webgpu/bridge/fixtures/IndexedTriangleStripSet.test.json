@@ -1,0 +1,112 @@
+{
+ "node": "IndexedTriangleStripSet",
+ "mode": "scene",
+ "note": "two strips of 4 indices: the gap between them stays open, all triangles keep one winding",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    102,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    218,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    59,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    77
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const s=__body.world.nodes.find(n=>n.def==='S');return __body.rec.get(s.id).meshes.reduce((a,m)=>a+m.getTotalIndices()/3,0)})()",
+    4
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const g=__body.world.nodes.find(n=>n.def==='G');const d=__body.geometryData(g);return d.nrm.every((v,i)=>i%3!==2||v>0.99)})()",
+    true
+   ]
+  }
+ ],
+ "gaps": [
+  "compared by where the pointer is over the shape (a TouchSensor) in both engines, plus triangle count and normals in our body only; colour, texture and lighting are not compared with X_ITE"
+ ]
+}
