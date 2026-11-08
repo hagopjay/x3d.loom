@@ -52,7 +52,20 @@ BR.layout = {
     live.sort((a, b) => a.depth - b.depth);
     for (const r of live) BR.layout.place(body, r);
   },
+  placeScreen(body, r) {                               // ScreenGroup: one unit = one pixel, the rotation of the group's place in the world, the origin where it is
+    const tn = r.tn, B = BABYLON, cam = BR.layout.camOf(body, tn), cw = body.canvas.clientWidth || 1, ch = body.canvas.clientHeight || 1, vp = cam.viewport, wpx = cw * vp.width, hpx = ch * vp.height;
+    const par = tn.parent ? tn.parent.getWorldMatrix() : B.Matrix.Identity(), V = cam.getViewMatrix(true), MV = par.multiply(V);
+    const cs = new B.Vector3(), cq = new B.Quaternion(), ct = new B.Vector3(); MV.decompose(cs, cq, ct);
+    let s;
+    if (cam.mode === B.Camera.ORTHOGRAPHIC_CAMERA) s = (cam.orthoTop - cam.orthoBottom) / hpx;
+    else { const fm = hpx <= wpx ? cam.fov : 2 * Math.atan(Math.tan(cam.fov / 2) * wpx / hpx); s = Math.abs(ct.z) * Math.tan(fm / 2) * 2 / Math.min(wpx, hpx); }
+    const rotM = new B.Matrix(); B.Matrix.FromQuaternionToRef(cq, rotM);
+    const M2 = B.Matrix.Scaling(s, s, s).multiply(rotM).multiply(B.Matrix.Translation(ct.x, ct.y, ct.z)), loc = M2.multiply(V.clone().invert()).multiply(par.clone().invert());
+    const s2 = new B.Vector3(), q2 = new B.Quaternion(), p2 = new B.Vector3(); loc.decompose(s2, q2, p2);
+    tn.scaling.copyFrom(s2); tn.rotationQuaternion = q2; tn.position.copyFrom(p2);
+  },
   place(body, r) {
+    if (r.screen) return BR.layout.placeScreen(body, r);
     const tn = r.tn, ln = r.n.f.layout, B = BABYLON, F = 1, P = 2, W = 0, N = 0, S = 3;
     if (!ln || ln.type !== 'Layout') { tn.position.set(0, 0, 0); tn.rotationQuaternion = null; tn.rotation.set(0, 0, 0); tn.scaling.set(1, 1, 1); r.rect = null; return; }
     const parents = [];                                  // the Layout nodes around this one, outermost first; prect = the rectangle of the innermost
