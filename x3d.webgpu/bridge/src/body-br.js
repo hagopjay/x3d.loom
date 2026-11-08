@@ -280,7 +280,7 @@
     _apply.call(this);
     const c = this.cam, o = this.pose && this.pose.ortho, C = BABYLON.Camera;
     if (!o) { if (c.mode !== C.PERSPECTIVE_CAMERA) c.mode = C.PERSPECTIVE_CAMERA; return; }
-    const w = this.canvas.clientWidth || 1, h = this.canvas.clientHeight || 1, ratio = w / h, f = o.f, s = o.scale || 1;
+    const w = this.canvas.clientWidth || 1, h = this.canvas.clientHeight || 1, ratio = (w * c.viewport.width) / (h * c.viewport.height), f = o.f, s = o.scale || 1;
     const x0 = (f[0] ?? -1) * s, y0 = (f[1] ?? -1) * s, x1 = (f[2] ?? 1) * s, y1 = (f[3] ?? 1) * s, sx = x1 - x0, sy = y1 - y0;
     c.mode = C.ORTHOGRAPHIC_CAMERA;
     if (ratio > sx / sy) { const cx = (x0 + x1) / 2, hw = sy * ratio / 2; c.orthoLeft = cx - hw; c.orthoRight = cx + hw; c.orthoBottom = y0; c.orthoTop = y1; }

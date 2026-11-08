@@ -1527,10 +1527,10 @@
    "inherits": "X3DLayoutNode",
    "container": "layout",
    "nfields": 7,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 18,
+   "receipt": "receipts/Layout.json",
+   "note": "a Layout inside a LayoutGroup that sits in the perspective world uses the near plane of the camera as the viewport size (like X_ITE); only the orthographic layer is probed here; the offset and size units of PIXEL count CSS pixels of the canvas; no device pixel ratio is read",
    "rank": 155
   },
   "LayoutGroup": {
@@ -1540,10 +1540,10 @@
    "inherits": "X3DNode",
    "container": "children",
    "nfields": 10,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 18,
+   "receipt": "receipts/LayoutGroup.json",
+   "note": "viewport of a LayoutGroup is held: the world camera is shared with the rest of the scene; a LayoutGroup in the perspective world uses the near plane of the camera as the viewport size, so its layout is microscopic there, as in X_ITE; only the orthographic layer is probed; XSD finding: x3d-4.0.xsd (x3d_mcp) lists LayoutGroup only in the pick-target content model, in no child content model, so NO scene can hold a LayoutGroup and still validate; the fixture is checked against the XSD plus one line (receipt names it)",
    "rank": 156
   },
   "LayoutLayer": {
@@ -1553,10 +1553,10 @@
    "inherits": "X3DLayerNode",
    "container": "layers",
    "nfields": 9,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 18,
+   "receipt": "receipts/LayoutLayer.json",
+   "note": "pickable, objectType and pointerEvents are held: picking does not respect layers; a LayoutLayer without a Layout shows its children as they are, a Layout is probed in the Layout fixture",
    "rank": 157
   },
   "LinePickSensor": {
@@ -2554,10 +2554,10 @@
    "inherits": "X3DFontStyleNode",
    "container": "fontStyle",
    "nfields": 10,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 18,
+   "receipt": "receipts/ScreenFontStyle.json",
+   "note": "the node is not drawn: the Text font path of the body reads FontStyle only, and a screen font size in pixels (pointSize) is not applied; a ScreenFontStyle changes the text size with the content scale of the screen in X_ITE; none of this is reproduced",
    "rank": 158
   },
   "ScreenGroup": {
@@ -3128,7 +3128,7 @@
    "nfields": 9,
    "status": "base",
    "batch": null,
-   "receipt": null,
+   "receipt": "receipts/TouchSensor.json",
    "note": "",
    "rank": 113
   },
@@ -3295,10 +3295,10 @@
    "inherits": "X3DViewportNode",
    "container": "viewport",
    "nfields": 9,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 18,
+   "receipt": "receipts/Viewport.json",
+   "note": "a Viewport used as a grouping node of the world builds its children but does not clip them (Babylon has one viewport per camera; the world's camera is shared); the layer's picture is squeezed into the clip rectangle, not cut out of the full picture: the same as X_ITE's viewport, which also changes the aspect",
    "rank": 154
   },
   "VisibilitySensor": {

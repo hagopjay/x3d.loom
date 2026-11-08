@@ -211,11 +211,29 @@ def cmd_scaffold(a):
 
 
 # --- check ------------------------------------------------------------------------------------------------------------------------------
+def xsd_patched(xsd, allow):
+    """The 4.0 XSD from x3d_mcp lists LayoutGroup only inside the pick-target content model: no child content model has it, so no scene can hold a LayoutGroup and still validate. A test
+    spec may name such a node in "xsdAllow"; the fixture is then checked against a copy of the XSD with one line added next to ScreenGroup (the child model of the Full profile). The receipt says so."""
+    s = open(xsd).read(); anchor = '      <xs:element ref="ScreenGroup"/>\n      <xs:element ref="LinePickSensor"/>'
+    if anchor not in s: return None
+    for n in allow: s = s.replace(anchor, anchor.replace('      <xs:element ref="LinePickSensor"/>', '      <xs:element ref="%s"/>\n      <xs:element ref="LinePickSensor"/>' % n), 1)
+    out = os.path.join(os.path.dirname(xsd), '.x3d-4.0.patched-' + '-'.join(allow) + '.xsd')
+    try: open(out, 'w').write(s)
+    except OSError: out = os.path.join('/tmp', 'x3d-4.0.patched-' + '-'.join(allow) + '.xsd'); open(out, 'w').write(s)
+    return out
+
+
 def xsd_check(name, xsd):
     fx = os.path.join(BR, 'fixtures', name + '.x3d')
     if not os.path.exists(fx): return {'ok': False, 'msg': 'no fixture'}
+    note = ''
+    try: allow = json.load(open(os.path.join(BR, 'fixtures', name + '.test.json'))).get('xsdAllow') or []
+    except Exception: allow = []
+    if allow:
+        px = xsd_patched(xsd, allow)
+        if px: xsd = px; note = ' + ' + ', '.join(allow) + ' added to the Full child content model (the 4.0 XSD has no child model with it)'
     p = subprocess.run(['xmllint', '--noout', '--schema', xsd, fx], capture_output=True, text=True)
-    return {'ok': p.returncode == 0, 'msg': (p.stderr.strip().splitlines() or [''])[-1][:300], 'validator': 'xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp'}
+    return {'ok': p.returncode == 0, 'msg': (p.stderr.strip().splitlines() or [''])[-1][:300], 'validator': 'xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp' + note}
 
 
 def run_tests(names, xite=True, babylon=None):

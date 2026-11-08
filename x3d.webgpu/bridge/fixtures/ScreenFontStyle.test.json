@@ -1,0 +1,216 @@
+{
+ "node": "ScreenFontStyle",
+ "mode": "events",
+ "note": "Event level test: every field of ScreenFontStyle keeps what it is set to, defaults as in X_ITE 16.6.0 (family SERIF, justify BEGIN, point size 12).",
+ "gaps": [
+  "the node is not drawn: the Text font path of the body reads FontStyle only, and a screen font size in pixels (pointSize) is not applied",
+  "a ScreenFontStyle changes the text size with the content scale of the screen in X_ITE; none of this is reproduced"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "family",
+    [
+     "SERIF"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "horizontal",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "justify",
+    [
+     "BEGIN"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "language",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "leftToRight",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pointSize",
+    12
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "spacing",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "style",
+    "PLAIN"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "topToBottom",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "family",
+    [
+     "SANS"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "family",
+    [
+     "SANS"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "pointSize",
+    24
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pointSize",
+    24
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "style",
+    "BOLD"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "style",
+    "BOLD"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "justify",
+    [
+     "MIDDLE",
+     "END"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "justify",
+    [
+     "MIDDLE",
+     "END"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "spacing",
+    1.5
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "spacing",
+    1.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "leftToRight",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "leftToRight",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "topToBottom",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "topToBottom",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "horizontal",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "horizontal",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "language",
+    "en"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "language",
+    "en"
+   ]
+  }
+ ]
+}

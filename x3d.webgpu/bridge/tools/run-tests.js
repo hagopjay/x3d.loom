@@ -124,7 +124,7 @@ window.runScene = async (spec, xml) => { await window.sceneReady; if (window.__R
 }, spec, xml); };
 </script>`;
 const PAGE_XITE_SCENE = `<!doctype html><meta charset=utf-8><link rel=stylesheet href="/x_ite/x_ite.css"><body style="margin:0"><x3d-canvas id=c style="width:320px;height:240px;display:block"></x3d-canvas><script src="/x_ite/x_ite.min.js"></script><script>${RUNNER}
-window.runScene = async (spec, xml) => { const b = X3D.getBrowser('#c');
+window.runScene = async (spec, xml) => { const b = X3D.getBrowser('#c'); await b.loadComponents?.(b.getProfile ? b.getProfile('Full') : undefined).catch(() => {});     // the external components (Layout needs Text's classes) are loaded up front, as in the event runner
   return runSpec({ name: 'xite',
     open: async (x) => { const sc = await b.createX3DFromString(x); await b.replaceWorld(sc); await b.nextFrame(); await b.nextFrame(); return sc; },
     apply: async (fn) => { fn(); await b.nextFrame(); await b.nextFrame(); },

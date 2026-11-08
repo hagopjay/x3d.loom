@@ -1,0 +1,30 @@
+{
+ "node": "Layout",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/Layout.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 119/119",
+  "xite": "pass 119/119",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "a Layout inside a LayoutGroup that sits in the perspective world uses the near plane of the camera as the viewport size (like X_ITE); only the orthographic layer is probed here",
+   "the offset and size units of PIXEL count CSS pixels of the canvas; no device pixel ratio is read"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 8a58c9552467",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "93ef82e"
+}
