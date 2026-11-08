@@ -1,0 +1,30 @@
+{
+ "node": "AudioDestination",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/AudioDestination.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 45/45",
+  "xite": "pass 45/45",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "mediaDeviceID would pick the output device with setSinkId; the bridge's graph ends at the page's default output with no Audio element, so it is held but not applied",
+   "the audio only plays once the page's audio context is allowed to run (a click or key on the page); this is the browser's rule, not the bridge's"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 5c57e213f129",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "fb9ecc7"
+}
