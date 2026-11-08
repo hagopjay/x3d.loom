@@ -43,7 +43,7 @@ KIND = {'Interpolation': 'event', 'EventUtilities': 'event', 'Followers': 'event
         'TextureProjection': 'texture', 'Geometry3D': 'geometry', 'Geometry2D': 'geometry', 'Rendering': 'geometry', 'NURBS': 'geometry', 'CADGeometry': 'geometry',
         'Geospatial': 'geometry', 'HAnim': 'geometry', 'Lighting': 'light', 'EnvironmentalEffects': 'env', 'Sound': 'sound', 'Text': 'text', 'Shaders': 'shader',
         'ParticleSystems': 'particles', 'RigidBodyPhysics': 'physics', 'VolumeRendering': 'volume', 'DIS': 'network'}
-CLAIMED = {n: 'Library hall port (thread claude/project-thread-dim2xp), 8 Nov 2026' for n in
+CLAIMED = {n: 'Library hall port (parallel port thread), 8 Nov 2026' for n in
            'Collision CoordinateInterpolator CoordinateInterpolator2D Disk2D Extrusion MultiTextureCoordinate PointProperties Rectangle2D'.split()}
 # nodes that exist only in X_ITE / 4.1, so the reader census may list them but they are not part of the 260
 NOT_4_0 = {'GaussianSplats', 'EnvironmentLight', 'BlendMode', 'DepthMode'}
@@ -88,7 +88,7 @@ def cmd_init(a):
         st = o.get('status') or ('claimed' if n in CLAIMED else 'base' if n in read else 'todo')
         if st in ('todo', 'base') and n in CLAIMED: st = 'claimed'
         nodes[n] = {'component': u['component'], 'level': u['level'], 'kind': KIND.get(u['component'], 'other'), 'inherits': u['base'], 'container': u['container'],
-                    'nfields': len(u['fields']), 'status': st, 'batch': o.get('batch'), 'receipt': o.get('receipt'), 'note': o.get('note') or CLAIMED.get(n, '')}
+                    'nfields': len(u['fields']), 'status': st, 'batch': o.get('batch'), 'receipt': o.get('receipt'), 'note': CLAIMED.get(n) or o.get('note') or ''}
     ranked = sorted(names, key=key)
     for i, n in enumerate(ranked): nodes[n]['rank'] = i + 1
     extra = sorted(read - set(uom) - NOT_4_0)

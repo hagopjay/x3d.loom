@@ -25,7 +25,7 @@ Concatenate after the reader and its extensions and before the body: `kit.js`, t
 Chromium 153.0.8010.12 (Chrome for Testing), SwiftShader, headless; X_ITE 16.6.0; Babylon 9.32.0. Correctness only: no real-GPU timing exists and none is claimed. Event nodes are Babylon-independent, so their tests do not draw; the smoke run proves they load in the full bundle, not that anything is drawn.
 
 ## Coordination
-The Library hall port owns Collision, CoordinateInterpolator, CoordinateInterpolator2D, Disk2D, Extrusion, MultiTextureCoordinate, PointProperties, Rectangle2D (`hall/reader-ext-hl.js`, branch claude/project-thread-dim2xp); they are `claimed` in the tracker. `run-tests.js` and `smoke.js` include `hall/reader-ext-hl.js` once it exists.
+The Library hall port owns Collision, CoordinateInterpolator, CoordinateInterpolator2D, Disk2D, Extrusion, MultiTextureCoordinate, PointProperties, Rectangle2D (`hall/reader-ext-hl.js`); they are `claimed` in the tracker. `run-tests.js` and `smoke.js` include `hall/reader-ext-hl.js` once it exists.
 
 ## Findings so far
 - `manifold/manifold-reader-ext.js` and `brain/sai.js` both wrap `events.emit` to run `addFieldCallback` listeners; a bundle with both fires every output callback twice (seen in the first test run, 5 of 5 nodes). No current build combines them. Not fixed here (older file).
