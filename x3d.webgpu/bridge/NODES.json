@@ -2,7 +2,7 @@
  "meta": {
   "uom": "X3dUnifiedObjectModel-4.0.xml (x3d_mcp src/validation/schemas)",
   "total": 260,
-  "census_commit": "994c427",
+  "census_commit": "e82ffe4",
   "census_parts": "brain/reader, gobbler/reader-ext, demiurge/reader-ext-dm, dynasty/reader-ext-dl, manifold/manifold-reader-ext, drift/drift-ext",
   "reader_types_not_in_4_0": [
    "BlendMode",
@@ -19,9 +19,9 @@
    "inherits": "X3DAppearanceChildNode",
    "container": "acousticProperties",
    "nfields": 7,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
+   "status": "bridged",
+   "batch": 12,
+   "receipt": "receipts/AcousticProperties.json",
    "note": "",
    "rank": 85
   },
@@ -32,10 +32,10 @@
    "inherits": "X3DSoundProcessingNode",
    "container": "children",
    "nfields": 21,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 13,
+   "receipt": "receipts/Analyser.json",
+   "note": "the data outputs are only fed while the node is active and a Web Audio context exists; nothing is wired into the analyser yet (the Sound children of this node come with the rest of the Sound group); minDecibels, maxDecibels and smoothingTimeConstant go to the audio node when it is made; changing them while it runs is not applied until the next start",
    "rank": 130
   },
   "Anchor": {
@@ -474,10 +474,10 @@
    "inherits": "X3DSensorNode",
    "container": "children",
    "nfields": 7,
-   "status": "todo",
+   "status": "blocked",
    "batch": null,
    "receipt": null,
-   "note": "",
+   "note": "needs the RigidBodyPhysics nodes it reads (CollisionCollection, CollidableShape, CollidableOffset, RigidBody, RigidBodyCollection, Contact; ranks 227 to 239) and a contact solver; a sensor with no collidables can never fire. Build them as one physics group. Scaffold kept in bridge/_deferred/",
    "rank": 59
   },
   "CollisionSpace": {
@@ -734,10 +734,10 @@
    "inherits": "X3DCoordinateNode",
    "container": "coord",
    "nfields": 2,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 13,
+   "receipt": "receipts/CoordinateDouble.json",
+   "note": "the points are kept as 32-bit floats (the geometry code reads Float32Array); doubles finer than about 7 digits or larger than 3e38 are not kept; only the triangle positions are compared with X_ITE (pointer hit and miss), not shading",
    "rank": 99
   },
   "CoordinateInterpolator": {
@@ -890,9 +890,9 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 5,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
+   "status": "bridged",
+   "batch": 12,
+   "receipt": "receipts/EaseInEaseOut.json",
    "note": "",
    "rank": 66
   },
@@ -1007,10 +1007,10 @@
    "inherits": "X3DGeometricPropertyNode",
    "container": "fogCoord",
    "nfields": 2,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 13,
+   "receipt": "receipts/FogCoordinate.json",
+   "note": "only IndexedTriangleSet and the bridged geometry sets take a fogCoord; IndexedFaceSet and the others the stock reader draws do not have the field; the fog is a second copy of the mesh drawn over the first with vertex alpha = depth, so it blends after the surface is tone mapped (X_ITE blends inside the shader); vertices past the end of depth read as 0 (clear); the world Fog is new to the bridge (stock body never drew it): it fogs every mesh no LocalFog covers; all fogs share the fog law of the first active one",
    "rank": 126
   },
   "FontStyle": {
@@ -1631,10 +1631,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 5,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 12,
+   "receipt": "receipts/LocalFog.json",
+   "note": "EXPONENTIAL and EXPONENTIAL2 use Babylon's EXP and EXP2 scaled to 1/e at half the range: close to X3D's exp(-d/(range-d)) in the first half, softer at the end (X3D reaches full fog at the range); all LocalFogs of a world share the fog law of the first active one (Babylon picks the law per scene, not per mesh); colour and range are per scope; the range is not scaled by the parent's transform scale, X3D measures it in the LocalFog's own coordinate system; two meshes sharing one Babylon material would share the fog parameters of whichever draws first; the body makes one material per shape, so it does not happen here",
    "rank": 57
   },
   "Material": {
@@ -2073,10 +2073,10 @@
    "inherits": "X3DViewpointNode",
    "container": "children",
    "nfields": 15,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 13,
+   "receipt": "receipts/OrthoViewpoint.json",
+   "note": "a bind between an OrthoViewpoint and another viewpoint is a cut: no fly-through is drawn; the user's mouse wheel scales the area, the drag pans in view units; X_ITE's fieldOfViewOffset / fieldOfViewScale animations and viewAll are not modelled; near and far default to 0.1 and 10000 when nearDistance or farDistance is not positive (X_ITE takes the navigation avatar size for near)",
    "rank": 119
   },
   "OscillatorSource": {
@@ -2424,10 +2424,10 @@
    "inherits": "X3DPrototypeInstance",
    "container": "children",
    "nfields": 3,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 12,
+   "receipt": "receipts/ProtoInstance.json",
+   "note": "ExternProtoDeclare is not loaded (external files); an instance of one is dropped with a warning; an SFNode field connected through IS to two places is copied, so a DEF inside it exists twice; IS inside a nested ProtoInstance connects values only (as fieldValue), not events; getNodeTypeName on an instance returns the type of its first inner node, not the PROTO's name; a PROTO field that is an SFNode or MFNode is not reachable through the instance's SAI object (initializeOnly values are not exposed either way in X_ITE's SAI, so the tests do not read them)",
    "rank": 75
   },
   "ProximitySensor": {
@@ -2944,10 +2944,10 @@
    "inherits": "X3DBackgroundNode",
    "container": "children",
    "nfields": 15,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 12,
+   "receipt": "receipts/TextureBackground.json",
+   "note": "only ImageTexture faces are drawn (the stock texture reader); PixelTexture and MovieTexture faces are not; transparency lowers the alpha of the sky and the six faces (checked in ours only); what shows through is the body's clear colour, which the stock Background node still sets from its first Background, where X_ITE shows the page behind; the sky sphere has 48 segments and a ring every 1/32 of PI plus one at every angle, so a gradient is stepped finer than the eye sees; colours are linear between rings; the sky is a sphere of radius 900 around the camera, the six faces a cube of half-size 500 inside it; scenes with a camera far clip below 900 would cut it (the body uses at least 2000)",
    "rank": 56
   },
   "TextureCoordinate": {
@@ -3282,10 +3282,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 7,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 13,
+   "receipt": "receipts/ViewpointGroup.json",
+   "note": "the proximity box is tested in world coordinates: a ViewpointGroup under a moved Transform is tested as if the Transform were not there; retainUserOffsets is held but not applied (the stock body keeps no user offsets per viewpoint); the page decides how to show the list; the stock pages have none, so Body.viewpointList() is the only way to read it",
    "rank": 120
   },
   "Viewport": {

@@ -1,0 +1,227 @@
+{
+ "node": "LocalFog",
+ "mode": "scene",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    240,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    25
+   ]
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     255,
+     136,
+     136
+    ],
+    35
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    25
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     255,
+     136,
+     136
+    ],
+    35
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "color",
+    [
+     0,
+     0,
+     1
+    ],
+    "SFColor"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     136,
+     136,
+     255
+    ],
+    35
+   ]
+  },
+  {
+   "px": [
+    240,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    25
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "fogType",
+    "EXPONENTIAL"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     106,
+     106,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    240,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    25
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "fogType",
+    "LINEAR"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "visibilityRange",
+    9
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    240,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    25
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "visibilityRange",
+    0
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    25
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "visibilityRange",
+    0
+   ]
+  }
+ ],
+ "note": "two white unlit boxes 9.3 units from the camera, the left one inside the group that holds the LocalFog, the right one in a sibling group: only the left one fades. Probed at the face centres of both boxes from the composited frame in both engines; the body's neutral tone map turns white into 239 and desaturates a pure fog colour by about 15% (a fully fogged blue reads 38 38 241), X_ITE draws the raw colour, hence the tolerances of 25 to 45.",
+ "gaps": [
+  "EXPONENTIAL and EXPONENTIAL2 use Babylon's EXP and EXP2 scaled to 1/e at half the range: close to X3D's exp(-d/(range-d)) in the first half, softer at the end (X3D reaches full fog at the range)",
+  "all LocalFogs of a world share the fog law of the first active one (Babylon picks the law per scene, not per mesh); colour and range are per scope",
+  "the range is not scaled by the parent's transform scale, X3D measures it in the LocalFog's own coordinate system",
+  "two meshes sharing one Babylon material would share the fog parameters of whichever draws first; the body makes one material per shape, so it does not happen here"
+ ]
+}

@@ -1,0 +1,215 @@
+{
+ "node": "FogCoordinate",
+ "mode": "scene",
+ "note": "two white unlit quads under the world Fog (red, range 20), the right one without fogCoord (distance fog, about half at 9.9 units), the left one with depths 0 0 1 1 (bottom row clear, top row fully fogged, interpolated between). Probed from the composited frame in both engines; the body's neutral tone map shifts pure colours, so the tolerances are 25 to 45. With the Fog off a FogCoordinate fogs nothing.",
+ "gaps": [
+  "only IndexedTriangleSet and the bridged geometry sets take a fogCoord; IndexedFaceSet and the others the stock reader draws do not have the field",
+  "the fog is a second copy of the mesh drawn over the first with vertex alpha = depth, so it blends after the surface is tone mapped (X_ITE blends inside the shader)",
+  "vertices past the end of depth read as 0 (clear)",
+  "the world Fog is new to the bridge (stock body never drew it): it fogs every mesh no LocalFog covers; all fogs share the fog law of the first active one"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "depth",
+    [
+     0,
+     0,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "depth",
+    [
+     0,
+     0,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "depth",
+    [
+     0,
+     0,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "depth",
+    [
+     0,
+     0,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    232,
+    120,
+    [
+     255,
+     128,
+     128
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    88,
+    50,
+    [
+     255,
+     26,
+     26
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    88,
+    190,
+    [
+     255,
+     230,
+     230
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    88,
+    120,
+    [
+     255,
+     128,
+     128
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "depth",
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    88,
+    190,
+    [
+     255,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "depth",
+    [
+     0,
+     0,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    88,
+    50,
+    [
+     255,
+     255,
+     255
+    ],
+    25
+   ]
+  },
+  {
+   "set": [
+    "F",
+    "visibilityRange",
+    0
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    232,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    25
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "depth",
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    88,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    25
+   ]
+  }
+ ]
+}

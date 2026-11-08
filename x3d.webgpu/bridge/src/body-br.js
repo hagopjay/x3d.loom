@@ -253,7 +253,55 @@
   };
 }
 
+/* FogCoordinate: a shape whose geometry has a fogCoord gets its fog overlay (BR.fog.coord) */
+{
+  const _bs = Body.prototype.buildShape;
+  Body.prototype.buildShape = function (n, parent, chain) { const r = _bs.call(this, n, parent, chain); BR.fog.coord(this, n, r); return r; };
+}
+
 { // a rebuilt Shape also drops its hatch overlay meshes
   const _rb = Body.prototype.rebuildShapeIn;
   Body.prototype.rebuildShapeIn = function (r) { (r.hatch || []).forEach((m) => m.dispose(false, true)); r.hatch = []; return _rb.call(this, r); };
 }
+
+/* OrthoViewpoint: the camera goes orthographic while one is bound. The pose gets an `ortho` record ({ f: fieldOfView, near, far, scale }), applyCamera sets the Babylon camera's mode and its
+   left/right/top/bottom from it, and the user's zoom changes the record's scale (moving along the view axis changes nothing in an orthographic view). */
+{
+  const B = Body.prototype, ORTHO = (v) => v && v.type === 'OrthoViewpoint';
+  const _pose = B.vpPose;
+  B.vpPose = function (vp) { const p = _pose.call(this, vp); if (ORTHO(vp)) { p.fov = 0.7854; p.ortho = { f: Array.from(vp.f.fieldOfView), near: vp.f.nearDistance, far: vp.f.farDistance, scale: 1 }; } return p; };
+  const _bind = B.bindViewpoint;
+  B.bindViewpoint = function (vp, on) {
+    const prev = this.bound; _bind.call(this, vp, on);
+    if (on && (ORTHO(vp) || ORTHO(prev))) { this.tr = null; this.pose = this.vpPose(vp); this.started = true; this.applyCamera(); }
+  };
+  const _apply = B.applyCamera;
+  B.applyCamera = function () {
+    _apply.call(this);
+    const c = this.cam, o = this.pose && this.pose.ortho, C = BABYLON.Camera;
+    if (!o) { if (c.mode !== C.PERSPECTIVE_CAMERA) c.mode = C.PERSPECTIVE_CAMERA; return; }
+    const w = this.canvas.clientWidth || 1, h = this.canvas.clientHeight || 1, ratio = w / h, f = o.f, s = o.scale || 1;
+    const x0 = (f[0] ?? -1) * s, y0 = (f[1] ?? -1) * s, x1 = (f[2] ?? 1) * s, y1 = (f[3] ?? 1) * s, sx = x1 - x0, sy = y1 - y0;
+    c.mode = C.ORTHOGRAPHIC_CAMERA;
+    if (ratio > sx / sy) { const cx = (x0 + x1) / 2, hw = sy * ratio / 2; c.orthoLeft = cx - hw; c.orthoRight = cx + hw; c.orthoBottom = y0; c.orthoTop = y1; }
+    else { const cy = (y0 + y1) / 2, hh = sx / ratio / 2; c.orthoLeft = x0; c.orthoRight = x1; c.orthoBottom = cy - hh; c.orthoTop = cy + hh; }
+    c.minZ = o.near > 0 ? o.near : 0.1; c.maxZ = o.far > 0 ? o.far : 1e4;
+  };
+  const _zoom = B.zoom;
+  B.zoom = function (k) { const o = this.pose && this.pose.ortho; if (!o) return _zoom.call(this, k); o.scale = Math.min(50, Math.max(0.02, (o.scale || 1) * k)); this.applyCamera(); };
+  const _pan = B.pan;
+  B.pan = function (dx, dy) {
+    const p = this.pose, c = this.cam, o = p && p.ortho; if (!o) return _pan.call(this, dx, dy);
+    const u = (c.orthoTop - c.orthoBottom) / (this.canvas.clientHeight || 1), up = R.quat.rotate(p.q, [0, 1, 0]), right = R.quat.rotate(p.q, [1, 0, 0]);
+    const t = R.v3.add(R.v3.scale(right, -dx * u), R.v3.scale(up, dy * u)); p.pos = R.v3.add(p.pos, t); p.center = R.v3.add(p.center, t); this.applyCamera();
+  };
+  const _sw = B.setWorld;
+  B.setWorld = function (...a) {          // an OrthoViewpoint that comes first in the file is bound at load (the stock body binds nothing at load; a first Viewpoint stays as it was)
+    const r = _sw.apply(this, a), w = this.world, first = w && w.nodes.find((n) => n.type === 'Viewpoint' || n.type === 'OrthoViewpoint');
+    if (ORTHO(first)) this.bindViewpoint(first, true);
+    return r;
+  };
+}
+
+/* the page's viewpoint list: body.viewpointList() -> [{ node, path, text }] for the loaded world, with the viewer where the camera is (ViewpointGroup proximity) */
+Body.prototype.viewpointList = function () { return this.world ? R.bridge.viewpoints(this.world, this.pose ? this.pose.pos : null) : []; };

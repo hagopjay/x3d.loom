@@ -1,0 +1,275 @@
+{
+ "node": "ViewpointGroup",
+ "mode": "scene",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.viewpointList().map(e=>e.text)",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic"
+    ]
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').getActiveLayer().getUserViewpoints().map(v=>v.getDescriptions().join(' \\u00bb '))",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "G1",
+    "displayed",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.viewpointList().map(e=>e.text)",
+    [
+     "Top level"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "G1",
+    "displayed",
+    true
+   ]
+  },
+  {
+   "set": [
+    "G2",
+    "displayed",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.viewpointList().map(e=>e.text)",
+    [
+     "Top level",
+     "Rooms » Hall"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "G2",
+    "displayed",
+    true
+   ]
+  },
+  {
+   "set": [
+    "G4",
+    "displayed",
+    true
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.viewpointList().map(e=>e.text)",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic",
+     "Hidden » Secret"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "G4",
+    "displayed",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.viewpointList().map(e=>e.text)",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "G3",
+    "center",
+    [
+     0,
+     0,
+     10
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.viewpointList().map(e=>e.text)",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic",
+     "Near » Far room"
+    ]
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').getActiveLayer().getUserViewpoints().map(v=>v.getDescriptions().join(' \\u00bb '))",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic",
+     "Near » Far room"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "G3",
+    "size",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "G3",
+    "center",
+    [
+     20,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.viewpointList().map(e=>e.text)",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic",
+     "Near » Far room"
+    ]
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').getActiveLayer().getUserViewpoints().map(v=>v.getDescriptions().join(' \\u00bb '))",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic",
+     "Near » Far room"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "G3",
+    "size",
+    [
+     2,
+     2,
+     2
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.viewpointList().map(e=>e.text)",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic"
+    ]
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').getActiveLayer().getUserViewpoints().map(v=>v.getDescriptions().join(' \\u00bb '))",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "G1",
+    "retainUserOffsets",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "G4",
+    "displayed",
+    false
+   ]
+  }
+ ],
+ "note": "the viewpoint list of a scene with nested groups, a group hidden at load, one with a proximity box and a viewpoint with no description; each engine reads its own list (ours: Body.viewpointList(); X_ITE: the active layer's getUserViewpoints with their descriptions) and both must equal the same literal list after each change they can both make. Switching `displayed` while the scene runs is checked in ours only (see gaps).",
+ "xiteDisagrees": "X_ITE 16.6.0 reads `displayed` once at load and ignores later changes (its ViewpointGroup listens to size and children, not displayed); the 4.0 text makes displayed an inputOutput field. Ours follows the text",
+ "gaps": [
+  "the proximity box is tested in world coordinates: a ViewpointGroup under a moved Transform is tested as if the Transform were not there",
+  "retainUserOffsets is held but not applied (the stock body keeps no user offsets per viewpoint)",
+  "the page decides how to show the list; the stock pages have none, so Body.viewpointList() is the only way to read it"
+ ]
+}

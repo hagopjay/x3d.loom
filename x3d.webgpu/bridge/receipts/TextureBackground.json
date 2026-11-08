@@ -1,0 +1,32 @@
+{
+ "node": "TextureBackground",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/TextureBackground.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 87/87",
+  "xite": "pass 86/86",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "only ImageTexture faces are drawn (the stock texture reader); PixelTexture and MovieTexture faces are not",
+   "transparency lowers the alpha of the sky and the six faces (checked in ours only); what shows through is the body's clear colour, which the stock Background node still sets from its first Background, where X_ITE shows the page behind",
+   "the sky sphere has 48 segments and a ring every 1/32 of PI plus one at every angle, so a gradient is stepped finer than the eye sees; colours are linear between rings",
+   "the sky is a sphere of radius 900 around the camera, the six faces a cube of half-size 500 inside it; scenes with a camera far clip below 900 would cut it (the body uses at least 2000)"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 3b32691c2a96",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2b54cb9"
+}

@@ -1,0 +1,33 @@
+{
+ "node": "ProtoInstance",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/ProtoInstance.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 21/21",
+  "xite": "pass 19/19",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "ExternProtoDeclare is not loaded (external files); an instance of one is dropped with a warning",
+   "an SFNode field connected through IS to two places is copied, so a DEF inside it exists twice",
+   "IS inside a nested ProtoInstance connects values only (as fieldValue), not events",
+   "getNodeTypeName on an instance returns the type of its first inner node, not the PROTO's name",
+   "a PROTO field that is an SFNode or MFNode is not reachable through the instance's SAI object (initializeOnly values are not exposed either way in X_ITE's SAI, so the tests do not read them)"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 3b32691c2a96",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2b54cb9"
+}

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="ProtoInstance.x3d"/><meta name="description" content="Bridge fixture for ProtoInstance"/></head>
+  <Scene>
+    <ProtoDeclare name="Scaler">
+      <ProtoInterface>
+        <field name="input" type="SFFloat" accessType="inputOnly"/>
+        <field name="output" type="SFFloat" accessType="outputOnly"/>
+        <field name="values" type="MFFloat" accessType="initializeOnly" value="0 2"/>
+        <field name="keys" type="MFFloat" accessType="inputOutput" value="0 1"/>
+      </ProtoInterface>
+      <ProtoBody>
+        <ScalarInterpolator DEF="SI">
+          <IS>
+            <connect nodeField="set_fraction" protoField="input"/>
+            <connect nodeField="value_changed" protoField="output"/>
+            <connect nodeField="keyValue" protoField="values"/>
+            <connect nodeField="key" protoField="keys"/>
+          </IS>
+        </ScalarInterpolator>
+      </ProtoBody>
+    </ProtoDeclare>
+    <ProtoDeclare name="Holder">
+      <ProtoInterface>
+        <field name="kid" type="SFNode" accessType="initializeOnly"><MetadataString name="dflt"/></field>
+      </ProtoInterface>
+      <ProtoBody>
+        <Group DEF="G"><IS><connect nodeField="metadata" protoField="kid"/></IS></Group>
+        <ScalarInterpolator DEF="Tail" key="0 1" keyValue="0 7"/>
+      </ProtoBody>
+    </ProtoDeclare>
+    <ProtoDeclare name="Twice">
+      <ProtoInterface>
+        <field name="go" type="SFFloat" accessType="inputOnly"/>
+        <field name="done" type="SFFloat" accessType="outputOnly"/>
+      </ProtoInterface>
+      <ProtoBody>
+        <ProtoInstance name="Scaler" DEF="A"><fieldValue name="values" value="0 2"/></ProtoInstance>
+        <ProtoInstance name="Scaler" DEF="B"><fieldValue name="values" value="0 3"/></ProtoInstance>
+        <ScalarInterpolator DEF="In" key="0 1" keyValue="0 1"><IS><connect nodeField="set_fraction" protoField="go"/></IS></ScalarInterpolator>
+        <ScalarInterpolator DEF="Out" key="0 1 2" keyValue="0 10 20"><IS><connect nodeField="value_changed" protoField="done"/></IS></ScalarInterpolator>
+        <ROUTE fromNode="In" fromField="value_changed" toNode="A" toField="input"/>
+        <ROUTE fromNode="A" fromField="output" toNode="B" toField="input"/>
+        <ROUTE fromNode="B" fromField="output" toNode="Out" toField="set_fraction"/>
+      </ProtoBody>
+    </ProtoDeclare>
+    <ProtoInstance name="Scaler" DEF="D1"/>
+    <ProtoInstance name="Scaler" DEF="D2"><fieldValue name="values" value="0 10"/></ProtoInstance>
+    <ProtoInstance name="Scaler" DEF="D3"/>
+    <ProtoInstance name="Twice" DEF="T"/>
+    <ProtoInstance name="Holder" DEF="H1"/>
+    <ProtoInstance name="Holder" DEF="H2"><fieldValue name="kid"><MetadataString DEF="mm" name="custom"/></fieldValue></ProtoInstance>
+    <ScalarInterpolator DEF="Src" key="0 1" keyValue="0 1"/>
+    <ScalarInterpolator DEF="Sink" key="0 1" keyValue="0 100"/>
+    <ROUTE fromNode="Src" fromField="value_changed" toNode="D3" toField="input"/>
+    <ROUTE fromNode="D3" fromField="output" toNode="Sink" toField="set_fraction"/>
+  </Scene>
+</X3D>

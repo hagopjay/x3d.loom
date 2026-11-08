@@ -1,0 +1,31 @@
+{
+ "node": "ViewpointGroup",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/ViewpointGroup.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 28/28",
+  "xite": "pass 24/24",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "the proximity box is tested in world coordinates: a ViewpointGroup under a moved Transform is tested as if the Transform were not there",
+   "retainUserOffsets is held but not applied (the stock body keeps no user offsets per viewpoint)",
+   "the page decides how to show the list; the stock pages have none, so Body.viewpointList() is the only way to read it"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ece5768b88af",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "744b32a"
+}

@@ -1,0 +1,30 @@
+{
+ "node": "CoordinateDouble",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/CoordinateDouble.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 32/32",
+  "xite": "pass 32/32",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "the points are kept as 32-bit floats (the geometry code reads Float32Array); doubles finer than about 7 digits or larger than 3e38 are not kept",
+   "only the triangle positions are compared with X_ITE (pointer hit and miss), not shading"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ece5768b88af",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "744b32a"
+}

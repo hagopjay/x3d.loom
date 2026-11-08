@@ -11,6 +11,8 @@
      build(body, n, parent, chain)   Babylon side: make what the node draws; return the record body.rec keeps
      geometry(g, body)        Babylon side: vertex data for a geometry node, same shape Body.geometryData returns
      changed(body, n, field)  Babylon side: a field changed after build
+     preparse(text)           the scene text before it is parsed (language features that are rewritten into plain nodes, ProtoInstance)
+     postparse(world)         the parsed world, before init (ProtoInstance connects its fields)
    The kit never touches a node type it does not own, so every earlier port parses and runs as before. */
 const BR = (R.bridge = { specs: new Map(), tickers: new Set(), worlds: [], version: 1 });
 
@@ -48,7 +50,9 @@ BR.emit = (n, field, value) => { n.f[field] = value; events.emit(n, field, value
 // every parsed world registers its bridge nodes: init once, then tick each timestamp
 const _parse = parseX3D;
 parseX3D = function (text) {
+  for (const s of BR.specs.values()) if (s.preparse) text = s.preparse(text);      // a node that is a language feature rewrites the text first (ProtoInstance expands PROTOs)
   const w = _parse(text);
+  for (const s of BR.specs.values()) if (s.postparse) s.postparse(w);
   BR.worlds.push(w);
   for (const n of w.nodes) { const s = BR.specs.get(n.type); if (!s) continue; if (s.tick) BR.tickers.add(n); }
   for (const n of w.nodes) { const s = BR.specs.get(n.type); if (s && s.init) s.init(n, w); }
@@ -58,11 +62,26 @@ R.parseX3D = parseX3D;
 
 const _recv = receive;
 receive = function (node, field, value) {
+  if (node.protoIn && node.protoIn[field]) {            // an input of a PROTO instance goes to the nodes it is connected to (and on to the instance's own node when that field is one of its own)
+    for (const t of node.protoIn[field]) receive(t.node, t.field, value);
+    if (!(node.protoSelf && node.protoSelf[field])) { node.f[field] = value; return; }
+  }
   const s = BR.specs.get(node.type);
   if (s && s.receive && s.receive(node, field, value) === true) return;
   return _recv(node, field, value);
 };
 R.receive = receive;
+
+/* an output of a node that a PROTO instance exposes also reaches the instance's own field: its value is kept there and the page's listeners on the instance hear it */
+const _emit = events.emit;
+events.emit = function (node, field, value) {
+  const r = _emit.call(this, node, field, value);
+  if (node.protoOut && node.protoOut[field]) for (const t of node.protoOut[field]) {
+    if (t.inst === node && t.name === field) continue;
+    t.inst.f[t.name] = value; if (R.hooks && R.hooks.cb) R.hooks.cb(t.inst, t.name, value);
+  }
+  return r;
+};
 
 const _drain = events.drain;
 events.drain = function () {
