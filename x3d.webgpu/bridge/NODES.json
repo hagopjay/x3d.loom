@@ -1800,10 +1800,10 @@
    "inherits": "X3DTextureNode",
    "container": "texture",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 10,
+   "receipt": "receipts/MultiTexture.json",
+   "note": "X_ITE is compared on loading and drawing the shapes; the combined colour is checked in our body only (red x green = black for MODULATE, red + green = yellow for ADD); function, source, color and alpha are read and not used; modes other than REPLACE, MODULATE, MODULATE2X, MODULATE4X and ADD are drawn as MODULATE; the combine is made once on a 256 x 256 canvas: it does not follow the lighting or the vertex colour",
    "rank": 50
   },
   "MultiTextureCoordinate": {
@@ -2268,10 +2268,10 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 2,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 10,
+   "receipt": "receipts/Polyline2D.json",
+   "note": "lines are not pickable: the segment count is compared between the engines (X_ITE vertex pairs via its private getVertices); colour and width are not compared",
    "rank": 46
   },
   "PolylineEmitter": {
@@ -2294,10 +2294,10 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 2,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 10,
+   "receipt": "receipts/Polypoint2D.json",
+   "note": "points cannot be picked: the point count is compared between the engines; WebGPU draws each point one pixel, X_ITE draws them with its point size; colour is not compared",
    "rank": 47
   },
   "PositionChaser": {
@@ -2827,10 +2827,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 6,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 10,
+   "receipt": "receipts/StaticGroup.json",
+   "note": "compared by pointer-over probes on the box and sphere inside it (the sensor sits outside, as the node forbids sensors inside); X_ITE's merging of static children is not observable",
    "rank": 48
   },
   "StreamAudioDestination": {
@@ -2996,10 +2996,10 @@
    "inherits": "X3DSingleTextureCoordinateNode",
    "container": "texCoord",
    "nfields": 4,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 10,
+   "receipt": "receipts/TextureCoordinateGenerator.json",
+   "note": "X_ITE is compared on loading and drawing the shapes; the generated texture coordinates are not observable there, so they are checked against the formula in our body only; the camera is taken as the identity: SPHERE and the CAMERASPACE modes use the object-space normal or position; NOISE and reflection modes are not made",
    "rank": 49
   },
   "TextureProjector": {

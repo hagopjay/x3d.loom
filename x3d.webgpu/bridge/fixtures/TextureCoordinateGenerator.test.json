@@ -1,0 +1,111 @@
+{
+ "node": "TextureCoordinateGenerator",
+ "mode": "scene",
+ "note": "normals become coordinates (SPHERE-LOCAL), positions become coordinates (COORD)",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    88,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    232,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T1",
+    "mode",
+    "SPHERE-LOCAL"
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "mode",
+    "COORD"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Array.from(__body.geometryData(__body.world.nodes.find(n=>n.def==='G1')).uv)",
+    [
+     1,
+     0.5,
+     0.5,
+     1,
+     0,
+     0.5,
+     0.5,
+     0
+    ]
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Array.from(__body.geometryData(__body.world.nodes.find(n=>n.def==='G2')).uv)",
+    [
+     -1,
+     -1,
+     1,
+     -1,
+     1,
+     1,
+     -1,
+     1
+    ]
+   ]
+  }
+ ],
+ "gaps": [
+  "X_ITE is compared on loading and drawing the shapes; the generated texture coordinates are not observable there, so they are checked against the formula in our body only",
+  "the camera is taken as the identity: SPHERE and the CAMERASPACE modes use the object-space normal or position; NOISE and reflection modes are not made"
+ ]
+}

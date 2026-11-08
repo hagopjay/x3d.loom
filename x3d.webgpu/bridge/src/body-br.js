@@ -20,7 +20,7 @@
 {
   const _setWorld = Body.prototype.setWorld;
   const live = {}; R.bridge.live = (k) => (live[k] ||= new Set());     // nodes of one kind in the world on screen (key sensors), emptied when the world is replaced
-  Body.prototype.setWorld = function (...a) { R.bridge.body = this; for (const s of Object.values(live)) s.clear(); return _setWorld.apply(this, a); };
+  Body.prototype.setWorld = function (...a) { R.bridge.body = this; for (const s of Object.values(live)) s.clear(); this.texCache.clear(); /* node ids restart in every world: a texture cached under an old id would be handed to the new world */ return _setWorld.apply(this, a); };
   const _click = Body.prototype.click;
   Body.prototype.click = function (x, y) {          // a click under an Anchor follows it, the nearest Anchor wins
     _click.call(this, x, y);
@@ -108,5 +108,73 @@
   Body.prototype.geometryChanged = function (n) {
     _gc.call(this, n);
     for (const x of this.world.nodes) if (linesSpec(x) && (x.f.color === n || x.f.coord === n)) this.regeo(x);
+  };
+}
+
+/* points: a bridge node with spec.points(g) -> flat xyz is drawn as a point cloud in the Material's emissive colour (unlit). WebGPU has no point size, so each point is one pixel. */
+{
+  const pointsSpec = (g) => { const s = R.bridge.specs.get(g.type); return s && s.points ? s : null; };
+  const _mats = Body.prototype.materialsFor;
+  Body.prototype.materialsFor = function (shape, g, app) {
+    if (!pointsSpec(g)) return _mats.call(this, shape, g, app);
+    const mat = app && app.f.material; return [{ kind: 'points', mat, deps: [g, mat].filter(Boolean) }];
+  };
+  const _make = Body.prototype.makeMesh;
+  Body.prototype.makeMesh = function (shape, g, spec, pass) {
+    const s = pointsSpec(g); if (!s) return _make.call(this, shape, g, spec, pass);
+    const P = s.points(g), mesh = new BABYLON.Mesh((shape.def || 'points') + '-pts', this.scene), vd = new BABYLON.VertexData();
+    vd.positions = P; vd.indices = Uint32Array.from({ length: P.length / 3 }, (_, i) => i); vd.applyToMesh(mesh, false);
+    const m = new BABYLON.StandardMaterial('pts-' + shape.id, this.scene), c = spec.mat ? (spec.mat.f.emissiveColor || [1, 1, 1]) : [1, 1, 1];
+    m.disableLighting = true; m.emissiveColor.set(c[0], c[1], c[2]); m.pointsCloud = true; m.pointSize = 3; m.backFaceCulling = false;
+    mesh.material = m; return mesh;
+  };
+}
+
+/* texture coordinates from a TextureCoordinateGenerator: made once per geometry build from positions and normals (object space; the camera is the identity) */
+{
+  const _data = Body.prototype.geometryData;
+  Body.prototype.geometryData = function (g) {
+    const d = _data.call(this, g), T = (g.f || {}).texCoord;
+    if (!T || T.type !== 'TextureCoordinateGenerator' || !d || !d.pos) return d;
+    const key = (T.version || 0) + '/' + T.f.mode; if (d._gen === key) return d;
+    let nrm = d.nrm;
+    if (!nrm) { nrm = new Float32Array(d.pos.length); BABYLON.VertexData.ComputeNormals(d.pos, d.idx, nrm); }
+    const n = d.pos.length / 3, uv = new Float32Array(n * 2), mode = String(T.f.mode || 'SPHERE').toUpperCase();
+    const fromNormal = /^(SPHERE|SPHERE-LOCAL|CAMERASPACENORMAL|SPHERE-REFLECT|SPHERE-REFLECT-LOCAL|CAMERASPACEREFLECTIONVECTOR)$/.test(mode);
+    if (!fromNormal && !/^(COORD|COORD-EYE|CAMERASPACEPOSITION)$/.test(mode)) this.note('TextureCoordinateGenerator mode ' + mode + ' is not made (uv left at 0)');
+    for (let i = 0; i < n; i++) {
+      if (fromNormal) { uv[i * 2] = nrm[i * 3] * 0.5 + 0.5; uv[i * 2 + 1] = nrm[i * 3 + 1] * 0.5 + 0.5; }
+      else if (/^(COORD|COORD-EYE|CAMERASPACEPOSITION)$/.test(mode)) { uv[i * 2] = d.pos[i * 3]; uv[i * 2 + 1] = d.pos[i * 3 + 1]; }
+    }
+    d.uv = uv; d._gen = key; return d;
+  };
+}
+
+/* MultiTexture: the textures are drawn over each other on a canvas texture; texture i meets the result so far by mode[i] */
+{
+  const _tex = Body.prototype.tex;
+  Body.prototype.tex = function (node) {
+    if (!node || node.type !== 'MultiTexture') return _tex.call(this, node);
+    const hit = this.texCache.get(node.id); if (hit) return hit;
+    const body = this, SZ = 256, dt = new BABYLON.DynamicTexture('mt-' + node.id, { width: SZ, height: SZ }, this.scene, true);
+    const imgs = [], ctx = dt.getContext();
+    const OPS = { REPLACE: 'source-over', MODULATE: 'multiply', MODULATE2X: 'multiply', MODULATE4X: 'multiply', ADD: 'lighter' };
+    dt.redraw = () => {
+      ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, SZ, SZ);
+      imgs.forEach((im, i) => {
+        if (!im.complete || !im.naturalWidth) return;
+        const mode = String((node.f.mode || [])[i] || 'MODULATE').toUpperCase(), op = OPS[mode];
+        if (!op && i) body.note('MultiTexture mode ' + mode + ' drawn as MODULATE');
+        ctx.globalCompositeOperation = i === 0 ? 'source-over' : op || 'multiply'; ctx.drawImage(im, 0, 0, SZ, SZ);
+        const extra = mode === 'MODULATE2X' ? 1 : mode === 'MODULATE4X' ? 3 : 0;
+        for (let k = 0; k < extra && i; k++) { ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(dt.getContext().canvas, 0, 0); }
+      });
+      ctx.globalCompositeOperation = 'source-over'; dt.update();
+    };
+    for (const t of node.f.texture || []) {
+      const u = t.f.url && t.f.url[0]; if (!u) continue;
+      const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = dt.redraw; im.src = this.resolve(u, this.baseUrl); imgs.push(im);
+    }
+    dt.redraw(); this.texCache.set(node.id, dt); return dt;
   };
 }
