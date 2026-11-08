@@ -203,6 +203,14 @@ Tested in headless Chromium on a software Vulkan adapter (SwiftShader) for corre
 
 Frame rates from that adapter mean nothing and are not quoted. Nothing is timed for a benchmark. The pages show a frame interval on the viewer's own screen and record or send nothing; gate G0 (timing consent) is still open.
 
+
+## Chirp on Babylon WebGPU (port #4)
+
+`python3 -I src/build-chirp.py --study <the Chirp study folder> --out OUT` draws the Chirp study (two black holes spiralling in, heard) with Babylon 9.32.0 WebGPU through the same reader and SAI shim as the brain and KANSEI ports. The study's `src/app.js` is copied byte for byte; `index.html` changes only in its script tags. Source files: `src/chirp/chirp-pre.js`, `chirp-look.js`, `chirp-boot.js`. The look (HDR bloom, a WGSL gravitational-lens post-process, an unlit glowing wave sheet, glowing trails) is optional: a pill on the page, or `?look=0`, gives the As-authored picture. Receipt, run scripts and the parity-gap log: `runs/webgpu-chirp-20261107/` (RECEIPT.md, GAPS.md). No timings are claimed.
+
+## Electron Cloud on Babylon WebGPU (port #5)
+
+`python3 -I src/build-chirp.py --kind cloud --study <the Electron Cloud study folder> --out OUT` draws the Electron Cloud Observatory (hydrogen orbital shells, cut slider, Lyman playback) the same way: Babylon 9.32.0 WebGPU, our reader and SAI shim, the study's `src/app.js` byte for byte. `--kind chirp|cloud` selects the part list; `--single` writes one offline `single.html` with scenes and cases inlined (only Babylon from a CDN). Files: `src/cloud/cloud-boot.js` and `cloud-look.js` (the optional look: glossy glowing shells, fill light, bloom, vignette; pill on the page or `?look=0` for As authored). Port work fixed a shared bug (geometry cache key collided for a second rebuild of a triangle set) and added `IntegerSequencer`. Receipt, run scripts and the parity-gap log: `runs/webgpu-cloud-20261107/` (RECEIPT.md, GAPS.md). No timings are claimed.
 ## Gobbler 3 on Babylon WebGPU (the knowledge-graph port)
 
 Port #2 of the port map's queue (Pantheon splats was #1). The Gobbler 3 page (`gobbler-v3/` in `hagopjay/x3d.ml`: a scriptless X3D 4.0 knowledge graph, 17 ComposedShaders, 64 ROUTEs) with its **own unmodified `common.js`, explorer and tour**, drawn by Babylon 9.32.0 in WebGPU mode. The build swaps one script tag (X_ITE out, the bundle in) and one kicker line; `<x3d-canvas>` is defined by the bundle, so the page's `PX.boot` runs as written. X_ITE 16.5.1 stays the reference; this is not a parity witness.

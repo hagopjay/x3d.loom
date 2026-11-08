@@ -201,7 +201,7 @@ B_.geometryData = function (g) {
 };
 B_.babylonGeometry = function (g, wantColor) {
   const d = this.geometryData(g);
-  const key = g.id + (wantColor ? 'c' : '');
+  const key = g.id + (wantColor ? 'c' : 'n');
   const c = this.geoCache.get(key);
   if (c && c.ver === d.ver) return c.geo;
   if (c) c.geo.dispose();
@@ -264,7 +264,7 @@ B_.frame = function () {
     }
     for (const x of geos) {
       this.geoCache.delete(x.id);
-      for (const key of [x.id, x.id + 'c']) { const c = this.geoCache.get(key); if (c) { c.geo.dispose(); this.geoCache.delete(key); } }
+      for (const key of [x.id, x.id + 'c', x.id + 'n']) { const c = this.geoCache.get(key); if (c) { c.geo.dispose(); this.geoCache.delete(key); } }
       for (const r of [...this.rec.values()]) if (r.node && r.node.type === 'Shape' && r.node.f.geometry === x && r.tn) this.rebuildShapeIn(r);
     }
   }
@@ -501,7 +501,7 @@ B_.emitterChanged = function (em, field) {
 B_.psAnchorMoved = function () {};
 
 /* the game owns the camera: no orbit, pan, zoom or picking from the pointer */
-for (const k of ['orbit', 'pan', 'zoom', 'userMoved', 'queuePick', 'click']) B_[k] = function () {};
+if (!window.__keepNav) for (const k of ['orbit', 'pan', 'zoom', 'userMoved', 'queuePick', 'click']) B_[k] = function () {};   // a page that is not a game (Chirp) keeps the EXAMINE navigation
 
 /* a far ridge sits 3 to 4 km out: the page's NavigationInfo says visibilityLimit 9000 */
 const _applyCamera = B_.applyCamera;
