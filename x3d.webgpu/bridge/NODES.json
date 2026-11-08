@@ -1501,10 +1501,10 @@
    "inherits": "X3DLayerNode",
    "container": "layers",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 17,
+   "receipt": "receipts/Layer.json",
+   "note": "pickable, objectType, pointerEvents and viewport are held: picking does not respect layers; addChildren and removeChildren rebuild the layer; this is checked in the SAI test of LayerSet only if the engine exposes them (X_ITE does), here only the fields are compared",
    "rank": 152
   },
   "LayerSet": {
@@ -1514,10 +1514,10 @@
    "inherits": "X3DNode",
    "container": "children",
    "nfields": 4,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 17,
+   "receipt": "receipts/LayerSet.json",
+   "note": "activeLayer (which layer the user navigates) and the navigation of a layer's own Viewpoint are held, not acted on: the user always navigates the world's camera; a layer's Viewpoint is read once and per frame, not bound or animated; the layer has no NavigationInfo, Background or headlight of its own; picking does not respect layers: a ray hits the meshes of every layer, and pickable / objectType / viewport are held; lights of the world light the meshes of every layer; a layer has no lights of its own; order without any visible layer draws the world (Babylon needs a camera)",
    "rank": 153
   },
   "Layout": {
@@ -2840,10 +2840,10 @@
    "inherits": "X3DSoundDestinationNode",
    "container": "children",
    "nfields": 11,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 17,
+   "receipt": "receipts/StreamAudioDestination.json",
+   "note": "no network stream is made: streamIdentifier and mediaDeviceID are held",
    "rank": 146
   },
   "StreamAudioSource": {
@@ -2853,10 +2853,10 @@
    "inherits": "X3DSoundSourceNode",
    "container": "children",
    "nfields": 14,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 17,
+   "receipt": "receipts/StreamAudioSource.json",
+   "note": "no stream is read: streamIdentifier is held",
    "rank": 147
   },
   "StringSensor": {
@@ -3360,10 +3360,10 @@
    "inherits": "X3DSoundProcessingNode",
    "container": "children",
    "nfields": 18,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 17,
+   "receipt": "receipts/WaveShaper.json",
+   "note": "the curve is read back by length and by values, the shaping itself is Web Audio's",
    "rank": 148
   },
   "WindPhysicsModel": {

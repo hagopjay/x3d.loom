@@ -305,3 +305,9 @@
 
 /* the page's viewpoint list: body.viewpointList() -> [{ node, path, text }] for the loaded world, with the viewer where the camera is (ViewpointGroup proximity) */
 Body.prototype.viewpointList = function () { return this.world ? R.bridge.viewpoints(this.world, this.pose ? this.pose.pos : null) : []; };
+
+/* Layers: a world that goes away takes its layer cameras with it */
+{
+  const _cw = Body.prototype.clearWorld;
+  Body.prototype.clearWorld = function () { if (this._layers) { for (const it of this._layers.items) if (it) it.cam.dispose(); this._layers = null; this.scene.activeCameras = []; } return _cw.call(this); };
+}

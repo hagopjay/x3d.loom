@@ -1,0 +1,145 @@
+{
+ "node": "Layer",
+ "mode": "scene",
+ "note": "a layer holding a blue box is drawn over the (empty) world by its LayerSet; visible FALSE hides it. Probed from the composited frame in both engines (tolerance 45 for the body's neutral tone map). pickable and objectType are checked as fields only.",
+ "gaps": [
+  "pickable, objectType, pointerEvents and viewport are held: picking does not respect layers",
+  "addChildren and removeChildren rebuild the layer; this is checked in the SAI test of LayerSet only if the engine exposes them (X_ITE does), here only the fields are compared"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "visible",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pickable",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "objectType",
+    [
+     "ALL"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pointerEvents",
+    true
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    300,
+    20,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "visible",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "visible",
+    true
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "pickable",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pickable",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "objectType",
+    [
+     "NAVIGATION"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "objectType",
+    [
+     "NAVIGATION"
+    ]
+   ]
+  }
+ ]
+}
