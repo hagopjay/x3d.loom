@@ -1,0 +1,83 @@
+{
+ "node": "PlaneSensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/PlaneSensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 28/28",
+  "xite": "pass 28/28",
+  "map": {
+   "tr": [
+    1.801833809572515,
+    0,
+    0
+   ],
+   "off": [
+    1.801833809572515,
+    0,
+    0
+   ],
+   "box": [
+    1.801833809572515,
+    0,
+    0
+   ],
+   "clamped": [
+    1,
+    0,
+    0
+   ],
+   "disabled": [
+    1,
+    0,
+    0
+   ]
+  },
+  "oursOk": true,
+  "mapX": {
+   "tr": [
+    1.8018285799583382,
+    0,
+    0
+   ],
+   "off": [
+    1.8018285799583382,
+    0,
+    0
+   ],
+   "box": [
+    1.8018285799583382,
+    0,
+    0
+   ],
+   "clamped": [
+    1,
+    0,
+    0
+   ],
+   "disabled": [
+    1,
+    0,
+    0
+   ]
+  },
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "axisRotation is implemented (frame turned by it) but not exercised against X_ITE",
+   "trackPoint_changed is not compared: X_ITE reports it in the sensor frame, ours in the sensor frame at the press, to be checked",
+   "isOver (hover) is not raised by the drag sensors"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 795fbdef14b1",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "e32f895"
+}

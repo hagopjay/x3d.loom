@@ -259,3 +259,36 @@ BR.TR = { toA: (r) => BR.q.fromRot(r), fromA: (q) => BR.q.toRot(q), lerp: (a, b,
 
 /* every node can carry a metadata child (19775-1 7.2.2 X3DNode.metadata): add the field to the older tables that lack it */
 for (const t of Object.keys(DEFS)) if (!DEFS[t].metadata) DEFS[t].metadata = ['SFNode', IO, null];
+
+/* ---- pointer drag sensors (PointingDeviceSensor) -----------------------------------------------------------------------------------------------
+   The Babylon body (body-br.js) turns a pointer press on a Shape into dragStart/dragMove/dragEnd calls on the sensors that are children of the Shape's nearest group. The ray
+   arrives in that group's local frame as it was at the press (the group may move while it is dragged, the frame does not). The sensor does the geometry and raises its outputs
+   through BR.fire. Tests call the same three methods through BR.drag with synthetic rays. */
+BR.fire = (n, f, v) => (R.hooks && R.hooks.fire ? R.hooks.fire(n, f, v) : (n.f[f] = v, events.emit(n, f, v)));
+BR.drag = {
+  start(n, c) { const s = BR.specs.get(n.type); if (n.f.enabled === false) return; n._dragging = true; s.dragStart(n, c); },
+  move(n, c) { if (n._dragging) BR.specs.get(n.type).dragMove(n, c); },
+  end(n) { if (n._dragging) { n._dragging = false; BR.specs.get(n.type).dragEnd(n); } },
+};
+{
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2], sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]], len = (a) => Math.hypot(a[0], a[1], a[2]);
+  BR.geo = {
+    dot, sub, len,
+    at: (o, d, t) => [o[0] + t * d[0], o[1] + t * d[1], o[2] + t * d[2]],
+    /* ray against a sphere about the origin: the nearest hit in front, else the point of the sphere nearest to the ray */
+    raySphere(o, d, r) {
+      const a = dot(d, d), b = 2 * dot(o, d), c = dot(o, o) - r * r, disc = b * b - 4 * a * c;
+      if (disc >= 0 && a > 1e-12) { const q = Math.sqrt(disc); let t = (-b - q) / (2 * a); if (t < 0) t = (-b + q) / (2 * a); if (t >= 0) return BR.geo.at(o, d, t); }
+      const t = a > 1e-12 ? -b / (2 * a) : 0, p = BR.geo.at(o, d, t), l = len(p) || 1; return p.map((x) => (x / l) * r);
+    },
+    /* ray against the cylinder x^2 + z^2 = r^2 (axis Y): nearest hit in front, else the nearest point to the ray pushed out to the radius */
+    rayCylinder(o, d, r) {
+      const a = d[0] * d[0] + d[2] * d[2], b = 2 * (o[0] * d[0] + o[2] * d[2]), c = o[0] * o[0] + o[2] * o[2] - r * r, disc = b * b - 4 * a * c;
+      if (a > 1e-12) {
+        if (disc >= 0) { const q = Math.sqrt(disc); let t = (-b - q) / (2 * a); if (t < 0) t = (-b + q) / (2 * a); if (t >= 0) return BR.geo.at(o, d, t); }
+        const p = BR.geo.at(o, d, -b / (2 * a)), l = Math.hypot(p[0], p[2]) || 1; return [(p[0] / l) * r, p[1], (p[2] / l) * r];
+      }
+      return null;
+    },
+  };
+}

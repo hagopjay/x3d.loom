@@ -786,10 +786,10 @@
    "inherits": "X3DDragSensorNode",
    "container": "children",
    "nfields": 13,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 6,
+   "receipt": "receipts/CylinderSensor.json",
+   "note": "disk mode (view along the axis) is implemented but only the cylinder mode is compared with X_ITE; trackPoint_changed not compared",
    "rank": 29
   },
   "DISEntityManager": {
@@ -2190,10 +2190,10 @@
    "inherits": "X3DDragSensorNode",
    "container": "children",
    "nfields": 12,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 6,
+   "receipt": "receipts/PlaneSensor.json",
+   "note": "axisRotation is implemented (frame turned by it) but not exercised against X_ITE; trackPoint_changed is not compared: X_ITE reports it in the sensor frame, ours in the sensor frame at the press, to be checked; isOver (hover) is not raised by the drag sensors",
    "rank": 27
   },
   "PointEmitter": {
@@ -2749,10 +2749,10 @@
    "inherits": "X3DDragSensorNode",
    "container": "children",
    "nfields": 9,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 6,
+   "receipt": "receipts/SphereSensor.json",
+   "note": "after the second drag the rotation angle agrees with X_ITE 16.6.0 (0.5205 vs 0.5235 rad) but one axis component differs by 0.2: the hit point of a press on an already turned box is read differently, not chased (no pixel perfection); trackPoint_changed not compared; a drag that leaves the sphere uses the nearest point of the sphere to the ray; X_ITE does the same by its own rule, only tested inside the sphere",
    "rank": 28
   },
   "SplinePositionInterpolator": {
@@ -2918,9 +2918,9 @@
    "inherits": "X3DDamperNode",
    "container": "children",
    "nfields": 10,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
+   "status": "bridged",
+   "batch": 6,
+   "receipt": "receipts/TexCoordDamper2D.json",
    "note": "",
    "rank": 26
   },
@@ -3308,10 +3308,10 @@
    "inherits": "X3DEnvironmentalSensorNode",
    "container": "children",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 6,
+   "receipt": "receipts/VisibilitySensor.json",
+   "note": "occlusion by other shapes is not tested (X_ITE 16.6.0 does not test it either); one decision per frame; enterTime and exitTime are the frame timestamps",
    "rank": 30
   },
   "VolumeData": {

@@ -8,19 +8,11 @@ const fs = require('fs'), path = require('path'), http = require('http');
 const { chromium } = require('playwright');
 const BR = path.resolve(__dirname, '..'), SRC = path.resolve(BR, '..', 'demo', 'src');
 const args = process.argv.slice(2); const noXite = args.includes('--no-xite');
-const bi = args.indexOf('--babylon'); const babylon = bi >= 0 ? args.splice(bi, 2)[1] : process.env.BABYLON_JS;
+const bi = args.indexOf('--babylon'); const babylon = bi >= 0 ? args.splice(bi, 2)[1] : (process.env.BABYLON_JS || '/tmp/bb/t/package/babylon.js');
 const names = args.filter((a) => !a.startsWith('--'));
 const XITE_DIR = process.env.XITE_DIR || '/tmp/bb/xite/package/dist';
 
-// ---- the bundle: the same concatenation the page builders use, plus the bridge kit, the node files and a test boot ----------------------
-const READER = ['brain/reader.js', 'gobbler/reader-ext.js', 'demiurge/reader-ext-dm.js', 'dynasty/reader-ext-dl.js', 'hall/reader-ext-hl.js'];
-function bundle() {
-  const rd = (p) => fs.readFileSync(path.join(SRC, p), 'utf8');
-  const nodes = fs.readdirSync(path.join(BR, 'src', 'nodes')).filter((f) => f.endsWith('.js')).sort().map((f) => fs.readFileSync(path.join(BR, 'src', 'nodes', f), 'utf8'));
-  const parts = [...READER.filter((p) => fs.existsSync(path.join(SRC, p))).map(rd), fs.readFileSync(path.join(BR, 'src', 'kit.js'), 'utf8'), ...nodes, rd('brain/sai.js'),
-    `window.__R = R; window.__events = events; window.__bridge = R.bridge; window.__worlds = R.bridge.worlds;`];
-  return '(function () {\n"use strict";\n' + parts.join('\n') + '\n})();\n';
-}
+const bundle = require('./bundle.js');
 
 // ---- the runner both pages share: it only uses the SAI ---------------------------------------------------------------------------------
 const RUNNER = `
@@ -45,7 +37,7 @@ const close = (a, b) => {
 };
 const show = (v) => JSON.stringify(v);
 async function runSpec(eng, spec, xml) {
-  const out = { ok: true, steps: 0, fails: [], recorded: [] }; const X = window.X3D;
+  const out = { ok: true, steps: 0, fails: [], recorded: [], map: {} }; const X = window.X3D;
   const scene = await eng.open(xml); const nodes = {}; const events = {};
   const node = (d) => (nodes[d] ||= scene.getNamedNode(d));
   const conv = (t, v) => {
@@ -72,6 +64,8 @@ async function runSpec(eng, spec, xml) {
       else if (s.between) { const [d, f, lo, hi] = s.between; const a = plain(node(d)[f]); if (!(a > lo && a < hi)) fail(d + '.' + f + ' is ' + show(a) + ', expected between ' + lo + ' and ' + hi); }
       else if (s.near) { const [d, f, v, tol] = s.near; const a = plain(node(d)[f]); if (!(Math.abs(a - v) <= tol)) fail(d + '.' + f + ' is ' + show(a) + ', expected ' + v + ' within ' + tol); }
       else if (s.nearv) { const [d, f, v, tol] = s.nearv; const fl = (x) => (Array.isArray(x) ? x.flatMap(fl) : [x]); const a = fl(plain(node(d)[f])), vv = fl(v); if (!(a.length === vv.length && vv.every((x, i) => Math.abs(a[i] - x) <= tol))) fail(d + '.' + f + ' is ' + show(a) + ', expected ' + show(v) + ' within ' + tol); }
+      else if (s.mouse) { await window.__mouse(...s.mouse); await eng.settle(0.15); }
+      else if (s.record) { const [d, f, name] = s.record; out.map[name] = plain(node(d)[f]); }
       else if (s.reset) { for (const k in events) events[k].length = 0; }
       else if (s.atleast) { const [d, f, n] = s.atleast; const l = events[d + '.' + f]; if (l.length < n) fail(d + '.' + f + ' fired ' + l.length + ' times, expected at least ' + n); }
       else if (s.noevent) { const [d, f] = s.noevent; const l = events[d + '.' + f]; if (l.length) fail(d + '.' + f + ' fired ' + show(l) + ', expected nothing'); }
@@ -99,6 +93,33 @@ window.runXite = async (spec, xml) => { const b = X3D.getBrowser('#c'); await b.
 window.xiteInfo = () => ({ name: X3D.getBrowser('#c').name, version: X3D.getBrowser('#c').version });
 </script>`;
 
+const PAGE_OURS_SCENE = `<!doctype html><meta charset=utf-8><body style="margin:0;background:#000"><canvas id=c width=320 height=240 style="width:320px;height:240px;display:block"></canvas><script src="/babylon.js"></script><script src="/bundle-body.js"></script><script>${RUNNER}
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+window.sceneReady = (async () => { const body = new Body(document.getElementById('c'), { onNote: (m) => (window.__notes = window.__notes || []).push(m) }); await body.init(); X3DSAI.setBody(body); window.__body = body; })();
+window.runScene = async (spec, xml) => { await window.sceneReady; return runSpec({
+  open: async (x) => { const sc = await X3DSAI.B.createX3DFromString(x); await X3DSAI.B.replaceWorld(sc); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); return sc; },
+  apply: async (fn) => { fn(); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); },
+  settle: async (dt) => { await sleep((dt || 0.05) * 1000); await X3DSAI.B.nextFrame(); },
+}, spec, xml); };
+</script>`;
+const PAGE_XITE_SCENE = `<!doctype html><meta charset=utf-8><link rel=stylesheet href="/x_ite/x_ite.css"><body style="margin:0"><x3d-canvas id=c style="width:320px;height:240px;display:block"></x3d-canvas><script src="/x_ite/x_ite.min.js"></script><script>${RUNNER}
+window.runScene = async (spec, xml) => { const b = X3D.getBrowser('#c');
+  return runSpec({
+    open: async (x) => { const sc = await b.createX3DFromString(x); await b.replaceWorld(sc); await b.nextFrame(); await b.nextFrame(); return sc; },
+    apply: async (fn) => { fn(); await b.nextFrame(); await b.nextFrame(); },
+    settle: async (dt) => { await new Promise((r) => setTimeout(r, (dt || 0.05) * 1000)); await b.nextFrame(); },
+  }, spec, xml); };
+window.xiteInfo = () => ({ name: X3D.getBrowser('#c').name, version: X3D.getBrowser('#c').version });
+</script>`;
+const STUB = () => {   // as the earlier port harnesses do: headless WebGPU draws into an offscreen texture, frames paced at 300 ms
+  window.requestAnimationFrame = (cb) => setTimeout(() => cb(performance.now()), 300);
+  const o = HTMLCanvasElement.prototype.getContext;
+  HTMLCanvasElement.prototype.getContext = function (t, op) { if (t !== 'webgpu') return o.call(this, t, op); const canvas = this;
+    const ctx = { _t: null, _d: null, _f: 'bgra8unorm', canvas, configure(c) { this._d = c.device; this._f = c.format; }, unconfigure() {},
+      getCurrentTexture() { const w = canvas.width, h = canvas.height; if (!this._t || this._t.width !== w || this._t.height !== h) { this._t = this._d.createTexture({ size: [w, h], format: this._f, usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC | GPUTextureUsage.TEXTURE_BINDING }); } return this._t; } };
+    return ctx; };
+};
+
 function serve(files) {
   const mime = { '.js': 'text/javascript', '.css': 'text/css', '.html': 'text/html', '.json': 'application/json', '.wasm': 'application/wasm', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
   return new Promise((res) => { const s = http.createServer((q, r) => {
@@ -110,7 +131,7 @@ function serve(files) {
 }
 
 (async () => {
-  const files = { '/bundle.js': bundle(), '/ours.html': PAGE_OURS, '/xite.html': PAGE_XITE };
+  const files = { '/bundle.js': bundle('reader'), '/bundle-body.js': bundle('body'), '/babylon.js': babylon ? fs.readFileSync(babylon, 'utf8') : '', '/ours.html': PAGE_OURS, '/xite.html': PAGE_XITE, '/ours-scene.html': PAGE_OURS_SCENE, '/xite-scene.html': PAGE_XITE_SCENE };
   const server = await serve(files), base = 'http://localhost:' + server.address().port;
   const b = await chromium.launch({ args: ['--enable-unsafe-webgpu', '--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--use-webgpu-adapter=swiftshader'] });
   const env = { chromium: b.version(), ours: 'x3d.webgpu reader + SAI shim, headless, bundle sha ' + require('crypto').createHash('sha256').update(files['/bundle.js']).digest('hex').slice(0, 12) };
@@ -120,13 +141,26 @@ function serve(files) {
   let px = null;
   if (!noXite && fs.existsSync(path.join(XITE_DIR, 'x_ite.min.js'))) { px = await b.newPage(); px.on('pageerror', (e) => errs.push('xite: ' + e.message.slice(0, 160))); await px.goto(base + '/xite.html'); await px.waitForFunction(() => window.X3D && X3D.getBrowser('#c'), null, { timeout: 60000 }).catch(() => {}); env.xite = 'X_ITE ' + (await px.evaluate(() => window.xiteInfo && window.xiteInfo().version).catch(() => '?')) + ' (WebGL2, SwiftShader)'; }
   else env.xite = noXite ? 'skipped (--no-xite)' : 'not found at ' + XITE_DIR;
+  let pos = null, pxs = null;
+  const mouseFor = async (pg) => { await pg.exposeFunction('__mouse', async (k, x, y) => { if (k === 'move') await pg.mouse.move(x, y, { steps: 6 }); else if (k === 'down') { await pg.mouse.move(x, y); await pg.mouse.down(); } else if (k === 'up') { await pg.mouse.move(x, y, { steps: 6 }); await pg.mouse.up(); } }); };
+  async function scenePages(needX) {
+    if (!pos) { pos = await b.newPage(); pos.on('pageerror', (e) => errs.push('scene: ' + e.message.slice(0, 200))); await pos.addInitScript(STUB); await mouseFor(pos); await pos.goto(base + '/ours-scene.html'); env.babylon = await pos.evaluate(() => window.sceneReady.then(() => BABYLON.Engine.Version)); }
+    if (needX && !pxs && fs.existsSync(path.join(XITE_DIR, 'x_ite.min.js'))) { pxs = await b.newPage(); pxs.on('pageerror', (e) => errs.push('xite scene: ' + e.message.slice(0, 160))); await mouseFor(pxs); await pxs.goto(base + '/xite-scene.html'); await pxs.waitForFunction(() => window.X3D && X3D.getBrowser('#c'), null, { timeout: 60000 }).catch(() => {}); }
+  }
   for (const n of names) {
     const fx = path.join(BR, 'fixtures', n + '.x3d'), ts = path.join(BR, 'fixtures', n + '.test.json');
     if (!fs.existsSync(fx) || !fs.existsSync(ts)) { results[n] = { ok: false, msg: 'missing fixture or test spec' }; continue; }
     const xml = fs.readFileSync(fx, 'utf8'), spec = JSON.parse(fs.readFileSync(ts, 'utf8'));
-    const r = { ok: false, ours: '?', xite: px && spec.xite !== false ? '?' : 'n/a' };
-    try { const o = await po.evaluate(([s, x]) => window.runOurs(s, x), [spec, xml]); r.ours = o.ok ? `pass ${o.steps}/${o.steps}` : 'FAIL ' + o.fails.join(' | '); r.oursOk = o.ok; if (o.recorded.length) r.recordedOurs = o.recorded; } catch (e) { r.ours = 'ERROR ' + String(e).slice(0, 200); r.oursOk = false; }
-    if (px && spec.xite !== false) { try { const o = await px.evaluate(([s, x]) => window.runXite(s, x), [spec, xml]); r.xite = o.ok ? `pass ${o.steps}/${o.steps}` : 'FAIL ' + o.fails.join(' | '); r.xiteOk = o.ok; if (o.recorded.length) r.recordedXite = o.recorded; } catch (e) { r.xite = 'ERROR ' + String(e).slice(0, 200); r.xiteOk = false; } }
+    const scene = spec.mode === 'scene';
+    if (scene) await scenePages(!noXite && spec.xite !== false);
+    const P = scene ? pos : po, PX = scene ? pxs : px, fnO = scene ? 'runScene' : 'runOurs', fnX = scene ? 'runScene' : 'runXite';
+    const r = { ok: false, ours: '?', xite: PX && spec.xite !== false ? '?' : 'n/a' };
+    try { const o = await P.evaluate(([f, s, x]) => window[f](s, x), [fnO, spec, xml]); r.map = o.map; r.ours = o.ok ? `pass ${o.steps}/${o.steps}` : 'FAIL ' + o.fails.join(' | '); r.oursOk = o.ok; if (o.recorded.length) r.recordedOurs = o.recorded; } catch (e) { r.ours = 'ERROR ' + String(e).slice(0, 200); r.oursOk = false; }
+    if (PX && spec.xite !== false) { try { const o = await PX.evaluate(([f, s, x]) => window[f](s, x), [fnX, spec, xml]); r.mapX = o.map; r.xite = o.ok ? `pass ${o.steps}/${o.steps}` : 'FAIL ' + o.fails.join(' | '); r.xiteOk = o.ok; if (o.recorded.length) r.recordedXite = o.recorded; } catch (e) { r.xite = 'ERROR ' + String(e).slice(0, 200); r.xiteOk = false; } }
+    if (r.map && r.mapX) for (const [name, tol] of spec.agree || []) {   // recorded values must agree between the engines, relative tol
+      const fl = (x) => (Array.isArray(x) ? x.flatMap(fl) : [x]), a = fl(r.map[name]), c = fl(r.mapX[name]), sc = Math.max(1, ...c.map(Math.abs));
+      if (!(a.length === c.length && a.every((v, i) => Math.abs(v - c[i]) <= tol * sc))) { r.oursOk = false; r.ours += ` | ${name}: ours ${JSON.stringify(r.map[name])} vs X_ITE ${JSON.stringify(r.mapX[name])} (tol ${tol})`; }
+    }
     // the bridge passes when ours passes; a disagreeing oracle is reported, and a gap if the spec lists one
     r.ok = r.oursOk && (r.xiteOk !== false || !!spec.xiteDisagrees);
     r.msg = r.ok ? (r.xiteOk === false ? 'X_ITE differs (' + spec.xiteDisagrees + ')' : '') : (r.oursOk ? 'X_ITE disagrees with the spec: check the spec' : '');

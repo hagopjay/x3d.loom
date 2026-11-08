@@ -1,0 +1,121 @@
+{
+ "node": "CylinderSensor",
+ "mode": "scene",
+ "note": "side-on view, so the cylinder (not the disk) is dragged; the first settle outlasts the 1 s camera transition the body runs after a world is replaced",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "down",
+    160,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    190,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    190,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N",
+    "rotation_changed",
+    "r1"
+   ]
+  },
+  {
+   "record": [
+    "N",
+    "offset",
+    "o1"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "offset",
+    0,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "minAngle",
+    -0.2,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "maxAngle",
+    0.2,
+    "SFFloat"
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    160,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    190,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    190,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N",
+    "rotation_changed",
+    "clamped"
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "r1",
+   0.12
+  ],
+  [
+   "o1",
+   0.12
+  ],
+  [
+   "clamped",
+   0.12
+  ]
+ ],
+ "gaps": [
+  "disk mode (view along the axis) is implemented but only the cylinder mode is compared with X_ITE",
+  "trackPoint_changed not compared"
+ ]
+}
