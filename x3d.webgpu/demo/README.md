@@ -84,16 +84,17 @@ The output folder (about 14 MB with levels, cars, textures and tapes) is the gam
 | file | role |
 |---|---|
 | [src/drift/drift-ext.js](src/drift/drift-ext.js) | what KANSEI needs beyond the brain body: reader tables (ElevationGrid, TextureProperties, TextureTransform, PolylineEmitter, Metadata*, Background `*Url`, alphaMode, normalScale, UnlitMaterial emissive texture), per-file base URLs and node-id offsets, IndexedFaceSet/TriangleSet normals with crease angle, Spot and Point lights with shadows (Poisson), linear fog, a six-face sky, alpha MASK and BLEND, a `Cone` primitive, Babylon particle systems from ParticleSystem and PolylineEmitter, a camera whose far plane follows `visibilityLimit` |
-| [src/drift/drift-boot.js](src/drift/drift-boot.js) | start-up: adapter retry, the Babylon body, the SAI shim, then `<x3d-canvas>` is defined so the game's own boot goes on |
-| [src/drift/drift-timing.js](src/drift/drift-timing.js) | the opt-in Timing button (below) |
+| [src/drift/drift-boot.js](src/drift/drift-boot.js) | start-up: the Babylon body, the SAI shim, then `<x3d-canvas>` is defined so the game's own boot goes on |
+| [src/shared/timing.js](src/shared/timing.js) | the opt-in Timing button, shared by KANSEI and Neural Canvas (below) |
+| [src/shared/adapter.js](src/shared/adapter.js) | the `requestAdapter` retry (default, then options, then low-power, then the fallback adapter), recorded in `window.__adapter` and `window.__adapterVia` |
 | [src/build-drift.py](src/build-drift.py) | the page builder: copies the game, concatenates the parts into `bundle.js`, edits only the two lines above |
-| [src/brain/sai.js](src/brain/sai.js) (additive), [src/brain/body.js](src/brain/body.js) (one fix) | the shim gained `createX3DFromURL`, `createX3DFromString(xml, baseUrl)`, `replaceWorld`, `addRootNode`, `loadComponents`, the colour-RGBA and multi-field types; `body.js` read `face[0]` where it needed `face[0][0]`, so every IndexedFaceSet without a Normal node had zero normals (the brain page is unaffected where its meshes carry their own normals) |
+| [src/brain/sai.js](src/brain/sai.js) (additive), [src/brain/body.js](src/brain/body.js) (one fix) | the shim gained `createX3DFromURL`, `createX3DFromString(xml, baseUrl)`, `replaceWorld`, `addRootNode`, `loadComponents`, the colour-RGBA and multi-field types; `body.js` read `face[0]` where it needed `face[0][0]`, so every IndexedFaceSet without a Normal node had zero normals (the Neural Canvas page is unaffected: re-checked on 9 views, 0 pixels differ before and after, see [runs/webgpu-brain-v2-20261107](../../runs/webgpu-brain-v2-20261107/RECEIPT.md)) |
 
 The scenes are 29 node types in 10 files (no shaders, so no hash-matched ports; this page has no GLSL to port), plus what the effects code creates at run time (Transform, Switch, Shape, Cone, UnlitMaterial, SpotLight, Viewpoint, ParticleSystem, PolylineEmitter).
 
 ### The Timing button (opt-in, off by default)
 
-A small "Timing" pill at the lower left. Nothing runs until it is pressed. Then, for about 22 s (2 s warm-up thrown away, 20 s measured), it records the interval between `requestAnimationFrame` callbacks of whatever the page is doing, and shows p50, p95, p99, max, mean fps, the 1% low and the count of frames over 33 and 50 ms. It keeps the numbers on the page: no fetch, no beacon, nothing is sent. "Copy numbers" copies a JSON block that also holds the GPU adapter (vendor, architecture, description, fallback flag, timestamp-query support), the browser string, cores, power state, the circuit, car, camera and quality tier, the canvas size and render scale, and the build id of the bundle, so a figure is never separated from the machine and the code that made it. A software adapter (SwiftShader, WARP, llvmpipe, or a fallback adapter) is labelled "these numbers do not count"; a hidden tab or fewer than 30 frames is labelled not valid. `?timing=0` hides the button; `?tsec=N` and `?twarm=N` change the windows. What it is not: it is the displayed-frame interval (a 60 Hz screen caps it near 16.7 ms) with the game physics and the Babylon draw inside it, not GPU-only time. [runs/webgpu-drift-20261107/test-timing.js](../../runs/webgpu-drift-20261107/test-timing.js) checks the statistics and the warnings with a stub DOM.
+A small "Timing" pill at the lower left (lower right on Neural Canvas, which has its own controls on the left). One file, [src/shared/timing.js](src/shared/timing.js), serves both pages; each boot file sets `window.__timingHooks` (name, result schema, how to read the scene, whether the page moves its own render scale) and the build sets `window.__x3dBuild`. The result is also kept in `window.__timingResult`. Nothing runs until it is pressed. Then, for about 22 s (2 s warm-up thrown away, 20 s measured), it records the interval between `requestAnimationFrame` callbacks of whatever the page is doing, and shows p50, p95, p99, max, mean fps, the 1% low and the count of frames over 33 and 50 ms. It keeps the numbers on the page: no fetch, no beacon, nothing is sent. "Copy numbers" copies a JSON block that also holds the GPU adapter (vendor, architecture, description, fallback flag, timestamp-query support), the browser string, cores, power state, the circuit, car, camera and quality tier, the canvas size and render scale, and the build id of the bundle, so a figure is never separated from the machine and the code that made it. A software adapter (SwiftShader, WARP, llvmpipe, or a fallback adapter) is labelled "these numbers do not count"; a hidden tab or fewer than 30 frames is labelled not valid. `?timing=0` hides the button; `?tsec=N` and `?twarm=N` change the windows. What it is not: it is the displayed-frame interval (a 60 Hz screen caps it near 16.7 ms) with the game physics and the Babylon draw inside it, not GPU-only time. [runs/webgpu-drift-20261107/test-timing.js](../../runs/webgpu-drift-20261107/test-timing.js) checks the statistics and the warnings with a stub DOM and the same hooks the pages set.
 
 ### What cost time (read before the next port)
 
@@ -107,10 +108,21 @@ A small "Timing" pill at the lower left. Nothing runs until it is pressed. Then,
 8. **Appearance `alphaMode` (MASK with a cutoff) was ignored**, so the pines were opaque boxes. `refreshPBR` resets the transparency mode: apply it again after.
 9. **The plain `requestAdapter()` first** (as in PR 14) and a visible message when none answers, because the owner's Windows GPU is blocklisted until a flag is set.
 10. **The test page and the frame queue** are as in the brain port: stub the swap chain and slow `requestAnimationFrame` to 1.2 s. The game then advances its own capped 0.25 s of sim per frame, so a drive takes few frames but long wall time.
+11. **A texture list with fallbacks costs a failed request per node on a sub-folder.** KANSEI lists `../textures/x.png` then `textures/x.png` so one page works from two depths. Served from `/kansei/v1/` the first never exists, and Babylon asked for it for every node (about 2,350 404s on the live page) before trying the second. `createX3DFromString` now probes each distinct candidate once and puts the live one first. Test a built page from a sub-folder, not only from the server root, where the first candidate resolves and hides this.
 
 ### Not done, and known deviations
 
 Same body, so Sound/AudioClip, Layout/ScreenGroup and Transform shear are still not in the Babylon body. **The game's sound is its own WebAudio synthesiser and it runs unchanged** (the page reports the audio context as running; it was not rebuilt on Babylon's audio engine and nobody has listened to it in this port). Visual deviations from X_ITE, none tuned away: the normal maps are drawn at 0.6 of their `normalScale` (full strength scored lower), the tail-light emissive texture shows stripes, the far ridges are browner than X_ITE's paler grey, the sky clouds are a little stronger. No timings were taken here: this machine has only a software adapter.
+
+## Manifold of Emotion on Babylon WebGPU (the manifold port)
+
+Port #4. The Manifold page (the Riemannian emotional-field manifold; source in `hagopjay/x3d.STEM` `studies/manifold`) with its own HUD, math and `app.js`, drawn by Babylon.js 9.32.0 in WebGPU mode through our X3D reader. **The scene file is the master; Babylon is the body.** Seven GLSL shaders are hand-ported to WGSL and keyed by hash (the builder refuses a scene with an unported shader). The page's old 2D-canvas lens cannot read a WebGPU swap chain, so the lens switch now drives Babylon's own chain (bloom, vignette, grain, chromatic aberration); the look is deliberately not the original's, "lens off" is the as-authored frame, and the page says so on screen. An opt-in **Timing** button (gate G0, opened by the owner for this demo only) prints a copy-paste block in the same format as the KANSEI page.
+
+```sh
+python3 -I x3d.webgpu/demo/src/build-manifold.py --site <manifold Pages folder> --out <new folder>   # then serve the folder over http
+```
+
+Against X_ITE 16.5.1 (software renderer, 640 x 360, lens off, correctness only): Reverie 49.3 dB, Euphoria 48.5 dB. Other rows, the bugs found, and the later-work list are in [runs/webgpu-manifold-20261107/RECEIPT.md](../../runs/webgpu-manifold-20261107/RECEIPT.md). No frame rate is quoted: timing is for the owner's own devices. Source: [src/manifold/](src/manifold/README.md), plan: [MANIFOLD-PORT-PLAN.md](../MANIFOLD-PORT-PLAN.md). The built page is not committed.
 
 ## The Collider
 
@@ -199,3 +211,25 @@ Frame rates from that adapter mean nothing and are not quoted. Nothing is timed 
 ## Electron Cloud on Babylon WebGPU (port #5)
 
 `python3 -I src/build-chirp.py --kind cloud --study <the Electron Cloud study folder> --out OUT` draws the Electron Cloud Observatory (hydrogen orbital shells, cut slider, Lyman playback) the same way: Babylon 9.32.0 WebGPU, our reader and SAI shim, the study's `src/app.js` byte for byte. `--kind chirp|cloud` selects the part list; `--single` writes one offline `single.html` with scenes and cases inlined (only Babylon from a CDN). Files: `src/cloud/cloud-boot.js` and `cloud-look.js` (the optional look: glossy glowing shells, fill light, bloom, vignette; pill on the page or `?look=0` for As authored). Port work fixed a shared bug (geometry cache key collided for a second rebuild of a triangle set) and added `IntegerSequencer`. Receipt, run scripts and the parity-gap log: `runs/webgpu-cloud-20261107/` (RECEIPT.md, GAPS.md). No timings are claimed.
+## Gobbler 3 on Babylon WebGPU (the knowledge-graph port)
+
+Port #2 of the port map's queue (Pantheon splats was #1). The Gobbler 3 page (`gobbler-v3/` in `hagopjay/x3d.ml`: a scriptless X3D 4.0 knowledge graph, 17 ComposedShaders, 64 ROUTEs) with its **own unmodified `common.js`, explorer and tour**, drawn by Babylon 9.32.0 in WebGPU mode. The build swaps one script tag (X_ITE out, the bundle in) and one kicker line; `<x3d-canvas>` is defined by the bundle, so the page's `PX.boot` runs as written. X_ITE 16.5.1 stays the reference; this is not a parity witness.
+
+```sh
+python3 -I x3d.webgpu/demo/src/build-gobbler.py --page <gobbler-v3/build-public-candidate> --out OUT.html          # needs the page folder next to it
+python3 -I x3d.webgpu/demo/src/build-gobbler.py --page <gobbler-v3/build-public-candidate> --out OUT.html --single # scene, graph, css and js inlined: one file
+```
+
+The built page and its scene are **not committed**: the public candidate names two outside maintainers and waits for its owner's "publish". The build refuses to run if the scene carries GLSL with no WGSL port (it prints the key).
+
+| file | role |
+|---|---|
+| [src/gobbler/reader-ext.js](src/gobbler/reader-ext.js) | PointSet, TextureCoordinate3D, PixelTexture, VolumeEmitter, BooleanFilter, BooleanSequencer, flat RGBA and index arrays; `receive` is wrapped so the Boolean nodes run as events |
+| [src/gobbler/body-gob.js](src/gobbler/body-gob.js) | wraps the brain body without editing it: port lookup by shader hash, per-corner attributes (RGBA, 3D texture coordinates), PointSet as quads, ember particles, bbox-centre sort, first Viewpoint bound at load |
+| [src/gobbler/wgsl-core.js](src/gobbler/wgsl-core.js) | port registry and the one material factory the page and the test harness share |
+| [src/gobbler/wgsl-sky.js](src/gobbler/wgsl-sky.js), [-eye](src/gobbler/wgsl-eye.js), [-point](src/gobbler/wgsl-point.js), [-facet](src/gobbler/wgsl-facet.js), [-line](src/gobbler/wgsl-line.js) | the six GLSL programs as WGSL (733 lines in all), term for term |
+| [src/gobbler/port-test.html](src/gobbler/port-test.html), [port-test.js](src/gobbler/port-test.js) | compile-and-draw check for one port at a time; WGSL errors come back as data |
+| [src/gobbler/compare-gob.html](src/gobbler/compare-gob.html) | the scene on the body without the page, for frame comparisons |
+| [src/gobbler/boot-gob.js](src/gobbler/boot-gob.js) | defines `<x3d-canvas>`, starts the body, lists every fallback on screen, wires the opt-in Timing button |
+
+Shader keys (FNV-1a of the whitespace-collapsed GLSL, vertex-fragment): sky `57378568-b3067a52`, point `8da5fec9-17c8a8f8`, facet `a2e1db0e-7e920071`, line `623a753e-ff5d9002`, hide `1a42dc70-060b0505` (draws nothing, no mesh), eye `50c500f7-7a46fca5`. Receipt, gap log and lessons: [runs/webgpu-gobbler-20261107/RECEIPT.md](../../runs/webgpu-gobbler-20261107/RECEIPT.md).

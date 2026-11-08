@@ -84,6 +84,19 @@
   }
   function unwrap(p) { return (p && rawOf.get(p)) || p; }
 
+  /* a field whose value can be large (vertex attributes, index lists, uniform arrays): reading does not copy, setValue takes a typed array as is */
+  function fieldView(raw, prop, type) {
+    return {
+      getTypeName() { return type; },
+      get length() { return raw.f[prop].length; },
+      getValue() { return raw.f[prop]; },
+      setValue(v) {
+        const out = isTyped(v) ? (type === 'MFInt32' ? Int32Array.from(v) : Float32Array.from(v)) : (type === 'MFInt32' ? Int32Array.from(Array.from(v, Number)) : Float32Array.from(Array.from(v, Number)));
+        R.receive(raw, prop, out);
+      },
+    };
+  }
+
   const METHODS = new Set(['getNodeName', 'getNodeTypeName', 'addFieldCallback', 'removeFieldCallback', 'getTypeName', 'getType', 'getName', 'dispose', 'valueOf', 'toString']);
   function wrap(raw) {
     let p = wrappers.get(raw); if (p) return p;
@@ -95,12 +108,14 @@
           case 'getNodeName': return () => raw.def || '';
           case 'getNodeTypeName': return () => raw.type;
           case 'getTypeName': return () => 'SFNode';
+          case 'getFieldDefinitions': return () => Object.entries(R.fdefsOf(raw)).map(([name, d]) => ({ name, dataType: d[0], accessType: d[1], getName() { return name; } }));
           case 'addFieldCallback': return (key, field, fn) => { ((raw.cbs ||= {})[field] ||= new Map()).set(key, fn); };
           case 'removeFieldCallback': return (field, key) => { raw.cbs && raw.cbs[field] && raw.cbs[field].delete(key); };
           case 'valueOf': case 'toString': return () => `[${raw.type}${raw.def ? ' ' + raw.def : ''}]`;
         }
         const fd = R.fdefsOf(raw)[prop];
         if (!fd) return undefined;
+        if (fd[0] === 'MFVec4f' || (R.saiLazy && R.saiLazy.has(raw.type + '.' + prop))) return fieldView(raw, prop, fd[0]);
         const v = raw.f[prop];
         if (fd[0] === 'MFNode') return mfNode(v, raw);
         if (/^MF/.test(fd[0])) return mfField(raw, prop, fd[0], toSAI(fd[0], v));
@@ -146,6 +161,11 @@
     if (rs) for (const r of rs) { R.events.queue.push(r, value); }
     R.events.drain();
   }
+  /* callbacks only (an output event raised inside the reader, such as a TimeSensor's elapsedTime): no route work, the reader's own emit does that */
+  R.hooks.cb = (node, field, value) => {
+    const cb = node.cbs && node.cbs[field];
+    if (cb) { const fd = R.fdefsOf(node)[field], sv = toSAI(fd ? fd[0] : '', value); for (const fn of cb.values()) { try { fn(sv); } catch (e) { console.error(e); } } }
+  };
   R.hooks.fire = fire;
   /* an output the body itself produces (a TimeSensor's fraction_changed, time, isActive) also reaches the page's addFieldCallback listeners, once per timestamp */
   const emitBase = R.events.emit;
@@ -195,10 +215,30 @@
     if (u[0] === 0x1f && u[1] === 0x8b) return gz(u);
     return new TextDecoder().decode(u);
   }
+  /* An ImageTexture may list fallbacks (KANSEI lists "../textures/x.png" then "textures/x.png", so one page works from two folder depths). Babylon would request the first one for
+     every node, get a 404 each time and only then try the next: thousands of failed requests on a page served from a sub-folder. Probe each distinct candidate once (HEAD, remembered)
+     and put the first one that exists at the front. A candidate whose probe fails for a reason other than "not found" keeps its place. Nothing is probed for embedded (single-file) pages. */
+  const probed = new Map();
+  const probe = (href) => { if (!probed.has(href)) probed.set(href, fetch(href, { method: 'HEAD' }).then((r) => (r.ok ? 1 : r.status === 404 ? 0 : 1), () => 1)); return probed.get(href); };
+  async function preferLiveTextureUrls(world, base) {
+    if (window.__VFS) return;
+    const todo = world.nodes.filter((n) => n.type === 'ImageTexture' && n.f.url && n.f.url.length > 1);
+    if (!todo.length) return;
+    const abs = (n, u) => { try { return new URL(u, n.base || base).href; } catch { return null; } };
+    const lists = new Map();
+    for (const n of todo) { const key = n.f.url.map((u) => abs(n, u)).join('|'); if (!lists.has(key)) lists.set(key, []); lists.get(key).push(n); }
+    await Promise.all([...lists].map(async ([key, nodes]) => {
+      const hrefs = key.split('|'); let pick = 0;
+      for (let i = 0; i < hrefs.length; i++) { if (hrefs[i] && (await probe(hrefs[i]))) { pick = i; break; } }
+      if (pick > 0) for (const n of nodes) n.f.url = [n.f.url[pick], ...n.f.url.filter((_, i) => i !== pick)];
+    }));
+  }
   const B = {
     version: 'Babylon ' + (typeof BABYLON !== 'undefined' ? BABYLON.Engine.Version : '?') + ' WebGPU',
     currentScene: null,
-    setBrowserOption(k, v) { if (k === 'ContentScale' && BODY) { BODY.engine.setHardwareScalingLevel(1 / Math.max(0.25, v)); } B._opts = B._opts || {}; B._opts[k] = v; },
+    setBrowserOption(k, v) { if (k === 'ContentScale' && BODY) { BODY.engine.setHardwareScalingLevel(1 / Math.max(0.25, v)); } if (BODY && BODY.browserOption) BODY.browserOption(k, v); B._opts = B._opts || {}; B._opts[k] = v; },
+    getBrowserOption(k) { return (B._opts || {})[k]; },
+    getContext() { return { canvas: BODY.canvas }; },
     addBrowserCallback() {},
     baseURL: '',
     getComponent() { return {}; },
@@ -234,6 +274,7 @@
       const sc = makeScene(world, false);
       sc._base = baseUrl || B.baseURL || location.href;
       for (const n of world.nodes) n.base = sc._base;
+      await preferLiveTextureUrls(world, sc._base);
       // nodes the imported scene owns: its timers run with the body's, and its roots join the main scene when pushed
       if (BODY) { BODY.timeSensors = (BODY.timeSensors || []).concat(world.nodes.filter((n) => n.type === 'TimeSensor')); }
       if (MAINSCENE) for (const [k, v] of world.defs) if (!MAINSCENE._world.defs.has(k)) MAINSCENE._world.defs.set(k, v);
@@ -246,7 +287,7 @@
 
   const X3D = {
     SFColor, SFVec2f, SFVec3f, SFVec4f, SFRotation, SFColorRGBA, MFColor, MFColorRGBA, MFVec3f, MFVec2f, MFFloat, MFInt32, MFString, MFNode, X3DConstants: {},
-    getBrowser(sel) { const c = document.querySelector(sel); return c && c.__browser ? c.__browser : null; },
+    getBrowser(sel) { const c = typeof sel === 'string' ? document.querySelector(sel) : sel; return c && c.__browser ? c.__browser : null; },
   };
   window.X3DSAI = { X3D, B, wrap, unwrap, setBody(b) { BODY = b; const c = b.canvas; c.__browser = B; c.browser = B; }, vfsResolve, vfsBytes };
   window.X3D = X3D;

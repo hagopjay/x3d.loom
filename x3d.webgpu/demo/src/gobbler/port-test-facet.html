@@ -1,0 +1,67 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#000"><canvas id=stage style="width:100vw;height:100vh;display:block"></canvas>
+<script>
+/* Compile-and-draw check for the Gobbler WGSL ports. Serve the scratch folder (layout in runs/webgpu-gobbler-20261107/RECEIPT.md, section 6), open
+   port-test.html?stub=1[&only=name,name]. Each port gets a dummy mesh with the attributes it declares; the page reports
+   window.__result = { name: { ok, errors[], lit } } and window.__done = true. Headless Chrome here cannot present a WebGPU swap chain, so ?stub=1 draws to an offscreen texture. */
+(()=>{const o=GPUAdapter.prototype.requestDevice;GPUAdapter.prototype.requestDevice=async function(...a){const d=await o.apply(this,a);d.lost.then(i=>console.error('DEVICE LOST '+i.reason+': '+i.message));return d;};})();
+if(location.search.includes('stub')){
+window.requestAnimationFrame=(cb)=>setTimeout(()=>cb(performance.now()),600);
+const origGC = HTMLCanvasElement.prototype.getContext;
+HTMLCanvasElement.prototype.getContext = function(t, o){ if(t!=='webgpu') return origGC.call(this,t,o);
+  const canvas=this; const ctx={ _t:null,_d:null,_f:'bgra8unorm', canvas,
+   configure(c){ this._d=c.device; this._f=c.format; window.__fmt=c.format; }, unconfigure(){},
+   getCurrentTexture(){ const w=canvas.width,h=canvas.height; if(!this._t||this._t.width!==w||this._t.height!==h){ this._t=this._d.createTexture({size:[w,h],format:this._f,usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.COPY_SRC|GPUTextureUsage.TEXTURE_BINDING}); window.__sc=this._t;} return this._t; } };
+  window.__ctx=ctx; return ctx; };
+}
+</script>
+<script src="/babylon.js"></script>
+<script src="/gob/wgsl-core.js"></script>
+<script>
+const q=new URLSearchParams(location.search);
+document.write('<script src="/gob/wgsl-facet.js"><\/script>');
+</script>
+<script>
+/* Facet comparison page: a bumpy sheet of flat triangles (3 own vertices per face, colour on all corners, tc0 (0 0)(1 0)(0 1)) drawn with the facet port;
+   uniforms from the query: phase,time,scan,glow,light0..3 (x;y;z). Exposes window.__data (mesh, matrices) and window.__pix (RGBA, top row first) for the GLSL side to replay. */
+function rng(seed){ let s=seed>>>0; return ()=>{ s=(Math.imul(s,1664525)+1013904223)>>>0; return s/4294967296; }; }
+window.addEventListener('load', async()=>{ try{
+  const errors=[];
+  const engine=new BABYLON.WebGPUEngine(document.getElementById('stage'),{antialias:false}); await engine.initAsync();
+  engine._device.addEventListener('uncapturederror',e=>errors.push(String(e.error&&e.error.message||e.error)));
+  const origErr=console.error; console.error=(...a)=>{errors.push(a.join(' ')); origErr(...a)};
+  const origWarn=console.warn; console.warn=(...a)=>{const t=a.join(' '); if(/error|invalid/i.test(t)) errors.push(t.slice(0,600)); origWarn(...a)};
+  const scene=new BABYLON.Scene(engine); scene.useRightHandedSystem=true; scene.clearColor=new BABYLON.Color4(0,0,0,1);
+  const cam=new BABYLON.FreeCamera('c',new BABYLON.Vector3(1.0,0,8),scene); cam.minZ=0.1; cam.maxZ=100; cam.setTarget(new BABYLON.Vector3(1.0,0,0));
+  const port=GOB_PORTS.facet;
+  const R=rng(+(q.get('seed')||7)), NX=+(q.get('nx')||24), NY=+(q.get('ny')||10), x0=-2.75,x1=4.79,y0=-1.6,y1=1.6;
+  const H=(x,y)=>0.5*Math.sin(1.3*x)*Math.cos(1.1*y)+0.3*Math.sin(3*y+x);
+  const P=[],C=[],T=[],I=[];
+  const pt=(i,j)=>{ const x=x0+(x1-x0)*i/NX, y=y0+(y1-y0)*j/NY; return [Math.fround(x),Math.fround(y),Math.fround(H(x,y))]; };
+  const face=(a,b,c)=>{ const k=Math.round(R()*100); let r,g,bl;
+    if(k<18){ r=0.78+0.2*R(); g=0.18+0.2*R(); bl=0.12+0.2*R(); } else { r=0.72+0.28*R(); g=0.42+0.42*R(); bl=0.08+0.32*R(); }
+    const col=[Math.round(r*1000)/1000,Math.round(g*1000)/1000,Math.round(bl*1000)/1000,Math.round((0.86+0.14*R())*1000)/1000];
+    const n=P.length/3; for(const v of [a,b,c]){ P.push(...v); C.push(...col); } T.push(0,0,0, 1,0,0, 0,1,0); I.push(n,n+1,n+2); };
+  for(let j=0;j<NY;j++)for(let i=0;i<NX;i++){ const a=pt(i,j),b=pt(i+1,j),c=pt(i+1,j+1),d=pt(i,j+1); face(a,b,d); face(b,c,d); }
+  const mesh=new BABYLON.Mesh('facet',scene);
+  const vd=new BABYLON.VertexData(); vd.positions=P; vd.indices=I; vd.applyToMesh(mesh);
+  mesh.setVerticesData('color',C,false,4); mesh.setVerticesData('tc0',T,false,3);
+  const DBG={ fwb:'vec4f(fwbmin * 8.0, bmin, 0.0, 1.0)', edge:'vec4f(edge * 0.5 + 0.5, charW, heat, 1.0)', cut:'vec4f(cut, rimHot, inner, 1.0)', n:'vec4f(N * 0.5 + 0.5, 1.0)', col:'vec4f(col, 1.0)', dx:'vec4f(abs(dpdx(bmin)) * 8.0, abs(dpdy(bmin)) * 8.0, 0.0, 1.0)', dxc:'vec4f(abs(dpdxCoarse(bmin)) * 8.0, abs(dpdyCoarse(bmin)) * 8.0, 0.0, 1.0)', dxf:'vec4f(abs(dpdxFine(bmin)) * 8.0, abs(dpdyFine(bmin)) * 8.0, 0.0, 1.0)' };
+  if(q.get('dbg')==='fixfw'){ const f=port.fs.replace('max(fwbmin, 1e-5)','max(0.05, 1e-5)'); if(f===port.fs) throw new Error('fixfw patch missed'); port.fs=f; }
+  else if(q.get('dbg')==='noburn'){ const f=port.fs.replace('if (d > 0.0) {','if (d > 99.0) {'); if(f===port.fs) throw new Error('noburn patch missed'); port.fs=f; }
+  else if(q.get('dbg')){ const f=port.fs.replace('fragmentOutputs.color = vec4f(col, a * cut);','fragmentOutputs.color = '+DBG[q.get('dbg')]+';'); if(f===port.fs) throw new Error('dbg patch missed'); port.fs=f; }
+  const mat=gobMakeMaterial(scene,'facet',port,'t-facet'); mesh.material=mat; mesh.alwaysSelectAsActiveMesh=true;
+  const U={phase:'f32',time:'f32',scan:'f32',glow:'f32',light0:'vec3f',light1:'vec3f',light2:'vec3f',light3:'vec3f'}, uv={};
+  for(const [n,t] of Object.entries(U)){ const s=q.get(n); const v=t==='f32'?(s==null?0:+s):(s==null?[0,0,0]:s.split(';').map(Number)); uv[n]=v; gobSetUniform(mat,n,t,v); }
+  engine.runRenderLoop(()=>scene.render());
+  await new Promise(r=>setTimeout(r,5000));
+  const wv=mesh.getWorldMatrix().multiply(scene.getViewMatrix()).toArray(), pr=scene.getProjectionMatrix().toArray();
+  const t=window.__sc, d=window.__ctx._d, w=t.width,h=t.height,bpr=Math.ceil(w*4/256)*256;
+  const buf=d.createBuffer({size:bpr*h,usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ}); const e=d.createCommandEncoder(); e.copyTextureToBuffer({texture:t},{buffer:buf,bytesPerRow:bpr},[w,h]); d.queue.submit([e.finish()]); await buf.mapAsync(GPUMapMode.READ);
+  const a=new Uint8Array(buf.getMappedRange().slice(0)), out=new Uint8Array(w*h*4), bgra=window.__fmt.startsWith('bgra');
+  for(let y=0;y<h;y++)for(let i=0;i<w;i++){ const s=y*bpr+i*4,o=(y*w+i)*4; out[o]=a[s+(bgra?2:0)]; out[o+1]=a[s+1]; out[o+2]=a[s+(bgra?0:2)]; out[o+3]=255; }
+  let bin=''; for(let i=0;i<out.length;i+=8192) bin+=String.fromCharCode.apply(null,out.subarray(i,i+8192));
+  window.__pix=btoa(bin); window.__w=w; window.__h=h;
+  window.__data={P,C,T,I,wv,pr,uv};
+  window.__errors=errors; window.__done=true;
+}catch(e){ window.__err=String(e&&e.stack||e); window.__done=true; }});
+</script>

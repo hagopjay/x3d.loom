@@ -14,7 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 BABYLON_VERSION = '9.32.0'                      # published 2026-10-22, more than two weeks old
 BABYLON_URL = f'https://cdn.jsdelivr.net/npm/babylonjs@{BABYLON_VERSION}/babylon.js'
 BABYLON_SRI = 'sha384-1XDybi1454WehNQaPHwhcTlpJ6oDdq/L4KKyDu7JiWPOBUzoBC0yEcuKDzHpdXyo'
-PARTS = [('brain', 'reader.js'), ('brain', 'wgsl.js'), ('brain', 'body.js'), ('brain', 'body-cam.js'), ('drift', 'drift-ext.js'), ('brain', 'sai.js'), ('drift', 'drift-timing.js'), ('drift', 'drift-boot.js')]
+PARTS = [('shared', 'adapter.js'), ('brain', 'reader.js'), ('brain', 'wgsl.js'), ('brain', 'body.js'), ('brain', 'body-cam.js'), ('drift', 'drift-ext.js'), ('brain', 'sai.js'), ('shared', 'timing.js'), ('drift', 'drift-boot.js')]
 COPY = ['engine', 'levels', 'cars', 'textures', 'tapes']
 
 def sub1(text, old, new):
@@ -36,7 +36,7 @@ def main():
 
     parts = '\n'.join(open(os.path.join(HERE, d, f), encoding='utf-8').read() for d, f in PARTS)
     tag = hashlib.sha256(parts.encode('utf-8')).hexdigest()[:12]  # names the build in the Timing panel, so a number is tied to the code that made it
-    bundle = '(function () {\n"use strict";\nwindow.__driftBuild = "%s";\n' % tag + parts + '\n})();\n'
+    bundle = '(function () {\n"use strict";\nwindow.__x3dBuild = "%s";\n' % tag + parts + '\n})();\n'
     open(os.path.join(out, 'bundle.js'), 'w', encoding='utf-8').write(bundle)
 
     main_js = open(os.path.join(game, 'main.js'), encoding='utf-8').read()
