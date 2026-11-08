@@ -1,0 +1,181 @@
+{
+ "node": "StringSensor",
+ "mode": "scene",
+ "note": "typed text, Backspace, Enter, Escape and deletionAllowed in both engines",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "key": [
+    "focus"
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "h"
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "i"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enteredText",
+    "hi"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "Backspace"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enteredText",
+    "h"
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "i"
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "!"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enteredText",
+    "hi!"
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "Enter"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "finalText",
+    "hi!"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enteredText",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "x"
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "Escape"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enteredText",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "finalText",
+    "hi!"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "deletionAllowed",
+    false
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "a"
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "b"
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "Backspace"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enteredText",
+    "ab"
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "Enter"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "finalText",
+    "ab"
+   ]
+  }
+ ],
+ "gaps": [
+  "IME and dead-key composition are not handled (the browser reports one key at a time)"
+ ]
+}

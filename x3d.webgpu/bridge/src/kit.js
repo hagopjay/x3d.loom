@@ -292,3 +292,22 @@ BR.drag = {
     },
   };
 }
+
+/* key helpers shared by KeySensor and StringSensor: modifier keys, action key codes (X3D: F1-F12 = 1-12, Home 13, End 14, PageUp 15, PageDown 16, arrows 17-20), the text a key stands for */
+BR.keys = {
+  mod: { Shift: 'shiftKey', Control: 'controlKey', Alt: 'altKey' },
+  action: { F1: 1, F2: 2, F3: 3, F4: 4, F5: 5, F6: 6, F7: 7, F8: 8, F9: 9, F10: 10, F11: 11, F12: 12, Home: 13, End: 14, PageUp: 15, PageDown: 16, ArrowUp: 17, ArrowDown: 18, ArrowLeft: 19, ArrowRight: 20 },
+  text(e) {
+    switch (e.key) {
+      case 'AltGraph': case 'CapsLock': case 'Insert': return null;
+      case 'Backspace': return String.fromCharCode(8);
+      case 'Delete': return String.fromCharCode(127);
+      case 'Enter': return '\n';
+      case 'Escape': return String.fromCharCode(27);
+      case 'Tab': return '\t';
+      default: return e.key && e.key.length === 1 ? e.key : null;
+    }
+  },
+};
+// a url from a node as the page would load it: through the body's resolver when there is one, else against the page
+BR.resolveUrl = (u) => { const b = R.bridge.body; try { return b && b.resolve ? b.resolve(u, b.baseUrl) : new URL(u, document.baseURI).href; } catch (e) { return u; } };

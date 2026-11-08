@@ -54,6 +54,7 @@ async function runSpec(eng, spec, xml) {
     if (!events[key]) { events[key] = []; node(d).addFieldCallback('w' + key, f, (v) => events[key].push(plain(v))); }
   }
   for (const [i, s] of spec.steps.entries()) {
+    if (s.only && s.only !== eng.name) continue;     // a step that only one engine can take (X_ITE waits for every resource before it hands the world over)
     out.steps++;
     const fail = (m) => { out.ok = false; out.fails.push('step ' + (i + 1) + ': ' + m); };
     try {
@@ -64,6 +65,9 @@ async function runSpec(eng, spec, xml) {
       else if (s.between) { const [d, f, lo, hi] = s.between; const a = plain(node(d)[f]); if (!(a > lo && a < hi)) fail(d + '.' + f + ' is ' + show(a) + ', expected between ' + lo + ' and ' + hi); }
       else if (s.near) { const [d, f, v, tol] = s.near; const a = plain(node(d)[f]); if (!(Math.abs(a - v) <= tol)) fail(d + '.' + f + ' is ' + show(a) + ', expected ' + v + ' within ' + tol); }
       else if (s.nearv) { const [d, f, v, tol] = s.nearv; const fl = (x) => (Array.isArray(x) ? x.flatMap(fl) : [x]); const a = fl(plain(node(d)[f])), vv = fl(v); if (!(a.length === vv.length && vv.every((x, i) => Math.abs(a[i] - x) <= tol))) fail(d + '.' + f + ' is ' + show(a) + ', expected ' + show(v) + ' within ' + tol); }
+      else if (s.setnode) { const [d, f, d2] = s.setnode; await eng.apply(() => { node(d)[f] = node(d2); }); }
+      else if (s.wait) await new Promise((r) => setTimeout(r, s.wait * 1000));
+      else if (s.key) { await window.__key(...s.key); await eng.settle(0.1); }
       else if (s.mouse) { await window.__mouse(...s.mouse); await eng.settle(0.15); }
       else if (s.record) { const [d, f, name] = s.record; out.map[name] = plain(node(d)[f]); }
       else if (s.reset) { for (const k in events) events[k].length = 0; }
@@ -76,7 +80,7 @@ async function runSpec(eng, spec, xml) {
 `;
 const PAGE_OURS = `<!doctype html><meta charset=utf-8><body><script src="/bundle.js"></script><script>${RUNNER}
 let ts = performance.timeOrigin / 1000 + performance.now() / 1000;
-window.runOurs = async (spec, xml) => runSpec({
+window.runOurs = async (spec, xml) => runSpec({ name: 'ours',
   open: async (x) => { const sc = await X3DSAI.B.createX3DFromString(x); return sc; },
   apply: async (fn) => { __events.begin(ts += 0.05); fn(); __events.drain(); },
   settle: async (dt) => { const sc = X3DSAI.B.currentScene, steps = Math.max(1, Math.round((dt || 0.05) / 0.05));
@@ -85,7 +89,7 @@ window.runOurs = async (spec, xml) => runSpec({
 </script>`;
 const PAGE_XITE = `<!doctype html><meta charset=utf-8><link rel=stylesheet href="/x_ite/x_ite.css"><body><x3d-canvas id=c style="width:64px;height:64px"></x3d-canvas><script src="/x_ite/x_ite.min.js"></script><script>${RUNNER}
 window.runXite = async (spec, xml) => { const b = X3D.getBrowser('#c'); await b.loadComponents?.(b.getProfile ? b.getProfile('Full') : undefined).catch(() => {});
-  return runSpec({
+  return runSpec({ name: 'xite',
     open: async (x) => { const sc = await b.createX3DFromString(x); await b.replaceWorld(sc); await b.nextFrame(); return sc; },
     apply: async (fn) => { fn(); await b.nextFrame(); await b.nextFrame(); },
     settle: async (dt) => { await new Promise((r) => setTimeout(r, (dt || 0.05) * 1000)); await b.nextFrame(); },
@@ -96,7 +100,7 @@ window.xiteInfo = () => ({ name: X3D.getBrowser('#c').name, version: X3D.getBrow
 const PAGE_OURS_SCENE = `<!doctype html><meta charset=utf-8><body style="margin:0;background:#000"><canvas id=c width=320 height=240 style="width:320px;height:240px;display:block"></canvas><script src="/babylon.js"></script><script src="/bundle-body.js"></script><script>${RUNNER}
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 window.sceneReady = (async () => { const body = new Body(document.getElementById('c'), { onNote: (m) => (window.__notes = window.__notes || []).push(m) }); await body.init(); X3DSAI.setBody(body); window.__body = body; })();
-window.runScene = async (spec, xml) => { await window.sceneReady; return runSpec({
+window.runScene = async (spec, xml) => { await window.sceneReady; return runSpec({ name: 'ours',
   open: async (x) => { const sc = await X3DSAI.B.createX3DFromString(x); await X3DSAI.B.replaceWorld(sc); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); return sc; },
   apply: async (fn) => { fn(); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); },
   settle: async (dt) => { await sleep((dt || 0.05) * 1000); await X3DSAI.B.nextFrame(); },
@@ -104,7 +108,7 @@ window.runScene = async (spec, xml) => { await window.sceneReady; return runSpec
 </script>`;
 const PAGE_XITE_SCENE = `<!doctype html><meta charset=utf-8><link rel=stylesheet href="/x_ite/x_ite.css"><body style="margin:0"><x3d-canvas id=c style="width:320px;height:240px;display:block"></x3d-canvas><script src="/x_ite/x_ite.min.js"></script><script>${RUNNER}
 window.runScene = async (spec, xml) => { const b = X3D.getBrowser('#c');
-  return runSpec({
+  return runSpec({ name: 'xite',
     open: async (x) => { const sc = await b.createX3DFromString(x); await b.replaceWorld(sc); await b.nextFrame(); await b.nextFrame(); return sc; },
     apply: async (fn) => { fn(); await b.nextFrame(); await b.nextFrame(); },
     settle: async (dt) => { await new Promise((r) => setTimeout(r, (dt || 0.05) * 1000)); await b.nextFrame(); },
@@ -124,6 +128,7 @@ function serve(files) {
   const mime = { '.js': 'text/javascript', '.css': 'text/css', '.html': 'text/html', '.json': 'application/json', '.wasm': 'application/wasm', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
   return new Promise((res) => { const s = http.createServer((q, r) => {
     const u = decodeURIComponent(q.url.split('?')[0]);
+    if (u === '/px.png' || u === '/slow.png') { const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64'); r.setHeader('content-type', 'image/png'); r.setHeader('cache-control', 'no-store'); return u === '/px.png' ? r.end(png) : setTimeout(() => r.end(png), 2500); }
     if (files[u] !== undefined) { r.setHeader('content-type', mime[path.extname(u)] || 'text/html'); return r.end(files[u]); }
     if (u.startsWith('/x_ite/')) { const f = path.join(XITE_DIR, u.slice(7)); if (fs.existsSync(f) && fs.statSync(f).isFile()) { r.setHeader('content-type', mime[path.extname(f)] || 'application/octet-stream'); return fs.createReadStream(f).pipe(r); } }
     r.statusCode = 404; r.end('no');
@@ -143,9 +148,13 @@ function serve(files) {
   else env.xite = noXite ? 'skipped (--no-xite)' : 'not found at ' + XITE_DIR;
   let pos = null, pxs = null;
   const mouseFor = async (pg) => { await pg.exposeFunction('__mouse', async (k, x, y) => { if (k === 'move') await pg.mouse.move(x, y, { steps: 6 }); else if (k === 'down') { await pg.mouse.move(x, y); await pg.mouse.down(); } else if (k === 'up') { await pg.mouse.move(x, y, { steps: 6 }); await pg.mouse.up(); } }); };
+  const keyFor = async (pg) => pg.exposeFunction('__key', async (k, a) => {
+    if (k === 'focus') { await pg.evaluate(() => document.getElementById('c').focus()); if (!(await pg.evaluate(() => document.activeElement && document.activeElement.id === 'c'))) await pg.mouse.click(4, 4); }
+    else if (k === 'down') await pg.keyboard.down(a); else if (k === 'up') await pg.keyboard.up(a); else if (k === 'press') await pg.keyboard.press(a); else if (k === 'type') await pg.keyboard.type(a);
+  });
   async function scenePages(needX) {
-    if (!pos) { pos = await b.newPage(); pos.on('pageerror', (e) => errs.push('scene: ' + e.message.slice(0, 200))); await pos.addInitScript(STUB); await mouseFor(pos); await pos.goto(base + '/ours-scene.html'); env.babylon = await pos.evaluate(() => window.sceneReady.then(() => BABYLON.Engine.Version)); }
-    if (needX && !pxs && fs.existsSync(path.join(XITE_DIR, 'x_ite.min.js'))) { pxs = await b.newPage(); pxs.on('pageerror', (e) => errs.push('xite scene: ' + e.message.slice(0, 160))); await mouseFor(pxs); await pxs.goto(base + '/xite-scene.html'); await pxs.waitForFunction(() => window.X3D && X3D.getBrowser('#c'), null, { timeout: 60000 }).catch(() => {}); }
+    if (!pos) { pos = await b.newPage(); pos.on('pageerror', (e) => errs.push('scene: ' + e.message.slice(0, 200))); await pos.addInitScript(STUB); await mouseFor(pos); await keyFor(pos); await pos.goto(base + '/ours-scene.html'); env.babylon = await pos.evaluate(() => window.sceneReady.then(() => BABYLON.Engine.Version)); }
+    if (needX && !pxs && fs.existsSync(path.join(XITE_DIR, 'x_ite.min.js'))) { pxs = await b.newPage(); pxs.on('pageerror', (e) => errs.push('xite scene: ' + e.message.slice(0, 160))); await mouseFor(pxs); await keyFor(pxs); await pxs.goto(base + '/xite-scene.html'); await pxs.waitForFunction(() => window.X3D && X3D.getBrowser('#c'), null, { timeout: 60000 }).catch(() => {}); }
   }
   for (const n of names) {
     const fx = path.join(BR, 'fixtures', n + '.x3d'), ts = path.join(BR, 'fixtures', n + '.test.json');

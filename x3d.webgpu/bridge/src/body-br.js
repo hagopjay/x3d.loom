@@ -19,9 +19,24 @@
    frame as it was at the press. A press that starts a drag does not orbit the camera. */
 {
   const _setWorld = Body.prototype.setWorld;
-  Body.prototype.setWorld = function (...a) { R.bridge.body = this; return _setWorld.apply(this, a); };
+  const live = {}; R.bridge.live = (k) => (live[k] ||= new Set());     // nodes of one kind in the world on screen (key sensors), emptied when the world is replaced
+  Body.prototype.setWorld = function (...a) { R.bridge.body = this; for (const s of Object.values(live)) s.clear(); return _setWorld.apply(this, a); };
+  const _click = Body.prototype.click;
+  Body.prototype.click = function (x, y) {          // a click under an Anchor follows it, the nearest Anchor wins
+    _click.call(this, x, y);
+    const hit = this.pickMesh(x, y); if (!hit || !hit.hit) return;
+    for (const g of (hit.pickedMesh.metadata && hit.pickedMesh.metadata.chain) || []) if (g.type === 'Anchor') { if (g.f.load !== false) R.bridge.specs.get('Anchor').activate(this, g); break; }
+  };
   const _init = Body.prototype.init;
-  Body.prototype.init = async function (...a) { const r = await _init.apply(this, a); R.bridge.pointerInit(this); return r; };
+  Body.prototype.init = async function (...a) { const r = await _init.apply(this, a); R.bridge.pointerInit(this); R.bridge.keyInit(this); return r; };
+  /* key sensors: the canvas takes focus (tabindex), key down and up go to every enabled KeySensor and StringSensor of the world, losing focus lets go of held modifiers */
+  R.bridge.keyInit = (body) => {
+    const cv = body.canvas; if (cv.tabIndex < 0) cv.tabIndex = 0; cv.style.outline = 'none';
+    const each = (fn, e) => { let used = false; for (const n of live.key || []) if (R.bridge.specs.get(n.type)[fn](n, e)) used = true; return used; };
+    cv.addEventListener('keydown', (e) => { if (each('keydown', e)) e.preventDefault(); });
+    cv.addEventListener('keyup', (e) => { if (each('keyup', e)) e.preventDefault(); });
+    cv.addEventListener('blur', () => { for (const n of live.key || []) R.bridge.specs.get(n.type).release(n); });
+  };
   R.bridge.pointerInit = (body) => {
     const cv = body.canvas, V = BABYLON.Vector3; let drag = null;
     const ray = (e, inv) => {
