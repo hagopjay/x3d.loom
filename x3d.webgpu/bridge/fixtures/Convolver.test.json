@@ -1,0 +1,577 @@
+{
+ "node": "Convolver",
+ "mode": "scene",
+ "note": "the impulse response buffer is compared with X_ITE 16.6.0 (channels, length = samples / channels, a sample value), then normalize, the input stage and the clock. Web Audio takes 1, 2 or 4 channels only (3 is not tested: X_ITE throws on it). Runs on the real clock for start and stop.",
+ "gaps": [
+  "three channels, or more than four, are refused by Web Audio; the bridge keeps the previous response (X_ITE throws)",
+  "the response is built at the audio context's own sample rate, as in X_ITE; the processed sound is not compared",
+  "numberOfChannels is a Convolver field in X_ITE 16.6.0 but is not in the X3D 4.0 UOM or XSD; the bridge has it as in X_ITE (set at run time only, since the XSD cannot write it)"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "normalize",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "numberOfChannels",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.buffer.numberOfChannels})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().convolverNode.buffer.numberOfChannels",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.buffer.length})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().convolverNode.buffer.length",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.normalize})()",
+    false
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().convolverNode.normalize",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "normalize",
+    true
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.normalize})()",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().convolverNode.normalize",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "buffer",
+    [
+     0.5,
+     0.25,
+     0.125,
+     0.0625
+    ]
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.buffer.length})()",
+    4
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().convolverNode.buffer.length",
+    4
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.buffer.getChannelData(0)[1]})()",
+    0.25
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().convolverNode.buffer.getChannelData(0)[1]",
+    0.25
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "numberOfChannels",
+    2
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.buffer.numberOfChannels})()",
+    2
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().convolverNode.buffer.numberOfChannels",
+    2
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.buffer.length})()",
+    2
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().convolverNode.buffer.length",
+    2
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.buffer.getChannelData(1)[0]})()",
+    0.125
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().convolverNode.buffer.getChannelData(1)[0]",
+    0.125
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "numberOfChannels",
+    4
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.buffer.numberOfChannels})()",
+    4
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().convolverNode.buffer.numberOfChannels",
+    4
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.buffer.length})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().convolverNode.buffer.length",
+    1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "buffer",
+    []
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.buffer.length})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().convolverNode.buffer.length",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.gain.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioDestination.gain.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelCount})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioDestination.channelCount",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelCountMode})()",
+    "max"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioDestination.channelCountMode",
+    "max"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelInterpretation})()",
+    "speakers"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioDestination.channelInterpretation",
+    "speakers"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.gain.value})()",
+    0.5
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioDestination.gain.value",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "channelCount",
+    4
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "channelCount",
+    4
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelCount})()",
+    4
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioDestination.channelCount",
+    4
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "channelCount",
+    100
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "channelCount",
+    100
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelCount})()",
+    32
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioDestination.channelCount",
+    32
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "channelCountMode",
+    "EXPLICIT"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "channelCountMode",
+    "EXPLICIT"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelCountMode})()",
+    "explicit"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioDestination.channelCountMode",
+    "explicit"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "channelCountMode",
+    "CLAMPED_MAX"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "channelCountMode",
+    "CLAMPED_MAX"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelCountMode})()",
+    "clamped-max"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioDestination.channelCountMode",
+    "clamped-max"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "channelCountMode",
+    "nonsense"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "channelCountMode",
+    "nonsense"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelCountMode})()",
+    "max"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioDestination.channelCountMode",
+    "max"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "channelInterpretation",
+    "DISCRETE"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "channelInterpretation",
+    "DISCRETE"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelInterpretation})()",
+    "discrete"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioDestination.channelInterpretation",
+    "discrete"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  }
+ ]
+}

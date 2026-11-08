@@ -1,0 +1,31 @@
+{
+ "node": "Convolver",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/Convolver.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 65/65",
+  "xite": "pass 65/65",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "three channels, or more than four, are refused by Web Audio; the bridge keeps the previous response (X_ITE throws)",
+   "the response is built at the audio context's own sample rate, as in X_ITE; the processed sound is not compared",
+   "numberOfChannels is a Convolver field in X_ITE 16.6.0 but is not in the X3D 4.0 UOM or XSD; the bridge has it as in X_ITE (set at run time only, since the XSD cannot write it)"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 169e2f5cd5e3",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "a29df02"
+}

@@ -56,7 +56,7 @@ BR.snd = {
     if (T.make) au.proc = T.make(c, n);
     if (T.dest) au.out.connect(c.destination);
     BR.snd.settle(n); BR.snd.wire(n);
-    for (const p of w.nodes) if (p._au && p !== n && (p.f.children || []).includes(n)) BR.snd.wire(p);
+    for (const p of w.nodes) if (p._au && p !== n && ((p.f.children || []).includes(n) || (p.f.outputs || []).includes(n))) BR.snd.wire(p);
     if (T.dest) n.f.isActive = n.f.enabled !== false;
   },
   /* all the input-stage fields at once, then the type's own */
@@ -69,9 +69,9 @@ BR.snd = {
     if (T.apply) T.apply(n, null);
     au.in.disconnect();
     if (T.dest) { if (en) au.in.connect(au.out); }
-    else if (T.merge || !au.proc || !en) au.in.connect(au.out);
+    else if (T.merge || T.wireOut || !au.proc || !en) au.in.connect(au.out);
     else au.in.connect(au.proc);
-    if (au.proc && !T.merge && !T.dest) { try { au.proc.disconnect(); } catch (e) { /* none */ } au.proc.connect(au.out, T.outPort ? T.outPort(n) : 0); }
+    if (au.proc && !T.merge && !T.wireOut && !T.dest) { try { au.proc.disconnect(); } catch (e) { /* none */ } au.proc.connect(au.out, T.outPort ? T.outPort(n) : 0); }
   },
   wire(n) {                                       // children's outputs into this node's input (or, for a merger, into its numbered inputs)
     const au = n._au, T = BR.snd.types[n.type]; if (!au) return;
@@ -79,6 +79,7 @@ BR.snd = {
     if (au._kids) for (const [k, i] of au._kids) { try { k._au.out.disconnect(i === null ? au.in : au.proc); } catch (e) { /* not connected */ } }
     au._kids = [];
     if (T.merge) BR.snd.merger(n, kids);
+    if (T.wireOut) T.wireOut(n);
     kids.forEach((k, i) => {
       if (T.merge && au.proc) { if (i < 32) { k._au.out.connect(au.proc, 0, i); au._kids.push([k, i]); } }
       else { k._au.out.connect(au.in); au._kids.push([k, null]); }
@@ -94,7 +95,7 @@ BR.snd = {
   },
   receive(n, field, v) {                          // the field is stored by the stock handler afterwards, so the change is applied on the next microtask
     if (!n._au) return false;
-    Promise.resolve().then(() => { const T = BR.snd.types[n.type]; if (field === 'children' || (T.merge && field === 'enabled')) BR.snd.wire(n); BR.snd.settle(n); if (field === 'enabled' && T.dest) BR.fire(n, 'isActive', n.f.enabled !== false); });
+    Promise.resolve().then(() => { const T = BR.snd.types[n.type]; if (field === 'children' || field === 'outputs' || ((T.merge || T.wireOut) && field === 'enabled')) BR.snd.wire(n); BR.snd.settle(n); if (field === 'enabled' && T.dest) BR.fire(n, 'isActive', n.f.enabled !== false); });
     return false;
   },
 };
