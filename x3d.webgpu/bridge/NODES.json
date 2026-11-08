@@ -110,10 +110,10 @@
    "inherits": "X3DSoundDestinationNode",
    "container": "children",
    "nfields": 11,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 14,
+   "receipt": "receipts/AudioDestination.json",
+   "note": "mediaDeviceID would pick the output device with setSinkId; the bridge's graph ends at the page's default output with no Audio element, so it is held but not applied; the audio only plays once the page's audio context is allowed to run (a click or key on the page); this is the browser's rule, not the bridge's",
    "rank": 131
   },
   "Background": {
@@ -162,10 +162,10 @@
    "inherits": "X3DSoundProcessingNode",
    "container": "children",
    "nfields": 20,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 14,
+   "receipt": "receipts/BiquadFilter.json",
+   "note": "the filter response is Web Audio's, the same engine under both; only the settings are compared; a time dependent node here only keeps the clock (isActive, isPaused, elapsedTime); the signal passes whether or not it is active, as in X_ITE",
    "rank": 132
   },
   "BlendedVolumeStyle": {
@@ -279,10 +279,10 @@
    "inherits": "X3DSoundSourceNode",
    "container": "children",
    "nfields": 29,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 14,
+   "receipt": "receipts/BufferAudioSource.json",
+   "note": "the field is bufferLength in X_ITE 16.6.0 and bufferlength (lowercase l, output only) in the X3D 4.0 XSD and UOM; both names exist here and the test uses the X_ITE one at run time, because the XSD one cannot be written; loading from url is written (fetch and decodeAudioData, then numberOfChannels, sampleRate, bufferLength, buffer and bufferDuration are filled in) but not tested here: it needs a sound file; a pause stops the source and resume starts it again at the paused position, since a Web Audio buffer source cannot pause; autoRefresh and autoRefreshTimeLimit are held, not acted on; X_ITE 16.6.0 reports bufferDuration -1 (not the UOM's 0) from the start while load is TRUE and nothing has loaded; the bridge does the same",
    "rank": 133
   },
   "CADAssembly": {
@@ -357,10 +357,10 @@
    "inherits": "X3DSoundChannelNode",
    "container": "children",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 14,
+   "receipt": "receipts/ChannelMerger.json",
+   "note": "a child past the 32nd is not connected (as in X_ITE); adding or removing children at run time rebuilds the merger on the next tick",
    "rank": 134
   },
   "ChannelSelector": {
@@ -370,10 +370,10 @@
    "inherits": "X3DSoundChannelNode",
    "container": "children",
    "nfields": 9,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 14,
+   "receipt": "receipts/ChannelSelector.json",
+   "note": "a disabled selector passes all channels (as in X_ITE); only the splitter size is checked, the routing of the chosen output is not read back",
    "rank": 135
   },
   "ChannelSplitter": {

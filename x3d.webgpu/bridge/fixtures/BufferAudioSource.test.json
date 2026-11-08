@@ -1,0 +1,313 @@
+{
+ "node": "BufferAudioSource",
+ "mode": "scene",
+ "note": "gain reaches the source's output stage, bufferDuration is bufferLength / sampleRate (sampleRate held to 3000..768000, -1 with no samples) and stays 0 while load is TRUE, and a started one-shot ends by itself when its samples run out (2 s here), as in X_ITE 16.6.0. Runs on the real clock. The buffer is silence (no samples given) so nothing audible is compared.",
+ "gaps": [
+  "the field is bufferLength in X_ITE 16.6.0 and bufferlength (lowercase l, output only) in the X3D 4.0 XSD and UOM; both names exist here and the test uses the X_ITE one at run time, because the XSD one cannot be written",
+  "loading from url is written (fetch and decodeAudioData, then numberOfChannels, sampleRate, bufferLength, buffer and bufferDuration are filled in) but not tested here: it needs a sound file",
+  "a pause stops the source and resume starts it again at the paused position, since a Web Audio buffer source cannot pause",
+  "autoRefresh and autoRefreshTimeLimit are held, not acted on",
+  "X_ITE 16.6.0 reports bufferDuration -1 (not the UOM's 0) from the start while load is TRUE and nothing has loaded; the bridge does the same"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "load",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "detune",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "playbackRate",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "loop",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "loopStart",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "loopEnd",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "numberOfChannels",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "sampleRate",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefresh",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefreshTimeLimit",
+    3600
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "bufferDuration",
+    -1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.out.gain.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioSource.gain.value",
+    1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "gain",
+    0.25
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    0.25
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.out.gain.value})()",
+    0.25
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioSource.gain.value",
+    0.25
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "load",
+    false
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "set": [
+    "N",
+    "numberOfChannels",
+    2
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "expect": [
+    "N",
+    "bufferDuration",
+    -1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "sampleRate",
+    8000
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "set": [
+    "N",
+    "bufferLength",
+    4000
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "bufferDuration",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "bufferLength",
+    16000
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "bufferDuration",
+    2
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "sampleRate",
+    100
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "bufferDuration",
+    5.333333333333333
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "sampleRate",
+    8000
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "bufferLength",
+    4000
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "bufferDuration",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "bufferLength",
+    16000
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "bufferDuration",
+    2
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "wait": 3
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  }
+ ]
+}
