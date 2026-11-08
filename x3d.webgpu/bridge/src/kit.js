@@ -175,6 +175,8 @@ BR.keySearch = (key, f) => {
    Damper: `order` cascaded exponential filters with time constant `tau`. Both are driven by the timestamp (tick), not by a frame count, so a slow frame does not slow them. */
 BR.T1 = { toA: (v) => [v], fromA: (a) => a[0] };
 BR.TN = { toA: (v) => Array.from(v), fromA: (a) => a.slice() };
+// lists of vectors (CoordinateChaser, TexCoordChaser2D, ...): followed as one flat array; a list that changes length restarts the buffers at the new length (gap: the new tail starts at 0)
+BR.TL = (k) => ({ toA: (v) => Array.from(v).flat(), fromA: (a) => { const o = []; for (let i = 0; i + k <= a.length; i += k) o.push(a.slice(i, i + k)); return o; } });
 // rotations as quaternions: slerp the short way, distance = the angle between them, a chaser step turns the output by the stage's delta (OrientationChaser / OrientationDamper)
 BR.TR = { toA: (r) => BR.q.fromRot(r), fromA: (q) => BR.q.toRot(q), lerp: (a, b, w) => BR.q.slerp(a, b, w), dist: (a, b) => 2 * Math.acos(Math.min(1, Math.abs(a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3]))),
   step: (o, v1, v2, t) => BR.q.slerp(o, BR.q.mul(o, BR.q.mul(BR.q.inv(v2), v1)), t) };
@@ -189,6 +191,7 @@ BR.TR = { toA: (r) => BR.q.fromRot(r), fromA: (q) => BR.q.toRot(q), lerp: (a, b,
 {
   const lerp = (a, b, w) => a.map((x, i) => x + (b[i] - x) * w), dist = (a, b) => Math.hypot(...a.map((x, i) => x - b[i])), cp = (a) => a.slice();
   const setActive = (n, on) => { const st = n._fl; if (st.active === on) return; st.active = on; n.f.isActive = on; events.emit(n, 'isActive', on); };
+  const fit = (st, len) => { const pad = (a) => { a = a.slice(0, len); while (a.length < len) a.push(0); return a; }; if (st.buf[0].length === len && st.buf.every((b) => b.length === len)) return; st.buf = st.buf.map(pad); if (st.prev) st.prev = pad(st.prev); if (st.dest) st.dest = pad(st.dest); };
   const out = (T, n, a) => { n.f.value_changed = T.fromA(a); events.emit(n, 'value_changed', n.f.value_changed); };
   BR.chaserSpec = (T) => { const L = T.lerp || lerp, D = T.dist || dist, STEP = T.step || ((o, v1, v2, t) => o.map((x, c) => x + (v1[c] - v2[c]) * t)); return {
     init(n) {
@@ -200,7 +203,7 @@ BR.TR = { toA: (r) => BR.q.fromRot(r), fromA: (q) => BR.q.toRot(q), lerp: (a, b,
     receive(n, field, v) {
       const st = n._fl; if (!st) return false;
       if (field === 'set_value') { if (!st.active) st.endTime = events.ts; const a = T.toA(v); st.buf = st.buf.map(() => cp(a)); st.prev = cp(a); out(T, n, a); setActive(n, true); return true; }
-      if (field === 'set_destination') { st.dest = T.toA(v); if (!st.active) st.endTime = events.ts; setActive(n, true); return true; }
+      if (field === 'set_destination') { st.dest = T.toA(v); fit(st, st.dest.length); if (!st.active) st.endTime = events.ts; setActive(n, true); return true; }
       return false;
     },
     tick(n, now) {
@@ -234,7 +237,7 @@ BR.TR = { toA: (r) => BR.q.fromRot(r), fromA: (q) => BR.q.toRot(q), lerp: (a, b,
     receive(n, field, v) {
       const st = n._fl; if (!st) return false;
       if (field === 'set_value') { const a = T.toA(v); for (let i = 1; i < st.buf.length; i++) st.buf[i] = cp(a); if (!st.active) st.last = events.ts; out(T, n, a); setActive(n, true); return true; }
-      if (field === 'set_destination') { st.buf[0] = T.toA(v); if (!st.active) st.last = events.ts; setActive(n, true); return true; }
+      if (field === 'set_destination') { const a = T.toA(v); fit(st, a.length); st.buf[0] = a; if (!st.active) st.last = events.ts; setActive(n, true); return true; }
       return false;
     },
     tick(n, now) {
