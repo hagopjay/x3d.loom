@@ -37,6 +37,7 @@ const plain = (v) => {
   return v.getNodeName ? '[node ' + v.getNodeName() + ']' : String(v);
 };
 const close = (a, b) => {
+  if (b === '$any') return true;
   if (b === '$time') return typeof a === 'number' && isFinite(a) && a > 1e9;
   if (typeof b === 'number' && typeof a === 'number') return Math.abs(a - b) <= 1e-5 * Math.max(1, Math.abs(b));
   if (Array.isArray(b)) return Array.isArray(a) && a.length === b.length && b.every((x, i) => close(a[i], x));
@@ -44,7 +45,7 @@ const close = (a, b) => {
 };
 const show = (v) => JSON.stringify(v);
 async function runSpec(eng, spec, xml) {
-  const out = { ok: true, steps: 0, fails: [] }; const X = window.X3D;
+  const out = { ok: true, steps: 0, fails: [], recorded: [] }; const X = window.X3D;
   const scene = await eng.open(xml); const nodes = {}; const events = {};
   const node = (d) => (nodes[d] ||= scene.getNamedNode(d));
   const conv = (t, v) => {
@@ -66,7 +67,7 @@ async function runSpec(eng, spec, xml) {
       if (s.set) { for (const k in events) events[k].length = 0; const [d, f, v, t] = s.set; await eng.apply(() => { node(d)[f] = conv(t, v); }); }
       else if (s.settle) await eng.settle(s.settle);
       else if (s.expect) { const [d, f, v] = s.expect; const a = plain(node(d)[f]); if (!close(a, v)) fail(d + '.' + f + ' is ' + show(a) + ', expected ' + show(v)); }
-      else if (s.event) { const [d, f, v] = s.event; const l = events[d + '.' + f]; if (l.length !== 1) fail(d + '.' + f + ' fired ' + l.length + ' times (' + show(l) + '), expected 1'); else if (!close(l[0], v)) fail(d + '.' + f + ' event ' + show(l[0]) + ', expected ' + show(v)); }
+      else if (s.event) { const [d, f, v] = s.event; const l = events[d + '.' + f]; if (v === '$any') out.recorded.push(l.length === 1 ? l[0] : l); if (l.length !== 1) fail(d + '.' + f + ' fired ' + l.length + ' times (' + show(l) + '), expected 1'); else if (!close(l[0], v)) fail(d + '.' + f + ' event ' + show(l[0]) + ', expected ' + show(v)); }
       else if (s.reset) { for (const k in events) events[k].length = 0; }
       else if (s.atleast) { const [d, f, n] = s.atleast; const l = events[d + '.' + f]; if (l.length < n) fail(d + '.' + f + ' fired ' + l.length + ' times, expected at least ' + n); }
       else if (s.noevent) { const [d, f] = s.noevent; const l = events[d + '.' + f]; if (l.length) fail(d + '.' + f + ' fired ' + show(l) + ', expected nothing'); }
@@ -120,8 +121,8 @@ function serve(files) {
     if (!fs.existsSync(fx) || !fs.existsSync(ts)) { results[n] = { ok: false, msg: 'missing fixture or test spec' }; continue; }
     const xml = fs.readFileSync(fx, 'utf8'), spec = JSON.parse(fs.readFileSync(ts, 'utf8'));
     const r = { ok: false, ours: '?', xite: px && spec.xite !== false ? '?' : 'n/a' };
-    try { const o = await po.evaluate(([s, x]) => window.runOurs(s, x), [spec, xml]); r.ours = o.ok ? `pass ${o.steps}/${o.steps}` : 'FAIL ' + o.fails.join(' | '); r.oursOk = o.ok; } catch (e) { r.ours = 'ERROR ' + String(e).slice(0, 200); r.oursOk = false; }
-    if (px && spec.xite !== false) { try { const o = await px.evaluate(([s, x]) => window.runXite(s, x), [spec, xml]); r.xite = o.ok ? `pass ${o.steps}/${o.steps}` : 'FAIL ' + o.fails.join(' | '); r.xiteOk = o.ok; } catch (e) { r.xite = 'ERROR ' + String(e).slice(0, 200); r.xiteOk = false; } }
+    try { const o = await po.evaluate(([s, x]) => window.runOurs(s, x), [spec, xml]); r.ours = o.ok ? `pass ${o.steps}/${o.steps}` : 'FAIL ' + o.fails.join(' | '); r.oursOk = o.ok; if (o.recorded.length) r.recordedOurs = o.recorded; } catch (e) { r.ours = 'ERROR ' + String(e).slice(0, 200); r.oursOk = false; }
+    if (px && spec.xite !== false) { try { const o = await px.evaluate(([s, x]) => window.runXite(s, x), [spec, xml]); r.xite = o.ok ? `pass ${o.steps}/${o.steps}` : 'FAIL ' + o.fails.join(' | '); r.xiteOk = o.ok; if (o.recorded.length) r.recordedXite = o.recorded; } catch (e) { r.xite = 'ERROR ' + String(e).slice(0, 200); r.xiteOk = false; } }
     // the bridge passes when ours passes; a disagreeing oracle is reported, and a gap if the spec lists one
     r.ok = r.oursOk && (r.xiteOk !== false || !!spec.xiteDisagrees);
     r.msg = r.ok ? (r.xiteOk === false ? 'X_ITE differs (' + spec.xiteDisagrees + ')' : '') : (r.oursOk ? 'X_ITE disagrees with the spec: check the spec' : '');

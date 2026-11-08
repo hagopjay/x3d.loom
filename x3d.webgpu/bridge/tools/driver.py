@@ -6,7 +6,8 @@
   driver.py next  [-n 5]                    the next nodes in rank order that nobody has claimed
   driver.py scaffold NODE...                module (field table generated from the UOM) + fixture + test skeleton, never overwrites
   driver.py check NODE... [--no-xite]       fixture vs x3d-4.0.xsd, then the test spec in our reader and in X_ITE; writes receipts/NODE.json
-  driver.py batch [-n 5] [--close]          check the next ready nodes; with --close mark the passing ones `bridged`, write BATCH-NN.md and print the status text
+  driver.py batch [-n 5] [--close]          check enough new nodes for a batch of n, run the regression gate, mark passers `bridged`; with --close number the batch of n and write BATCH-NN.md
+  driver.py report N                        rewrite BATCH-NN.md from NODES.json and the receipts
 
 Status values: todo | wip (module exists, not yet checked) | base (reader already knew it before this work) | bridged (new here, fixture + test pass)
                | gap (bridged with a logged gap) | claimed (another port thread owns it) | blocked.
@@ -253,41 +254,64 @@ def regression_gate(a):
     json.dump(g, open(os.path.join(BR, 'receipts', '_gate.json'), 'w'), indent=1); print('gate', 'PASS' if ok else 'FAIL', json.dumps(g['body'])[:300]); return g
 
 
-def cmd_batch(a):
-    d = load(); ready = [k for k in pick(d, 10 ** 6) if os.path.exists(os.path.join(BR, 'src', 'nodes', k + '.js'))][:a.n]
-    if len(ready) < a.n: print(f'only {len(ready)} nodes have a module; scaffold + implement the next ones first:', ', '.join(pick(d, a.n)));
-    if not ready: return
-    res = cmd_check(a, ready)
-    gate = regression_gate(a)
-    if not a.close: return
-    done = [k for k in ready if res[k]['pass']] if gate['ok'] else []
-    nb = 1 + max([int(re.sub(r'\D', '', f)) for f in os.listdir(BR) if re.match(r'BATCH-\d+\.md', f)] or [0])
-    for k in done:
-        gaps = res[k]['test'].get('gaps')
-        d['nodes'][k]['status'] = 'gap' if gaps else 'bridged'; d['nodes'][k]['batch'] = nb; d['nodes'][k]['note'] = '; '.join(gaps) if gaps else d['nodes'][k]['note']
-    save(d); c = counts(d); n = len(d['nodes'])
-    env = next((r['env'] for r in res.values() if r.get('env')), {})
-    gb = gate['body'] if gate else {}
-    L = [f'# Bridge batch {nb}', '', f'Reader knows **{read_total(d)}/{n}** X3D 4.0 node types ({c.get("bridged", 0) + c.get("gap", 0)} bridged in this work, {c.get("base", 0)} baseline). Rig: {json.dumps(env)}.', '',
-         f"Regression gate (all bridged event nodes in one ROUTE chain): {'PASS' if gate and gate['ok'] else 'FAIL'}; inside the real Babylon {gb.get('babylon')} WebGPU body on {gb.get('adapter', {}).get('architecture')}: {gb.get('frames')} frames, page errors {len(gb.get('pageErrors') or [])}, Switch ended on {gb.get('switches')}.", '',
+def unreported(d):
+    return [k for k, v in sorted(d['nodes'].items(), key=lambda kv: kv[1]['rank']) if v['status'] in ('bridged', 'gap') and not v['batch']]
+
+
+def write_report(d, nb, nodes, gate=None):
+    c = counts(d); n = len(d['nodes']); gate = gate or json.load(open(os.path.join(BR, 'receipts', '_gate.json')))
+    gb = gate['body']; recs = {k: json.load(open(os.path.join(BR, 'receipts', k + '.json'))) for k in nodes}
+    env = next((r['env'] for r in recs.values() if r.get('env')), {})
+    upto = sum(1 for v in d['nodes'].values() if v['status'] in ('bridged', 'gap') and v['batch'] and v['batch'] <= nb)
+    L = [f'# Bridge batch {nb}', '', f'Reader knows **{c.get("base", 0) + upto}/{n}** X3D 4.0 node types after this batch ({upto} bridged in this work so far, {c.get("base", 0)} baseline). Rig: {json.dumps(env)}.', '',
+         f"Regression gate (all bridged event nodes in one ROUTE chain, ours + X_ITE): {'PASS' if gate['ok'] else 'FAIL'}; inside the real Babylon {gb.get('babylon')} WebGPU body on {(gb.get('adapter') or {}).get('architecture')}: {gb.get('frames')} frames, page errors {len(gb.get('pageErrors') or [])}, Switch ended on {gb.get('switches')}.", '',
          '| node | component | xsd | ours | X_ITE | verdict | note |', '|---|---|---|---|---|---|---|']
+    for k in nodes:
+        r = recs[k]; t = r['test']
+        L.append(f"| {k} | {d['nodes'][k]['component']} | {'ok' if r['xsd']['ok'] else 'FAIL'} | {t.get('ours', '')} | {t.get('xite', '')} | {'PASS' if r['pass'] else 'FAIL'} | {d['nodes'][k]['note'] or ''} |")
+    open(os.path.join(BR, f'BATCH-{nb:02d}.md'), 'w').write('\n'.join(L) + '\n'); return '\n'.join(L)
+
+
+def cmd_report(a):
+    d = load(); nodes = [k for k, v in sorted(d['nodes'].items(), key=lambda kv: kv[1]['rank']) if v['batch'] == a.batch]
+    print(write_report(d, a.batch, nodes))
+
+
+def cmd_batch(a):
+    """Check enough new nodes to make a batch of n (counting nodes bridged earlier but not yet reported), then with --close number the batch and write BATCH-NN.md."""
+    d = load(); have = unreported(d)
+    ready = [k for k in pick(d, 10 ** 6) if os.path.exists(os.path.join(BR, 'src', 'nodes', k + '.js'))][:max(0, a.n - len(have))]
+    if len(have) + len(ready) < a.n: print(f'{len(have)} unreported + {len(ready)} with a module is less than {a.n}; scaffold + implement the next ones first:', ', '.join(pick(d, a.n)))
+    res = cmd_check(a, ready) if ready else {}
+    gate = regression_gate(a)
+    d = load()
     for k in ready:
-        r = res[k]; t = r['test']
-        L.append(f"| {k} | {d['nodes'][k]['component']} | {'ok' if r['xsd']['ok'] else 'FAIL'} | {t.get('ours', '')} | {t.get('xite', '')} | {'PASS' if r['pass'] else 'FAIL'} | {t.get('msg', '')} |")
-    open(os.path.join(BR, f'BATCH-{nb:02d}.md'), 'w').write('\n'.join(L) + '\n')
-    print('\n'.join(L)); print(f'\nbatch {nb}: {len(done)} of {len(ready)} bridged; next up:', ', '.join(pick(d, 5)))
+        if res[k]['pass'] and gate['ok']:
+            gaps = res[k]['test'].get('gaps'); d['nodes'][k]['status'] = 'gap' if gaps else 'bridged'
+            if gaps: d['nodes'][k]['note'] = '; '.join(gaps)
+        else: d['nodes'][k]['status'] = 'wip'
+    save(d)
+    for k in ready: print(f"  {k}: {d['nodes'][k]['status']}")
+    have = unreported(d)
+    if not a.close or len(have) < a.n: print(f'{len(have)} nodes bridged and not yet in a batch report (need {a.n})'); return
+    nb = 1 + max([int(re.sub(r'\D', '', f)) for f in os.listdir(BR) if re.match(r'BATCH-\d+\.md', f)] or [0])
+    take = have[:a.n]
+    for k in take: d['nodes'][k]['batch'] = nb
+    save(d); txt = write_report(d, nb, take, gate)
+    print(txt); print(f'\nbatch {nb} closed: {len(take)} nodes; next up:', ', '.join(pick(d, 5)))
 
 
 def main():
     ap = argparse.ArgumentParser(); sp = ap.add_subparsers(dest='cmd', required=True)
-    for name in ('init', 'status', 'next', 'scaffold', 'check', 'batch'):
+    for name in ('init', 'status', 'next', 'scaffold', 'check', 'batch', 'report'):
         p = sp.add_parser(name); p.add_argument('--uom', default=UOM_DEFAULT); p.add_argument('--xsd', default=XSD_DEFAULT)
         p.add_argument('--no-xite', action='store_true'); p.add_argument('--babylon', default=None)
         if name == 'next': p.add_argument('-n', type=int, default=5)
         if name == 'batch': p.add_argument('-n', type=int, default=5); p.add_argument('--close', action='store_true')
+        if name == 'report': p.add_argument('batch', type=int)
         if name in ('scaffold', 'check'): p.add_argument('nodes', nargs='+')
     a = ap.parse_args()
-    {'init': cmd_init, 'status': cmd_status, 'next': cmd_next, 'scaffold': cmd_scaffold, 'check': cmd_check, 'batch': cmd_batch}[a.cmd](a)
+    {'init': cmd_init, 'status': cmd_status, 'next': cmd_next, 'scaffold': cmd_scaffold, 'check': cmd_check, 'batch': cmd_batch, 'report': cmd_report}[a.cmd](a)
 
 
 main()

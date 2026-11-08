@@ -83,3 +83,89 @@ BR.lerpKeys = (k, kv, frac, mix) => {
   const j = Math.min(i + 1, N - 1), span = k[j] - k[i];
   return mix(kv[i], kv[j], span > 0 ? (frac - k[i]) / span : 0);
 };
+
+/* ---- shared interpolation math ---------------------------------------------------------------------------------------------------------
+   keySearch: X3DInterpolatorNode's rule for set_fraction: [index0, index1, weight]; the end values hold outside the key range, a single key holds always. */
+BR.keySearch = (key, f) => {
+  const N = key.length;
+  if (!N) return null;
+  if (N === 1) return [0, 0, 0];
+  if (f <= key[0]) return [0, 1, 0];
+  if (f >= key[N - 1]) return [N - 2, N - 1, 1];
+  let i = 0; while (i < N - 2 && f >= key[i + 1]) i++;
+  const span = key[i + 1] - key[i];
+  return [i, i + 1, span > 0 ? (f - key[i]) / span : 0];
+};
+{
+  const vsub = (a, b) => a.map((x, i) => x - b[i]), vscale = (a, s) => a.map((x) => x * s), vlen = (a) => Math.hypot(...a);
+  /* Catmull-Rom tangents for a Hermite spline over n-vectors (SplinePositionInterpolator, ...2D, SplineScalarInterpolator as 1-vectors):
+     T[i] = (P[i+1] - P[i-1]) / 2 unless keyVelocity is given; closed wraps the ends; the key spacing scales the two sides (F-); normalizeVelocity rescales given velocities by the path length. */
+  BR.splineGen = (closed, key, kv, kvel, normalize) => {
+    const n = key.length, T0 = [], T1 = [];
+    if (n < 2) { const z = (kv[0] || [0]).map(() => 0); return { T0: [z], T1: [z] }; }
+    const Z = () => kv[0].map(() => 0); let T = [];
+    if (!kvel.length) {
+      T.push(closed ? vscale(vsub(kv[1], kv[kv.length - 2]), 0.5) : Z());
+      for (let i = 1; i < kv.length - 1; i++) T.push(vscale(vsub(kv[i + 1], kv[i - 1]), 0.5));
+      T.push(T[0].slice());
+    } else {
+      T = kvel.map((v) => v.slice());
+      if (normalize) {
+        let D = 0; for (let i = 0; i < kv.length - 1; i++) D += vlen(vsub(kv[i], kv[i + 1]));
+        for (let i = 0; i < T.length - 1; i++) { const m = vlen(T[i]); if (m) T[i] = vscale(T[i], D / m); }
+      }
+    }
+    const Fm = [], Fp = [];
+    if (closed) { const a = n - 1, b = n - 2, d = key[1] - key[0] + key[a] - key[b]; Fm.push(2 * (key[1] - key[0]) / d); Fp.push(2 * (key[a] - key[b]) / d); }
+    else { Fm.push(1); Fp.push(1); }
+    for (let i = 1; i < n - 1; i++) { const d = key[i + 1] - key[i - 1]; Fm.push(2 * (key[i + 1] - key[i]) / d); Fp.push(2 * (key[i] - key[i - 1]) / d); }
+    Fm.push(Fm[0]); Fp.push(Fp[0]);
+    for (let i = 0; i < T.length; i++) { T0.push(vscale(T[i], Fp[i] ?? 1)); T1.push(vscale(T[i], Fm[i] ?? 1)); }
+    return { T0, T1 };
+  };
+  BR.splineAt = (sp, i0, i1, t, kv) => {      // cubic Hermite basis on P[i0], P[i1], T0[i0], T1[i1]
+    const t2 = t * t, t3 = t2 * t, h00 = 2 * t3 - 3 * t2 + 1, h01 = -2 * t3 + 3 * t2, h10 = t3 - 2 * t2 + t, h11 = t3 - t2;
+    return kv[i0].map((_, c) => h00 * kv[i0][c] + h01 * kv[i1][c] + h10 * sp.T0[i0][c] + h11 * sp.T1[i1][c]);
+  };
+  /* the node-level driver for the three spline nodes: pads keyValue/keyVelocity to the key count, caches the tangents until a field changes, returns the interpolated vector */
+  BR.splineNode = (n, frac, wrap, unwrap) => {
+    const f = n.f, key = f.key; if (!key.length) return null;
+    let kv = Array.from(f.keyValue, wrap); if (!kv.length) return null;
+    const dflt = kv[kv.length - 1].map(() => 0);
+    while (kv.length < key.length) kv.push(kv[kv.length - 1].slice());
+    let kvel = Array.from(f.keyVelocity, wrap); if (kvel.length) while (kvel.length < key.length) kvel.push(dflt.slice());
+    const stamp = [f.keyValue, f.keyVelocity, f.key, f.closed, f.normalizeVelocity];
+    if (!n._sp || n._spStamp.some((x, i) => x !== stamp[i])) { n._sp = BR.splineGen(f.closed, key, kv, kvel, f.normalizeVelocity); n._spStamp = stamp; n._spKv = kv; }
+    const ks = BR.keySearch(key, frac); if (!ks) return null;
+    return unwrap(BR.splineAt(n._sp, ks[0], ks[1], ks[2], n._spKv));
+  };
+  BR.wrap1 = (x) => [x]; BR.unwrap1 = (a) => a[0]; BR.wrapN = (v) => Array.from(v); BR.unwrapN = (a) => a;
+
+  /* quaternions [x, y, z, w]: log / exp / spline for SQUAD, and a slerp that goes the short way round (the reader's quat.slerp falls back to a normalised lerp very near parallel) */
+  const qmul = quat.mul, qdot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3], qneg = (a) => a.map((x) => -x), qinv = (a) => [-a[0], -a[1], -a[2], a[3]];
+  const qlog = (q) => { const v = Math.hypot(q[0], q[1], q[2]), m = Math.hypot(v, q[3]); if (v < 1e-12) return [0, 0, 0, Math.log(m)]; const k = Math.acos(clamp(q[3] / m, -1, 1)) / v; return [q[0] * k, q[1] * k, q[2] * k, Math.log(m)]; };
+  const qexp = (q) => { const v = Math.hypot(q[0], q[1], q[2]), e = Math.exp(q[3]); if (v < 1e-12) return [0, 0, 0, e]; const k = e * Math.sin(v) / v; return [q[0] * k, q[1] * k, q[2] * k, e * Math.cos(v)]; };
+  const qslerp = (a, b, t, short = true) => {
+    let c = qdot(a, b); if (short && c < 0) { c = -c; b = qneg(b); }
+    if (c >= 1) return a.slice();
+    const w = Math.acos(c), s = Math.sin(w); if (s < 1e-12) return a.map((x, i) => x + (b[i] - x) * t);
+    const s0 = Math.sin((1 - t) * w) / s, s1 = Math.sin(t * w) / s; return a.map((x, i) => x * s0 + b[i] * s1);
+  };
+  const qnorm = (a) => { const l = Math.hypot(...a) || 1; return a.map((x) => x / l); };
+  const qspline = (q0, q1, q2) => {            // the control quaternion s_i of SQUAD: q1 * exp(-(log(q1^-1 q0) + log(q1^-1 q2)) / 4), neighbours put in q1's hemisphere
+    if (qdot(q0, q1) < 0) q0 = qneg(q0); if (qdot(q2, q1) < 0) q2 = qneg(q2);
+    const i = qinv(q1), a = qlog(qmul(i, q0)), b = qlog(qmul(i, q2));
+    return qnorm(qmul(q1, qexp(a.map((x, k) => -(x + b[k]) / 4))));
+  };
+  BR.squadGen = (closed, key, kv) => {
+    const n = key.length, s = [];
+    if (n > 1) {
+      s.push(closed ? qspline(kv[n - 2], kv[0], kv[1]) : kv[0].slice());
+      for (let i = 1; i < n - 1; i++) s.push(qspline(kv[i - 1], kv[i], kv[i + 1]));
+      s.push(closed ? qspline(kv[n - 2], kv[n - 1], kv[1]) : kv[n - 1].slice());
+    } else if (n) s.push(kv[0].slice());
+    return s;
+  };
+  BR.squadAt = (s, i0, i1, t, kv) => qslerp(qslerp(kv[i0], kv[i1], t), qslerp(s[i0], s[i1], t), 2 * t * (1 - t));
+  BR.q = { fromRot: (r) => quat.fromAxisAngle(r, r[3]), toRot: (q) => quat.toAxisAngle(q), slerp: qslerp };
+}
