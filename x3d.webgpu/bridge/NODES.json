@@ -1605,10 +1605,10 @@
    "inherits": "X3DSoundSourceNode",
    "container": "children",
    "nfields": 16,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 16,
+   "receipt": "receipts/ListenerPointSource.json",
+   "note": "the listener follows the node once per frame; X_ITE does it while it draws the node; enabled = false leaves the listener where it was; interauralDistance and dopplerEnabled are held, Web Audio has no use for them; the 4.0 UOM gives ListenerPointSource gain, mediaDeviceID and a start/stop clock; X_ITE 16.6.0 has none of them, so they are held here and not compared",
    "rank": 141
   },
   "LoadSensor": {
@@ -1761,10 +1761,10 @@
    "inherits": "X3DSoundSourceNode",
    "container": "children",
    "nfields": 12,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 16,
+   "receipt": "receipts/MicrophoneSource.json",
+   "note": "getUserMedia is not tested (no device, no permission prompt in the test browser); streamIdentifier is held; X_ITE lists it, the 4.0 UOM does not for this node",
    "rank": 142
   },
   "MotorJoint": {
@@ -2086,10 +2086,10 @@
    "inherits": "X3DSoundSourceNode",
    "container": "children",
    "nfields": 14,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 16,
+   "receipt": "receipts/OscillatorSource.json",
+   "note": "pause stops the tone (30 ms fade) and resume starts a new one, as in X_ITE; the four extra OscillatorSources are only there to hold the waves for the test",
    "rank": 143
   },
   "PackagedShader": {
@@ -2125,10 +2125,10 @@
    "inherits": "X3DSoundNode",
    "container": "periodicWave",
    "nfields": 6,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 16,
+   "receipt": "receipts/PeriodicWave.json",
+   "note": "the waveform is only used through an OscillatorSource; the type to wave-type mapping is tested there",
    "rank": 144
   },
   "PhysicalMaterial": {
@@ -2723,10 +2723,10 @@
    "inherits": "X3DSoundNode",
    "container": "children",
    "nfields": 19,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 16,
+   "receipt": "receipts/SpatialSound.json",
+   "note": "a SpatialSound plays only while it is drawn in X_ITE (its traversed flag, which a Switch or culling turns off); the bridge plays it whenever it is enabled; spatialize is an initializeOnly field: set at load, bypassing the panner; the routing is not read back; dopplerEnabled and priority are held; Web Audio has no doppler and there is one voice per node; a maxDistance of 0 or less is refused by Web Audio (RangeError): the old distance stays; X_ITE 16.6.0 raises the error inside its event handler, so the test does not try it",
    "rank": 145
   },
   "Sphere": {

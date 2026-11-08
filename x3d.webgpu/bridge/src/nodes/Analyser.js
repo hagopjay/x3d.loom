@@ -63,6 +63,7 @@ BR.snd = {
   settle(n) {
     const au = n._au, f = n.f, T = BR.snd.types[n.type], en = f.enabled !== false;
     if (!au) return;
+    if (T.own) { T.apply(n, null); return; }          // a type that sets up its own stages (SpatialSound)
     au.in.channelCount = BR.snd.clamp(f.channelCount | 0, 1, 32);
     if (en) { au.in.gain.value = f.gain; au.in.channelCountMode = BR.snd.MODE[f.channelCountMode] || 'max'; au.in.channelInterpretation = BR.snd.INTERP[f.channelInterpretation] || 'speakers'; }
     else if (!T.dest) { au.in.gain.value = 1; au.in.channelCountMode = 'max'; au.in.channelInterpretation = 'speakers'; }
@@ -97,6 +98,25 @@ BR.snd = {
     if (!n._au) return false;
     Promise.resolve().then(() => { const T = BR.snd.types[n.type]; if (field === 'children' || field === 'outputs' || ((T.merge || T.wireOut) && field === 'enabled')) BR.snd.wire(n); BR.snd.settle(n); if (field === 'enabled' && T.dest) BR.fire(n, 'isActive', n.f.enabled !== false); });
     return false;
+  },
+};
+
+/* view space: Web Audio's panner and listener are placed in the camera's own space (the listener at the origin looking down -z), as X_ITE does. Sound nodes that sit in the scene (SpatialSound,
+   ListenerPointSource) get a Babylon TransformNode under their parent in build(); once per frame the node's world pose is taken through the camera's view matrix and handed to the audio node. */
+BR.snd.space = {
+  anchor(body, n, parent) {
+    const S = (body._space ||= { world: null, list: new Set() });
+    if (S.world !== body.world) { S.world = body.world; S.list.clear(); }
+    if (!S.hook) { S.hook = true; body.scene.onBeforeRenderObservable.add(() => { for (const e of S.list) BR.snd.space.update(body, e); }); }
+    const a = new BABYLON.TransformNode((n.def || n.type) + '-snd', body.scene); a.parent = parent; n._anchor = a;
+    const T = BR.snd.types[n.type]; if (T && T.pose) T.pose(n);
+    S.list.add(n); return a;
+  },
+  update(body, n) {
+    const a = n._anchor, cam = body.scene.activeCamera, T = BR.snd.types[n.type]; if (!a || !cam || a.isDisposed() || !T.place) return;
+    const V = cam.getViewMatrix(), W = a.computeWorldMatrix(true), M = W.multiply(V), P = BABYLON.Vector3.TransformCoordinates(BABYLON.Vector3.Zero(), M);
+    const dir = (x, y, z) => BABYLON.Vector3.TransformNormal(new BABYLON.Vector3(x, y, z), M).normalize();
+    T.place(n, P, dir);
   },
 };
 

@@ -1,0 +1,32 @@
+{
+ "node": "SpatialSound",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/SpatialSound.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 91/91",
+  "xite": "pass 91/91",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "a SpatialSound plays only while it is drawn in X_ITE (its traversed flag, which a Switch or culling turns off); the bridge plays it whenever it is enabled",
+   "spatialize is an initializeOnly field: set at load, bypassing the panner; the routing is not read back",
+   "dopplerEnabled and priority are held; Web Audio has no doppler and there is one voice per node",
+   "a maxDistance of 0 or less is refused by Web Audio (RangeError): the old distance stays; X_ITE 16.6.0 raises the error inside its event handler, so the test does not try it"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 79d1f27294c6",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "506d2b1"
+}

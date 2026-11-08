@@ -1,0 +1,32 @@
+{
+ "node": "ListenerPointSource",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/ListenerPointSource.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 29/29",
+  "xite": "pass 29/29",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "the listener follows the node once per frame; X_ITE does it while it draws the node",
+   "enabled = false leaves the listener where it was",
+   "interauralDistance and dopplerEnabled are held, Web Audio has no use for them",
+   "the 4.0 UOM gives ListenerPointSource gain, mediaDeviceID and a start/stop clock; X_ITE 16.6.0 has none of them, so they are held here and not compared"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 79d1f27294c6",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "506d2b1"
+}
