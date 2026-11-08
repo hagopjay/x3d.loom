@@ -1,0 +1,849 @@
+{
+ "node": "SpatialSound",
+ "mode": "scene",
+ "note": "the node's gain stage (intensity 0..1 times gain, stereo explicit) and the Web Audio panner (distance model and rolloff, with LINEAR held to rolloff 1, reference and maximum distance, cone angles from radians to degrees held to 0..360, cone outer gain, HRTF or equal power) are compared with X_ITE 16.6.0, and so is the panner's position and orientation: location and direction taken through the Transform and the camera (a viewpoint at 0 0 10) into view space. Runs in the real Babylon body. The panned sound is not compared.",
+ "gaps": [
+  "a SpatialSound plays only while it is drawn in X_ITE (its traversed flag, which a Switch or culling turns off); the bridge plays it whenever it is enabled",
+  "spatialize is an initializeOnly field: set at load, bypassing the panner; the routing is not read back",
+  "dopplerEnabled and priority are held; Web Audio has no doppler and there is one voice per node",
+  "a maxDistance of 0 or less is refused by Web Audio (RangeError): the old distance stays; X_ITE 16.6.0 raises the error inside its event handler, so the test does not try it"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "intensity",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "spatialize",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "distanceModel",
+    "INVERSE"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "rolloffFactor",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "maxDistance",
+    10000
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "referenceDistance",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enableHRTF",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "coneOuterGain",
+    0
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.gain.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().gainNode.gain.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelCount})()",
+    2
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().gainNode.channelCount",
+    2
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelCountMode})()",
+    "explicit"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().gainNode.channelCountMode",
+    "explicit"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.distanceModel})()",
+    "inverse"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.distanceModel",
+    "inverse"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.rolloffFactor})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.rolloffFactor",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.maxDistance})()",
+    10000
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.maxDistance",
+    10000
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.refDistance})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.refDistance",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.panningModel})()",
+    "equalpower"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.panningModel",
+    "equalpower"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneOuterGain})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneOuterGain",
+    0
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneInnerAngle})()",
+    360
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneInnerAngle",
+    360
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneOuterAngle})()",
+    360
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneOuterAngle",
+    360
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.positionX.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.positionX.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.positionY.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.positionY.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.positionZ.value})()",
+    -10
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.positionZ.value",
+    -10
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.orientationX.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.orientationX.value",
+    0
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.orientationZ.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.orientationZ.value",
+    1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "location",
+    [
+     0,
+     0,
+     -5
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.positionX.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.positionX.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.positionY.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.positionY.value",
+    0
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.positionZ.value})()",
+    -15
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.positionZ.value",
+    -15
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "direction",
+    [
+     1,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.orientationX.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.orientationX.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.orientationZ.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.orientationZ.value",
+    0
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "intensity",
+    0.5
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.gain.value})()",
+    0.5
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().gainNode.gain.value",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.gain.value})()",
+    0.25
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().gainNode.gain.value",
+    0.25
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "intensity",
+    5
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.gain.value})()",
+    0.5
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().gainNode.gain.value",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "coneInnerAngle",
+    1.5708
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneInnerAngle})()",
+    90
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneInnerAngle",
+    90
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "coneOuterAngle",
+    3.1416
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneOuterAngle})()",
+    180
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneOuterAngle",
+    180
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "coneInnerAngle",
+    20
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneInnerAngle})()",
+    360
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneInnerAngle",
+    360
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "coneOuterGain",
+    0.4
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneOuterGain})()",
+    0.4
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneOuterGain",
+    0.4
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "coneOuterGain",
+    3
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneOuterGain})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneOuterGain",
+    1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "maxDistance",
+    50
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.maxDistance})()",
+    50
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.maxDistance",
+    50
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "referenceDistance",
+    2
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.refDistance})()",
+    2
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.refDistance",
+    2
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "distanceModel",
+    "LINEAR"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.distanceModel})()",
+    "linear"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.distanceModel",
+    "linear"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "distanceModel",
+    "EXPONENTIAL"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.distanceModel})()",
+    "exponential"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.distanceModel",
+    "exponential"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "distanceModel",
+    "INVERSE"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.distanceModel})()",
+    "inverse"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.distanceModel",
+    "inverse"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "distanceModel",
+    "NONSENSE"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.distanceModel})()",
+    "inverse"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.distanceModel",
+    "inverse"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "distanceModel",
+    "LINEAR"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "rolloffFactor",
+    3
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.rolloffFactor})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.rolloffFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "distanceModel",
+    "INVERSE"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.rolloffFactor})()",
+    3
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.rolloffFactor",
+    3
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "rolloffFactor",
+    -2
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.rolloffFactor})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.rolloffFactor",
+    0
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enableHRTF",
+    true
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.panningModel})()",
+    "HRTF"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.panningModel",
+    "HRTF"
+   ]
+  }
+ ]
+}

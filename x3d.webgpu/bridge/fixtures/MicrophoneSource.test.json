@@ -1,0 +1,118 @@
+{
+ "node": "MicrophoneSource",
+ "mode": "scene",
+ "note": "the node's gain stage and its start and stop clock, compared with X_ITE 16.6.0. The test machine has no microphone, so asking the browser for one fails (a console message, as in X_ITE) and nothing is heard; the capture itself is not tested.",
+ "gaps": [
+  "getUserMedia is not tested (no device, no permission prompt in the test browser)",
+  "streamIdentifier is held; X_ITE lists it, the 4.0 UOM does not for this node"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "mediaDeviceID",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.out.gain.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioSource.gain.value",
+    1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "gain",
+    0.3
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    0.3
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.out.gain.value})()",
+    0.3
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioSource.gain.value",
+    0.3
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  }
+ ]
+}
