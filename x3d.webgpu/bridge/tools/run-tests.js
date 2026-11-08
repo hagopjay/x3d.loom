@@ -45,6 +45,7 @@ async function runSpec(eng, spec, xml) {
     switch (t) {
       case 'SFVec2f': return new X.SFVec2f(...v); case 'SFVec3f': return new X.SFVec3f(...v); case 'SFRotation': return new X.SFRotation(...v); case 'SFColor': return new X.SFColor(...v);
       case 'MFVec3f': return new X.MFVec3f(...v.map((a) => new X.SFVec3f(...a))); case 'MFVec2f': return new X.MFVec2f(...v.map((a) => new X.SFVec2f(...a)));
+      case 'MFVec3d': return eng.name === 'ours' ? Float32Array.from(v.flat()) : new X.MFVec3d(...v.map((a) => new X.SFVec3d(...a)));   // the reader keeps double lists flat
       case 'MFFloat': return new X.MFFloat(...v); case 'MFInt32': return new X.MFInt32(...v); case 'MFString': return new X.MFString(...v);
       default: return v;
     }

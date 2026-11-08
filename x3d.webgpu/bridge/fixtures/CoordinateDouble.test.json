@@ -1,0 +1,221 @@
+{
+ "node": "CoordinateDouble",
+ "mode": "scene",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    60
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    261,
+    130
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    300,
+    60
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "point",
+    [
+     [
+      -1.5,
+      2,
+      0
+     ],
+     [
+      1.5,
+      2,
+      0
+     ],
+     [
+      0,
+      4.5,
+      0
+     ]
+    ],
+    "MFVec3d"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    122
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    62
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    261,
+    130
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "point",
+    [
+     [
+      2.5,
+      -4,
+      0
+     ],
+     [
+      4.5,
+      -4,
+      0
+     ],
+     [
+      3.5,
+      -2,
+      0
+     ]
+    ],
+    "MFVec3d"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "mouse": [
+    "move",
+    261,
+    130
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    261,
+    215
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  }
+ ],
+ "note": "an IndexedFaceSet and an IndexedTriangleSet take their points from a CoordinateDouble; the pointer is over the shape where the triangle is, before and after the points are replaced through the SAI",
+ "gaps": [
+  "the points are kept as 32-bit floats (the geometry code reads Float32Array); doubles finer than about 7 digits or larger than 3e38 are not kept",
+  "only the triangle positions are compared with X_ITE (pointer hit and miss), not shading"
+ ]
+}

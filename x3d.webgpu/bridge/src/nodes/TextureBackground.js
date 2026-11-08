@@ -1,21 +1,21 @@
 /* TextureBackground (EnvironmentalEffects level 3): TextureBackground simulates ground and sky, using vertical arrays of wraparound color values, TextureBackground can also provide backdrop texture images on all six sides of the background.
    Field table generated from X3DUOM 4.0 by driver.py scaffold; the behaviour below is hand written. */
 
-/* ---- the Background stack, shared by Background and TextureBackground -----------------------------------------------------------------------
+/* ---- the bind stack, shared by Background and TextureBackground (and used by Fog, with a stack of its own) -----------------------------------------------------------------------
    X3D keeps one stack for both node types. The first one of a world is bound at load; set_bind TRUE moves a node to the top (the one under it is unbound), set_bind FALSE takes it out
    (when it was on top, the next one down is bound again; an empty stack binds nothing). Every change of isBound also sets bindTime. Same results as X_ITE 16.6.0 step for step
    (receipts/TextureBackground.json). The stock Background only knew its first node, so its isBound and bindTime are added here (extend) and its set_bind joins the same stack. */
 const BG_KINDS = ['Background', 'TextureBackground'];
 BR.bg = {
   now: () => (events.ts > 1e9 ? events.ts : Date.now() / 1000),
-  stack: (w) => (w.bgStack ||= []),
+  stack: (w, n) => (w[n.type === 'Fog' ? 'fogStack' : 'bgStack'] ||= []),      // Background and TextureBackground share one stack; Fog has its own
   set(n, on) {                      // one node changes state: the output events and the body hear about it
     n.f.isBound = on; n.f.bindTime = BR.bg.now();
     events.emit(n, 'isBound', on); events.emit(n, 'bindTime', n.f.bindTime);
     if (R.bridge.body) R.bridge.body.changed(n, 'isBound');
   },
   bind(n, on) {
-    const st = BR.bg.stack(n._w), top = st[st.length - 1], i = st.indexOf(n);
+    const st = BR.bg.stack(n._w, n), top = st[st.length - 1], i = st.indexOf(n);
     if (on) {
       if (top === n) return;
       if (i >= 0) st.splice(i, 1);
@@ -27,13 +27,17 @@ BR.bg = {
     }
   },
   init(n, w) {                      // runs for every Background and TextureBackground once the world is parsed; the first one is bound
-    n._w = w; const st = BR.bg.stack(w);
+    n._w = w; const st = BR.bg.stack(w, n);
     if (!st.length) { st.push(n); n.f.isBound = true; n.f.bindTime = BR.bg.now(); }
   },
   receive(n, field, v) { if (field !== 'set_bind') return false; BR.bg.bind(n, !!v); return true; },
 };
 BR.node('Background', { component: 'EnvironmentalEffects', level: 1, extend: { Background: { isBound: ['SFBool', OUT, false], bindTime: ['SFTime', OUT, 0] } },
   init: BR.bg.init, receive: BR.bg.receive });
+
+/* Fog (the world's own fog, EnvironmentalEffects level 2; kept here because it shares the bind code above): like Background, one stack per world, the first Fog is bound at load, set_bind moves one to the top. The stock body never drew it; the bridge
+   treats it as the fog of every mesh that no LocalFog covers (a LocalFog above a mesh wins, as in X3D). isBound and bindTime are added on the stock node. */
+BR.node('Fog', { component: 'EnvironmentalEffects', level: 2, extend: { Fog: { isBound: ['SFBool', OUT, false], bindTime: ['SFTime', OUT, 0] } }, init: BR.bg.init, receive: BR.bg.receive });
 
 BR.node('TextureBackground', {
   component: 'EnvironmentalEffects', level: 3,

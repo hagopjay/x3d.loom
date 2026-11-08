@@ -1,0 +1,31 @@
+{
+ "node": "OrthoViewpoint",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/OrthoViewpoint.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 71/71",
+  "xite": "pass 71/71",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "a bind between an OrthoViewpoint and another viewpoint is a cut: no fly-through is drawn",
+   "the user's mouse wheel scales the area, the drag pans in view units; X_ITE's fieldOfViewOffset / fieldOfViewScale animations and viewAll are not modelled",
+   "near and far default to 0.1 and 10000 when nearDistance or farDistance is not positive (X_ITE takes the navigation avatar size for near)"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ece5768b88af",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "744b32a"
+}

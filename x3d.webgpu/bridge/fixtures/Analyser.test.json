@@ -1,0 +1,439 @@
+{
+ "node": "Analyser",
+ "mode": "scene",
+ "note": "defaults and the fftSize rule are Web Audio's (power of two, 32 to 32768, bin count half of it); the clock is X3DTimeDependentNode's. The data arrays (byte and float, frequency and time domain) come from the page's audio context and are not compared: silence reads the same everywhere and a headless browser has no audio device, so the test asserts on no array. Runs in scene mode so the clock is the real one ($now), as the MovieTexture test does.",
+ "gaps": [
+  "the data outputs are only fed while the node is active and a Web Audio context exists; nothing is wired into the analyser yet (the Sound children of this node come with the rest of the Sound group)",
+  "minDecibels, maxDecibels and smoothingTimeConstant go to the audio node when it is made; changing them while it runs is not applied until the next start"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "fftSize",
+    2048
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "minDecibels",
+    -100
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "maxDecibels",
+    -30
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "smoothingTimeConstant",
+    0.8
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "tailTime",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "channelCountMode",
+    "MAX"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "channelInterpretation",
+    "SPEAKERS"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "startTime",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "stopTime",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pauseTime",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "resumeTime",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isPaused",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "fftSize",
+    1000
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "fftSize",
+    1000
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "frequencyBinCount",
+    512
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "fftSize",
+    4096
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "fftSize",
+    4096
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "frequencyBinCount",
+    2048
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "fftSize",
+    8
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "fftSize",
+    8
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "frequencyBinCount",
+    16
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "fftSize",
+    100000
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "fftSize",
+    100000
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "frequencyBinCount",
+    16384
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "fftSize",
+    33
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "fftSize",
+    33
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "frequencyBinCount",
+    32
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "minDecibels",
+    -80
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "minDecibels",
+    -80
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "maxDecibels",
+    -10
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "maxDecibels",
+    -10
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "smoothingTimeConstant",
+    0.5
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "smoothingTimeConstant",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "tailTime",
+    2
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "tailTime",
+    2
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "between": [
+    "N",
+    "elapsedTime",
+    0.1,
+    1.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "pauseTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isPaused",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "resumeTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isPaused",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  }
+ ]
+}

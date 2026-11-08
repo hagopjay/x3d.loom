@@ -32,10 +32,10 @@
    "inherits": "X3DSoundProcessingNode",
    "container": "children",
    "nfields": 21,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 13,
+   "receipt": "receipts/Analyser.json",
+   "note": "the data outputs are only fed while the node is active and a Web Audio context exists; nothing is wired into the analyser yet (the Sound children of this node come with the rest of the Sound group); minDecibels, maxDecibels and smoothingTimeConstant go to the audio node when it is made; changing them while it runs is not applied until the next start",
    "rank": 130
   },
   "Anchor": {
@@ -734,10 +734,10 @@
    "inherits": "X3DCoordinateNode",
    "container": "coord",
    "nfields": 2,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 13,
+   "receipt": "receipts/CoordinateDouble.json",
+   "note": "the points are kept as 32-bit floats (the geometry code reads Float32Array); doubles finer than about 7 digits or larger than 3e38 are not kept; only the triangle positions are compared with X_ITE (pointer hit and miss), not shading",
    "rank": 99
   },
   "CoordinateInterpolator": {
@@ -1007,10 +1007,10 @@
    "inherits": "X3DGeometricPropertyNode",
    "container": "fogCoord",
    "nfields": 2,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 13,
+   "receipt": "receipts/FogCoordinate.json",
+   "note": "only IndexedTriangleSet and the bridged geometry sets take a fogCoord; IndexedFaceSet and the others the stock reader draws do not have the field; the fog is a second copy of the mesh drawn over the first with vertex alpha = depth, so it blends after the surface is tone mapped (X_ITE blends inside the shader); vertices past the end of depth read as 0 (clear); the world Fog is new to the bridge (stock body never drew it): it fogs every mesh no LocalFog covers; all fogs share the fog law of the first active one",
    "rank": 126
   },
   "FontStyle": {
@@ -2073,10 +2073,10 @@
    "inherits": "X3DViewpointNode",
    "container": "children",
    "nfields": 15,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 13,
+   "receipt": "receipts/OrthoViewpoint.json",
+   "note": "a bind between an OrthoViewpoint and another viewpoint is a cut: no fly-through is drawn; the user's mouse wheel scales the area, the drag pans in view units; X_ITE's fieldOfViewOffset / fieldOfViewScale animations and viewAll are not modelled; near and far default to 0.1 and 10000 when nearDistance or farDistance is not positive (X_ITE takes the navigation avatar size for near)",
    "rank": 119
   },
   "OscillatorSource": {
@@ -3282,10 +3282,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 7,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 13,
+   "receipt": "receipts/ViewpointGroup.json",
+   "note": "the proximity box is tested in world coordinates: a ViewpointGroup under a moved Transform is tested as if the Transform were not there; retainUserOffsets is held but not applied (the stock body keeps no user offsets per viewpoint); the page decides how to show the list; the stock pages have none, so Body.viewpointList() is the only way to read it",
    "rank": 120
   },
   "Viewport": {
