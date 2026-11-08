@@ -383,10 +383,10 @@
    "inherits": "X3DSoundChannelNode",
    "container": "children",
    "nfields": 9,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 15,
+   "receipt": "receipts/ChannelSplitter.json",
+   "note": "a node past the 32nd in outputs is not connected (as in X_ITE); the wiring of each output to its node is not read back, only the splitter's size",
    "rank": 136
   },
   "Circle2D": {
@@ -682,10 +682,10 @@
    "inherits": "X3DSoundProcessingNode",
    "container": "children",
    "nfields": 18,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 15,
+   "receipt": "receipts/Convolver.json",
+   "note": "three channels, or more than four, are refused by Web Audio; the bridge keeps the previous response (X_ITE throws); the response is built at the audio context's own sample rate, as in X_ITE; the processed sound is not compared; numberOfChannels is a Convolver field in X_ITE 16.6.0 but is not in the X3D 4.0 UOM or XSD; the bridge has it as in X_ITE (set at run time only, since the XSD cannot write it)",
    "rank": 137
   },
   "Coordinate": {
@@ -825,10 +825,10 @@
    "inherits": "X3DSoundProcessingNode",
    "container": "children",
    "nfields": 18,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 15,
+   "receipt": "receipts/Delay.json",
+   "note": "Web Audio takes a maximum above 0 and below 180 s; X_ITE throws outside that, the bridge holds maxDelayTime to 0.001..179.999 (not tested, since X_ITE cannot be asked)",
    "rank": 138
   },
   "DirectionalLight": {
@@ -877,10 +877,10 @@
    "inherits": "X3DSoundProcessingNode",
    "container": "children",
    "nfields": 22,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 15,
+   "receipt": "receipts/DynamicsCompressor.json",
+   "note": "reduction is read from the audio node every tick while active; with real sound it follows the signal, here only silence is tested",
    "rank": 139
   },
   "EaseInEaseOut": {
@@ -1046,10 +1046,10 @@
    "inherits": "X3DSoundProcessingNode",
    "container": "children",
    "nfields": 16,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 15,
+   "receipt": "receipts/Gain.json",
+   "note": "a Gain has no Web Audio node of its own beyond the input stage (as in X_ITE)",
    "rank": 140
   },
   "GeneratedCubeMapTexture": {
