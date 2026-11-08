@@ -1,0 +1,167 @@
+{
+ "node": "ProtoInstance",
+ "mode": "events",
+ "steps": [
+  {
+   "set": [
+    "D1",
+    "input",
+    0.5
+   ]
+  },
+  {
+   "event": [
+    "D1",
+    "output",
+    1
+   ]
+  },
+  {
+   "set": [
+    "D2",
+    "input",
+    0.5
+   ]
+  },
+  {
+   "event": [
+    "D2",
+    "output",
+    5
+   ]
+  },
+  {
+   "set": [
+    "D1",
+    "input",
+    0.25
+   ]
+  },
+  {
+   "event": [
+    "D1",
+    "output",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "D1",
+    "keys",
+    [
+     0,
+     0.5
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "expect": [
+    "D1",
+    "keys",
+    [
+     0,
+     0.5
+    ]
+   ]
+  },
+  {
+   "set": [
+    "D1",
+    "input",
+    0.25
+   ]
+  },
+  {
+   "event": [
+    "D1",
+    "output",
+    1
+   ]
+  },
+  {
+   "set": [
+    "D3",
+    "input",
+    0.5
+   ]
+  },
+  {
+   "event": [
+    "D3",
+    "output",
+    1
+   ]
+  },
+  {
+   "set": [
+    "Src",
+    "set_fraction",
+    0.25
+   ]
+  },
+  {
+   "event": [
+    "Sink",
+    "value_changed",
+    50
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "go",
+    0.25
+   ]
+  },
+  {
+   "event": [
+    "T",
+    "done",
+    15
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "go",
+    0
+   ]
+  },
+  {
+   "event": [
+    "T",
+    "done",
+    0
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];return [w.defs.get('H2').f.metadata.f.name, w.defs.get('H1').f.metadata.f.name]})()",
+    [
+     "custom",
+     "dflt"
+    ]
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];return w.nodes.filter(n=>n.type==='ScalarInterpolator').length})()",
+    11
+   ]
+  }
+ ],
+ "note": "Scaler: input and output events, an initializeOnly MFFloat (values) and an inputOutput MFFloat (keys) connected through IS to a ScalarInterpolator; three instances with their own values, and an inputOutput change on one does not reach another. D3 is driven and read through ROUTEs that name its fields. Twice nests two Scalers and three more nodes behind its own go and done. Holder passes an SFNode through IS (checked in our reader only: X_ITE does not give the inner node a name).",
+ "gaps": [
+  "ExternProtoDeclare is not loaded (external files); an instance of one is dropped with a warning",
+  "an SFNode field connected through IS to two places is copied, so a DEF inside it exists twice",
+  "IS inside a nested ProtoInstance connects values only (as fieldValue), not events",
+  "getNodeTypeName on an instance returns the type of its first inner node, not the PROTO's name",
+  "a PROTO field that is an SFNode or MFNode is not reachable through the instance's SAI object (initializeOnly values are not exposed either way in X_ITE's SAI, so the tests do not read them)"
+ ]
+}
