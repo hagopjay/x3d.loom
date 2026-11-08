@@ -1,0 +1,40 @@
+// node odyssey-play.js BASE_URL: drives the Babylon engine on the Odyssey page like a visitor (begin, play, Look switch, engine switch to X3D and back, take the sticks, bench) and reports page errors. Software adapters, correctness only, no timings.
+const { chromium } = require('playwright');
+(async () => {
+  const base = process.argv[2];
+  const b = await chromium.launch({ args: ['--enable-unsafe-webgpu', '--no-sandbox', '--use-angle=swiftshader', '--use-webgpu-adapter=swiftshader', '--enable-unsafe-swiftshader'] });
+  const p = await b.newPage({ viewport: { width: 960, height: 402 } });
+  const errs = []; p.on('console', m => { if (m.type() === 'error') errs.push(m.text().slice(0, 200)); }); p.on('pageerror', e => errs.push('pageerror ' + e.message.slice(0, 200)));
+  await p.addInitScript(() => {
+    window.requestAnimationFrame = (cb) => setTimeout(() => cb(performance.now()), 300);
+    const orig = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (t, o) { if (t !== 'webgpu') return orig.call(this, t, o); const canvas = this;
+      return { _t: null, _d: null, _f: 'bgra8unorm', canvas, configure(c) { this._d = c.device; this._f = c.format; }, unconfigure() {}, getCurrentTexture() { const w = canvas.width, h = canvas.height; if (!this._t || this._t.width !== w || this._t.height !== h) this._t = this._d.createTexture({ size: [w, h], format: this._f, usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC | GPUTextureUsage.TEXTURE_BINDING }); return this._t; } }; };
+  });
+  const out = {};
+  await p.goto(base + '/index.html?quality=low');
+  out.defaultKind = await p.evaluate(() => window.__odyssey.S.kind);
+  await p.click('#begin');
+  await p.waitForFunction(() => window.__odyssey.S.adapter && !window.__odyssey.S.busy, null, { timeout: 600000 });
+  out.started = await p.evaluate(() => ({ kind: window.__odyssey.S.adapter.kind, playing: window.__odyssey.S.playing, badge: document.querySelector('#engBadge').textContent, look: !document.querySelector('#bLook').hidden }));
+  await p.waitForTimeout(6000);
+  const t1 = await p.evaluate(() => window.__odyssey.S.adapter.time()); await p.waitForTimeout(6000); const t2 = await p.evaluate(() => window.__odyssey.S.adapter.time());
+  out.play = { t1: +t1.toFixed(2), t2: +t2.toFixed(2), advancing: t2 > t1 + 0.5 };
+  await p.keyboard.press('Space'); out.paused = !(await p.evaluate(() => window.__odyssey.S.playing));
+  await p.mouse.move(480, 300); await p.waitForTimeout(400); await p.click('#bLook'); out.lookOff = await p.evaluate(() => ({ on: window.__odysseyLook.on, pressed: document.querySelector('#bLook').getAttribute('aria-pressed') }));
+  await p.mouse.move(470, 310); await p.click('#bLook'); out.lookOn = await p.evaluate(() => window.__odysseyLook.on);
+  await p.evaluate(() => window.__odyssey.seek(40)); await p.waitForTimeout(3000); out.seek = await p.evaluate(() => window.__odyssey.S.adapter.cameraPose().pos.map(x => +x.toFixed(1)));
+  await p.evaluate(() => window.__odyssey.flyStart()); await p.waitForTimeout(3000);
+  out.fly = await p.evaluate(() => ({ active: window.__odyssey.fly.active, pose: window.__odyssey.S.adapter.cameraPose().pos.map(x => +x.toFixed(1)) }));
+  await p.evaluate(() => window.__odyssey.flyEnd()); await p.waitForTimeout(2000);
+  out.flyBack = await p.evaluate(() => window.__odyssey.S.adapter.cameraPose().pos.map(x => +x.toFixed(1)));
+  await p.evaluate(() => window.__odyssey.togglePanel('About')); await p.waitForTimeout(500);
+  out.about = await p.evaluate(() => document.querySelector('#aboutLive').innerText.replace(/\n+/g, ' | ').slice(0, 700)); await p.evaluate(() => window.__odyssey.togglePanel(null));
+  await p.evaluate(() => window.__odyssey.switchEngine('x3d')); await p.waitForFunction(() => window.__odyssey.S.kind === 'x3d' && !window.__odyssey.S.busy, null, { timeout: 600000 });
+  out.toX3d = await p.evaluate(() => ({ kind: window.__odyssey.S.adapter.kind, t: +window.__odyssey.S.adapter.time().toFixed(1), look: !document.querySelector('#bLook').hidden, x3dGlobal: typeof window.X3D, xite: !!(window.X3D && window.X3D.getBrowser && document.querySelector('x3d-canvas')) }));
+  await p.evaluate(() => window.__odyssey.switchEngine('babylon')); await p.waitForFunction(() => window.__odyssey.S.kind === 'babylon' && !window.__odyssey.S.busy, null, { timeout: 600000 });
+  await p.waitForTimeout(3000);
+  out.backToBabylon = await p.evaluate(() => ({ kind: window.__odyssey.S.adapter.kind, t: +window.__odyssey.S.adapter.time().toFixed(1), look: !document.querySelector('#bLook').hidden, canvases: document.querySelectorAll('#stage canvas.bjs').length, meshes: window.__odysseyLook.body.scene.meshes.length }));
+  out.errors = errs.filter(e => !/WebGPU uncaptured|Instance dropped|popErrorScope/.test(e));
+  console.log(JSON.stringify(out, null, 1)); await b.close();
+})();
