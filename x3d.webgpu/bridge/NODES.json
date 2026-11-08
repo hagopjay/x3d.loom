@@ -2,7 +2,7 @@
  "meta": {
   "uom": "X3dUnifiedObjectModel-4.0.xml (x3d_mcp src/validation/schemas)",
   "total": 260,
-  "census_commit": "635db52",
+  "census_commit": "cd9b05d",
   "census_parts": "brain/reader, gobbler/reader-ext, demiurge/reader-ext-dm, dynasty/reader-ext-dl, manifold/manifold-reader-ext, drift/drift-ext",
   "reader_types_not_in_4_0": [
    "BlendMode",
@@ -513,10 +513,10 @@
    "inherits": "X3DChaserNode",
    "container": "children",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 4,
+   "receipt": "receipts/ColorChaser.json",
+   "note": "hue path between start and destination not pinned against X_ITE (end state only)",
    "rank": 19
   },
   "ColorDamper": {
@@ -526,10 +526,10 @@
    "inherits": "X3DDamperNode",
    "container": "children",
    "nfields": 10,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 4,
+   "receipt": "receipts/ColorDamper.json",
+   "note": "X_ITE 16.6.0 keeps isActive true after a hue-seam path (observed 7.3 s); ours stops. Intermediate colours not pinned",
    "rank": 20
   },
   "ColorInterpolator": {
@@ -2034,10 +2034,10 @@
    "inherits": "X3DChaserNode",
    "container": "children",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 4,
+   "receipt": "receipts/OrientationChaser.json",
+   "note": "end state and bounds only (virtual time here, real time in X_ITE); curves not compared numerically",
    "rank": 17
   },
   "OrientationDamper": {
@@ -2047,10 +2047,10 @@
    "inherits": "X3DDamperNode",
    "container": "children",
    "nfields": 10,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 4,
+   "receipt": "receipts/OrientationDamper.json",
+   "note": "end state and bounds only (virtual time here, real time in X_ITE); curves not compared numerically",
    "rank": 18
   },
   "OrientationInterpolator": {
@@ -2310,7 +2310,7 @@
    "status": "bridged",
    "batch": 3,
    "receipt": "receipts/PositionChaser.json",
-   "note": "",
+   "note": "end state and bounds only (virtual time here, real time in X_ITE); curves not compared numerically",
    "rank": 15
   },
   "PositionChaser2D": {
@@ -2333,10 +2333,10 @@
    "inherits": "X3DDamperNode",
    "container": "children",
    "nfields": 10,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 4,
+   "receipt": "receipts/PositionDamper.json",
+   "note": "end state and bounds only (virtual time here, real time in X_ITE); curves not compared numerically",
    "rank": 16
   },
   "PositionDamper2D": {
@@ -2518,7 +2518,7 @@
    "status": "bridged",
    "batch": 3,
    "receipt": "receipts/ScalarChaser.json",
-   "note": "",
+   "note": "end state and bounds only (virtual time here, real time in X_ITE); curves not compared numerically",
    "rank": 13
   },
   "ScalarDamper": {
@@ -2531,7 +2531,7 @@
    "status": "bridged",
    "batch": 3,
    "receipt": "receipts/ScalarDamper.json",
-   "note": "",
+   "note": "end state and bounds only (virtual time here, real time in X_ITE); curves not compared numerically",
    "rank": 14
   },
   "ScalarInterpolator": {

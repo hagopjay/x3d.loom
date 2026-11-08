@@ -1,0 +1,23 @@
+{
+ "node": "ColorDamper",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/ColorDamper.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 7/7",
+  "xite": "FAIL step 6: N.isActive fired 0 times ([]), expected 1",
+  "oursOk": true,
+  "xiteOk": false,
+  "msg": "X_ITE differs (X_ITE 16.6.0 ColorDamper never goes inactive when the hue path crosses the 0/1 seam (blue to red): isActive stayed true 7.3 s after the value was within 3e-14 of the destination, because its stop test subtracts unwrapped hues. Ours measures the hue difference on the circle and stops.)"
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 0dfe446168ec",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)"
+ },
+ "driver_commit": "cd9b05d"
+}

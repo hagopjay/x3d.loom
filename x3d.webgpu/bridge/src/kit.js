@@ -167,7 +167,7 @@ BR.keySearch = (key, f) => {
     return s;
   };
   BR.squadAt = (s, i0, i1, t, kv) => qslerp(qslerp(kv[i0], kv[i1], t), qslerp(s[i0], s[i1], t), 2 * t * (1 - t));
-  BR.q = { fromRot: (r) => quat.fromAxisAngle(r, r[3]), toRot: (q) => quat.toAxisAngle(q), slerp: qslerp };
+  BR.q = { fromRot: (r) => quat.fromAxisAngle(r, r[3]), toRot: (q) => quat.toAxisAngle(q), slerp: qslerp, mul: qmul, inv: qinv };
 }
 
 /* ---- followers (Followers component) ------------------------------------------------------------------------------------------------------
@@ -175,16 +175,27 @@ BR.keySearch = (key, f) => {
    Damper: `order` cascaded exponential filters with time constant `tau`. Both are driven by the timestamp (tick), not by a frame count, so a slow frame does not slow them. */
 BR.T1 = { toA: (v) => [v], fromA: (a) => a[0] };
 BR.TN = { toA: (v) => Array.from(v), fromA: (a) => a.slice() };
+// rotations as quaternions: slerp the short way, distance = the angle between them, a chaser step turns the output by the stage's delta (OrientationChaser / OrientationDamper)
+BR.TR = { toA: (r) => BR.q.fromRot(r), fromA: (q) => BR.q.toRot(q), lerp: (a, b, w) => BR.q.slerp(a, b, w), dist: (a, b) => 2 * Math.acos(Math.min(1, Math.abs(a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3]))),
+  step: (o, v1, v2, t) => BR.q.slerp(o, BR.q.mul(o, BR.q.mul(BR.q.inv(v2), v1)), t) };
+// colours follow in HSV (ColorChaser / ColorDamper), output converted back to RGB
+{
+  // HSV lerp the short way round the hue circle (the way ColorInterpolator does), and a distance that does the same, so a path across the hue seam still ends
+  const hl = (A, B, w) => { A = A.slice(); B = B.slice(); if (A[1] === 0) A[0] = B[0]; if (B[1] === 0) B[0] = A[0]; let dh = B[0] - A[0]; if (dh > 0.5) dh -= 1; if (dh < -0.5) dh += 1; let h = A[0] + dh * w; h -= Math.floor(h); return [h, A[1] + (B[1] - A[1]) * w, A[2] + (B[2] - A[2]) * w]; };
+  BR.TC = { toA: (c) => rgb2hsv(c), fromA: (h) => hsv2rgb(h), lerp: hl,
+    dist: (a, b) => { let dh = Math.abs(a[0] - b[0]); dh = Math.min(dh, 1 - dh); return Math.hypot(dh, a[1] - b[1], a[2] - b[2]); },
+    step: (o, v1, v2, t) => hl(o, o.map((x, c) => x + v1[c] - v2[c]), t) };
+}
 {
   const lerp = (a, b, w) => a.map((x, i) => x + (b[i] - x) * w), dist = (a, b) => Math.hypot(...a.map((x, i) => x - b[i])), cp = (a) => a.slice();
   const setActive = (n, on) => { const st = n._fl; if (st.active === on) return; st.active = on; n.f.isActive = on; events.emit(n, 'isActive', on); };
   const out = (T, n, a) => { n.f.value_changed = T.fromA(a); events.emit(n, 'value_changed', n.f.value_changed); };
-  BR.chaserSpec = (T) => ({
+  BR.chaserSpec = (T) => { const L = T.lerp || lerp, D = T.dist || dist, STEP = T.step || ((o, v1, v2, t) => o.map((x, c) => x + (v1[c] - v2[c]) * t)); return {
     init(n) {
       const f = n.f, iv = T.toA(f.initialValue), id = T.toA(f.initialDestination);
       const st = (n._fl = { buf: [cp(id)], prev: cp(iv), dest: cp(id), endTime: null, active: false });
       for (let i = 1; i < 60; i++) st.buf.push(cp(iv));
-      if (dist(id, iv) < 1e-8) f.value_changed = T.fromA(id); else { st.active = true; f.isActive = true; }
+      if (D(id, iv) < 1e-8) f.value_changed = T.fromA(id); else { st.active = true; f.isActive = true; }
     },
     receive(n, field, v) {
       const st = n._fl; if (!st) return false;
@@ -203,22 +214,22 @@ BR.TN = { toA: (v) => Array.from(v), fromA: (a) => a.slice() };
         if (s < NB) {
           st.prev = cp(st.buf[NB - s]);
           for (let i = NB - 1; i >= s; --i) st.buf[i] = cp(st.buf[i - s]);
-          for (let i = 0; i < s; ++i) st.buf[i] = lerp(st.dest, st.buf[s], i / s);
+          for (let i = 0; i < s; ++i) st.buf[i] = L(st.dest, st.buf[s], i / s);
         } else { st.prev = cp(s === NB ? st.buf[0] : st.dest); for (let i = 0; i < NB; ++i) st.buf[i] = cp(st.dest); }
         st.endTime += s * stepTime;
       }
-      let o = lerp(st.prev, st.buf[NB - 1], resp((NB - 1 + fr) * stepTime));
-      for (let i = NB - 2; i >= 0; --i) { const r = resp((i + fr) * stepTime); o = o.map((x, c) => x + (st.buf[i][c] - st.buf[i + 1][c]) * r); }
+      let o = L(st.prev, st.buf[NB - 1], resp((NB - 1 + fr) * stepTime));
+      for (let i = NB - 2; i >= 0; --i) o = STEP(o, st.buf[i], st.buf[i + 1], resp((i + fr) * stepTime));
       out(T, n, o);
-      if (dist(o, st.dest) < 1e-8) setActive(n, false);
+      if (D(o, st.dest) < 1e-8) setActive(n, false);
     },
-  });
-  BR.damperSpec = (T) => ({
+  }; };
+  BR.damperSpec = (T) => { const L = T.lerp || lerp, D = T.dist || dist; return {
     init(n) {
       const f = n.f, iv = T.toA(f.initialValue), id = T.toA(f.initialDestination), order = clamp(f.order, 0, 5);
       const st = (n._fl = { buf: [cp(id)], active: false, last: null });
       for (let i = 1; i <= order; i++) st.buf.push(cp(iv));
-      if (dist(id, iv) < (f.tolerance < 0 ? 1e-4 : f.tolerance)) f.value_changed = T.fromA(id); else { st.active = true; f.isActive = true; }
+      if (D(id, iv) < (f.tolerance < 0 ? 1e-4 : f.tolerance)) f.value_changed = T.fromA(id); else { st.active = true; f.isActive = true; }
     },
     receive(n, field, v) {
       const st = n._fl; if (!st) return false;
@@ -233,14 +244,14 @@ BR.TN = { toA: (v) => Array.from(v), fromA: (a) => a.slice() };
       let order = want - 1;
       if (f.tau) {
         const dt = st.last == null ? 1 / 60 : Math.max(0, now - st.last); st.last = now; const alpha = Math.exp(-dt / f.tau);
-        for (let i = 0; i < order; i++) st.buf[i + 1] = lerp(st.buf[i], st.buf[i + 1], alpha);
+        for (let i = 0; i < order; i++) st.buf[i + 1] = L(st.buf[i], st.buf[i + 1], alpha);
         out(T, n, st.buf[order]);
-        if (dist(st.buf[order], st.buf[0]) >= tol) return;
+        if (D(st.buf[order], st.buf[0]) >= tol) return;
       } else { out(T, n, st.buf[0]); order = 0; }
       for (let i = 1; i < st.buf.length; i++) st.buf[i] = cp(st.buf[order]);
       setActive(n, false);
     },
-  });
+  }; };
 }
 
 /* every node can carry a metadata child (19775-1 7.2.2 X3DNode.metadata): add the field to the older tables that lack it */

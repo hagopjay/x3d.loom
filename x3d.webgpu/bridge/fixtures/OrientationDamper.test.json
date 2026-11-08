@@ -1,0 +1,56 @@
+{
+ "node": "OrientationDamper",
+ "mode": "events",
+ "steps": [
+  {
+   "set": [
+    "N",
+    "set_destination",
+    [
+     0,
+     1,
+     0,
+     1.5707963
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "reset": true
+  },
+  {
+   "settle": 3
+  },
+  {
+   "event": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "value_changed",
+    [
+     0,
+     1,
+     0,
+     1.5707963
+    ],
+    0.002
+   ]
+  }
+ ],
+ "note": "bounds and end state only: time is virtual in ours and real in X_ITE"
+}

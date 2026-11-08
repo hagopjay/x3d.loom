@@ -8,6 +8,6 @@ Regression gate (all bridged event nodes in one ROUTE chain, ours + X_ITE): PASS
 |---|---|---|---|---|---|---|
 | MetadataBoolean | Core | ok | pass 4/4 | pass 4/4 | PASS |  |
 | MetadataFloat | Core | ok | pass 3/3 | pass 3/3 | PASS |  |
-| ScalarChaser | Followers | ok | pass 17/17 | pass 17/17 | PASS |  |
-| ScalarDamper | Followers | ok | pass 11/11 | pass 11/11 | PASS |  |
-| PositionChaser | Followers | ok | pass 7/7 | pass 7/7 | PASS |  |
+| ScalarChaser | Followers | ok | pass 17/17 | pass 17/17 | PASS | end state and bounds only (virtual time here, real time in X_ITE); curves not compared numerically |
+| ScalarDamper | Followers | ok | pass 11/11 | pass 11/11 | PASS | end state and bounds only (virtual time here, real time in X_ITE); curves not compared numerically |
+| PositionChaser | Followers | ok | pass 7/7 | pass 7/7 | PASS | end state and bounds only (virtual time here, real time in X_ITE); curves not compared numerically |
