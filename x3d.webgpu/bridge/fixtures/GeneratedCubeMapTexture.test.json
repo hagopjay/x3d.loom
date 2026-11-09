@@ -1,0 +1,214 @@
+{
+ "node": "GeneratedCubeMapTexture",
+ "mode": "scene",
+ "note": "A ball (radius 3 at the origin) with a GeneratedCubeMapTexture. Three big boxes sit off screen: red on the left, green on the right, blue above (the ball sees them in its sides and top; nothing is behind the camera). update NONE: nothing is drawn, the ball is black; NEXT_FRAME_ONLY: one picture is taken on the next frame and update goes back to NONE (an event, in both engines), the ball then shows the boxes; ALWAYS: a picture every frame.",
+ "gaps": [
+  "the faces of the cube are not turned like X_ITE's (flat colours cannot show it)",
+  "the picture is taken from the origin of the ball in world space, not in the camera space of X_ITE's cube",
+  "the probe renders meshes as they are: it does not draw the Background spheres of other layers"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "update",
+    "NONE"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "size",
+    128
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    94,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    226,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    54,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "update",
+    "NEXT_FRAME_ONLY"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "N",
+    "update",
+    "NONE"
+   ]
+  },
+  {
+   "px": [
+    94,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    226,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    54,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "update",
+    "ALWAYS"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "update",
+    "ALWAYS"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "px": [
+    94,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    226,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    54,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  }
+ ]
+}

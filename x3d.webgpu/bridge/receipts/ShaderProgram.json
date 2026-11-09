@@ -1,0 +1,30 @@
+{
+ "node": "ShaderProgram",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/ShaderProgram.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 19/19",
+  "xite": "pass 19/19",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "no shader language runs: the program is a holder",
+   "the 4.0 UOM lists a sourceCode field that X_ITE 16.6.0 does not have and the XSD cannot write; it is not offered"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha d4e15ecfee7a",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "9df2df5"
+}

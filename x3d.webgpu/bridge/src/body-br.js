@@ -311,3 +311,44 @@ Body.prototype.viewpointList = function () { return this.world ? R.bridge.viewpo
   const _cw = Body.prototype.clearWorld;
   Body.prototype.clearWorld = function () { if (this._layers) { for (const it of this._layers.items) if (it) it.cam.dispose(); this._layers = null; this.scene.activeCameras = []; } return _cw.call(this); };
 }
+
+/* Textures that are not a plain picture. PixelTexture (2D) and PixelTexture3D / ComposedTexture3D (their first slice, since the geometry has 2D texture coordinates only) are drawn as pictures; an
+   ImageCubeMapTexture or GeneratedCubeMapTexture on an Appearance makes the Shape an environment mirror: the cube sampled with the reflection of the view (Babylon reflectionTexture in cube mode). */
+{
+  const CUBE = { ImageCubeMapTexture: 1, GeneratedCubeMapTexture: 1 };
+  const _t = Body.prototype.tex;
+  Body.prototype.tex = function (node) {
+    if (node) {
+      if (CUBE[node.type]) return null;                 // never a flat picture
+      if (node.type === 'PixelTexture' || node.type === 'PixelTexture3D') { let t = this.texCache.get(node.id); if (!t) { t = BR.tex3.make(this, node); this.texCache.set(node.id, t); } return t; }
+      if (node.type === 'ComposedTexture3D') { const first = (node.f.texture || [])[0]; if (!first) return null; const t = this.tex(first); if (t && t.updateSamplingMode) t.updateSamplingMode(BABYLON.Texture.NEAREST_SAMPLINGMODE); return t; }   // a volume is read without smoothing, as X_ITE does
+
+    }
+    return _t.call(this, node);
+  };
+  const _mf = Body.prototype.materialsFor;
+  Body.prototype.materialsFor = function (shape, g, app) {
+    const t = app && app.f.texture;
+    if (t && CUBE[t.type] && !(app.f.material && app.f.material.type === 'TwoSidedMaterial') && g.type !== 'Text') {
+      const mat = app.f.material && app.f.material.type === 'Material' ? app.f.material : null;
+      return [{ kind: 'cube', mat, tex: t, deps: [t, mat].filter(Boolean) }];
+    }
+    return _mf.call(this, shape, g, app);
+  };
+  const _mm = Body.prototype.makeMaterial;
+  Body.prototype.makeMaterial = function (shape, g, spec, mesh) {
+    if (spec.kind !== 'cube') return _mm.call(this, shape, g, spec, mesh);
+    const m = new BABYLON.StandardMaterial('cube-' + shape.id, this.scene);
+    m.specularColor.set(0, 0, 0); m.backFaceCulling = false;
+    if (spec.mat) this.refreshPhong(m, spec.mat); else { m.disableLighting = true; m.diffuseColor.set(0, 0, 0); m.emissiveColor.set(0, 0, 0); }
+    BR.cube.apply(this, m, spec.tex, mesh);
+    if (!this._gcmHook) { this._gcmHook = true; this.scene.onBeforeRenderObservable.add(() => BR.cube.generatedFrame(this)); }
+    return m;
+  };
+  const _cw2 = Body.prototype.clearWorld;
+  Body.prototype.clearWorld = function () {
+    if (this._gcm) { for (const e of this._gcm) { try { e.probe.dispose(); } catch (x) { /* already gone */ } } this._gcm.clear(); }
+    for (const [k, e] of this.texCache) if (typeof k === 'string' && k.startsWith('cube:') && e.tex && !e.probe) { try { e.tex.dispose(); } catch (x) { /* already gone */ } }
+    return _cw2.call(this);
+  };
+}

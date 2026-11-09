@@ -591,10 +591,10 @@
    "inherits": "X3DTexture3DNode",
    "container": "texture",
    "nfields": 7,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 20,
+   "receipt": "receipts/ComposedTexture3D.json",
+   "note": "the volume is not sampled in 3D, only the first slice is drawn (see PixelTexture3D); XSD finding: x3d-4.0.xsd writes the texture field of a ComposedTexture3D as an xs:sequence of ImageTexture, PixelTexture, MovieTexture, ProtoInstance repeated, not an xs:choice, so the slices must come in fours in that order and two ImageTextures do not validate; the fixture is checked against the XSD with that sequence made a choice (the receipt says so); the image field of a PixelTexture3D takes decimal numbers only in the XSD (no 0x hex)",
    "rank": 171
   },
   "ComposedVolumeStyle": {
@@ -1059,10 +1059,10 @@
    "inherits": "X3DEnvironmentTextureNode",
    "container": "texture",
    "nfields": 5,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 20,
+   "receipt": "receipts/GeneratedCubeMapTexture.json",
+   "note": "the faces of the cube are not turned like X_ITE's (flat colours cannot show it); the picture is taken from the origin of the ball in world space, not in the camera space of X_ITE's cube; the probe renders meshes as they are: it does not draw the Background spheres of other layers",
    "rank": 170
   },
   "GeoCoordinate": {
@@ -1306,10 +1306,10 @@
    "inherits": "X3DEnvironmentTextureNode",
    "container": "texture",
    "nfields": 7,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 20,
+   "receipt": "receipts/ImageCubeMapTexture.json",
+   "note": "the Material is added to the reflection, not multiplied with it; the reflection is of the world (it does not turn with the camera as CAMERASPACEREFLECTIONVECTOR does in X_ITE); flat face colours cannot show if the face images are turned like X_ITE's; a 2:1 panorama is converted but its orientation is not compared; KTX2 and DDS are not read",
    "rank": 169
   },
   "ImageTexture": {
@@ -2177,10 +2177,10 @@
    "inherits": "X3DTexture3DNode",
    "container": "texture",
    "nfields": 7,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 20,
+   "receipt": "receipts/PixelTexture3D.json",
+   "note": "the volume is not sampled in 3D: the Texturing3D coordinate nodes (TextureCoordinate3D, TextureCoordinate4D, TextureTransform3D, TextureTransformMatrix3D) come in later batches and only the first slice is drawn; repeatR, repeatS and repeatT are read for S and T only",
    "rank": 172
   },
   "PlaneSensor": {
@@ -2632,10 +2632,10 @@
    "inherits": "X3DNode",
    "container": "programs",
    "nfields": 9,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 20,
+   "receipt": "receipts/ShaderProgram.json",
+   "note": "no shader language runs: the program is a holder; the 4.0 UOM lists a sourceCode field that X_ITE 16.6.0 does not have and the XSD cannot write; it is not offered",
    "rank": 167
   },
   "Shape": {
