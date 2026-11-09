@@ -211,15 +211,23 @@ def cmd_scaffold(a):
 
 
 # --- check ------------------------------------------------------------------------------------------------------------------------------
-def xsd_patched(xsd, allow):
-    """The 4.0 XSD from x3d_mcp lists LayoutGroup only inside the pick-target content model: no child content model has it, so no scene can hold a LayoutGroup and still validate. A test
-    spec may name such a node in "xsdAllow"; the fixture is then checked against a copy of the XSD with one line added next to ScreenGroup (the child model of the Full profile). The receipt says so."""
+def xsd_patched(xsd, allow, choice=()):
+    """The 4.0 XSD from x3d_mcp has two defects that no scene can work around:
+    - LayoutGroup is listed only inside the pick-target content model, in no child content model, so no scene can hold a LayoutGroup and still validate;
+    - the children of ComposedTexture3D are written as an xs:sequence of ImageTexture, PixelTexture, MovieTexture, ProtoInstance (repeated), not an xs:choice, so the children must come in fours.
+    A test spec may name them in "xsdAllow" (a node added next to ScreenGroup, the child model of the Full profile) and "xsdChoice" (the element's sequence becomes a choice). The fixture is then
+    checked against a copy of the XSD with that one change; the receipt says so."""
     s = open(xsd).read(); anchor = '      <xs:element ref="ScreenGroup"/>\n      <xs:element ref="LinePickSensor"/>'
-    if anchor not in s: return None
+    if allow and anchor not in s: return None
     for n in allow: s = s.replace(anchor, anchor.replace('      <xs:element ref="LinePickSensor"/>', '      <xs:element ref="%s"/>\n      <xs:element ref="LinePickSensor"/>' % n), 1)
-    out = os.path.join(os.path.dirname(xsd), '.x3d-4.0.patched-' + '-'.join(allow) + '.xsd')
+    for n in choice:
+        i = s.find('<xs:element name="%s">' % n); j = s.find('<xs:sequence minOccurs="0" maxOccurs="unbounded">', i); k = s.find('</xs:sequence>', j)
+        if i < 0 or j < 0 or k < 0: return None
+        s = s[:j] + '<xs:choice minOccurs="0" maxOccurs="unbounded">' + s[j + len('<xs:sequence minOccurs="0" maxOccurs="unbounded">'):k] + '</xs:choice>' + s[k + len('</xs:sequence>'):]
+    tag = '-'.join(list(allow) + ['choice-' + c for c in choice])
+    out = os.path.join(os.path.dirname(xsd), '.x3d-4.0.patched-' + tag + '.xsd')
     try: open(out, 'w').write(s)
-    except OSError: out = os.path.join('/tmp', 'x3d-4.0.patched-' + '-'.join(allow) + '.xsd'); open(out, 'w').write(s)
+    except OSError: out = os.path.join('/tmp', 'x3d-4.0.patched-' + tag + '.xsd'); open(out, 'w').write(s)
     return out
 
 
@@ -227,11 +235,12 @@ def xsd_check(name, xsd):
     fx = os.path.join(BR, 'fixtures', name + '.x3d')
     if not os.path.exists(fx): return {'ok': False, 'msg': 'no fixture'}
     note = ''
-    try: allow = json.load(open(os.path.join(BR, 'fixtures', name + '.test.json'))).get('xsdAllow') or []
-    except Exception: allow = []
-    if allow:
-        px = xsd_patched(xsd, allow)
-        if px: xsd = px; note = ' + ' + ', '.join(allow) + ' added to the Full child content model (the 4.0 XSD has no child model with it)'
+    try: spec = json.load(open(os.path.join(BR, 'fixtures', name + '.test.json')))
+    except Exception: spec = {}
+    allow, choice = spec.get('xsdAllow') or [], spec.get('xsdChoice') or []
+    if allow or choice:
+        px = xsd_patched(xsd, allow, choice)
+        if px: xsd = px; note = ' + XSD patched: ' + '; '.join([n + ' added to the Full child content model' for n in allow] + [c + ' children as a choice, not a sequence' for c in choice])
     p = subprocess.run(['xmllint', '--noout', '--schema', xsd, fx], capture_output=True, text=True)
     return {'ok': p.returncode == 0, 'msg': (p.stderr.strip().splitlines() or [''])[-1][:300], 'validator': 'xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp' + note}
 
