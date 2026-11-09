@@ -68,6 +68,7 @@ async function runSpec(eng, spec, xml) {
       else if (s.nearv) { const [d, f, v, tol] = s.nearv; const fl = (x) => (Array.isArray(x) ? x.flatMap(fl) : [x]); const a = fl(plain(node(d)[f])), vv = fl(v); if (!(a.length === vv.length && vv.every((x, i) => Math.abs(a[i] - x) <= tol))) fail(d + '.' + f + ' is ' + show(a) + ', expected ' + show(v) + ' within ' + tol); }
       else if (s.js) { const [code, v] = s.js; const got = await new Function('return (' + code + ')')(); if (v === '$any') out.recorded.push(got); if (!close(got, v)) fail('js ' + show(got) + ', expected ' + show(v)); }
       else if (s.px) { const [x, y, v, tol] = s.px; const im = new Image(); im.src = eng.name === 'ours' ? await window.__bodyShot() : 'data:image/png;base64,' + await window.__pxraw(x, y); await im.decode(); const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const g = c.getContext('2d'); g.drawImage(im, 0, 0); const a = Array.from(g.getImageData(eng.name === 'ours' ? x : 0, eng.name === 'ours' ? y : 0, 1, 1).data).slice(0, 3); if (v === '$any') out.recorded.push(a); else if (!(a.every((q, i) => Math.abs(q - v[i]) <= (tol ?? 24)))) fail('px ' + x + ',' + y + ' is ' + show(a) + ', expected ' + show(v) + ' within ' + (tol ?? 24)); }
+      else if (s.shot) out.recorded.push(eng.name === 'ours' ? await window.__bodyShot() : 'data:image/png;base64,' + await window.__shotraw());   // a whole 320 x 240 picture, for demo pages
       else if (s.setnode) { const [d, f, d2] = s.setnode; await eng.apply(() => { node(d)[f] = node(d2); }); }
       else if (s.wait) await new Promise((r) => setTimeout(r, s.wait * 1000));
       else if (s.key) { await window.__key(...s.key); await eng.settle(0.1); }
@@ -167,7 +168,8 @@ function serve(files) {
   let pos = null, pxs = null;
   const mouseFor = async (pg) => { await pg.exposeFunction('__mouse', async (k, x, y) => { if (k === 'move') await pg.mouse.move(x, y, { steps: 6 }); else if (k === 'down') { await pg.mouse.move(x, y); await pg.mouse.down(); } else if (k === 'up') { await pg.mouse.move(x, y, { steps: 6 }); await pg.mouse.up(); } }); };
   // px: the composited colour of one canvas pixel, from a 1 x 1 page screenshot decoded in the page; the same route for both engines
-  const pxFor = async (pg) => pg.exposeFunction('__pxraw', async (x, y) => (await pg.screenshot({ clip: { x, y, width: 1, height: 1 }, type: 'png' })).toString('base64'));
+  const pxFor = async (pg) => { await pg.exposeFunction('__shotraw', async () => (await pg.screenshot({ clip: { x: 0, y: 0, width: 320, height: 240 }, type: 'png' })).toString('base64')); return pxFor0(pg); };
+  const pxFor0 = async (pg) => pg.exposeFunction('__pxraw', async (x, y) => (await pg.screenshot({ clip: { x, y, width: 1, height: 1 }, type: 'png' })).toString('base64'));
   const keyFor = async (pg) => pg.exposeFunction('__key', async (k, a) => {
     if (k === 'focus') { await pg.evaluate(() => document.getElementById('c').focus()); if (!(await pg.evaluate(() => document.activeElement && document.activeElement.id === 'c'))) await pg.mouse.click(4, 4); }
     else if (k === 'down') await pg.keyboard.down(a); else if (k === 'up') await pg.keyboard.up(a); else if (k === 'press') await pg.keyboard.press(a); else if (k === 'type') await pg.keyboard.type(a);
