@@ -3,10 +3,35 @@
 
 const B_UNIFORM_SCALE_NOTE = 'shaders read x3d_NormalMatrix as the upper 3x3 of the model-view matrix: exact for uniform scale (every Transform in these scenes is).';
 
+/* One logical X3D node, many rendered occurrences. A node that is DEF'd once and USEd elsewhere is the same
+   object in the reader, but each place it appears needs its own Babylon TransformNode and meshes (a Babylon
+   node has one parent). set() adds an occurrence; get() keeps returning the latest one, as callers have always
+   assumed; all() lists every occurrence; values() walks every occurrence, so loops that rebuild "every Shape
+   using this geometry" reach shared copies too; delete(id, r) removes one occurrence, delete(id) all of them. */
+class OccurrenceMap extends Map {
+  constructor() { super(); this.occ = new Map(); }
+  set(id, r) { let s = this.occ.get(id); if (!s) this.occ.set(id, (s = new Set())); s.add(r); return super.set(id, r); }
+  all(id) { const s = this.occ.get(id); return s ? Array.from(s) : []; }
+  delete(id, r) {
+    const s = this.occ.get(id);
+    if (r === undefined || !s) { this.occ.delete(id); return super.delete(id); }
+    s.delete(r);
+    if (!s.size) { this.occ.delete(id); return super.delete(id); }
+    if (super.get(id) === r) super.set(id, Array.from(s).pop());
+    return true;
+  }
+  clear() { this.occ.clear(); super.clear(); }
+  // snapshots: callers rebuild shapes while they loop, and a rebuild adds a record
+  values() { const out = []; for (const s of this.occ.values()) out.push(...s); return out[Symbol.iterator](); }
+  [Symbol.iterator]() { const out = []; for (const [id, s] of this.occ) for (const r of s) out.push([id, r]); return out[Symbol.iterator](); }
+  entries() { return this[Symbol.iterator](); }
+  forEach(fn, self) { for (const [id, r] of this) fn.call(self, r, id, this); }
+}
+
 class Body {
   constructor(canvas, opts) {
     this.canvas = canvas; this.opts = opts || {};
-    this.rec = new Map();            // raw node id -> { tn, kids, meshes, ... }
+    this.rec = new OccurrenceMap();  // raw node id -> { tn, kids, meshes, ... }, one record per rendered occurrence
     this.meshesOf = new Map();       // raw node id (material, shader, texture, geometry...) -> [mesh]
     this.texCache = new Map(); this.geoCache = new Map();
     this.sensors = new Map();        // raw TouchSensor id -> { node, group }
@@ -103,24 +128,25 @@ class Body {
     const f = n.f, T = f.translation, S = f.scale, c = f.center, sr = f.scaleOrientation, rot = f.rotation;
     const simple = !c[0] && !c[1] && !c[2] && !sr[3];
     if (simple) {
+      if (tn._x3dMatrix) { tn.setPreTransformMatrix(BABYLON.Matrix.Identity()); tn._x3dMatrix = false; }
       tn.position.set(T[0], T[1], T[2]);
       tn.rotationQuaternion = new BABYLON.Quaternion(...R.quat.fromAxisAngle(rot, rot[3]));
       tn.scaling.set(S[0], S[1], S[2]);
       return;
     }
-    // general case: T * C * R * SR * S * -SR * -C as one matrix; a non-uniform scale under SR becomes a shear, which a TransformNode keeps as a matrix
+    // general case: T * C * R * SR * S * -SR * -C as one matrix. A non-uniform scale under SR is a shear, which
+    // position/rotation/scaling cannot hold, so the whole matrix goes in as the node's pre-transform and TRS stay identity.
     const M = BABYLON.Matrix;
     const tr = (v) => M.Translation(v[0], v[1], v[2]);
     const rq = (q) => { const m = new M(); new BABYLON.Quaternion(...R.quat.fromAxisAngle(q, q[3])).toRotationMatrix(m); return m; };
     // BABYLON multiplies row-vector style (v * M), so compose in the opposite order
     const parts = [tr([-c[0], -c[1], -c[2]]), rq([sr[0], sr[1], sr[2], -sr[3]]), M.Scaling(S[0], S[1], S[2]), rq(sr), rq(rot), tr(c), tr(T)];
     let out = M.Identity(); for (const p of parts) out = out.multiply(p);
-    out.decompose(tn.scaling, tn.rotationQuaternion = new BABYLON.Quaternion(), tn.position);
-    this.note('Transform with center or scaleOrientation decomposed to TRS (shear dropped)');
+    tn.position.set(0, 0, 0); tn.scaling.set(1, 1, 1); tn.rotationQuaternion = BABYLON.Quaternion.Identity();
+    tn.setPreTransformMatrix(out); tn._x3dMatrix = true;
   }
   applySwitch(n) {
-    const r = this.rec.get(n.id); if (!r) return;
-    r.kids.forEach((k, i) => { const on = i === n.f.whichChoice; if (k && k.tn) k.tn.setEnabled(on); });
+    for (const r of this.rec.all(n.id)) r.kids.forEach((k, i) => { const on = i === n.f.whichChoice; if (k && k.tn) k.tn.setEnabled(on); });
   }
 
   /* ---------------------------------------------------------------- shapes */
@@ -459,7 +485,7 @@ class Body {
   changed(node, field) {
     const t = node.type;
     if (t === 'Switch' && field === 'whichChoice') this.applySwitch(node);
-    else if (t === 'Transform') { const r = this.rec.get(node.id); if (r && r.tn) this.applyTransform(node, r.tn); }
+    else if (t === 'Transform' && field !== 'children') { for (const r of this.rec.all(node.id)) if (r.tn) this.applyTransform(node, r.tn); }
     else if ((t === 'Group' || t === 'Switch' || t === 'Billboard' || t === 'Transform') && field === 'children') this.rebuildGroup(node);
     else if (t === 'Billboard' && field === 'axisOfRotation') { /* rare */ }
     else if (t === 'ComposedShader') { for (const m of this.meshesOf.get(node.id) || []) if (m.material && m.material.setFloat) this.refreshShader(m.material, node); }
@@ -488,16 +514,18 @@ class Body {
   rebuildShapeIn(r) {
     const shape = r.node, parent = r.tn.parent, enabled = r.tn.isEnabled(false);
     r.meshes.forEach((m) => m.dispose(false, true)); r.tn.dispose();
+    this.rec.delete(shape.id, r);   // the rebuilt record replaces this occurrence, not another USE copy
     const nr = this.buildShape(shape, parent, r.chain.slice(1));
     // keep the parent's record pointing at the new shape record
     for (const pr of this.rec.values()) if (pr.kids) { const i = pr.kids.indexOf(r); if (i >= 0) pr.kids[i] = nr; }
     if (nr.tn) nr.tn.setEnabled(enabled);
   }
   rebuildGroup(node) {
-    const r = this.rec.get(node.id); if (!r) return;
-    for (const k of r.kids) this.disposeRec(k);
-    r.kids = [];
-    for (const c of node.f.children) r.kids.push(this.build(c, r.tn, r.chain));
+    for (const r of this.rec.all(node.id)) {
+      for (const k of r.kids) this.disposeRec(k);
+      r.kids = [];
+      for (const c of node.f.children) r.kids.push(this.build(c, r.tn, r.chain));
+    }
     if (node.type === 'Switch') this.applySwitch(node);
   }
   disposeRec(k) {
@@ -505,14 +533,19 @@ class Body {
     if (k.kids) k.kids.forEach((x) => this.disposeRec(x));
     if (k.meshes) k.meshes.forEach((m) => m.dispose(false, true));
     if (k.tn && k.node && k.node.type !== 'Viewpoint') k.tn.dispose();
-    if (k.node) this.rec.delete(k.node.id);
+    if (k.node) this.rec.delete(k.node.id, k);   // this occurrence only: other USE copies of the node stay drawn
   }
-  /* page-created nodes (cameras, sensors) enter through MFNode.push: sensors and viewpoints are scene state, groups are drawn */
+  /* page-created nodes (cameras, sensors) enter through MFNode.push: sensors and viewpoints are scene state, groups are drawn.
+     A parent that is itself shared gets the child in every one of its occurrences. */
   adopt(node, parentNode) {
-    const pr = parentNode ? this.rec.get(parentNode.id) : null;
-    const parentTN = pr ? pr.tn : this.root, chain = pr ? pr.chain : [];
-    const cr = this.build(node, parentTN, chain);
-    if (pr && pr.kids && cr) pr.kids.push(cr);
-    return cr;
+    const parents = parentNode ? this.rec.all(parentNode.id) : [];
+    if (!parents.length) return this.build(node, this.root, []);
+    let first = null;
+    for (const pr of parents) {
+      const cr = this.build(node, pr.tn, pr.chain);
+      if (pr.kids && cr) pr.kids.push(cr);
+      first = first || cr;
+    }
+    return first;
   }
 }

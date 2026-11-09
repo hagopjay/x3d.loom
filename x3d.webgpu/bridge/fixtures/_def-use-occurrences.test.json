@@ -1,0 +1,16 @@
+{
+ "node": "_def-use-occurrences",
+ "mode": "scene",
+ "note": "A red unit box in a Transform DEF Shared, placed under parents at x = -2 and x = +2 (USE). Both occurrences draw at y = 0; after Shared.translation becomes 0 2 0 both must draw at y = 2 and neither may stay at y = 0. Viewpoint at z = 10, 45 degree field of view on 320 x 240: about 29 px per unit.",
+ "steps": [
+  { "settle": 1 },
+  { "px": [102, 120, [255, 0, 0], 60] },
+  { "px": [218, 120, [255, 0, 0], 60] },
+  { "set": ["Shared", "translation", [0, 2, 0], "SFVec3f"] },
+  { "settle": 1 },
+  { "px": [102, 62, [255, 0, 0], 60] },
+  { "px": [218, 62, [255, 0, 0], 60] },
+  { "px": [102, 120, [0, 0, 0], 40] },
+  { "px": [218, 120, [0, 0, 0], 40] }
+ ]
+}
