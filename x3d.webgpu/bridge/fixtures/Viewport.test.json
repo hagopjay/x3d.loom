@@ -1,0 +1,234 @@
+{
+ "node": "Viewport",
+ "mode": "scene",
+ "note": "A big blue box is seen by a Layer whose viewport is a Viewport. clipBoundary (left right bottom top, fractions of the canvas) decides which part of the canvas the layer is drawn into: left half, right half, lower half, all. The probes sit inside the box in both engines (the box is 8 units wide, so it fills the clip whatever the field of view does), and outside the clip, where nothing is drawn.",
+ "gaps": [
+  "a Viewport used as a grouping node of the world builds its children but does not clip them (Babylon has one viewport per camera; the world's camera is shared)",
+  "the layer's picture is squeezed into the clip rectangle, not cut out of the full picture: the same as X_ITE's viewport, which also changes the aspect"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "V",
+    "clipBoundary",
+    [
+     0,
+     0.5,
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "V",
+    "visible",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "V",
+    "children",
+    []
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    20,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    240,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    300,
+    20,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "V",
+    "clipBoundary",
+    [
+     0.5,
+     1,
+     0,
+     1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    240,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    300,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "V",
+    "clipBoundary",
+    [
+     0,
+     1,
+     0,
+     0.5
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    160,
+    180,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    40,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    20,
+    180,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "V",
+    "clipBoundary",
+    [
+     0,
+     1,
+     0,
+     1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "V",
+    "visible",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "V",
+    "visible",
+    false
+   ]
+  }
+ ]
+}

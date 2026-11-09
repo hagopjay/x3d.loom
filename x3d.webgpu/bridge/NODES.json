@@ -1501,10 +1501,10 @@
    "inherits": "X3DLayerNode",
    "container": "layers",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 17,
+   "receipt": "receipts/Layer.json",
+   "note": "pickable, objectType, pointerEvents and viewport are held: picking does not respect layers; addChildren and removeChildren rebuild the layer; this is checked in the SAI test of LayerSet only if the engine exposes them (X_ITE does), here only the fields are compared",
    "rank": 152
   },
   "LayerSet": {
@@ -1514,10 +1514,10 @@
    "inherits": "X3DNode",
    "container": "children",
    "nfields": 4,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 17,
+   "receipt": "receipts/LayerSet.json",
+   "note": "activeLayer (which layer the user navigates) and the navigation of a layer's own Viewpoint are held, not acted on: the user always navigates the world's camera; a layer's Viewpoint is read once and per frame, not bound or animated; the layer has no NavigationInfo, Background or headlight of its own; picking does not respect layers: a ray hits the meshes of every layer, and pickable / objectType / viewport are held; lights of the world light the meshes of every layer; a layer has no lights of its own; order without any visible layer draws the world (Babylon needs a camera)",
    "rank": 153
   },
   "Layout": {
@@ -1527,10 +1527,10 @@
    "inherits": "X3DLayoutNode",
    "container": "layout",
    "nfields": 7,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 18,
+   "receipt": "receipts/Layout.json",
+   "note": "a Layout inside a LayoutGroup that sits in the perspective world uses the near plane of the camera as the viewport size (like X_ITE); only the orthographic layer is probed here; the offset and size units of PIXEL count CSS pixels of the canvas; no device pixel ratio is read",
    "rank": 155
   },
   "LayoutGroup": {
@@ -1540,10 +1540,10 @@
    "inherits": "X3DNode",
    "container": "children",
    "nfields": 10,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 18,
+   "receipt": "receipts/LayoutGroup.json",
+   "note": "viewport of a LayoutGroup is held: the world camera is shared with the rest of the scene; a LayoutGroup in the perspective world uses the near plane of the camera as the viewport size, so its layout is microscopic there, as in X_ITE; only the orthographic layer is probed; XSD finding: x3d-4.0.xsd (x3d_mcp) lists LayoutGroup only in the pick-target content model, in no child content model, so NO scene can hold a LayoutGroup and still validate; the fixture is checked against the XSD plus one line (receipt names it)",
    "rank": 156
   },
   "LayoutLayer": {
@@ -1553,10 +1553,10 @@
    "inherits": "X3DLayerNode",
    "container": "layers",
    "nfields": 9,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 18,
+   "receipt": "receipts/LayoutLayer.json",
+   "note": "pickable, objectType and pointerEvents are held: picking does not respect layers; a LayoutLayer without a Layout shows its children as they are, a Layout is probed in the Layout fixture",
    "rank": 157
   },
   "LinePickSensor": {
@@ -1657,10 +1657,10 @@
    "inherits": "X3DVertexAttributeNode",
    "container": "attrib",
    "nfields": 3,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 19,
+   "receipt": "receipts/Matrix3VertexAttribute.json",
+   "note": "the matrices are attributes for a shader program; the bridge has none (WGSL ports only), so nothing is drawn from them",
    "rank": 162
   },
   "Matrix4VertexAttribute": {
@@ -1670,10 +1670,10 @@
    "inherits": "X3DVertexAttributeNode",
    "container": "attrib",
    "nfields": 3,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 19,
+   "receipt": "receipts/Matrix4VertexAttribute.json",
+   "note": "the matrices are attributes for a shader program; the bridge has none (WGSL ports only), so nothing is drawn from them",
    "rank": 163
   },
   "MetadataBoolean": {
@@ -2099,10 +2099,10 @@
    "inherits": "X3DShaderNode",
    "container": "shaders",
    "nfields": 12,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 19,
+   "receipt": "receipts/PackagedShader.json",
+   "note": "no shader language runs: the node is only a holder (the WebGPU body runs WGSL ports of known GLSL parts); author-defined <field> declarations are not read for this node (the stock reader reads them for ComposedShader only)",
    "rank": 164
   },
   "ParticleSystem": {
@@ -2398,10 +2398,10 @@
    "inherits": "X3DShaderNode",
    "container": "shaders",
    "nfields": 6,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 19,
+   "receipt": "receipts/ProgramShader.json",
+   "note": "no shader language runs: the node is only a holder; ShaderProgram parts of programs are checked with the ShaderProgram node",
    "rank": 165
   },
   "ProjectionVolumeStyle": {
@@ -2554,10 +2554,10 @@
    "inherits": "X3DFontStyleNode",
    "container": "fontStyle",
    "nfields": 10,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 18,
+   "receipt": "receipts/ScreenFontStyle.json",
+   "note": "the node is not drawn: the Text font path of the body reads FontStyle only, and a screen font size in pixels (pointSize) is not applied; a ScreenFontStyle changes the text size with the content scale of the screen in X_ITE; none of this is reproduced",
    "rank": 158
   },
   "ScreenGroup": {
@@ -2567,10 +2567,10 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 19,
+   "receipt": "receipts/ScreenGroup.json",
+   "note": "the pixel size comes from the depth of the group's origin only, as in X_ITE: the nearer face of a deep child looks a little larger; no snapping to whole pixels (X_ITE does not snap for ScreenGroup either); the device content scale is 1",
    "rank": 159
   },
   "Script": {
@@ -2840,10 +2840,10 @@
    "inherits": "X3DSoundDestinationNode",
    "container": "children",
    "nfields": 11,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 17,
+   "receipt": "receipts/StreamAudioDestination.json",
+   "note": "no network stream is made: streamIdentifier and mediaDeviceID are held",
    "rank": 146
   },
   "StreamAudioSource": {
@@ -2853,10 +2853,10 @@
    "inherits": "X3DSoundSourceNode",
    "container": "children",
    "nfields": 14,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 17,
+   "receipt": "receipts/StreamAudioSource.json",
+   "note": "no stream is read: streamIdentifier is held",
    "rank": 147
   },
   "StringSensor": {
@@ -3128,7 +3128,7 @@
    "nfields": 9,
    "status": "base",
    "batch": null,
-   "receipt": null,
+   "receipt": "receipts/TouchSensor.json",
    "note": "",
    "rank": 113
   },
@@ -3295,10 +3295,10 @@
    "inherits": "X3DViewportNode",
    "container": "viewport",
    "nfields": 9,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 18,
+   "receipt": "receipts/Viewport.json",
+   "note": "a Viewport used as a grouping node of the world builds its children but does not clip them (Babylon has one viewport per camera; the world's camera is shared); the layer's picture is squeezed into the clip rectangle, not cut out of the full picture: the same as X_ITE's viewport, which also changes the aspect",
    "rank": 154
   },
   "VisibilitySensor": {
@@ -3360,10 +3360,10 @@
    "inherits": "X3DSoundProcessingNode",
    "container": "children",
    "nfields": 18,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 17,
+   "receipt": "receipts/WaveShaper.json",
+   "note": "the curve is read back by length and by values, the shaping itself is Web Audio's",
    "rank": 148
   },
   "WindPhysicsModel": {

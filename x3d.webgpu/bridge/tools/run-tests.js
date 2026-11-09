@@ -103,7 +103,20 @@ window.xiteInfo = () => ({ name: X3D.getBrowser('#c').name, version: X3D.getBrow
 const PAGE_OURS_SCENE = `<!doctype html><meta charset=utf-8><body style="margin:0;background:#000"><canvas id=c width=320 height=240 style="width:320px;height:240px;display:block"></canvas><script src="/babylon.js"></script><script src="/bundle-body.js"></script><script>${RUNNER}
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 window.sceneReady = (async () => { const body = new Body(document.getElementById('c'), { onNote: (m) => (window.__notes = window.__notes || []).push(m) }); await body.init(); X3DSAI.setBody(body); window.__body = body; })();
-window.__bodyShot = async () => { const b = window.__body; return BABYLON.Tools.CreateScreenshotUsingRenderTargetAsync(b.engine, b.scene.activeCamera, { width: 320, height: 240 }); };
+window.__bodyShot = async () => {
+  const b = window.__body, sc = b.scene, cams = sc.activeCameras && sc.activeCameras.length > 1 ? sc.activeCameras.slice() : null;
+  const shot = (cam) => BABYLON.Tools.CreateScreenshotUsingRenderTargetAsync(b.engine, cam, { width: 320, height: 240 });
+  if (!cams) return shot(sc.activeCamera);
+  /* several layer cameras: Babylon draws them one over the other on the canvas; a render target holds one camera, so each is shot alone (later layers on a clear background) and the pictures are stacked in order */
+  const cv = document.createElement('canvas'); cv.width = 320; cv.height = 240; const g = cv.getContext('2d'), keep = sc.clearColor.clone(), keepA = sc.activeCameras;
+  try {
+    for (let i = 0; i < cams.length; i++) {
+      sc.clearColor.a = i ? 0 : keep.a; sc.activeCameras = [cams[i]];
+      const im = new Image(); im.src = await shot(cams[i]); await im.decode(); g.drawImage(im, 0, 0);
+    }
+  } finally { sc.clearColor.copyFrom(keep); sc.activeCameras = keepA; }
+  return cv.toDataURL('image/png');
+};
 window.runScene = async (spec, xml) => { await window.sceneReady; if (window.__R) __R.bridge.allowScripts = spec.scripts !== false; return runSpec({ name: 'ours',
   open: async (x) => { const sc = await X3DSAI.B.createX3DFromString(x); await X3DSAI.B.replaceWorld(sc); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); return sc; },
   apply: async (fn) => { fn(); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); },
@@ -111,7 +124,7 @@ window.runScene = async (spec, xml) => { await window.sceneReady; if (window.__R
 }, spec, xml); };
 </script>`;
 const PAGE_XITE_SCENE = `<!doctype html><meta charset=utf-8><link rel=stylesheet href="/x_ite/x_ite.css"><body style="margin:0"><x3d-canvas id=c style="width:320px;height:240px;display:block"></x3d-canvas><script src="/x_ite/x_ite.min.js"></script><script>${RUNNER}
-window.runScene = async (spec, xml) => { const b = X3D.getBrowser('#c');
+window.runScene = async (spec, xml) => { const b = X3D.getBrowser('#c'); await b.loadComponents?.(b.getProfile ? b.getProfile('Full') : undefined).catch(() => {});     // the external components (Layout needs Text's classes) are loaded up front, as in the event runner
   return runSpec({ name: 'xite',
     open: async (x) => { const sc = await b.createX3DFromString(x); await b.replaceWorld(sc); await b.nextFrame(); await b.nextFrame(); return sc; },
     apply: async (fn) => { fn(); await b.nextFrame(); await b.nextFrame(); },

@@ -1,0 +1,164 @@
+{
+ "node": "StreamAudioSource",
+ "mode": "scene",
+ "note": "X_ITE 16.6.0 marks this node as not supported; only the clock of every time dependent node runs there (start, pause, resume, stop). The bridge does the same and plays nothing.",
+ "gaps": [
+  "no stream is read: streamIdentifier is held"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "streamIdentifier",
+    []
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isPaused",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "gain",
+    0.4
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    0.4
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.4
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "pauseTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.4
+  },
+  {
+   "expect": [
+    "N",
+    "isPaused",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "resumeTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.4
+  },
+  {
+   "expect": [
+    "N",
+    "isPaused",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.4
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  }
+ ]
+}

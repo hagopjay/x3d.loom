@@ -280,7 +280,7 @@
     _apply.call(this);
     const c = this.cam, o = this.pose && this.pose.ortho, C = BABYLON.Camera;
     if (!o) { if (c.mode !== C.PERSPECTIVE_CAMERA) c.mode = C.PERSPECTIVE_CAMERA; return; }
-    const w = this.canvas.clientWidth || 1, h = this.canvas.clientHeight || 1, ratio = w / h, f = o.f, s = o.scale || 1;
+    const w = this.canvas.clientWidth || 1, h = this.canvas.clientHeight || 1, ratio = (w * c.viewport.width) / (h * c.viewport.height), f = o.f, s = o.scale || 1;
     const x0 = (f[0] ?? -1) * s, y0 = (f[1] ?? -1) * s, x1 = (f[2] ?? 1) * s, y1 = (f[3] ?? 1) * s, sx = x1 - x0, sy = y1 - y0;
     c.mode = C.ORTHOGRAPHIC_CAMERA;
     if (ratio > sx / sy) { const cx = (x0 + x1) / 2, hw = sy * ratio / 2; c.orthoLeft = cx - hw; c.orthoRight = cx + hw; c.orthoBottom = y0; c.orthoTop = y1; }
@@ -305,3 +305,9 @@
 
 /* the page's viewpoint list: body.viewpointList() -> [{ node, path, text }] for the loaded world, with the viewer where the camera is (ViewpointGroup proximity) */
 Body.prototype.viewpointList = function () { return this.world ? R.bridge.viewpoints(this.world, this.pose ? this.pose.pos : null) : []; };
+
+/* Layers: a world that goes away takes its layer cameras with it */
+{
+  const _cw = Body.prototype.clearWorld;
+  Body.prototype.clearWorld = function () { if (this._layers) { for (const it of this._layers.items) if (it) it.cam.dispose(); this._layers = null; this.scene.activeCameras = []; } return _cw.call(this); };
+}
