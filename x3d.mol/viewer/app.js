@@ -13,7 +13,7 @@
   async function sha256(text) { const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)); return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, "0")).join(""); }
   async function fetchScene(entry) {
     try {
-      if (typeof DecompressionStream !== "undefined") {
+      if (!window.__xmolPlain && typeof DecompressionStream !== "undefined") {  // a host that cannot serve .gz sets __xmolPlain
         const r = await fetch(entry.file + ".gz");
         if (r.ok) return await new Response(r.body.pipeThrough(new DecompressionStream("gzip"))).text();
       }
@@ -67,7 +67,9 @@
       <dt>witness</dt><dd>${wit}${m.ca_nearest_max_A !== undefined ? ` · every residue's backbone atom has a mesh vertex within ${m.ca_nearest_max_A} Å (median ${m.ca_nearest_median_A} Å) · ${(100 * m["mesh_within_3.5A_of_an_atom"]).toFixed(1)}% of vertices lie within 3.5 Å of an atom` : ""}${m.plddt_colour_agreement ? ` · ${(100 * m.plddt_colour_agreement).toFixed(1)}% of vertex colours match the nearest residue's pLDDT band` : ""}${m.zn_nearest_max_A !== undefined ? ` · every zinc within ${m.zn_nearest_max_A} Å of the mesh` : ""}</dd>
       <dt>controls</dt><dd>${ctl ? `${ctl.filter((x) => x.ok).length} of ${ctl.length} behaved (shifted, wrong-source${s.colour === "plddt" ? ", one-colour and channel-swapped" : ""} copies refused; the honest file passed)` : "not run"}</dd></dl>
       <p class="fine">${s.colour_channels_clamped_to_1 ? `${s.colour_channels_clamped_to_1} colour channels were clamped from 1.000169 to 1, because the X3D 4.0 schema refuses colours above 1. ` : ""}The live viewer on this page draws the scenes that the x3d.mol builder writes; drawing this Blender-made file live is the next step. The still is a picture of the same coordinates, not a measurement.</p>`;
-    $("#cineGet").href = "cinema/" + s.x3d.gz.file;
+    const base = window.__xmolFileBase, get = $("#cineGet");  // a host that blocks downloads (a sandboxed preview) links to the repository copy instead
+    get.href = (base || "cinema/") + s.x3d.gz.file;
+    if (base) { get.removeAttribute("download"); get.target = "_blank"; get.rel = "noopener"; get.textContent = "Get the X3D (gzip) from GitHub"; }
     $("#cineBox").hidden = false;
   }
 
@@ -214,7 +216,7 @@
     renderInfo(model, entry); renderReceipt(entry, shaOk); buildPAE(model); buildLabels(model);
     $("#residue").hidden = true; paeClear && state.pae && paeClear();
     $("#busy").hidden = true;
-    history.replaceState(null, "", "#scene=" + entry.id + (state.scheme !== "file" ? "&scheme=" + state.scheme : ""));
+    if (!window.__xmolNoHash) history.replaceState(null, "", "#scene=" + entry.id + (state.scheme !== "file" ? "&scheme=" + state.scheme : ""));
     window.__xmolReady = { id: entry.id, meshes: state.body.meshes.length, backend: state.body.backend };
   }
 

@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>x3d.mol: proteins in X3D</title>
+<title>x3d.mol</title>
 <meta name="description" content="Public protein structures, written as validated X3D 4.0 and drawn by Babylon.js on WebGPU: zinc fingers and AlphaFold models with confidence and PAE.">
 <style>
 :root{--bg:#050810;--panel:rgba(9,15,27,.74);--line:rgba(150,185,255,.15);--text:#e7eef9;--mut:#93a4bd;--accent:#7cc4ff;--warm:#ffb454;--ok:#6ee7a8;--bad:#ff7d6e;--r:12px}
-@media (prefers-color-scheme:light){:root{--bg:#050810}} /* the stage is dark by design; panels stay dark in both themes */
+:root{color-scheme:dark} /* the stage is dark by design in both host themes: every colour is set explicitly */
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:13px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
 #stage{position:fixed;inset:0;width:100%;height:100%;display:block;outline:none;touch-action:none;cursor:grab}
 #labels{position:fixed;inset:0;pointer-events:none;overflow:hidden}
@@ -102,7 +102,7 @@ body.cinema #info,body.cinema #receipt,body.cinema #pae,body.cinema #side,body.c
 <div id="cineBox" hidden><div class="card"><div id="cineBody"></div><p class="cinebtns"><button class="btn" id="cineOpen">Open this structure in the live viewer</button><a class="btn" id="cineGet" download>Download the X3D (gzip)</a><button class="btn" id="cineClose">Close</button></p></div></div>
 <div id="aboutBox" hidden><div class="card"><div id="aboutBody"></div><p><button class="btn" id="aboutClose">Close</button></p></div></div>
 <script src="https://cdn.jsdelivr.net/npm/babylonjs@9.32.0/babylon.js" integrity="sha384-1XDybi1454WehNQaPHwhcTlpJ6oDdq/L4KKyDu7JiWPOBUzoBC0yEcuKDzHpdXyo" crossorigin="anonymous"></script>
-<script>window.__xmolBuild="767013b0fbd1";</script>
+<script>window.__xmolBuild="fa5261ef5c59";</script>
 <script>
 /* One WebGPU adapter request that does not give up early. Babylon asks navigator.gpu.requestAdapter() with its own options (the high-performance
    hint); on some machines only the plain call, the low-power hint or the software adapter answers (x3d.loom PR 14, playbook 4.1). This wraps the
@@ -556,7 +556,7 @@ body.cinema #info,body.cinema #receipt,body.cinema #pae,body.cinema #side,body.c
   async function sha256(text) { const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)); return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, "0")).join(""); }
   async function fetchScene(entry) {
     try {
-      if (typeof DecompressionStream !== "undefined") {
+      if (!window.__xmolPlain && typeof DecompressionStream !== "undefined") {  // a host that cannot serve .gz sets __xmolPlain
         const r = await fetch(entry.file + ".gz");
         if (r.ok) return await new Response(r.body.pipeThrough(new DecompressionStream("gzip"))).text();
       }
@@ -610,7 +610,9 @@ body.cinema #info,body.cinema #receipt,body.cinema #pae,body.cinema #side,body.c
       <dt>witness</dt><dd>${wit}${m.ca_nearest_max_A !== undefined ? ` · every residue's backbone atom has a mesh vertex within ${m.ca_nearest_max_A} Å (median ${m.ca_nearest_median_A} Å) · ${(100 * m["mesh_within_3.5A_of_an_atom"]).toFixed(1)}% of vertices lie within 3.5 Å of an atom` : ""}${m.plddt_colour_agreement ? ` · ${(100 * m.plddt_colour_agreement).toFixed(1)}% of vertex colours match the nearest residue's pLDDT band` : ""}${m.zn_nearest_max_A !== undefined ? ` · every zinc within ${m.zn_nearest_max_A} Å of the mesh` : ""}</dd>
       <dt>controls</dt><dd>${ctl ? `${ctl.filter((x) => x.ok).length} of ${ctl.length} behaved (shifted, wrong-source${s.colour === "plddt" ? ", one-colour and channel-swapped" : ""} copies refused; the honest file passed)` : "not run"}</dd></dl>
       <p class="fine">${s.colour_channels_clamped_to_1 ? `${s.colour_channels_clamped_to_1} colour channels were clamped from 1.000169 to 1, because the X3D 4.0 schema refuses colours above 1. ` : ""}The live viewer on this page draws the scenes that the x3d.mol builder writes; drawing this Blender-made file live is the next step. The still is a picture of the same coordinates, not a measurement.</p>`;
-    $("#cineGet").href = "cinema/" + s.x3d.gz.file;
+    const base = window.__xmolFileBase, get = $("#cineGet");  // a host that blocks downloads (a sandboxed preview) links to the repository copy instead
+    get.href = (base || "cinema/") + s.x3d.gz.file;
+    if (base) { get.removeAttribute("download"); get.target = "_blank"; get.rel = "noopener"; get.textContent = "Get the X3D (gzip) from GitHub"; }
     $("#cineBox").hidden = false;
   }
 
@@ -757,7 +759,7 @@ body.cinema #info,body.cinema #receipt,body.cinema #pae,body.cinema #side,body.c
     renderInfo(model, entry); renderReceipt(entry, shaOk); buildPAE(model); buildLabels(model);
     $("#residue").hidden = true; paeClear && state.pae && paeClear();
     $("#busy").hidden = true;
-    history.replaceState(null, "", "#scene=" + entry.id + (state.scheme !== "file" ? "&scheme=" + state.scheme : ""));
+    if (!window.__xmolNoHash) history.replaceState(null, "", "#scene=" + entry.id + (state.scheme !== "file" ? "&scheme=" + state.scheme : ""));
     window.__xmolReady = { id: entry.id, meshes: state.body.meshes.length, backend: state.body.backend };
   }
 
