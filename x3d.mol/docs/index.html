@@ -1,0 +1,832 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>x3d.mol: proteins in X3D</title>
+<meta name="description" content="Public protein structures, written as validated X3D 4.0 and drawn by Babylon.js on WebGPU: zinc fingers and AlphaFold models with confidence and PAE.">
+<style>
+:root{--bg:#050810;--panel:rgba(9,15,27,.74);--line:rgba(150,185,255,.15);--text:#e7eef9;--mut:#93a4bd;--accent:#7cc4ff;--warm:#ffb454;--ok:#6ee7a8;--bad:#ff7d6e;--r:12px}
+@media (prefers-color-scheme:light){:root{--bg:#050810}} /* the stage is dark by design; panels stay dark in both themes */
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:13px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;outline:none;touch-action:none;cursor:grab}
+#labels{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.lbl{position:absolute;left:0;top:0;padding:1px 6px;border-radius:9px;background:rgba(20,12,0,.62);border:1px solid rgba(255,180,84,.55);color:#ffd9a0;font:600 11px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:nowrap}
+.panel,#side{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+#side{position:fixed;left:12px;top:12px;bottom:12px;width:300px;display:flex;flex-direction:column;overflow:hidden;z-index:5;transition:transform .25s}
+#side header{padding:14px 14px 8px}
+#side h1{margin:0;font:700 18px/1.1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em}#side h1 span{color:var(--accent)}
+#side p.sub{margin:4px 0 0;color:var(--mut);font-size:12px}
+#side .row{display:flex;gap:6px;padding:0 14px 8px;flex-wrap:wrap}
+#tabs{display:flex;gap:6px;padding:0 14px 6px}#tabs button{flex:1 1 auto;background:none;border:1px solid var(--line);border-radius:8px;padding:5px 6px;cursor:pointer;color:var(--mut);font-size:12px;white-space:nowrap}#tabs button.on{color:var(--text);background:rgba(124,196,255,.16);border-color:rgba(124,196,255,.4)}
+#list{overflow:auto;padding:0 8px 10px;flex:1}
+#list h3{margin:12px 6px 4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:600}
+.item{display:grid;grid-template-columns:auto 1fr;gap:0 8px;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:9px;color:var(--text);padding:6px 8px;cursor:pointer;font:inherit}
+.item:hover{background:rgba(124,196,255,.08)}.item.on{background:rgba(124,196,255,.16);border-color:rgba(124,196,255,.4)}
+.item b{font:700 12px ui-monospace,Menlo,monospace;grid-row:1/3;align-self:center;min-width:54px;color:var(--accent)}
+.item span{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.item i{font-style:normal;color:var(--mut);font-size:11px}
+button,select{font:inherit;color:var(--text)}
+.btn,#controls button,.chip{background:rgba(124,196,255,.1);border:1px solid var(--line);border-radius:8px;padding:5px 10px;cursor:pointer;color:var(--text)}
+.btn:hover,#controls button:hover,.chip:hover{background:rgba(124,196,255,.22)}#cinema.on{background:rgba(255,180,84,.28);border-color:var(--warm)}
+select{background:rgba(5,10,20,.9);border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+#info{position:fixed;left:324px;top:12px;max-width:calc(100vw - 324px - 456px - 24px);padding:12px 14px;z-index:4}
+#info h2{margin:0 0 4px;font-size:15px;line-height:1.25}#info .meta,#info .cite{margin:2px 0;color:var(--mut);font-size:12px}#info a{color:var(--accent)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.chip{font:600 11px ui-monospace,Menlo,monospace;border-color:rgba(255,180,84,.45);color:#ffd9a0}
+#controls{position:fixed;right:12px;top:12px;width:444px;display:flex;gap:6px 10px;flex-wrap:wrap;justify-content:flex-start;padding:8px 10px;align-items:center;z-index:4}
+#controls label{display:flex;gap:5px;align-items:center;color:var(--mut);font-size:12px}
+#legend{position:fixed;left:324px;bottom:14px;display:flex;gap:6px 12px;flex-wrap:wrap;justify-content:center;padding:6px 12px;font-size:12px;border-radius:18px;z-index:3;background:var(--panel);border:1px solid var(--line);max-width:calc(100vw - 324px - 364px)}
+#legend:empty{display:none}#legend u{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}#legend .grad{width:90px;height:10px;border-radius:3px;background:linear-gradient(90deg,#3a52ff,#3ad6c0,#ffe14a,#ff3a3a);align-self:center}
+#residue{position:fixed;left:calc(50% + 156px);bottom:58px;transform:translateX(-50%);padding:8px 14px;text-align:center;z-index:3;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+#residue span{color:var(--mut)}#residue em{color:var(--warm);font-style:normal;font-size:11px}
+#receipt{position:fixed;right:12px;bottom:12px;width:340px;max-height:36vh;overflow:auto;padding:10px 12px;z-index:3;font-size:12px}
+#receipt h4,#pae h4{margin:0 0 6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+#receipt dl{margin:0;display:grid;grid-template-columns:78px 1fr;gap:3px 8px}#receipt dt{color:var(--mut)}#receipt dd{margin:0;word-break:break-word}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.ok{color:var(--ok)}.bad{color:var(--bad)}.fine{color:var(--mut);font-size:11px;margin:6px 0 0}
+#pae{position:fixed;right:12px;bottom:calc(36vh + 24px);width:330px;padding:10px 12px;z-index:3}
+#paeCanvas{width:min(100%,max(120px,calc(64vh - 253px)));margin:0 auto;aspect-ratio:1;image-rendering:pixelated;border-radius:6px;display:block;cursor:crosshair;border:1px solid var(--line)}#paeRead{margin:6px 0 0;font-size:12px;color:var(--mut);min-height:2.7em}#paeRead b{color:var(--text)}
+#gpuhint{margin:0 8px 8px;padding:8px 10px;font-size:11px;color:var(--mut);border:1px solid var(--line);border-radius:9px}
+#busy{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,8,16,.7);z-index:20;font-size:15px}#busy[hidden],[hidden]{display:none!important}
+#cineBox{position:fixed;inset:0;background:rgba(2,4,10,.86);display:flex;align-items:center;justify-content:center;z-index:30;padding:16px}
+#cineBox .card{width:min(1100px,100%);max-height:94vh;overflow:auto;padding:16px 20px;background:#0a1220;border:1px solid var(--line);border-radius:var(--r)}
+#cineBox img{width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--line);background:#02040a}#cineBox h2{margin:0 0 8px;font-size:16px}#cineBox p{color:var(--mut);font-size:12px;margin:8px 0}
+#cineBox dl{display:grid;grid-template-columns:90px 1fr;gap:3px 10px;margin:8px 0;font-size:12px}#cineBox dt{color:var(--mut)}#cineBox dd{margin:0;word-break:break-word}.cinebtns{display:flex;gap:8px;flex-wrap:wrap}a.btn{text-decoration:none;display:inline-block}
+.shot{display:block;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:9px;color:var(--text);padding:6px;cursor:pointer;font:inherit;margin-bottom:4px}.shot:hover{background:rgba(124,196,255,.08);border-color:var(--line)}
+.shot img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:6px;display:block;background:#02040a}.shot span{display:block;font-size:12px;margin-top:4px}.shot i{font-style:normal;color:var(--mut);font-size:11px}
+#aboutBox{position:fixed;inset:0;background:rgba(2,4,10,.78);display:flex;align-items:center;justify-content:center;z-index:30;padding:16px}
+#aboutBox .card{max-width:720px;max-height:90vh;overflow:auto;padding:18px 22px;background:#0a1220;border:1px solid var(--line);border-radius:var(--r)}
+#aboutBox h2{margin-top:0}#aboutBox h3{margin:16px 0 4px;font-size:13px;color:var(--accent)}#aboutBox a{color:var(--accent)}.papers{font-size:12px;color:var(--mut);padding-left:18px}
+#menu{display:none;position:fixed;left:12px;top:12px;z-index:6}
+body.nui #side,body.nui #info,body.nui #controls,body.nui #legend,body.nui #residue,body.nui #receipt,body.nui #pae,body.nui #gpuhint,body.nui #menu{display:none}
+body.cinema #info,body.cinema #receipt,body.cinema #pae,body.cinema #side,body.cinema #legend,body.cinema #residue{opacity:0;pointer-events:none}
+#paeBtn{display:none}
+@media (max-width:1180px){
+ #info{max-width:calc(100vw - 336px)}#controls{top:auto;bottom:58px;right:12px;width:min(444px,calc(100vw - 336px))}
+ #receipt{display:none;bottom:12px}body.show-receipt #receipt{display:block;z-index:8}
+ #pae{bottom:160px;width:240px}#paeCanvas{width:min(100%,max(120px,calc(100vh - 419px)))}#legend{max-width:calc(100vw - 336px)}
+}
+@media (max-width:900px){
+ #menu{display:block}#side{transform:translateX(-110%);width:min(320px,88vw);top:56px}body.side-open #side{transform:none}
+ #info{left:12px;right:12px;top:56px;max-width:none;padding:8px 12px}#info .cite{display:none}
+ #controls{top:auto;bottom:12px;left:12px;right:12px;width:auto;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;white-space:nowrap}#controls>*{flex:none}#paeBtn{display:inline-block}#paeBtn[hidden]{display:none}
+ #legend{left:50%;transform:translateX(-50%);bottom:66px;max-width:calc(100vw - 24px);flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;border-radius:99px;white-space:nowrap}
+ #residue{left:auto;right:12px;transform:none;bottom:108px;max-width:calc(100vw - 24px)}body.show-pae #residue{max-width:calc(100vw - 196px)}
+ #receipt{left:12px;right:12px;width:auto;bottom:auto;top:12px;max-height:40vh}
+ #pae{display:none;left:12px;right:auto;bottom:108px;width:160px;padding:8px}#paeCanvas{width:100%}body.show-pae #pae{display:block}#paeRead{font-size:11px}
+}
+</style>
+</head>
+<body>
+<canvas id="stage" tabindex="0" role="application" aria-label="Interactive 3D protein view. Drag to orbit, scroll or pinch to zoom, click a residue to pin it."></canvas>
+<div id="labels" aria-hidden="true"></div>
+<button id="menu" class="btn" aria-label="Show the structure list" onclick="document.body.classList.toggle('side-open')">☰ Structures</button>
+<aside id="side">
+  <header><h1>x3d<span>.mol</span></h1><p class="sub">Proteins as validated X3D, drawn on <b id="backend">…</b></p></header>
+  <div class="row"><button class="btn" id="about">About and credit</button><button class="btn" id="hide" title="Hide the panels (H)">Hide UI</button><button class="btn" onclick="document.body.classList.toggle('show-receipt')">Receipt</button></div>
+  <div class="tabs" id="tabs"><button data-k="pdb" class="on">Zinc fingers · 14</button><button data-k="afdb">AlphaFold · 5</button><button data-k="cine" hidden>Blender · <span id="cineN">0</span></button></div>
+  <div id="list"></div>
+  <div id="gpuhint" hidden>Running on WebGL2 because WebGPU was not available. On Windows Chrome, <span class="mono">chrome://flags/#enable-unsafe-webgpu</span> may turn it on.</div>
+</aside>
+<section id="info" class="panel"></section>
+<div id="controls" class="panel">
+  <label>Colour <select id="scheme"></select></label>
+  <label><input type="checkbox" id="l_sites" checked> Zinc</label>
+  <label><input type="checkbox" id="l_sticks" checked> Ligand sticks</label>
+  <label><input type="checkbox" id="l_nucleic" checked> DNA/RNA</label>
+  <button id="cinema" title="Slow orbit, depth of field (C)">Cinema</button><button id="reset">Reset view</button><button id="core" hidden title="Frame the residues the model is confident about (pLDDT 70 or more)">Core</button><button id="paeBtn" hidden onclick="document.body.classList.toggle('show-pae')">PAE map</button><button id="shot">Save PNG</button>
+</div>
+<div id="legend"></div>
+<div id="residue" hidden></div>
+<section id="pae" class="panel" hidden><h4>AlphaFold predicted aligned error</h4><canvas id="paeCanvas"></canvas><p id="paeRead">Hover the map: each cell is the model's own error estimate for one pair of residues.</p></section>
+<aside id="receipt" class="panel"></aside>
+<div id="busy">Loading…</div>
+<div id="cineBox" hidden><div class="card"><div id="cineBody"></div><p class="cinebtns"><button class="btn" id="cineOpen">Open this structure in the live viewer</button><a class="btn" id="cineGet" download>Download the X3D (gzip)</a><button class="btn" id="cineClose">Close</button></p></div></div>
+<div id="aboutBox" hidden><div class="card"><div id="aboutBody"></div><p><button class="btn" id="aboutClose">Close</button></p></div></div>
+<script src="https://cdn.jsdelivr.net/npm/babylonjs@9.32.0/babylon.js" integrity="sha384-1XDybi1454WehNQaPHwhcTlpJ6oDdq/L4KKyDu7JiWPOBUzoBC0yEcuKDzHpdXyo" crossorigin="anonymous"></script>
+<script>window.__xmolBuild="767013b0fbd1";</script>
+<script>
+/* One WebGPU adapter request that does not give up early. Babylon asks navigator.gpu.requestAdapter() with its own options (the high-performance
+   hint); on some machines only the plain call, the low-power hint or the software adapter answers (x3d.loom PR 14, playbook 4.1). This wraps the
+   call so the plain request goes first, then the caller's options, low-power, then the fallback adapter, and records which one answered
+   (window.__adapter, window.__adapterVia) so a page can say so on screen and the Timing panel can name the GPU. Loaded before the body starts. */
+(() => {
+  const gpu = navigator.gpu;
+  if (!gpu || gpu.__plainFirst) return;
+  const orig = gpu.requestAdapter.bind(gpu);
+  gpu.requestAdapter = async (opts) => {
+    let a = null;
+    for (const o of [undefined, opts, { powerPreference: 'low-power' }, { forceFallbackAdapter: true }]) {
+      try { a = await orig(o); } catch (e) { a = null; }
+      if (a) { window.__adapter = a; window.__adapterVia = o === undefined ? 'default' : JSON.stringify(o); break; }
+    }
+    return a;
+  };
+  gpu.__plainFirst = true;
+})();
+
+/* x3d.mol reader: X3D 4.0 text -> a plain model. No Babylon in here, so the same model can feed any body.
+   It reads only what src/build.py writes: IndexedTriangleSet (with Normal, Color, FloatVertexAttribute), Transform + Sphere / Cylinder,
+   Billboard + Text, IndexedFaceSet, Viewpoint, DirectionalLight, and the WorldInfo MetadataSet. Anything else is counted in model.skipped. */
+(function (root) {
+  "use strict";
+  const f32 = (s) => Float32Array.from(s.trim().split(/\s+/), Number);
+  const mfstring = (v) => [...v.matchAll(/"((?:[^"\\]|\\.)*)"/g)].map((m) => m[1].replace(/\\(.)/g, "$1"));
+
+  function parseX3D(text) {
+    const doc = new DOMParser().parseFromString(text, "application/xml");
+    if (doc.querySelector("parsererror")) throw new Error("not well-formed XML: " + doc.querySelector("parsererror").textContent.slice(0, 120));
+    const model = { title: "", meta: {}, meshes: [], zinc: [], bonds: [], labels: [], cages: [], viewpoints: [], lights: [], skipped: {}, headMeta: {} };
+    const skip = (n) => { model.skipped[n] = (model.skipped[n] || 0) + 1; };
+    for (const m of doc.querySelectorAll("head > meta")) model.headMeta[m.getAttribute("name")] = m.getAttribute("content");
+    const wi = doc.querySelector("WorldInfo");
+    model.title = wi ? wi.getAttribute("title") : "";
+    for (const m of doc.querySelectorAll("WorldInfo > MetadataSet > *")) {
+      const name = m.getAttribute("name"), v = m.getAttribute("value") || "";
+      model.meta[name] = m.tagName === "MetadataString" ? mfstring(v) : f32(v);
+    }
+    const sc = doc.querySelector("Scene");
+    const walk = (el, pendingLabel) => {
+      for (const ch of el.children) {
+        switch (ch.tagName) {
+          case "WorldInfo": case "NavigationInfo": case "Background": break;
+          case "DirectionalLight":
+            model.lights.push({ name: ch.getAttribute("DEF"), dir: f32(ch.getAttribute("direction")), intensity: +ch.getAttribute("intensity"), color: f32(ch.getAttribute("color")) }); break;
+          case "Viewpoint":
+            model.viewpoints.push({ description: ch.getAttribute("description"), position: f32(ch.getAttribute("position")), orientation: f32(ch.getAttribute("orientation")),
+              center: f32(ch.getAttribute("centerOfRotation")), fov: +ch.getAttribute("fieldOfView") }); break;
+          case "Shape": shape(ch, null); break;
+          case "Transform": {
+            const def = ch.getAttribute("DEF") || "";
+            const t = f32(ch.getAttribute("translation") || "0 0 0");
+            const sph = ch.querySelector(":scope > Shape > Sphere"), cyl = ch.querySelector(":scope > Shape > Cylinder"), bb = ch.querySelector(":scope > Billboard");
+            if (sph) model.zinc.push({ def, pos: t, radius: +sph.getAttribute("radius"), tag: def.replace(/^Zn_/, "") });
+            else if (cyl) {
+              const r = f32(ch.getAttribute("rotation") || "1 0 0 0"), h = +cyl.getAttribute("height"), ax = r.slice(0, 3), a = r[3];
+              const c = Math.cos(a), s = Math.sin(a), k = [ax[0], ax[1], ax[2]];
+              // Rodrigues: rotate +Y by axis-angle
+              const y = [0, 1, 0], kxy = [k[1] * y[2] - k[2] * y[1], k[2] * y[0] - k[0] * y[2], k[0] * y[1] - k[1] * y[0]], kd = k[0] * y[0] + k[1] * y[1] + k[2] * y[2];
+              const d = [0, 1, 2].map((i) => y[i] * c + kxy[i] * s + k[i] * kd * (1 - c));
+              const mat = ch.querySelector("PhysicalMaterial");
+              const glow = +cyl.getAttribute("radius") > 0.06, m = def.match(/^Bond_(.+)_(\d+)$/);
+              model.bonds.push({ def, site: m ? m[1] : "", index: m ? +m[2] : 0, a: [0, 1, 2].map((i) => t[i] - d[i] * h / 2), b: [0, 1, 2].map((i) => t[i] + d[i] * h / 2), length: h, glow,
+                radius: +cyl.getAttribute("radius"), emissive: mat ? f32(mat.getAttribute("emissiveColor")) : [0, 0, 0] });
+            } else if (bb) {
+              const tx = bb.querySelector("Text");
+              model.labels.push({ pos: t, text: mfstring(tx.getAttribute("string"))[0] });
+            } else walk(ch);
+            break;
+          }
+          case "Group": walk(ch); break;
+          default: skip(ch.tagName);
+        }
+      }
+    };
+    const shape = (sh) => {
+      const def = sh.getAttribute("DEF") || "";
+      const its = sh.querySelector("IndexedTriangleSet"), ifs = sh.querySelector("IndexedFaceSet");
+      if (its) {
+        const attrs = {};
+        for (const a of its.querySelectorAll("FloatVertexAttribute")) attrs[a.getAttribute("name")] = f32(a.getAttribute("value"));
+        const idx = Uint32Array.from(its.getAttribute("index").trim().split(/\s+/), Number);
+        model.meshes.push({ def, positions: f32(its.querySelector("Coordinate").getAttribute("point")), normals: f32(its.querySelector("Normal").getAttribute("vector")),
+          colors: f32(its.querySelector("Color").getAttribute("color")), indices: idx, attrs });
+      } else if (ifs && def.startsWith("Cage_")) {
+        model.cages.push({ def, tag: def.replace(/^Cage_/, ""), points: f32(ifs.querySelector("Coordinate").getAttribute("point")) });
+      } else skip("Shape/" + (sh.firstElementChild && sh.firstElementChild.nextElementSibling ? sh.firstElementChild.nextElementSibling.tagName : "?"));
+    };
+    walk(sc);
+    // sites JSON from metadata
+    model.sites = model.meta.sites ? JSON.parse(model.meta.sites[0]) : [];
+    return model;
+  }
+  root.XMolReader = { parseX3D, mfstring };
+})(typeof window !== "undefined" ? window : globalThis);
+
+/* x3d.mol body: draws an XMolReader model with Babylon.js (WebGPU first, WebGL2 fallback). Look, not data: materials, the studio
+   environment, lights beyond the file's, bloom, ambient occlusion and depth of field are declared here and listed in body.effects so a page
+   can say exactly which ones ran. Right-handed scene so X3D coordinates are used as written. */
+(function (root) {
+  "use strict";
+  const B = root.BABYLON;
+  const lin = (c) => Math.pow(Math.max(0, Math.min(1, c)), 2.2);
+  const PL = [[90, [0, 0.3255, 0.8392]], [70, [0.396, 0.796, 0.953]], [50, [1, 0.859, 0.0745]], [0, [1, 0.49, 0.2706]]];
+  const SSC = { H: [0.93, 0.33, 0.52], E: [0.97, 0.78, 0.25], "-": [0.55, 0.66, 0.78], n: [0.25, 0.75, 0.70] };
+  const CHAIN = [[0.45, 0.75, 1], [1, 0.62, 0.35], [0.55, 0.9, 0.55], [0.95, 0.5, 0.85], [0.95, 0.9, 0.4], [0.6, 0.6, 1], [0.4, 0.9, 0.85], [1, 0.45, 0.45]];
+  const hsv = (h, s, v) => { const i = Math.floor(h * 6), f = h * 6 - i, p = v * (1 - s), q = v * (1 - f * s), t = v * (1 - (1 - f) * s); return [[v, t, p], [q, v, p], [p, v, t], [p, q, v], [t, p, v], [v, p, q]][i % 6]; };
+  const ramp = (stops, x) => { for (let i = 1; i < stops.length; i++) if (x <= stops[i][0]) { const a = stops[i - 1], b = stops[i], u = (x - a[0]) / (b[0] - a[0]); return a[1].map((v, k) => v + (b[1][k] - v) * u); } return stops[stops.length - 1][1]; };
+  const SMOOTH = [[0, [1, 0.49, 0.27]], [50, [1, 0.86, 0.07]], [70, [0.4, 0.8, 0.95]], [90, [0, 0.33, 0.84]], [100, [0, 0.2, 0.7]]];
+  const SEQ = [[0, [0.05, 0.1, 0.35]], [0.5, [0.2, 0.7, 0.65]], [1, [0.98, 0.93, 0.4]]];
+
+  /* per-residue colour tables for the schemes the page offers */
+  function residueColors(model, scheme) {
+    const m = model.meta, n = m.residues.length, out = new Float32Array(n * 3);
+    const chains = m.chains, chainOf = m.residues.map((r) => chains.indexOf(r.split(":")[0]));
+    const ss = m.ss[0], conf = m.plddt || null, bf = m.bfactor || null;
+    let bmin = 0, bmax = 1;
+    if (bf) { bmin = Math.min(...bf); bmax = Math.max(...bf) || 1; }
+    const first = {}, last = {};
+    chainOf.forEach((c, i) => { if (first[c] === undefined) first[c] = i; last[c] = i; });
+    for (let i = 0; i < n; i++) {
+      let c;
+      const nuc = ss[i] === "n";
+      if (scheme === "plddt" && conf) c = (PL.find(([lo]) => conf[i] >= lo) || PL[3])[1];
+      else if (scheme === "plddt-smooth" && conf) c = ramp(SMOOTH, conf[i]);
+      else if (scheme === "ss") c = SSC[ss[i]];
+      else if (scheme === "chain") c = CHAIN[chainOf[i] % CHAIN.length];
+      else if (scheme === "rainbow") c = nuc ? SSC.n : hsv(0.66 * (1 - (i - first[chainOf[i]]) / Math.max(1, last[chainOf[i]] - first[chainOf[i]])), 0.8, 0.98);
+      else if (scheme === "bfactor" && bf) c = ramp(SEQ, (bf[i] - bmin) / (bmax - bmin || 1));
+      else c = SSC[ss[i]] || SSC["-"];
+      out.set(c, i * 3);
+    }
+    return out;
+  }
+
+  function studioEnv(scene) {
+    const faces = [], S = 64;
+    const mk = (draw) => { const c = document.createElement("canvas"); c.width = c.height = S; const g = c.getContext("2d"); draw(g, S); return c.toDataURL("image/png"); };
+    const side = (warm) => mk((g, s) => {
+      const gr = g.createLinearGradient(0, 0, 0, s); gr.addColorStop(0, "#5a6b86"); gr.addColorStop(0.5, warm ? "#f1e2cf" : "#c9d8ee"); gr.addColorStop(0.62, "#2a2f3a"); gr.addColorStop(1, "#06080c");
+      g.fillStyle = gr; g.fillRect(0, 0, s, s);
+      g.fillStyle = warm ? "#fff6e6" : "#e8f3ff"; g.fillRect(s * 0.18, s * 0.12, s * 0.64, s * 0.2);          // soft box
+    });
+    const top = mk((g, s) => { g.fillStyle = "#1b2433"; g.fillRect(0, 0, s, s); g.fillStyle = "#ffffff"; g.fillRect(s * 0.25, s * 0.25, s * 0.5, s * 0.5); });
+    const bot = mk((g, s) => { g.fillStyle = "#07090d"; g.fillRect(0, 0, s, s); });
+    // order for CubeTexture files: px, py, pz, nx, ny, nz
+    faces.push(side(true), top, side(false), side(true), bot, side(false));
+    const t = new B.CubeTexture("", scene, null, false, faces, null, null, undefined, false, null, true);
+    return t;
+  }
+
+  async function create(canvas, opts) {
+    opts = opts || {};
+    let engine, backend = "webgl2";
+    const wantGPU = opts.webgpu !== false && !!navigator.gpu;
+    if (wantGPU) {
+      try {
+        if (await B.WebGPUEngine.IsSupportedAsync) {
+          engine = new B.WebGPUEngine(canvas, { antialias: true, adaptToDeviceRatio: true, stencil: true });
+          await engine.initAsync();
+          backend = "webgpu";
+        }
+      } catch (e) { console.warn("WebGPU engine failed, falling back to WebGL2:", e); engine = null; }
+    }
+    if (!engine) engine = new B.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, antialias: true }, true);
+    const scene = new B.Scene(engine);
+    scene.useRightHandedSystem = true;
+    scene.clearColor = new B.Color4(0.012, 0.017, 0.03, 1);
+    const cam = new B.ArcRotateCamera("cam", -1.0, 1.15, 120, B.Vector3.Zero(), scene);
+    cam.attachControl(canvas, true);
+    cam.wheelDeltaPercentage = 0.012; cam.pinchDeltaPercentage = 0.012; cam.panningSensibility = 600; cam.minZ = 0.3; cam.inertia = 0.88;
+    const body = { engine, scene, camera: cam, backend, effects: {}, model: null, layers: {}, cinema: false, meshes: [], notes: [] };
+    // sky: a vertical gradient on an inverted sphere that follows the camera (look, not data); fog gives far parts depth
+    try {
+      const tex = new B.DynamicTexture("skytex", { width: 4, height: 256 }, scene, false), g = tex.getContext();
+      const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, "#02040a"); gr.addColorStop(0.42, "#0b1a36"); gr.addColorStop(0.52, "#16294a"); gr.addColorStop(0.6, "#0a1428"); gr.addColorStop(1, "#020308");
+      g.fillStyle = gr; g.fillRect(0, 0, 4, 256); tex.update();
+      const sky = B.MeshBuilder.CreateSphere("sky", { diameter: 1600, segments: 12, sideOrientation: B.Mesh.BACKSIDE }, scene), sm = new B.StandardMaterial("skym", scene);
+      sm.emissiveTexture = tex; sm.disableLighting = true; sm.backFaceCulling = false; sm.diffuseColor = B.Color3.Black(); sm.specularColor = B.Color3.Black(); sm.fogEnabled = false;
+      sky.material = sm; sky.infiniteDistance = true; sky.isPickable = false; body.sky = sky; body.effects.sky = true;
+    } catch (e) { body.effects.sky = false; }
+    scene.fogMode = B.Scene.FOGMODE_EXP2; scene.fogColor = new B.Color3(0.02, 0.035, 0.07); scene.fogDensity = 0.004;
+    // lights: the file's three directional lights plus a soft hemispheric fill
+    const hemi = new B.HemisphericLight("hemi", new B.Vector3(0, 1, 0), scene);
+    hemi.intensity = 0.35; hemi.diffuse = new B.Color3(0.55, 0.65, 0.9); hemi.groundColor = new B.Color3(0.18, 0.12, 0.08);
+    body.lights = [];
+    // environment (look): generated studio cube, never a fetched file
+    try { scene.environmentTexture = studioEnv(scene); scene.environmentIntensity = 0.9; body.effects.studioEnvironment = true; }
+    catch (e) { body.effects.studioEnvironment = false; body.notes.push("studio environment skipped: " + e.message); }
+    // motes
+    try {
+      const dot = new B.DynamicTexture("dot", 64, scene, false); const g = dot.getContext();
+      const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(1, "rgba(255,255,255,0)"); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); dot.update();
+      const ps = new B.ParticleSystem("motes", 450, scene);
+      ps.particleTexture = dot; ps.emitter = B.Vector3.Zero(); ps.minSize = 0.15; ps.maxSize = 0.7; ps.minLifeTime = 14; ps.maxLifeTime = 26; ps.emitRate = 24;
+      ps.color1 = new B.Color4(0.5, 0.7, 1, 0.55); ps.color2 = new B.Color4(1, 0.8, 0.5, 0.4); ps.colorDead = new B.Color4(0, 0, 0, 0);
+      ps.minEmitBox = new B.Vector3(-60, -60, -60); ps.maxEmitBox = new B.Vector3(60, 60, 60);
+      ps.direction1 = new B.Vector3(-0.3, -0.2, -0.3); ps.direction2 = new B.Vector3(0.3, 0.4, 0.3); ps.minEmitPower = 0.1; ps.maxEmitPower = 0.5;
+      ps.blendMode = B.ParticleSystem.BLENDMODE_ADD; ps.preWarmCycles = 120; ps.preWarmStepOffset = 4; ps.start();
+      body.motes = ps; body.effects.motes = true;
+    } catch (e) { body.effects.motes = false; }
+    // post effects
+    const q = opts.quality || "high";
+    try {
+      const pipe = new B.DefaultRenderingPipeline("pipe", true, scene, [cam]);
+      pipe.samples = q === "low" ? 1 : 4; pipe.fxaaEnabled = q === "low";
+      pipe.bloomEnabled = q !== "low"; if (pipe.bloomEnabled) { pipe.bloomThreshold = 0.82; pipe.bloomWeight = 0.42; pipe.bloomKernel = 48; pipe.bloomScale = 0.5; }
+      pipe.imageProcessingEnabled = true;
+      const ip = pipe.imageProcessing; ip.toneMappingEnabled = true;
+      ip.toneMappingType = B.ImageProcessingConfiguration.TONEMAPPING_KHR_PBR_NEUTRAL !== undefined ? B.ImageProcessingConfiguration.TONEMAPPING_KHR_PBR_NEUTRAL : B.ImageProcessingConfiguration.TONEMAPPING_ACES;
+      ip.contrast = 1.18; ip.exposure = 1.05; ip.vignetteEnabled = true; ip.vignetteWeight = 2.2; ip.vignetteStretch = 0.4; ip.vignetteColor = new B.Color4(0, 0.01, 0.03, 0);
+      pipe.sharpenEnabled = q !== "low"; if (pipe.sharpenEnabled) pipe.sharpen.edgeAmount = 0.25;
+      pipe.grainEnabled = q === "high"; if (pipe.grainEnabled) { pipe.grain.intensity = 4; pipe.grain.animated = true; }
+      pipe.depthOfFieldEnabled = false;
+      body.pipeline = pipe; body.effects.bloom = pipe.bloomEnabled; body.effects.msaa = pipe.samples; body.effects.toneMapping = "KHR_PBR_NEUTRAL";
+    } catch (e) { body.notes.push("rendering pipeline skipped: " + e.message); body.effects.pipeline = false; }
+    if (q !== "low") {
+      try {
+        const ssao = new B.SSAO2RenderingPipeline("ssao", scene, { ssaoRatio: 0.5, blurRatio: 1 }, [cam]);
+        ssao.radius = 5; ssao.totalStrength = 1.15; ssao.base = 0.12; ssao.maxZ = 400; ssao.expensiveBlur = false; ssao.samples = 8;
+        body.ssao = ssao; body.effects.ssao = true;
+      } catch (e) { body.effects.ssao = false; body.notes.push("SSAO2 skipped: " + e.message); }
+    }
+    try { body.glow = new B.GlowLayer("glow", scene, { mainTextureSamples: q === "low" ? 1 : 2 }); body.glow.intensity = 0.9; body.glow.customEmissiveColorSelector = null; body.effects.glow = true; }
+    catch (e) { body.effects.glow = false; }
+
+    const root3 = new B.TransformNode("molecule", scene), sites = new B.TransformNode("sites", scene);
+    sites.parent = root3;
+    body.root = root3; body.sitesNode = sites;
+    const mat = (name, rough, clear) => {
+      const m = new B.PBRMaterial(name, scene);
+      m.albedoColor = new B.Color3(1, 1, 1); m.metallic = 0.0; m.roughness = rough; m.backFaceCulling = false; m.twoSidedLighting = true;
+      if (clear) { m.clearCoat.isEnabled = true; m.clearCoat.intensity = 0.4; m.clearCoat.roughness = 0.1; }
+      m.environmentIntensity = 0.9; return m;
+    };
+    body.matCartoon = mat("cartoon", 0.4, true); body.matSticks = mat("sticks", 0.35, false);
+
+    body.setModel = function (model) {
+      for (const m of body.meshes) m.dispose();
+      for (const c of sites.getChildren().slice()) c.dispose();
+      body.meshes = []; body.model = model;
+      const n = model.meta.residues.length;
+      body.resVerts = [];
+      let lo = [1e9, 1e9, 1e9], hi = [-1e9, -1e9, -1e9];
+      for (const md of model.meshes) {
+        const mesh = new B.Mesh(md.def, scene); mesh.parent = root3;
+        const vd = new B.VertexData(); vd.positions = md.positions; vd.normals = md.normals; vd.indices = md.indices;
+        const nv = md.positions.length / 3, col = new Float32Array(nv * 4);
+        for (let i = 0; i < nv; i++) { col[i * 4] = lin(md.colors[i * 3]); col[i * 4 + 1] = lin(md.colors[i * 3 + 1]); col[i * 4 + 2] = lin(md.colors[i * 3 + 2]); col[i * 4 + 3] = 1; }
+        vd.colors = col; vd.applyToMesh(mesh, true);
+        mesh.material = md.def === "LigandSticks" || md.def === "BaseRungs" ? body.matSticks : body.matCartoon;
+        mesh.isPickable = true;
+        // vertex lists per residue (CSR) for highlighting
+        const rid = md.attrs.resid, counts = new Uint32Array(n + 1);
+        for (let i = 0; i < nv; i++) counts[rid[i] + 1]++;
+        for (let i = 0; i < n; i++) counts[i + 1] += counts[i];
+        const order = new Uint32Array(nv), cur = counts.slice();
+        for (let i = 0; i < nv; i++) order[cur[rid[i]]++] = i;
+        mesh.metadata = { def: md.def, resid: rid, fileColors: col.slice(), colors: col, start: counts, order, lit: [] };
+        body.meshes.push(mesh);
+        if (md.def.startsWith("Cartoon") || md.def.startsWith("Nucleic")) for (let i = 0; i < md.positions.length; i += 3) for (let k = 0; k < 3; k++) { lo[k] = Math.min(lo[k], md.positions[i + k]); hi[k] = Math.max(hi[k], md.positions[i + k]); }
+      }
+      const ctr = lo.map((v, k) => (v + hi[k]) / 2), rad = Math.hypot(hi[0] - lo[0], hi[1] - lo[1], hi[2] - lo[2]) / 2;
+      body.center = new B.Vector3(ctr[0], ctr[1], ctr[2]); body.radius = rad; scene.fogDensity = 0.17 / Math.max(20, rad);
+      // sites: zinc spheres, bonds, cages
+      body.zincMeshes = []; body.siteBonds = [];
+      const glowSet = [];
+      for (const z of model.zinc) {
+        const s = B.MeshBuilder.CreateSphere(z.def, { diameter: z.radius * 2, segments: 24 }, scene); s.parent = sites; s.position.set(z.pos[0], z.pos[1], z.pos[2]);
+        const m = new B.PBRMaterial("zn", scene); m.albedoColor = new B.Color3(0.78, 0.86, 0.96); m.metallic = 1; m.roughness = 0.16; m.emissiveColor = new B.Color3(0.12, 0.2, 0.34);
+        s.material = m; s.metadata = { site: z.tag }; body.zincMeshes.push(s); glowSet.push(s);
+      }
+      for (const b of model.bonds) {
+        const a = new B.Vector3(...b.a), c = new B.Vector3(...b.b), len = B.Vector3.Distance(a, c);
+        const cyl = B.MeshBuilder.CreateCylinder(b.def, { height: len, diameter: b.radius * 2, tessellation: 12, cap: B.Mesh.NO_CAP }, scene);
+        cyl.parent = sites; cyl.position = a.add(c).scale(0.5);
+        const dir = c.subtract(a).normalize(), y = new B.Vector3(0, 1, 0), ax = B.Vector3.Cross(y, dir);
+        cyl.rotationQuaternion = ax.length() < 1e-6 ? (dir.y > 0 ? B.Quaternion.Identity() : B.Quaternion.RotationAxis(new B.Vector3(1, 0, 0), Math.PI)) : B.Quaternion.RotationAxis(ax.normalize(), Math.acos(Math.max(-1, Math.min(1, dir.y))));
+        const m = new B.PBRMaterial("bond", scene);
+        if (b.glow) { m.albedoColor = new B.Color3(1, 0.78, 0.35); m.emissiveColor = new B.Color3(1.0, 0.55, 0.12); m.roughness = 0.35; glowSet.push(cyl); }
+        else { m.albedoColor = new B.Color3(0.45, 0.5, 0.55); m.alpha = 0.45; m.roughness = 0.6; }
+        cyl.material = m; body.siteBonds.push(cyl);
+      }
+      for (const c of model.cages) {
+        const p = c.points, vd = new B.VertexData();
+        vd.positions = p; vd.indices = [0, 1, 2, 0, 1, 3, 0, 2, 3, 1, 2, 3];
+        const normals = []; B.VertexData.ComputeNormals(p, vd.indices, normals); vd.normals = normals;
+        const cm = new B.Mesh(c.def, scene); cm.parent = sites; vd.applyToMesh(cm);
+        const m = new B.StandardMaterial("cage", scene); m.emissiveColor = new B.Color3(0.25, 0.55, 1.0); m.alpha = 0.16; m.backFaceCulling = false; m.disableLighting = true;
+        cm.material = m; cm.isPickable = false;
+        const wire = B.MeshBuilder.CreateLineSystem(c.def + "_edges", { lines: [[0, 1, 2, 0], [0, 3, 1], [2, 3]].map((ix) => ix.map((k) => new B.Vector3(p[k * 3], p[k * 3 + 1], p[k * 3 + 2]))) }, scene);
+        wire.parent = sites; wire.color = new B.Color3(0.45, 0.75, 1); wire.isPickable = false;
+      }
+      if (body.glow) { try { for (const m of glowSet) body.glow.addIncludedOnlyMesh(m); } catch (e) { /* older layer API: glow stays global */ } }
+      // camera
+      body.frame(true);
+      if (body.motes) { body.motes.emitter = body.center.clone(); body.motes.minEmitBox = new B.Vector3(-rad * 1.6, -rad * 1.6, -rad * 1.6); body.motes.maxEmitBox = new B.Vector3(rad * 1.6, rad * 1.6, rad * 1.6); }
+      body.setLights(model);
+      body.setLayer("sites", body.layers.sites !== false); body.setLayer("sticks", body.layers.sticks !== false); body.setLayer("nucleic", body.layers.nucleic !== false);
+      return { center: ctr, radius: rad };
+    };
+    body.setLights = function (model) {
+      for (const l of body.lights) l.dispose();
+      body.lights = [];
+      for (const l of model.lights) {
+        const d = new B.DirectionalLight(l.name, new B.Vector3(l.dir[0], l.dir[1], l.dir[2]), scene);
+        d.intensity = l.intensity * 0.9; d.diffuse = new B.Color3(l.color[0], l.color[1], l.color[2]); d.specular = d.diffuse; body.lights.push(d);
+      }
+    };
+    body.frame = function (instant) {
+      const to = { target: body.center.clone(), radius: Math.max(36, body.radius * 2.15), alpha: -1.0, beta: 1.15 };
+      body.tween(to, instant ? 0 : 900);
+      cam.lowerRadiusLimit = 5; cam.upperRadiusLimit = Math.max(300, body.radius * 8); cam.maxZ = Math.max(2000, body.radius * 30);
+    };
+    body.focusSite = function (tag) {
+      const z = body.model.zinc.find((s) => s.tag === tag); if (!z) return;
+      body.tween({ target: new B.Vector3(z.pos[0], z.pos[1], z.pos[2]), radius: 16 }, 1100);
+    };
+    body.focusCore = function (minPlddt) {
+      const m = body.model.meta; if (!m.plddt) return body.frame(false);
+      let c = [0, 0, 0], n = 0; for (let i = 0; i < m.plddt.length; i++) if (m.plddt[i] >= minPlddt) { c[0] += m.ca[i * 3]; c[1] += m.ca[i * 3 + 1]; c[2] += m.ca[i * 3 + 2]; n++; }
+      if (!n) return body.frame(false); c = c.map((v) => v / n); let r = 0;
+      for (let i = 0; i < m.plddt.length; i++) if (m.plddt[i] >= minPlddt) r = Math.max(r, Math.hypot(m.ca[i * 3] - c[0], m.ca[i * 3 + 1] - c[1], m.ca[i * 3 + 2] - c[2]));
+      body.tween({ target: new B.Vector3(c[0], c[1], c[2]), radius: Math.max(30, r * 2.6) }, 1000);
+    };
+    body.focusResidue = function (i, radius) {
+      const ca = body.model.meta.ca;
+      body.tween({ target: new B.Vector3(ca[i * 3], ca[i * 3 + 1], ca[i * 3 + 2]), radius: radius || 28 }, 900);
+    };
+    let tw = null;
+    body.tween = function (to, ms) {
+      const from = { target: cam.target.clone(), radius: cam.radius, alpha: cam.alpha, beta: cam.beta };
+      if (!ms) { cam.setTarget(to.target || from.target); cam.radius = to.radius ?? from.radius; cam.alpha = to.alpha ?? from.alpha; cam.beta = to.beta ?? from.beta; return; }
+      const t0 = performance.now(); tw = to;
+      const step = () => {
+        if (tw !== to) return;
+        const u = Math.min(1, (performance.now() - t0) / ms), e = u * u * (3 - 2 * u);
+        if (to.target) cam.setTarget(B.Vector3.Lerp(from.target, to.target, e));
+        if (to.radius !== undefined) cam.radius = from.radius + (to.radius - from.radius) * e;
+        if (to.alpha !== undefined) cam.alpha = from.alpha + (to.alpha - from.alpha) * e;
+        if (to.beta !== undefined) cam.beta = from.beta + (to.beta - from.beta) * e;
+        if (u < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    body.setScheme = function (name) {
+      const model = body.model; if (!model) return;
+      const table = name === "file" ? null : residueColors(model, name);
+      for (const mesh of body.meshes) {
+        const md = mesh.metadata, rid = md.resid, nv = rid.length, col = md.colors;
+        if (!table) col.set(md.fileColors);
+        else for (let i = 0; i < nv; i++) {
+          const r = rid[i] * 3;
+          if (mesh.metadata.def === "LigandSticks") { col[i * 4] = md.fileColors[i * 4]; col[i * 4 + 1] = md.fileColors[i * 4 + 1]; col[i * 4 + 2] = md.fileColors[i * 4 + 2]; continue; }
+          col[i * 4] = lin(table[r]); col[i * 4 + 1] = lin(table[r + 1]); col[i * 4 + 2] = lin(table[r + 2]);
+        }
+        md.base = col.slice();
+        mesh.updateVerticesData(B.VertexBuffer.ColorKind, col);
+        md.lit = [];
+      }
+      body.scheme = name;
+    };
+    /* highlights: residue index -> [r,g,b] (display colours); previous highlights are restored first */
+    body.highlight = function (map) {
+      for (const mesh of body.meshes) {
+        const md = mesh.metadata; if (!md.base) md.base = md.colors.slice();
+        const col = md.colors;
+        for (const v of md.lit) { col[v * 4] = md.base[v * 4]; col[v * 4 + 1] = md.base[v * 4 + 1]; col[v * 4 + 2] = md.base[v * 4 + 2]; }
+        md.lit = [];
+        for (const [r, c] of map) {
+          for (let k = md.start[r]; k < md.start[r + 1]; k++) { const v = md.order[k]; md.lit.push(v); col[v * 4] = lin(c[0]) * 1.3; col[v * 4 + 1] = lin(c[1]) * 1.3; col[v * 4 + 2] = lin(c[2]) * 1.3; }
+        }
+        mesh.updateVerticesData(B.VertexBuffer.ColorKind, col);
+      }
+    };
+    body.setLayer = function (name, on) {
+      body.layers[name] = on;
+      if (name === "sites") sites.setEnabled(on);
+      for (const m of body.meshes) {
+        if (name === "sticks" && m.metadata.def === "LigandSticks") m.setEnabled(on);
+        if (name === "nucleic" && (m.metadata.def.startsWith("Nucleic") || m.metadata.def === "BaseRungs")) m.setEnabled(on);
+      }
+    };
+    body.setCinema = function (on) {
+      body.cinema = on;
+      if (body.pipeline) {
+        try {
+          body.pipeline.depthOfFieldEnabled = on;
+          if (on) { const d = body.pipeline.depthOfField; d.focusDistance = cam.radius * 1000; d.fStop = 2.2; d.focalLength = 60; d.lensSize = 30; body.pipeline.depthOfFieldBlurLevel = B.DepthOfFieldEffectBlurLevel.Medium; body.effects.depthOfField = true; }
+          body.pipeline.chromaticAberrationEnabled = on; if (on) body.pipeline.chromaticAberration.aberrationAmount = 4;
+        } catch (e) { body.notes.push("depth of field skipped: " + e.message); body.effects.depthOfField = false; }
+      }
+    };
+    scene.onBeforeRenderObservable.add(() => {
+      const dt = engine.getDeltaTime() / 1000;
+      if (body.cinema) {
+        cam.alpha += dt * 0.12;
+        if (body.pipeline && body.pipeline.depthOfFieldEnabled) body.pipeline.depthOfField.focusDistance = cam.radius * 1000;
+      }
+    });
+    body.pick = function (x, y) {
+      const p = scene.pick(x, y, (m) => m.isPickable && m.metadata && m.metadata.resid);
+      if (!p || !p.hit || p.faceId < 0) return null;
+      const md = p.pickedMesh.metadata, idx = p.pickedMesh.getIndices();
+      return { resid: md.resid[idx[p.faceId * 3]], mesh: md.def, point: p.pickedPoint };
+    };
+    body.project = function (pos) {
+      const w = engine.getRenderWidth(), h = engine.getRenderHeight();
+      const v = B.Vector3.Project(new B.Vector3(pos[0], pos[1], pos[2]), B.Matrix.Identity(), scene.getTransformMatrix(), cam.viewport.toGlobal(w, h));
+      const k = canvas.clientWidth / w;
+      return { x: v.x * k, y: v.y * k, z: v.z, visible: v.z > 0 && v.z < 1 };
+    };
+    body.arc = function (a, b, color) {
+      if (body.arcMesh) { body.arcMesh.dispose(); body.arcMesh = null; }
+      if (!a || !b) return;
+      const A = new B.Vector3(...a), Bv = new B.Vector3(...b), mid = A.add(Bv).scale(0.5), out = mid.subtract(body.center);
+      const lift = Math.max(6, B.Vector3.Distance(A, Bv) * 0.35), c = mid.add(out.length() > 1e-3 ? out.normalize().scale(lift) : new B.Vector3(0, lift, 0));
+      const pts = []; for (let i = 0; i <= 32; i++) { const t = i / 32; pts.push(A.scale((1 - t) * (1 - t)).add(c.scale(2 * t * (1 - t))).add(Bv.scale(t * t))); }
+      const tube = B.MeshBuilder.CreateTube("paearc", { path: pts, radius: 0.22, tessellation: 8 }, scene);
+      const m = new B.StandardMaterial("arc", scene); m.emissiveColor = new B.Color3(...color); m.disableLighting = true; tube.material = m; tube.isPickable = false; tube.parent = root3;
+      body.arcMesh = tube;
+      if (body.glow) { try { body.glow.addIncludedOnlyMesh(tube); } catch (e) { /* global glow */ } }
+    };
+    body.screenshot = function () { return new Promise((res) => { scene.onAfterRenderObservable.addOnce(() => canvas.toBlob(res, "image/png")); scene.render(); }); };
+    body.info = function () {
+      const gl = engine.getGlInfo ? engine.getGlInfo() : {};
+      return { backend, renderer: gl.renderer || (root.__adapter && root.__adapter.info ? [root.__adapter.info.vendor, root.__adapter.info.architecture].filter(Boolean).join(" ") : ""), vendor: gl.vendor || "",
+        adapterVia: root.__adapterVia || "", babylon: B.Engine.Version, effects: body.effects, notes: body.notes };
+    };
+    engine.runRenderLoop(() => scene.render());
+    root.addEventListener("resize", () => engine.resize());
+    return body;
+  }
+  root.XMolBody = { create, residueColors, PL, CHAIN };
+})(typeof window !== "undefined" ? window : globalThis);
+
+/* x3d.mol page: catalogue, colour schemes, residue picking, zinc sites, the AlphaFold PAE map and the receipt card. */
+(function () {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const hp = new URLSearchParams(location.hash.slice(1));
+  const AA3 = { CYS: "C", HIS: "H", ASP: "D", GLU: "E" };
+  const BAND = [[90, "very high", "#0053d6"], [70, "confident", "#65cbf3"], [50, "low", "#ffdb13"], [0, "very low", "#ff7d45"]];
+  const SSNAME = { H: "helix", E: "strand", "-": "coil", n: "nucleic acid" };
+  const state = { catalog: null, receipt: null, credits: null, body: null, entry: null, model: null, scheme: "file", pinned: null, paeLock: null, hover: -1 };
+
+  async function getJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(url + " " + r.status); return r.json(); }
+  async function sha256(text) { const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)); return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, "0")).join(""); }
+  async function fetchScene(entry) {
+    try {
+      if (typeof DecompressionStream !== "undefined") {
+        const r = await fetch(entry.file + ".gz");
+        if (r.ok) return await new Response(r.body.pipeThrough(new DecompressionStream("gzip"))).text();
+      }
+    } catch (e) { /* fall through to the plain file */ }
+    const r = await fetch(entry.file); if (!r.ok) throw new Error(entry.file + " " + r.status);
+    return r.text();
+  }
+  const band = (v) => BAND.find(([lo]) => v >= lo) || BAND[3];
+
+  function buildCatalogue() {
+    const groups = [["pdb", "Zinc fingers, 14 deposited structures"], ["afdb", "AlphaFold DB, 5 predicted models"]];
+    $("#list").innerHTML = groups.map(([k, label]) => `<div data-kind="${k}"><h3>${label}</h3>` + state.catalog.scenes.filter((s) => s.kind === k).map((s) =>
+      `<button class="item" data-id="${esc(s.id)}"><b>${esc(s.id.replace(/-F1$/, "").toUpperCase())}</b><span>${esc(s.title.replace(/^[^:]+:\s*/, "").replace(/ \[chains.*$/, ""))}</span>` +
+      `<i>${s.residues} aa${s.sites.length ? " · " + s.sites.length + " Zn" : ""}${s.mean_plddt ? " · pLDDT " + s.mean_plddt : ""}</i></button>`).join("") + "</div>").join("");
+    buildCinema();
+    for (const t of document.querySelectorAll("#tabs button")) t.onclick = () => showTab(t.dataset.k);
+    showTab("pdb");
+    for (const b of document.querySelectorAll(".item")) b.onclick = () => load(b.dataset.id);
+  }
+
+  /* ---------- the Blender cut: Cycles stills of the same structures, and the X3D the Blender stage wrote ---------- */
+  function buildCinema() {
+    const c = state.cine; if (!c || !c.scenes) return;
+    const ids = Object.keys(c.scenes).filter((id) => c.scenes[id].jpg);
+    if (!ids.length) return;
+    $("#cineN").textContent = ids.length; $('#tabs [data-k="cine"]').hidden = false;
+    const title = (id) => { const e = state.catalog.scenes.find((s) => s.id === id); return e ? e.title.replace(/ \[chains.*$/, "") : id; };
+    const div = document.createElement("div"); div.dataset.kind = "cine";
+    div.innerHTML = `<h3>Rendered in Blender, ${ids.length} stills</h3>` + ids.map((id) => `<button class="shot" data-cine="${esc(id)}"><img src="cinema/${esc(c.scenes[id].jpg.file)}" alt="${esc(title(id))}, rendered in Blender" loading="lazy">` +
+      `<span>${esc(title(id))}</span><i>${c.scenes[id].colour === "plddt" ? "coloured by pLDDT" : "element colours, zinc in gold"} · X3D ${Math.round(c.scenes[id].x3d.gz.bytes / 1024)} KB gzip</i></button>`).join("");
+    $("#list").appendChild(div);
+    for (const b of div.querySelectorAll(".shot")) b.onclick = () => openCinema(b.dataset.cine);
+    $("#cineClose").onclick = () => { $("#cineBox").hidden = true; };
+    $("#cineOpen").onclick = () => { $("#cineBox").hidden = true; const id = $("#cineBox").dataset.id; load(id); };
+  }
+  function openCinema(id) {
+    const c = state.cine, s = c.scenes[id], g = state.gate && state.gate.scenes[id], t = c.tools, ctl = state.gate && state.gate.controls[id];
+    const e = state.catalog.scenes.find((x) => x.id === id);
+    const m = (g && g.measured) || {};
+    const wit = g ? (g.witness === "pass" ? `<span class="ok">pass</span>` : `<span class="bad">${esc([].concat(g.witness).join("; "))}</span>`) : "not run";
+    $("#cineBox").dataset.id = id;
+    $("#cineBody").innerHTML = `<h2>${esc(e ? e.title.replace(/ \[chains.*$/, "") : id)}, rendered in Blender</h2>
+      <img src="cinema/${esc(s.jpg.file)}" alt="${esc(id)} cartoon, rendered in Blender with Cycles">
+      <p>molecularnodes ${esc(t.molecularnodes)} draws the cartoon in Blender ${esc(t.blender)}; Cycles renders it on the CPU at ${c.render.samples} samples with ${esc(s.denoise)} and the ${esc(s.view_transform)} view transform.
+      ${s.colour === "plddt" ? "Colour is the AlphaFold confidence (pLDDT) band of each residue, in the molecularnodes palette." : "Colour is by element, with each chain's carbons in its own tint; zinc ions are gold spheres."}
+      The same mesh is then written as X3D by x3d-blender-io and checked before it is offered here.</p>
+      <dl><dt>X3D</dt><dd class="mono">${esc(s.x3d.file)} · ${s.evaluated_faces} faces · ${Math.round(s.x3d.bytes / 1024)} KB (${Math.round(s.x3d.gz.bytes / 1024)} KB gzip)</dd>
+      <dt>sha256</dt><dd class="mono">${esc(s.x3d.sha256.slice(0, 16))}…</dd>
+      <dt>written by</dt><dd>x3d-blender-io ${esc(t.x3d_blender_io.commit.slice(0, 12))}</dd>
+      <dt>validator</dt><dd>${g ? `x3d_mcp fork ${esc(state.gate.validator.commit.slice(0, 12))} · ${g.xsd_valid ? "XSD valid" : "XSD INVALID"}, ${g.semantic_errors} semantic errors, ${g.semantic_warnings} warnings` : "not run"}</dd>
+      <dt>witness</dt><dd>${wit}${m.ca_nearest_max_A !== undefined ? ` · every residue's backbone atom has a mesh vertex within ${m.ca_nearest_max_A} Å (median ${m.ca_nearest_median_A} Å) · ${(100 * m["mesh_within_3.5A_of_an_atom"]).toFixed(1)}% of vertices lie within 3.5 Å of an atom` : ""}${m.plddt_colour_agreement ? ` · ${(100 * m.plddt_colour_agreement).toFixed(1)}% of vertex colours match the nearest residue's pLDDT band` : ""}${m.zn_nearest_max_A !== undefined ? ` · every zinc within ${m.zn_nearest_max_A} Å of the mesh` : ""}</dd>
+      <dt>controls</dt><dd>${ctl ? `${ctl.filter((x) => x.ok).length} of ${ctl.length} behaved (shifted, wrong-source${s.colour === "plddt" ? ", one-colour and channel-swapped" : ""} copies refused; the honest file passed)` : "not run"}</dd></dl>
+      <p class="fine">${s.colour_channels_clamped_to_1 ? `${s.colour_channels_clamped_to_1} colour channels were clamped from 1.000169 to 1, because the X3D 4.0 schema refuses colours above 1. ` : ""}The live viewer on this page draws the scenes that the x3d.mol builder writes; drawing this Blender-made file live is the next step. The still is a picture of the same coordinates, not a measurement.</p>`;
+    $("#cineGet").href = "cinema/" + s.x3d.gz.file;
+    $("#cineBox").hidden = false;
+  }
+
+  function showTab(k) {
+    for (const t of document.querySelectorAll("#tabs button")) t.classList.toggle("on", t.dataset.k === k);
+    for (const d of document.querySelectorAll("#list [data-kind]")) d.hidden = d.dataset.kind !== k;
+  }
+  function schemeOptions(model) {
+    const o = [["file", "As written in the file"]];
+    if (model.meta.plddt) o.push(["plddt", "Confidence (pLDDT bands)"], ["plddt-smooth", "Confidence (smooth)"]);
+    o.push(["ss", "Secondary structure"], ["rainbow", "N to C terminus"], ["chain", "Chain"]);
+    if (model.meta.bfactor) o.push(["bfactor", "B-factor"]);
+    return o;
+  }
+
+  function legend(model) {
+    const m = model.meta;
+    if (state.scheme === "plddt" || state.scheme === "plddt-smooth" || (state.scheme === "file" && m.plddt)) {
+      const cnt = [0, 0, 0, 0]; for (const v of m.plddt) cnt[v >= 90 ? 0 : v >= 70 ? 1 : v >= 50 ? 2 : 3]++;
+      return BAND.map((b, i) => `<span><u style="background:${b[2]}"></u>${b[1]} (${i === 0 ? "&gt;90" : i === 3 ? "&lt;50" : b[0] + " to " + BAND[i - 1][0]}) ${cnt[i]}</span>`).join("");
+    }
+    if (state.scheme === "ss" || (state.scheme === "file" && !m.plddt)) return `<span><u style="background:#ed5485"></u>helix</span><span><u style="background:#f7c740"></u>strand</span><span><u style="background:#8caac7"></u>coil</span><span><u style="background:#40bfb3"></u>nucleic acid</span>`;
+    if (state.scheme === "chain") return m.chains.map((c, i) => { const k = XMolBody.CHAIN[i % XMolBody.CHAIN.length]; return `<span><u style="background:rgb(${k.map((v) => Math.round(v * 255)).join(",")})"></u>chain ${esc(c)}</span>`; }).join("");
+    if (state.scheme === "rainbow") return `<span class="grad"></span><span>N → C</span>`;
+    return "";
+  }
+
+  function renderInfo(model, entry) {
+    const m = model.meta, c = entry.citation || {};
+    const cite = entry.kind === "afdb"
+      ? `AlphaFold Protein Structure Database (DeepMind, EMBL-EBI), model ${esc(entry.source.file)} of ${esc((entry.source.created || "").slice(0, 10))}, CC-BY 4.0. Jumper et al., Nature 2021; Varadi et al., Nucleic Acids Res. 2024.`
+      : `${c.title ? esc(c.title) + ". " : ""}${c.first_author ? esc(c.first_author[0]) + " et al., " : ""}${esc(c.journal || "")} ${esc(c.year || "")}${c.doi ? ` · <a href="https://doi.org/${esc(c.doi)}" target="_blank" rel="noopener">doi:${esc(c.doi)}</a>` : ""}. Coordinates: wwPDB, CC0.`;
+    const sites = (model.sites || []).map((s) => {
+      const cls = s.donors.filter((d) => d.glow).sort((a, b) => a.index - b.index).map((d) => AA3[d.res.slice(0, 3)] || "x").join("");
+      return `<button class="chip" data-site="${esc(s.site)}">Zn ${esc(s.site)} · ${esc(cls)}</button>`;
+    }).join("");
+    $("#info").innerHTML = `<h2>${esc(model.title.replace(/ \[chains.*$/, ""))}</h2>
+      <p class="meta">${m.residues.length} residues · chains ${esc(m.chains.join(", "))}${m.focus ? ` · <span title="${esc(m.focus[0])}">focus view</span>` : ""}${entry.dssp_agreement ? ` · secondary structure by DSSP (pydssp), ${(entry.dssp_agreement.fraction * 100).toFixed(0)}% residue agreement with the deposited records` : " · secondary structure by DSSP (pydssp)"}</p>
+      ${sites ? `<div class="chips">${sites}</div>` : ""}<p class="cite">${cite}</p>`;
+    for (const b of document.querySelectorAll("[data-site]")) b.onclick = () => state.body.focusSite(b.dataset.site);
+    $("#legend").innerHTML = legend(model);
+  }
+
+  function renderReceipt(entry, shaOk, text) {
+    const r = state.receipt, sc = r && r.scenes && r.scenes[entry.id], bi = state.body.info();
+    const fx = Object.entries(bi.effects).filter(([, v]) => v).map(([k, v]) => k + (typeof v === "number" ? " " + v + "x" : "")).join(", ");
+    $("#receipt").innerHTML = `<h4>Receipt</h4>
+      <dl><dt>scene</dt><dd>${esc(entry.id)}.x3d · ${(entry.bytes / 1024).toFixed(0)} KB (${(entry.gz_bytes / 1024).toFixed(0)} KB gzip)</dd>
+      <dt>sha256</dt><dd class="mono">${esc(entry.sha256.slice(0, 16))}… ${shaOk ? '<b class="ok">matches the file served</b>' : '<b class="bad">DIFFERS from the catalog</b>'}</dd>
+      <dt>validator</dt><dd>${r ? esc(r.validator.tool) + " <span class='mono'>" + esc(r.validator.commit.slice(0, 12)) + "</span>" + (sc ? ` · ${sc.xsd_valid ? "XSD valid" : "<b class='bad'>XSD invalid</b>"}, ${sc.semantic_errors} semantic errors, ${sc.semantic_warnings} warnings` : "") : "receipt not loaded"}</dd>
+      <dt>witness</dt><dd>${r && sc ? (sc.witness === "pass" ? '<b class="ok">pass</b>' : '<b class="bad">' + esc(sc.witness) + "</b>") + ` · ${r.controls.negative} negative controls rejected, ${r.controls.positive} positive passed` : "n/a"}</dd>
+      <dt>drawn by</dt><dd>${esc(bi.backend)} · Babylon ${esc(bi.babylon)}${bi.renderer ? " · " + esc(bi.renderer) : ""}</dd>
+      <dt>effects</dt><dd>${esc(fx || "none")}${bi.notes.length ? " · skipped: " + esc(bi.notes.join("; ")) : ""}</dd>
+      <dt>skipped nodes</dt><dd>${esc(JSON.stringify(state.model.skipped) === "{}" ? "none" : JSON.stringify(state.model.skipped))}</dd>
+      <dt>fps</dt><dd id="fps">…</dd></dl><p class="fine">No GPU timing is claimed anywhere on this page.</p>`;
+  }
+
+  /* ---------- residue card ---------- */
+  function residueCard(i, pinned) {
+    const m = state.model.meta, [ch, name, num] = m.residues[i].split(":");
+    const v = m.plddt ? m.plddt[i] : null, bf = m.bfactor ? m.bfactor[i] : null, ss = m.ss[0][i];
+    const b = v !== null ? band(v) : null;
+    $("#residue").hidden = false;
+    $("#residue").innerHTML = `<b>${esc(name)} ${esc(num)}</b> <span>chain ${esc(ch)}</span>${pinned ? " <em>pinned</em>" : ""}<br>` +
+      (v !== null ? `pLDDT <b style="color:${b[2]}">${v.toFixed(1)}</b> · ${b[1]}` : `B-factor ${bf.toFixed(1)}`) + `<br>${SSNAME[ss]}`;
+  }
+  function setHover(i) {
+    if (i === state.hover) return; state.hover = i;
+    const map = new Map(); if (state.paeLock) for (const [k, c] of state.paeLock) map.set(k, c);
+    if (state.pinned !== null) map.set(state.pinned, [1, 1, 1]);
+    if (i >= 0) map.set(i, [0.8, 1, 1]);
+    state.body.highlight(map);
+    if (i >= 0) residueCard(i, i === state.pinned); else if (state.pinned !== null) residueCard(state.pinned, true); else $("#residue").hidden = true;
+  }
+
+  /* ---------- PAE teaser ---------- */
+  function paeColor(v) { // 0 A dark green .. 30 A white (the AlphaFold DB convention: low error is dark)
+    const t = Math.min(1, v / 31), stops = [[0, [0.0, 0.3, 0.2]], [0.45, [0.35, 0.75, 0.6]], [1, [0.97, 0.99, 0.98]]];
+    for (let k = 1; k < stops.length; k++) if (t <= stops[k][0]) { const a = stops[k - 1], b = stops[k], u = (t - a[0]) / (b[0] - a[0]); return a[1].map((x, j) => Math.round(255 * (x + (b[1][j] - x) * u))); }
+    return [247, 252, 250];
+  }
+  function buildPAE(model) {
+    const m = model.meta, box = $("#pae");
+    $("#paeBtn").hidden = !m.pae_half_angstrom;
+    if (!m.pae_half_angstrom) { box.hidden = true; return; }
+    box.hidden = false;
+    const N = m.residues.length, q = m.pae_half_angstrom, M = 8, W = N + M;
+    const cv = $("#paeCanvas"); cv.width = W; cv.height = W;
+    const g = cv.getContext("2d"), img = g.createImageData(W, W);
+    for (let p = 0; p < W * W; p++) { img.data[p * 4 + 3] = 255; img.data[p * 4] = img.data[p * 4 + 1] = img.data[p * 4 + 2] = 10; }
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { const c = paeColor(q[i * N + j] * 0.5), o = ((i + M) * W + (j + M)) * 4; img.data[o] = c[0]; img.data[o + 1] = c[1]; img.data[o + 2] = c[2]; }
+    const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+    for (let i = 0; i < N; i++) { const c = hex(band(m.plddt[i])[2]); for (let k = 0; k < M - 3; k++) { let o = ((i + M) * W + k) * 4; img.data.set([c[0], c[1], c[2]], o); o = (k * W + i + M) * 4; img.data.set([c[0], c[1], c[2]], o); } }
+    g.putImageData(img, 0, 0);
+    state.pae = { N, M, W };
+    cv.onpointermove = (e) => paeAt(e, false);
+    cv.onpointerleave = () => { if (!state.paeLocked) paeClear(); };
+    cv.onclick = (e) => { state.paeLocked = !state.paeLocked; if (state.paeLocked) paeAt(e, true); else paeClear(); };
+  }
+  function paeAt(e, force) {
+    if (state.paeLocked && !force) return;
+    const { N, M, W } = state.pae, r = e.currentTarget.getBoundingClientRect();
+    const j = Math.floor(((e.clientX - r.left) / r.width) * W) - M, i = Math.floor(((e.clientY - r.top) / r.height) * W) - M;
+    if (i < 0 || j < 0 || i >= N || j >= N) return;
+    const v = state.model.meta.pae_half_angstrom[i * N + j] * 0.5, ca = state.model.meta.ca, lab = (k) => state.model.meta.residues[k].split(":").slice(1).join(" ");
+    $("#paeRead").innerHTML = `row <b>${lab(i)}</b> · column <b>${lab(j)}</b><br>PAE <b>${v.toFixed(1)} Å</b> (half-Å steps; entry [${i + 1}][${j + 1}] of the file, not symmetric)`;
+    state.paeLock = new Map([[i, [0.2, 0.9, 1]], [j, [1, 0.35, 0.85]]]);
+    state.hover = -2; setHover(-1);
+    state.body.arc([ca[i * 3], ca[i * 3 + 1], ca[i * 3 + 2]], [ca[j * 3], ca[j * 3 + 1], ca[j * 3 + 2]], v < 5 ? [0.3, 1, 0.7] : v < 15 ? [1, 0.85, 0.3] : [1, 0.4, 0.3]);
+  }
+  function paeClear() { state.paeLock = null; state.body.arc(null); state.hover = -2; setHover(-1); $("#paeRead").textContent = "Hover the map: each cell is the model's own error estimate for one pair of residues."; }
+
+  /* ---------- labels for the zinc bonds ---------- */
+  function buildLabels(model) {
+    const host = $("#labels"); host.innerHTML = "";
+    state.labelEls = model.labels.map((l) => { const d = document.createElement("div"); d.className = "lbl"; d.textContent = l.text; host.appendChild(d); return { el: d, pos: l.pos }; });
+  }
+  function placeLabels() {
+    const on = state.body.layers.sites !== false;
+    for (const l of state.labelEls || []) {
+      const p = state.body.project(l.pos);
+      const dist = state.body.camera.position.subtract(new BABYLON.Vector3(...l.pos)).length();
+      l.el.style.display = on && p.visible && dist < 90 ? "block" : "none";
+      l.el.style.transform = `translate(${p.x}px,${p.y}px) translate(-50%,-50%)`;
+      l.el.style.opacity = String(Math.max(0.25, Math.min(1, 1.3 - dist / 90)));
+    }
+  }
+
+  /* ---------- loading ---------- */
+  async function load(id) {
+    const entry = state.catalog.scenes.find((s) => s.id === id) || state.catalog.scenes[0];
+    $("#busy").hidden = false; $("#busy").textContent = "Reading " + entry.id + "…";
+    for (const b of document.querySelectorAll(".item")) b.classList.toggle("on", b.dataset.id === entry.id);
+    showTab(entry.kind);
+    const text = await fetchScene(entry);
+    const shaOk = (await sha256(text)) === entry.sha256;
+    const model = XMolReader.parseX3D(text);
+    state.entry = entry; state.model = model; state.pinned = null; state.paeLock = null; state.paeLocked = false; state.hover = -1;
+    state.body.setModel(model);
+    state.scheme = "file";
+    $("#scheme").innerHTML = schemeOptions(model).map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("");
+    const want = hp.get("scheme"); if (want && [...$("#scheme").options].some((o) => o.value === want)) { $("#scheme").value = want; state.scheme = want; state.body.setScheme(want); }
+    $("#core").hidden = !model.meta.plddt;
+    renderInfo(model, entry); renderReceipt(entry, shaOk); buildPAE(model); buildLabels(model);
+    $("#residue").hidden = true; paeClear && state.pae && paeClear();
+    $("#busy").hidden = true;
+    history.replaceState(null, "", "#scene=" + entry.id + (state.scheme !== "file" ? "&scheme=" + state.scheme : ""));
+    window.__xmolReady = { id: entry.id, meshes: state.body.meshes.length, backend: state.body.backend };
+  }
+
+  async function boot() {
+    try {
+      const [cat, rec, cred, cine, gate] = await Promise.all([getJSON("scenes/catalog.json"), getJSON("scenes/receipt.json").catch(() => null), getJSON("scenes/credits.json").catch(() => null),
+        getJSON("cinema/receipt.json").catch(() => null), getJSON("cinema/gate.json").catch(() => null)]);
+      Object.assign(state, { catalog: cat, receipt: rec, credits: cred, cine, gate });
+      buildCatalogue();
+      const q = hp.get("q") || (matchMedia("(max-width:700px)").matches ? "low" : "high");
+      state.body = await XMolBody.create($("#stage"), { quality: q, webgpu: hp.get("gpu") !== "0" });
+      $("#backend").textContent = state.body.backend === "webgpu" ? "WebGPU" : "WebGL2";
+      if (state.body.backend !== "webgpu") $("#gpuhint").hidden = false;
+      $("#scheme").onchange = (e) => { state.scheme = e.target.value; state.body.setScheme(state.scheme); renderInfo(state.model, state.entry); };
+      for (const k of ["sites", "sticks", "nucleic"]) $("#l_" + k).onchange = (e) => state.body.setLayer(k, e.target.checked);
+      $("#cinema").onclick = () => { const on = !state.body.cinema; state.body.setCinema(on); $("#cinema").classList.toggle("on", on); document.body.classList.toggle("cinema", on); };
+      $("#shot").onclick = async () => { const b = await state.body.screenshot(); const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = `x3d-mol-${state.entry.id}.png`; a.click(); };
+      $("#reset").onclick = () => state.body.frame(false);
+      $("#core").onclick = () => state.body.focusCore(70);
+      $("#hide").onclick = () => document.body.classList.toggle("nui");
+      $("#about").onclick = () => { $("#aboutBox").hidden = false; };
+      $("#aboutClose").onclick = () => { $("#aboutBox").hidden = true; };
+      document.addEventListener("keydown", (e) => { if (e.target.tagName === "SELECT") return; if (e.key === "h") $("#hide").click(); if (e.key === "c") $("#cinema").click(); if (e.key === "Escape") { $("#cineBox").hidden = true; state.pinned = null; paeClear && state.pae && (state.paeLocked = false, paeClear()); setHover(-1); } });
+      const cv = $("#stage");
+      let down = null;
+      cv.addEventListener("pointerdown", (e) => { down = [e.clientX, e.clientY]; });
+      cv.addEventListener("pointerup", (e) => {
+        if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 4) return; down = null;
+        const r = cv.getBoundingClientRect(), p = state.body.pick(e.clientX - r.left, e.clientY - r.top);
+        state.pinned = p ? p.resid : null; state.hover = -2; setHover(p ? p.resid : -1);
+      });
+      let pending = false;
+      cv.addEventListener("pointerleave", () => { if (!state.paeLocked) setHover(-1); });
+      cv.addEventListener("pointermove", (e) => {
+        if (e.buttons || pending) return; pending = true;
+        const x = e.clientX, y = e.clientY;
+        requestAnimationFrame(() => { pending = false; const r = cv.getBoundingClientRect(), p = state.body.pick(x - r.left, y - r.top); cv.style.cursor = p ? "pointer" : "grab"; setHover(p ? p.resid : -1); });
+      });
+      state.body.scene.onAfterRenderObservable.add(() => { placeLabels(); const f = $("#fps"); if (f && (state.tick = (state.tick || 0) + 1) % 30 === 0) f.textContent = state.body.engine.getFps().toFixed(0) + " fps (this machine, this frame size; not a benchmark)"; });
+      renderAbout(); window.__xmolState = state;
+      await load(hp.get("scene") || "1aay");
+      if (hp.get("cinema") === "1") $("#cinema").click();
+      if (hp.get("ui") === "0") document.body.classList.add("nui");
+    } catch (e) {
+      console.error(e); $("#busy").hidden = false; $("#busy").textContent = "Could not start: " + e.message; window.__xmolError = String(e.stack || e);
+    }
+  }
+
+  function renderAbout() {
+    const c = state.credits;
+    const papers = c ? c.papers.map((p) => `<li>${esc(p.authors)} <i>${esc(p.title)}</i>. ${p.journal ? esc(p.journal) + " " : ""}${esc(p.year || "")}${p.doi ? ` · <a href="https://doi.org/${esc(p.doi)}" target="_blank" rel="noopener">doi:${esc(p.doi)}</a>` : ""}</li>`).join("") : "";
+    $("#aboutBody").innerHTML = `<h2>About x3d.mol</h2>
+      <p>Public protein structures, written as X3D 4.0, checked by a validator and a second reader, and drawn by Babylon.js. Every number in the Receipt card names the instrument behind it.</p>
+      <h3>Credit</h3>
+      <p>The zinc finger work follows the published research of Sarah Lucie Jane Michel's laboratory at the University of Maryland School of Pharmacy on zinc finger proteins (tristetraprolin, ZRANB2, YY1, PARP1, CPSF30). The structures drawn here were determined by other groups and are cited on each entry. <b>This project is independent: the laboratory did not review or endorse it.</b></p>
+      ${papers ? `<details><summary>${c.papers.length} published papers by the laboratory on these proteins</summary><ul class="papers">${papers}</ul><p class="fine">Bibliographic data: ${esc(c.source)}, retrieved ${esc(c.retrieved)}.</p></details>` : ""}
+      <h3>Data and licences</h3>
+      <ul><li>Zinc finger entries: wwPDB archive snapshot of 1 January 2026, CC0 1.0.</li>
+      <li>Predicted models: AlphaFold Protein Structure Database (DeepMind and EMBL-EBI), CC-BY 4.0. Jumper et al., Nature 596, 583 (2021); Varadi et al., Nucleic Acids Res. 52, D368 (2024).</li>
+      <li>Secondary structure: DSSP rules as implemented in pydssp. Parsing: gemmi. Rendering: Babylon.js 9.32.0 (Apache-2.0).</li></ul>
+      <h3>Reading the picture</h3>
+      <ul><li>Colour on the AlphaFold models is the database's pLDDT palette. Low confidence is common in flexible stretches and is not an error in the drawing.</li>
+      <li>Bonds to zinc glow only while they measure under 2.5 Å; each label is the length measured from the deposited coordinates.</li>
+      <li>Materials, lights, bloom, depth of field and the studio environment are look, not data.</li></ul>
+      <p class="fine">Where WebGPU is blocked (some Windows Chrome builds list the Intel UHD 620 as unsupported), enable <span class="mono">chrome://flags/#enable-unsafe-webgpu</span>; the page falls back to WebGL2 on its own.</p>`;
+  }
+  boot();
+})();
+
+</script>
+</body>
+</html>
