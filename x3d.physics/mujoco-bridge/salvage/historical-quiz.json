@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "source": {
+    "archive_name": "mujoco-expert-training-playground.zip",
+    "archive_sha256": "2ddbf2b9e02a3e4d75e0ef12254e91e1dc6cb254ed5b957d1a1165824cab9131",
+    "source_project": "A — richer teaching interface with handwritten dynamics",
+    "file": "src/data/learn.ts"
+  },
+  "review_status": "historical_unreviewed",
+  "publication_status": "reference_only_not_authoritative",
+  "preservation": "Original question text, answers, and explanations preserved. Review against current MuJoCo documentation before learner-facing use.",
+  "legacy_pass_score": 4,
+  "legacy_pass_xp": 150,
+  "known_issues": [
+    {
+      "question_id": "pipeline",
+      "source": "src/data/learn.ts:376",
+      "issue": "The blanket claim that sensors are evaluated at the end of the step needs correction/qualification."
+    },
+    {
+      "question_id": "solref",
+      "source": "src/data/learn.ts:345-350",
+      "issue": "The selected positive solref example is appropriate, but any generalized explanation must mention the separate direct negative-value format."
+    }
+  ],
+  "questions": [
+    {
+      "id": "qpos-qvel",
+      "prompt": "A floating rigid body uses one freejoint. How many position (qpos) and velocity (qvel) coordinates does it contribute?",
+      "options": [
+        "3 qpos / 3 qvel",
+        "6 qpos / 6 qvel",
+        "7 qpos / 6 qvel",
+        "7 qpos / 7 qvel"
+      ],
+      "correct": 2,
+      "explanation": "A freejoint contributes a 3D position plus a unit quaternion (7 qpos) and a 3D linear plus 3D angular velocity (6 qvel). The quaternion is constrained, so nq exceeds nv.",
+      "review_status": "historical_unreviewed"
+    },
+    {
+      "id": "solref",
+      "prompt": "In <geom solref=\".02 1\">, what does the second number represent?",
+      "options": [
+        "Contact stiffness in N/m",
+        "The damping ratio",
+        "Friction cone width",
+        "Solver iteration count"
+      ],
+      "correct": 1,
+      "explanation": "solref is [timeconst, dampratio]. The first value is a time constant, the second is the damping ratio. It is not a stiffness-like game-engine spring.",
+      "review_status": "historical_unreviewed"
+    },
+    {
+      "id": "diagnosis",
+      "prompt": "A freshly loaded robot jitters at rest. What is the best first diagnostic step?",
+      "options": [
+        "Shrink timestep until the jitter disappears",
+        "Increase kp on every joint",
+        "Turn actuators off and inspect contacts and joint axes",
+        "Switch to Euler integration"
+      ],
+      "correct": 2,
+      "explanation": "Reproduce the problem in the passive model. Jitter often comes from collision geometry, an unintended joint axis, or an impossible initial pose. Hide the symptom with timestep only after the model is credible.",
+      "review_status": "historical_unreviewed"
+    },
+    {
+      "id": "pipeline",
+      "prompt": "Which sequence matches a MuJoCo simulation step?",
+      "options": [
+        "Integrate → collision → solve → kinematics",
+        "Kinematics → collision → constraints → forward dynamics → integrate",
+        "Solve constraints → integrate → build Jacobians → collide",
+        "Sensors → actuator force → reset → integrate"
+      ],
+      "correct": 1,
+      "explanation": "mj_step propagates the kinematic tree, detects collision, assembles and solves constraints, computes forward dynamics, then integrates. Sensors are evaluated at the end of the step.",
+      "review_status": "historical_unreviewed"
+    },
+    {
+      "id": "actuators",
+      "prompt": "You want a joint-space servo with position and velocity gains inside the model. Which actuator type should you reach for?",
+      "options": [
+        "<motor>",
+        "<position>",
+        "<velocity>",
+        "<damper>"
+      ],
+      "correct": 1,
+      "explanation": "A <position> actuator is MuJoCo's internal servo with kp and kv. Stacking a large hand-written PD loop on top of it usually causes the two controllers to fight.",
+      "review_status": "historical_unreviewed"
+    }
+  ]
+}

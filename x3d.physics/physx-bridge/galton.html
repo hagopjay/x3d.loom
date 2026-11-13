@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Galton board · standard X3D on PhysX</title>
+<link rel="stylesheet" href="./src/demos/demo.css">
+<script src="./vendor/x_ite/x_ite.min.js"></script>
+</head>
+<body data-mode="run">
+<header>
+  <div class="title"><h1>Galton board</h1><span id="tagline"></span></div>
+  <nav id="demo-nav" aria-label="Demos"></nav>
+  <span id="status" class="dim" role="status"></span>
+</header>
+<main class="demo">
+  <section id="stage">
+    <x3d-canvas id="canvas" splashScreen="false" contextMenu="false" notifications="false"></x3d-canvas>
+    <div id="hud" aria-live="polite"></div>
+  </section>
+  <aside id="side"></aside>
+</main>
+<div hidden>
+  <section id="panels">
+    <section>
+      <h2>The board</h2>
+      <label class="slider">beads <output id="beads-out"></output><input id="beads" type="range" aria-label="Number of beads"></label>
+      <label class="slider">rows of pins <output id="rows-out"></output><input id="rows" type="range" aria-label="Rows of pins"></label>
+      <label class="slider">pin pitch <output id="pitch-out"></output><input id="pitch" type="range" aria-label="Distance between pins in a row"></label>
+      <label class="slider">bounce (restitution) <output id="bounce-out"></output><input id="bounce" type="range" aria-label="Bounce"></label>
+      <p class="hint">These rebuild the board. Tilt and Shake change RigidBodyCollection.gravity while it runs. Tilting does not simply slide the bell downhill: sideways gravity speeds beads up between pins, so it mostly flattens (measured in Node: σ 2.5 bins level, 2.9 at 4°, 3.6 at 8°; the centre moved +0.45 and +0.23 bins).</p>
+    </section>
+    <section>
+      <h2>Bins</h2>
+      <div class="legend" id="hist-legend"></div>
+      <div id="hist"></div>
+      <div class="row"><button id="hist-table-toggle">Table <kbd>Y</kbd></button></div>
+      <div id="hist-table" class="chart-table" hidden></div>
+      <dl id="galton-readout" class="readout"></dl>
+      <p class="hint">If every pin were a fair coin, bin k would get Binomial(rows, ½). Real beads remember their momentum; the pitch decides how much: try 18 mm (beads zigzag, narrow) and 24 mm (beads stair-step, wide).</p>
+    </section>
+  </section>
+</div>
+<script type="module" src="./src/demos/galton.ts"></script>
+</body>
+</html>

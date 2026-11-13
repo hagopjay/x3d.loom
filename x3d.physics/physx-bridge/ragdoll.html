@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Stairs of doom · standard X3D on PhysX</title>
+<link rel="stylesheet" href="./src/demos/demo.css">
+<script src="./vendor/x_ite/x_ite.min.js"></script>
+</head>
+<body data-mode="run">
+<header>
+  <div class="title"><h1>Stairs of doom</h1><span id="tagline"></span></div>
+  <nav id="demo-nav" aria-label="Demos"></nav>
+  <span id="status" class="dim" role="status"></span>
+</header>
+<main class="demo">
+  <section id="stage">
+    <x3d-canvas id="canvas" splashScreen="false" contextMenu="false" notifications="false"></x3d-canvas>
+    <div id="hud" aria-live="polite"></div>
+  </section>
+  <aside id="side"></aside>
+</main>
+<div hidden>
+  <section id="panels">
+    <section>
+      <h2>Ouch-o-meter</h2>
+      <div class="big" id="ouch-big">0</div>
+      <div class="dim" id="ouch-combo"></div>
+      <div id="ouch-bars" class="bars" role="table" aria-label="Points by body part"></div>
+      <dl id="ouch-readout" class="readout"></dl>
+      <p class="hint">Points are the real impact impulses PhysX reports on each body part (N·s; taps under 2 are ignored), the head counting triple, quick runs of hits building a combo. Stiffness, limits and mass come from the H-Anim file's own fields.</p>
+    </section>
+  </section>
+</div>
+<script type="module" src="./src/ragdoll/ragdoll.ts"></script>
+</body>
+</html>

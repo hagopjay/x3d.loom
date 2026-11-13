@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>MuJoCo Observatory — Recovery assessment</title>
+<style>
+:root{--bg:#0c1215;--panel:#121c20;--line:#26363b;--text:#dce7e8;--muted:#9aaeb2;--lime:#d4ef91;--cyan:#81dce3;--amber:#f2c17d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 90% 0%,#1d3030 0,transparent 43%),var(--bg);color:var(--text);font:16px/1.72 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--cyan);text-underline-offset:3px}a:hover{color:var(--lime)}a:focus-visible{outline:2px solid var(--lime);outline-offset:4px}main{max-width:1120px;margin:auto;padding:54px 38px 70px}.kicker,.eyebrow,.section-no{font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.15em;text-transform:uppercase}.kicker{color:var(--lime);display:flex;gap:20px;justify-content:space-between;border-top:1px solid var(--line);padding-top:16px}.eyebrow{color:var(--muted)}h1,h2,h3{font-weight:620;line-height:1.16;letter-spacing:-.035em;color:#f1f6f4}h1{font-size:clamp(38px,6vw,70px);max-width:830px;margin:35px 0 23px}h1 em{font-style:normal;color:var(--lime)}h2{font-size:30px;margin:8px 0 20px}h3{font-size:19px;margin:0 0 12px}p{margin:0 0 18px}.lead{font-size:20px;color:#bdcdd0;line-height:1.55;max-width:880px}.lede-note{max-width:890px;color:var(--muted)}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:30px 0}.metric{padding:19px 20px;background:#132024;border:1px solid var(--line);border-radius:12px}.metric strong{font-size:34px;line-height:1;letter-spacing:-.04em;color:var(--lime)}.metric span{display:block;color:var(--muted);font-size:12px;margin-top:10px}nav{display:flex;flex-wrap:wrap;gap:9px 22px;padding:17px 0 22px;border-bottom:1px solid var(--line);font-size:12px}nav a{text-decoration:none;color:var(--muted)}section{margin-top:47px;scroll-margin-top:25px}.section-no{color:var(--cyan)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{background:linear-gradient(135deg,#162228,#111b1f);border:1px solid var(--line);border-radius:14px;padding:23px}.card .tag{display:inline-block;font:10px ui-monospace,Consolas,monospace;letter-spacing:.11em;border:1px solid #38504b;color:var(--lime);border-radius:30px;padding:5px 8px;margin-bottom:14px}.card p:last-child{margin-bottom:0}.evidence{font-size:12px;line-height:1.65;color:var(--muted)}.evidence code{font-size:11px}.callout{border-left:3px solid var(--lime);background:#18241f;padding:18px 22px;margin:24px 0;border-radius:0 10px 10px 0}.callout p:last-child{margin-bottom:0}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:22px 0}table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:var(--muted);font-size:11px;letter-spacing:.06em;background:#152126}th,td{padding:13px 15px;vertical-align:top;border-bottom:1px solid var(--line)}tr:last-child td{border-bottom:0}td strong{color:var(--lime)}code{font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;background:#111c20;padding:2px 4px;border-radius:4px;overflow-wrap:anywhere}pre{overflow-x:auto;background:#081014;padding:18px 20px;border:1px solid var(--line);border-radius:10px;font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--lime)}pre code{padding:0;background:transparent;font:inherit}ul,ol{padding-left:22px;margin:14px 0 20px}li{margin:9px 0}.muted{color:var(--muted)}.warning{color:var(--amber)}.choices{counter-reset:choice}.choice{position:relative;padding:18px 20px 18px 58px;border-top:1px solid var(--line)}.choice::before{counter-increment:choice;content:"0" counter(choice);position:absolute;left:14px;top:20px;color:var(--lime);font:17px ui-monospace,Consolas,monospace}.choice p{margin:5px 0 0;color:var(--muted);font-size:14px}.sources{font-size:12px;color:var(--muted);padding-top:22px;border-top:1px solid var(--line);margin-top:42px}.sources li{margin:8px 0}.hash{word-break:break-all;font-size:10px}footer{display:flex;gap:20px;justify-content:space-between;margin-top:30px;color:var(--muted);font-size:11px}strong{color:#f0f6ef}
+@media(max-width:700px){main{padding:30px 20px}.grid{grid-template-columns:1fr}.metric{padding:15px 12px}.metric strong{font-size:27px}.metric span{font-size:10px}h2{font-size:25px}.lead{font-size:18px}.kicker{font-size:9px}.card{padding:20px}th,td{padding:10px}footer{flex-direction:column;gap:4px}}
+@media print{body{background:white;color:#222;font-size:10pt}main{max-width:none;padding:0}h1,h2,h3,strong{color:#132721}h1{font-size:34pt}h1 em,.section-no,.metric strong{color:#315a36}.card,.metric,.callout,th,code,pre{background:#f4f7f4;color:#222}.muted,.evidence,.eyebrow,.sources,footer,.lead,.lede-note{color:#4a5756}.card,table,.callout,.choice{break-inside:avoid}a{color:#245b67}section{margin-top:28px}nav{display:none}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="kicker"><span>MuJoCo Observatory / Recovery assessment</span><span>29 October 2026</span></div>
+  <h1>There is a worthwhile lab<br><em>inside these prototypes.</em></h1>
+  <p class="lead">Both archives can contribute. The strongest foundation combines the second project's genuine MuJoCo runtime with the first project's teaching ideas and visual ambition.</p>
+  <p class="lede-note">The recovered package repairs measurable faults, extracts useful assets with provenance, and establishes a clear experiment workflow. The next integration should grow from this evidence, with you choosing the direction.</p>
+  <div class="metrics">
+    <div class="metric"><strong>32 / 32</strong><span>Real-engine verification checks passed</span></div>
+    <div class="metric"><strong>7 + 5</strong><span>Bundled presets + extracted MJCF starters compiled and stepped</span></div>
+    <div class="metric"><strong>11 + 5</strong><span>Historical lessons + quiz questions recovered for review</span></div>
+  </div>
+</header>
+<nav aria-label="Report sections"><a href="#assessment">The two archives</a><a href="#repairs">Measured repairs</a><a href="#control">A meaningful control test</a><a href="#deliverables">Recovered material</a><a href="#vision">Integration direction</a><a href="#decisions">Three decisions</a></nav>
+
+<section id="assessment">
+  <div class="section-no">01 / Assessment</div>
+  <h2>Two different kinds of value</h2>
+  <div class="grid">
+    <article class="card"><span class="tag">ARCHIVE A · TEACHING &amp; DESIGN</span><h3>mujoco-expert-training-playground.zip</h3><p>A substantial React/Three.js teaching prototype: five scenes, eleven lessons, five challenges, a quiz, a searchable reference, a command palette, and a coherent visual language. Its original production build and strict TypeScript check pass.</p><p>The moving mechanisms are driven by handwritten JavaScript equations. The XML editor extracts selected numbers into those equations. It never compiles the model into MuJoCo. Hard-coded labels nevertheless describe <code>implicitfast</code>, Newton, and <code>mjData</code>. Those claims cannot be carried into a serious laboratory.</p></article>
+    <article class="card"><span class="tag">ARCHIVE B · ENGINE FOUNDATION</span><h3>mujoco-expert-training-playground (1).zip</h3><p>This project actually loads the official <code>@mujoco/mujoco</code> WebAssembly package, compiles MJCF, calls the engine, and renders compiled geometry through Three.js. Seven presets and six challenge definitions provide a useful starting set.</p><p>The integration had consequential faults in timekeeping, energy reporting, model replacement, challenge isolation, and resource management. These are repairable engineering problems. This project is the base of the recovered application.</p></article>
+  </div>
+  <p class="evidence">Evidence: archive A <code>src/lib/physics.ts:64–215</code>, <code>src/data/models.ts:504–615</code>, <code>src/components/Inspector.tsx:444–460</code>; archive B <code>src/mujoco/engine.ts</code>. The detailed A extraction ledger is <a href="salvage/INVENTORY.md">salvage/INVENTORY.md</a>.</p>
+  <p>A's scene renderer also contains mismatches between displayed and calculated motion: pendulum lengths are compounded by nested scaling, its second-link angle uses a different convention from the equations, and arm cylinders scale along the wrong local axis. Its lighting, composition, controls, and teaching flow remain useful. The recovered workspace obtains physical poses from the real engine.</p>
+</section>
+
+<section id="repairs">
+  <div class="section-no">02 / Repairs with evidence</div>
+  <h2>Make time, state, and results trustworthy</h2>
+  <p>The inherited frame loop rounded physics work upward every display frame. An accumulator now retains fractional timesteps between frames. Pause, slow motion, and single-step behavior have explicit meanings. Catch-up work is bounded, so an overloaded or suspended tab can still fall behind real time.</p>
+  <div class="table-wrap"><table><thead><tr><th>CONTROLLED CHECK</th><th>ORIGINAL B</th><th>RECOVERED</th></tr></thead><tbody>
+    <tr><td>1 wall-clock second at 30 Hz; physics dt 0.01 s</td><td>1.20 simulated seconds</td><td><strong>1.00 second</strong></td></tr>
+    <tr><td>Same check at 60 Hz</td><td>1.20 simulated seconds</td><td><strong>1.00 second</strong></td></tr>
+    <tr><td>Same check at 144 Hz</td><td>1.44 simulated seconds</td><td><strong>1.00 second</strong></td></tr>
+    <tr><td>Kinetic energy: 1 kg moving at 2 m/s</td><td>Displayed 0 J</td><td><strong>2 J</strong>, matching ½mv²</td></tr>
+  </tbody></table></div>
+  <p class="evidence">Measured records: <a href="validation/original-b-baseline.json">original-b-baseline.json</a> and <a href="validation/runtime-results.json">runtime-results.json</a>. These tests use the actual MuJoCo 3.17.0 WASM module under Node, not substituted dynamics.</p>
+  <p>Model replacement now constructs a candidate before releasing the current model. A compile failure preserves the last working simulation. Challenge checks allocate an independent model/data pair, copy editable live options, reset, and measure the goal; they preserve the user's workspace. A wrong model is rejected before stepping.</p>
+  <p>Energy is explicitly computed for observation, duplicate telemetry timestamps are suppressed, and derived poses are refreshed after stepping. Resource cleanup follows the installed bindings' ownership rules. Model-local mesh caches are cleared on replacement. Unlimited hinge angles remain continuous rather than being wrapped to one revolution.</p>
+  <p>The inspector now exposes all seven position and six velocity values of a free joint, and all four quaternion and three angular-velocity values of a ball joint. It labels quaternion order, coordinates, units, and addresses. Live options are clearly distinguished from source XML; contact override fields require the override flag. See the official <a href="https://mujoco.readthedocs.io/en/stable/overview.html#floating-objects">coordinate conventions</a> and <a href="https://mujoco.readthedocs.io/en/stable/modeling.html#contact-override">contact override documentation</a>.</p>
+</section>
+
+<section id="control">
+  <div class="section-no">03 / Improvement beyond repair</div>
+  <h2>A balance test that asks the controller to recover</h2>
+  <p>The inherited cartpole challenge began exactly upright and motionless. Its controller could pass while applying zero input. The recovered challenge starts with a reproducible 0.08 radian pole displacement and checks peak excursions as well as final error.</p>
+  <p>With the same bundled MJCF, 0.01-second timestep, five-second duration, and unchanged acceptance thresholds, the inherited controller fails the perturbed test. Its pole reaches approximately 2.142 radians and the cart travels 2.531 metres from center. A tuned four-state feedback law produces a useful local recovery:</p>
+  <pre><code>u = 120 θ + 40 θ̇ + 10 x + 15 ẋ
+clamp u to the bundled actuator range [−60, 60]</code></pre>
+  <div class="table-wrap"><table><thead><tr><th>FIVE-SECOND RECOVERY FROM ±0.08 RAD</th><th>MEASURED RESULT</th></tr></thead><tbody>
+    <tr><td>Peak absolute pole angle</td><td><strong>0.080 rad</strong></td></tr>
+    <tr><td>Peak absolute cart displacement</td><td><strong>0.250307 m</strong></td></tr>
+    <tr><td>Final absolute pole angle</td><td><strong>0.000075815 rad</strong></td></tr>
+    <tr><td>Peak absolute control</td><td><strong>9.6</strong></td></tr>
+  </tbody></table></div>
+  <p>Both positive and mirrored negative perturbations pass. This is empirical local control tuning for the bundled model. It does not establish global stability, swing-up ability, or robustness to different masses, geometry, delays, or timesteps. The complete comparison is in <a href="validation/cartpole-controller-comparison.json">cartpole-controller-comparison.json</a>.</p>
+  <p>Other challenge predicates now identify the ball–floor pair rather than accepting an unrelated contact. The spider checks forward motion together with minimum torso height and orientation. The “chaos” exercise checks motion and speed; it does not establish a Lyapunov exponent or prove sensitivity to initial conditions.</p>
+</section>
+
+<section id="deliverables">
+  <div class="section-no">04 / What has been recovered</div>
+  <h2>A runnable workspace and a documented salvage collection</h2>
+  <p>The active application includes a model editor, real-engine viewport, transport controls, inspector, telemetry, lessons, reference, isolated challenges, and a four-experiment field guide. Import/export controls handle self-contained MJCF, telemetry CSV, and an observation JSON packet. An experiment note records prediction, change, observation, and remaining uncertainty.</p>
+  <p>The observation packet includes the compiled XML, engine version, effective editable options, state arrays, named bodies, world poses, sensor metadata, and the current telemetry buffer. It is an analysis export. A complete replay checkpoint, reproducible control-event trace, and import/replay workflow have not been implemented. The MJCF download exports editor text; unapplied edits can differ from the running model.</p>
+  <div class="grid">
+    <article class="card"><h3>Curated starters</h3><p>Five standalone MJCF models were extracted from A. The two pendulum anchors were moved onto the correct vertical axis. The box's unsupported restitution attribute was replaced with an explicit <code>solref="0.02 1"</code> baseline, without pretending to preserve the old bounce coefficient.</p><p>The original XML, exact changes, parameters, hashes, and remaining sensor/keyframe caveats are retained in <a href="salvage/model-provenance.json">model-provenance.json</a>. These starters remain separate from the seven active presets.</p></article>
+    <article class="card"><h3>Historical teaching material</h3><p>A's eleven lessons and five quiz questions are preserved as structured JSON, explicitly marked historical and unreviewed. Known issues include the claim that 50 Hz means 4 ms, incomplete Gymnasium code, and confused actuator-force terminology.</p><p>Targeted corrections were made to the active B lesson/reference material, including sensor cutoff/noise semantics and current contact terminology. This is not a claim that every course sentence has received an independent technical review.</p></article>
+  </div>
+  <p class="evidence">Primary references: <a href="https://mujoco.readthedocs.io/en/3.17.0/XMLreference.html#sensor">MuJoCo 3.17 sensor reference</a>, <a href="https://mujoco.readthedocs.io/en/stable/modeling.html#solver-parameters">solver parameters</a>, and the <a href="https://mujoco.readthedocs.io/en/3.17.0/changelog.html">versioned changelog</a>. In the targeted 3.17 behavior, contacts are detected within margin + gap and can generate forces within margin; model and documentation versions should travel together.</p>
+  <div class="callout"><h3>What the verification establishes</h3><p><strong>32 runtime checks passed.</strong> All seven active presets and five extracted starters compiled and stepped for 0.1 simulated seconds with finite state. Longer challenge trajectories were tested separately. Five of six starters met their goals; the solver-tuning starter intentionally remains unsolved, and its completed fixture passes.</p><p>A 0.1-second smoke run does not establish long-term stability or validate every model assumption. Headless checks do not cover GPU rendering, every lesson, or arbitrary MJCF. Browser rendering and interaction checks are evaluated separately from this headless suite.</p></div>
+  <p><strong>Browser verification: 12 of 12 checks passed.</strong> Chromium 134 on Linux rendered all seven presets, imported the extracted arm, exported real state and telemetry, preserved the workspace through isolated challenges and invalid XML, exercised live options and repeated navigation, and avoided document overflow at 390 and 1560 pixels. No unhandled page or console errors were observed. The prebuilt HTML also opened directly from disk with external networking blocked and zero external requests. See <a href="validation/browser-results.json">browser-results.json</a>. Windows/WSL and other browsers were not tested here.</p>
+  <p>The current importer accepts self-contained XML under 2 MB. The viewer renders primitives and a compiled mesh subset; it is not a full MuJoCo renderer or an external asset-bundle importer. Checks run synchronously on the main thread and may briefly pause interaction. There is no RL trainer, Python backend, X3D adapter, or Defold integration in this delivery.</p>
+</section>
+
+<section id="vision">
+  <div class="section-no">05 / The next useful integration</div>
+  <h2>An observable experiment workbench</h2>
+  <p>The strongest extension is a workbench where every visual result has an inspectable origin. MJCF defines the physical model; MuJoCo owns the evolving physical state; a renderer explains that state; an experiment record preserves what changed and what was measured.</p>
+  <p>For your broader 3D interests, X3D/X_ITE could become an optional presentation and inspection surface. A bridge would transmit named body poses, units, coordinate conventions, timestamps, and selected observations. It should not assume that an X3D scene and an MJCF model have equivalent physics merely because both are readable structured formats.</p>
+  <p>A Python/WSL companion would be a productive first extension: compile the same models, run longer controlled experiments, export comparable trajectories, and check browser-versus-Python results within documented tolerances. A future Defold consumer could then visualize experiments or use measured control outputs in interactive teaching scenarios. Neither bridge is implemented yet.</p>
+  <p>A compelling signature experiment is a two-link arm making controlled contact: show joint axes, targets, actuator saturation, contact observations, and synchronized traces. Change one physical assumption, repeat from a recorded start, and explain the consequence. This concentrates visual quality, control theory, observability, and clear human steering in one manageable demonstration.</p>
+</section>
+
+<section id="decisions">
+  <div class="section-no">06 / Ready for your direction</div>
+  <h2>Three decisions before expanding the system</h2>
+  <div class="choices">
+    <div class="choice"><strong>What should the integrated product primarily do?</strong><p><strong>Recommended:</strong> a learning and control workbench. Alternatives: an advanced model-debugging tool, or a reinforcement-learning experiment environment requiring a larger backend.</p></div>
+    <div class="choice"><strong>Which bridge should come first?</strong><p><strong>Recommended:</strong> Python on WSL for validation and batch experiments. Alternatives: X3D/X_ITE for a richer inspection surface, or Defold for a game-oriented teaching experience.</p></div>
+    <div class="choice"><strong>Which mechanism should become the flagship demo?</strong><p><strong>Recommended:</strong> a two-link arm with contact. Alternatives: a focused contact laboratory, or locomotion with the additional modeling and evaluation work it requires.</p></div>
+  </div>
+</section>
+
+<div class="sources">
+  <h3>Evidence and provenance</h3>
+  <ul>
+    <li><a href="validation/README.md">Validation guide</a> explains commands, engine version, scope, and the distinction between an unmet learning goal and a runtime failure.</li>
+    <li><a href="salvage/INVENTORY.md">Salvage inventory</a> records original source locations, implementation claims, extracted files, and content-review priorities.</li>
+    <li>Archive A SHA-256: <code class="hash">2ddbf2b9e02a3e4d75e0ef12254e91e1dc6cb254ed5b957d1a1165824cab9131</code></li>
+    <li>Archive B SHA-256: <code class="hash">57eb72bf4c2f7663d4d71fc63bf79f35495cc4cb5d0960118322660575a2ebfb</code></li>
+  </ul>
+  <p>Source provenance is retained; this recovery does not assign a new blanket license to the uploaded work. Dependencies retain their own package licenses. See <a href="README.md">README.md</a> for local startup and package structure.</p>
+</div>
+<footer><span>MuJoCo Observatory · recovery build 0.1</span><span>Observe → change → measure → explain</span></footer>
+</main>
+</body>
+</html>

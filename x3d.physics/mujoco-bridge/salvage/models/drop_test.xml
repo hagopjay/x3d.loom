@@ -1,0 +1,28 @@
+<mujoco model="drop_test">
+  <!-- Salvaged starter from archive A. See ../model-provenance.json for changes and limitations. -->
+  <!-- Recovered drop test: inspect contact response using solref. -->
+  <option gravity="0 0 -9.81"
+          timestep="0.002" integrator="implicitfast"/>
+
+  <worldbody>
+    <light pos="1 3 3" dir="-1 -1 -1" directional="true"/>
+    <geom name="floor" type="plane" size="5 5 0.1"
+          rgba="0.35 0.37 0.32 1"/>
+
+    <body name="body" pos="0 0 2.20">
+      <freejoint name="root"/>
+      <geom name="box" type="box" size="0.18 0.18 0.18"
+            mass="0.80"
+            solref="0.02 1"
+            rgba="0.88 0.85 0.76 1"/>
+      <site name="imu" pos="0 0 0" size="0.02"
+            rgba="0.78 0.97 0.34 1"/>
+    </body>
+  </worldbody>
+
+  <sensor>
+    <framepos name="body_pos" objtype="body" objname="body"/>
+    <framelinvel name="body_vel" objtype="body" objname="body"/>
+    <touch name="floor_contact" site="imu"/>
+  </sensor>
+</mujoco>

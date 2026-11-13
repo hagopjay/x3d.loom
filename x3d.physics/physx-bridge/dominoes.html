@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Dominoes · standard X3D on PhysX</title>
+<link rel="stylesheet" href="./src/demos/demo.css">
+<script src="./vendor/x_ite/x_ite.min.js"></script>
+</head>
+<body data-mode="draw">
+<header>
+  <div class="title"><h1>Draw-a-domino run</h1><span id="tagline"></span></div>
+  <nav id="demo-nav" aria-label="Demos"></nav>
+  <span id="status" class="dim" role="status"></span>
+</header>
+<main class="demo">
+  <section id="stage">
+    <x3d-canvas id="canvas" splashScreen="false" contextMenu="false" notifications="false"></x3d-canvas>
+    <div id="hud" aria-live="polite"></div>
+  </section>
+  <aside id="side"></aside>
+</main>
+<div hidden>
+  <section id="panels">
+    <section>
+      <h2>Rows</h2>
+      <label class="slider">gap between dominoes <output id="gap-out"></output><input id="gap" type="range" min="0.1" max="0.85" step="0.05" aria-label="Gap between dominoes, as a fraction of their height"></label>
+      <label class="slider">friction (domino on domino and table) <output id="mu-out"></output><input id="mu" type="range" min="0" max="0.8" step="0.05" aria-label="Friction coefficient"></label>
+      <p class="hint">Both apply to every row; in run mode the table is rebuilt.</p>
+    </section>
+    <section>
+      <h2>The wave</h2>
+      <div class="big" id="wave-big">–</div>
+      <dl id="wave-readout" class="readout"></dl>
+      <figure class="chart">
+        <figcaption class="dim">Wave speed against gap, both in the units of the dimensional analysis (v/√(gH) = G(gap/H))</figcaption>
+        <div class="legend" id="chart-legend"></div>
+        <div id="chart"></div>
+        <div class="row"><button id="chart-table-toggle">Table <kbd>Y</kbd></button><button id="chart-clear">Forget my runs</button></div>
+        <div id="chart-table" class="chart-table" hidden></div>
+      </figure>
+      <p class="hint">Gold: your runs on this page. Hollow: real dominoes measured by Larham (arXiv:1302.3311, table 1), read from the paper, not measured here. Lines: PhysX in Node on a straight row at three frictions (tools/domino-sim.ts).</p>
+    </section>
+  </section>
+</div>
+<script type="module" src="./src/demos/dominoes.ts"></script>
+</body>
+</html>

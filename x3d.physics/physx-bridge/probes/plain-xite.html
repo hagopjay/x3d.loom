@@ -1,0 +1,22 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="icon" href="data:,"><title>plain X_ITE: the exported machine on X_ITE's own engine</title>
+<script src="../vendor/x_ite/x_ite.min.js"></script>
+<style>body{margin:0;background:#0d0f13} x3d-canvas{width:100vw;height:100vh;display:block}</style></head>
+<body><x3d-canvas id="c" splashScreen="false" contextMenu="false" src="../scenes/marble-machine.x3d"></x3d-canvas>
+<script type="module">
+// No bridge: X_ITE loads the exported file as any X3D viewer would, and its built-in engine (ammo.js / Bullet) runs it.
+const canvas = document.getElementById('c');
+const R = window.__plain = { samples: [] };
+const has = () => { try { return !!canvas.browser.currentScene.getNamedNode('Marble0Body'); } catch { return false; } }; // getNamedNode throws until the scene is in
+const wait = () => new Promise((r) => { const t = () => (has() ? r() : setTimeout(t, 100)); t(); });
+wait().then(() => {
+  const sc = canvas.browser.currentScene, t0 = performance.now();
+  const tick = () => {
+    const ys = []; let inCup = 0;
+    for (let i = 0; i < 20; i++) { const p = sc.getNamedNode(`Marble${i}Body`).position; ys.push(+p.y.toFixed(3)); if (Math.abs(p.x - 0.44) < 0.055 && p.y > 0 && p.y < 0.1) inCup++; }
+    R.samples.push({ t: +((performance.now() - t0) / 1000).toFixed(2), inCup, minY: Math.min(...ys), maxY: Math.max(...ys) });
+    if (R.samples.length < 30) setTimeout(tick, 500); else R.done = true;
+  };
+  tick();
+});
+</script></body></html>

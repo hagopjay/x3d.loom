@@ -1,0 +1,12 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch({ channel: 'chromium', args: ['--autoplay-policy=no-user-gesture-required'] });
+const page = await browser.newPage({ locale: 'en-US' });
+const errs = []; page.on('pageerror', (e) => errs.push(e.stack?.split('\n').slice(0, 6).join(' | ')));
+await page.goto('http://127.0.0.1:5181/machine.html');
+await page.waitForFunction(() => window.__mm?.ready);
+await page.evaluate(() => window.__mm.enterRun());
+await page.waitForFunction(() => window.__mm.sound);
+await page.waitForTimeout(1500);
+const r = await page.evaluate(() => { const sc = window.__mm.bridge.scene; const v = sc.getNamedNode('Voice_knock_wood_0'); const c = sc.getNamedNode('Clip_knock_wood_0'); return { loc: String(v.location), dir: String(v.direction), intensity: v.intensity, gain: v.gain, url: String(c.url), dur: c.duration_changed, pitch: c.pitch }; });
+console.log(JSON.stringify(r)); console.log(errs.slice(0, 3));
+await browser.close();

@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "source": {
+    "archive_name": "mujoco-expert-training-playground.zip",
+    "archive_sha256": "2ddbf2b9e02a3e4d75e0ef12254e91e1dc6cb254ed5b957d1a1165824cab9131",
+    "source_project": "A — richer teaching interface with handwritten dynamics"
+  },
+  "extraction_note": "Files were generated from the five historical default model definitions. Only listed XML/comment corrections and a provenance comment were applied. No controller or handwritten physics was copied into the active application.",
+  "reference_sources": [
+    {
+      "title": "MuJoCo Modeling — solver parameters",
+      "url": "https://mujoco.readthedocs.io/en/stable/modeling.html#solver-parameters",
+      "use": "Positive solref values express time constant and damping ratio. The chosen 0.02 1 is an explicit baseline, not a restitution conversion."
+    }
+  ],
+  "models": [
+    {
+      "id": "cartpole",
+      "name": "Cartpole balance",
+      "file": "models/cartpole_balance.xml",
+      "source_file": "src/data/models.ts",
+      "source_function": "buildXml(id, params)",
+      "parameters": {
+        "gravity": 9.81,
+        "mass": 1,
+        "mass2": 0.22,
+        "length": 0.9,
+        "length2": 0.7,
+        "damping": 0.06,
+        "force": 20,
+        "restitution": 0.45,
+        "target1": 1.05,
+        "target2": -1.35
+      },
+      "status": "inactive_starter_pending_real_engine_validation",
+      "changes": [],
+      "remaining_caveats": [
+        "No feedback controller is embedded. A motor alone will not balance an unstable pole.",
+        "The sensor named pole_tip measures the pole body origin, not the geometric tip; rename or replace it with a site sensor before relying on that name.",
+        "The original JavaScript initial state and controller are not reproduced by this XML."
+      ],
+      "original_xml": "<mujoco model=\"cartpole_balance\">\n  <!-- Keep the pole upright using one actuator on the cart. -->\n  <option gravity=\"0 0 -9.81\"\n          timestep=\"0.002\" integrator=\"implicitfast\"/>\n\n  <worldbody>\n    <light pos=\"0 2.4 3\" dir=\"0 -1 -1\" directional=\"true\"/>\n    <geom name=\"floor\" type=\"plane\" size=\"5 5 0.1\"\n          rgba=\"0.35 0.37 0.32 1\"/>\n\n    <body name=\"cart\" pos=\"0 0 0.18\">\n      <joint name=\"slide\" type=\"slide\" axis=\"1 0 0\"\n             damping=\"0.060\" limited=\"true\"\n             range=\"-2.2 2.2\"/>\n      <geom name=\"cart\" type=\"box\" size=\"0.26 0.16 0.11\"\n            mass=\"1.00\" rgba=\"0.86 0.84 0.74 1\"/>\n\n      <body name=\"pole\" pos=\"0 0 0.11\">\n        <joint name=\"hinge\" type=\"hinge\" axis=\"0 1 0\"\n               damping=\"0.004\"/>\n        <geom name=\"pole\" type=\"capsule\"\n              fromto=\"0 0 0 0 0 0.90\"\n              size=\"0.026\" mass=\"0.22\"\n              rgba=\"0.93 0.51 0.27 1\"/>\n      </body>\n    </body>\n  </worldbody>\n\n  <actuator>\n    <motor name=\"drive\" joint=\"slide\" gear=\"1\"\n           ctrlrange=\"-20 20\"/>\n  </actuator>\n\n  <sensor>\n    <jointpos name=\"pole_angle\" joint=\"hinge\"/>\n    <jointvel name=\"pole_velocity\" joint=\"hinge\"/>\n    <framepos name=\"pole_tip\" objtype=\"body\" objname=\"pole\"/>\n  </sensor>\n</mujoco>",
+      "recovered_sha256": "dbf8432149693311ea7a7be5150a31f3f2c5b0b3b052bbed4131bb84d715899a"
+    },
+    {
+      "id": "double",
+      "name": "Double pendulum",
+      "file": "models/double_pendulum.xml",
+      "source_file": "src/data/models.ts",
+      "source_function": "buildXml(id, params)",
+      "parameters": {
+        "gravity": 9.81,
+        "mass": 0.22,
+        "mass2": 0.18,
+        "length": 0.72,
+        "length2": 0.62,
+        "damping": 0.012,
+        "force": 20,
+        "restitution": 0.45,
+        "target1": 1.05,
+        "target2": -1.35
+      },
+      "status": "inactive_starter_pending_real_engine_validation",
+      "changes": [
+        {
+          "old": "<body name=\"ceiling\" pos=\"0 2.1 0\">",
+          "replacement": "<body name=\"ceiling\" pos=\"0 0 2.1\">",
+          "reason": "Move the anchor above the Z=0 plane; original gravity and link geometry already use Z as vertical."
+        }
+      ],
+      "remaining_caveats": [
+        "No initial perturbation/keyframe is included; the default hanging pose may remain stationary.",
+        "MuJoCo joint coordinates are relative to each parent, whereas the historical handwritten equations used two absolute link angles.",
+        "These links have distributed capsule mass, unlike the point-mass idealization in the historical explanation."
+      ],
+      "original_xml": "<mujoco model=\"double_pendulum\">\n  <!-- Deterministic chaos from two coupled hinges. -->\n  <option gravity=\"0 0 -9.81\"\n          timestep=\"0.002\" integrator=\"implicitfast\"/>\n\n  <worldbody>\n    <light pos=\"0 2 3\" dir=\"0 -1 -1\" directional=\"true\"/>\n    <geom name=\"floor\" type=\"plane\" size=\"5 5 0.1\"/>\n    <body name=\"ceiling\" pos=\"0 2.1 0\">\n      <geom name=\"anchor\" type=\"box\" size=\"0.16 0.05 0.16\"\n            mass=\"0.01\" rgba=\"0.2 0.22 0.2 1\"/>\n\n      <body name=\"upper\" pos=\"0 0 0\">\n        <joint name=\"shoulder\" type=\"hinge\" axis=\"0 1 0\"\n               damping=\"0.012\"/>\n        <geom name=\"upper_link\" type=\"capsule\"\n              fromto=\"0 0 0 0 0 -0.72\"\n              size=\"0.024\" mass=\"0.22\"\n              rgba=\"0.88 0.85 0.76 1\"/>\n\n        <body name=\"lower\" pos=\"0 0 -0.72\">\n          <joint name=\"elbow\" type=\"hinge\" axis=\"0 1 0\"\n                 damping=\"0.012\"/>\n          <geom name=\"lower_link\" type=\"capsule\"\n                fromto=\"0 0 0 0 0 -0.62\"\n                size=\"0.022\" mass=\"0.18\"\n                rgba=\"0.93 0.51 0.27 1\"/>\n        </body>\n      </body>\n    </body>\n  </worldbody>\n\n  <sensor>\n    <jointpos name=\"q1\" joint=\"shoulder\"/>\n    <jointpos name=\"q2\" joint=\"elbow\"/>\n    <jointvel name=\"q1_dot\" joint=\"shoulder\"/>\n    <jointvel name=\"q2_dot\" joint=\"elbow\"/>\n  </sensor>\n</mujoco>",
+      "recovered_sha256": "2f63181304a9bf9bd7b4c179cb2037910a5903cf62a27ea8c94d2d10d255eb47"
+    },
+    {
+      "id": "pendulum",
+      "name": "Driven pendulum",
+      "file": "models/driven_pendulum.xml",
+      "source_file": "src/data/models.ts",
+      "source_function": "buildXml(id, params)",
+      "parameters": {
+        "gravity": 9.81,
+        "mass": 0.5,
+        "mass2": 0.2,
+        "length": 0.8,
+        "length2": 0.7,
+        "damping": 0.045,
+        "force": 4.2,
+        "restitution": 0.45,
+        "target1": 1.05,
+        "target2": -1.35
+      },
+      "status": "inactive_starter_pending_real_engine_validation",
+      "changes": [
+        {
+          "old": "<body name=\"mount\" pos=\"0 1.9 0\">",
+          "replacement": "<body name=\"mount\" pos=\"0 0 1.9\">",
+          "reason": "Move the anchor above the Z=0 plane; original gravity and link geometry already use Z as vertical."
+        }
+      ],
+      "remaining_caveats": [
+        "No sinusoidal controller is embedded; the motor requires an external control signal.",
+        "No initial perturbation/keyframe is included; the default hanging pose may remain stationary."
+      ],
+      "original_xml": "<mujoco model=\"driven_pendulum\">\n  <!-- Torque input pumps energy into a single hinge. -->\n  <option gravity=\"0 0 -9.81\"\n          timestep=\"0.002\" integrator=\"implicitfast\"/>\n\n  <worldbody>\n    <light pos=\"0 2 3\" dir=\"0 -1 -1\" directional=\"true\"/>\n    <geom name=\"floor\" type=\"plane\" size=\"5 5 0.1\"/>\n    <body name=\"mount\" pos=\"0 1.9 0\">\n      <geom name=\"bearing\" type=\"cylinder\" size=\"0.08 0.12\"\n            mass=\"0.05\" rgba=\"0.22 0.24 0.22 1\"/>\n\n      <body name=\"link\" pos=\"0 0 0\">\n        <joint name=\"hinge\" type=\"hinge\" axis=\"0 1 0\"\n               damping=\"0.045\"/>\n        <geom name=\"rod\" type=\"capsule\"\n              fromto=\"0 0 0 0 0 -0.80\"\n              size=\"0.021\" mass=\"0.02\"\n              rgba=\"0.88 0.85 0.76 1\"/>\n        <geom name=\"bob\" type=\"sphere\" pos=\"0 0 -0.80\"\n              size=\"0.105\" mass=\"0.50\"\n              rgba=\"0.93 0.51 0.27 1\"/>\n      </body>\n    </body>\n  </worldbody>\n\n  <actuator>\n    <motor name=\"kick\" joint=\"hinge\" gear=\"1\"\n           ctrlrange=\"-4.2 4.2\"/>\n  </actuator>\n\n  <sensor>\n    <jointpos name=\"theta\" joint=\"hinge\"/>\n    <jointvel name=\"theta_dot\" joint=\"hinge\"/>\n    <actuatorpos name=\"drive_pos\" actuator=\"kick\"/>\n  </sensor>\n</mujoco>",
+      "recovered_sha256": "6cf7f49db59130a9e0ddfa5baa82535ad20a827aa0fbfeb64a67f332712e0a61"
+    },
+    {
+      "id": "arm2",
+      "name": "Two-link arm",
+      "file": "models/planar_arm.xml",
+      "source_file": "src/data/models.ts",
+      "source_function": "buildXml(id, params)",
+      "parameters": {
+        "gravity": 9.81,
+        "mass": 0.9,
+        "mass2": 0.65,
+        "length": 1.05,
+        "length2": 0.78,
+        "damping": 0.18,
+        "force": 14,
+        "restitution": 0.45,
+        "target1": 1.05,
+        "target2": -1.35
+      },
+      "status": "inactive_starter_pending_real_engine_validation",
+      "changes": [],
+      "remaining_caveats": [
+        "The two actuators are motors, not position servos. The original comment mentioning a servo describes an intended external controller.",
+        "The home keyframe is not automatically applied on load. Positive rotation about the given +Y axes moves the first link toward negative Z; inspect this keyframe against the floor before using it.",
+        "The historical handwritten arm dynamics and their displayed targets are not reconstructed by this MJCF."
+      ],
+      "original_xml": "<mujoco model=\"planar_arm\">\n  <!-- Serial manipulator with a compliant joint-space servo. -->\n  <option gravity=\"0 0 -9.81\"\n          timestep=\"0.002\" integrator=\"implicitfast\"/>\n\n  <worldbody>\n    <light pos=\"1 3 3\" dir=\"-1 -1 -1\" directional=\"true\"/>\n    <geom name=\"floor\" type=\"plane\" size=\"5 5 0.1\"/>\n    <geom name=\"pedestal\" type=\"cylinder\" pos=\"0 0 0.12\"\n          size=\"0.2 0.12\" mass=\"0.5\" rgba=\"0.2 0.22 0.2 1\"/>\n\n    <body name=\"upper\" pos=\"0 0 0.28\">\n      <joint name=\"shoulder\" type=\"hinge\" axis=\"0 1 0\"\n             damping=\"0.18\"/>\n      <geom name=\"upper_link\" type=\"capsule\"\n            fromto=\"0 0 0 1.05 0 0\"\n            size=\"0.07\" mass=\"0.90\"\n            rgba=\"0.88 0.85 0.76 1\"/>\n\n      <body name=\"lower\" pos=\"1.05 0 0\">\n        <joint name=\"elbow\" type=\"hinge\" axis=\"0 1 0\"\n               damping=\"0.18\"/>\n        <geom name=\"lower_link\" type=\"capsule\"\n              fromto=\"0 0 0 0.78 0 0\"\n              size=\"0.058\" mass=\"0.65\"\n              rgba=\"0.93 0.51 0.27 1\"/>\n        <geom name=\"effector\" type=\"sphere\"\n              pos=\"0.78 0 0\" size=\"0.075\"\n              mass=\"0.02\" rgba=\"0.78 0.97 0.34 1\"/>\n      </body>\n    </body>\n  </worldbody>\n\n  <actuator>\n    <motor name=\"shoulder\" joint=\"shoulder\"\n           ctrlrange=\"-14 14\"/>\n    <motor name=\"elbow\" joint=\"elbow\"\n           ctrlrange=\"-14 14\"/>\n  </actuator>\n\n  <keyframe>\n    <key name=\"home\" qpos=\"1.05 -1.35\"/>\n  </keyframe>\n</mujoco>",
+      "recovered_sha256": "a785eeac2fc1b9ba246c8fd8cf2e97f46f0293bbe3265850ece64dced5234770"
+    },
+    {
+      "id": "box",
+      "name": "Contact lab",
+      "file": "models/drop_test.xml",
+      "source_file": "src/data/models.ts",
+      "source_function": "buildXml(id, params)",
+      "parameters": {
+        "gravity": 9.81,
+        "mass": 0.8,
+        "mass2": 0.2,
+        "length": 2.2,
+        "length2": 0.7,
+        "damping": 0.02,
+        "force": 20,
+        "restitution": 0.45,
+        "target1": 1.05,
+        "target2": -1.35
+      },
+      "status": "inactive_starter_pending_real_engine_validation",
+      "changes": [
+        {
+          "old": "<!-- A contact-rich drop test. Tune restitution, observe rebound. -->",
+          "replacement": "<!-- Recovered drop test: inspect contact response using solref. -->",
+          "reason": "Describe the actual MuJoCo contact parameter."
+        },
+        {
+          "old": "restitution=\"0.45\"",
+          "replacement": "solref=\"0.02 1\"",
+          "reason": "Replace the unsupported geom restitution attribute with an explicit time-constant/damping-ratio baseline. This is not a conversion of coefficient of restitution 0.45."
+        }
+      ],
+      "remaining_caveats": [
+        "The solref baseline does not preserve or promise the old JavaScript bounce coefficient. Contact behavior must be measured in the real engine.",
+        "The original tiny central imu site is preserved. Its touch sensor does not cover the floor-contact surface and should not be treated as a reliable contact detector; use data.ncon or a properly placed/enlarged site."
+      ],
+      "original_xml": "<mujoco model=\"drop_test\">\n  <!-- A contact-rich drop test. Tune restitution, observe rebound. -->\n  <option gravity=\"0 0 -9.81\"\n          timestep=\"0.002\" integrator=\"implicitfast\"/>\n\n  <worldbody>\n    <light pos=\"1 3 3\" dir=\"-1 -1 -1\" directional=\"true\"/>\n    <geom name=\"floor\" type=\"plane\" size=\"5 5 0.1\"\n          rgba=\"0.35 0.37 0.32 1\"/>\n\n    <body name=\"body\" pos=\"0 0 2.20\">\n      <freejoint name=\"root\"/>\n      <geom name=\"box\" type=\"box\" size=\"0.18 0.18 0.18\"\n            mass=\"0.80\"\n            restitution=\"0.45\"\n            rgba=\"0.88 0.85 0.76 1\"/>\n      <site name=\"imu\" pos=\"0 0 0\" size=\"0.02\"\n            rgba=\"0.78 0.97 0.34 1\"/>\n    </body>\n  </worldbody>\n\n  <sensor>\n    <framepos name=\"body_pos\" objtype=\"body\" objname=\"body\"/>\n    <framelinvel name=\"body_vel\" objtype=\"body\" objname=\"body\"/>\n    <touch name=\"floor_contact\" site=\"imu\"/>\n  </sensor>\n</mujoco>",
+      "recovered_sha256": "9db80f248e00ee1ff26f34a79987f1ebc54122d4bd21491194e6bb6192640d6a"
+    }
+  ]
+}

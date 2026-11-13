@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-10-30T00:54:48.901Z",
+  "source": "original-b",
+  "engineVersion": "3.17.0",
+  "frameTiming": [
+    {
+      "displayHz": 30,
+      "wallSeconds": 1,
+      "physicsTimestep": 0.01,
+      "simulatedSeconds": 1.2,
+      "steps": 120
+    },
+    {
+      "displayHz": 60,
+      "wallSeconds": 1,
+      "physicsTimestep": 0.01,
+      "simulatedSeconds": 1.2,
+      "steps": 120
+    },
+    {
+      "displayHz": 144,
+      "wallSeconds": 1,
+      "physicsTimestep": 0.01,
+      "simulatedSeconds": 1.44,
+      "steps": 144
+    }
+  ],
+  "energy": {
+    "expectedJoules": 2,
+    "displayedJoules": 0
+  },
+  "challenges": [
+    {
+      "id": "first-contact",
+      "status": "goal_met",
+      "pass": true,
+      "detail": "min z of body#1 = 0.139 m, peak |qvel| = 6.32 m/s, max simultaneous contacts = 5"
+    },
+    {
+      "id": "bounce-detector",
+      "status": "goal_met",
+      "pass": true,
+      "detail": "rebounds=1, fastest fall=yes, minZ=0.139 m, rest z=0.160 m (need >=1 rebound, minZ<0.4, no tunneling)"
+    },
+    {
+      "id": "cartpole-balance",
+      "status": "goal_met",
+      "pass": true,
+      "detail": "|theta| = 0.000 rad (need < 0.5), |x| = 0.000 m (need < 1.8) after 5 s of PD autopilot"
+    },
+    {
+      "id": "spider-crawl",
+      "status": "goal_met",
+      "pass": true,
+      "detail": "torso moved dx = 6.2 cm in 5 s (need > 3 cm forward)"
+    },
+    {
+      "id": "chaos",
+      "status": "goal_met",
+      "pass": true,
+      "detail": "peak |qvel| = 11.01 rad/s (need > 2.5); qmax = [1.00, 1.34]"
+    },
+    {
+      "id": "tune-the-solver",
+      "status": "goal_unmet",
+      "pass": false,
+      "detail": "solver=0 (Newton=2), iterations=10, nkey=0 — need Newton + >=100 iters + >=1 keyframe"
+    }
+  ]
+}

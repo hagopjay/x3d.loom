@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Interchange" version="4.0">
+ <head>
+  <component name="Shape" level="2"/>
+  <component name="Lighting" level="2"/>
+  <component name="Texturing" level="2"/>
+  <component name="Grouping" level="2"/>
+  <component name="RigidBodyPhysics" level="2"/>
+  <component name="Navigation" level="2"/>
+
+  <meta name="title" content="Piece: Bell"/>
+  <meta name="description" content="A marble machine with 1 pieces. Standard X3D 4.0 RigidBodyPhysics: runs on PhysX through the x3d-physx bridge and on X_ITE&apos;s built-in engine."/>
+  <meta name="generator" content="x3d-physx-bridge Marble Machine (src/machine/x3d.ts)"/>
+ </head>
+ <Scene>
+  <WorldInfo title="Piece: Bell" info='"Units: metres, kilograms, seconds, radians. Y up. A marble machine on a 4 cm pegboard."'>
+   <MetadataString DEF="MachineDescription" containerField="metadata" name="X3dPhysxMachine" value='&quot;{\&quot;format\&quot;:\&quot;x3d-physx-machine/1\&quot;,\&quot;name\&quot;:\&quot;Piece: Bell\&quot;,\&quot;marbles\&quot;:0,\&quot;pieces\&quot;:[{\&quot;id\&quot;:1,\&quot;type\&quot;:\&quot;bell\&quot;,\&quot;gx\&quot;:0,\&quot;gy\&quot;:12,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}}]}&quot;'/>
+  </WorldInfo>
+  <NavigationInfo type='"EXAMINE" "ANY"' headlight="false"/>
+  <Background DEF="Sky" skyColor="0.05 0.06 0.08"/>
+  <Viewpoint DEF="Front" description="Front" position="0 0.54 2.05" centerOfRotation="0 0.5 0" fieldOfView="0.7"/>
+  <Viewpoint DEF="Close" description="Close" position="-0.25 0.75 0.9" orientation="1 0 0 -0.12" centerOfRotation="-0.25 0.7 0" fieldOfView="0.7"/>
+  <DirectionalLight DEF="Key" direction="-0.3 -0.8 -0.6" intensity="2.2" shadows="true"/>
+  <DirectionalLight DEF="Fill" direction="0.1 -0.25 -1" intensity="1.6"/>
+  <DirectionalLight DEF="Rim" direction="0.6 -0.2 -1" intensity="0.5"/>
+  <Shape><Appearance DEF="LoomLine"><Material emissiveColor="0.95 0.74 0.3" diffuseColor="0 0 0"/></Appearance><PointSet><Coordinate point="0 -10 0"/></PointSet></Shape>
+  <Transform DEF="P1BellT" translation="0 0.48 0">
+   <Shape DEF="P1BellCS"><Appearance DEF="Mat_brass"><PhysicalMaterial baseColor="0.86 0.68 0.32" metallic="1" roughness="0.3"/></Appearance><Cone bottomRadius="0.03" height="0.045"/></Shape>
+  </Transform>
+  <RigidBodyCollection DEF="Machine" gravity="0 -9.81 0" iterations="10" preferAccuracy="true">
+   <RigidBody DEF="P1BellBody" containerField="bodies" position="0 0.48 0" fixed="true">
+     <CollidableShape DEF="P1BellC" containerField="geometry"><Shape USE="P1BellCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <CollisionCollection DEF="Surfaces" containerField="collider" appliedParameters='"BOUNCE" "FRICTION_COEFFICIENT-2"' bounce="0.3" minBounceSpeed="0.1" frictionCoefficients="0.35 0.35">
+    <CollidableShape USE="P1BellC" containerField="collidables"/>
+   </CollisionCollection>
+  </RigidBodyCollection>
+  <CollisionSensor DEF="Chimes" description="bells and xylophone bars: contacts here ring">
+   <CollisionCollection DEF="ChimeSurfaces" containerField="collider" appliedParameters='"BOUNCE" "FRICTION_COEFFICIENT-2"' bounce="0.3" minBounceSpeed="0.1" frictionCoefficients="0.35 0.35">
+    <CollidableShape USE="P1BellC" containerField="collidables"/>
+   </CollisionCollection>
+  </CollisionSensor>
+ </Scene>
+</X3D>

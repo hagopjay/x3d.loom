@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Interchange" version="4.0">
+ <head>
+  <component name="Shape" level="2"/>
+  <component name="Lighting" level="2"/>
+  <component name="Texturing" level="2"/>
+  <component name="Grouping" level="2"/>
+  <component name="PointingDeviceSensor" level="1"/>
+  <component name="Navigation" level="2"/>
+
+  <meta name="title" content="Grand cascade"/>
+  <meta name="description" content="Build view of a marble machine with 16 pieces. Standard X3D 4.0 RigidBodyPhysics: runs on PhysX through the x3d-physx bridge and on X_ITE&apos;s built-in engine."/>
+  <meta name="generator" content="x3d-physx-bridge Marble Machine (src/machine/x3d.ts)"/>
+ </head>
+ <Scene>
+  <WorldInfo title="Grand cascade" info='"Units: metres, kilograms, seconds, radians. Y up. A marble machine on a 4 cm pegboard."'>
+   <MetadataString DEF="MachineDescription" containerField="metadata" name="X3dPhysxMachine" value='&quot;{\&quot;format\&quot;:\&quot;x3d-physx-machine/1\&quot;,\&quot;name\&quot;:\&quot;Grand cascade\&quot;,\&quot;pieces\&quot;:[{\&quot;id\&quot;:1,\&quot;type\&quot;:\&quot;zigzag\&quot;,\&quot;gx\&quot;:-13,\&quot;gy\&quot;:21,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:3,\&quot;type\&quot;:\&quot;ramp\&quot;,\&quot;gx\&quot;:-8,\&quot;gy\&quot;:16,\&quot;rot\&quot;:-8,\&quot;params\&quot;:{\&quot;length\&quot;:0.32}},{\&quot;id\&quot;:5,\&quot;type\&quot;:\&quot;xylophone\&quot;,\&quot;gx\&quot;:-1,\&quot;gy\&quot;:13,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:4,\&quot;type\&quot;:\&quot;bell\&quot;,\&quot;gx\&quot;:5,\&quot;gy\&quot;:8,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:6,\&quot;type\&quot;:\&quot;funnel\&quot;,\&quot;gx\&quot;:10,\&quot;gy\&quot;:3,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:20,\&quot;type\&quot;:\&quot;wheel\&quot;,\&quot;gx\&quot;:11,\&quot;gy\&quot;:19,\&quot;rot\&quot;:0,\&quot;params\&quot;:{\&quot;spin\&quot;:1.5}},{\&quot;id\&quot;:21,\&quot;type\&quot;:\&quot;seesaw\&quot;,\&quot;gx\&quot;:12,\&quot;gy\&quot;:10,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:22,\&quot;type\&quot;:\&quot;ramp\&quot;,\&quot;gx\&quot;:13,\&quot;gy\&quot;:12,\&quot;rot\&quot;:14,\&quot;params\&quot;:{\&quot;length\&quot;:0.32}},{\&quot;id\&quot;:30,\&quot;type\&quot;:\&quot;pendulum\&quot;,\&quot;gx\&quot;:-12,\&quot;gy\&quot;:8,\&quot;rot\&quot;:0,\&quot;params\&quot;:{\&quot;start\&quot;:-70}},{\&quot;id\&quot;:31,\&quot;type\&quot;:\&quot;dominoes\&quot;,\&quot;gx\&quot;:-11,\&quot;gy\&quot;:4,\&quot;rot\&quot;:0,\&quot;params\&quot;:{\&quot;count\&quot;:28}},{\&quot;id\&quot;:32,\&quot;type\&quot;:\&quot;flipper\&quot;,\&quot;gx\&quot;:-6,\&quot;gy\&quot;:21,\&quot;rot\&quot;:-90,\&quot;params\&quot;:{}},{\&quot;id\&quot;:33,\&quot;type\&quot;:\&quot;dominoes\&quot;,\&quot;gx\&quot;:-5,\&quot;gy\&quot;:18,\&quot;rot\&quot;:0,\&quot;params\&quot;:{\&quot;count\&quot;:12}},{\&quot;id\&quot;:34,\&quot;type\&quot;:\&quot;launcher\&quot;,\&quot;gx\&quot;:4,\&quot;gy\&quot;:17,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:35,\&quot;type\&quot;:\&quot;elevator\&quot;,\&quot;gx\&quot;:-9,\&quot;gy\&quot;:18,\&quot;rot\&quot;:0,\&quot;params\&quot;:{\&quot;height\&quot;:0.16}},{\&quot;id\&quot;:36,\&quot;type\&quot;:\&quot;halfpipe\&quot;,\&quot;gx\&quot;:-6,\&quot;gy\&quot;:1,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:37,\&quot;type\&quot;:\&quot;curve\&quot;,\&quot;gx\&quot;:6,\&quot;gy\&quot;:0,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}}],\&quot;marbles\&quot;:20}&quot;'/>
+  </WorldInfo>
+  <NavigationInfo type='"NONE"' headlight="false"/>
+  <Viewpoint DEF="Front" description="Front" position="0 0.54 2.05" centerOfRotation="0 0.5 0" fieldOfView="0.7"/>
+  <DirectionalLight DEF="Key" direction="-0.3 -0.8 -0.6" intensity="2.2" shadows="true"/>
+  <DirectionalLight DEF="Fill" direction="0.1 -0.25 -1" intensity="1.6"/>
+  <DirectionalLight DEF="Rim" direction="0.6 -0.2 -1" intensity="0.5"/>
+  <Transform DEF="BoardBackT" translation="0 0.5 -0.031">
+   <Shape DEF="BoardBackCS"><Appearance DEF="Mat_pegboard"><PhysicalMaterial baseColor="0.78 0.68 0.52" metallic="0" roughness="0.9"><PixelTexture containerField="baseTexture" image="16 16 3 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0x8a7556 0x2a211a 0x2a211a 0x8a7556 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0x8a7556 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0x8a7556 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0x8a7556 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0x8a7556 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0x8a7556 0x2a211a 0x2a211a 0x8a7556 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86"/></PhysicalMaterial><TextureTransform scale="34.5 26.5" translation="0.0144928 0"/></Appearance><Box size="1.38 1.06 0.012"/></Shape>
+  </Transform>
+  <Transform DEF="BoardFrameT">
+   <Transform translation="0 -0.01 0"><Shape DEF="BoardFrameC0S"><Appearance DEF="Mat_frame"><PhysicalMaterial baseColor="0.3 0.22 0.15" metallic="0" roughness="0.7"/></Appearance><Box size="1.38 0.02 0.05"/></Shape></Transform>
+   <Transform translation="-0.7 0.5 0"><Shape DEF="BoardFrameC1S"><Appearance USE="Mat_frame"/><Box size="0.02 1.06 0.05"/></Shape></Transform>
+   <Transform translation="0.7 0.5 0"><Shape DEF="BoardFrameC2S"><Appearance USE="Mat_frame"/><Box size="0.02 1.06 0.05"/></Shape></Transform>
+   <Transform translation="0 1.04 0"><Shape DEF="BoardFrameC3S"><Appearance USE="Mat_frame"/><Box size="1.38 0.02 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="BoardHopperT">
+   <Transform translation="-0.58 0.97 0" rotation="0 0 -1 0.698132"><Shape DEF="BoardHopperC0S"><Appearance DEF="Mat_brass"><PhysicalMaterial baseColor="0.86 0.68 0.32" metallic="1" roughness="0.3"/></Appearance><Box size="0.1 0.006 0.05"/></Shape></Transform>
+   <Transform translation="-0.46 0.97 0" rotation="0 0 1 0.698132"><Shape DEF="BoardHopperC1S"><Appearance USE="Mat_brass"/><Box size="0.1 0.006 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="BoardHopperBT">
+   <Transform translation="0.46 0.97 0" rotation="0 0 -1 0.698132"><Shape DEF="BoardHopperBC0S"><Appearance USE="Mat_brass"/><Box size="0.1 0.006 0.05"/></Shape></Transform>
+   <Transform translation="0.58 0.97 0" rotation="0 0 1 0.698132"><Shape DEF="BoardHopperBC1S"><Appearance USE="Mat_brass"/><Box size="0.1 0.006 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="BoardShelfT">
+   <Transform translation="0.02 1.005 0"><Shape DEF="BoardShelfC0S"><Appearance USE="Mat_frame"/><Box size="0.4 0.006 0.05"/></Shape></Transform>
+   <Transform translation="-0.182 1.02 0"><Shape DEF="BoardShelfC1S"><Appearance USE="Mat_frame"/><Box size="0.006 0.03 0.05"/></Shape></Transform>
+   <Transform translation="0.222 1.02 0"><Shape DEF="BoardShelfC2S"><Appearance USE="Mat_frame"/><Box size="0.006 0.03 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="BoardCupT">
+   <Transform translation="0.44 0.004 0"><Shape DEF="BoardCupC0S"><Appearance USE="Mat_brass"/><Box size="0.122 0.008 0.05"/></Shape></Transform>
+   <Transform translation="0.382 0.05 0"><Shape DEF="BoardCupC1S"><Appearance USE="Mat_brass"/><Box size="0.006 0.1 0.05"/></Shape></Transform>
+   <Transform translation="0.498 0.05 0"><Shape DEF="BoardCupC2S"><Appearance USE="Mat_brass"/><Box size="0.006 0.1 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="Marble0T" translation="-0.165 1.0165 0">
+   <Shape DEF="Marble0CS"><Appearance DEF="Mat_marble0"><PhysicalMaterial baseColor="0.35 0.6 1" metallic="0.2" roughness="0.1"/></Appearance><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble1T" translation="-0.1475 1.0165 0">
+   <Shape DEF="Marble1CS"><Appearance DEF="Mat_marble1"><PhysicalMaterial baseColor="1 0.45 0.3" metallic="0.2" roughness="0.1"/></Appearance><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble2T" translation="-0.13 1.0165 0">
+   <Shape DEF="Marble2CS"><Appearance DEF="Mat_marble2"><PhysicalMaterial baseColor="0.4 0.9 0.5" metallic="0.2" roughness="0.1"/></Appearance><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble3T" translation="-0.1125 1.0165 0">
+   <Shape DEF="Marble3CS"><Appearance DEF="Mat_marble3"><PhysicalMaterial baseColor="0.95 0.85 0.3" metallic="0.2" roughness="0.1"/></Appearance><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble4T" translation="-0.095 1.0165 0">
+   <Shape DEF="Marble4CS"><Appearance USE="Mat_marble0"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble5T" translation="-0.0775 1.0165 0">
+   <Shape DEF="Marble5CS"><Appearance USE="Mat_marble1"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble6T" translation="-0.06 1.0165 0">
+   <Shape DEF="Marble6CS"><Appearance USE="Mat_marble2"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble7T" translation="-0.0425 1.0165 0">
+   <Shape DEF="Marble7CS"><Appearance USE="Mat_marble3"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble8T" translation="-0.025 1.0165 0">
+   <Shape DEF="Marble8CS"><Appearance USE="Mat_marble0"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble9T" translation="-0.0075 1.0165 0">
+   <Shape DEF="Marble9CS"><Appearance USE="Mat_marble1"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble10T" translation="0.01 1.0165 0">
+   <Shape DEF="Marble10CS"><Appearance USE="Mat_marble2"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble11T" translation="0.0275 1.0165 0">
+   <Shape DEF="Marble11CS"><Appearance USE="Mat_marble3"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble12T" translation="0.045 1.0165 0">
+   <Shape DEF="Marble12CS"><Appearance USE="Mat_marble0"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble13T" translation="0.0625 1.0165 0">
+   <Shape DEF="Marble13CS"><Appearance USE="Mat_marble1"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble14T" translation="0.08 1.0165 0">
+   <Shape DEF="Marble14CS"><Appearance USE="Mat_marble2"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble15T" translation="0.0975 1.0165 0">
+   <Shape DEF="Marble15CS"><Appearance USE="Mat_marble3"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble16T" translation="0.115 1.0165 0">
+   <Shape DEF="Marble16CS"><Appearance USE="Mat_marble0"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble17T" translation="0.1325 1.0165 0">
+   <Shape DEF="Marble17CS"><Appearance USE="Mat_marble1"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble18T" translation="0.15 1.0165 0">
+   <Shape DEF="Marble18CS"><Appearance USE="Mat_marble2"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble19T" translation="0.1675 1.0165 0">
+   <Shape DEF="Marble19CS"><Appearance USE="Mat_marble3"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Group DEF="Slot1">
+   <PlaneSensor DEF="Drag1" description="drag zigzag" autoOffset="true" offset="-0.52 0.84 0"/>
+   <Transform DEF="Piece1" translation="-0.52 0.84 0">
+    <Transform DEF="P1ZigzagT">
+     <Transform rotation="0 0 -1 0.20944"><Shape DEF="P1ZigzagC0S"><Appearance DEF="Mat_wood"><PhysicalMaterial baseColor="0.66 0.45 0.26" metallic="0" roughness="0.55"/></Appearance><Box size="0.16 0.008 0.05"/></Shape></Transform>
+     <Transform translation="0 -0.065 0" rotation="0 0 1 0.20944"><Shape DEF="P1ZigzagC1S"><Appearance USE="Mat_wood"/><Box size="0.16 0.008 0.05"/></Shape></Transform>
+     <Transform translation="0 -0.13 0" rotation="0 0 -1 0.20944"><Shape DEF="P1ZigzagC2S"><Appearance USE="Mat_wood"/><Box size="0.16 0.008 0.05"/></Shape></Transform>
+     <Transform translation="0.112 -0.03 0"><Shape DEF="P1ZigzagC3S"><Appearance DEF="Mat_steel"><PhysicalMaterial baseColor="0.62 0.64 0.68" metallic="1" roughness="0.35"/></Appearance><Box size="0.008 0.08 0.05"/></Shape></Transform>
+     <Transform translation="-0.112 -0.095 0"><Shape DEF="P1ZigzagC4S"><Appearance USE="Mat_steel"/><Box size="0.008 0.08 0.05"/></Shape></Transform>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot3">
+   <PlaneSensor DEF="Drag3" description="drag ramp" autoOffset="true" offset="-0.32 0.64 0"/>
+   <Transform DEF="Piece3" translation="-0.32 0.64 0" rotation="0 0 1 -0.139626">
+    <Transform DEF="P3RampT">
+     <Shape DEF="P3RampCS"><Appearance USE="Mat_wood"/><Box size="0.32 0.008 0.05"/></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot5">
+   <PlaneSensor DEF="Drag5" description="drag xylophone" autoOffset="true" offset="-0.04 0.52 0"/>
+   <Transform DEF="Piece5" translation="-0.04 0.52 0">
+    <Transform DEF="P5Bar0T" rotation="0 0 -1 0.139626">
+     <Shape DEF="P5Bar0CS"><Appearance DEF="Mat_bar0"><PhysicalMaterial baseColor="0.85 0.2 0.2" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.065 0.01 0.044"/></Shape>
+    </Transform>
+    <Transform DEF="P5Bar1T" translation="0.05 -0.035 0" rotation="0 0 -1 0.139626">
+     <Shape DEF="P5Bar1CS"><Appearance DEF="Mat_bar1"><PhysicalMaterial baseColor="0.9 0.55 0.15" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.059 0.01 0.044"/></Shape>
+    </Transform>
+    <Transform DEF="P5Bar2T" translation="0.1 -0.07 0" rotation="0 0 -1 0.139626">
+     <Shape DEF="P5Bar2CS"><Appearance DEF="Mat_bar2"><PhysicalMaterial baseColor="0.9 0.85 0.2" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.053 0.01 0.044"/></Shape>
+    </Transform>
+    <Transform DEF="P5Bar3T" translation="0.15 -0.105 0" rotation="0 0 -1 0.139626">
+     <Shape DEF="P5Bar3CS"><Appearance DEF="Mat_bar3"><PhysicalMaterial baseColor="0.25 0.75 0.3" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.047 0.01 0.044"/></Shape>
+    </Transform>
+    <Transform DEF="P5Bar4T" translation="0.2 -0.14 0" rotation="0 0 -1 0.139626">
+     <Shape DEF="P5Bar4CS"><Appearance DEF="Mat_bar4"><PhysicalMaterial baseColor="0.25 0.45 0.9" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.041 0.01 0.044"/></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot4">
+   <PlaneSensor DEF="Drag4" description="drag bell" autoOffset="true" offset="0.2 0.32 0"/>
+   <Transform DEF="Piece4" translation="0.2 0.32 0">
+    <Transform DEF="P4BellT">
+     <Shape DEF="P4BellCS"><Appearance USE="Mat_brass"/><Cone bottomRadius="0.03" height="0.045"/></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot6">
+   <PlaneSensor DEF="Drag6" description="drag funnel" autoOffset="true" offset="0.4 0.12 0"/>
+   <Transform DEF="Piece6" translation="0.4 0.12 0">
+    <Transform DEF="P6FunnelT">
+     <Transform translation="-0.058 0.04 0" rotation="0 0 -1 0.761013"><Shape DEF="P6FunnelC0S"><Appearance USE="Mat_brass"/><Box size="0.116 0.008 0.05"/></Shape></Transform>
+     <Transform translation="0.058 0.04 0" rotation="0 0 1 0.761013"><Shape DEF="P6FunnelC1S"><Appearance USE="Mat_brass"/><Box size="0.116 0.008 0.05"/></Shape></Transform>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot20">
+   <PlaneSensor DEF="Drag20" description="drag wheel" autoOffset="true" offset="0.44 0.76 0"/>
+   <Transform DEF="Piece20" translation="0.44 0.76 0">
+    <Transform DEF="P20HubT">
+     <Shape DEF="P20HubCS"><Appearance USE="Mat_steel"/><Box size="0.012 0.012 0.05"/></Shape>
+    </Transform>
+    <Transform DEF="P20WheelT">
+     <Shape DEF="P20WheelC0S"><Appearance USE="Mat_wood"/><Box size="0.17 0.01 0.044"/></Shape>
+     <Shape DEF="P20WheelC1S"><Appearance USE="Mat_wood"/><Box size="0.01 0.17 0.044"/></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot21">
+   <PlaneSensor DEF="Drag21" description="drag seesaw" autoOffset="true" offset="0.48 0.4 0"/>
+   <Transform DEF="Piece21" translation="0.48 0.4 0">
+    <Transform DEF="P21PivotT" translation="0 -0.02 0">
+     <Shape DEF="P21PivotCS"><Appearance USE="Mat_steel"/><Box size="0.014 0.04 0.05"/></Shape>
+    </Transform>
+    <Transform DEF="P21PlankT" translation="0 0.004 0">
+     <Shape DEF="P21PlankCS"><Appearance USE="Mat_wood"/><Box size="0.2 0.008 0.044"/></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot22">
+   <PlaneSensor DEF="Drag22" description="drag ramp" autoOffset="true" offset="0.52 0.48 0"/>
+   <Transform DEF="Piece22" translation="0.52 0.48 0" rotation="0 0 1 0.244346">
+    <Transform DEF="P22RampT">
+     <Shape DEF="P22RampCS"><Appearance USE="Mat_wood"/><Box size="0.32 0.008 0.05"/></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot30">
+   <PlaneSensor DEF="Drag30" description="drag pendulum" autoOffset="true" offset="-0.48 0.32 0"/>
+   <Transform DEF="Piece30" translation="-0.48 0.32 0">
+    <Transform DEF="P30PivotT">
+     <Shape DEF="P30PivotCS"><Appearance USE="Mat_steel"/><Box size="0.014 0.014 0.05"/></Shape>
+    </Transform>
+    <Transform DEF="P30BobT" translation="-0.129208 -0.0470278 0" rotation="0 0 -1 1.22173">
+     <Shape DEF="P30BobC0S"><Appearance USE="Mat_brass"/><Sphere radius="0.02"/></Shape>
+     <Transform translation="0 0.06875 0"><Shape DEF="P30BobC1S"><Appearance USE="Mat_steel"/><Box size="0.005 0.1375 0.008"/></Shape></Transform>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot31">
+   <PlaneSensor DEF="Drag31" description="drag dominoes" autoOffset="true" offset="-0.44 0.16 0"/>
+   <Transform DEF="Piece31" translation="-0.44 0.16 0">
+    <Transform DEF="P31ShelfT" translation="0.351 -0.004 0">
+     <Shape DEF="P31ShelfCS"><Appearance USE="Mat_wood"/><Box size="0.742 0.008 0.05"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino0T" translation="0 0.0225 0">
+     <Shape DEF="P31Domino0CS"><Appearance DEF="Mat_ebony"><PhysicalMaterial baseColor="0.12 0.1 0.09" metallic="0" roughness="0.5"/></Appearance><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino1T" translation="0.026 0.0225 0">
+     <Shape DEF="P31Domino1CS"><Appearance DEF="Mat_ivory"><PhysicalMaterial baseColor="0.92 0.89 0.8" metallic="0" roughness="0.5"/></Appearance><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino2T" translation="0.052 0.0225 0">
+     <Shape DEF="P31Domino2CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino3T" translation="0.078 0.0225 0">
+     <Shape DEF="P31Domino3CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino4T" translation="0.104 0.0225 0">
+     <Shape DEF="P31Domino4CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino5T" translation="0.13 0.0225 0">
+     <Shape DEF="P31Domino5CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino6T" translation="0.156 0.0225 0">
+     <Shape DEF="P31Domino6CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino7T" translation="0.182 0.0225 0">
+     <Shape DEF="P31Domino7CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino8T" translation="0.208 0.0225 0">
+     <Shape DEF="P31Domino8CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino9T" translation="0.234 0.0225 0">
+     <Shape DEF="P31Domino9CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino10T" translation="0.26 0.0225 0">
+     <Shape DEF="P31Domino10CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino11T" translation="0.286 0.0225 0">
+     <Shape DEF="P31Domino11CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino12T" translation="0.312 0.0225 0">
+     <Shape DEF="P31Domino12CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino13T" translation="0.338 0.0225 0">
+     <Shape DEF="P31Domino13CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino14T" translation="0.364 0.0225 0">
+     <Shape DEF="P31Domino14CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino15T" translation="0.39 0.0225 0">
+     <Shape DEF="P31Domino15CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino16T" translation="0.416 0.0225 0">
+     <Shape DEF="P31Domino16CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino17T" translation="0.442 0.0225 0">
+     <Shape DEF="P31Domino17CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino18T" translation="0.468 0.0225 0">
+     <Shape DEF="P31Domino18CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino19T" translation="0.494 0.0225 0">
+     <Shape DEF="P31Domino19CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino20T" translation="0.52 0.0225 0">
+     <Shape DEF="P31Domino20CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino21T" translation="0.546 0.0225 0">
+     <Shape DEF="P31Domino21CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino22T" translation="0.572 0.0225 0">
+     <Shape DEF="P31Domino22CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino23T" translation="0.598 0.0225 0">
+     <Shape DEF="P31Domino23CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino24T" translation="0.624 0.0225 0">
+     <Shape DEF="P31Domino24CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino25T" translation="0.65 0.0225 0">
+     <Shape DEF="P31Domino25CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino26T" translation="0.676 0.0225 0">
+     <Shape DEF="P31Domino26CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P31Domino27T" translation="0.702 0.0225 0">
+     <Shape DEF="P31Domino27CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot32">
+   <PlaneSensor DEF="Drag32" description="drag flipper" autoOffset="true" offset="-0.24 0.84 0"/>
+   <Transform DEF="Piece32" translation="-0.24 0.84 0" rotation="0 0 1 -1.5708">
+    <Transform DEF="P32PinT">
+     <Shape DEF="P32PinCS"><Appearance USE="Mat_steel"/><Box size="0.014 0.014 0.05"/></Shape>
+    </Transform>
+    <Transform DEF="P32BarT" translation="0.0469846 -0.017101 0" rotation="0 0 -1 0.349066">
+     <Shape DEF="P32BarCS"><Appearance DEF="Mat_red"><PhysicalMaterial baseColor="0.78 0.16 0.12" metallic="0" roughness="0.4"/></Appearance><Box size="0.1 0.012 0.044"/></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot33">
+   <PlaneSensor DEF="Drag33" description="drag dominoes" autoOffset="true" offset="-0.2 0.72 0"/>
+   <Transform DEF="Piece33" translation="-0.2 0.72 0">
+    <Transform DEF="P33ShelfT" translation="0.143 -0.004 0">
+     <Shape DEF="P33ShelfCS"><Appearance USE="Mat_wood"/><Box size="0.326 0.008 0.05"/></Shape>
+    </Transform>
+    <Transform DEF="P33Domino0T" translation="0 0.0225 0">
+     <Shape DEF="P33Domino0CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P33Domino1T" translation="0.026 0.0225 0">
+     <Shape DEF="P33Domino1CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P33Domino2T" translation="0.052 0.0225 0">
+     <Shape DEF="P33Domino2CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P33Domino3T" translation="0.078 0.0225 0">
+     <Shape DEF="P33Domino3CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P33Domino4T" translation="0.104 0.0225 0">
+     <Shape DEF="P33Domino4CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P33Domino5T" translation="0.13 0.0225 0">
+     <Shape DEF="P33Domino5CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P33Domino6T" translation="0.156 0.0225 0">
+     <Shape DEF="P33Domino6CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P33Domino7T" translation="0.182 0.0225 0">
+     <Shape DEF="P33Domino7CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P33Domino8T" translation="0.208 0.0225 0">
+     <Shape DEF="P33Domino8CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P33Domino9T" translation="0.234 0.0225 0">
+     <Shape DEF="P33Domino9CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P33Domino10T" translation="0.26 0.0225 0">
+     <Shape DEF="P33Domino10CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+    <Transform DEF="P33Domino11T" translation="0.286 0.0225 0">
+     <Shape DEF="P33Domino11CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot34">
+   <PlaneSensor DEF="Drag34" description="drag launcher" autoOffset="true" offset="0.16 0.68 0"/>
+   <Transform DEF="Piece34" translation="0.16 0.68 0">
+    <Transform DEF="P34FrameT">
+     <Transform translation="0 -0.035 0"><Shape DEF="P34FrameC0S"><Appearance USE="Mat_steel"/><Box size="0.05 0.01 0.05"/></Shape></Transform>
+     <Transform translation="-0.026 0 0"><Shape DEF="P34FrameC1S"><Appearance USE="Mat_steel"/><Box size="0.006 0.08 0.05"/></Shape></Transform>
+     <Transform translation="0.026 0 0"><Shape DEF="P34FrameC2S"><Appearance USE="Mat_steel"/><Box size="0.006 0.08 0.05"/></Shape></Transform>
+    </Transform>
+    <Transform DEF="P34PlungerT" translation="0 -0.022 0">
+     <Shape DEF="P34PlungerCS"><Appearance DEF="Mat_blue"><PhysicalMaterial baseColor="0.15 0.35 0.8" metallic="0" roughness="0.4"/></Appearance><Box size="0.04 0.012 0.044"/></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot35">
+   <PlaneSensor DEF="Drag35" description="drag elevator" autoOffset="true" offset="-0.36 0.72 0"/>
+   <Transform DEF="Piece35" translation="-0.36 0.72 0">
+    <Transform DEF="P35ShaftT">
+     <Transform translation="0.045 0.055 0"><Shape DEF="P35ShaftC0S"><Appearance USE="Mat_steel"/><Box size="0.008 0.13 0.05"/></Shape></Transform>
+     <Transform translation="0.11 0.155 0" rotation="0 0 -1 0.261799"><Shape DEF="P35ShaftC1S"><Appearance USE="Mat_wood"/><Box size="0.12 0.008 0.05"/></Shape></Transform>
+    </Transform>
+    <Transform DEF="P35PlatformT" rotation="0 0 -1 0.174533">
+     <Shape DEF="P35PlatformCS"><Appearance USE="Mat_steel"/><Box size="0.075 0.008 0.05"/></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot36">
+   <PlaneSensor DEF="Drag36" description="drag halfpipe" autoOffset="true" offset="-0.24 0.04 0"/>
+   <Transform DEF="Piece36" translation="-0.24 0.04 0">
+    <Transform DEF="P36PipeT">
+     <Shape DEF="P36PipeCS"><Appearance USE="Mat_wood"/><IndexedFaceSet solid="false" creaseAngle="0.5" coordIndex="0 4 5 -1 0 5 1 -1 1 5 6 -1 1 6 2 -1 2 6 7 -1 2 7 3 -1 3 7 4 -1 3 4 0 -1 4 8 9 -1 4 9 5 -1 5 9 10 -1 5 10 6 -1 6 10 11 -1 6 11 7 -1 7 11 8 -1 7 8 4 -1 8 12 13 -1 8 13 9 -1 9 13 14 -1 9 14 10 -1 10 14 15 -1 10 15 11 -1 11 15 12 -1 11 12 8 -1 12 16 17 -1 12 17 13 -1 13 17 18 -1 13 18 14 -1 14 18 19 -1 14 19 15 -1 15 19 16 -1 15 16 12 -1 16 20 21 -1 16 21 17 -1 17 21 22 -1 17 22 18 -1 18 22 23 -1 18 23 19 -1 19 23 20 -1 19 20 16 -1 20 24 25 -1 20 25 21 -1 21 25 26 -1 21 26 22 -1 22 26 27 -1 22 27 23 -1 23 27 24 -1 23 24 20 -1 24 28 29 -1 24 29 25 -1 25 29 30 -1 25 30 26 -1 26 30 31 -1 26 31 27 -1 27 31 28 -1 27 28 24 -1 28 32 33 -1 28 33 29 -1 29 33 34 -1 29 34 30 -1 30 34 35 -1 30 35 31 -1 31 35 32 -1 31 32 28 -1 32 36 37 -1 32 37 33 -1 33 37 38 -1 33 38 34 -1 34 38 39 -1 34 39 35 -1 35 39 36 -1 35 36 32 -1 36 40 41 -1 36 41 37 -1 37 41 42 -1 37 42 38 -1 38 42 43 -1 38 43 39 -1 39 43 40 -1 39 40 36 -1 40 44 45 -1 40 45 41 -1 41 45 46 -1 41 46 42 -1 42 46 47 -1 42 47 43 -1 43 47 44 -1 43 44 40 -1 44 48 49 -1 44 49 45 -1 45 49 50 -1 45 50 46 -1 46 50 51 -1 46 51 47 -1 47 51 48 -1 47 48 44 -1 48 52 53 -1 48 53 49 -1 49 53 54 -1 49 54 50 -1 50 54 55 -1 50 55 51 -1 51 55 52 -1 51 52 48 -1 52 56 57 -1 52 57 53 -1 53 57 58 -1 53 58 54 -1 54 58 59 -1 54 59 55 -1 55 59 56 -1 55 56 52 -1 56 60 61 -1 56 61 57 -1 57 61 62 -1 57 62 58 -1 58 62 63 -1 58 63 59 -1 59 63 60 -1 59 60 56 -1 60 64 65 -1 60 65 61 -1 61 65 66 -1 61 66 62 -1 62 66 67 -1 62 67 63 -1 63 67 64 -1 63 64 60 -1 64 68 69 -1 64 69 65 -1 65 69 70 -1 65 70 66 -1 66 70 71 -1 66 71 67 -1 67 71 68 -1 67 68 64 -1 68 72 73 -1 68 73 69 -1 69 73 74 -1 69 74 70 -1 70 74 75 -1 70 75 71 -1 71 75 72 -1 71 72 68 -1 0 1 2 -1 0 2 3 -1 75 74 73 -1 75 73 72 -1"><Coordinate point="-0.09376 0.0751 -0.025 -0.09376 0.0751 0.025 -0.09943 0.07313 0.025 -0.09943 0.07313 -0.025 -0.08907 0.06158 -0.025 -0.08907 0.06158 0.025 -0.09458 0.0592 0.025 -0.09458 0.0592 -0.025 -0.08256 0.04908 -0.025 -0.08256 0.04908 0.025 -0.08767 0.04593 0.025 -0.08767 0.04593 -0.025 -0.07431 0.03765 -0.025 -0.07431 0.03765 0.025 -0.0789 0.03379 0.025 -0.0789 0.03379 -0.025 -0.06449 0.02754 -0.025 -0.06449 0.02754 0.025 -0.06847 0.02306 0.025 -0.06847 0.02306 -0.025 -0.0533 0.01896 -0.025 -0.0533 0.01896 0.025 -0.0566 0.01394 0.025 -0.0566 0.01394 -0.025 -0.04099 0.01209 -0.025 -0.04099 0.01209 0.025 -0.04353 0.00665 0.025 -0.04353 0.00665 -0.025 -0.02782 0.00708 -0.025 -0.02782 0.00708 0.025 -0.02954 0.00133 0.025 -0.02954 0.00133 -0.025 -0.01406 0.00402 -0.025 -0.01406 0.00402 0.025 -0.01493 -0.00191 0.025 -0.01493 -0.00191 -0.025 0 0.003 -0.025 0 0.003 0.025 0 -0.003 0.025 0 -0.003 -0.025 0.01406 0.00402 -0.025 0.01406 0.00402 0.025 0.01493 -0.00191 0.025 0.01493 -0.00191 -0.025 0.02782 0.00708 -0.025 0.02782 0.00708 0.025 0.02954 0.00133 0.025 0.02954 0.00133 -0.025 0.04099 0.01209 -0.025 0.04099 0.01209 0.025 0.04353 0.00665 0.025 0.04353 0.00665 -0.025 0.0533 0.01896 -0.025 0.0533 0.01896 0.025 0.0566 0.01394 0.025 0.0566 0.01394 -0.025 0.06449 0.02754 -0.025 0.06449 0.02754 0.025 0.06847 0.02306 0.025 0.06847 0.02306 -0.025 0.07431 0.03765 -0.025 0.07431 0.03765 0.025 0.0789 0.03379 0.025 0.0789 0.03379 -0.025 0.08256 0.04908 -0.025 0.08256 0.04908 0.025 0.08767 0.04593 0.025 0.08767 0.04593 -0.025 0.08907 0.06158 -0.025 0.08907 0.06158 0.025 0.09458 0.0592 0.025 0.09458 0.0592 -0.025 0.09376 0.0751 -0.025 0.09376 0.0751 0.025 0.09943 0.07313 0.025 0.09943 0.07313 -0.025"/></IndexedFaceSet></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Group DEF="Slot37">
+   <PlaneSensor DEF="Drag37" description="drag curve" autoOffset="true" offset="0.24 0 0"/>
+   <Transform DEF="Piece37" translation="0.24 0 0">
+    <Transform DEF="P37CurveT">
+     <Shape DEF="P37CurveCS"><Appearance USE="Mat_wood"/><IndexedFaceSet solid="false" creaseAngle="0.5" coordIndex="0 4 5 -1 0 5 1 -1 1 5 6 -1 1 6 2 -1 2 6 7 -1 2 7 3 -1 3 7 4 -1 3 4 0 -1 4 8 9 -1 4 9 5 -1 5 9 10 -1 5 10 6 -1 6 10 11 -1 6 11 7 -1 7 11 8 -1 7 8 4 -1 8 12 13 -1 8 13 9 -1 9 13 14 -1 9 14 10 -1 10 14 15 -1 10 15 11 -1 11 15 12 -1 11 12 8 -1 12 16 17 -1 12 17 13 -1 13 17 18 -1 13 18 14 -1 14 18 19 -1 14 19 15 -1 15 19 16 -1 15 16 12 -1 16 20 21 -1 16 21 17 -1 17 21 22 -1 17 22 18 -1 18 22 23 -1 18 23 19 -1 19 23 20 -1 19 20 16 -1 20 24 25 -1 20 25 21 -1 21 25 26 -1 21 26 22 -1 22 26 27 -1 22 27 23 -1 23 27 24 -1 23 24 20 -1 24 28 29 -1 24 29 25 -1 25 29 30 -1 25 30 26 -1 26 30 31 -1 26 31 27 -1 27 31 28 -1 27 28 24 -1 28 32 33 -1 28 33 29 -1 29 33 34 -1 29 34 30 -1 30 34 35 -1 30 35 31 -1 31 35 32 -1 31 32 28 -1 32 36 37 -1 32 37 33 -1 33 37 38 -1 33 38 34 -1 34 38 39 -1 34 39 35 -1 35 39 36 -1 35 36 32 -1 36 40 41 -1 36 41 37 -1 37 41 42 -1 37 42 38 -1 38 42 43 -1 38 43 39 -1 39 43 40 -1 39 40 36 -1 40 44 45 -1 40 45 41 -1 41 45 46 -1 41 46 42 -1 42 46 47 -1 42 47 43 -1 43 47 44 -1 43 44 40 -1 44 48 49 -1 44 49 45 -1 45 49 50 -1 45 50 46 -1 46 50 51 -1 46 51 47 -1 47 51 48 -1 47 48 44 -1 48 52 53 -1 48 53 49 -1 49 53 54 -1 49 54 50 -1 50 54 55 -1 50 55 51 -1 51 55 52 -1 51 52 48 -1 52 56 57 -1 52 57 53 -1 53 57 58 -1 53 58 54 -1 54 58 59 -1 54 59 55 -1 55 59 56 -1 55 56 52 -1 56 60 61 -1 56 61 57 -1 57 61 62 -1 57 62 58 -1 58 62 63 -1 58 63 59 -1 59 63 60 -1 59 60 56 -1 0 1 2 -1 0 2 3 -1 63 62 61 -1 63 61 60 -1"><Coordinate point="-0.117 0.12017 -0.025 -0.117 0.12017 0.025 -0.123 0.11983 0.025 -0.123 0.11983 -0.025 -0.11626 0.1069 -0.025 -0.11626 0.1069 0.025 -0.12223 0.10623 0.025 -0.12223 0.10623 -0.025 -0.11407 0.09397 -0.025 -0.11407 0.09397 0.025 -0.11992 0.09263 0.025 -0.11992 0.09263 -0.025 -0.11043 0.08136 -0.025 -0.11043 0.08136 0.025 -0.1161 0.07938 0.025 -0.1161 0.07938 -0.025 -0.10541 0.06924 -0.025 -0.10541 0.06924 0.025 -0.11082 0.06663 0.025 -0.11082 0.06663 -0.025 -0.09907 0.05775 -0.025 -0.09907 0.05775 0.025 -0.10415 0.05456 0.025 -0.10415 0.05456 -0.025 -0.09147 0.04705 -0.025 -0.09147 0.04705 0.025 -0.09617 0.04331 0.025 -0.09617 0.04331 -0.025 -0.08273 0.03727 -0.025 -0.08273 0.03727 0.025 -0.08697 0.03303 0.025 -0.08697 0.03303 -0.025 -0.07295 0.02853 -0.025 -0.07295 0.02853 0.025 -0.07669 0.02383 0.025 -0.07669 0.02383 -0.025 -0.06225 0.02093 -0.025 -0.06225 0.02093 0.025 -0.06544 0.01585 0.025 -0.06544 0.01585 -0.025 -0.05076 0.01459 -0.025 -0.05076 0.01459 0.025 -0.05337 0.00918 0.025 -0.05337 0.00918 -0.025 -0.03864 0.00957 -0.025 -0.03864 0.00957 0.025 -0.04062 0.0039 0.025 -0.04062 0.0039 -0.025 -0.02603 0.00593 -0.025 -0.02603 0.00593 0.025 -0.02737 0.00008 0.025 -0.02737 0.00008 -0.025 -0.0131 0.00374 -0.025 -0.0131 0.00374 0.025 -0.01377 -0.00223 0.025 -0.01377 -0.00223 -0.025 0.00004 0.003 -0.025 0.00004 0.003 0.025 -0.00004 -0.003 0.025 -0.00004 -0.003 -0.025 0.05 0.003 -0.025 0.05 0.003 0.025 0.05 -0.003 0.025 0.05 -0.003 -0.025"/></IndexedFaceSet></Shape>
+    </Transform>
+   </Transform>
+  </Group>
+  <Background skyColor="0.05 0.06 0.08"/>
+  <Transform DEF="Selection" scale="0 0 0"><Shape><Appearance><Material emissiveColor="1 0.78 0.25" diffuseColor="0 0 0"/></Appearance><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.5 -0.5 0.5 -0.5 -0.5 0.5 0.5 -0.5 -0.5 0.5 -0.5 -0.5 -0.5 0.5 0.5 -0.5 0.5 0.5 0.5 0.5 -0.5 0.5 0.5"/></IndexedLineSet></Shape></Transform>
+ </Scene>
+</X3D>

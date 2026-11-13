@@ -1,0 +1,916 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Interchange" version="4.0">
+ <head>
+  <component name="Shape" level="2"/>
+  <component name="Lighting" level="2"/>
+  <component name="Texturing" level="2"/>
+  <component name="RigidBodyPhysics" level="2"/>
+  <component name="Navigation" level="2"/>
+  <component name="Sound" level="2"/>
+
+  <meta name="title" content="Grand cascade"/>
+  <meta name="description" content="A marble machine with 16 pieces. Standard X3D 4.0 RigidBodyPhysics: runs on PhysX through the x3d-physx bridge and on X_ITE&apos;s built-in engine."/>
+  <meta name="generator" content="x3d-physx-bridge Marble Machine (src/machine/x3d.ts)"/>
+ </head>
+ <Scene>
+  <WorldInfo title="Grand cascade" info='"Units: metres, kilograms, seconds, radians. Y up. A marble machine on a 4 cm pegboard."'>
+   <MetadataString DEF="MachineDescription" containerField="metadata" name="X3dPhysxMachine" value='&quot;{\&quot;format\&quot;:\&quot;x3d-physx-machine/1\&quot;,\&quot;name\&quot;:\&quot;Grand cascade\&quot;,\&quot;pieces\&quot;:[{\&quot;id\&quot;:1,\&quot;type\&quot;:\&quot;zigzag\&quot;,\&quot;gx\&quot;:-13,\&quot;gy\&quot;:21,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:3,\&quot;type\&quot;:\&quot;ramp\&quot;,\&quot;gx\&quot;:-8,\&quot;gy\&quot;:16,\&quot;rot\&quot;:-8,\&quot;params\&quot;:{\&quot;length\&quot;:0.32}},{\&quot;id\&quot;:5,\&quot;type\&quot;:\&quot;xylophone\&quot;,\&quot;gx\&quot;:-1,\&quot;gy\&quot;:13,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:4,\&quot;type\&quot;:\&quot;bell\&quot;,\&quot;gx\&quot;:5,\&quot;gy\&quot;:8,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:6,\&quot;type\&quot;:\&quot;funnel\&quot;,\&quot;gx\&quot;:10,\&quot;gy\&quot;:3,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:20,\&quot;type\&quot;:\&quot;wheel\&quot;,\&quot;gx\&quot;:11,\&quot;gy\&quot;:19,\&quot;rot\&quot;:0,\&quot;params\&quot;:{\&quot;spin\&quot;:1.5}},{\&quot;id\&quot;:21,\&quot;type\&quot;:\&quot;seesaw\&quot;,\&quot;gx\&quot;:12,\&quot;gy\&quot;:10,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:22,\&quot;type\&quot;:\&quot;ramp\&quot;,\&quot;gx\&quot;:13,\&quot;gy\&quot;:12,\&quot;rot\&quot;:14,\&quot;params\&quot;:{\&quot;length\&quot;:0.32}},{\&quot;id\&quot;:30,\&quot;type\&quot;:\&quot;pendulum\&quot;,\&quot;gx\&quot;:-12,\&quot;gy\&quot;:8,\&quot;rot\&quot;:0,\&quot;params\&quot;:{\&quot;start\&quot;:-70}},{\&quot;id\&quot;:31,\&quot;type\&quot;:\&quot;dominoes\&quot;,\&quot;gx\&quot;:-11,\&quot;gy\&quot;:4,\&quot;rot\&quot;:0,\&quot;params\&quot;:{\&quot;count\&quot;:28}},{\&quot;id\&quot;:32,\&quot;type\&quot;:\&quot;flipper\&quot;,\&quot;gx\&quot;:-6,\&quot;gy\&quot;:21,\&quot;rot\&quot;:-90,\&quot;params\&quot;:{}},{\&quot;id\&quot;:33,\&quot;type\&quot;:\&quot;dominoes\&quot;,\&quot;gx\&quot;:-5,\&quot;gy\&quot;:18,\&quot;rot\&quot;:0,\&quot;params\&quot;:{\&quot;count\&quot;:12}},{\&quot;id\&quot;:34,\&quot;type\&quot;:\&quot;launcher\&quot;,\&quot;gx\&quot;:4,\&quot;gy\&quot;:17,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:35,\&quot;type\&quot;:\&quot;elevator\&quot;,\&quot;gx\&quot;:-9,\&quot;gy\&quot;:18,\&quot;rot\&quot;:0,\&quot;params\&quot;:{\&quot;height\&quot;:0.16}},{\&quot;id\&quot;:36,\&quot;type\&quot;:\&quot;halfpipe\&quot;,\&quot;gx\&quot;:-6,\&quot;gy\&quot;:1,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}},{\&quot;id\&quot;:37,\&quot;type\&quot;:\&quot;curve\&quot;,\&quot;gx\&quot;:6,\&quot;gy\&quot;:0,\&quot;rot\&quot;:0,\&quot;params\&quot;:{}}],\&quot;marbles\&quot;:20}&quot;'/>
+  </WorldInfo>
+  <NavigationInfo type='"EXAMINE" "ANY"' headlight="false"/>
+  <Viewpoint DEF="Front" description="Front" position="0 0.54 2.05" centerOfRotation="0 0.5 0" fieldOfView="0.7"/>
+  <Viewpoint DEF="Close" description="Close" position="-0.25 0.75 0.9" orientation="1 0 0 -0.12" centerOfRotation="-0.25 0.7 0" fieldOfView="0.7"/>
+  <DirectionalLight direction="-0.3 -0.8 -0.6" intensity="2.2" shadows="true"/>
+  <DirectionalLight direction="0.1 -0.25 -1" intensity="1.6"/>
+  <DirectionalLight direction="0.6 -0.2 -1" intensity="0.5"/>
+  <Background skyColor="0.05 0.06 0.08"/>
+  <Transform DEF="BoardBackT" translation="0 0.5 -0.031">
+   <Shape DEF="BoardBackCS"><Appearance DEF="Mat_pegboard"><PhysicalMaterial baseColor="0.78 0.68 0.52" metallic="0" roughness="0.9"><PixelTexture containerField="baseTexture" image="16 16 3 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0x8a7556 0x2a211a 0x2a211a 0x8a7556 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0x8a7556 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0x8a7556 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0x8a7556 0x2a211a 0x2a211a 0x2a211a 0x2a211a 0x8a7556 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0x8a7556 0x2a211a 0x2a211a 0x8a7556 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86 0xc8ae86"/></PhysicalMaterial><TextureTransform scale="34.5 26.5" translation="0.0144928 0"/></Appearance><Box size="1.38 1.06 0.012"/></Shape>
+  </Transform>
+  <Transform DEF="BoardGlassT" translation="0 0.5 0.028">
+   <Shape DEF="BoardGlassCS"><Appearance DEF="Mat_glassPane"><PhysicalMaterial baseColor="0.85 0.92 1" metallic="0" roughness="0.05" transparency="0.92"/></Appearance><Box size="1.38 1.06 0.006"/></Shape>
+  </Transform>
+  <Transform DEF="BoardFrameT">
+   <Transform translation="0 -0.01 0"><Shape DEF="BoardFrameC0S"><Appearance DEF="Mat_frame"><PhysicalMaterial baseColor="0.3 0.22 0.15" metallic="0" roughness="0.7"/></Appearance><Box size="1.38 0.02 0.05"/></Shape></Transform>
+   <Transform translation="-0.7 0.5 0"><Shape DEF="BoardFrameC1S"><Appearance USE="Mat_frame"/><Box size="0.02 1.06 0.05"/></Shape></Transform>
+   <Transform translation="0.7 0.5 0"><Shape DEF="BoardFrameC2S"><Appearance USE="Mat_frame"/><Box size="0.02 1.06 0.05"/></Shape></Transform>
+   <Transform translation="0 1.04 0"><Shape DEF="BoardFrameC3S"><Appearance USE="Mat_frame"/><Box size="1.38 0.02 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="BoardHopperT">
+   <Transform translation="-0.58 0.97 0" rotation="0 0 -1 0.698132"><Shape DEF="BoardHopperC0S"><Appearance DEF="Mat_brass"><PhysicalMaterial baseColor="0.86 0.68 0.32" metallic="1" roughness="0.3"/></Appearance><Box size="0.1 0.006 0.05"/></Shape></Transform>
+   <Transform translation="-0.46 0.97 0" rotation="0 0 1 0.698132"><Shape DEF="BoardHopperC1S"><Appearance USE="Mat_brass"/><Box size="0.1 0.006 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="BoardHopperBT">
+   <Transform translation="0.46 0.97 0" rotation="0 0 -1 0.698132"><Shape DEF="BoardHopperBC0S"><Appearance USE="Mat_brass"/><Box size="0.1 0.006 0.05"/></Shape></Transform>
+   <Transform translation="0.58 0.97 0" rotation="0 0 1 0.698132"><Shape DEF="BoardHopperBC1S"><Appearance USE="Mat_brass"/><Box size="0.1 0.006 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="BoardShelfT">
+   <Transform translation="0.02 1.005 0"><Shape DEF="BoardShelfC0S"><Appearance USE="Mat_frame"/><Box size="0.4 0.006 0.05"/></Shape></Transform>
+   <Transform translation="-0.182 1.02 0"><Shape DEF="BoardShelfC1S"><Appearance USE="Mat_frame"/><Box size="0.006 0.03 0.05"/></Shape></Transform>
+   <Transform translation="0.222 1.02 0"><Shape DEF="BoardShelfC2S"><Appearance USE="Mat_frame"/><Box size="0.006 0.03 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="BoardCupT">
+   <Transform translation="0.44 0.004 0"><Shape DEF="BoardCupC0S"><Appearance USE="Mat_brass"/><Box size="0.122 0.008 0.05"/></Shape></Transform>
+   <Transform translation="0.382 0.05 0"><Shape DEF="BoardCupC1S"><Appearance USE="Mat_brass"/><Box size="0.006 0.1 0.05"/></Shape></Transform>
+   <Transform translation="0.498 0.05 0"><Shape DEF="BoardCupC2S"><Appearance USE="Mat_brass"/><Box size="0.006 0.1 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="Marble0T" translation="-0.165 1.0165 0">
+   <Shape DEF="Marble0CS"><Appearance DEF="Mat_marble0"><PhysicalMaterial baseColor="0.35 0.6 1" metallic="0.2" roughness="0.1"/></Appearance><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble1T" translation="-0.1475 1.0165 0">
+   <Shape DEF="Marble1CS"><Appearance DEF="Mat_marble1"><PhysicalMaterial baseColor="1 0.45 0.3" metallic="0.2" roughness="0.1"/></Appearance><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble2T" translation="-0.13 1.0165 0">
+   <Shape DEF="Marble2CS"><Appearance DEF="Mat_marble2"><PhysicalMaterial baseColor="0.4 0.9 0.5" metallic="0.2" roughness="0.1"/></Appearance><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble3T" translation="-0.1125 1.0165 0">
+   <Shape DEF="Marble3CS"><Appearance DEF="Mat_marble3"><PhysicalMaterial baseColor="0.95 0.85 0.3" metallic="0.2" roughness="0.1"/></Appearance><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble4T" translation="-0.095 1.0165 0">
+   <Shape DEF="Marble4CS"><Appearance USE="Mat_marble0"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble5T" translation="-0.0775 1.0165 0">
+   <Shape DEF="Marble5CS"><Appearance USE="Mat_marble1"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble6T" translation="-0.06 1.0165 0">
+   <Shape DEF="Marble6CS"><Appearance USE="Mat_marble2"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble7T" translation="-0.0425 1.0165 0">
+   <Shape DEF="Marble7CS"><Appearance USE="Mat_marble3"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble8T" translation="-0.025 1.0165 0">
+   <Shape DEF="Marble8CS"><Appearance USE="Mat_marble0"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble9T" translation="-0.0075 1.0165 0">
+   <Shape DEF="Marble9CS"><Appearance USE="Mat_marble1"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble10T" translation="0.01 1.0165 0">
+   <Shape DEF="Marble10CS"><Appearance USE="Mat_marble2"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble11T" translation="0.0275 1.0165 0">
+   <Shape DEF="Marble11CS"><Appearance USE="Mat_marble3"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble12T" translation="0.045 1.0165 0">
+   <Shape DEF="Marble12CS"><Appearance USE="Mat_marble0"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble13T" translation="0.0625 1.0165 0">
+   <Shape DEF="Marble13CS"><Appearance USE="Mat_marble1"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble14T" translation="0.08 1.0165 0">
+   <Shape DEF="Marble14CS"><Appearance USE="Mat_marble2"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble15T" translation="0.0975 1.0165 0">
+   <Shape DEF="Marble15CS"><Appearance USE="Mat_marble3"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble16T" translation="0.115 1.0165 0">
+   <Shape DEF="Marble16CS"><Appearance USE="Mat_marble0"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble17T" translation="0.1325 1.0165 0">
+   <Shape DEF="Marble17CS"><Appearance USE="Mat_marble1"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble18T" translation="0.15 1.0165 0">
+   <Shape DEF="Marble18CS"><Appearance USE="Mat_marble2"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Marble19T" translation="0.1675 1.0165 0">
+   <Shape DEF="Marble19CS"><Appearance USE="Mat_marble3"/><Sphere radius="0.008"/></Shape>
+  </Transform>
+  <Transform DEF="P1ZigzagT" translation="-0.52 0.84 0">
+   <Transform rotation="0 0 -1 0.20944"><Shape DEF="P1ZigzagC0S"><Appearance DEF="Mat_wood"><PhysicalMaterial baseColor="0.66 0.45 0.26" metallic="0" roughness="0.55"/></Appearance><Box size="0.16 0.008 0.05"/></Shape></Transform>
+   <Transform translation="0 -0.065 0" rotation="0 0 1 0.20944"><Shape DEF="P1ZigzagC1S"><Appearance USE="Mat_wood"/><Box size="0.16 0.008 0.05"/></Shape></Transform>
+   <Transform translation="0 -0.13 0" rotation="0 0 -1 0.20944"><Shape DEF="P1ZigzagC2S"><Appearance USE="Mat_wood"/><Box size="0.16 0.008 0.05"/></Shape></Transform>
+   <Transform translation="0.112 -0.03 0"><Shape DEF="P1ZigzagC3S"><Appearance DEF="Mat_steel"><PhysicalMaterial baseColor="0.62 0.64 0.68" metallic="1" roughness="0.35"/></Appearance><Box size="0.008 0.08 0.05"/></Shape></Transform>
+   <Transform translation="-0.112 -0.095 0"><Shape DEF="P1ZigzagC4S"><Appearance USE="Mat_steel"/><Box size="0.008 0.08 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="P3RampT" translation="-0.32 0.64 0" rotation="0 0 -1 0.139626">
+   <Shape DEF="P3RampCS"><Appearance USE="Mat_wood"/><Box size="0.32 0.008 0.05"/></Shape>
+  </Transform>
+  <Transform DEF="P5Bar0T" translation="-0.04 0.52 0" rotation="0 0 -1 0.139626">
+   <Shape DEF="P5Bar0CS"><Appearance DEF="Mat_bar0"><PhysicalMaterial baseColor="0.85 0.2 0.2" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.065 0.01 0.044"/></Shape>
+  </Transform>
+  <Transform DEF="P5Bar1T" translation="0.01 0.485 0" rotation="0 0 -1 0.139626">
+   <Shape DEF="P5Bar1CS"><Appearance DEF="Mat_bar1"><PhysicalMaterial baseColor="0.9 0.55 0.15" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.059 0.01 0.044"/></Shape>
+  </Transform>
+  <Transform DEF="P5Bar2T" translation="0.06 0.45 0" rotation="0 0 -1 0.139626">
+   <Shape DEF="P5Bar2CS"><Appearance DEF="Mat_bar2"><PhysicalMaterial baseColor="0.9 0.85 0.2" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.053 0.01 0.044"/></Shape>
+  </Transform>
+  <Transform DEF="P5Bar3T" translation="0.11 0.415 0" rotation="0 0 -1 0.139626">
+   <Shape DEF="P5Bar3CS"><Appearance DEF="Mat_bar3"><PhysicalMaterial baseColor="0.25 0.75 0.3" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.047 0.01 0.044"/></Shape>
+  </Transform>
+  <Transform DEF="P5Bar4T" translation="0.16 0.38 0" rotation="0 0 -1 0.139626">
+   <Shape DEF="P5Bar4CS"><Appearance DEF="Mat_bar4"><PhysicalMaterial baseColor="0.25 0.45 0.9" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.041 0.01 0.044"/></Shape>
+  </Transform>
+  <Transform DEF="P4BellT" translation="0.2 0.32 0">
+   <Shape DEF="P4BellCS"><Appearance USE="Mat_brass"/><Cone bottomRadius="0.03" height="0.045"/></Shape>
+  </Transform>
+  <Transform DEF="P6FunnelT" translation="0.4 0.12 0">
+   <Transform translation="-0.058 0.04 0" rotation="0 0 -1 0.761013"><Shape DEF="P6FunnelC0S"><Appearance USE="Mat_brass"/><Box size="0.116 0.008 0.05"/></Shape></Transform>
+   <Transform translation="0.058 0.04 0" rotation="0 0 1 0.761013"><Shape DEF="P6FunnelC1S"><Appearance USE="Mat_brass"/><Box size="0.116 0.008 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="P20HubT" translation="0.44 0.76 0">
+   <Shape DEF="P20HubCS"><Appearance USE="Mat_steel"/><Box size="0.012 0.012 0.05"/></Shape>
+  </Transform>
+  <Transform DEF="P20WheelT" translation="0.44 0.76 0">
+   <Shape DEF="P20WheelC0S"><Appearance USE="Mat_wood"/><Box size="0.17 0.01 0.044"/></Shape>
+   <Shape DEF="P20WheelC1S"><Appearance USE="Mat_wood"/><Box size="0.01 0.17 0.044"/></Shape>
+  </Transform>
+  <Transform DEF="P21PivotT" translation="0.48 0.38 0">
+   <Shape DEF="P21PivotCS"><Appearance USE="Mat_steel"/><Box size="0.014 0.04 0.05"/></Shape>
+  </Transform>
+  <Transform DEF="P21PlankT" translation="0.48 0.404 0">
+   <Shape DEF="P21PlankCS"><Appearance USE="Mat_wood"/><Box size="0.2 0.008 0.044"/></Shape>
+  </Transform>
+  <Transform DEF="P22RampT" translation="0.52 0.48 0" rotation="0 0 1 0.244346">
+   <Shape DEF="P22RampCS"><Appearance USE="Mat_wood"/><Box size="0.32 0.008 0.05"/></Shape>
+  </Transform>
+  <Transform DEF="P30PivotT" translation="-0.48 0.32 0">
+   <Shape DEF="P30PivotCS"><Appearance USE="Mat_steel"/><Box size="0.014 0.014 0.05"/></Shape>
+  </Transform>
+  <Transform DEF="P30BobT" translation="-0.609208 0.272972 0" rotation="0 0 -1 1.22173">
+   <Shape DEF="P30BobC0S"><Appearance USE="Mat_brass"/><Sphere radius="0.02"/></Shape>
+   <Transform translation="0 0.06875 0"><Shape DEF="P30BobC1S"><Appearance USE="Mat_steel"/><Box size="0.005 0.1375 0.008"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="P31ShelfT" translation="-0.089 0.156 0">
+   <Shape DEF="P31ShelfCS"><Appearance USE="Mat_wood"/><Box size="0.742 0.008 0.05"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino0T" translation="-0.44 0.1825 0">
+   <Shape DEF="P31Domino0CS"><Appearance DEF="Mat_ebony"><PhysicalMaterial baseColor="0.12 0.1 0.09" metallic="0" roughness="0.5"/></Appearance><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino1T" translation="-0.414 0.1825 0">
+   <Shape DEF="P31Domino1CS"><Appearance DEF="Mat_ivory"><PhysicalMaterial baseColor="0.92 0.89 0.8" metallic="0" roughness="0.5"/></Appearance><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino2T" translation="-0.388 0.1825 0">
+   <Shape DEF="P31Domino2CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino3T" translation="-0.362 0.1825 0">
+   <Shape DEF="P31Domino3CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino4T" translation="-0.336 0.1825 0">
+   <Shape DEF="P31Domino4CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino5T" translation="-0.31 0.1825 0">
+   <Shape DEF="P31Domino5CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino6T" translation="-0.284 0.1825 0">
+   <Shape DEF="P31Domino6CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino7T" translation="-0.258 0.1825 0">
+   <Shape DEF="P31Domino7CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino8T" translation="-0.232 0.1825 0">
+   <Shape DEF="P31Domino8CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino9T" translation="-0.206 0.1825 0">
+   <Shape DEF="P31Domino9CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino10T" translation="-0.18 0.1825 0">
+   <Shape DEF="P31Domino10CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino11T" translation="-0.154 0.1825 0">
+   <Shape DEF="P31Domino11CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino12T" translation="-0.128 0.1825 0">
+   <Shape DEF="P31Domino12CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino13T" translation="-0.102 0.1825 0">
+   <Shape DEF="P31Domino13CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino14T" translation="-0.076 0.1825 0">
+   <Shape DEF="P31Domino14CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino15T" translation="-0.05 0.1825 0">
+   <Shape DEF="P31Domino15CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino16T" translation="-0.024 0.1825 0">
+   <Shape DEF="P31Domino16CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino17T" translation="0.002 0.1825 0">
+   <Shape DEF="P31Domino17CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino18T" translation="0.028 0.1825 0">
+   <Shape DEF="P31Domino18CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino19T" translation="0.054 0.1825 0">
+   <Shape DEF="P31Domino19CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino20T" translation="0.08 0.1825 0">
+   <Shape DEF="P31Domino20CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino21T" translation="0.106 0.1825 0">
+   <Shape DEF="P31Domino21CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino22T" translation="0.132 0.1825 0">
+   <Shape DEF="P31Domino22CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino23T" translation="0.158 0.1825 0">
+   <Shape DEF="P31Domino23CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino24T" translation="0.184 0.1825 0">
+   <Shape DEF="P31Domino24CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino25T" translation="0.21 0.1825 0">
+   <Shape DEF="P31Domino25CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino26T" translation="0.236 0.1825 0">
+   <Shape DEF="P31Domino26CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P31Domino27T" translation="0.262 0.1825 0">
+   <Shape DEF="P31Domino27CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P32PinT" translation="-0.24 0.84 0" rotation="0 0 -1 1.5708">
+   <Shape DEF="P32PinCS"><Appearance USE="Mat_steel"/><Box size="0.014 0.014 0.05"/></Shape>
+  </Transform>
+  <Transform DEF="P32BarT" translation="-0.257101 0.793015 0" rotation="0 0 -1 1.91986">
+   <Shape DEF="P32BarCS"><Appearance DEF="Mat_red"><PhysicalMaterial baseColor="0.78 0.16 0.12" metallic="0" roughness="0.4"/></Appearance><Box size="0.1 0.012 0.044"/></Shape>
+  </Transform>
+  <Transform DEF="P33ShelfT" translation="-0.057 0.716 0">
+   <Shape DEF="P33ShelfCS"><Appearance USE="Mat_wood"/><Box size="0.326 0.008 0.05"/></Shape>
+  </Transform>
+  <Transform DEF="P33Domino0T" translation="-0.2 0.7425 0">
+   <Shape DEF="P33Domino0CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P33Domino1T" translation="-0.174 0.7425 0">
+   <Shape DEF="P33Domino1CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P33Domino2T" translation="-0.148 0.7425 0">
+   <Shape DEF="P33Domino2CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P33Domino3T" translation="-0.122 0.7425 0">
+   <Shape DEF="P33Domino3CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P33Domino4T" translation="-0.096 0.7425 0">
+   <Shape DEF="P33Domino4CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P33Domino5T" translation="-0.07 0.7425 0">
+   <Shape DEF="P33Domino5CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P33Domino6T" translation="-0.044 0.7425 0">
+   <Shape DEF="P33Domino6CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P33Domino7T" translation="-0.018 0.7425 0">
+   <Shape DEF="P33Domino7CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P33Domino8T" translation="0.008 0.7425 0">
+   <Shape DEF="P33Domino8CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P33Domino9T" translation="0.034 0.7425 0">
+   <Shape DEF="P33Domino9CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P33Domino10T" translation="0.06 0.7425 0">
+   <Shape DEF="P33Domino10CS"><Appearance USE="Mat_ebony"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P33Domino11T" translation="0.086 0.7425 0">
+   <Shape DEF="P33Domino11CS"><Appearance USE="Mat_ivory"/><Box size="0.006 0.045 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="P34FrameT" translation="0.16 0.68 0">
+   <Transform translation="0 -0.035 0"><Shape DEF="P34FrameC0S"><Appearance USE="Mat_steel"/><Box size="0.05 0.01 0.05"/></Shape></Transform>
+   <Transform translation="-0.026 0 0"><Shape DEF="P34FrameC1S"><Appearance USE="Mat_steel"/><Box size="0.006 0.08 0.05"/></Shape></Transform>
+   <Transform translation="0.026 0 0"><Shape DEF="P34FrameC2S"><Appearance USE="Mat_steel"/><Box size="0.006 0.08 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="P34PlungerT" translation="0.16 0.658 0">
+   <Shape DEF="P34PlungerCS"><Appearance DEF="Mat_blue"><PhysicalMaterial baseColor="0.15 0.35 0.8" metallic="0" roughness="0.4"/></Appearance><Box size="0.04 0.012 0.044"/></Shape>
+  </Transform>
+  <Transform DEF="P35ShaftT" translation="-0.36 0.72 0">
+   <Transform translation="0.045 0.055 0"><Shape DEF="P35ShaftC0S"><Appearance USE="Mat_steel"/><Box size="0.008 0.13 0.05"/></Shape></Transform>
+   <Transform translation="0.11 0.155 0" rotation="0 0 -1 0.261799"><Shape DEF="P35ShaftC1S"><Appearance USE="Mat_wood"/><Box size="0.12 0.008 0.05"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="P35PlatformT" translation="-0.36 0.72 0" rotation="0 0 -1 0.174533">
+   <Shape DEF="P35PlatformCS"><Appearance USE="Mat_steel"/><Box size="0.075 0.008 0.05"/></Shape>
+  </Transform>
+  <Transform DEF="P36PipeT" translation="-0.24 0.04 0">
+   <Shape DEF="P36PipeCS"><Appearance USE="Mat_wood"/><IndexedFaceSet solid="false" creaseAngle="0.5" coordIndex="0 4 5 -1 0 5 1 -1 1 5 6 -1 1 6 2 -1 2 6 7 -1 2 7 3 -1 3 7 4 -1 3 4 0 -1 4 8 9 -1 4 9 5 -1 5 9 10 -1 5 10 6 -1 6 10 11 -1 6 11 7 -1 7 11 8 -1 7 8 4 -1 8 12 13 -1 8 13 9 -1 9 13 14 -1 9 14 10 -1 10 14 15 -1 10 15 11 -1 11 15 12 -1 11 12 8 -1 12 16 17 -1 12 17 13 -1 13 17 18 -1 13 18 14 -1 14 18 19 -1 14 19 15 -1 15 19 16 -1 15 16 12 -1 16 20 21 -1 16 21 17 -1 17 21 22 -1 17 22 18 -1 18 22 23 -1 18 23 19 -1 19 23 20 -1 19 20 16 -1 20 24 25 -1 20 25 21 -1 21 25 26 -1 21 26 22 -1 22 26 27 -1 22 27 23 -1 23 27 24 -1 23 24 20 -1 24 28 29 -1 24 29 25 -1 25 29 30 -1 25 30 26 -1 26 30 31 -1 26 31 27 -1 27 31 28 -1 27 28 24 -1 28 32 33 -1 28 33 29 -1 29 33 34 -1 29 34 30 -1 30 34 35 -1 30 35 31 -1 31 35 32 -1 31 32 28 -1 32 36 37 -1 32 37 33 -1 33 37 38 -1 33 38 34 -1 34 38 39 -1 34 39 35 -1 35 39 36 -1 35 36 32 -1 36 40 41 -1 36 41 37 -1 37 41 42 -1 37 42 38 -1 38 42 43 -1 38 43 39 -1 39 43 40 -1 39 40 36 -1 40 44 45 -1 40 45 41 -1 41 45 46 -1 41 46 42 -1 42 46 47 -1 42 47 43 -1 43 47 44 -1 43 44 40 -1 44 48 49 -1 44 49 45 -1 45 49 50 -1 45 50 46 -1 46 50 51 -1 46 51 47 -1 47 51 48 -1 47 48 44 -1 48 52 53 -1 48 53 49 -1 49 53 54 -1 49 54 50 -1 50 54 55 -1 50 55 51 -1 51 55 52 -1 51 52 48 -1 52 56 57 -1 52 57 53 -1 53 57 58 -1 53 58 54 -1 54 58 59 -1 54 59 55 -1 55 59 56 -1 55 56 52 -1 56 60 61 -1 56 61 57 -1 57 61 62 -1 57 62 58 -1 58 62 63 -1 58 63 59 -1 59 63 60 -1 59 60 56 -1 60 64 65 -1 60 65 61 -1 61 65 66 -1 61 66 62 -1 62 66 67 -1 62 67 63 -1 63 67 64 -1 63 64 60 -1 64 68 69 -1 64 69 65 -1 65 69 70 -1 65 70 66 -1 66 70 71 -1 66 71 67 -1 67 71 68 -1 67 68 64 -1 68 72 73 -1 68 73 69 -1 69 73 74 -1 69 74 70 -1 70 74 75 -1 70 75 71 -1 71 75 72 -1 71 72 68 -1 0 1 2 -1 0 2 3 -1 75 74 73 -1 75 73 72 -1"><Coordinate point="-0.09376 0.0751 -0.025 -0.09376 0.0751 0.025 -0.09943 0.07313 0.025 -0.09943 0.07313 -0.025 -0.08907 0.06158 -0.025 -0.08907 0.06158 0.025 -0.09458 0.0592 0.025 -0.09458 0.0592 -0.025 -0.08256 0.04908 -0.025 -0.08256 0.04908 0.025 -0.08767 0.04593 0.025 -0.08767 0.04593 -0.025 -0.07431 0.03765 -0.025 -0.07431 0.03765 0.025 -0.0789 0.03379 0.025 -0.0789 0.03379 -0.025 -0.06449 0.02754 -0.025 -0.06449 0.02754 0.025 -0.06847 0.02306 0.025 -0.06847 0.02306 -0.025 -0.0533 0.01896 -0.025 -0.0533 0.01896 0.025 -0.0566 0.01394 0.025 -0.0566 0.01394 -0.025 -0.04099 0.01209 -0.025 -0.04099 0.01209 0.025 -0.04353 0.00665 0.025 -0.04353 0.00665 -0.025 -0.02782 0.00708 -0.025 -0.02782 0.00708 0.025 -0.02954 0.00133 0.025 -0.02954 0.00133 -0.025 -0.01406 0.00402 -0.025 -0.01406 0.00402 0.025 -0.01493 -0.00191 0.025 -0.01493 -0.00191 -0.025 0 0.003 -0.025 0 0.003 0.025 0 -0.003 0.025 0 -0.003 -0.025 0.01406 0.00402 -0.025 0.01406 0.00402 0.025 0.01493 -0.00191 0.025 0.01493 -0.00191 -0.025 0.02782 0.00708 -0.025 0.02782 0.00708 0.025 0.02954 0.00133 0.025 0.02954 0.00133 -0.025 0.04099 0.01209 -0.025 0.04099 0.01209 0.025 0.04353 0.00665 0.025 0.04353 0.00665 -0.025 0.0533 0.01896 -0.025 0.0533 0.01896 0.025 0.0566 0.01394 0.025 0.0566 0.01394 -0.025 0.06449 0.02754 -0.025 0.06449 0.02754 0.025 0.06847 0.02306 0.025 0.06847 0.02306 -0.025 0.07431 0.03765 -0.025 0.07431 0.03765 0.025 0.0789 0.03379 0.025 0.0789 0.03379 -0.025 0.08256 0.04908 -0.025 0.08256 0.04908 0.025 0.08767 0.04593 0.025 0.08767 0.04593 -0.025 0.08907 0.06158 -0.025 0.08907 0.06158 0.025 0.09458 0.0592 0.025 0.09458 0.0592 -0.025 0.09376 0.0751 -0.025 0.09376 0.0751 0.025 0.09943 0.07313 0.025 0.09943 0.07313 -0.025"/></IndexedFaceSet></Shape>
+  </Transform>
+  <Transform DEF="P37CurveT" translation="0.24 0 0">
+   <Shape DEF="P37CurveCS"><Appearance USE="Mat_wood"/><IndexedFaceSet solid="false" creaseAngle="0.5" coordIndex="0 4 5 -1 0 5 1 -1 1 5 6 -1 1 6 2 -1 2 6 7 -1 2 7 3 -1 3 7 4 -1 3 4 0 -1 4 8 9 -1 4 9 5 -1 5 9 10 -1 5 10 6 -1 6 10 11 -1 6 11 7 -1 7 11 8 -1 7 8 4 -1 8 12 13 -1 8 13 9 -1 9 13 14 -1 9 14 10 -1 10 14 15 -1 10 15 11 -1 11 15 12 -1 11 12 8 -1 12 16 17 -1 12 17 13 -1 13 17 18 -1 13 18 14 -1 14 18 19 -1 14 19 15 -1 15 19 16 -1 15 16 12 -1 16 20 21 -1 16 21 17 -1 17 21 22 -1 17 22 18 -1 18 22 23 -1 18 23 19 -1 19 23 20 -1 19 20 16 -1 20 24 25 -1 20 25 21 -1 21 25 26 -1 21 26 22 -1 22 26 27 -1 22 27 23 -1 23 27 24 -1 23 24 20 -1 24 28 29 -1 24 29 25 -1 25 29 30 -1 25 30 26 -1 26 30 31 -1 26 31 27 -1 27 31 28 -1 27 28 24 -1 28 32 33 -1 28 33 29 -1 29 33 34 -1 29 34 30 -1 30 34 35 -1 30 35 31 -1 31 35 32 -1 31 32 28 -1 32 36 37 -1 32 37 33 -1 33 37 38 -1 33 38 34 -1 34 38 39 -1 34 39 35 -1 35 39 36 -1 35 36 32 -1 36 40 41 -1 36 41 37 -1 37 41 42 -1 37 42 38 -1 38 42 43 -1 38 43 39 -1 39 43 40 -1 39 40 36 -1 40 44 45 -1 40 45 41 -1 41 45 46 -1 41 46 42 -1 42 46 47 -1 42 47 43 -1 43 47 44 -1 43 44 40 -1 44 48 49 -1 44 49 45 -1 45 49 50 -1 45 50 46 -1 46 50 51 -1 46 51 47 -1 47 51 48 -1 47 48 44 -1 48 52 53 -1 48 53 49 -1 49 53 54 -1 49 54 50 -1 50 54 55 -1 50 55 51 -1 51 55 52 -1 51 52 48 -1 52 56 57 -1 52 57 53 -1 53 57 58 -1 53 58 54 -1 54 58 59 -1 54 59 55 -1 55 59 56 -1 55 56 52 -1 56 60 61 -1 56 61 57 -1 57 61 62 -1 57 62 58 -1 58 62 63 -1 58 63 59 -1 59 63 60 -1 59 60 56 -1 0 1 2 -1 0 2 3 -1 63 62 61 -1 63 61 60 -1"><Coordinate point="-0.117 0.12017 -0.025 -0.117 0.12017 0.025 -0.123 0.11983 0.025 -0.123 0.11983 -0.025 -0.11626 0.1069 -0.025 -0.11626 0.1069 0.025 -0.12223 0.10623 0.025 -0.12223 0.10623 -0.025 -0.11407 0.09397 -0.025 -0.11407 0.09397 0.025 -0.11992 0.09263 0.025 -0.11992 0.09263 -0.025 -0.11043 0.08136 -0.025 -0.11043 0.08136 0.025 -0.1161 0.07938 0.025 -0.1161 0.07938 -0.025 -0.10541 0.06924 -0.025 -0.10541 0.06924 0.025 -0.11082 0.06663 0.025 -0.11082 0.06663 -0.025 -0.09907 0.05775 -0.025 -0.09907 0.05775 0.025 -0.10415 0.05456 0.025 -0.10415 0.05456 -0.025 -0.09147 0.04705 -0.025 -0.09147 0.04705 0.025 -0.09617 0.04331 0.025 -0.09617 0.04331 -0.025 -0.08273 0.03727 -0.025 -0.08273 0.03727 0.025 -0.08697 0.03303 0.025 -0.08697 0.03303 -0.025 -0.07295 0.02853 -0.025 -0.07295 0.02853 0.025 -0.07669 0.02383 0.025 -0.07669 0.02383 -0.025 -0.06225 0.02093 -0.025 -0.06225 0.02093 0.025 -0.06544 0.01585 0.025 -0.06544 0.01585 -0.025 -0.05076 0.01459 -0.025 -0.05076 0.01459 0.025 -0.05337 0.00918 0.025 -0.05337 0.00918 -0.025 -0.03864 0.00957 -0.025 -0.03864 0.00957 0.025 -0.04062 0.0039 0.025 -0.04062 0.0039 -0.025 -0.02603 0.00593 -0.025 -0.02603 0.00593 0.025 -0.02737 0.00008 0.025 -0.02737 0.00008 -0.025 -0.0131 0.00374 -0.025 -0.0131 0.00374 0.025 -0.01377 -0.00223 0.025 -0.01377 -0.00223 -0.025 0.00004 0.003 -0.025 0.00004 0.003 0.025 -0.00004 -0.003 0.025 -0.00004 -0.003 -0.025 0.05 0.003 -0.025 0.05 0.003 0.025 0.05 -0.003 0.025 0.05 -0.003 -0.025"/></IndexedFaceSet></Shape>
+  </Transform>
+  <TimeSensor DEF="P35Clock" cycleInterval="6" loop="true"/>
+  <PositionInterpolator DEF="P35ClockPath" key="0 0.15 0.5 0.6 1" keyValue="-0.36 0.72 0 -0.36 0.72 0 -0.36 0.88 0 -0.36 0.88 0 -0.36 0.72 0"/>
+  <RigidBodyCollection DEF="Machine" gravity="0 -9.81 0" iterations="10" preferAccuracy="true">
+   <RigidBody DEF="BoardBackBody" containerField="bodies" position="0 0.5 -0.031" fixed="true">
+     <CollidableShape DEF="BoardBackC" containerField="geometry"><Shape USE="BoardBackCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="BoardGlassBody" containerField="bodies" position="0 0.5 0.028" fixed="true">
+     <CollidableShape DEF="BoardGlassC" containerField="geometry"><Shape USE="BoardGlassCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="BoardFrameBody" containerField="bodies" position="0 0 0" fixed="true">
+     <CollidableOffset DEF="BoardFrameC0Offset" containerField="geometry"><CollidableShape DEF="BoardFrameC0" containerField="collidable" translation="0 -0.01 0"><Shape USE="BoardFrameC0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="BoardFrameC1Offset" containerField="geometry"><CollidableShape DEF="BoardFrameC1" containerField="collidable" translation="-0.7 0.5 0"><Shape USE="BoardFrameC1S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="BoardFrameC2Offset" containerField="geometry"><CollidableShape DEF="BoardFrameC2" containerField="collidable" translation="0.7 0.5 0"><Shape USE="BoardFrameC2S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="BoardFrameC3Offset" containerField="geometry"><CollidableShape DEF="BoardFrameC3" containerField="collidable" translation="0 1.04 0"><Shape USE="BoardFrameC3S" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="BoardHopperBody" containerField="bodies" position="0 0 0" fixed="true">
+     <CollidableOffset DEF="BoardHopperC0Offset" containerField="geometry"><CollidableShape DEF="BoardHopperC0" containerField="collidable" translation="-0.58 0.97 0" rotation="0 0 -1 0.698132"><Shape USE="BoardHopperC0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="BoardHopperC1Offset" containerField="geometry"><CollidableShape DEF="BoardHopperC1" containerField="collidable" translation="-0.46 0.97 0" rotation="0 0 1 0.698132"><Shape USE="BoardHopperC1S" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="BoardHopperBBody" containerField="bodies" position="0 0 0" fixed="true">
+     <CollidableOffset DEF="BoardHopperBC0Offset" containerField="geometry"><CollidableShape DEF="BoardHopperBC0" containerField="collidable" translation="0.46 0.97 0" rotation="0 0 -1 0.698132"><Shape USE="BoardHopperBC0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="BoardHopperBC1Offset" containerField="geometry"><CollidableShape DEF="BoardHopperBC1" containerField="collidable" translation="0.58 0.97 0" rotation="0 0 1 0.698132"><Shape USE="BoardHopperBC1S" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="BoardShelfBody" containerField="bodies" position="0 0 0" fixed="true">
+     <CollidableOffset DEF="BoardShelfC0Offset" containerField="geometry"><CollidableShape DEF="BoardShelfC0" containerField="collidable" translation="0.02 1.005 0"><Shape USE="BoardShelfC0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="BoardShelfC1Offset" containerField="geometry"><CollidableShape DEF="BoardShelfC1" containerField="collidable" translation="-0.182 1.02 0"><Shape USE="BoardShelfC1S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="BoardShelfC2Offset" containerField="geometry"><CollidableShape DEF="BoardShelfC2" containerField="collidable" translation="0.222 1.02 0"><Shape USE="BoardShelfC2S" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="BoardCupBody" containerField="bodies" position="0 0 0" fixed="true">
+     <CollidableOffset DEF="BoardCupC0Offset" containerField="geometry"><CollidableShape DEF="BoardCupC0" containerField="collidable" translation="0.44 0.004 0"><Shape USE="BoardCupC0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="BoardCupC1Offset" containerField="geometry"><CollidableShape DEF="BoardCupC1" containerField="collidable" translation="0.382 0.05 0"><Shape USE="BoardCupC1S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="BoardCupC2Offset" containerField="geometry"><CollidableShape DEF="BoardCupC2" containerField="collidable" translation="0.498 0.05 0"><Shape USE="BoardCupC2S" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="Marble0Body" containerField="bodies" position="-0.165 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble0C" containerField="geometry"><Shape USE="Marble0CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble1Body" containerField="bodies" position="-0.1475 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble1C" containerField="geometry"><Shape USE="Marble1CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble2Body" containerField="bodies" position="-0.13 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble2C" containerField="geometry"><Shape USE="Marble2CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble3Body" containerField="bodies" position="-0.1125 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble3C" containerField="geometry"><Shape USE="Marble3CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble4Body" containerField="bodies" position="-0.095 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble4C" containerField="geometry"><Shape USE="Marble4CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble5Body" containerField="bodies" position="-0.0775 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble5C" containerField="geometry"><Shape USE="Marble5CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble6Body" containerField="bodies" position="-0.06 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble6C" containerField="geometry"><Shape USE="Marble6CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble7Body" containerField="bodies" position="-0.0425 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble7C" containerField="geometry"><Shape USE="Marble7CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble8Body" containerField="bodies" position="-0.025 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble8C" containerField="geometry"><Shape USE="Marble8CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble9Body" containerField="bodies" position="-0.0075 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble9C" containerField="geometry"><Shape USE="Marble9CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble10Body" containerField="bodies" position="0.01 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble10C" containerField="geometry"><Shape USE="Marble10CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble11Body" containerField="bodies" position="0.0275 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble11C" containerField="geometry"><Shape USE="Marble11CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble12Body" containerField="bodies" position="0.045 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble12C" containerField="geometry"><Shape USE="Marble12CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble13Body" containerField="bodies" position="0.0625 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble13C" containerField="geometry"><Shape USE="Marble13CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble14Body" containerField="bodies" position="0.08 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble14C" containerField="geometry"><Shape USE="Marble14CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble15Body" containerField="bodies" position="0.0975 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble15C" containerField="geometry"><Shape USE="Marble15CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble16Body" containerField="bodies" position="0.115 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble16C" containerField="geometry"><Shape USE="Marble16CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble17Body" containerField="bodies" position="0.1325 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble17C" containerField="geometry"><Shape USE="Marble17CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble18Body" containerField="bodies" position="0.15 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble18C" containerField="geometry"><Shape USE="Marble18CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Marble19Body" containerField="bodies" position="0.1675 1.0165 0" mass="0.005">
+     <CollidableShape DEF="Marble19C" containerField="geometry"><Shape USE="Marble19CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P1ZigzagBody" containerField="bodies" position="-0.52 0.84 0" fixed="true">
+     <CollidableOffset DEF="P1ZigzagC0Offset" containerField="geometry"><CollidableShape DEF="P1ZigzagC0" containerField="collidable" rotation="0 0 -1 0.20944"><Shape USE="P1ZigzagC0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="P1ZigzagC1Offset" containerField="geometry"><CollidableShape DEF="P1ZigzagC1" containerField="collidable" translation="0 -0.065 0" rotation="0 0 1 0.20944"><Shape USE="P1ZigzagC1S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="P1ZigzagC2Offset" containerField="geometry"><CollidableShape DEF="P1ZigzagC2" containerField="collidable" translation="0 -0.13 0" rotation="0 0 -1 0.20944"><Shape USE="P1ZigzagC2S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="P1ZigzagC3Offset" containerField="geometry"><CollidableShape DEF="P1ZigzagC3" containerField="collidable" translation="0.112 -0.03 0"><Shape USE="P1ZigzagC3S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="P1ZigzagC4Offset" containerField="geometry"><CollidableShape DEF="P1ZigzagC4" containerField="collidable" translation="-0.112 -0.095 0"><Shape USE="P1ZigzagC4S" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="P3RampBody" containerField="bodies" position="-0.32 0.64 0" orientation="0 0 -1 0.139626" fixed="true">
+     <CollidableShape DEF="P3RampC" containerField="geometry"><Shape USE="P3RampCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P5Bar0Body" containerField="bodies" position="-0.04 0.52 0" orientation="0 0 -1 0.139626" fixed="true">
+     <CollidableShape DEF="P5Bar0C" containerField="geometry"><Shape USE="P5Bar0CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P5Bar1Body" containerField="bodies" position="0.01 0.485 0" orientation="0 0 -1 0.139626" fixed="true">
+     <CollidableShape DEF="P5Bar1C" containerField="geometry"><Shape USE="P5Bar1CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P5Bar2Body" containerField="bodies" position="0.06 0.45 0" orientation="0 0 -1 0.139626" fixed="true">
+     <CollidableShape DEF="P5Bar2C" containerField="geometry"><Shape USE="P5Bar2CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P5Bar3Body" containerField="bodies" position="0.11 0.415 0" orientation="0 0 -1 0.139626" fixed="true">
+     <CollidableShape DEF="P5Bar3C" containerField="geometry"><Shape USE="P5Bar3CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P5Bar4Body" containerField="bodies" position="0.16 0.38 0" orientation="0 0 -1 0.139626" fixed="true">
+     <CollidableShape DEF="P5Bar4C" containerField="geometry"><Shape USE="P5Bar4CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P4BellBody" containerField="bodies" position="0.2 0.32 0" fixed="true">
+     <CollidableShape DEF="P4BellC" containerField="geometry"><Shape USE="P4BellCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P6FunnelBody" containerField="bodies" position="0.4 0.12 0" fixed="true">
+     <CollidableOffset DEF="P6FunnelC0Offset" containerField="geometry"><CollidableShape DEF="P6FunnelC0" containerField="collidable" translation="-0.058 0.04 0" rotation="0 0 -1 0.761013"><Shape USE="P6FunnelC0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="P6FunnelC1Offset" containerField="geometry"><CollidableShape DEF="P6FunnelC1" containerField="collidable" translation="0.058 0.04 0" rotation="0 0 1 0.761013"><Shape USE="P6FunnelC1S" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="P20HubBody" containerField="bodies" position="0.44 0.76 0" fixed="true">
+     <CollidableShape DEF="P20HubC" containerField="geometry"><Shape USE="P20HubCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P20WheelBody" containerField="bodies" position="0.44 0.76 0" mass="0.05">
+     <CollidableOffset DEF="P20WheelC0Offset" containerField="geometry"><CollidableShape DEF="P20WheelC0" containerField="collidable"><Shape USE="P20WheelC0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="P20WheelC1Offset" containerField="geometry"><CollidableShape DEF="P20WheelC1" containerField="collidable"><Shape USE="P20WheelC1S" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="P21PivotBody" containerField="bodies" position="0.48 0.38 0" fixed="true">
+     <CollidableShape DEF="P21PivotC" containerField="geometry"><Shape USE="P21PivotCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P21PlankBody" containerField="bodies" position="0.48 0.404 0" mass="0.03">
+     <CollidableShape DEF="P21PlankC" containerField="geometry"><Shape USE="P21PlankCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P22RampBody" containerField="bodies" position="0.52 0.48 0" orientation="0 0 1 0.244346" fixed="true">
+     <CollidableShape DEF="P22RampC" containerField="geometry"><Shape USE="P22RampCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P30PivotBody" containerField="bodies" position="-0.48 0.32 0" fixed="true">
+     <CollidableShape DEF="P30PivotC" containerField="geometry"><Shape USE="P30PivotCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P30BobBody" containerField="bodies" position="-0.609208 0.272972 0" orientation="0 0 -1 1.22173" mass="0.15">
+     <CollidableOffset DEF="P30BobC0Offset" containerField="geometry"><CollidableShape DEF="P30BobC0" containerField="collidable"><Shape USE="P30BobC0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="P30BobC1Offset" containerField="geometry"><CollidableShape DEF="P30BobC1" containerField="collidable" translation="0 0.06875 0"><Shape USE="P30BobC1S" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="P31ShelfBody" containerField="bodies" position="-0.089 0.156 0" fixed="true">
+     <CollidableShape DEF="P31ShelfC" containerField="geometry"><Shape USE="P31ShelfCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino0Body" containerField="bodies" position="-0.44 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino0C" containerField="geometry"><Shape USE="P31Domino0CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino1Body" containerField="bodies" position="-0.414 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino1C" containerField="geometry"><Shape USE="P31Domino1CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino2Body" containerField="bodies" position="-0.388 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino2C" containerField="geometry"><Shape USE="P31Domino2CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino3Body" containerField="bodies" position="-0.362 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino3C" containerField="geometry"><Shape USE="P31Domino3CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino4Body" containerField="bodies" position="-0.336 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino4C" containerField="geometry"><Shape USE="P31Domino4CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino5Body" containerField="bodies" position="-0.31 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino5C" containerField="geometry"><Shape USE="P31Domino5CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino6Body" containerField="bodies" position="-0.284 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino6C" containerField="geometry"><Shape USE="P31Domino6CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino7Body" containerField="bodies" position="-0.258 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino7C" containerField="geometry"><Shape USE="P31Domino7CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino8Body" containerField="bodies" position="-0.232 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino8C" containerField="geometry"><Shape USE="P31Domino8CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino9Body" containerField="bodies" position="-0.206 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino9C" containerField="geometry"><Shape USE="P31Domino9CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino10Body" containerField="bodies" position="-0.18 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino10C" containerField="geometry"><Shape USE="P31Domino10CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino11Body" containerField="bodies" position="-0.154 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino11C" containerField="geometry"><Shape USE="P31Domino11CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino12Body" containerField="bodies" position="-0.128 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino12C" containerField="geometry"><Shape USE="P31Domino12CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino13Body" containerField="bodies" position="-0.102 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino13C" containerField="geometry"><Shape USE="P31Domino13CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino14Body" containerField="bodies" position="-0.076 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino14C" containerField="geometry"><Shape USE="P31Domino14CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino15Body" containerField="bodies" position="-0.05 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino15C" containerField="geometry"><Shape USE="P31Domino15CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino16Body" containerField="bodies" position="-0.024 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino16C" containerField="geometry"><Shape USE="P31Domino16CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino17Body" containerField="bodies" position="0.002 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino17C" containerField="geometry"><Shape USE="P31Domino17CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino18Body" containerField="bodies" position="0.028 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino18C" containerField="geometry"><Shape USE="P31Domino18CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino19Body" containerField="bodies" position="0.054 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino19C" containerField="geometry"><Shape USE="P31Domino19CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino20Body" containerField="bodies" position="0.08 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino20C" containerField="geometry"><Shape USE="P31Domino20CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino21Body" containerField="bodies" position="0.106 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino21C" containerField="geometry"><Shape USE="P31Domino21CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino22Body" containerField="bodies" position="0.132 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino22C" containerField="geometry"><Shape USE="P31Domino22CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino23Body" containerField="bodies" position="0.158 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino23C" containerField="geometry"><Shape USE="P31Domino23CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino24Body" containerField="bodies" position="0.184 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino24C" containerField="geometry"><Shape USE="P31Domino24CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino25Body" containerField="bodies" position="0.21 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino25C" containerField="geometry"><Shape USE="P31Domino25CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino26Body" containerField="bodies" position="0.236 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino26C" containerField="geometry"><Shape USE="P31Domino26CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P31Domino27Body" containerField="bodies" position="0.262 0.1825 0" mass="0.006">
+     <CollidableShape DEF="P31Domino27C" containerField="geometry"><Shape USE="P31Domino27CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P32PinBody" containerField="bodies" position="-0.24 0.84 0" orientation="0 0 -1 1.5708" fixed="true">
+     <CollidableShape DEF="P32PinC" containerField="geometry"><Shape USE="P32PinCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P32BarBody" containerField="bodies" position="-0.257101 0.793015 0" orientation="0 0 -1 1.91986" mass="0.03">
+     <CollidableShape DEF="P32BarC" containerField="geometry"><Shape USE="P32BarCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33ShelfBody" containerField="bodies" position="-0.057 0.716 0" fixed="true">
+     <CollidableShape DEF="P33ShelfC" containerField="geometry"><Shape USE="P33ShelfCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33Domino0Body" containerField="bodies" position="-0.2 0.7425 0" mass="0.006">
+     <CollidableShape DEF="P33Domino0C" containerField="geometry"><Shape USE="P33Domino0CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33Domino1Body" containerField="bodies" position="-0.174 0.7425 0" mass="0.006">
+     <CollidableShape DEF="P33Domino1C" containerField="geometry"><Shape USE="P33Domino1CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33Domino2Body" containerField="bodies" position="-0.148 0.7425 0" mass="0.006">
+     <CollidableShape DEF="P33Domino2C" containerField="geometry"><Shape USE="P33Domino2CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33Domino3Body" containerField="bodies" position="-0.122 0.7425 0" mass="0.006">
+     <CollidableShape DEF="P33Domino3C" containerField="geometry"><Shape USE="P33Domino3CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33Domino4Body" containerField="bodies" position="-0.096 0.7425 0" mass="0.006">
+     <CollidableShape DEF="P33Domino4C" containerField="geometry"><Shape USE="P33Domino4CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33Domino5Body" containerField="bodies" position="-0.07 0.7425 0" mass="0.006">
+     <CollidableShape DEF="P33Domino5C" containerField="geometry"><Shape USE="P33Domino5CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33Domino6Body" containerField="bodies" position="-0.044 0.7425 0" mass="0.006">
+     <CollidableShape DEF="P33Domino6C" containerField="geometry"><Shape USE="P33Domino6CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33Domino7Body" containerField="bodies" position="-0.018 0.7425 0" mass="0.006">
+     <CollidableShape DEF="P33Domino7C" containerField="geometry"><Shape USE="P33Domino7CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33Domino8Body" containerField="bodies" position="0.008 0.7425 0" mass="0.006">
+     <CollidableShape DEF="P33Domino8C" containerField="geometry"><Shape USE="P33Domino8CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33Domino9Body" containerField="bodies" position="0.034 0.7425 0" mass="0.006">
+     <CollidableShape DEF="P33Domino9C" containerField="geometry"><Shape USE="P33Domino9CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33Domino10Body" containerField="bodies" position="0.06 0.7425 0" mass="0.006">
+     <CollidableShape DEF="P33Domino10C" containerField="geometry"><Shape USE="P33Domino10CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P33Domino11Body" containerField="bodies" position="0.086 0.7425 0" mass="0.006">
+     <CollidableShape DEF="P33Domino11C" containerField="geometry"><Shape USE="P33Domino11CS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P34FrameBody" containerField="bodies" position="0.16 0.68 0" fixed="true">
+     <CollidableOffset DEF="P34FrameC0Offset" containerField="geometry"><CollidableShape DEF="P34FrameC0" containerField="collidable" translation="0 -0.035 0"><Shape USE="P34FrameC0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="P34FrameC1Offset" containerField="geometry"><CollidableShape DEF="P34FrameC1" containerField="collidable" translation="-0.026 0 0"><Shape USE="P34FrameC1S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="P34FrameC2Offset" containerField="geometry"><CollidableShape DEF="P34FrameC2" containerField="collidable" translation="0.026 0 0"><Shape USE="P34FrameC2S" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="P34PlungerBody" containerField="bodies" position="0.16 0.658 0" mass="0.03">
+     <CollidableShape DEF="P34PlungerC" containerField="geometry"><Shape USE="P34PlungerCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P35ShaftBody" containerField="bodies" position="-0.36 0.72 0" fixed="true">
+     <CollidableOffset DEF="P35ShaftC0Offset" containerField="geometry"><CollidableShape DEF="P35ShaftC0" containerField="collidable" translation="0.045 0.055 0"><Shape USE="P35ShaftC0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="P35ShaftC1Offset" containerField="geometry"><CollidableShape DEF="P35ShaftC1" containerField="collidable" translation="0.11 0.155 0" rotation="0 0 -1 0.261799"><Shape USE="P35ShaftC1S" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="P35PlatformBody" containerField="bodies" position="-0.36 0.72 0" orientation="0 0 -1 0.174533" fixed="true">
+     <CollidableShape DEF="P35PlatformC" containerField="geometry"><Shape USE="P35PlatformCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P36PipeBody" containerField="bodies" position="-0.24 0.04 0" fixed="true">
+     <CollidableShape DEF="P36PipeC" containerField="geometry"><Shape USE="P36PipeCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="P37CurveBody" containerField="bodies" position="0.24 0 0" fixed="true">
+     <CollidableShape DEF="P37CurveC" containerField="geometry"><Shape USE="P37CurveCS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <DoubleAxisHingeJoint DEF="P20Axle" containerField="joints" anchorPoint="0.44 0.76 0" axis1="0 1 0" axis2="0 0 1" minAngle1="0" maxAngle1="0" desiredAngularVelocity2="1.5" maxTorque2="0.03" forceOutput='"ALL"'><RigidBody USE="P20HubBody" containerField="body1"/><RigidBody USE="P20WheelBody" containerField="body2"/></DoubleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="P21Hinge" containerField="joints" anchorPoint="0.48 0.4 0" axis="0 0 1" minAngle="-0.3" maxAngle="0.3" forceOutput='"ALL"'><RigidBody USE="P21PlankBody" containerField="body1"/><RigidBody USE="P21PivotBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="P30Hinge" containerField="joints" anchorPoint="-0.48 0.32 0" axis="0 0 1" forceOutput='"ALL"'><RigidBody USE="P30BobBody" containerField="body1"/><RigidBody USE="P30PivotBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="P32Hinge" containerField="joints" anchorPoint="-0.24 0.84 0" axis="0 0 1" minAngle="-0.01" maxAngle="0.9" stopBounce="0.1" forceOutput='"ALL"'><RigidBody USE="P32BarBody" containerField="body1"/><RigidBody USE="P32PinBody" containerField="body2"/></SingleAxisHingeJoint>
+   <MotorJoint DEF="P32Motor" containerField="joints" enabledAxes="1" motor1Axis="0 0 1" axis1Torque="-0.02" autoCalc="true" forceOutput='"ALL"'><RigidBody USE="P32BarBody" containerField="body1"/><RigidBody USE="P32PinBody" containerField="body2"/></MotorJoint>
+   <SliderJoint DEF="P34Slider" containerField="joints" axis="0 1 0" minSeparation="0" maxSeparation="0.045" sliderForce="-0.2" stopBounce="0" forceOutput='"ALL"'><RigidBody USE="P34PlungerBody" containerField="body1"/><RigidBody USE="P34FrameBody" containerField="body2"/></SliderJoint>
+   <CollisionCollection DEF="Surfaces" containerField="collider" appliedParameters='"BOUNCE" "FRICTION_COEFFICIENT-2"' bounce="0.3" minBounceSpeed="0.1" frictionCoefficients="0.35 0.35">
+    <CollidableShape USE="BoardBackC" containerField="collidables"/>
+    <CollidableShape USE="BoardGlassC" containerField="collidables"/>
+    <CollidableOffset USE="BoardFrameC0Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardFrameC1Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardFrameC2Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardFrameC3Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardHopperC0Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardHopperC1Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardHopperBC0Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardHopperBC1Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardShelfC0Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardShelfC1Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardShelfC2Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardCupC0Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardCupC1Offset" containerField="collidables"/>
+    <CollidableOffset USE="BoardCupC2Offset" containerField="collidables"/>
+    <CollidableShape USE="Marble0C" containerField="collidables"/>
+    <CollidableShape USE="Marble1C" containerField="collidables"/>
+    <CollidableShape USE="Marble2C" containerField="collidables"/>
+    <CollidableShape USE="Marble3C" containerField="collidables"/>
+    <CollidableShape USE="Marble4C" containerField="collidables"/>
+    <CollidableShape USE="Marble5C" containerField="collidables"/>
+    <CollidableShape USE="Marble6C" containerField="collidables"/>
+    <CollidableShape USE="Marble7C" containerField="collidables"/>
+    <CollidableShape USE="Marble8C" containerField="collidables"/>
+    <CollidableShape USE="Marble9C" containerField="collidables"/>
+    <CollidableShape USE="Marble10C" containerField="collidables"/>
+    <CollidableShape USE="Marble11C" containerField="collidables"/>
+    <CollidableShape USE="Marble12C" containerField="collidables"/>
+    <CollidableShape USE="Marble13C" containerField="collidables"/>
+    <CollidableShape USE="Marble14C" containerField="collidables"/>
+    <CollidableShape USE="Marble15C" containerField="collidables"/>
+    <CollidableShape USE="Marble16C" containerField="collidables"/>
+    <CollidableShape USE="Marble17C" containerField="collidables"/>
+    <CollidableShape USE="Marble18C" containerField="collidables"/>
+    <CollidableShape USE="Marble19C" containerField="collidables"/>
+    <CollidableOffset USE="P1ZigzagC0Offset" containerField="collidables"/>
+    <CollidableOffset USE="P1ZigzagC1Offset" containerField="collidables"/>
+    <CollidableOffset USE="P1ZigzagC2Offset" containerField="collidables"/>
+    <CollidableOffset USE="P1ZigzagC3Offset" containerField="collidables"/>
+    <CollidableOffset USE="P1ZigzagC4Offset" containerField="collidables"/>
+    <CollidableShape USE="P3RampC" containerField="collidables"/>
+    <CollidableShape USE="P5Bar0C" containerField="collidables"/>
+    <CollidableShape USE="P5Bar1C" containerField="collidables"/>
+    <CollidableShape USE="P5Bar2C" containerField="collidables"/>
+    <CollidableShape USE="P5Bar3C" containerField="collidables"/>
+    <CollidableShape USE="P5Bar4C" containerField="collidables"/>
+    <CollidableShape USE="P4BellC" containerField="collidables"/>
+    <CollidableOffset USE="P6FunnelC0Offset" containerField="collidables"/>
+    <CollidableOffset USE="P6FunnelC1Offset" containerField="collidables"/>
+    <CollidableShape USE="P20HubC" containerField="collidables"/>
+    <CollidableOffset USE="P20WheelC0Offset" containerField="collidables"/>
+    <CollidableOffset USE="P20WheelC1Offset" containerField="collidables"/>
+    <CollidableShape USE="P21PivotC" containerField="collidables"/>
+    <CollidableShape USE="P21PlankC" containerField="collidables"/>
+    <CollidableShape USE="P22RampC" containerField="collidables"/>
+    <CollidableShape USE="P30PivotC" containerField="collidables"/>
+    <CollidableOffset USE="P30BobC0Offset" containerField="collidables"/>
+    <CollidableOffset USE="P30BobC1Offset" containerField="collidables"/>
+    <CollidableShape USE="P31ShelfC" containerField="collidables"/>
+    <CollidableShape USE="P31Domino0C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino1C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino2C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino3C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino4C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino5C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino6C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino7C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino8C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino9C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino10C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino11C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino12C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino13C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino14C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino15C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino16C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino17C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino18C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino19C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino20C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino21C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino22C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino23C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino24C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino25C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino26C" containerField="collidables"/>
+    <CollidableShape USE="P31Domino27C" containerField="collidables"/>
+    <CollidableShape USE="P32PinC" containerField="collidables"/>
+    <CollidableShape USE="P32BarC" containerField="collidables"/>
+    <CollidableShape USE="P33ShelfC" containerField="collidables"/>
+    <CollidableShape USE="P33Domino0C" containerField="collidables"/>
+    <CollidableShape USE="P33Domino1C" containerField="collidables"/>
+    <CollidableShape USE="P33Domino2C" containerField="collidables"/>
+    <CollidableShape USE="P33Domino3C" containerField="collidables"/>
+    <CollidableShape USE="P33Domino4C" containerField="collidables"/>
+    <CollidableShape USE="P33Domino5C" containerField="collidables"/>
+    <CollidableShape USE="P33Domino6C" containerField="collidables"/>
+    <CollidableShape USE="P33Domino7C" containerField="collidables"/>
+    <CollidableShape USE="P33Domino8C" containerField="collidables"/>
+    <CollidableShape USE="P33Domino9C" containerField="collidables"/>
+    <CollidableShape USE="P33Domino10C" containerField="collidables"/>
+    <CollidableShape USE="P33Domino11C" containerField="collidables"/>
+    <CollidableOffset USE="P34FrameC0Offset" containerField="collidables"/>
+    <CollidableOffset USE="P34FrameC1Offset" containerField="collidables"/>
+    <CollidableOffset USE="P34FrameC2Offset" containerField="collidables"/>
+    <CollidableShape USE="P34PlungerC" containerField="collidables"/>
+    <CollidableOffset USE="P35ShaftC0Offset" containerField="collidables"/>
+    <CollidableOffset USE="P35ShaftC1Offset" containerField="collidables"/>
+    <CollidableShape USE="P35PlatformC" containerField="collidables"/>
+    <CollidableShape USE="P36PipeC" containerField="collidables"/>
+    <CollidableShape USE="P37CurveC" containerField="collidables"/>
+   </CollisionCollection>
+  </RigidBodyCollection>
+  <CollisionSensor DEF="Chimes" description="bells and xylophone bars: contacts here ring">
+   <CollisionCollection DEF="ChimeSurfaces" containerField="collider" appliedParameters='"BOUNCE" "FRICTION_COEFFICIENT-2"' bounce="0.3" minBounceSpeed="0.1" frictionCoefficients="0.35 0.35">
+    <CollidableShape USE="P5Bar0C" containerField="collidables"/>
+    <CollidableShape USE="P5Bar1C" containerField="collidables"/>
+    <CollidableShape USE="P5Bar2C" containerField="collidables"/>
+    <CollidableShape USE="P5Bar3C" containerField="collidables"/>
+    <CollidableShape USE="P5Bar4C" containerField="collidables"/>
+    <CollidableShape USE="P4BellC" containerField="collidables"/>
+   </CollisionCollection>
+  </CollisionSensor>
+  <ROUTE fromNode="P35Clock" fromField="fraction_changed" toNode="P35ClockPath" toField="set_fraction"/>
+  <ROUTE fromNode="P35ClockPath" fromField="value_changed" toNode="P35PlatformBody" toField="set_position"/>
+  <ROUTE fromNode="P35ClockPath" fromField="value_changed" toNode="P35PlatformT" toField="set_translation"/>
+  <ROUTE fromNode="Marble0Body" fromField="position" toNode="Marble0T" toField="set_translation"/>
+  <ROUTE fromNode="Marble0Body" fromField="orientation" toNode="Marble0T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble1Body" fromField="position" toNode="Marble1T" toField="set_translation"/>
+  <ROUTE fromNode="Marble1Body" fromField="orientation" toNode="Marble1T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble2Body" fromField="position" toNode="Marble2T" toField="set_translation"/>
+  <ROUTE fromNode="Marble2Body" fromField="orientation" toNode="Marble2T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble3Body" fromField="position" toNode="Marble3T" toField="set_translation"/>
+  <ROUTE fromNode="Marble3Body" fromField="orientation" toNode="Marble3T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble4Body" fromField="position" toNode="Marble4T" toField="set_translation"/>
+  <ROUTE fromNode="Marble4Body" fromField="orientation" toNode="Marble4T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble5Body" fromField="position" toNode="Marble5T" toField="set_translation"/>
+  <ROUTE fromNode="Marble5Body" fromField="orientation" toNode="Marble5T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble6Body" fromField="position" toNode="Marble6T" toField="set_translation"/>
+  <ROUTE fromNode="Marble6Body" fromField="orientation" toNode="Marble6T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble7Body" fromField="position" toNode="Marble7T" toField="set_translation"/>
+  <ROUTE fromNode="Marble7Body" fromField="orientation" toNode="Marble7T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble8Body" fromField="position" toNode="Marble8T" toField="set_translation"/>
+  <ROUTE fromNode="Marble8Body" fromField="orientation" toNode="Marble8T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble9Body" fromField="position" toNode="Marble9T" toField="set_translation"/>
+  <ROUTE fromNode="Marble9Body" fromField="orientation" toNode="Marble9T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble10Body" fromField="position" toNode="Marble10T" toField="set_translation"/>
+  <ROUTE fromNode="Marble10Body" fromField="orientation" toNode="Marble10T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble11Body" fromField="position" toNode="Marble11T" toField="set_translation"/>
+  <ROUTE fromNode="Marble11Body" fromField="orientation" toNode="Marble11T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble12Body" fromField="position" toNode="Marble12T" toField="set_translation"/>
+  <ROUTE fromNode="Marble12Body" fromField="orientation" toNode="Marble12T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble13Body" fromField="position" toNode="Marble13T" toField="set_translation"/>
+  <ROUTE fromNode="Marble13Body" fromField="orientation" toNode="Marble13T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble14Body" fromField="position" toNode="Marble14T" toField="set_translation"/>
+  <ROUTE fromNode="Marble14Body" fromField="orientation" toNode="Marble14T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble15Body" fromField="position" toNode="Marble15T" toField="set_translation"/>
+  <ROUTE fromNode="Marble15Body" fromField="orientation" toNode="Marble15T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble16Body" fromField="position" toNode="Marble16T" toField="set_translation"/>
+  <ROUTE fromNode="Marble16Body" fromField="orientation" toNode="Marble16T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble17Body" fromField="position" toNode="Marble17T" toField="set_translation"/>
+  <ROUTE fromNode="Marble17Body" fromField="orientation" toNode="Marble17T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble18Body" fromField="position" toNode="Marble18T" toField="set_translation"/>
+  <ROUTE fromNode="Marble18Body" fromField="orientation" toNode="Marble18T" toField="set_rotation"/>
+  <ROUTE fromNode="Marble19Body" fromField="position" toNode="Marble19T" toField="set_translation"/>
+  <ROUTE fromNode="Marble19Body" fromField="orientation" toNode="Marble19T" toField="set_rotation"/>
+  <ROUTE fromNode="P20WheelBody" fromField="position" toNode="P20WheelT" toField="set_translation"/>
+  <ROUTE fromNode="P20WheelBody" fromField="orientation" toNode="P20WheelT" toField="set_rotation"/>
+  <ROUTE fromNode="P21PlankBody" fromField="position" toNode="P21PlankT" toField="set_translation"/>
+  <ROUTE fromNode="P21PlankBody" fromField="orientation" toNode="P21PlankT" toField="set_rotation"/>
+  <ROUTE fromNode="P30BobBody" fromField="position" toNode="P30BobT" toField="set_translation"/>
+  <ROUTE fromNode="P30BobBody" fromField="orientation" toNode="P30BobT" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino0Body" fromField="position" toNode="P31Domino0T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino0Body" fromField="orientation" toNode="P31Domino0T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino1Body" fromField="position" toNode="P31Domino1T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino1Body" fromField="orientation" toNode="P31Domino1T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino2Body" fromField="position" toNode="P31Domino2T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino2Body" fromField="orientation" toNode="P31Domino2T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino3Body" fromField="position" toNode="P31Domino3T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino3Body" fromField="orientation" toNode="P31Domino3T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino4Body" fromField="position" toNode="P31Domino4T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino4Body" fromField="orientation" toNode="P31Domino4T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino5Body" fromField="position" toNode="P31Domino5T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino5Body" fromField="orientation" toNode="P31Domino5T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino6Body" fromField="position" toNode="P31Domino6T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino6Body" fromField="orientation" toNode="P31Domino6T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino7Body" fromField="position" toNode="P31Domino7T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino7Body" fromField="orientation" toNode="P31Domino7T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino8Body" fromField="position" toNode="P31Domino8T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino8Body" fromField="orientation" toNode="P31Domino8T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino9Body" fromField="position" toNode="P31Domino9T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino9Body" fromField="orientation" toNode="P31Domino9T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino10Body" fromField="position" toNode="P31Domino10T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino10Body" fromField="orientation" toNode="P31Domino10T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino11Body" fromField="position" toNode="P31Domino11T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino11Body" fromField="orientation" toNode="P31Domino11T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino12Body" fromField="position" toNode="P31Domino12T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino12Body" fromField="orientation" toNode="P31Domino12T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino13Body" fromField="position" toNode="P31Domino13T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino13Body" fromField="orientation" toNode="P31Domino13T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino14Body" fromField="position" toNode="P31Domino14T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino14Body" fromField="orientation" toNode="P31Domino14T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino15Body" fromField="position" toNode="P31Domino15T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino15Body" fromField="orientation" toNode="P31Domino15T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino16Body" fromField="position" toNode="P31Domino16T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino16Body" fromField="orientation" toNode="P31Domino16T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino17Body" fromField="position" toNode="P31Domino17T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino17Body" fromField="orientation" toNode="P31Domino17T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino18Body" fromField="position" toNode="P31Domino18T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino18Body" fromField="orientation" toNode="P31Domino18T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino19Body" fromField="position" toNode="P31Domino19T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino19Body" fromField="orientation" toNode="P31Domino19T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino20Body" fromField="position" toNode="P31Domino20T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino20Body" fromField="orientation" toNode="P31Domino20T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino21Body" fromField="position" toNode="P31Domino21T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino21Body" fromField="orientation" toNode="P31Domino21T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino22Body" fromField="position" toNode="P31Domino22T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino22Body" fromField="orientation" toNode="P31Domino22T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino23Body" fromField="position" toNode="P31Domino23T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino23Body" fromField="orientation" toNode="P31Domino23T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino24Body" fromField="position" toNode="P31Domino24T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino24Body" fromField="orientation" toNode="P31Domino24T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino25Body" fromField="position" toNode="P31Domino25T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino25Body" fromField="orientation" toNode="P31Domino25T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino26Body" fromField="position" toNode="P31Domino26T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino26Body" fromField="orientation" toNode="P31Domino26T" toField="set_rotation"/>
+  <ROUTE fromNode="P31Domino27Body" fromField="position" toNode="P31Domino27T" toField="set_translation"/>
+  <ROUTE fromNode="P31Domino27Body" fromField="orientation" toNode="P31Domino27T" toField="set_rotation"/>
+  <ROUTE fromNode="P32BarBody" fromField="position" toNode="P32BarT" toField="set_translation"/>
+  <ROUTE fromNode="P32BarBody" fromField="orientation" toNode="P32BarT" toField="set_rotation"/>
+  <ROUTE fromNode="P33Domino0Body" fromField="position" toNode="P33Domino0T" toField="set_translation"/>
+  <ROUTE fromNode="P33Domino0Body" fromField="orientation" toNode="P33Domino0T" toField="set_rotation"/>
+  <ROUTE fromNode="P33Domino1Body" fromField="position" toNode="P33Domino1T" toField="set_translation"/>
+  <ROUTE fromNode="P33Domino1Body" fromField="orientation" toNode="P33Domino1T" toField="set_rotation"/>
+  <ROUTE fromNode="P33Domino2Body" fromField="position" toNode="P33Domino2T" toField="set_translation"/>
+  <ROUTE fromNode="P33Domino2Body" fromField="orientation" toNode="P33Domino2T" toField="set_rotation"/>
+  <ROUTE fromNode="P33Domino3Body" fromField="position" toNode="P33Domino3T" toField="set_translation"/>
+  <ROUTE fromNode="P33Domino3Body" fromField="orientation" toNode="P33Domino3T" toField="set_rotation"/>
+  <ROUTE fromNode="P33Domino4Body" fromField="position" toNode="P33Domino4T" toField="set_translation"/>
+  <ROUTE fromNode="P33Domino4Body" fromField="orientation" toNode="P33Domino4T" toField="set_rotation"/>
+  <ROUTE fromNode="P33Domino5Body" fromField="position" toNode="P33Domino5T" toField="set_translation"/>
+  <ROUTE fromNode="P33Domino5Body" fromField="orientation" toNode="P33Domino5T" toField="set_rotation"/>
+  <ROUTE fromNode="P33Domino6Body" fromField="position" toNode="P33Domino6T" toField="set_translation"/>
+  <ROUTE fromNode="P33Domino6Body" fromField="orientation" toNode="P33Domino6T" toField="set_rotation"/>
+  <ROUTE fromNode="P33Domino7Body" fromField="position" toNode="P33Domino7T" toField="set_translation"/>
+  <ROUTE fromNode="P33Domino7Body" fromField="orientation" toNode="P33Domino7T" toField="set_rotation"/>
+  <ROUTE fromNode="P33Domino8Body" fromField="position" toNode="P33Domino8T" toField="set_translation"/>
+  <ROUTE fromNode="P33Domino8Body" fromField="orientation" toNode="P33Domino8T" toField="set_rotation"/>
+  <ROUTE fromNode="P33Domino9Body" fromField="position" toNode="P33Domino9T" toField="set_translation"/>
+  <ROUTE fromNode="P33Domino9Body" fromField="orientation" toNode="P33Domino9T" toField="set_rotation"/>
+  <ROUTE fromNode="P33Domino10Body" fromField="position" toNode="P33Domino10T" toField="set_translation"/>
+  <ROUTE fromNode="P33Domino10Body" fromField="orientation" toNode="P33Domino10T" toField="set_rotation"/>
+  <ROUTE fromNode="P33Domino11Body" fromField="position" toNode="P33Domino11T" toField="set_translation"/>
+  <ROUTE fromNode="P33Domino11Body" fromField="orientation" toNode="P33Domino11T" toField="set_rotation"/>
+  <ROUTE fromNode="P34PlungerBody" fromField="position" toNode="P34PlungerT" toField="set_translation"/>
+  <ROUTE fromNode="P34PlungerBody" fromField="orientation" toNode="P34PlungerT" toField="set_rotation"/>
+  <Group DEF="Voices">
+   <SpatialSound DEF="Voice_knock_wood_0" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_knock_wood_0" containerField="children" url='&quot;../../public/sounds/knock-wood.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_knock_wood_1" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_knock_wood_1" containerField="children" url='&quot;../../public/sounds/knock-wood.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_knock_wood_2" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_knock_wood_2" containerField="children" url='&quot;../../public/sounds/knock-wood.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_knock_wood_3" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_knock_wood_3" containerField="children" url='&quot;../../public/sounds/knock-wood.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_clink_glass_0" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_clink_glass_0" containerField="children" url='&quot;../../public/sounds/clink-glass.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_clink_glass_1" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_clink_glass_1" containerField="children" url='&quot;../../public/sounds/clink-glass.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_clink_glass_2" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_clink_glass_2" containerField="children" url='&quot;../../public/sounds/clink-glass.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_clink_glass_3" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_clink_glass_3" containerField="children" url='&quot;../../public/sounds/clink-glass.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_ting_brass_0" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_ting_brass_0" containerField="children" url='&quot;../../public/sounds/ting-brass.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_ting_brass_1" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_ting_brass_1" containerField="children" url='&quot;../../public/sounds/ting-brass.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_ting_brass_2" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_ting_brass_2" containerField="children" url='&quot;../../public/sounds/ting-brass.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_ting_brass_3" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_ting_brass_3" containerField="children" url='&quot;../../public/sounds/ting-brass.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_clack_steel_0" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_clack_steel_0" containerField="children" url='&quot;../../public/sounds/clack-steel.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_clack_steel_1" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_clack_steel_1" containerField="children" url='&quot;../../public/sounds/clack-steel.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_clack_steel_2" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_clack_steel_2" containerField="children" url='&quot;../../public/sounds/clack-steel.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_clack_steel_3" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_clack_steel_3" containerField="children" url='&quot;../../public/sounds/clack-steel.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_bell_c6_0" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_bell_c6_0" containerField="children" url='&quot;../../public/sounds/bell-c6.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_bell_c6_1" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_bell_c6_1" containerField="children" url='&quot;../../public/sounds/bell-c6.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_bell_c6_2" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_bell_c6_2" containerField="children" url='&quot;../../public/sounds/bell-c6.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_bell_c6_3" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_bell_c6_3" containerField="children" url='&quot;../../public/sounds/bell-c6.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_bar_c5_0" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_bar_c5_0" containerField="children" url='&quot;../../public/sounds/bar-c5.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_bar_c5_1" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_bar_c5_1" containerField="children" url='&quot;../../public/sounds/bar-c5.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_bar_c5_2" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_bar_c5_2" containerField="children" url='&quot;../../public/sounds/bar-c5.wav&quot;'/></SpatialSound>
+   <SpatialSound DEF="Voice_bar_c5_3" location="0 0.5 0" intensity="0" referenceDistance="0.6" rolloffFactor="1" distanceModel="INVERSE"><AudioClip DEF="Clip_bar_c5_3" containerField="children" url='&quot;../../public/sounds/bar-c5.wav&quot;'/></SpatialSound>
+  </Group>
+ </Scene>
+</X3D>

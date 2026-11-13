@@ -30,7 +30,7 @@ you repair the generator until they agree, and every claim carries a grade and a
 - Models: builder <id>; judges <ids> (flags only); image / video / audio <ids>. Cache by prompt hash.
 
 3. TRAPS TO READ BEFORE CODING
-- LOOM-v1 section 8 (108 known failure modes) and FACTS <sections>.
+- LOOM-v1 section 8 (147 known failure modes) and FACTS <sections>.
 - Host: the policy blocks other hosts and eval. No Script nodes: drive the scene from page JS through SAI.
   Fonts as TTF. Strip the DOCTYPE from page copies; serve .x3d as application/xml.
 - X_ITE: never let an exception escape a field callback (one escaping exception freezes all routing, 16.5.1),

@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Interchange" version="4.0">
+ <head>
+  <component name="Shape" level="2"/>
+  <component name="Lighting" level="2"/>
+  <component name="Texturing" level="2"/>
+  <component name="Grouping" level="2"/>
+  <component name="RigidBodyPhysics" level="2"/>
+  <component name="Navigation" level="2"/>
+
+  <meta name="title" content="Twinkle, twinkle"/>
+  <meta name="description" content="A physics music box: a pinned drum (TimeSensor + OrientationInterpolator, kinematic) lifts 10 hammers on SingleAxisHingeJoints; each falls on its tuned bar. 18 pegs, 110 BPM."/>
+  <meta name="generator" content="x3d-physx-bridge demos (src/demos/musicbox-scene.ts)"/>
+ </head>
+ <Scene>
+  <WorldInfo title="Twinkle, twinkle" info='"Units: metres, kilograms, seconds, radians. Y up. Drum axis along X; hammers pivot behind it."'>
+   <MetadataString DEF="MachineDescription" containerField="metadata" name="X3dPhysxDemo" value='&quot;{\&quot;demo\&quot;:\&quot;musicbox\&quot;,\&quot;state\&quot;:{\&quot;format\&quot;:\&quot;x3d-physx-musicbox/1\&quot;,\&quot;name\&quot;:\&quot;Twinkle, twinkle\&quot;,\&quot;tempo\&quot;:110,\&quot;grid\&quot;:[\&quot;xx............x.\&quot;,\&quot;............xx..\&quot;,\&quot;..........xx....\&quot;,\&quot;........xx......\&quot;,\&quot;..xx..x.........\&quot;,\&quot;....xx..........\&quot;,\&quot;............x...\&quot;,\&quot;x...............\&quot;,\&quot;........x.......\&quot;,\&quot;....x...........\&quot;]}}&quot;'/>
+  </WorldInfo>
+  <NavigationInfo type='"EXAMINE" "ANY"' headlight="false"/>
+  <Background DEF="Sky" skyColor="0.05 0.06 0.08"/>
+  <Viewpoint DEF="Front" description="Over the drum" position="-0.27 0.42 -0.48" orientation="-0.05722 -0.97142 -0.23036 2.66809" centerOfRotation="0 0.13 0.03" fieldOfView="0.7"/>
+  <Viewpoint DEF="Side" description="Side: the mechanism" position="0.5 0.19 0.02" orientation="-0.02995 0.9991 0.02995 1.57169" centerOfRotation="0 0.16 0.02" fieldOfView="0.55"/>
+  <Viewpoint DEF="Top" description="Bars" position="0.12 0.4 0.42" orientation="-0.87207 0.46955 0.13788 0.6496" centerOfRotation="0 0.15 0.05" fieldOfView="0.7"/>
+  <DirectionalLight DEF="Key" direction="-0.3 -0.8 -0.6" intensity="2.2" shadows="true"/>
+  <DirectionalLight DEF="Fill" direction="0.1 -0.25 -1" intensity="1.6"/>
+  <DirectionalLight DEF="Rim" direction="0.6 -0.2 -1" intensity="0.5"/>
+  <Shape><Appearance DEF="LoomLine"><Material emissiveColor="0.95 0.74 0.3" diffuseColor="0 0 0"/></Appearance><PointSet><Coordinate point="0 -10 0"/></PointSet></Shape>
+  <Transform DEF="BaseT" translation="0 0.01 0">
+   <Shape DEF="BaseSS"><Appearance DEF="Mat_wood"><PhysicalMaterial baseColor="0.66 0.45 0.26" metallic="0" roughness="0.55"/></Appearance><Box size="0.4 0.02 0.32"/></Shape>
+  </Transform>
+  <Transform DEF="CheekLT" translation="-0.18 0.09 0">
+   <Shape DEF="CheekLSS"><Appearance DEF="Mat_frame"><PhysicalMaterial baseColor="0.3 0.22 0.15" metallic="0" roughness="0.7"/></Appearance><Box size="0.012 0.16 0.12"/></Shape>
+  </Transform>
+  <Transform DEF="CheekRT" translation="0.18 0.09 0">
+   <Shape DEF="CheekRSS"><Appearance USE="Mat_frame"/><Box size="0.012 0.16 0.12"/></Shape>
+  </Transform>
+  <Transform DEF="PivotRodT" translation="0 0.184 -0.04">
+   <Transform rotation="0 0 1 1.5708"><Shape DEF="PivotRodSS"><Appearance DEF="Mat_steel"><PhysicalMaterial baseColor="0.62 0.64 0.68" metallic="1" roughness="0.35"/></Appearance><Cylinder radius="0.003" height="0.35"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="PostLT" translation="-0.168 0.102 -0.04">
+   <Shape DEF="PostLSS"><Appearance USE="Mat_frame"/><Box size="0.01 0.184 0.012"/></Shape>
+  </Transform>
+  <Transform DEF="PostRT" translation="0.168 0.102 -0.04">
+   <Shape DEF="PostRSS"><Appearance USE="Mat_frame"/><Box size="0.01 0.184 0.012"/></Shape>
+  </Transform>
+  <Transform DEF="DrumT" translation="0 0.12 0">
+   <Transform rotation="0 0 1 1.5708"><Shape DEF="BarrelS"><Appearance DEF="Mat_brass"><PhysicalMaterial baseColor="0.86 0.68 0.32" metallic="1" roughness="0.3"/></Appearance><Cylinder radius="0.045" height="0.29"/></Shape></Transform>
+   <Transform translation="-0.126 0.0328469 0.0343123" rotation="1 0 0 0.807215"><Shape DEF="Peg0_0S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg0_0O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="-0.126 0.0172158 0.0442704" rotation="1 0 0 1.19991"><Shape DEF="Peg0_1S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg0_1O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="-0.126 0.0474887 0.00103621" rotation="1 0 0 0.0218166"><Shape DEF="Peg0_14S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg0_14O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="-0.098 0.0343123 -0.0328469" rotation="-1 0 0 0.763582"><Shape DEF="Peg1_12S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg1_12O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="-0.098 0.0442704 -0.0172158" rotation="-1 0 0 0.370882"><Shape DEF="Peg1_13S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg1_13O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="-0.07 0.00103621 -0.0474887" rotation="-1 0 0 1.54898"><Shape DEF="Peg2_10S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg2_10O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="-0.07 0.0191305 -0.0434773" rotation="-1 0 0 1.15628"><Shape DEF="Peg2_11S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg2_11O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="-0.042 -0.0328469 -0.0343123" rotation="-1 0 0 2.33438"><Shape DEF="Peg3_8S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg3_8O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="-0.042 -0.0172158 -0.0442704" rotation="-1 0 0 1.94168"><Shape DEF="Peg3_9S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg3_9O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="-0.014 -0.00103621 0.0474887" rotation="1 0 0 1.59261"><Shape DEF="Peg4_2S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg4_2O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="-0.014 -0.0191305 0.0434773" rotation="1 0 0 1.98531"><Shape DEF="Peg4_3S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg4_3O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="-0.014 -0.0474887 -0.00103621" rotation="-1 0 0 3.11978"><Shape DEF="Peg4_6S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg4_6O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0.014 -0.0343123 0.0328469" rotation="1 0 0 2.37801"><Shape DEF="Peg5_4S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg5_4O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0.014 -0.0442704 0.0172158" rotation="1 0 0 2.77071"><Shape DEF="Peg5_5S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg5_5O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0.042 0.0343123 -0.0328469" rotation="-1 0 0 0.763582"><Shape DEF="Peg6_12S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg6_12O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0.07 0.0328469 0.0343123" rotation="1 0 0 0.807215"><Shape DEF="Peg7_0S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg7_0O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0.098 -0.0328469 -0.0343123" rotation="-1 0 0 2.33438"><Shape DEF="Peg8_8S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg8_8O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0.126 -0.0343123 0.0328469" rotation="1 0 0 2.37801"><Shape DEF="Peg9_4S"><Appearance USE="Mat_steel"/><Box size="0.006 0.007 0.005"/></Shape><Switch DEF="Peg9_4O" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.003 -0.0035 -0.0025 0.003 -0.0035 -0.0025 0.003 0.0035 -0.0025 -0.003 0.0035 -0.0025 -0.003 -0.0035 0.0025 0.003 -0.0035 0.0025 0.003 0.0035 0.0025 -0.003 0.0035 0.0025"/></IndexedLineSet></Shape></Switch></Transform>
+  </Transform>
+  <Transform DEF="Hammer0T" translation="-0.126 0.184 0.0275">
+   <Group><Shape DEF="Hammer0ArmS"><Appearance USE="Mat_wood"/><Box size="0.004 0.004 0.135"/></Shape><Switch DEF="Hammer0ArmO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.002 -0.0675 0.002 -0.002 -0.0675 0.002 0.002 -0.0675 -0.002 0.002 -0.0675 -0.002 -0.002 0.0675 0.002 -0.002 0.0675 0.002 0.002 0.0675 -0.002 0.002 0.0675"/></IndexedLineSet></Shape></Switch></Group>
+   <Transform translation="0 -0.011726 0.000892034"><Shape DEF="Hammer0StrutS"><Appearance USE="Mat_wood"/><Box size="0.004 0.023452 0.004"/></Shape><Switch DEF="Hammer0StrutO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.011726 -0.002 0.002 -0.011726 -0.002 0.002 0.011726 -0.002 -0.002 0.011726 -0.002 -0.002 -0.011726 0.002 0.002 -0.011726 0.002 0.002 0.011726 0.002 -0.002 0.011726 0.002"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0 -0.023452 0.000892034"><Shape DEF="Hammer0FootS"><Appearance DEF="Mat_ivory"><PhysicalMaterial baseColor="0.92 0.89 0.8" metallic="0" roughness="0.5"/></Appearance><Sphere radius="0.003"/></Shape></Transform>
+   <Transform translation="0 -0.006 0.0675"><Shape DEF="Hammer0HeadS"><Appearance USE="Mat_brass"/><Sphere radius="0.006"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="Bar0T" translation="-0.126 0.169 0.13">
+   <Group><Shape DEF="Bar0SS"><Appearance DEF="Mat_bar0"><PhysicalMaterial baseColor="0.85 0.2 0.2" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.02 0.006 0.11"/></Shape><Switch DEF="Bar0SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.01 -0.003 -0.055 0.01 -0.003 -0.055 0.01 0.003 -0.055 -0.01 0.003 -0.055 -0.01 -0.003 0.055 0.01 -0.003 0.055 0.01 0.003 0.055 -0.01 0.003 0.055"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Hammer1T" translation="-0.098 0.184 0.0275">
+   <Group><Shape DEF="Hammer1ArmS"><Appearance USE="Mat_wood"/><Box size="0.004 0.004 0.135"/></Shape><Switch DEF="Hammer1ArmO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.002 -0.0675 0.002 -0.002 -0.0675 0.002 0.002 -0.0675 -0.002 0.002 -0.0675 -0.002 -0.002 0.0675 0.002 -0.002 0.0675 0.002 0.002 0.0675 -0.002 0.002 0.0675"/></IndexedLineSet></Shape></Switch></Group>
+   <Transform translation="0 -0.011726 0.000892034"><Shape DEF="Hammer1StrutS"><Appearance USE="Mat_wood"/><Box size="0.004 0.023452 0.004"/></Shape><Switch DEF="Hammer1StrutO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.011726 -0.002 0.002 -0.011726 -0.002 0.002 0.011726 -0.002 -0.002 0.011726 -0.002 -0.002 -0.011726 0.002 0.002 -0.011726 0.002 0.002 0.011726 0.002 -0.002 0.011726 0.002"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0 -0.023452 0.000892034"><Shape DEF="Hammer1FootS"><Appearance USE="Mat_ivory"/><Sphere radius="0.003"/></Shape></Transform>
+   <Transform translation="0 -0.006 0.0675"><Shape DEF="Hammer1HeadS"><Appearance USE="Mat_brass"/><Sphere radius="0.006"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="Bar1T" translation="-0.098 0.169 0.1275">
+   <Group><Shape DEF="Bar1SS"><Appearance DEF="Mat_bar1"><PhysicalMaterial baseColor="0.9 0.55 0.15" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.02 0.006 0.105"/></Shape><Switch DEF="Bar1SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.01 -0.003 -0.0525 0.01 -0.003 -0.0525 0.01 0.003 -0.0525 -0.01 0.003 -0.0525 -0.01 -0.003 0.0525 0.01 -0.003 0.0525 0.01 0.003 0.0525 -0.01 0.003 0.0525"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Hammer2T" translation="-0.07 0.184 0.0275">
+   <Group><Shape DEF="Hammer2ArmS"><Appearance USE="Mat_wood"/><Box size="0.004 0.004 0.135"/></Shape><Switch DEF="Hammer2ArmO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.002 -0.0675 0.002 -0.002 -0.0675 0.002 0.002 -0.0675 -0.002 0.002 -0.0675 -0.002 -0.002 0.0675 0.002 -0.002 0.0675 0.002 0.002 0.0675 -0.002 0.002 0.0675"/></IndexedLineSet></Shape></Switch></Group>
+   <Transform translation="0 -0.011726 0.000892034"><Shape DEF="Hammer2StrutS"><Appearance USE="Mat_wood"/><Box size="0.004 0.023452 0.004"/></Shape><Switch DEF="Hammer2StrutO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.011726 -0.002 0.002 -0.011726 -0.002 0.002 0.011726 -0.002 -0.002 0.011726 -0.002 -0.002 -0.011726 0.002 0.002 -0.011726 0.002 0.002 0.011726 0.002 -0.002 0.011726 0.002"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0 -0.023452 0.000892034"><Shape DEF="Hammer2FootS"><Appearance USE="Mat_ivory"/><Sphere radius="0.003"/></Shape></Transform>
+   <Transform translation="0 -0.006 0.0675"><Shape DEF="Hammer2HeadS"><Appearance USE="Mat_brass"/><Sphere radius="0.006"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="Bar2T" translation="-0.07 0.169 0.125">
+   <Group><Shape DEF="Bar2SS"><Appearance DEF="Mat_bar2"><PhysicalMaterial baseColor="0.9 0.85 0.2" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.02 0.006 0.1"/></Shape><Switch DEF="Bar2SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.01 -0.003 -0.05 0.01 -0.003 -0.05 0.01 0.003 -0.05 -0.01 0.003 -0.05 -0.01 -0.003 0.05 0.01 -0.003 0.05 0.01 0.003 0.05 -0.01 0.003 0.05"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Hammer3T" translation="-0.042 0.184 0.0275">
+   <Group><Shape DEF="Hammer3ArmS"><Appearance USE="Mat_wood"/><Box size="0.004 0.004 0.135"/></Shape><Switch DEF="Hammer3ArmO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.002 -0.0675 0.002 -0.002 -0.0675 0.002 0.002 -0.0675 -0.002 0.002 -0.0675 -0.002 -0.002 0.0675 0.002 -0.002 0.0675 0.002 0.002 0.0675 -0.002 0.002 0.0675"/></IndexedLineSet></Shape></Switch></Group>
+   <Transform translation="0 -0.011726 0.000892034"><Shape DEF="Hammer3StrutS"><Appearance USE="Mat_wood"/><Box size="0.004 0.023452 0.004"/></Shape><Switch DEF="Hammer3StrutO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.011726 -0.002 0.002 -0.011726 -0.002 0.002 0.011726 -0.002 -0.002 0.011726 -0.002 -0.002 -0.011726 0.002 0.002 -0.011726 0.002 0.002 0.011726 0.002 -0.002 0.011726 0.002"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0 -0.023452 0.000892034"><Shape DEF="Hammer3FootS"><Appearance USE="Mat_ivory"/><Sphere radius="0.003"/></Shape></Transform>
+   <Transform translation="0 -0.006 0.0675"><Shape DEF="Hammer3HeadS"><Appearance USE="Mat_brass"/><Sphere radius="0.006"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="Bar3T" translation="-0.042 0.169 0.1225">
+   <Group><Shape DEF="Bar3SS"><Appearance DEF="Mat_bar3"><PhysicalMaterial baseColor="0.25 0.75 0.3" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.02 0.006 0.095"/></Shape><Switch DEF="Bar3SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.01 -0.003 -0.0475 0.01 -0.003 -0.0475 0.01 0.003 -0.0475 -0.01 0.003 -0.0475 -0.01 -0.003 0.0475 0.01 -0.003 0.0475 0.01 0.003 0.0475 -0.01 0.003 0.0475"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Hammer4T" translation="-0.014 0.184 0.0275">
+   <Group><Shape DEF="Hammer4ArmS"><Appearance USE="Mat_wood"/><Box size="0.004 0.004 0.135"/></Shape><Switch DEF="Hammer4ArmO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.002 -0.0675 0.002 -0.002 -0.0675 0.002 0.002 -0.0675 -0.002 0.002 -0.0675 -0.002 -0.002 0.0675 0.002 -0.002 0.0675 0.002 0.002 0.0675 -0.002 0.002 0.0675"/></IndexedLineSet></Shape></Switch></Group>
+   <Transform translation="0 -0.011726 0.000892034"><Shape DEF="Hammer4StrutS"><Appearance USE="Mat_wood"/><Box size="0.004 0.023452 0.004"/></Shape><Switch DEF="Hammer4StrutO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.011726 -0.002 0.002 -0.011726 -0.002 0.002 0.011726 -0.002 -0.002 0.011726 -0.002 -0.002 -0.011726 0.002 0.002 -0.011726 0.002 0.002 0.011726 0.002 -0.002 0.011726 0.002"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0 -0.023452 0.000892034"><Shape DEF="Hammer4FootS"><Appearance USE="Mat_ivory"/><Sphere radius="0.003"/></Shape></Transform>
+   <Transform translation="0 -0.006 0.0675"><Shape DEF="Hammer4HeadS"><Appearance USE="Mat_brass"/><Sphere radius="0.006"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="Bar4T" translation="-0.014 0.169 0.12">
+   <Group><Shape DEF="Bar4SS"><Appearance DEF="Mat_bar4"><PhysicalMaterial baseColor="0.25 0.45 0.9" metallic="0.6" roughness="0.3"/></Appearance><Box size="0.02 0.006 0.09"/></Shape><Switch DEF="Bar4SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.01 -0.003 -0.045 0.01 -0.003 -0.045 0.01 0.003 -0.045 -0.01 0.003 -0.045 -0.01 -0.003 0.045 0.01 -0.003 0.045 0.01 0.003 0.045 -0.01 0.003 0.045"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Hammer5T" translation="0.014 0.184 0.0275">
+   <Group><Shape DEF="Hammer5ArmS"><Appearance USE="Mat_wood"/><Box size="0.004 0.004 0.135"/></Shape><Switch DEF="Hammer5ArmO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.002 -0.0675 0.002 -0.002 -0.0675 0.002 0.002 -0.0675 -0.002 0.002 -0.0675 -0.002 -0.002 0.0675 0.002 -0.002 0.0675 0.002 0.002 0.0675 -0.002 0.002 0.0675"/></IndexedLineSet></Shape></Switch></Group>
+   <Transform translation="0 -0.011726 0.000892034"><Shape DEF="Hammer5StrutS"><Appearance USE="Mat_wood"/><Box size="0.004 0.023452 0.004"/></Shape><Switch DEF="Hammer5StrutO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.011726 -0.002 0.002 -0.011726 -0.002 0.002 0.011726 -0.002 -0.002 0.011726 -0.002 -0.002 -0.011726 0.002 0.002 -0.011726 0.002 0.002 0.011726 0.002 -0.002 0.011726 0.002"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0 -0.023452 0.000892034"><Shape DEF="Hammer5FootS"><Appearance USE="Mat_ivory"/><Sphere radius="0.003"/></Shape></Transform>
+   <Transform translation="0 -0.006 0.0675"><Shape DEF="Hammer5HeadS"><Appearance USE="Mat_brass"/><Sphere radius="0.006"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="Bar5T" translation="0.014 0.169 0.1175">
+   <Group><Shape DEF="Bar5SS"><Appearance USE="Mat_bar0"/><Box size="0.02 0.006 0.085"/></Shape><Switch DEF="Bar5SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.01 -0.003 -0.0425 0.01 -0.003 -0.0425 0.01 0.003 -0.0425 -0.01 0.003 -0.0425 -0.01 -0.003 0.0425 0.01 -0.003 0.0425 0.01 0.003 0.0425 -0.01 0.003 0.0425"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Hammer6T" translation="0.042 0.184 0.0275">
+   <Group><Shape DEF="Hammer6ArmS"><Appearance USE="Mat_wood"/><Box size="0.004 0.004 0.135"/></Shape><Switch DEF="Hammer6ArmO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.002 -0.0675 0.002 -0.002 -0.0675 0.002 0.002 -0.0675 -0.002 0.002 -0.0675 -0.002 -0.002 0.0675 0.002 -0.002 0.0675 0.002 0.002 0.0675 -0.002 0.002 0.0675"/></IndexedLineSet></Shape></Switch></Group>
+   <Transform translation="0 -0.011726 0.000892034"><Shape DEF="Hammer6StrutS"><Appearance USE="Mat_wood"/><Box size="0.004 0.023452 0.004"/></Shape><Switch DEF="Hammer6StrutO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.011726 -0.002 0.002 -0.011726 -0.002 0.002 0.011726 -0.002 -0.002 0.011726 -0.002 -0.002 -0.011726 0.002 0.002 -0.011726 0.002 0.002 0.011726 0.002 -0.002 0.011726 0.002"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0 -0.023452 0.000892034"><Shape DEF="Hammer6FootS"><Appearance USE="Mat_ivory"/><Sphere radius="0.003"/></Shape></Transform>
+   <Transform translation="0 -0.006 0.0675"><Shape DEF="Hammer6HeadS"><Appearance USE="Mat_brass"/><Sphere radius="0.006"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="Bar6T" translation="0.042 0.169 0.115">
+   <Group><Shape DEF="Bar6SS"><Appearance USE="Mat_bar1"/><Box size="0.02 0.006 0.08"/></Shape><Switch DEF="Bar6SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.01 -0.003 -0.04 0.01 -0.003 -0.04 0.01 0.003 -0.04 -0.01 0.003 -0.04 -0.01 -0.003 0.04 0.01 -0.003 0.04 0.01 0.003 0.04 -0.01 0.003 0.04"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Hammer7T" translation="0.07 0.184 0.0275">
+   <Group><Shape DEF="Hammer7ArmS"><Appearance USE="Mat_wood"/><Box size="0.004 0.004 0.135"/></Shape><Switch DEF="Hammer7ArmO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.002 -0.0675 0.002 -0.002 -0.0675 0.002 0.002 -0.0675 -0.002 0.002 -0.0675 -0.002 -0.002 0.0675 0.002 -0.002 0.0675 0.002 0.002 0.0675 -0.002 0.002 0.0675"/></IndexedLineSet></Shape></Switch></Group>
+   <Transform translation="0 -0.011726 0.000892034"><Shape DEF="Hammer7StrutS"><Appearance USE="Mat_wood"/><Box size="0.004 0.023452 0.004"/></Shape><Switch DEF="Hammer7StrutO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.011726 -0.002 0.002 -0.011726 -0.002 0.002 0.011726 -0.002 -0.002 0.011726 -0.002 -0.002 -0.011726 0.002 0.002 -0.011726 0.002 0.002 0.011726 0.002 -0.002 0.011726 0.002"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0 -0.023452 0.000892034"><Shape DEF="Hammer7FootS"><Appearance USE="Mat_ivory"/><Sphere radius="0.003"/></Shape></Transform>
+   <Transform translation="0 -0.006 0.0675"><Shape DEF="Hammer7HeadS"><Appearance USE="Mat_brass"/><Sphere radius="0.006"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="Bar7T" translation="0.07 0.169 0.1125">
+   <Group><Shape DEF="Bar7SS"><Appearance USE="Mat_bar2"/><Box size="0.02 0.006 0.075"/></Shape><Switch DEF="Bar7SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.01 -0.003 -0.0375 0.01 -0.003 -0.0375 0.01 0.003 -0.0375 -0.01 0.003 -0.0375 -0.01 -0.003 0.0375 0.01 -0.003 0.0375 0.01 0.003 0.0375 -0.01 0.003 0.0375"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Hammer8T" translation="0.098 0.184 0.0275">
+   <Group><Shape DEF="Hammer8ArmS"><Appearance USE="Mat_wood"/><Box size="0.004 0.004 0.135"/></Shape><Switch DEF="Hammer8ArmO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.002 -0.0675 0.002 -0.002 -0.0675 0.002 0.002 -0.0675 -0.002 0.002 -0.0675 -0.002 -0.002 0.0675 0.002 -0.002 0.0675 0.002 0.002 0.0675 -0.002 0.002 0.0675"/></IndexedLineSet></Shape></Switch></Group>
+   <Transform translation="0 -0.011726 0.000892034"><Shape DEF="Hammer8StrutS"><Appearance USE="Mat_wood"/><Box size="0.004 0.023452 0.004"/></Shape><Switch DEF="Hammer8StrutO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.011726 -0.002 0.002 -0.011726 -0.002 0.002 0.011726 -0.002 -0.002 0.011726 -0.002 -0.002 -0.011726 0.002 0.002 -0.011726 0.002 0.002 0.011726 0.002 -0.002 0.011726 0.002"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0 -0.023452 0.000892034"><Shape DEF="Hammer8FootS"><Appearance USE="Mat_ivory"/><Sphere radius="0.003"/></Shape></Transform>
+   <Transform translation="0 -0.006 0.0675"><Shape DEF="Hammer8HeadS"><Appearance USE="Mat_brass"/><Sphere radius="0.006"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="Bar8T" translation="0.098 0.169 0.11">
+   <Group><Shape DEF="Bar8SS"><Appearance USE="Mat_bar3"/><Box size="0.02 0.006 0.07"/></Shape><Switch DEF="Bar8SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.01 -0.003 -0.035 0.01 -0.003 -0.035 0.01 0.003 -0.035 -0.01 0.003 -0.035 -0.01 -0.003 0.035 0.01 -0.003 0.035 0.01 0.003 0.035 -0.01 0.003 0.035"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Hammer9T" translation="0.126 0.184 0.0275">
+   <Group><Shape DEF="Hammer9ArmS"><Appearance USE="Mat_wood"/><Box size="0.004 0.004 0.135"/></Shape><Switch DEF="Hammer9ArmO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.002 -0.0675 0.002 -0.002 -0.0675 0.002 0.002 -0.0675 -0.002 0.002 -0.0675 -0.002 -0.002 0.0675 0.002 -0.002 0.0675 0.002 0.002 0.0675 -0.002 0.002 0.0675"/></IndexedLineSet></Shape></Switch></Group>
+   <Transform translation="0 -0.011726 0.000892034"><Shape DEF="Hammer9StrutS"><Appearance USE="Mat_wood"/><Box size="0.004 0.023452 0.004"/></Shape><Switch DEF="Hammer9StrutO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.002 -0.011726 -0.002 0.002 -0.011726 -0.002 0.002 0.011726 -0.002 -0.002 0.011726 -0.002 -0.002 -0.011726 0.002 0.002 -0.011726 0.002 0.002 0.011726 0.002 -0.002 0.011726 0.002"/></IndexedLineSet></Shape></Switch></Transform>
+   <Transform translation="0 -0.023452 0.000892034"><Shape DEF="Hammer9FootS"><Appearance USE="Mat_ivory"/><Sphere radius="0.003"/></Shape></Transform>
+   <Transform translation="0 -0.006 0.0675"><Shape DEF="Hammer9HeadS"><Appearance USE="Mat_brass"/><Sphere radius="0.006"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="Bar9T" translation="0.126 0.169 0.1075">
+   <Group><Shape DEF="Bar9SS"><Appearance USE="Mat_bar4"/><Box size="0.02 0.006 0.065"/></Shape><Switch DEF="Bar9SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.01 -0.003 -0.0325 0.01 -0.003 -0.0325 0.01 0.003 -0.0325 -0.01 0.003 -0.0325 -0.01 -0.003 0.0325 0.01 -0.003 0.0325 0.01 0.003 0.0325 -0.01 0.003 0.0325"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Rail0T" translation="0 0.162 0.083">
+   <Shape DEF="Rail0SS"><Appearance DEF="Mat_felt"><PhysicalMaterial baseColor="0.1 0.24 0.18" metallic="0" roughness="1"/></Appearance><Box size="0.32 0.008 0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Leg0LT" translation="-0.156 0.089 0.083">
+   <Shape DEF="Leg0LSS"><Appearance USE="Mat_frame"/><Box size="0.008 0.138 0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Leg0RT" translation="0.156 0.089 0.083">
+   <Shape DEF="Leg0RSS"><Appearance USE="Mat_frame"/><Box size="0.008 0.138 0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Rail1T" translation="0 0.162 0.14">
+   <Shape DEF="Rail1SS"><Appearance USE="Mat_felt"/><Box size="0.32 0.008 0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Leg1LT" translation="-0.156 0.089 0.14">
+   <Shape DEF="Leg1LSS"><Appearance USE="Mat_frame"/><Box size="0.008 0.138 0.008"/></Shape>
+  </Transform>
+  <Transform DEF="Leg1RT" translation="0.156 0.089 0.14">
+   <Shape DEF="Leg1RSS"><Appearance USE="Mat_frame"/><Box size="0.008 0.138 0.008"/></Shape>
+  </Transform>
+  <TimeSensor DEF="Crank" cycleInterval="4.36364" loop="true"/>
+  <OrientationInterpolator DEF="CrankTurn" key="0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1" keyValue="0 0 1 0 -1 0 0 0.785398 -1 0 0 1.5708 -1 0 0 2.35619 -1 0 0 3.14159 1 0 0 2.35619 1 0 0 1.5708 1 0 0 0.785398 0 0 1 0"/>
+  <RigidBodyCollection DEF="Machine" gravity="0 -9.81 0" iterations="10" preferAccuracy="true">
+   <RigidBody DEF="BaseBody" containerField="bodies" position="0 0.01 0" fixed="true">
+     <CollidableShape DEF="BaseS" containerField="geometry"><Shape USE="BaseSS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="CheekLBody" containerField="bodies" position="-0.18 0.09 0" fixed="true">
+     <CollidableShape DEF="CheekLS" containerField="geometry"><Shape USE="CheekLSS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="CheekRBody" containerField="bodies" position="0.18 0.09 0" fixed="true">
+     <CollidableShape DEF="CheekRS" containerField="geometry"><Shape USE="CheekRSS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="PivotRodBody" containerField="bodies" position="0 0.184 -0.04" fixed="true">
+     <CollidableOffset DEF="PivotRodSOffset" containerField="geometry"><CollidableShape DEF="PivotRodS" containerField="collidable" rotation="0 0 1 1.5708"><Shape USE="PivotRodSS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="PostLBody" containerField="bodies" position="-0.168 0.102 -0.04" fixed="true">
+     <CollidableShape DEF="PostLS" containerField="geometry"><Shape USE="PostLSS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="PostRBody" containerField="bodies" position="0.168 0.102 -0.04" fixed="true">
+     <CollidableShape DEF="PostRS" containerField="geometry"><Shape USE="PostRSS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="DrumBody" containerField="bodies" position="0 0.12 0" fixed="true">
+     <CollidableOffset DEF="BarrelOffset" containerField="geometry"><CollidableShape DEF="Barrel" containerField="collidable" rotation="0 0 1 1.5708"><Shape USE="BarrelS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg0_0Offset" containerField="geometry"><CollidableShape DEF="Peg0_0" containerField="collidable" translation="-0.126 0.0328469 0.0343123" rotation="1 0 0 0.807215"><Shape USE="Peg0_0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg0_1Offset" containerField="geometry"><CollidableShape DEF="Peg0_1" containerField="collidable" translation="-0.126 0.0172158 0.0442704" rotation="1 0 0 1.19991"><Shape USE="Peg0_1S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg0_14Offset" containerField="geometry"><CollidableShape DEF="Peg0_14" containerField="collidable" translation="-0.126 0.0474887 0.00103621" rotation="1 0 0 0.0218166"><Shape USE="Peg0_14S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg1_12Offset" containerField="geometry"><CollidableShape DEF="Peg1_12" containerField="collidable" translation="-0.098 0.0343123 -0.0328469" rotation="-1 0 0 0.763582"><Shape USE="Peg1_12S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg1_13Offset" containerField="geometry"><CollidableShape DEF="Peg1_13" containerField="collidable" translation="-0.098 0.0442704 -0.0172158" rotation="-1 0 0 0.370882"><Shape USE="Peg1_13S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg2_10Offset" containerField="geometry"><CollidableShape DEF="Peg2_10" containerField="collidable" translation="-0.07 0.00103621 -0.0474887" rotation="-1 0 0 1.54898"><Shape USE="Peg2_10S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg2_11Offset" containerField="geometry"><CollidableShape DEF="Peg2_11" containerField="collidable" translation="-0.07 0.0191305 -0.0434773" rotation="-1 0 0 1.15628"><Shape USE="Peg2_11S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg3_8Offset" containerField="geometry"><CollidableShape DEF="Peg3_8" containerField="collidable" translation="-0.042 -0.0328469 -0.0343123" rotation="-1 0 0 2.33438"><Shape USE="Peg3_8S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg3_9Offset" containerField="geometry"><CollidableShape DEF="Peg3_9" containerField="collidable" translation="-0.042 -0.0172158 -0.0442704" rotation="-1 0 0 1.94168"><Shape USE="Peg3_9S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg4_2Offset" containerField="geometry"><CollidableShape DEF="Peg4_2" containerField="collidable" translation="-0.014 -0.00103621 0.0474887" rotation="1 0 0 1.59261"><Shape USE="Peg4_2S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg4_3Offset" containerField="geometry"><CollidableShape DEF="Peg4_3" containerField="collidable" translation="-0.014 -0.0191305 0.0434773" rotation="1 0 0 1.98531"><Shape USE="Peg4_3S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg4_6Offset" containerField="geometry"><CollidableShape DEF="Peg4_6" containerField="collidable" translation="-0.014 -0.0474887 -0.00103621" rotation="-1 0 0 3.11978"><Shape USE="Peg4_6S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg5_4Offset" containerField="geometry"><CollidableShape DEF="Peg5_4" containerField="collidable" translation="0.014 -0.0343123 0.0328469" rotation="1 0 0 2.37801"><Shape USE="Peg5_4S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg5_5Offset" containerField="geometry"><CollidableShape DEF="Peg5_5" containerField="collidable" translation="0.014 -0.0442704 0.0172158" rotation="1 0 0 2.77071"><Shape USE="Peg5_5S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg6_12Offset" containerField="geometry"><CollidableShape DEF="Peg6_12" containerField="collidable" translation="0.042 0.0343123 -0.0328469" rotation="-1 0 0 0.763582"><Shape USE="Peg6_12S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg7_0Offset" containerField="geometry"><CollidableShape DEF="Peg7_0" containerField="collidable" translation="0.07 0.0328469 0.0343123" rotation="1 0 0 0.807215"><Shape USE="Peg7_0S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg8_8Offset" containerField="geometry"><CollidableShape DEF="Peg8_8" containerField="collidable" translation="0.098 -0.0328469 -0.0343123" rotation="-1 0 0 2.33438"><Shape USE="Peg8_8S" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Peg9_4Offset" containerField="geometry"><CollidableShape DEF="Peg9_4" containerField="collidable" translation="0.126 -0.0343123 0.0328469" rotation="1 0 0 2.37801"><Shape USE="Peg9_4S" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="Hammer0Body" containerField="bodies" position="-0.126 0.184 0.0275" mass="0.012">
+     <CollidableOffset DEF="Hammer0ArmOffset" containerField="geometry"><CollidableShape DEF="Hammer0Arm" containerField="collidable"><Shape USE="Hammer0ArmS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer0StrutOffset" containerField="geometry"><CollidableShape DEF="Hammer0Strut" containerField="collidable" translation="0 -0.011726 0.000892034"><Shape USE="Hammer0StrutS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer0FootOffset" containerField="geometry"><CollidableShape DEF="Hammer0Foot" containerField="collidable" translation="0 -0.023452 0.000892034"><Shape USE="Hammer0FootS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer0HeadOffset" containerField="geometry"><CollidableShape DEF="Hammer0Head" containerField="collidable" translation="0 -0.006 0.0675"><Shape USE="Hammer0HeadS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="Bar0Body" containerField="bodies" position="-0.126 0.169 0.13" fixed="true">
+     <CollidableShape DEF="Bar0S" containerField="geometry"><Shape USE="Bar0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Hammer1Body" containerField="bodies" position="-0.098 0.184 0.0275" mass="0.012">
+     <CollidableOffset DEF="Hammer1ArmOffset" containerField="geometry"><CollidableShape DEF="Hammer1Arm" containerField="collidable"><Shape USE="Hammer1ArmS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer1StrutOffset" containerField="geometry"><CollidableShape DEF="Hammer1Strut" containerField="collidable" translation="0 -0.011726 0.000892034"><Shape USE="Hammer1StrutS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer1FootOffset" containerField="geometry"><CollidableShape DEF="Hammer1Foot" containerField="collidable" translation="0 -0.023452 0.000892034"><Shape USE="Hammer1FootS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer1HeadOffset" containerField="geometry"><CollidableShape DEF="Hammer1Head" containerField="collidable" translation="0 -0.006 0.0675"><Shape USE="Hammer1HeadS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="Bar1Body" containerField="bodies" position="-0.098 0.169 0.1275" fixed="true">
+     <CollidableShape DEF="Bar1S" containerField="geometry"><Shape USE="Bar1SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Hammer2Body" containerField="bodies" position="-0.07 0.184 0.0275" mass="0.012">
+     <CollidableOffset DEF="Hammer2ArmOffset" containerField="geometry"><CollidableShape DEF="Hammer2Arm" containerField="collidable"><Shape USE="Hammer2ArmS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer2StrutOffset" containerField="geometry"><CollidableShape DEF="Hammer2Strut" containerField="collidable" translation="0 -0.011726 0.000892034"><Shape USE="Hammer2StrutS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer2FootOffset" containerField="geometry"><CollidableShape DEF="Hammer2Foot" containerField="collidable" translation="0 -0.023452 0.000892034"><Shape USE="Hammer2FootS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer2HeadOffset" containerField="geometry"><CollidableShape DEF="Hammer2Head" containerField="collidable" translation="0 -0.006 0.0675"><Shape USE="Hammer2HeadS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="Bar2Body" containerField="bodies" position="-0.07 0.169 0.125" fixed="true">
+     <CollidableShape DEF="Bar2S" containerField="geometry"><Shape USE="Bar2SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Hammer3Body" containerField="bodies" position="-0.042 0.184 0.0275" mass="0.012">
+     <CollidableOffset DEF="Hammer3ArmOffset" containerField="geometry"><CollidableShape DEF="Hammer3Arm" containerField="collidable"><Shape USE="Hammer3ArmS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer3StrutOffset" containerField="geometry"><CollidableShape DEF="Hammer3Strut" containerField="collidable" translation="0 -0.011726 0.000892034"><Shape USE="Hammer3StrutS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer3FootOffset" containerField="geometry"><CollidableShape DEF="Hammer3Foot" containerField="collidable" translation="0 -0.023452 0.000892034"><Shape USE="Hammer3FootS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer3HeadOffset" containerField="geometry"><CollidableShape DEF="Hammer3Head" containerField="collidable" translation="0 -0.006 0.0675"><Shape USE="Hammer3HeadS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="Bar3Body" containerField="bodies" position="-0.042 0.169 0.1225" fixed="true">
+     <CollidableShape DEF="Bar3S" containerField="geometry"><Shape USE="Bar3SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Hammer4Body" containerField="bodies" position="-0.014 0.184 0.0275" mass="0.012">
+     <CollidableOffset DEF="Hammer4ArmOffset" containerField="geometry"><CollidableShape DEF="Hammer4Arm" containerField="collidable"><Shape USE="Hammer4ArmS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer4StrutOffset" containerField="geometry"><CollidableShape DEF="Hammer4Strut" containerField="collidable" translation="0 -0.011726 0.000892034"><Shape USE="Hammer4StrutS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer4FootOffset" containerField="geometry"><CollidableShape DEF="Hammer4Foot" containerField="collidable" translation="0 -0.023452 0.000892034"><Shape USE="Hammer4FootS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer4HeadOffset" containerField="geometry"><CollidableShape DEF="Hammer4Head" containerField="collidable" translation="0 -0.006 0.0675"><Shape USE="Hammer4HeadS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="Bar4Body" containerField="bodies" position="-0.014 0.169 0.12" fixed="true">
+     <CollidableShape DEF="Bar4S" containerField="geometry"><Shape USE="Bar4SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Hammer5Body" containerField="bodies" position="0.014 0.184 0.0275" mass="0.012">
+     <CollidableOffset DEF="Hammer5ArmOffset" containerField="geometry"><CollidableShape DEF="Hammer5Arm" containerField="collidable"><Shape USE="Hammer5ArmS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer5StrutOffset" containerField="geometry"><CollidableShape DEF="Hammer5Strut" containerField="collidable" translation="0 -0.011726 0.000892034"><Shape USE="Hammer5StrutS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer5FootOffset" containerField="geometry"><CollidableShape DEF="Hammer5Foot" containerField="collidable" translation="0 -0.023452 0.000892034"><Shape USE="Hammer5FootS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer5HeadOffset" containerField="geometry"><CollidableShape DEF="Hammer5Head" containerField="collidable" translation="0 -0.006 0.0675"><Shape USE="Hammer5HeadS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="Bar5Body" containerField="bodies" position="0.014 0.169 0.1175" fixed="true">
+     <CollidableShape DEF="Bar5S" containerField="geometry"><Shape USE="Bar5SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Hammer6Body" containerField="bodies" position="0.042 0.184 0.0275" mass="0.012">
+     <CollidableOffset DEF="Hammer6ArmOffset" containerField="geometry"><CollidableShape DEF="Hammer6Arm" containerField="collidable"><Shape USE="Hammer6ArmS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer6StrutOffset" containerField="geometry"><CollidableShape DEF="Hammer6Strut" containerField="collidable" translation="0 -0.011726 0.000892034"><Shape USE="Hammer6StrutS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer6FootOffset" containerField="geometry"><CollidableShape DEF="Hammer6Foot" containerField="collidable" translation="0 -0.023452 0.000892034"><Shape USE="Hammer6FootS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer6HeadOffset" containerField="geometry"><CollidableShape DEF="Hammer6Head" containerField="collidable" translation="0 -0.006 0.0675"><Shape USE="Hammer6HeadS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="Bar6Body" containerField="bodies" position="0.042 0.169 0.115" fixed="true">
+     <CollidableShape DEF="Bar6S" containerField="geometry"><Shape USE="Bar6SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Hammer7Body" containerField="bodies" position="0.07 0.184 0.0275" mass="0.012">
+     <CollidableOffset DEF="Hammer7ArmOffset" containerField="geometry"><CollidableShape DEF="Hammer7Arm" containerField="collidable"><Shape USE="Hammer7ArmS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer7StrutOffset" containerField="geometry"><CollidableShape DEF="Hammer7Strut" containerField="collidable" translation="0 -0.011726 0.000892034"><Shape USE="Hammer7StrutS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer7FootOffset" containerField="geometry"><CollidableShape DEF="Hammer7Foot" containerField="collidable" translation="0 -0.023452 0.000892034"><Shape USE="Hammer7FootS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer7HeadOffset" containerField="geometry"><CollidableShape DEF="Hammer7Head" containerField="collidable" translation="0 -0.006 0.0675"><Shape USE="Hammer7HeadS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="Bar7Body" containerField="bodies" position="0.07 0.169 0.1125" fixed="true">
+     <CollidableShape DEF="Bar7S" containerField="geometry"><Shape USE="Bar7SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Hammer8Body" containerField="bodies" position="0.098 0.184 0.0275" mass="0.012">
+     <CollidableOffset DEF="Hammer8ArmOffset" containerField="geometry"><CollidableShape DEF="Hammer8Arm" containerField="collidable"><Shape USE="Hammer8ArmS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer8StrutOffset" containerField="geometry"><CollidableShape DEF="Hammer8Strut" containerField="collidable" translation="0 -0.011726 0.000892034"><Shape USE="Hammer8StrutS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer8FootOffset" containerField="geometry"><CollidableShape DEF="Hammer8Foot" containerField="collidable" translation="0 -0.023452 0.000892034"><Shape USE="Hammer8FootS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer8HeadOffset" containerField="geometry"><CollidableShape DEF="Hammer8Head" containerField="collidable" translation="0 -0.006 0.0675"><Shape USE="Hammer8HeadS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="Bar8Body" containerField="bodies" position="0.098 0.169 0.11" fixed="true">
+     <CollidableShape DEF="Bar8S" containerField="geometry"><Shape USE="Bar8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Hammer9Body" containerField="bodies" position="0.126 0.184 0.0275" mass="0.012">
+     <CollidableOffset DEF="Hammer9ArmOffset" containerField="geometry"><CollidableShape DEF="Hammer9Arm" containerField="collidable"><Shape USE="Hammer9ArmS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer9StrutOffset" containerField="geometry"><CollidableShape DEF="Hammer9Strut" containerField="collidable" translation="0 -0.011726 0.000892034"><Shape USE="Hammer9StrutS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer9FootOffset" containerField="geometry"><CollidableShape DEF="Hammer9Foot" containerField="collidable" translation="0 -0.023452 0.000892034"><Shape USE="Hammer9FootS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="Hammer9HeadOffset" containerField="geometry"><CollidableShape DEF="Hammer9Head" containerField="collidable" translation="0 -0.006 0.0675"><Shape USE="Hammer9HeadS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="Bar9Body" containerField="bodies" position="0.126 0.169 0.1075" fixed="true">
+     <CollidableShape DEF="Bar9S" containerField="geometry"><Shape USE="Bar9SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Rail0Body" containerField="bodies" position="0 0.162 0.083" fixed="true">
+     <CollidableShape DEF="Rail0S" containerField="geometry"><Shape USE="Rail0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Leg0LBody" containerField="bodies" position="-0.156 0.089 0.083" fixed="true">
+     <CollidableShape DEF="Leg0LS" containerField="geometry"><Shape USE="Leg0LSS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Leg0RBody" containerField="bodies" position="0.156 0.089 0.083" fixed="true">
+     <CollidableShape DEF="Leg0RS" containerField="geometry"><Shape USE="Leg0RSS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Rail1Body" containerField="bodies" position="0 0.162 0.14" fixed="true">
+     <CollidableShape DEF="Rail1S" containerField="geometry"><Shape USE="Rail1SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Leg1LBody" containerField="bodies" position="-0.156 0.089 0.14" fixed="true">
+     <CollidableShape DEF="Leg1LS" containerField="geometry"><Shape USE="Leg1LSS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Leg1RBody" containerField="bodies" position="0.156 0.089 0.14" fixed="true">
+     <CollidableShape DEF="Leg1RS" containerField="geometry"><Shape USE="Leg1RSS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <SingleAxisHingeJoint DEF="Hammer0Hinge" containerField="joints" anchorPoint="-0.126 0.184 -0.04" axis="1 0 0" minAngle="-0.1" maxAngle="0.05" stopBounce="0" stopErrorCorrection="0.8" forceOutput='"ALL"'><RigidBody USE="Hammer0Body" containerField="body1"/><RigidBody USE="PivotRodBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="Hammer1Hinge" containerField="joints" anchorPoint="-0.098 0.184 -0.04" axis="1 0 0" minAngle="-0.1" maxAngle="0.05" stopBounce="0" stopErrorCorrection="0.8" forceOutput='"ALL"'><RigidBody USE="Hammer1Body" containerField="body1"/><RigidBody USE="PivotRodBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="Hammer2Hinge" containerField="joints" anchorPoint="-0.07 0.184 -0.04" axis="1 0 0" minAngle="-0.1" maxAngle="0.05" stopBounce="0" stopErrorCorrection="0.8" forceOutput='"ALL"'><RigidBody USE="Hammer2Body" containerField="body1"/><RigidBody USE="PivotRodBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="Hammer3Hinge" containerField="joints" anchorPoint="-0.042 0.184 -0.04" axis="1 0 0" minAngle="-0.1" maxAngle="0.05" stopBounce="0" stopErrorCorrection="0.8" forceOutput='"ALL"'><RigidBody USE="Hammer3Body" containerField="body1"/><RigidBody USE="PivotRodBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="Hammer4Hinge" containerField="joints" anchorPoint="-0.014 0.184 -0.04" axis="1 0 0" minAngle="-0.1" maxAngle="0.05" stopBounce="0" stopErrorCorrection="0.8" forceOutput='"ALL"'><RigidBody USE="Hammer4Body" containerField="body1"/><RigidBody USE="PivotRodBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="Hammer5Hinge" containerField="joints" anchorPoint="0.014 0.184 -0.04" axis="1 0 0" minAngle="-0.1" maxAngle="0.05" stopBounce="0" stopErrorCorrection="0.8" forceOutput='"ALL"'><RigidBody USE="Hammer5Body" containerField="body1"/><RigidBody USE="PivotRodBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="Hammer6Hinge" containerField="joints" anchorPoint="0.042 0.184 -0.04" axis="1 0 0" minAngle="-0.1" maxAngle="0.05" stopBounce="0" stopErrorCorrection="0.8" forceOutput='"ALL"'><RigidBody USE="Hammer6Body" containerField="body1"/><RigidBody USE="PivotRodBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="Hammer7Hinge" containerField="joints" anchorPoint="0.07 0.184 -0.04" axis="1 0 0" minAngle="-0.1" maxAngle="0.05" stopBounce="0" stopErrorCorrection="0.8" forceOutput='"ALL"'><RigidBody USE="Hammer7Body" containerField="body1"/><RigidBody USE="PivotRodBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="Hammer8Hinge" containerField="joints" anchorPoint="0.098 0.184 -0.04" axis="1 0 0" minAngle="-0.1" maxAngle="0.05" stopBounce="0" stopErrorCorrection="0.8" forceOutput='"ALL"'><RigidBody USE="Hammer8Body" containerField="body1"/><RigidBody USE="PivotRodBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="Hammer9Hinge" containerField="joints" anchorPoint="0.126 0.184 -0.04" axis="1 0 0" minAngle="-0.1" maxAngle="0.05" stopBounce="0" stopErrorCorrection="0.8" forceOutput='"ALL"'><RigidBody USE="Hammer9Body" containerField="body1"/><RigidBody USE="PivotRodBody" containerField="body2"/></SingleAxisHingeJoint>
+   <CollisionCollection DEF="Surfaces" containerField="collider" appliedParameters='"BOUNCE" "FRICTION_COEFFICIENT-2"' bounce="0.1" minBounceSpeed="0.05" frictionCoefficients="0.3 0.3">
+    <CollidableShape USE="BaseS" containerField="collidables"/>
+    <CollidableShape USE="CheekLS" containerField="collidables"/>
+    <CollidableShape USE="CheekRS" containerField="collidables"/>
+    <CollidableOffset USE="PivotRodSOffset" containerField="collidables"/>
+    <CollidableShape USE="PostLS" containerField="collidables"/>
+    <CollidableShape USE="PostRS" containerField="collidables"/>
+    <CollidableOffset USE="BarrelOffset" containerField="collidables"/>
+    <CollidableOffset USE="Peg0_0Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg0_1Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg0_14Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg1_12Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg1_13Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg2_10Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg2_11Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg3_8Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg3_9Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg4_2Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg4_3Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg4_6Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg5_4Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg5_5Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg6_12Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg7_0Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg8_8Offset" containerField="collidables"/>
+    <CollidableOffset USE="Peg9_4Offset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer0ArmOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer0StrutOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer0FootOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer0HeadOffset" containerField="collidables"/>
+    <CollidableShape USE="Bar0S" containerField="collidables"/>
+    <CollidableOffset USE="Hammer1ArmOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer1StrutOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer1FootOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer1HeadOffset" containerField="collidables"/>
+    <CollidableShape USE="Bar1S" containerField="collidables"/>
+    <CollidableOffset USE="Hammer2ArmOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer2StrutOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer2FootOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer2HeadOffset" containerField="collidables"/>
+    <CollidableShape USE="Bar2S" containerField="collidables"/>
+    <CollidableOffset USE="Hammer3ArmOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer3StrutOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer3FootOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer3HeadOffset" containerField="collidables"/>
+    <CollidableShape USE="Bar3S" containerField="collidables"/>
+    <CollidableOffset USE="Hammer4ArmOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer4StrutOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer4FootOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer4HeadOffset" containerField="collidables"/>
+    <CollidableShape USE="Bar4S" containerField="collidables"/>
+    <CollidableOffset USE="Hammer5ArmOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer5StrutOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer5FootOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer5HeadOffset" containerField="collidables"/>
+    <CollidableShape USE="Bar5S" containerField="collidables"/>
+    <CollidableOffset USE="Hammer6ArmOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer6StrutOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer6FootOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer6HeadOffset" containerField="collidables"/>
+    <CollidableShape USE="Bar6S" containerField="collidables"/>
+    <CollidableOffset USE="Hammer7ArmOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer7StrutOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer7FootOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer7HeadOffset" containerField="collidables"/>
+    <CollidableShape USE="Bar7S" containerField="collidables"/>
+    <CollidableOffset USE="Hammer8ArmOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer8StrutOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer8FootOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer8HeadOffset" containerField="collidables"/>
+    <CollidableShape USE="Bar8S" containerField="collidables"/>
+    <CollidableOffset USE="Hammer9ArmOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer9StrutOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer9FootOffset" containerField="collidables"/>
+    <CollidableOffset USE="Hammer9HeadOffset" containerField="collidables"/>
+    <CollidableShape USE="Bar9S" containerField="collidables"/>
+    <CollidableShape USE="Rail0S" containerField="collidables"/>
+    <CollidableShape USE="Leg0LS" containerField="collidables"/>
+    <CollidableShape USE="Leg0RS" containerField="collidables"/>
+    <CollidableShape USE="Rail1S" containerField="collidables"/>
+    <CollidableShape USE="Leg1LS" containerField="collidables"/>
+    <CollidableShape USE="Leg1RS" containerField="collidables"/>
+   </CollisionCollection>
+  </RigidBodyCollection>
+  <ROUTE fromNode="Crank" fromField="fraction_changed" toNode="CrankTurn" toField="set_fraction"/>
+  <ROUTE fromNode="CrankTurn" fromField="value_changed" toNode="DrumBody" toField="set_orientation"/>
+  <ROUTE fromNode="CrankTurn" fromField="value_changed" toNode="DrumT" toField="set_rotation"/>
+  <ROUTE fromNode="Hammer0Body" fromField="position" toNode="Hammer0T" toField="set_translation"/>
+  <ROUTE fromNode="Hammer0Body" fromField="orientation" toNode="Hammer0T" toField="set_rotation"/>
+  <ROUTE fromNode="Hammer1Body" fromField="position" toNode="Hammer1T" toField="set_translation"/>
+  <ROUTE fromNode="Hammer1Body" fromField="orientation" toNode="Hammer1T" toField="set_rotation"/>
+  <ROUTE fromNode="Hammer2Body" fromField="position" toNode="Hammer2T" toField="set_translation"/>
+  <ROUTE fromNode="Hammer2Body" fromField="orientation" toNode="Hammer2T" toField="set_rotation"/>
+  <ROUTE fromNode="Hammer3Body" fromField="position" toNode="Hammer3T" toField="set_translation"/>
+  <ROUTE fromNode="Hammer3Body" fromField="orientation" toNode="Hammer3T" toField="set_rotation"/>
+  <ROUTE fromNode="Hammer4Body" fromField="position" toNode="Hammer4T" toField="set_translation"/>
+  <ROUTE fromNode="Hammer4Body" fromField="orientation" toNode="Hammer4T" toField="set_rotation"/>
+  <ROUTE fromNode="Hammer5Body" fromField="position" toNode="Hammer5T" toField="set_translation"/>
+  <ROUTE fromNode="Hammer5Body" fromField="orientation" toNode="Hammer5T" toField="set_rotation"/>
+  <ROUTE fromNode="Hammer6Body" fromField="position" toNode="Hammer6T" toField="set_translation"/>
+  <ROUTE fromNode="Hammer6Body" fromField="orientation" toNode="Hammer6T" toField="set_rotation"/>
+  <ROUTE fromNode="Hammer7Body" fromField="position" toNode="Hammer7T" toField="set_translation"/>
+  <ROUTE fromNode="Hammer7Body" fromField="orientation" toNode="Hammer7T" toField="set_rotation"/>
+  <ROUTE fromNode="Hammer8Body" fromField="position" toNode="Hammer8T" toField="set_translation"/>
+  <ROUTE fromNode="Hammer8Body" fromField="orientation" toNode="Hammer8T" toField="set_rotation"/>
+  <ROUTE fromNode="Hammer9Body" fromField="position" toNode="Hammer9T" toField="set_translation"/>
+  <ROUTE fromNode="Hammer9Body" fromField="orientation" toNode="Hammer9T" toField="set_rotation"/>
+ </Scene>
+</X3D>

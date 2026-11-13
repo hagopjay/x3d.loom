@@ -1,0 +1,82 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="icon" href="data:,"><title>probe: can SAI write outputOnly fields?</title>
+<script src="../vendor/x_ite/x_ite.min.js"></script></head>
+<body><x3d-canvas id="c" splashScreen="false" style="width:320px;height:200px"></x3d-canvas><pre id="out"></pre>
+<script type="module">
+const X3D = window.X3D;
+const frames = (n) => new Promise((res) => { let k = 0; const f = () => (++k >= n ? res() : requestAnimationFrame(f)); requestAnimationFrame(f); });
+const R = {};
+const src = `<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Interchange" version="4.0"><head><component name="RigidBodyPhysics" level="2"/><component name="Scripting" level="1"/></head><Scene>
+<Transform DEF="T"><Shape DEF="S"><Box size="0.1 0.1 0.1"/></Shape></Transform>
+<RigidBodyCollection DEF="C">
+ <RigidBody DEF="A" containerField="bodies" fixed="true"><CollidableShape DEF="CA" containerField="geometry"><Shape USE="S" containerField="shape"/></CollidableShape></RigidBody>
+ <RigidBody DEF="B" containerField="bodies" position="0 -0.3 0"><CollidableShape DEF="CB" containerField="geometry"><Shape USE="S" containerField="shape"/></CollidableShape></RigidBody>
+ <SingleAxisHingeJoint DEF="H" containerField="joints" anchorPoint="0 0 0" axis="0 0 1" forceOutput='"ALL"'><RigidBody USE="A" containerField="body1"/><RigidBody USE="B" containerField="body2"/></SingleAxisHingeJoint>
+ <CollisionCollection DEF="CC" containerField="collider"><CollidableShape USE="CA" containerField="collidables"/><CollidableShape USE="CB" containerField="collidables"/></CollisionCollection>
+</RigidBodyCollection>
+<CollisionSensor DEF="Sensor"><CollisionCollection USE="CC" containerField="collider"/></CollisionSensor>
+<OrientationInterpolator DEF="Probe" key="0 1" keyValue="0 0 1 0 0 0 1 1"/>
+<ROUTE fromNode="H" fromField="angle" toNode="Probe" toField="set_fraction"/>
+</Scene></X3D>`;
+try {
+  const browser = document.getElementById('c').browser;
+  const scene = await browser.createX3DFromString(src);
+  scene.getNamedNode('C').enabled = false;
+  const sensor = scene.getNamedNode('Sensor');
+  R.sensorEnabledAuthored = sensor.enabled;
+  await browser.replaceWorld(scene);
+  const H = scene.getNamedNode('H'), probe = scene.getNamedNode('Probe');
+  let routed = 0; probe.addFieldCallback('p', 'value_changed', () => routed++);
+  const tryWrite = (label, fn) => { try { fn(); return { ok: true }; } catch (e) { return { ok: false, error: String(e).slice(0, 120) }; } };
+  // A. the SAI field object
+  R.A_getField = { hasGetField: typeof H.getField };
+  R.A_getField.write = tryWrite('A', () => { const f = H.getField('angle'); f.setValue(0.5); if (f.addEvent) f.addEvent(); });
+  await frames(3);
+  R.A_getField.readBack = H.angle; R.A_getField.routed = routed;
+  // B. X_ITE's internal node, as its own engine writes outputs
+  const hi = H.getValue?.();
+  R.B_internal = { hasGetValue: typeof H.getValue, internalType: hi?.constructor?.name };
+  R.B_internal.write = tryWrite('B', () => { hi._angle = 0.75; });
+  await frames(3);
+  R.B_internal.readBack = H.angle; R.B_internal.routed = routed; R.B_internal.probeValue = probe.value_changed?.angle;
+  // C. CollisionSensor via both routes
+  const c = scene.createNode('Contact'); c.position = new X3D.SFVec3f(1, 2, 3); c.body1 = scene.getNamedNode('A'); c.geometry1 = scene.getNamedNode('CA');
+  let cbActive = 0, cbContacts = 0; sensor.addFieldCallback('k1', 'isActive', () => cbActive++); sensor.addFieldCallback('k2', 'contacts', () => cbContacts++);
+  R.C_sensor_getField = tryWrite('C', () => { sensor.getField('contacts').setValue(new X3D.MFNode(c)); sensor.getField('isActive').setValue(true); });
+  await frames(2);
+  R.C_sensor_getField.after = { isActive: sensor.isActive, contacts: sensor.contacts.length, cbActive, cbContacts };
+  await frames(10);
+  R.C_sensorEnabled_after10 = { isActive: sensor.isActive, note: 'X_ITE sensor still enabled' };
+  sensor.enabled = false; await frames(2);
+  R.C_sensor_disabled = tryWrite('C2', () => { sensor.getField('isActive').setValue(true); });
+  await frames(10);
+  R.C_sensor_disabled.after10 = { isActive: sensor.isActive, contacts: sensor.contacts.length, cbActive };
+  const si = sensor.getValue();
+  R.D_sensor_internal = tryWrite('D', () => { si._contacts = new X3D.MFNode(c, c); si._isActive = true; });
+  await frames(3);
+  R.D_sensor_internal.after = { isActive: sensor.isActive, contacts: sensor.contacts.length, contact0pos: sensor.contacts[0] ? [sensor.contacts[0].position.x] : null, cbActive, cbContacts };
+  // E. sensor disabled BEFORE the scene goes live: does X_ITE leave isActive alone?
+  {
+    const s2 = await browser.createX3DFromString(src);
+    s2.getNamedNode('C').enabled = false; s2.getNamedNode('Sensor').enabled = false;
+    await browser.replaceWorld(s2); await frames(3);
+    const sen = s2.getNamedNode('Sensor'); let cb = 0; sen.addFieldCallback('e', 'isActive', () => cb++);
+    sen.getField('isActive').setValue(true); await frames(10);
+    R.E_disabledBeforeLive = { isActive: sen.isActive, callbacks: cb };
+  }
+  // F. disable, then re-assign collider (X_ITE re-checks enabled in set_collider__)
+  {
+    const s3 = await browser.createX3DFromString(src);
+    s3.getNamedNode('C').enabled = false;
+    const sen = s3.getNamedNode('Sensor'); sen.enabled = false; sen.collider = sen.collider;
+    await browser.replaceWorld(s3); await frames(3);
+    let cb = 0; sen.addFieldCallback('f', 'isActive', () => cb++);
+    sen.getField('isActive').setValue(true); await frames(10);
+    R.F_disableThenReassignCollider = { isActive: sen.isActive, callbacks: cb };
+    sen.getField('isActive').setValue(false); await frames(2);
+    R.F_writeFalse = { isActive: sen.isActive, callbacks: cb };
+  }
+} catch (e) { R.error = String(e && e.stack || e); }
+window.__probe = R; document.getElementById('out').textContent = JSON.stringify(R, null, 1);
+</script></body></html>

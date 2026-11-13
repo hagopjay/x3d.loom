@@ -1,0 +1,74 @@
+{
+ "browser": "firefox",
+ "version": "146.0.1",
+ "result": {
+  "sensorEnabledAuthored": true,
+  "A_getField": {
+   "hasGetField": "function",
+   "write": {
+    "ok": true
+   },
+   "readBack": 0.5,
+   "routed": 1
+  },
+  "B_internal": {
+   "hasGetValue": "function",
+   "internalType": "Bt",
+   "write": {
+    "ok": true
+   },
+   "readBack": 0.75,
+   "routed": 2,
+   "probeValue": 0.75
+  },
+  "C_sensor_getField": {
+   "ok": true,
+   "after": {
+    "isActive": false,
+    "contacts": 1,
+    "cbActive": 2,
+    "cbContacts": 1
+   }
+  },
+  "C_sensorEnabled_after10": {
+   "isActive": false,
+   "note": "X_ITE sensor still enabled"
+  },
+  "C_sensor_disabled": {
+   "ok": true,
+   "after10": {
+    "isActive": false,
+    "contacts": 1,
+    "cbActive": 4
+   }
+  },
+  "D_sensor_internal": {
+   "ok": true,
+   "after": {
+    "isActive": false,
+    "contacts": 2,
+    "contact0pos": [
+     1
+    ],
+    "cbActive": 6,
+    "cbContacts": 2
+   }
+  },
+  "E_disabledBeforeLive": {
+   "isActive": false,
+   "callbacks": 2
+  },
+  "F_disableThenReassignCollider": {
+   "isActive": true,
+   "callbacks": 1
+  },
+  "F_writeFalse": {
+   "isActive": false,
+   "callbacks": 2
+  }
+ },
+ "logs": [
+  "[debug] [vite] connecting...",
+  "[debug] [vite] connected."
+ ]
+}

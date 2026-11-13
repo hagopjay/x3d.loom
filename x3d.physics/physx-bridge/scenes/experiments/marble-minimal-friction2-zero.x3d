@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Interchange" version="4.0">
+ <head>
+  <component name="Shape" level="2"/>
+  <component name="RigidBodyPhysics" level="2"/>
+  <component name="Navigation" level="2"/>
+  <meta name="title" content="Experiment: marble-minimal with the second friction coefficient 0 (X_ITE maps it to Bullet rolling friction)"/>
+  <meta name="description" content="Standard X3D 4.0 RigidBodyPhysics. Runs on X_ITE's own engine (ammo.js / Bullet) as is; the x3d-physx bridge disables that collection and drives the same nodes with PhysX 5 (WASM)."/>
+  <meta name="generator" content="hand-written, x3d-physx-bridge 0.0.1"/>
+ </head>
+ <Scene>
+  <WorldInfo title="Marble machine, minimal" info='"Units: metres, kilograms, seconds, radians. Y up. Gravity -9.81 on Y."'/>
+  <NavigationInfo type='"EXAMINE" "ANY"' headlight="false"/>
+  <Viewpoint description="Side, from above" position="0.08 0.52 0.72" orientation="1 0 0 -0.55" centerOfRotation="0.08 0.12 0"/>
+  <DirectionalLight direction="-0.4 -1 -0.5" intensity="2.5" shadows="true"/>
+  <DirectionalLight direction="0.5 -0.3 -1" intensity="0.8"/>
+  <Background skyColor="0.04 0.05 0.07"/>
+
+  <Transform DEF="MarbleT" translation="-0.25 0.32 0">
+   <Shape DEF="MarbleShape">
+    <Appearance><PhysicalMaterial baseColor="0.55 0.75 1" metallic="0.3" roughness="0.15"/></Appearance>
+    <Sphere radius="0.008"/>
+   </Shape>
+  </Transform>
+  <Transform DEF="RampT" translation="0 0.2 0" rotation="0 0 1 -0.35">
+   <Shape DEF="RampShape">
+    <Appearance><PhysicalMaterial baseColor="0.55 0.36 0.2" metallic="0" roughness="0.6"/></Appearance>
+    <Box size="0.6 0.01 0.06"/>
+   </Shape>
+  </Transform>
+  <Transform DEF="CupT" translation="0.40 0 0">
+   <Transform translation="0 0.005 0">
+    <Shape DEF="CupBaseShape">
+     <Appearance DEF="Brass"><PhysicalMaterial baseColor="0.8 0.62 0.25" metallic="1" roughness="0.3"/></Appearance>
+     <Box size="0.14 0.01 0.1"/>
+    </Shape>
+   </Transform>
+   <Transform translation="-0.065 0.03 0"><Shape DEF="CupWallXShape"><Appearance USE="Brass"/><Box size="0.01 0.04 0.1"/></Shape></Transform>
+   <Transform translation="0.065 0.03 0"><Shape USE="CupWallXShape"/></Transform>
+   <Transform translation="0 0.03 -0.045"><Shape DEF="CupWallZShape"><Appearance USE="Brass"/><Box size="0.12 0.04 0.01"/></Shape></Transform>
+   <Transform translation="0 0.03 0.045"><Shape USE="CupWallZShape"/></Transform>
+  </Transform>
+  <Transform DEF="FloorT" translation="0.1 -0.005 0">
+   <Shape DEF="FloorShape">
+    <Appearance><PhysicalMaterial baseColor="0.16 0.17 0.2" metallic="0" roughness="0.9"/></Appearance>
+    <Box size="1.4 0.01 0.6"/>
+   </Shape>
+  </Transform>
+
+  <RigidBodyCollection DEF="Machine" gravity="0 -9.81 0" iterations="10" preferAccuracy="true">
+   <RigidBody DEF="MarbleBody" containerField="bodies" mass="0.005" position="-0.25 0.32 0" autoDisable="false">
+    <CollidableShape DEF="MarbleCollider" containerField="geometry"><Shape USE="MarbleShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="RampBody" containerField="bodies" fixed="true" position="0 0.2 0" orientation="0 0 1 -0.35">
+    <CollidableShape DEF="RampCollider" containerField="geometry"><Shape USE="RampShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="CupBody" containerField="bodies" fixed="true" position="0.40 0 0">
+    <CollidableOffset DEF="CupBaseOffset" containerField="geometry"><CollidableShape DEF="CupBaseCollider" containerField="collidable" translation="0 0.005 0"><Shape USE="CupBaseShape" containerField="shape"/></CollidableShape></CollidableOffset>
+    <CollidableOffset DEF="CupWallLeftOffset" containerField="geometry"><CollidableShape DEF="CupWallLeftCollider" containerField="collidable" translation="-0.065 0.03 0"><Shape USE="CupWallXShape" containerField="shape"/></CollidableShape></CollidableOffset>
+    <CollidableOffset DEF="CupWallRightOffset" containerField="geometry"><CollidableShape DEF="CupWallRightCollider" containerField="collidable" translation="0.065 0.03 0"><Shape USE="CupWallXShape" containerField="shape"/></CollidableShape></CollidableOffset>
+    <CollidableOffset DEF="CupWallBackOffset" containerField="geometry"><CollidableShape DEF="CupWallBackCollider" containerField="collidable" translation="0 0.03 -0.045"><Shape USE="CupWallZShape" containerField="shape"/></CollidableShape></CollidableOffset>
+    <CollidableOffset DEF="CupWallFrontOffset" containerField="geometry"><CollidableShape DEF="CupWallFrontCollider" containerField="collidable" translation="0 0.03 0.045"><Shape USE="CupWallZShape" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="FloorBody" containerField="bodies" fixed="true" position="0.1 -0.005 0">
+    <CollidableShape DEF="FloorCollider" containerField="geometry"><Shape USE="FloorShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <CollisionCollection DEF="AllContacts" containerField="collider" appliedParameters='"BOUNCE" "FRICTION_COEFFICIENT-2"' bounce="0.35" minBounceSpeed="0.05" frictionCoefficients="0.25 0">
+    <CollidableShape USE="MarbleCollider" containerField="collidables"/>
+    <CollidableShape USE="RampCollider" containerField="collidables"/>
+    <CollidableOffset USE="CupBaseOffset" containerField="collidables"/>
+    <CollidableOffset USE="CupWallLeftOffset" containerField="collidables"/>
+    <CollidableOffset USE="CupWallRightOffset" containerField="collidables"/>
+    <CollidableOffset USE="CupWallBackOffset" containerField="collidables"/>
+    <CollidableOffset USE="CupWallFrontOffset" containerField="collidables"/>
+    <CollidableShape USE="FloorCollider" containerField="collidables"/>
+   </CollisionCollection>
+  </RigidBodyCollection>
+  <CollisionSensor DEF="Contacts"><CollisionCollection USE="AllContacts" containerField="collider"/></CollisionSensor>
+
+  <ROUTE fromNode="Contacts" fromField="contacts" toNode="Machine" toField="set_contacts"/>
+  <ROUTE fromNode="MarbleBody" fromField="position_changed" toNode="MarbleT" toField="set_translation"/>
+  <ROUTE fromNode="MarbleBody" fromField="orientation_changed" toNode="MarbleT" toField="set_rotation"/>
+ </Scene>
+</X3D>

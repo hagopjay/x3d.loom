@@ -1,0 +1,181 @@
+{
+  "generatedAt": "2026-11-07T16:29:37.376Z",
+  "scope": "readScene (X3D) and importBundle (experiment ZIP) under hostile input; jsdom DOMParser stands in for the browser parser.",
+  "checks": [
+    {
+      "id": "X1",
+      "kind": "defended",
+      "name": "XXE: external entity in an internal DTD subset is refused before parsing",
+      "status": "pass",
+      "ms": 1.1
+    },
+    {
+      "id": "X2",
+      "kind": "defended",
+      "name": "entity expansion (\"billion laughs\") is refused before parsing, in well under a second",
+      "status": "pass",
+      "ms": 0.1,
+      "details": {
+        "ms": 0.02949999999998454
+      }
+    },
+    {
+      "id": "X3",
+      "kind": "defended",
+      "name": "DTD detection is case-insensitive (<!doctype, <!Entity)",
+      "status": "pass",
+      "ms": 0
+    },
+    {
+      "id": "X4",
+      "kind": "defended",
+      "name": "oversized scene text (>200 000 characters) is refused before parsing",
+      "status": "pass",
+      "ms": 0.1
+    },
+    {
+      "id": "X5",
+      "kind": "defended",
+      "name": "executable and external-content nodes are refused (Script, Inline, ExternProtoDeclare, ProtoInstance, Anchor, ImageTexture)",
+      "status": "pass",
+      "ms": 30.8,
+      "details": {
+        "nodes": 6
+      }
+    },
+    {
+      "id": "X6",
+      "kind": "defended",
+      "name": "giant meshes are outside the profile: no mesh geometry nodes are accepted",
+      "status": "pass",
+      "ms": 7.7
+    },
+    {
+      "id": "X7",
+      "kind": "defended",
+      "name": "event-handler and url attributes are refused on allowed nodes",
+      "status": "pass",
+      "ms": 3.3
+    },
+    {
+      "id": "X8",
+      "kind": "defended",
+      "name": "non-finite and out-of-range physical values are refused (NaN, Infinity, 1e308, negative mass)",
+      "status": "pass",
+      "ms": 12.7
+    },
+    {
+      "id": "X9",
+      "kind": "defended",
+      "name": "prototype pollution through the embedded manifest JSON has no effect",
+      "status": "pass",
+      "ms": 3
+    },
+    {
+      "id": "X10",
+      "kind": "gap",
+      "name": "URL-bearing fields not literally named \"url\" (Background backUrl …) pass the filter, but are dropped: import returns only the recipe and target and the scene is regenerated canonically",
+      "status": "pass",
+      "ms": 2.5,
+      "details": {
+        "accepted": true,
+        "urlInOutput": false
+      }
+    },
+    {
+      "id": "X11",
+      "kind": "gap",
+      "name": "deeply nested allowed nodes (5 000 Transforms within the size limit) parse; bounded only by the 200 KB cap",
+      "status": "pass",
+      "ms": 3024.7,
+      "details": {
+        "depth": 5000,
+        "ms": 3024.6
+      }
+    },
+    {
+      "id": "Z1",
+      "kind": "defended",
+      "name": "packages over 2 MB are refused before unzipping",
+      "status": "pass",
+      "ms": 0.4
+    },
+    {
+      "id": "Z2",
+      "kind": "defended",
+      "name": "honest ZIP bomb: a member declaring >5 MB uncompressed is refused before inflating",
+      "status": "pass",
+      "ms": 126.1,
+      "details": {
+        "compressedBytes": 10531,
+        "declared": 6000000
+      }
+    },
+    {
+      "id": "Z3",
+      "kind": "defended",
+      "name": "many members whose declared sizes total >12 MB are refused before inflating",
+      "status": "pass",
+      "ms": 217.7,
+      "details": {
+        "compressedBytes": 18078
+      }
+    },
+    {
+      "id": "Z4",
+      "kind": "defended",
+      "name": "path-traversal member names are never written: import is in-memory and reads three fixed members only",
+      "status": "pass",
+      "ms": 12.8,
+      "details": {
+        "imported": true,
+        "filesWritten": 0
+      }
+    },
+    {
+      "id": "Z5",
+      "kind": "defended",
+      "name": "MJCF <include>, plugins and extra assets in the package are refused: mjcf/model.xml must equal the MJCF regenerated from the recipe",
+      "status": "pass",
+      "ms": 14.3,
+      "details": {
+        "variants": [
+          "include",
+          "plugin",
+          "mesh"
+        ]
+      }
+    },
+    {
+      "id": "Z6",
+      "kind": "defended",
+      "name": "manifest and scene that disagree are refused (no silent preference for either)",
+      "status": "pass",
+      "ms": 3.8
+    },
+    {
+      "id": "Z7",
+      "kind": "defended",
+      "name": "the scene inside a package goes through the same X3D filter (Script refused)",
+      "status": "pass",
+      "ms": 4.1
+    },
+    {
+      "id": "Z8",
+      "kind": "gap",
+      "name": "lying ZIP: a member whose headers under-declare its size passes the pre-check and is fully inflated before JSZip notices the mismatch",
+      "status": "pass",
+      "ms": 851.1,
+      "details": {
+        "compressedBytes": 33713,
+        "declaredBytes": 100,
+        "actualBytes": 30001620,
+        "outcome": "rejected: Bug : uncompressed data size mismatch",
+        "approxPeakExtraMB": 50.1,
+        "worstCaseNote": "deflate tops out near 1032:1, so a 2 MB package can inflate to roughly 2 GB before rejection"
+      }
+    }
+  ],
+  "passed": 19,
+  "failed": 0
+}

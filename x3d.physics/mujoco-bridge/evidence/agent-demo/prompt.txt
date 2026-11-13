@@ -1,0 +1,7 @@
+You have an MCP server "x3d-bridge" with X3D <-> MuJoCo tools. Using only its tools mjcf_to_x3d, validate_scene and simulate:
+1. Convert <project>/evidence/agent-demo/pendulum.xml to X3D with mjcf_to_x3d (keyframe "tilted"). Report the validation result and the losses.
+2. Run validate_scene on the X3D text you got back. Report valid/invalid and the bridge profile.
+3. Run simulate on <project>/evidence/agent-demo/pendulum.xml from keyframe "tilted" for 1000 steps. Report the final qpos.
+4. Run simulate on the bridge scene <project>/bridge/samples/contact-arm.x3d with default settings and package_out <project>/evidence/agent-demo/agent-trial.zip. Report the controller used, peak contacts and final qpos.
+5. Run validate_scene on <project>/evidence/agent-demo/agent-trial.zip.
+Finish with a short table of what each tool returned. Do not use any other tool.

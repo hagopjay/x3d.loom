@@ -112,12 +112,24 @@ The two Mashtots standalones arrived well tested: 148 and 74 feature checks, cle
     The Loom's existing laws named each one. Reading them earlier would have saved the red runs. *(Laws 26, 28, 33; failure modes 105 to 107.)*
 35. **Fidelity is a number.** Matched frames of the original and the recreation, with controls that must fail, turned "looks close" into SSIM 0.906 to 0.960 and showed exactly which layer differed. *(Pattern G.)*
 
+## 6c. From the physics bridges (13 Nov)
+
+36. **A stepped engine has its own exact answer.** Free fall under semi-implicit Euler is not the textbook parabola: it differs by 1/2 g h t (0.0204 m after one second). Judged against the scheme's own discrete solution the error is 1.5e-6. State the continuum gap as a known number and do not call it a bug. *(Failure mode 124.)*
+37. **Hash every step, not the last one.** One final hash says a run differs; a hash per step says where. Replayed in Chromium, Firefox, WebKit and Node, a 1918-step and a 969-step run had no differing hash. Said of one machine only, and said so. *(Law 42; failure modes 128, 129.)*
+38. **"Switched off" is a claim to test, in every host.** X_ITE's Bullet took one step after the page loaded. The cure was an order of operations, and the proof was 120 frames of nothing in three browsers. *(Law 41; failure mode 127.)*
+39. **A tolerance is not an excuse.** The owner's rule was to state tolerances and not chase exactness. The Loom keeps that and adds one thing: a failure beyond a limit is written down as a waiver with a name, a date, a reason and its own numbers, and the profile counts them. Three of 33 smoke tests failed under load; they are three waivers, not a pass. *(Law 43; failure mode 133.)*
+40. **Do not tune a self-check to fit.** The Gravitron missed its closed form by 34 %. Logging the gap with its probable cause is the result; adjusting friction until it matched would have been the mistake. *(Failure mode 137.)*
+41. **Build the score from what the body felt.** Contact impulse over mass read 141 m/s on a thigh. The segment's own change of velocity is what it felt, and a unit test of a known pulse (619 against 636 by hand) keeps it honest. *(Failure mode 136.)*
+42. **A cross-check of an engine against itself checks the build.** Native MuJoCo reproduced its own WASM to 6e-16 rad, which is worth saying and does not validate the model. *(Failure mode 142.)*
+43. **Grammar passed and Meaning found five errors per scene.** A missing `containerField` is invisible to the XSD. Run both on every generated scene. *(Failure mode 141.)*
+44. **Sibling threads do not fold back by themselves.** Two physics threads finished without a PR, a remote, or any use of the Loom's method, and everyone assumed the lessons had returned. A thread's last step is its PR, numbered from upstream that day. *(Failure modes 146, 147.)*
+
 ## 7. What v1.0 contains
 
 - **[LOOM-v1.md](LOOM-v1.md):**
-  - 37 laws;
+  - 43 laws;
   - the ten-step loop;
-  - 108 failure modes, each with its fix and source;
+  - 147 failure modes, each with its fix and source;
   - acceptance profiles for the Scientific Loom and each x3d.STEM study;
   - the roadmap, including the X_ITE fixture catalogue.
 - **`kit/loomkit`:** candidate binding, Grammar and Meaning on the x3d_mcp fork, 11 trap rules, science gates (builder and dependency hashes, payloads opened before they are hashed), receipts, a leak sweep. Page traps add six more two-sided rules (syntax, guarded callbacks, clock, navigation, globals, load budget) and six two-sided reading forms (inline HTML scripts, callbacks passed by name, module scope), and report what they saw. 44 negative controls pass, normal and under `python -O`.

@@ -1,0 +1,89 @@
+{
+ "schema": "loom.controls/1",
+ "subject": "runs/physx-grand-cascade-chromium.physics.json",
+ "controls": [
+  {
+   "case": "the Chromium record as shipped",
+   "result": "pass",
+   "steps": 1918,
+   "waivers": 3
+  },
+  {
+   "case": "the Firefox record as shipped",
+   "result": "pass",
+   "steps": 969,
+   "waivers": 0
+  },
+  {
+   "case": "a single step hash edited in the 1918-step record",
+   "expected": "PHYS_TRACE_TAMPERED",
+   "caught": "PHYS_TRACE_TAMPERED"
+  },
+  {
+   "case": "the WebKit replay left out",
+   "expected": "PHYS_REPLAY_MISSING",
+   "caught": "PHYS_REPLAY_MISSING"
+  },
+  {
+   "case": "the Firefox replay differs at step 1100",
+   "expected": "PHYS_HASH_DRIFT",
+   "caught": "PHYS_HASH_DRIFT"
+  },
+  {
+   "case": "a replay on another PhysX version",
+   "expected": "PHYS_ENGINE_DRIFT",
+   "caught": "PHYS_ENGINE_DRIFT"
+  },
+  {
+   "case": "the pendulum limit widened from 0.5 % to 5 %",
+   "expected": "PHYS_LIMIT_WIDENED",
+   "caught": "PHYS_LIMIT_WIDENED"
+  },
+  {
+   "case": "free fall marked pass at an error above its limit",
+   "expected": "PHYS_FALSE_GREEN",
+   "caught": "PHYS_FALSE_GREEN"
+  },
+  {
+   "case": "the CCD tunnelling reference missed",
+   "expected": "PHYS_REFERENCE_FAIL",
+   "caught": "PHYS_REFERENCE_FAIL"
+  },
+  {
+   "case": "the Galton waiver removed, the failure left",
+   "expected": "PHYS_TOLERANCE_FAIL",
+   "caught": "PHYS_TOLERANCE_FAIL"
+  },
+  {
+   "case": "a waiver without a date",
+   "expected": "PHYS_WAIVER_INCOMPLETE",
+   "caught": "PHYS_WAIVER_INCOMPLETE"
+  },
+  {
+   "case": "the profile's cap lowered below the recorded waivers",
+   "expected": "PHYS_WAIVERS_OVER_CAP",
+   "caught": "PHYS_WAIVERS_OVER_CAP"
+  },
+  {
+   "case": "the tunnelling control that did not tunnel",
+   "expected": "PHYS_CONTROL_SURVIVED",
+   "caught": "PHYS_CONTROL_SURVIVED"
+  },
+  {
+   "case": "WebKit missing from the engine-off proof",
+   "expected": "PHYS_TAKEOVER_UNPROVEN",
+   "caught": "PHYS_TAKEOVER_UNPROVEN"
+  },
+  {
+   "case": "11 authored fields dropped and the loss report off",
+   "expected": "PHYS_LOSS_UNREPORTED",
+   "caught": "PHYS_LOSS_UNREPORTED"
+  },
+  {
+   "case": "no references at all",
+   "expected": "PHYS_NO_REFERENCE",
+   "caught": "PHYS_NO_REFERENCE"
+  }
+ ],
+ "all_caught": true
+}
