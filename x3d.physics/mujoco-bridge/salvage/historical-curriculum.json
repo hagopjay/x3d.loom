@@ -1,0 +1,365 @@
+{
+  "schema_version": 1,
+  "source": {
+    "archive_name": "mujoco-expert-training-playground.zip",
+    "archive_sha256": "2ddbf2b9e02a3e4d75e0ef12254e91e1dc6cb254ed5b957d1a1165824cab9131",
+    "source_project": "A — richer teaching interface with handwritten dynamics",
+    "file": "src/data/learn.ts"
+  },
+  "review_status": "historical_unreviewed",
+  "publication_status": "reference_only_not_authoritative",
+  "preservation": "Original lesson content is preserved verbatim as structured data. Issue metadata accompanies it; do not present the original wording as a reviewed course.",
+  "counts": {
+    "modules": 3,
+    "lessons": 11
+  },
+  "legacy_seeded_progress": {
+    "completed_lessons": [
+      "mjcf-model",
+      "bodies-joints"
+    ],
+    "xp": 240,
+    "note": "Historical demo defaults; not evidence of user learning and must not be carried into a fresh learner profile."
+  },
+  "known_issues": [
+    {
+      "id": "fresh-data",
+      "lesson_id": "mjcf-model",
+      "source": "src/data/learn.ts:43-44",
+      "status": "needs_correction",
+      "issue": "Text says each simulation tick writes to a fresh mjData buffer. Typical stepping mutates the existing allocated data object; the next paragraph correctly emphasizes allocation-free reset."
+    },
+    {
+      "id": "model-immutable",
+      "lesson_id": "mjcf-model",
+      "source": "src/data/learn.ts:44",
+      "status": "needs_qualification",
+      "issue": "Calling the compiled model immutable is too absolute. Treat it as shared configuration by convention; supported fields can be changed, with recomputation constraints."
+    },
+    {
+      "id": "sensors-end",
+      "lesson_id": "step-pipeline",
+      "source": "src/data/learn.ts:140",
+      "status": "needs_review",
+      "issue": "Claim that sensors are evaluated at the end of the step oversimplifies stage-dependent sensor evaluation and the relation between derived quantities and integrated state."
+    },
+    {
+      "id": "split-step",
+      "lesson_id": "step-pipeline",
+      "source": "src/data/learn.ts:142",
+      "status": "needs_review",
+      "issue": "The stated inspection point for mj_step1/mj_step2 needs verification against the actual pipeline and integrator limitations."
+    },
+    {
+      "id": "diagonal-implicitfast",
+      "lesson_id": "solvers",
+      "source": "src/data/learn.ts:184",
+      "status": "needs_correction",
+      "issue": "implicitfast is described as using a diagonal approximation. Verify the actual derivative approximation in official computation documentation before publication."
+    },
+    {
+      "id": "control-frequency",
+      "lesson_id": "solvers",
+      "source": "src/data/learn.ts:185",
+      "status": "confirmed_arithmetic_error",
+      "issue": "50 Hz means one action every 20 ms, not every 4 ms. 4 ms corresponds to 250 Hz."
+    },
+    {
+      "id": "actuator-force",
+      "lesson_id": "actuators",
+      "source": "src/data/learn.ts:242",
+      "status": "needs_correction",
+      "issue": "actuator_force = gear * ctrl conflates scalar actuator force with generalized force after transmission. Explain the actuator force law and moment-arm mapping separately."
+    },
+    {
+      "id": "servo-first-order",
+      "lesson_id": "actuators",
+      "source": "src/data/learn.ts:242",
+      "status": "needs_review",
+      "issue": "The description of a position actuator as a first-order servo is imprecise and should distinguish a force law from actuator activation dynamics."
+    },
+    {
+      "id": "gym-incomplete",
+      "lesson_id": "gymnasium",
+      "source": "src/data/learn.ts:264-278",
+      "status": "confirmed_incomplete_example",
+      "issue": "The environment snippet omits observation_space, reset, _obs, _reward, termination logic, and a trainer. It is an outline, not runnable training code."
+    },
+    {
+      "id": "unsupported-certainty",
+      "lesson_id": "debugging",
+      "source": "src/data/learn.ts:312",
+      "status": "needs_qualification",
+      "issue": "The numerical claim that nine out of ten dynamics bugs are axes or collision pairs has no supplied evidence; retain it only as a clearly labeled heuristic without the statistic."
+    }
+  ],
+  "modules": [
+    {
+      "id": "orientation",
+      "index": "01",
+      "title": "The MuJoCo mental model",
+      "description": "How a scene is compiled, stepped, and observed.",
+      "lessons": [
+        {
+          "id": "mjcf-model",
+          "title": "The MJCF mental model",
+          "minutes": 6,
+          "level": "Foundations",
+          "summary": "MJCF is a description, not a program. The compiler turns your XML into a reusable physics model.",
+          "takeaways": [
+            "MJCF describes bodies, joints, geoms, and actuators as a tree.",
+            "The compiler resolves defaults and compiles reusable functions and constraints.",
+            "One XML file can contain multiple assets and keyframes, but exactly one <mujoco> root."
+          ],
+          "body": [
+            "MuJoCo separates the model — what the robot is — from the data — where it is right now. Your MJCF file becomes an mjModel at load time, while every simulation tick writes into a fresh mjData buffer.",
+            "This split is the reason large-scale learning is fast: resetting an environment reallocates nothing. The compiled model is immutable and shared, while data is cheap to reset and copy.",
+            "Start every debugging session by asking which layer is wrong. A malformed pose is usually a data problem. A broken inertia, missing joint, or impossible contact is usually a model problem."
+          ],
+          "code": "<mujoco model=\"two_link_arm\">\n  <compiler angle=\"radian\" autolimits=\"true\"/>\n  <option timestep=\"0.002\" integrator=\"implicitfast\"/>\n  <worldbody>\n    <body name=\"upper\" pos=\"0 0 0.3\">\n      <joint name=\"shoulder\" type=\"hinge\" axis=\"0 1 0\"/>\n      <geom type=\"capsule\" fromto=\"0 0 0 1 0 0\" size=\".06\" mass=\".8\"/>\n    </body>\n  </worldbody>\n</mujoco>",
+          "xp": 120,
+          "review_status": "historical_unreviewed",
+          "issue_ids": [
+            "fresh-data",
+            "model-immutable"
+          ]
+        },
+        {
+          "id": "bodies-joints",
+          "title": "Bodies, joints & geoms",
+          "minutes": 9,
+          "level": "Foundations",
+          "summary": "The body tree defines kinematics. Joints connect degrees of freedom. Geoms define collision.",
+          "takeaways": [
+            "Every body has a pose relative to its parent; only joints add degrees of freedom.",
+            "A freejoint contributes 7 qpos and 6 qvel coordinates.",
+            "Geoms own collision geometry; they inherit inertia from mass and shape."
+          ],
+          "body": [
+            "Bodies are frames. Without a joint, a child body is welded to its parent. Add a hinge and the relative transform becomes parameterised by one angle; add a slide and it becomes a translation.",
+            "Geoms are primitives: plane, sphere, capsule, box, cylinder, ellipsoid, mesh. Collision only happens between pairs that survive the contype/conaffinity filter. In newer MuJoCo versions, explicit <pair> elements give you finer control.",
+            "Sites are non-colliding frames that are perfect for sensors, targets, and end effectors. Keep sites tiny and visual; keep geoms physical."
+          ],
+          "code": "<body name=\"cart\" pos=\"0 0 .18\">\n  <joint name=\"slide\" type=\"slide\" axis=\"1 0 0\"\n         range=\"-2 2\" damping=\".05\"/>\n  <geom name=\"chassis\" type=\"box\"\n        size=\".25 .15 .1\" mass=\"1.2\"/>\n  <site name=\"cart_imu\" pos=\"0 0 .12\" size=\".02\"/>\n  <body name=\"pole\" pos=\"0 0 .11\">\n    <joint name=\"hinge\" type=\"hinge\" axis=\"0 1 0\"/>\n    <geom type=\"capsule\" fromto=\"0 0 0 0 0 .9\"\n          size=\".025\" mass=\".2\"/>\n  </body>\n</body>",
+          "xp": 120,
+          "review_status": "historical_unreviewed",
+          "issue_ids": []
+        },
+        {
+          "id": "qpos-qvel",
+          "title": "Reading qpos, qvel & ctrl",
+          "minutes": 7,
+          "level": "Foundations",
+          "summary": "Every simulation exposes three arrays. Learning their layouts prevents most shape bugs.",
+          "takeaways": [
+            "qpos holds generalised positions; for a hinge this is an angle, for a freejoint a position + quaternion.",
+            "qvel holds degrees of freedom velocities — one fewer than the freejoint position count.",
+            "control is the actuator command vector; it is not the same as force."
+          ],
+          "body": [
+            "For a serial arm with two hinges, nq equals nv equals two. For a floating box, nq grows to seven while nv is six. Never infer one count from the other unless every joint is hinge or slide.",
+            "Use model.jnt_qposadr and model.jnt_dofadr to write into the correct slots instead of hard-coding indices. This is the difference between a demo and an environment you can trust.",
+            "ctrl is a command, not a force. A motor turns ctrl into torque via gear and gains; a position actuator solves for the force that tracks a target. Inspect actuator_force when a robot behaves strangely."
+          ],
+          "code": "import mujoco as mj\n\nmodel = mj.MjModel.from_xml_path(\"scene.xml\")\ndata = mj.MjData(model)\n\nprint(\"nq / nv / nu:\", model.nq, model.nv, model.nu)\n\ndef act(q_target):\n    data.ctrl[:] = q_target\n    mj.mj_step(model, data)\n    return data.qpos.copy(), data.sensordata.copy()",
+          "xp": 140,
+          "review_status": "historical_unreviewed",
+          "issue_ids": []
+        }
+      ]
+    },
+    {
+      "id": "dynamics",
+      "index": "02",
+      "title": "Dynamics & contact",
+      "description": "The solver pipeline, constraint models, and numerical health.",
+      "lessons": [
+        {
+          "id": "step-pipeline",
+          "title": "Inside a simulation step",
+          "minutes": 8,
+          "level": "Dynamics",
+          "summary": "Forward kinematics, collision detection, constraint solving, integration. In that order.",
+          "takeaways": [
+            "The pipeline is deterministic: kinematics → collision → constraints → forward dynamics → integration.",
+            "Warm-starting accelerates convergence and is why consecutive calls reuse previous contact forces.",
+            "Step cost grows with active constraints, not just the number of bodies."
+          ],
+          "body": [
+            "mj_step first propagates the kinematic tree, then detects collisions, assembles constraint rows, solves for constraint forces, computes accelerations, and integrates. Sensors are evaluated at the end of the step.",
+            "Most surprises come from collision: a convex hull that is too large, a self-collision filter that should be disabled, or a pair not included in the broadphase. Turn on contact-point visualisation before touching solver settings.",
+            "When the solver fails to converge you get soft interpenetration or jitter. Use mj_step1 / mj_step2 when you need to inspect data between constraint assembly and integration."
+          ],
+          "xp": 150,
+          "review_status": "historical_unreviewed",
+          "issue_ids": [
+            "sensors-end",
+            "split-step"
+          ]
+        },
+        {
+          "id": "contacts",
+          "title": "Contacts, gaps & solref",
+          "minutes": 11,
+          "level": "Dynamics",
+          "summary": "Make contact stable by understanding margin, gap, solimp and solref — in that order.",
+          "takeaways": [
+            "margin begins to generate constraint rows before the actual contact; gap is deprecated in newer models.",
+            "solref encodes time constant and damping ratio, not stiffness like a game-engine spring.",
+            "Friction is a cone unless you switch to an elliptic cone; condim controls the number of friction rows."
+          ],
+          "body": [
+            "MuJoCo allows small penetration as a solver-tolerant constraint. The margin value decides how early the constraint becomes active, smoothing the transition and improving convergence on dense contact.",
+            "solref = [timeconst, dampratio]. A larger time constant makes contact softer. For a heavy robot, refine the physical collision shapes before making the contact artificially compliant.",
+            "For grasping, friction and condim matter more than restitution. Use condim=4 for torsional friction and 6 for rolling friction. Test the same object at multiple masses before committing gains."
+          ],
+          "code": "<geom name=\"cube\" type=\"box\" size=\".06 .06 .06\"\n      mass=\".2\" friction=\"1.2 .05 .01\"\n      condim=\"4\" solref=\".008 1\" solimp=\".9 .95 .003\"/>\n\n<contact>\n  <pair geom1=\"wall\" geom2=\"cube\" friction=\".2\"/>\n</contact>",
+          "xp": 160,
+          "review_status": "historical_unreviewed",
+          "issue_ids": []
+        },
+        {
+          "id": "solvers",
+          "title": "Choosing a solver & integrator",
+          "minutes": 10,
+          "level": "Dynamics",
+          "summary": "Newton, CG, PGS, Euler, RK4 and implicitfast: sensible defaults and when to deviate.",
+          "takeaways": [
+            "Use Newton + implicitfast as a modern default for contact-rich robots.",
+            "Solve the constraint problem well before shrinking timestep to hide jitter.",
+            "Timestep is a control decision as much as a numerical one; document the control frequency."
+          ],
+          "body": [
+            "Newton solves the full convex constraint problem using a Hessian. CG is cheaper for large, sparse scenes. PGS is the classic fallback and can respond differently on tricky friction pyramids.",
+            "implicitfast damps velocity-dependent forces with a diagonal approximation without the cost of full implicit integration. It is stable enough for most model-based control and reinforcement learning.",
+            "Sensor data is only as resolved as your timestep. If you intend to control at 50 Hz, act every 4 ms but step the physics at 0.5 ms and accumulate, rather than increasing frame_skip blindly."
+          ],
+          "code": "<option timestep=\".001\"\n        integrator=\"implicitfast\"\n        solver=\"Newton\"\n        iterations=\"8\"\n        tolerance=\"1e-9\"/>\n\n<!-- Log the effective control rate -->\n<custom>\n  <numeric name=\"ctrl_hz\" data=\"50\"/>\n</custom>",
+          "xp": 160,
+          "review_status": "historical_unreviewed",
+          "issue_ids": [
+            "diagonal-implicitfast",
+            "control-frequency"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "control",
+      "index": "03",
+      "title": "Actuation & control",
+      "description": "Turn stable dynamics into competent, inspectable behaviour.",
+      "lessons": [
+        {
+          "id": "pd-gains",
+          "title": "PD gains that don't explode",
+          "minutes": 9,
+          "level": "Control",
+          "summary": "Pick gains from natural frequency and damping ratio, then verify with a step response.",
+          "takeaways": [
+            "kp = I·ω² and kd = 2·ζ·I·ω is a defensible starting point for a joint-space servo.",
+            "Clamp torque at the actuator, not at the controller, so the model reports what actually happened.",
+            "Gravity compensation is not optional for heavy arms."
+          ],
+          "body": [
+            "A PD controller is a spring-damper on position error. Choose the damping ratio first: ζ ≈ 0.7–1.0 for a settling response without visible oscillation. Then select ω below the actuator bandwidth.",
+            "Gain scheduling is a legitimate tool. A nearly straight arm has different inertia than a folded one; if one gain set must cover both, run a frequency sweep across the workspace.",
+            "The oscillation you see may not be your gains. Check for a delay in the control loop, a too-large timestep, or a position actuator whose gain is far above its forcerange."
+          ],
+          "code": "def pd(q, qd, q_target, I=0.04, wn=8.0, zeta=0.85):\n    kp = I * wn ** 2\n    kd = 2 * zeta * I * wn\n    tau = kp * (q_target - q) - kd * qd\n    return np.clip(tau, -6.0, 6.0)",
+          "xp": 180,
+          "review_status": "historical_unreviewed",
+          "issue_ids": []
+        },
+        {
+          "id": "actuators",
+          "title": "Actuator tuning",
+          "minutes": 8,
+          "level": "Control",
+          "summary": "Motor, position, velocity, general: understand what ctrl is actually commanding.",
+          "takeaways": [
+            "Motor applies force proportional to control; gear scales the transmitted force.",
+            "Position actuators add their own internal servo with kp and kv; nested PD can fight itself.",
+            "Always set plausible ctrlrange and forcerange; unsupervised commands hide broken controllers."
+          ],
+          "body": [
+            "An actuator is a transmission plus a force law. For a direct-drive motor, actuator_force = gear * ctrl. For position control, MuJoCo internally uses a first-order servo, exposed through kp and kv.",
+            "Do not stack a large hand-written PD on top of a position actuator. Pick one abstraction and measure the resulting actuator_force. If a number is pinned at the limit, the controller is saturated.",
+            "Torque limits belong in the model. This keeps training rollouts physically constrained and makes a learned policy transferable instead of relying on software clip values."
+          ],
+          "xp": 150,
+          "review_status": "historical_unreviewed",
+          "issue_ids": [
+            "actuator-force",
+            "servo-first-order"
+          ]
+        },
+        {
+          "id": "gymnasium",
+          "title": "MuJoCo for reinforcement learning",
+          "minutes": 12,
+          "level": "Control",
+          "summary": "Wrap a compiled model into a deterministic, vectorisable environment.",
+          "takeaways": [
+            "A reset must clear the data buffer; qpos0 is only a convenient initial keyframe.",
+            "Control frequency should be explicit in the environment contract.",
+            "Observation scaling and termination conditions are part of your reward design."
+          ],
+          "body": [
+            "The clean pattern is: compile once, allocate data once, reset in place. Use model.qpos0 or a keyframe as the nominal pose, then add task-appropriate initial state noise.",
+            "Separate action normalisation from physical limits. Policies usually produce bounded, dimensionless actions; the environment is responsible for mapping them to ctrl ranges and choosing control frequency.",
+            "Log qpos, qvel, actuator_force, and contact counts alongside rewards. Most learning pathologies look obvious in those traces, long before a reward curve turns the corner."
+          ],
+          "code": "import gymnasium as gym\nimport mujoco\nimport numpy as np\n\nclass CartpoleEnv(gym.Env):\n    def __init__(self):\n        self.model = mujoco.MjModel.from_xml_path(\"cartpole.xml\")\n        self.data = mujoco.MjData(self.model)\n        self.action_space = gym.spaces.Box(-1, 1, (1,))\n\n    def step(self, action):\n        self.data.ctrl[:] = action * 20\n        for _ in range(5):\n            mujoco.mj_step(self.model, self.data)\n        return self._obs(), self._reward(), False, False, {}",
+          "xp": 200,
+          "review_status": "historical_unreviewed",
+          "issue_ids": [
+            "gym-incomplete"
+          ]
+        },
+        {
+          "id": "robustness",
+          "title": "Robustness & sim-to-real",
+          "minutes": 10,
+          "level": "Mastery",
+          "summary": "Randomise the model, not just the state. Validate on the edges of your distribution.",
+          "takeaways": [
+            "Domain randomisation should target parameters with real uncertainty: mass, friction, delay, actuation.",
+            "Randomising everything makes learning slower and hides systematic model error.",
+            "Validate on nominal, edge, and adversarial conditions separately."
+          ],
+          "body": [
+            "Start from a measured nominal model. Randomise mass within a defensible range, friction within its cone, and actuator strength from datasheet tolerance. Add observation delay only after checking the real control loop.",
+            "Use procedural reset noise for generalisation inside a task, and parameter noise for robustness to a different robot. They solve different problems and should be logged separately.",
+            "A policy that only works at the midpoint of its training distribution is not robust. Build a regression suite of seeds, terrain variants, and payloads that run on every checkpoint."
+          ],
+          "xp": 200,
+          "review_status": "historical_unreviewed",
+          "issue_ids": []
+        },
+        {
+          "id": "debugging",
+          "title": "Debug like a roboticist",
+          "minutes": 7,
+          "level": "Mastery",
+          "summary": "A repeatable visual and numerical workflow for when the robot misbehaves.",
+          "takeaways": [
+            "Reproduce in the passive model before adding control.",
+            "Render contact forces, joints, and inertial frames together.",
+            "Reset to a known keyframe and change one parameter at a time."
+          ],
+          "body": [
+            "First, can the model stand? Turn off all actuators and see whether the pose and contact points look credible. Second, can one joint track a tiny sinusoid? Third, can the full controller work at nominal speed?",
+            "Use the viewer overlays aggressively: contact normal and tangent, joint axes, body frames, inertia boxes. Nine out of ten strange dynamics bugs are a joint axis or a collision pair.",
+            "Keep a short experiment log next to the model: change, hypothesis, observed, next. Physics debugging fails when changes pile up faster than observations."
+          ],
+          "xp": 180,
+          "review_status": "historical_unreviewed",
+          "issue_ids": [
+            "unsupported-certainty"
+          ]
+        }
+      ]
+    }
+  ]
+}

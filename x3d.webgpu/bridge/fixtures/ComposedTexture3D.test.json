@@ -1,0 +1,93 @@
+{
+ "node": "ComposedTexture3D",
+ "mode": "scene",
+ "note": "A box with a ComposedTexture3D of an ImageTexture and a PixelTexture (2 by 2 pictures), the first slice red green on the bottom row, blue white above. Cut at r = 0 in both engines, the first slice shows.",
+ "gaps": [
+  "the volume is not sampled in 3D, only the first slice is drawn (see PixelTexture3D)",
+  "XSD finding: x3d-4.0.xsd writes the texture field of a ComposedTexture3D as an xs:sequence of ImageTexture, PixelTexture, MovieTexture, ProtoInstance repeated, not an xs:choice, so the slices must come in fours in that order and two ImageTextures do not validate; the fixture is checked against the XSD with that sequence made a choice (the receipt says so); the image field of a PixelTexture3D takes decimal numbers only in the XSD (no 0x hex)"
+ ],
+ "xsdChoice": [
+  "ComposedTexture3D"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "repeatR",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "repeatS",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "repeatT",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    124,
+    156,
+    [
+     255,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    196,
+    156,
+    [
+     0,
+     255,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    124,
+    84,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    196,
+    84,
+    [
+     255,
+     255,
+     255
+    ],
+    45
+   ]
+  }
+ ]
+}

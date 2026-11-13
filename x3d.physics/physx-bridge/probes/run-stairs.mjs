@@ -1,0 +1,40 @@
+// Stairs of doom in a real browser: shove, watch it tumble (pop-ups, follow camera), the score; power flicker with a launch; instant replay.
+import { chromium, firefox, webkit } from 'playwright';
+import { writeFileSync } from 'node:fs';
+const [, , which = 'chromium'] = process.argv;
+const B = { chromium, firefox, webkit }[which];
+const browser = await B.launch({ ...(which === 'chromium' ? { channel: 'chromium', args: ['--autoplay-policy=no-user-gesture-required'] } : {}) });
+const page = await browser.newPage({ locale: 'en-US', viewport: { width: 1500, height: 950 } });
+const errors = [];
+page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+page.on('pageerror', (e) => errors.push(String(e)));
+await page.goto(`${process.env.BASE ?? 'http://127.0.0.1:5181/'}ragdoll.html`);
+await page.waitForFunction(() => window.__demo?.ready || window.__demo?.error, null, { timeout: 90000 });
+if (await page.evaluate(() => window.__demo.error)) { console.log(await page.evaluate(() => window.__demo.error)); process.exit(1); }
+await page.screenshot({ path: `evidence/stairs-ready-${which}.png` });
+await page.locator('#canvas').click({ position: { x: 5, y: 5 } });
+const run = async (keys, tag) => {
+  for (const k of keys) await page.keyboard.press(k);
+  await page.waitForFunction(() => window.__rag.phase === 'falling', null, { timeout: 30000 });
+  await page.waitForTimeout(1300);
+  await page.screenshot({ path: `evidence/stairs-${tag}-mid-${which}.png` });
+  await page.waitForFunction(() => window.__rag.phase === 'done', null, { timeout: 60000 });
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: `evidence/stairs-${tag}-end-${which}.png` });
+  return page.evaluate(() => { const a = window.__rag.attempts.at(-1); return { score: a.score, hits: a.hits, combo: a.combo, byPart: a.byPart, push: a.push, boom: window.__rag.boom.done, sounds: window.__demo.sound?.triggered, physUs: Math.round(window.__demo.bridge.stats.physicsMsPerStep * 1000), fps: Math.round(window.__demo.browser.currentFrameRate) }; });
+};
+const shove = await run(['2'], 'shove');
+const flicker = await run(['f', '3'], 'flicker-launch');
+await page.keyboard.press('q');
+await page.waitForFunction(() => window.__rag.replay, null, { timeout: 30000 });
+await page.waitForTimeout(2500);
+await page.screenshot({ path: `evidence/stairs-replay-${which}.png` });
+await page.waitForFunction(() => !window.__rag.replay, null, { timeout: 120000 });
+const replay = await page.evaluate(() => window.__rag.lastReplay);
+await page.keyboard.press('h');
+await page.waitForFunction(() => window.__rag.phase === 'ready' && window.__rag.links.length, null, { timeout: 60000 });
+const cartoon = await run(['1'], 'cartoon-nudge');
+const out = { browser: which, version: browser.version(), shove, flicker, replay, cartoon, errors };
+console.log(JSON.stringify(out));
+writeFileSync(`evidence/stairs-${which}.json`, JSON.stringify(out, null, 1));
+await browser.close();

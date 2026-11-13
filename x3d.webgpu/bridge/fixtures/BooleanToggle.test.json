@@ -1,0 +1,68 @@
+{
+ "node": "BooleanToggle",
+ "mode": "events",
+ "steps": [
+  {
+   "set": [
+    "N",
+    "set_boolean",
+    true
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "toggle",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "toggle",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_boolean",
+    false
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "toggle"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "toggle",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_boolean",
+    true
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "toggle",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "toggle",
+    false
+   ]
+  }
+ ]
+}

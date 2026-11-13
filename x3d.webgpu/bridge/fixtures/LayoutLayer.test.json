@@ -1,0 +1,289 @@
+{
+ "node": "LayoutLayer",
+ "mode": "scene",
+ "note": "The LayoutLayer looks through an OrthoViewpoint of its own (the canvas is 2 units high), so a box of size 1 is 120 pixels wide in the middle of the frame. Its viewport (a Viewport node) cuts the picture into the left or right half of the canvas, where the layer is squeezed in; visible FALSE takes it out.",
+ "gaps": [
+  "pickable, objectType and pointerEvents are held: picking does not respect layers",
+  "a LayoutLayer without a Layout shows its children as they are, a Layout is probed in the Layout fixture"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "visible",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pickable",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "objectType",
+    [
+     "ALL"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pointerEvents",
+    true
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    260,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    60,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    40,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "V",
+    "clipBoundary",
+    [
+     0,
+     0.5,
+     0,
+     1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    240,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    20,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "V",
+    "clipBoundary",
+    [
+     0.5,
+     1,
+     0,
+     1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    240,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "V",
+    "clipBoundary",
+    [
+     0,
+     1,
+     0,
+     1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "visible",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "visible",
+    true
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "pickable",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pickable",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "objectType",
+    [
+     "NAVIGATION"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "objectType",
+    [
+     "NAVIGATION"
+    ]
+   ]
+  }
+ ]
+}

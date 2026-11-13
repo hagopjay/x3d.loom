@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Music box · standard X3D on PhysX</title>
+<link rel="stylesheet" href="./src/demos/demo.css">
+<script src="./vendor/x_ite/x_ite.min.js"></script>
+</head>
+<body data-mode="run">
+<header>
+  <div class="title"><h1>Physics music box</h1><span id="tagline"></span></div>
+  <nav id="demo-nav" aria-label="Demos"></nav>
+  <span id="status" class="dim" role="status"></span>
+</header>
+<main class="demo">
+  <section id="stage">
+    <x3d-canvas id="canvas" splashScreen="false" contextMenu="false" notifications="false"></x3d-canvas>
+    <div id="hud" aria-live="polite"></div>
+    <div id="dock">
+      <div class="seq-head">
+        <h2>Pegs on the drum</h2>
+        <span class="dim">Click a cell (or arrows and Enter) to set or pull a peg. It changes on the turning drum at once: a CollidableShape switched on or off.</span>
+      </div>
+      <div id="seq" role="grid" aria-label="Peg grid: notes by steps"></div>
+    </div>
+  </section>
+  <aside id="side"></aside>
+</main>
+<div hidden>
+  <section id="panels">
+    <section>
+      <h2>What you are hearing</h2>
+      <p class="hint">The drum turns on a standard X3D clock (TimeSensor and OrientationInterpolator). Each peg lifts a hammer's foot; past the peg, the hammer falls under gravity onto its bar. The note is that contact: PhysX reports the impulse, the bridge finds the impact, and an X3D SpatialSound plays a synthesised steel tine at the bar's pitch, as loud as the strike.</p>
+      <p class="hint">A cell flashes when its hammer actually struck. If a peg is set and the cell stays dark, the physics missed the note.</p>
+      <dl id="mb-readout" class="readout"></dl>
+    </section>
+  </section>
+</div>
+<script type="module" src="./src/demos/musicbox.ts"></script>
+</body>
+</html>

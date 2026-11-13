@@ -21,7 +21,7 @@ KIT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(KIT))
 
 from loomkit import accept as acc  # noqa: E402
-from loomkit import cli, pagetraps, picture, play, receipt, sci, sweep, traps  # noqa: E402
+from loomkit import cli, pagetraps, physics, picture, play, receipt, sci, sweep, traps  # noqa: E402
 from loomkit.core import GateError, InstrumentError, candidate, sha256_file, write_witness  # noqa: E402
 
 PROFILE = {"schema": "loom.profile/1", "name": "synthetic/test", "required": [
@@ -121,6 +121,20 @@ TRAP_CASES = {  # rule: (passing XML, failing XML). Synthetic fixtures.
                                 "<X3D><Scene><Shape><MetadataSet name='row'/></Shape></Scene></X3D>"),
     "glsl-reserved-active": ("<X3D><Scene><ShaderPart>data:x-shader/x-fragment,in float sounding;void main(){}</ShaderPart></Scene></X3D>",
                              "<X3D><Scene><ShaderPart>data:x-shader/x-fragment,in float active;void main(){}</ShaderPart></Scene></X3D>"),
+    # 7 Nov, two renderers on one file. Passing sides are the repairs that were shipped.
+    "color-keys-sparse": ("<X3D><Scene><ColorInterpolator key='0 0.5 1' keyValue='0.1 0.1 0.6 0.35 0.1 0.45 0.6 0.1 0.3'/></Scene></X3D>",
+                          "<X3D><Scene><ColorInterpolator key='0 1' keyValue='0.1 0.1 0.6 0.9 0.5 0.1'/></Scene></X3D>"),
+    "xite-light-zero-pop": ("<X3D><Scene><ScalarInterpolator DEF='F' key='0 1' keyValue='1 0'/><PointLight DEF='L' ambientIntensity='0.3'/>"
+                            "<ROUTE fromNode='F' fromField='value_changed' toNode='L' toField='set_intensity'/>"
+                            "<ROUTE fromNode='F' fromField='value_changed' toNode='L' toField='set_ambientIntensity'/></Scene></X3D>",
+                            "<X3D><Scene><ScalarInterpolator DEF='F' key='0 1' keyValue='1 0'/><PointLight DEF='L' ambientIntensity='0.3'/>"
+                            "<ROUTE fromNode='F' fromField='value_changed' toNode='L' toField='set_intensity'/></Scene></X3D>"),
+    "xite-transparent-shadow": ("<X3D><Scene><DirectionalLight shadows='true'/><Shape castShadow='false'><Appearance><Material transparency='1'/></Appearance><Box/></Shape></Scene></X3D>",
+                                "<X3D><Scene><DirectionalLight shadows='true'/><Shape><Appearance><Material transparency='1'/></Appearance><Box/></Shape></Scene></X3D>"),
+    "loop-seam": ("<X3D><Scene><TimeSensor DEF='T' loop='true'/><OrientationInterpolator DEF='O' key='0 0.5 1' keyValue='0 1 0 0 0 1 0 3.14 1 0 0 0'/>"
+                  "<ROUTE fromNode='T' fromField='fraction_changed' toNode='O' toField='set_fraction'/></Scene></X3D>",
+                  "<X3D><Scene><TimeSensor DEF='T' loop='true'/><PositionInterpolator DEF='P' key='0 1' keyValue='0 0 0 0 1 0'/>"
+                  "<ROUTE fromNode='T' fromField='fraction_changed' toNode='P' toField='set_fraction'/></Scene></X3D>"),
 }
 
 
@@ -157,6 +171,7 @@ PAGE_CASES = {
     "loadurl-unbudgeted": CLEAN_PAGE.replace(_LOAD, "  await B.load" + "URL(u);\n"),
     "js-syntax": CLEAN_PAGE.replace("console.error(e); } });", "console.error(e); } }););"),
     "sim-nonportable-math": "// loom" + ":sim\n" + CLEAN_PAGE.replace("const t = B.getCurrentTime();", "const t = Math." + "sin(B.getCurrentTime());"),
+    "anchor-download-hosted": CLEAN_PAGE.replace("const t = B.getCurrentTime();", "const t = B.getCurrentTime();\n  const a = document.createElement('a'); a.href = url; a." + "download = 'still.png'; a.click();"),
 }
 
 
@@ -490,6 +505,117 @@ def play_controls() -> list[dict]:
     return rows
 
 
+def physics_run(td: Path) -> tuple[Path, dict]:
+    """A synthetic, clean physics run record (a falling ball; not a project run): one model file, a 40-step hash trace
+    recorded in one host and replayed in three, two exact references, one tolerance, a negative control, a takeover."""
+    root = td / "sim"; root.mkdir()
+    (root / "model.x3d").write_text("<X3D version='4.0'><Scene><Group/></Scene></X3D>\n")
+    hashes = [(i * 2654435761) % 4294967296 for i in range(40)]
+    run = {"schema": physics.SCHEMA, "id": "toy/fall", "engine": {"name": "toy", "version": "1.0"},
+           "model": {"path": "model.x3d", "sha256": sha256_file(root / "model.x3d")},
+           "recorded": {"host": "chromium", "steps": 40, "hashes": hashes, "trace_sha256": physics.trace_sha256(hashes)},
+           "replays": [{"host": h, "steps": 40, "engine_version": "1.0", "mismatches": 0, "first_mismatch": -1} for h in ("firefox", "node")],
+           "required_hosts": ["chromium", "firefox", "node"],
+           "references": [{"id": "free fall vs the discrete solution", "observed": 1.5e-6, "limit": 1e-5, "declared_limit": 1e-5, "rule": "at most", "status": "pass"}],
+           "tolerances": [{"id": "pose between engines", "observed": 0.004, "limit": 0.01, "declared_limit": 0.01, "rule": "at most", "status": "pass"}],
+           "controls": [{"id": "CCD off tunnels", "expect": "fail", "observed_failed": True}],
+           "takeover": {"replaces": "X_ITE Bullet", "applies_to": ["chromium", "firefox"], "engine_off_hosts": ["chromium", "firefox"], "leaks": [{"what": "loadURL runs one step", "handled": True}]},
+           "losses": {"authored_fields_dropped": 0, "reported": True}}
+    # the recording host replays itself too, so every required host is covered
+    run["replays"].append({"host": "chromium", "steps": 40, "engine_version": "1.0", "mismatches": 0, "first_mismatch": -1})
+    (root / "run.json").write_text(json.dumps(run))
+    return root, run
+
+
+def physics_controls() -> list[dict]:
+    waiver = {"owner": "owner", "date": "2026-11-13", "reason": "heavy machine load; tolerance written down", "observed": 0.4, "limit": 0.2}
+
+    def over(r):
+        r["tolerances"] = [{"id": "limit overshoot", "observed": 0.4, "limit": 0.2, "declared_limit": 0.2, "rule": "at most", "status": "accepted_failure", "waiver": dict(waiver)}]
+
+    cases = [  # (label, code, mutation of the record, check_run keywords)
+        ("a required field is missing", "PHYS_SCHEMA", lambda r: r.pop("engine"), {}),
+        ("a step hash edited after the trace was stamped", "PHYS_TRACE_TAMPERED", lambda r: r["recorded"]["hashes"].__setitem__(7, 1), {}),
+        ("a required host never replayed", "PHYS_REPLAY_MISSING", lambda r: r["replays"].pop(0), {}),
+        ("a replay ran a different number of steps", "PHYS_REPLAY_STEPS", lambda r: r["replays"][0].update(steps=39), {}),
+        ("a replay on another engine version", "PHYS_ENGINE_DRIFT", lambda r: r["replays"][0].update(engine_version="1.1"), {}),
+        ("a replay differs at some step", "PHYS_HASH_DRIFT", lambda r: r["replays"][0].update(mismatches=3, first_mismatch=11), {}),
+        ("no exact reference", "PHYS_NO_REFERENCE", lambda r: r.update(references=[]), {}),
+        ("a limit widened after the fact", "PHYS_LIMIT_WIDENED", lambda r: r["tolerances"][0].update(limit=0.05), {}),
+        ("a tolerance marked pass whose numbers fail it", "PHYS_FALSE_GREEN", lambda r: r["tolerances"][0].update(observed=0.02, status="pass"), {}),
+        ("a reference that is missed", "PHYS_REFERENCE_FAIL", lambda r: r["references"][0].update(observed=1e-3, status="fail"), {}),
+        ("a tolerance exceeded with no waiver", "PHYS_TOLERANCE_FAIL", lambda r: r["tolerances"][0].update(observed=0.02, status="fail"), {}),
+        ("a waiver without a reason", "PHYS_WAIVER_INCOMPLETE", lambda r: (over(r), r["tolerances"][0]["waiver"].update(reason="")), {"max_waivers": 1}),
+        ("a waiver that states other numbers", "PHYS_WAIVER_INCOMPLETE", lambda r: (over(r), r["tolerances"][0]["waiver"].update(observed=0.3)), {"max_waivers": 1}),
+        ("a complete waiver the profile does not allow", "PHYS_WAIVERS_OVER_CAP", over, {"max_waivers": 0}),
+        ("a negative control that did not fail", "PHYS_CONTROL_SURVIVED", lambda r: r["controls"][0].update(observed_failed=False), {}),
+        ("the old engine not shown off on one host", "PHYS_TAKEOVER_UNPROVEN", lambda r: r["takeover"]["engine_off_hosts"].remove("firefox"), {}),
+        ("a takeover claimed for a host that is not a required host", "PHYS_TAKEOVER_UNPROVEN", lambda r: r["takeover"].update(applies_to=["chromium", "safari"], engine_off_hosts=["chromium", "safari"]), {}),
+        ("a takeover with no applies_to, so Node must show an engine it never ran", "PHYS_TAKEOVER_UNPROVEN", lambda r: r["takeover"].pop("applies_to"), {}),
+        ("a takeover required and not recorded", "PHYS_TAKEOVER_UNPROVEN", lambda r: r.pop("takeover"), {"require_takeover": True}),
+        ("authored fields dropped without a loss report", "PHYS_LOSS_UNREPORTED", lambda r: r.update(losses={"authored_fields_dropped": 11, "reported": False}), {}),
+    ]
+    rows = []
+    with tempfile.TemporaryDirectory(prefix="loomkit-phys-") as d:
+        root, run = physics_run(Path(d))
+        res = physics.check_run(run, root)
+        if res["steps"] != 40 or res["waivers"]:
+            raise RuntimeError(f"PHYS_CLEAN_FIXTURE: {res}")
+        rows.append({"case": "clean fixture", "result": "pass", "hosts": res["replayed_in"]})
+        # two-sided: the same waiver, allowed by the profile, passes and is reported as a waiver, never as a plain pass
+        o = json.loads(json.dumps(run)); over(o)
+        w = physics.check_run(o, root, max_waivers=1)
+        if len(w["waivers"]) != 1:
+            raise RuntimeError("PHYS_WAIVER_NOT_REPORTED")
+        rows.append({"case": "a complete waiver within the profile's cap", "result": "pass, reported as 1 waiver"})
+        if physics.check_run(json.loads(json.dumps(run)), root, required_hosts=["chromium", "firefox", "node"], require_takeover=True)["leaks"] != 1:
+            raise RuntimeError("PHYS_TAKEOVER_NOT_REPORTED")
+        rows.append({"case": "takeover required and proved", "result": "pass, 1 leak listed"})
+    for label, code, mutate, kw in cases:
+        with tempfile.TemporaryDirectory(prefix="loomkit-phys-") as d:
+            root, run = physics_run(Path(d)); mutate(run)
+            rows.append({"case": label, **expect(code, lambda: physics.check_run(run, root, **kw))})
+    with tempfile.TemporaryDirectory(prefix="loomkit-phys-") as d:   # the model edited after the run was recorded
+        root, run = physics_run(Path(d)); (root / "model.x3d").write_text("<X3D version='4.0'><Scene/></X3D>\n")
+        rows.append({"case": "model edited after the run", **expect("PHYS_MODEL_STALE", lambda: physics.check_run(run, root))})
+    rows.append({"case": "no run record at all", **expect("PHYS_NO_RUNS", lambda: physics.check([]))})
+    with tempfile.TemporaryDirectory(prefix="loomkit-phys-") as d:
+        root, run = physics_run(Path(d))
+        ev = Path(d) / "ev"
+        base = ["physics", str(root), "--evidence", str(ev), "--runs", "run.json"]
+        if quiet_cli(base) != 0 or json.loads((ev / "physics.json").read_text())["status"] != "pass":
+            raise RuntimeError("CLI_PHYSICS: the clean fixture must pass through the CLI")
+        w = json.loads((ev / "physics.json").read_text())
+        if w["coverage"] != {"runs": 1, "max_waivers": 0, "require_takeover": False}:
+            raise RuntimeError(f"CLI_PHYSICS: the profile can only bind the waiver cap if the witness records it: {w['coverage']}")
+        rows.append({"case": "CLI: clean fixture; the witness records the waiver cap it ran with", "result": "exit 0, witness pass"})
+        # the profile binds the waiver cap: a witness run with a looser cap than the profile names is not accepted
+        run["tolerances"] = [{"id": "limit overshoot", "observed": 0.4, "limit": 0.2, "declared_limit": 0.2, "rule": "at most", "status": "accepted_failure", "waiver": dict(waiver)}]
+        (root / "run.json").write_text(json.dumps(run))
+        if quiet_cli(base + ["--max-waivers", "1"]) != 0:
+            raise RuntimeError("CLI_PHYSICS: a waiver within the cap must pass through the CLI")
+        for cap, outcome in ((0, "COVERAGE_REQUIRED"), (1, None)):
+            prof = {"schema": "loom.profile/1", "name": "synthetic/physics", "required": [{"witness": "physics", "coverage": {"max_waivers": cap}}]}
+            if outcome:
+                rows.append({"case": "profile caps waivers at 0 but the witness ran with a cap of 1", **expect(outcome, lambda: acc.accept(root, ev, prof))})
+            else:
+                acc.accept(root, ev, prof)
+                rows.append({"case": "profile caps waivers at 1 and the witness ran with a cap of 1", "result": "accepted"})
+        run["tolerances"] = []
+        run["replays"][0]["mismatches"] = 2
+        (root / "run.json").write_text(json.dumps(run))
+        quiet_cli(base)
+        rec = json.loads((ev / "physics.json").read_text())
+        if rec["status"] != "fail" or "PHYS_HASH_DRIFT" not in rec["reason"]:
+            raise RuntimeError(f"CLI_PHYSICS: a hash drift must be a witness fail, got {rec['status']} {rec['reason']}")
+        rows.append({"case": "CLI: hash drift is a witness fail with its code", "expected": "PHYS_HASH_DRIFT", "caught": "PHYS_HASH_DRIFT"})
+        (root / "run.json").write_text("{not json")
+        if quiet_cli(base) != 2:
+            raise RuntimeError("CLI_EXIT: an unreadable record must exit 2")
+        rows.append({"case": "CLI: unreadable record exits 2", "expected": "exit 2", "caught": "exit 2"})
+    return rows
+
+
 def cli_controls() -> list[dict]:
     """The CLI itself, not only the predicates: `loom traps` crashed with NameError on every call until 6 Nov and the
     self-test never noticed, because it called traps.check directly. A crash used to exit 1, which reads as a violation."""
@@ -517,7 +643,7 @@ def cli_controls() -> list[dict]:
 def run_all() -> dict:
     return {"acceptance": acceptance_controls(), "traps": trap_controls(),
             "picture": picture_controls(), "receipt": receipt_controls(), "sweep": sweep_controls(), "sci": sci_controls(),
-            "pagetraps": page_controls(), "play": play_controls(), "cli": cli_controls(), "cli_subprocess": cli_subprocess_controls(), "optimized": bool(sys.flags.optimize)}
+            "pagetraps": page_controls(), "play": play_controls(), "physics": physics_controls(), "cli": cli_controls(), "cli_subprocess": cli_subprocess_controls(), "optimized": bool(sys.flags.optimize)}
 
 
 if __name__ == "__main__":
@@ -531,7 +657,7 @@ if __name__ == "__main__":
             print(p.stdout, p.stderr, file=sys.stderr)
             sys.exit(1)
         res = json.loads(p.stdout)
-        negatives = sum(1 for k in ("acceptance", "picture", "receipt", "sweep", "sci", "play", "cli") for row in res[k] if "caught" in row)
+        negatives = sum(1 for k in ("acceptance", "picture", "receipt", "sweep", "sci", "play", "physics", "cli") for row in res[k] if "caught" in row)
         report["modes"].append({"optimized": res["optimized"], "negative_controls_caught": negatives,
                                 "trap_rules_two_sided": len(res["traps"]),
                                 "page_trap_rules_two_sided": sum(1 for r in res["pagetraps"] if "rule" in r and "form" not in r),

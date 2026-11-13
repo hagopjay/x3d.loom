@@ -1,0 +1,83 @@
+{
+ "node": "MultiTexture",
+ "mode": "scene",
+ "note": "a red and a green texture combined by MODULATE and by ADD",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    88,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    232,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const t=__body.texCache.get(__body.world.nodes.find(n=>n.def==='M1').id);return Array.from(t.getContext().getImageData(0,0,1,1).data)})()",
+    [
+     0,
+     0,
+     0,
+     255
+    ]
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const t=__body.texCache.get(__body.world.nodes.find(n=>n.def==='M2').id);return Array.from(t.getContext().getImageData(0,0,1,1).data)})()",
+    [
+     255,
+     255,
+     0,
+     255
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "M1",
+    "mode",
+    [
+     "REPLACE",
+     "MODULATE"
+    ]
+   ]
+  }
+ ],
+ "gaps": [
+  "X_ITE is compared on loading and drawing the shapes; the combined colour is checked in our body only (red x green = black for MODULATE, red + green = yellow for ADD)",
+  "function, source, color and alpha are read and not used; modes other than REPLACE, MODULATE, MODULATE2X, MODULATE4X and ADD are drawn as MODULATE",
+  "the combine is made once on a 256 x 256 canvas: it does not follow the lighting or the vertex colour"
+ ]
+}

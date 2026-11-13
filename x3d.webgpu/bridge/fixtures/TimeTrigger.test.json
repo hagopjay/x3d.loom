@@ -1,0 +1,33 @@
+{
+ "node": "TimeTrigger",
+ "mode": "events",
+ "steps": [
+  {
+   "set": [
+    "N",
+    "set_boolean",
+    true
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "triggerTime",
+    "$time"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_boolean",
+    false
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "triggerTime"
+   ]
+  }
+ ]
+}

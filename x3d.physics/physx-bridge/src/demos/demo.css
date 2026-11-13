@@ -1,0 +1,66 @@
+@import '../demo/machine.css';
+/* the demos: stage | side panel, an optional dock under the stage (sequencer, charts) */
+header { flex-wrap: wrap; row-gap: 6px; }
+header .title { display: flex; flex-direction: column; }
+#tagline { color: var(--dim); font-size: 12px; }
+#demo-nav { display: flex; gap: 4px; flex-wrap: wrap; }
+#demo-nav a { color: var(--dim); text-decoration: none; font-size: 12px; padding: 3px 8px; border: 1px solid transparent; border-radius: 12px; }
+#demo-nav a:hover { color: var(--fg); border-color: var(--line); }
+#demo-nav a[aria-current="page"] { color: var(--gold); border-color: var(--gold); }
+main.demo { grid-template-columns: 1fr 320px; grid-template-rows: minmax(0, 1fr); }
+#stage { overflow: hidden; }
+#stage #hud { top: 10px; bottom: auto; }
+#stage { display: flex; flex-direction: column; }
+#stage x3d-canvas { flex: 1; min-height: 0; height: auto; }
+#dock { border-top: 1px solid var(--line); background: var(--panel); padding: 10px 14px; }
+#dock:empty { display: none; }
+#side section h2 { margin-bottom: 4px; }
+#side .row { margin-top: 4px; }
+body:not([data-mode="run"]) [data-mode="run-only"] { display: none; }
+body[data-mode="run"] .edit-only { display: none; }
+body:not([data-mode="run"]) .run-only { display: none; }
+#counters { margin-top: 8px; }
+dialog#help-dialog { background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 10px; padding: 18px 22px; max-width: 880px; }
+dialog#help-dialog::backdrop { background: #0008; }
+dialog#help-dialog h2 { color: var(--gold); text-transform: none; letter-spacing: 0; font-size: 15px; margin-bottom: 12px; }
+dialog#help-dialog h3 { font-size: 12px; color: var(--dim); margin: 0 0 4px; }
+.help-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px 22px; }
+.help-grid dl { margin: 0; }
+.help-grid dt { color: var(--gold); }
+dialog#help-dialog .close { margin-top: 14px; }
+.readout { font: 12px/1.5 ui-monospace, Menlo, monospace; }
+.big { font: 600 22px/1.2 system-ui, sans-serif; color: var(--gold); }
+.legend { display: flex; gap: 14px; font-size: 11px; color: var(--dim); margin: 2px 0 4px; }
+.legend i { display: inline-block; width: 14px; height: 2px; vertical-align: middle; margin-right: 5px; }
+.chart-table table { width: 100%; border-collapse: collapse; font: 11px ui-monospace, Menlo, monospace; }
+.chart-table th, .chart-table td { text-align: right; padding: 2px 4px; border-bottom: 1px solid var(--line); }
+.chart-table th { color: var(--dim); font-weight: 400; }
+input[type="range"] { accent-color: var(--gold); width: 100%; }
+label.slider { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 12px; color: var(--dim); margin-top: 6px; }
+label.slider output { color: var(--fg); font: 12px ui-monospace, Menlo, monospace; }
+label.slider input { grid-column: 1 / -1; }
+/* music box sequencer */
+.seq-head { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; margin-bottom: 6px; }
+.seq-head h2 { margin: 0; }
+#seq { display: grid; grid-template-columns: 40px repeat(16, minmax(18px, 1fr)); gap: 3px; max-width: 760px; }
+#seq .note { font: 11px ui-monospace, Menlo, monospace; color: var(--dim); display: flex; align-items: center; gap: 5px; }
+#seq .note i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+#seq button.cell { padding: 0; height: 18px; border-radius: 4px; background: #1a1d24; border-color: #262a33; }
+#seq button.cell.beat { border-left-color: #4a4536; }
+#seq button.cell[aria-pressed="true"] { background: #6b5a32; border-color: var(--gold); }
+#seq button.cell.now { box-shadow: 0 0 0 1px #e8e3d5 inset; }
+#seq button.cell.struck { background: var(--gold); transition: none; }
+#seq button.cell.fade { transition: background 0.45s ease-out; }
+#seq .col-head { font: 10px ui-monospace, Menlo, monospace; color: var(--dim); text-align: center; }
+#seq .col-head.now { color: var(--gold); }
+body[data-mode="run"] button[data-mode="draw"] { display: none; }
+body:not([data-mode="run"]) button[data-mode="run"] { display: none; }
+figure.chart { margin: 8px 0 0; }
+#wave-big { margin: 2px 0 4px; }
+body:not([data-mode="run"]) #side section[data-group="Run"] { display: none; }
+/* ragdoll: points by body part */
+.bars { display: grid; gap: 4px; margin: 8px 0; }
+.bar-row { display: grid; grid-template-columns: 44px 1fr 52px; gap: 6px; align-items: center; font: 11px ui-monospace, Menlo, monospace; }
+.bar-label { color: var(--dim); }
+.bar { height: 10px; background: var(--gold); border-radius: 0 4px 4px 0; width: 0; transition: width 0.15s; }
+.bar-value { text-align: right; }

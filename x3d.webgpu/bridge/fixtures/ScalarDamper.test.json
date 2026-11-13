@@ -1,0 +1,71 @@
+{
+ "node": "ScalarDamper",
+ "mode": "events",
+ "steps": [
+  {
+   "set": [
+    "N",
+    "set_destination",
+    10
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "between": [
+    "N",
+    "value_changed",
+    0.0001,
+    9.999
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "settle": 3
+  },
+  {
+   "event": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "near": [
+    "N",
+    "value_changed",
+    10,
+    0.002
+   ]
+  },
+  {
+   "set": [
+    "Still",
+    "set_destination",
+    7
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "near": [
+    "Still",
+    "value_changed",
+    7,
+    1e-09
+   ]
+  }
+ ],
+ "note": "tau 0 follows at once; with tau > 0 the output stops inside `tolerance` (1e-4 by default) of the destination, X_ITE and ours alike"
+}

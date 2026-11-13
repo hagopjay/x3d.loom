@@ -1,0 +1,61 @@
+{
+ "schema": "loom.profile/1",
+ "name": "x3d-physics/v1",
+ "purpose": "First Loom profile for a stepped physical simulation behind an X3D scene (x3d.physics, 13 Nov 2026: PhysX 5 under X_ITE, and MuJoCo). Accepting under it means: every exported scene is grammatical and meaningful and carries no known scene or page trap; every run record carries a hash of every step that replays unchanged in every host it names; the run answers to its exact references with limits declared before the run; any excursion beyond a tolerance is a recorded waiver within the profile's cap (none, here); where page code replaced a runtime's engine the old engine is shown off with its leaks listed; and the shipped page reaches the recorded state whatever the frame rate. It says nothing about whether the model is right where no exact reference exists, about another machine, a real GPU, listening, or the feel of the thing.",
+ "required": [
+  {
+   "witness": "grammar"
+  },
+  {
+   "witness": "meaning"
+  },
+  {
+   "witness": "traps",
+   "coverage": {
+    "rules": 15
+   }
+  },
+  {
+   "witness": "page-traps",
+   "coverage": {
+    "rules": 8
+   }
+  },
+  {
+   "witness": "physics",
+   "coverage": {
+    "max_waivers": 0,
+    "require_takeover": false
+   }
+  },
+  {
+   "witness": "behaviour"
+  }
+ ],
+ "visible_not_run": [
+  "eyes",
+  "cross-machine",
+  "host",
+  "listening",
+  "paired-visual-review"
+ ],
+ "gate_map": {
+  "PHYSICS-GRAMMAR": "grammar and meaning on every exported scene, including the pieces and the experiments",
+  "PHYSICS-PAGE": "traps and page-traps on the page code; the sim-nonportable-math rule binds the files marked // loom:sim",
+  "PHYSICS-RUN-RECORD": "physics: every run record carries a hash of every step, replayed on every host it names, with PHYS_* codes (PHYS_HASH_DRIFT names the first step that differs)",
+  "PHYSICS-EXACT-REFERENCE": "physics: at least one closed-form or scheme-exact reference per record, with limits declared before the run (PHYS_NO_REFERENCE, PHYS_LIMIT_WIDENED, PHYS_FALSE_GREEN)",
+  "PHYSICS-WAIVER": "physics: an excursion beyond a tolerance is an accepted_failure with owner, date, reason and its own numbers; the profile's coverage binds the cap (PHYS_WAIVER_INCOMPLETE, PHYS_WAIVERS_OVER_CAP)",
+  "PHYSICS-TAKEOVER": "physics: when page code replaces a runtime's engine, the old engine is shown off on every host that has it, and every leak is listed (law 41)",
+  "PHYSICS-LOSS": "physics: authored fields the engine cannot honour are reported, not dropped (law 40)",
+  "PHYSICS-RENDER-INDEPENDENCE": "behaviour: the shipped page reaches the recorded state at two very different frame rates",
+  "PHYSICS-CROSS-MACHINE": "visible_not_run: replays on a second machine were not run",
+  "PHYSICS-LISTENING": "visible_not_run: only a person can say the sound is right"
+ },
+ "limitations": [
+  "Grammar and Meaning need the x3d_mcp fork checkout (set X3D_MCP); a run that used another checkout says so in its witness.",
+  "Determinism is shown on the hosts and the machine the record names. A second machine, another engine build and a real GPU are visible_not_run, not passed.",
+  "A physics record answers to exact references where the physics has them (free fall, a pendulum, restitution, an incline, CCD). Where it has none (a ragdoll, a drum, a machine of 300 bodies) the record shows self-consistency and stated tolerances, not that the model is right.",
+  "A waiver is a recorded excursion. The profile caps how many; a passing run with waivers is a pass WITH those waivers on its receipt, never a clean pass.",
+  "Unsigned receipt: it shows drift; it does not authenticate authorship."
+ ]
+}

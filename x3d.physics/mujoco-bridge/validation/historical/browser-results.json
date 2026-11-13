@@ -1,0 +1,98 @@
+{
+  "schema": "mujoco-observatory-browser-checks/1",
+  "generatedAt": "2026-10-30T00:58:39.810Z",
+  "browser": "134.0.6998.35",
+  "renderer": "headless Chromium with software WebGL",
+  "checks": [
+    {
+      "name": "browser boots actual WASM and creates visible WebGL canvas",
+      "status": "pass",
+      "detail": {
+        "title": "MuJoCo Observatory — Recovery Edition",
+        "canvasCount": 2
+      }
+    },
+    {
+      "name": "JSON observation and CSV exports carry actual state and named conventions",
+      "status": "pass",
+      "detail": {
+        "bodies": 3,
+        "qpos": 14,
+        "qvel": 12,
+        "csvSamples": 8
+      }
+    },
+    {
+      "name": "challenge runs on a copy and preserves workspace state",
+      "status": "pass",
+      "detail": {
+        "timeBefore": 0.2660000000000002,
+        "timeAfter": 0.2660000000000002
+      }
+    },
+    {
+      "name": "malformed XML reports an error and preserves the valid simulation",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "Inspector displays complete free-joint coordinates and live override flag",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "all seven built-in presets render through their real compiled model",
+      "status": "pass",
+      "detail": [
+        "cartpole",
+        "pendulum",
+        "double-pendulum",
+        "ball-drop",
+        "spider",
+        "hopper",
+        "humanoid"
+      ]
+    },
+    {
+      "name": "an extracted arm imports, compiles, and rejects unrelated challenge checks",
+      "status": "pass",
+      "detail": {
+        "armModel": "planar_arm"
+      }
+    },
+    {
+      "name": "learning navigation repeatedly disposes and recreates the viewer",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "field guide launches a real experiment and reference search filters content",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "desktop and narrow layout avoid document overflow",
+      "status": "pass",
+      "detail": null
+    },
+    {
+      "name": "prebuilt single HTML starts from file URL with external network blocked",
+      "status": "pass",
+      "detail": {
+        "externalRequests": 0,
+        "pageErrors": []
+      }
+    },
+    {
+      "name": "no unhandled browser or WebGL errors during interactions",
+      "status": "pass",
+      "detail": null
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "summary": {
+    "passed": 12,
+    "failed": 0
+  }
+}

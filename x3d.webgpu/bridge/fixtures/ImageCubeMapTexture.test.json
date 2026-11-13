@@ -1,0 +1,143 @@
+{
+ "node": "ImageCubeMapTexture",
+ "mode": "scene",
+ "note": "A ball (radius 3 at the origin, seen from 10 units away) whose Appearance holds an ImageCubeMapTexture of a 4:3 cross: left red, front green, right blue, back yellow, top magenta, bottom cyan. It mirrors the cube: the middle of the ball reflects the front (green), the sides at 45 degrees the left and right faces, above and below the top and bottom. The front face is only seen in a ring a pixel wide at the edge and is not probed. load FALSE takes the picture away.",
+ "gaps": [
+  "the Material is added to the reflection, not multiplied with it; the reflection is of the world (it does not turn with the camera as CAMERASPACEREFLECTIONVECTOR does in X_ITE)",
+  "flat face colours cannot show if the face images are turned like X_ITE's; a 2:1 panorama is converted but its orientation is not compared; KTX2 and DDS are not read"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "load",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefresh",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefreshTimeLimit",
+    3600
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "url",
+    [
+     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAABgCAIAAABaGO0eAAABD0lEQVR4nO3dsQ3DMAwAwSjTyPsPY2+jbJAmIL7I3QAUgYdqrr33a9L93KPzr32Nzp/2rhf4dwLEBIgJEBMgJkBMgJgAMQFiAsQEiAkQEyAmQEyAmAAxAWICxASICRATICZATICYADEBYgLEBIgJEBMgJkBMgNg6HvjqnDU63w+ICRATICZATICYADEBYgLEBIgJEBMgJkBMgJgAMQFiAsQEiAkQEyAmQEyAmAAxAWICxASICRATICZATICYADEBYmv6fsBzz94P2Jf7AfxAgJgAMQFiAsQEiAkQEyAmQEyAmAAxAWICxASICRATICZATICYADEBYgLEBIgJEBMgJkBMgJgAMQFiAsQEiAkQ+wCUVwysd7RFCAAAAABJRU5ErkJggg=="
+    ]
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    82,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    238,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    42,
+    [
+     255,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    198,
+    [
+     0,
+     255,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "load",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "set": [
+    "N",
+    "load",
+    true
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    45
+   ]
+  }
+ ]
+}

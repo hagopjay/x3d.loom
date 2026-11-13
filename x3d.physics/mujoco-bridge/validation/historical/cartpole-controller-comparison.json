@@ -1,0 +1,77 @@
+{
+  "generatedAt": "2026-10-30T00:54:48.584Z",
+  "engineVersion": "3.17.0",
+  "model": "bundled cartpole, unchanged MJCF",
+  "timestepSeconds": 0.01,
+  "durationSeconds": 5,
+  "tuningMethod": "Empirical screening of simple four-state linear feedback gains using the actual WASM model; no learned policy or global stability claim.",
+  "inheritedEquation": "u = 30*theta + 6*theta_dot - 4*x - 2*x_dot",
+  "tunedEquation": "u = 120*theta + 40*theta_dot + 10*x + 15*x_dot",
+  "controlLimits": [
+    -60,
+    60
+  ],
+  "unchangedPassCriteria": {
+    "peakAbsAngleLessThanRadians": 0.5,
+    "peakAbsCartLessThanMeters": 1.8,
+    "finalAbsAngleLessThanRadians": 0.1
+  },
+  "scope": "Five-second near-upright recovery on the bundled parameters and tested initial states. This does not establish robust stability under arbitrary disturbances, modified dynamics or timestep changes, and does not implement swing-up.",
+  "cases": [
+    {
+      "id": "inherited_zero_start",
+      "initialAngleRadians": 0,
+      "peakAbsAngleRadians": 0,
+      "peakAbsCartMeters": 0,
+      "finalAbsAngleRadians": 0,
+      "finalCartMeters": 0,
+      "peakAbsControl": 0,
+      "pass": true,
+      "warnings": []
+    },
+    {
+      "id": "uncontrolled_perturbed",
+      "initialAngleRadians": 0.08,
+      "peakAbsAngleRadians": 2.1622210583102235,
+      "peakAbsCartMeters": 0.24796108145233794,
+      "finalAbsAngleRadians": 2.1155572589558354,
+      "finalCartMeters": -0.2479610814466185,
+      "peakAbsControl": 0,
+      "pass": false,
+      "warnings": []
+    },
+    {
+      "id": "inherited_perturbed",
+      "initialAngleRadians": 0.08,
+      "peakAbsAngleRadians": 2.14165482150643,
+      "peakAbsCartMeters": 2.530961258457034,
+      "finalAbsAngleRadians": 2.1155572589591833,
+      "finalCartMeters": 2.500655983018513,
+      "peakAbsControl": 60,
+      "pass": false,
+      "warnings": []
+    },
+    {
+      "id": "tuned_perturbed",
+      "initialAngleRadians": 0.08,
+      "peakAbsAngleRadians": 0.08,
+      "peakAbsCartMeters": 0.25030736921358493,
+      "finalAbsAngleRadians": 0.00007581514184712343,
+      "finalCartMeters": 0.0008241273080101352,
+      "peakAbsControl": 9.6,
+      "pass": true,
+      "warnings": []
+    },
+    {
+      "id": "tuned_mirrored_perturbation",
+      "initialAngleRadians": -0.08,
+      "peakAbsAngleRadians": 0.08,
+      "peakAbsCartMeters": 0.25030736921358493,
+      "finalAbsAngleRadians": 0.00007581514184712343,
+      "finalCartMeters": -0.0008241273080101352,
+      "peakAbsControl": 9.6,
+      "pass": true,
+      "warnings": []
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+ "node": "ScreenGroup",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/ScreenGroup.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 72/72",
+  "xite": "pass 72/72",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "the pixel size comes from the depth of the group's origin only, as in X_ITE: the nearer face of a deep child looks a little larger",
+   "no snapping to whole pixels (X_ITE does not snap for ScreenGroup either); the device content scale is 1"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha b207d6a3cd63",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "b90b2e3"
+}

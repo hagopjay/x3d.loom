@@ -4,7 +4,7 @@ The X3D Loom, consolidated: one definition, its sources, what the other model's 
 
 | File | What it is |
 |---|---|
-| [LOOM-v1.md](LOOM-v1.md) | **The definition.** Purpose, roles, 37 laws, the ten-step loop, artefacts, gates and thresholds, measurements with grades, 108 failure modes, roadmap, open questions, decisions |
+| [LOOM-v1.md](LOOM-v1.md) | **The definition.** Purpose, roles, 43 laws, the ten-step loop, artefacts, gates and thresholds, measurements with grades, 147 failure modes, roadmap, open questions, decisions |
 | [LESSONS-v1.0.md](LESSONS-v1.0.md) | **The v1.0 sweep.** The lessons in plain language: witnesses, limits and causes, science, the browser and X_ITE, process; what v1.0 contains and what is open before it is frozen |
 | [SCIENCE-PLAYBOOK.md](SCIENCE-PLAYBOOK.md) | **For science- and maths-intensive studies.** The order of work, nine witness patterns (exact references and exact discrete identities, convergence, invariants vs events, measured claims, controls that must fail, the display chain, cross-implementation, reproducibility, units), a numerics cheat-sheet, the builder and page skeleton, and the study card (`kit/templates/SCIENCE-STUDY-CARD.md`) |
 | [SOURCES.md](SOURCES.md) | Every input, what it gave, how it was read, and the 14 places sources disagree, each with its resolution |
@@ -14,6 +14,8 @@ The X3D Loom, consolidated: one definition, its sources, what the other model's 
 | [REVIEW-scientific.md](REVIEW-scientific.md) | Review of the first x3d.STEM delivery, the Scientific Loom Observatory: measurements, six findings, the hardening patch, 13 lessons |
 | [ZINC-FINGER.md](ZINC-FINGER.md) | **Zinc fingers under the Loom** (6 Nov): a reference animation audited for truth, the study card, seven phases, and P0 and P1 done on CPU. The metal-site witness (`kit/loom metalsite`: coordination found by element, ligand class and residues, histidine donor, distances, geometry, intact fraction, units) with 25 negative controls; 14 deposited structures with a receipt, a second reader and a census of 32 zinc sites (5 pass as deposited, 9 red with their reasons); 14 data-true X3D Site scenes with a receipt; a review round that found the first witness blind to unnamed ligands, which 2JVX really has; and look v2 (X3D 4.1: physically based materials, a generated studio environment, cages and donor-naming labels), whose reader also checks that zinc is drawn as zinc |
 | [X3D-STEM.md](X3D-STEM.md) | **x3d.STEM direction**: one case with four lenses (K-12 to researcher), three fidelity tiers, 11 wow-factor techniques, about 30 project ideas each with its reference control, a roadmap and a maturity ladder |
+| [PHYSICS-PLAYBOOK.md](PHYSICS-PLAYBOOK.md) | **For stepped physical simulations** (13 Nov): X3D with PhysX 5 (a marble machine and an H-Anim ragdoll) and X3D with MuJoCo. The order of work, ten witness patterns (the scheme's own discrete solution as the reference, an analytic ladder, a hash of every step replayed in every host, the takeover proof, tolerances and waivers), the record format `loom.physics-run/1` and its 18 codes, a trap cheat-sheet for X_ITE, PhysX, H-Anim and the browsers, and what stays open. The witness is `kit/loom physics`; the profiles are `x3d-physics/v1` and `x3d-physics-physx/v1`; the study card is `kit/templates/PHYSICS-STUDY-CARD.md` |
+| [x3d.physics/](x3d.physics/) | **The two physics bridges, collected and swept**: `physx-bridge/` (source, scenes, tests, probes, evidence, SPEC), `mujoco-bridge/` (source, evidence, release checksums), the sibling threads' notes, the two PhysX run records in `runs/` and the tools that make and attack them. Its README says what was left out and why |
 | [PLATFORMER.md](PLATFORMER.md) | **A game under the Loom** (6 Nov): NIB, an original physics platformer whose levels are X3D files ([x3d.platformer/](x3d.platformer/)), and what it added: the proof-of-play witness `kit/loom play`, the `sim-nonportable-math` page trap, the `x3d-game` profile and a feel card, plus a fix for `kit/loom traps` |
 | [DRIFT.md](DRIFT.md) | **A racing game under the Loom** (6 Nov): KANSEI, an original drift-racing game whose circuits and cars are X3D files ([x3d.drift/](x3d.drift/)): five circuits, four cars, five modes, a deterministic tyre-and-drivetrain sim with its AI rivals inside it, and the `x3d-drift` profile (a handling card witness, race and tandem tapes replayed in the browser) |
 | [COLLIDER.md](COLLIDER.md) | **The Loom Collider** (6 Nov): a collider-event demo in X3D, demo not STEM, a shader on every particle. Real generator events, the light plausibility witness `kit/loom hepevent` (v2 after an independent review: 206 negative controls, mutation pass 161 of 161), look v2 with merged ribbon tracks, muons through the calorimeter and a spiky crown from the event's own towers, a dijet hero event, X_ITE measurements, and stills up to 8,855 tracks on 9 shader programs |
@@ -40,6 +42,9 @@ kit/loom foldback PROJECT --evidence RUN/evidence --patch PROJECT/integration/yo
 ```
 ```bash
 kit/loom play     PROJECT --evidence RUN/evidence --tapes 'tapes/*.tape.json' --levels 'levels/*.x3d' --runner tools/replay.mjs
+```
+```bash
+kit/loom physics  PROJECT --evidence RUN/evidence --runs 'runs/*.physics.json' --hosts chromium,firefox,webkit,node --max-waivers 0 --require-takeover
 ```
 ```bash
 kit/loom record   PROJECT --evidence RUN/evidence --name eyes --status not_run --reason "why"
@@ -74,7 +79,7 @@ python3 -I kit/tests/test_metalsite.py && kit/examples/run_zinc_site.sh
 python3 -I kit/examples/check_all_foldbacks.py
 ```
 
-The first runs 56 negative controls, 11 two-sided trap rules and 7 page-trap rules (with 10 page forms) under normal Python and `-O`, including the play witness and the CLI itself. The second takes the delivered Data City Loom (copied, never edited), accepts it under `x3d-static/v1`, writes a receipt, then shows that a post-witness edit and a planted trap are both rejected. The third applies every PR patch from the project zips in an empty repo and runs its smoke test both ways.
+The first runs 82 negative controls, 15 two-sided trap rules and 8 page-trap rules (with 10 page forms) under normal Python and `-O`, including the play witness and the CLI itself. The second takes the delivered Data City Loom (copied, never edited), accepts it under `x3d-static/v1`, writes a receipt, then shows that a post-witness edit and a planted trap are both rejected. The third applies every PR patch from the project zips in an empty repo and runs its smoke test both ways.
 
 ## Where it stands (3 Nov)
 

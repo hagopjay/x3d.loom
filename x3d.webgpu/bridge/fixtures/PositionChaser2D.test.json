@@ -1,0 +1,52 @@
+{
+ "node": "PositionChaser2D",
+ "mode": "events",
+ "steps": [
+  {
+   "set": [
+    "N",
+    "set_destination",
+    [
+     3,
+     -2
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "reset": true
+  },
+  {
+   "settle": 2.8
+  },
+  {
+   "event": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "value_changed",
+    [
+     3,
+     -2
+    ],
+    1e-05
+   ]
+  }
+ ],
+ "note": "bounds and end state only: time is virtual in ours and real in X_ITE"
+}

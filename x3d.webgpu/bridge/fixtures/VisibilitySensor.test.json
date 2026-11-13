@@ -1,0 +1,122 @@
+{
+ "node": "VisibilitySensor",
+ "mode": "scene",
+ "note": "the sensor volume is moved behind the viewer and back; X_ITE 16.6.0 is the oracle",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     30
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     40,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "size",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  }
+ ],
+ "gaps": [
+  "occlusion by other shapes is not tested (X_ITE 16.6.0 does not test it either)",
+  "one decision per frame; enterTime and exitTime are the frame timestamps"
+ ],
+ "xiteDisagrees": "X_ITE 16.6.0 keeps a size 0 0 0 sensor active (it treats it as unbounded); the 4.0 text says a zero size sensor never fires"
+}

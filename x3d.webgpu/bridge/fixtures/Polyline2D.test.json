@@ -1,0 +1,27 @@
+{
+ "node": "Polyline2D",
+ "mode": "scene",
+ "note": "four points make an open polyline of 3 segments",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const g=__body.world.nodes.find(n=>n.def==='G1');const ci=__R.bridge.specs.get(g.type).lines(g).coordIndex;let s=0,run=0;for(const i of ci){if(i<0){s+=Math.max(run-1,0);run=0}else run++}return s})()",
+    3
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('G1').getValue().getVertices().length/8",
+    3
+   ]
+  }
+ ],
+ "gaps": [
+  "lines are not pickable: the segment count is compared between the engines (X_ITE vertex pairs via its private getVertices); colour and width are not compared"
+ ]
+}

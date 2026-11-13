@@ -1,0 +1,48 @@
+{
+ "node": "_script-off",
+ "mode": "events",
+ "note": "scripts are off by default: with allowScripts false the same Script does nothing (regression check for the opt-in)",
+ "steps": [
+  {
+   "wait": 0.3
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "S",
+    "n",
+    0
+   ]
+  },
+  {
+   "set": [
+    "S",
+    "a",
+    2,
+    null
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "expect": [
+    "S",
+    "sum",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "S",
+    "n",
+    0
+   ]
+  }
+ ],
+ "gaps": [],
+ "scripts": false,
+ "xite": false
+}

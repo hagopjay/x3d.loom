@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="EnvironmentalEffects" level="4"/><meta name="title" content="FogCoordinate.x3d"/><meta name="description" content="Bridge fixture for FogCoordinate: two white unlit quads under the world Fog, the left one with per-vertex fog depths"/></head>
+  <Scene>
+    <NavigationInfo type='"EXAMINE" "ANY"' transitionType='"TELEPORT"' headlight="false"/>
+    <Viewpoint position="0 0 10"/>
+    <Fog DEF="F" color="1 0 0" visibilityRange="20"/>
+    <Shape>
+      <Appearance><Material diffuseColor="0 0 0" emissiveColor="1 1 1"/></Appearance>
+      <IndexedTriangleSet index="0 1 2 0 2 3">
+        <Coordinate point="-4 -3 0 -1 -3 0 -1 3 0 -4 3 0"/>
+        <FogCoordinate DEF="N" containerField="fogCoord" depth="0 0 1 1"/>
+      </IndexedTriangleSet>
+    </Shape>
+    <Shape>
+      <Appearance><Material diffuseColor="0 0 0" emissiveColor="1 1 1"/></Appearance>
+      <IndexedTriangleSet index="0 1 2 0 2 3">
+        <Coordinate point="1 -3 0 4 -3 0 4 3 0 1 3 0"/>
+      </IndexedTriangleSet>
+    </Shape>
+  </Scene>
+</X3D>

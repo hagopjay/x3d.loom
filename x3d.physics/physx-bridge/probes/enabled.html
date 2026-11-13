@@ -1,0 +1,52 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>probe: does RigidBodyCollection.enabled=FALSE stop X_ITE's Bullet?</title>
+<script src="../vendor/x_ite/x_ite.min.js"></script>
+<style>body{margin:0;background:#111;color:#ddd;font:12px monospace} x3d-canvas{width:640px;height:400px;display:block}</style></head>
+<body><x3d-canvas id="c" splashScreen="false" contextMenu="false"></x3d-canvas><pre id="out"></pre>
+<script type="module">
+const X3D = window.X3D;
+const out = (s) => { document.getElementById('out').textContent += s + '\n'; };
+const frames = (n) => new Promise((res) => { let k = 0; const f = () => (++k >= n ? res() : requestAnimationFrame(f)); requestAnimationFrame(f); });
+const v3 = (f) => [f.x, f.y, f.z].map((x) => +x.toFixed(6));
+async function load(url, disableAtLoad) {
+  const browser = document.getElementById('c').browser;
+  await browser.loadURL(new X3D.MFString(url));
+  const scene = browser.currentScene;
+  const coll = scene.getNamedNode('Machine'), body = scene.getNamedNode('MarbleBody'), xf = scene.getNamedNode('MarbleT');
+  const atLoad = v3(body.position);
+  if (disableAtLoad) coll.enabled = false;
+  let events = 0; body.getField('position').addFieldCallback('probe', () => events++);
+  return { browser, scene, coll, body, xf, atLoad, events: () => events, frameRate: () => browser.getBrowserOption ? browser.currentFrameRate : null };
+}
+const R = {};
+try {
+  // A: control, engine on
+  let s = await load('../scenes/marble-minimal.x3d', false);
+  await frames(60);
+  R.A_enabled = { atLoad: s.atLoad, after60: v3(s.body.position), positionEvents: s.events(), transform: v3(s.xf.translation) };
+  // B: disable in the loadURL continuation
+  s = await load('../scenes/marble-minimal.x3d', true);
+  await frames(120);
+  R.B_disabledAtLoad = { atLoad: s.atLoad, after120: v3(s.body.position), positionEvents: s.events(), transform: v3(s.xf.translation) };
+  // D: bridge-style write while disabled
+  s.body.position = new X3D.SFVec3f(0.1, 0.5, 0); s.body.linearVelocity = new X3D.SFVec3f(1, 0, 0);
+  await frames(60);
+  R.D_writeWhileDisabled = { after60: v3(s.body.position), transform: v3(s.xf.translation), collider: v3(s.scene.getNamedNode('MarbleCollider').translation), positionEvents: s.events() };
+  // E: re-enable, Bullet resumes from the written pose?
+  s.coll.enabled = true; await frames(30);
+  R.E_reEnabled = { after30: v3(s.body.position), positionEvents: s.events() };
+  // F: disable again mid-flight
+  s.coll.enabled = false; const p0 = v3(s.body.position); const e0 = s.events(); await frames(60);
+  R.F_disabledMidFlight = { before: p0, after60: v3(s.body.position), newEvents: s.events() - e0 };
+  // G: create the scene off-screen, disable, then show it (no step can leak)
+  {
+    const browser = document.getElementById('c').browser;
+    const scene = await browser.createX3DFromURL(new X3D.MFString('../scenes/marble-minimal.x3d'));
+    scene.getNamedNode('Machine').enabled = false;
+    const atCreate = v3(scene.getNamedNode('MarbleBody').position);
+    browser.replaceWorld(scene); await frames(120);
+    R.G_disabledBeforeReplaceWorld = { atCreate, after120: v3(scene.getNamedNode('MarbleBody').position) };
+  }
+} catch (e) { R.error = String(e && e.stack || e); }
+window.__probe = R; out(JSON.stringify(R, null, 1));
+</script></body></html>

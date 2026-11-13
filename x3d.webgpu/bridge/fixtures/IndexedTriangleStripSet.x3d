@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="IndexedTriangleStripSet.x3d"/><meta name="description" content="Bridge fixture for IndexedTriangleStripSet: flat shapes in the z=0 plane, a TouchSensor next to each tells where the pointer is over them"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+    <Group>
+      <Shape DEF="S"><Appearance><Material diffuseColor="0.2 0.7 0.9"/></Appearance>
+        <IndexedTriangleStripSet DEF="G" index="0 1 2 3 -1 4 5 6 7 -1"><Coordinate point="-3 -1 0, -1 -1 0, -3 1 0, -1 1 0, 1 -1 0, 3 -1 0, 1 1 0, 3 1 0"/></IndexedTriangleStripSet>
+      </Shape>
+      <TouchSensor DEF="TS"/>
+    </Group>
+  </Scene>
+</X3D>

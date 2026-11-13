@@ -1,0 +1,58 @@
+{
+ "node": "CylinderSensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/CylinderSensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 15/15",
+  "xite": "pass 15/15",
+  "map": {
+   "r1": [
+    0,
+    1,
+    0,
+    0.4917002937890711
+   ],
+   "o1": 0.4917002937890711,
+   "clamped": [
+    0,
+    1,
+    0,
+    0.2
+   ]
+  },
+  "oursOk": true,
+  "mapX": {
+   "r1": [
+    0,
+    1.0000000000000016,
+    0,
+    0.4846898291729655
+   ],
+   "o1": 0.4846898291729655,
+   "clamped": [
+    0,
+    1,
+    0,
+    0.2
+   ]
+  },
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "disk mode (view along the axis) is implemented but only the cylinder mode is compared with X_ITE",
+   "trackPoint_changed not compared"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 3b32691c2a96",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2b54cb9"
+}

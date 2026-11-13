@@ -1,0 +1,32 @@
+{
+ "node": "LocalFog",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/LocalFog.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 26/26",
+  "xite": "pass 26/26",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "EXPONENTIAL and EXPONENTIAL2 use Babylon's EXP and EXP2 scaled to 1/e at half the range: close to X3D's exp(-d/(range-d)) in the first half, softer at the end (X3D reaches full fog at the range)",
+   "all LocalFogs of a world share the fog law of the first active one (Babylon picks the law per scene, not per mesh); colour and range are per scope",
+   "the range is not scaled by the parent's transform scale, X3D measures it in the LocalFog's own coordinate system",
+   "two meshes sharing one Babylon material would share the fog parameters of whichever draws first; the body makes one material per shape, so it does not happen here"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha fb73883023bb",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "93ef82e"
+}

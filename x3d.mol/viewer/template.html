@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>x3d.mol</title>
+<meta name="description" content="Public protein structures, written as validated X3D 4.0 and drawn by Babylon.js on WebGPU: zinc fingers and AlphaFold models with confidence and PAE.">
+<style>
+:root{--bg:#050810;--panel:rgba(9,15,27,.74);--line:rgba(150,185,255,.15);--text:#e7eef9;--mut:#93a4bd;--accent:#7cc4ff;--warm:#ffb454;--ok:#6ee7a8;--bad:#ff7d6e;--r:12px}
+:root{color-scheme:dark} /* the stage is dark by design in both host themes: every colour is set explicitly */
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:13px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+#stage{position:fixed;inset:0;width:100%;height:100%;display:block;outline:none;touch-action:none;cursor:grab}
+#labels{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.lbl{position:absolute;left:0;top:0;padding:1px 6px;border-radius:9px;background:rgba(20,12,0,.62);border:1px solid rgba(255,180,84,.55);color:#ffd9a0;font:600 11px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:nowrap}
+.panel,#side{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+#side{position:fixed;left:12px;top:12px;bottom:12px;width:300px;display:flex;flex-direction:column;overflow:hidden;z-index:5;transition:transform .25s}
+#side header{padding:14px 14px 8px}
+#side h1{margin:0;font:700 18px/1.1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em}#side h1 span{color:var(--accent)}
+#side p.sub{margin:4px 0 0;color:var(--mut);font-size:12px}
+#side .row{display:flex;gap:6px;padding:0 14px 8px;flex-wrap:wrap}
+#tabs{display:flex;gap:6px;padding:0 14px 6px}#tabs button{flex:1 1 auto;background:none;border:1px solid var(--line);border-radius:8px;padding:5px 6px;cursor:pointer;color:var(--mut);font-size:12px;white-space:nowrap}#tabs button.on{color:var(--text);background:rgba(124,196,255,.16);border-color:rgba(124,196,255,.4)}
+#list{overflow:auto;padding:0 8px 10px;flex:1}
+#list h3{margin:12px 6px 4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:600}
+.item{display:grid;grid-template-columns:auto 1fr;gap:0 8px;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:9px;color:var(--text);padding:6px 8px;cursor:pointer;font:inherit}
+.item:hover{background:rgba(124,196,255,.08)}.item.on{background:rgba(124,196,255,.16);border-color:rgba(124,196,255,.4)}
+.item b{font:700 12px ui-monospace,Menlo,monospace;grid-row:1/3;align-self:center;min-width:54px;color:var(--accent)}
+.item span{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.item i{font-style:normal;color:var(--mut);font-size:11px}
+button,select{font:inherit;color:var(--text)}
+.btn,#controls button,.chip{background:rgba(124,196,255,.1);border:1px solid var(--line);border-radius:8px;padding:5px 10px;cursor:pointer;color:var(--text)}
+.btn:hover,#controls button:hover,.chip:hover{background:rgba(124,196,255,.22)}#cinema.on{background:rgba(255,180,84,.28);border-color:var(--warm)}
+select{background:rgba(5,10,20,.9);border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+#info{position:fixed;left:324px;top:12px;max-width:calc(100vw - 324px - 456px - 24px);padding:12px 14px;z-index:4}
+#info h2{margin:0 0 4px;font-size:15px;line-height:1.25}#info .meta,#info .cite{margin:2px 0;color:var(--mut);font-size:12px}#info a{color:var(--accent)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.chip{font:600 11px ui-monospace,Menlo,monospace;border-color:rgba(255,180,84,.45);color:#ffd9a0}
+#controls{position:fixed;right:12px;top:12px;width:444px;display:flex;gap:6px 10px;flex-wrap:wrap;justify-content:flex-start;padding:8px 10px;align-items:center;z-index:4}
+#controls label{display:flex;gap:5px;align-items:center;color:var(--mut);font-size:12px}
+#legend{position:fixed;left:324px;bottom:14px;display:flex;gap:6px 12px;flex-wrap:wrap;justify-content:center;padding:6px 12px;font-size:12px;border-radius:18px;z-index:3;background:var(--panel);border:1px solid var(--line);max-width:calc(100vw - 324px - 364px)}
+#legend:empty{display:none}#legend u{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}#legend .grad{width:90px;height:10px;border-radius:3px;background:linear-gradient(90deg,#3a52ff,#3ad6c0,#ffe14a,#ff3a3a);align-self:center}
+#residue{position:fixed;left:calc(50% + 156px);bottom:58px;transform:translateX(-50%);padding:8px 14px;text-align:center;z-index:3;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+#residue span{color:var(--mut)}#residue em{color:var(--warm);font-style:normal;font-size:11px}
+#receipt{position:fixed;right:12px;bottom:12px;width:340px;max-height:36vh;overflow:auto;padding:10px 12px;z-index:3;font-size:12px}
+#receipt h4,#pae h4{margin:0 0 6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+#receipt dl{margin:0;display:grid;grid-template-columns:78px 1fr;gap:3px 8px}#receipt dt{color:var(--mut)}#receipt dd{margin:0;word-break:break-word}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.ok{color:var(--ok)}.bad{color:var(--bad)}.fine{color:var(--mut);font-size:11px;margin:6px 0 0}
+#pae{position:fixed;right:12px;bottom:calc(36vh + 24px);width:330px;padding:10px 12px;z-index:3}
+#paeCanvas{width:min(100%,max(120px,calc(64vh - 253px)));margin:0 auto;aspect-ratio:1;image-rendering:pixelated;border-radius:6px;display:block;cursor:crosshair;border:1px solid var(--line)}#paeRead{margin:6px 0 0;font-size:12px;color:var(--mut);min-height:2.7em}#paeRead b{color:var(--text)}
+#gpuhint{margin:0 8px 8px;padding:8px 10px;font-size:11px;color:var(--mut);border:1px solid var(--line);border-radius:9px}
+#busy{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,8,16,.7);z-index:20;font-size:15px}#busy[hidden],[hidden]{display:none!important}
+#cineBox{position:fixed;inset:0;background:rgba(2,4,10,.86);display:flex;align-items:center;justify-content:center;z-index:30;padding:16px}
+#cineBox .card{width:min(1100px,100%);max-height:94vh;overflow:auto;padding:16px 20px;background:#0a1220;border:1px solid var(--line);border-radius:var(--r)}
+#cineBox img{width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--line);background:#02040a}#cineBox h2{margin:0 0 8px;font-size:16px}#cineBox p{color:var(--mut);font-size:12px;margin:8px 0}
+#cineBox dl{display:grid;grid-template-columns:90px 1fr;gap:3px 10px;margin:8px 0;font-size:12px}#cineBox dt{color:var(--mut)}#cineBox dd{margin:0;word-break:break-word}.cinebtns{display:flex;gap:8px;flex-wrap:wrap}a.btn{text-decoration:none;display:inline-block}
+.shot{display:block;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:9px;color:var(--text);padding:6px;cursor:pointer;font:inherit;margin-bottom:4px}.shot:hover{background:rgba(124,196,255,.08);border-color:var(--line)}
+.shot img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:6px;display:block;background:#02040a}.shot span{display:block;font-size:12px;margin-top:4px}.shot i{font-style:normal;color:var(--mut);font-size:11px}
+#aboutBox{position:fixed;inset:0;background:rgba(2,4,10,.78);display:flex;align-items:center;justify-content:center;z-index:30;padding:16px}
+#aboutBox .card{max-width:720px;max-height:90vh;overflow:auto;padding:18px 22px;background:#0a1220;border:1px solid var(--line);border-radius:var(--r)}
+#aboutBox h2{margin-top:0}#aboutBox h3{margin:16px 0 4px;font-size:13px;color:var(--accent)}#aboutBox a{color:var(--accent)}.papers{font-size:12px;color:var(--mut);padding-left:18px}
+#menu{display:none;position:fixed;left:12px;top:12px;z-index:6}
+body.nui #side,body.nui #info,body.nui #controls,body.nui #legend,body.nui #residue,body.nui #receipt,body.nui #pae,body.nui #gpuhint,body.nui #menu{display:none}
+body.cinema #info,body.cinema #receipt,body.cinema #pae,body.cinema #side,body.cinema #legend,body.cinema #residue{opacity:0;pointer-events:none}
+#paeBtn{display:none}
+@media (max-width:1180px){
+ #info{max-width:calc(100vw - 336px)}#controls{top:auto;bottom:58px;right:12px;width:min(444px,calc(100vw - 336px))}
+ #receipt{display:none;bottom:12px}body.show-receipt #receipt{display:block;z-index:8}
+ #pae{bottom:160px;width:240px}#paeCanvas{width:min(100%,max(120px,calc(100vh - 419px)))}#legend{max-width:calc(100vw - 336px)}
+}
+@media (max-width:900px){
+ #menu{display:block}#side{transform:translateX(-110%);width:min(320px,88vw);top:56px}body.side-open #side{transform:none}
+ #info{left:12px;right:12px;top:56px;max-width:none;padding:8px 12px}#info .cite{display:none}
+ #controls{top:auto;bottom:12px;left:12px;right:12px;width:auto;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;white-space:nowrap}#controls>*{flex:none}#paeBtn{display:inline-block}#paeBtn[hidden]{display:none}
+ #legend{left:50%;transform:translateX(-50%);bottom:66px;max-width:calc(100vw - 24px);flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;border-radius:99px;white-space:nowrap}
+ #residue{left:auto;right:12px;transform:none;bottom:108px;max-width:calc(100vw - 24px)}body.show-pae #residue{max-width:calc(100vw - 196px)}
+ #receipt{left:12px;right:12px;width:auto;bottom:auto;top:12px;max-height:40vh}
+ #pae{display:none;left:12px;right:auto;bottom:108px;width:160px;padding:8px}#paeCanvas{width:100%}body.show-pae #pae{display:block}#paeRead{font-size:11px}
+}
+</style>
+</head>
+<body>
+<canvas id="stage" tabindex="0" role="application" aria-label="Interactive 3D protein view. Drag to orbit, scroll or pinch to zoom, click a residue to pin it."></canvas>
+<div id="labels" aria-hidden="true"></div>
+<button id="menu" class="btn" aria-label="Show the structure list" onclick="document.body.classList.toggle('side-open')">☰ Structures</button>
+<aside id="side">
+  <header><h1>x3d<span>.mol</span></h1><p class="sub">Proteins as validated X3D, drawn on <b id="backend">…</b></p></header>
+  <div class="row"><button class="btn" id="about">About and credit</button><button class="btn" id="hide" title="Hide the panels (H)">Hide UI</button><button class="btn" onclick="document.body.classList.toggle('show-receipt')">Receipt</button></div>
+  <div class="tabs" id="tabs"><button data-k="pdb" class="on">Zinc fingers · 14</button><button data-k="afdb">AlphaFold · 5</button><button data-k="cine" hidden>Blender · <span id="cineN">0</span></button></div>
+  <div id="list"></div>
+  <div id="gpuhint" hidden>Running on WebGL2 because WebGPU was not available. On Windows Chrome, <span class="mono">chrome://flags/#enable-unsafe-webgpu</span> may turn it on.</div>
+</aside>
+<section id="info" class="panel"></section>
+<div id="controls" class="panel">
+  <label>Colour <select id="scheme"></select></label>
+  <label><input type="checkbox" id="l_sites" checked> Zinc</label>
+  <label><input type="checkbox" id="l_sticks" checked> Ligand sticks</label>
+  <label><input type="checkbox" id="l_nucleic" checked> DNA/RNA</label>
+  <button id="cinema" title="Slow orbit, depth of field (C)">Cinema</button><button id="reset">Reset view</button><button id="core" hidden title="Frame the residues the model is confident about (pLDDT 70 or more)">Core</button><button id="paeBtn" hidden onclick="document.body.classList.toggle('show-pae')">PAE map</button><button id="shot">Save PNG</button>
+</div>
+<div id="legend"></div>
+<div id="residue" hidden></div>
+<section id="pae" class="panel" hidden><h4>AlphaFold predicted aligned error</h4><canvas id="paeCanvas"></canvas><p id="paeRead">Hover the map: each cell is the model's own error estimate for one pair of residues.</p></section>
+<aside id="receipt" class="panel"></aside>
+<div id="busy">Loading…</div>
+<div id="cineBox" hidden><div class="card"><div id="cineBody"></div><p class="cinebtns"><button class="btn" id="cineOpen">Open this structure in the live viewer</button><a class="btn" id="cineGet" download>Download the X3D (gzip)</a><button class="btn" id="cineClose">Close</button></p></div></div>
+<div id="aboutBox" hidden><div class="card"><div id="aboutBody"></div><p><button class="btn" id="aboutClose">Close</button></p></div></div>
+<!--SCRIPTS-->
+</body>
+</html>

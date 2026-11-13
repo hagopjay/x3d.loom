@@ -1,0 +1,164 @@
+{
+  "generatedAt": "2026-11-07T16:29:33.078Z",
+  "engine": "3.17.0",
+  "scope": "Real MuJoCo WASM, XML and package round-trips, protocol semantics, coordinate mathematics; X_ITE adapter field calls tested with a deliberately substituted browser port, not a GPU.",
+  "checks": [
+    {
+      "name": "real engine initializes curated model and stable body mappings",
+      "status": "pass",
+      "details": {
+        "ids": [
+          "arm.upper",
+          "arm.lower"
+        ]
+      }
+    },
+    {
+      "name": "basis transform is invertible and preserves proper orientation",
+      "status": "pass",
+      "details": {
+        "basis": "(x,z,-y)",
+        "rotationsCompared": 3
+      }
+    },
+    {
+      "name": "forward and inverse target agree on elbow-positive branch",
+      "status": "pass"
+    },
+    {
+      "name": "target command reaches controller and real touch returns to snapshot",
+      "status": "pass",
+      "details": {
+        "touchN": 3.5207360047863183,
+        "contactPoint": [
+          0.878986694435874,
+          0.45001275052326406,
+          0.34
+        ],
+        "ctrl": [
+          2.20340568214622,
+          0.47801338191605125
+        ]
+      }
+    },
+    {
+      "name": "authored geometry and mass compile into the named MuJoCo model",
+      "status": "pass",
+      "details": {
+        "revision": 2,
+        "lowerParentOffset": 0.62
+      }
+    },
+    {
+      "name": "invalid recipe and stale revision preserve physical state",
+      "status": "pass"
+    },
+    {
+      "name": "duplicate commands are idempotent; identifier conflicts are rejected",
+      "status": "pass",
+      "details": {
+        "time": 0.002
+      }
+    },
+    {
+      "name": "protocol rejects unknown type, malformed target and invalid transport",
+      "status": "pass"
+    },
+    {
+      "name": "standard X3D XML round-trips the declared physical profile",
+      "status": "pass",
+      "details": {
+        "profile": "Interactive",
+        "nodes": 86,
+        "warnings": [
+          "Imported X3D is normalized to this profile. Only declared physical annotations, obstacle position/radius and joint targets are read; other presentation edits are reported as outside the importer contract.",
+          "Serialized body poses, sensor values and drag state are observations only; import resets physics to home."
+        ]
+      }
+    },
+    {
+      "name": "external X3D annotation and obstacle edits drive physical recompilation",
+      "status": "pass",
+      "details": {
+        "recipe": {
+          "profile": "contact-arm/1",
+          "upperLength": 0.62,
+          "lowerLength": 0.37,
+          "upperMass": 1.3,
+          "lowerMass": 0.7,
+          "obstacle": {
+            "position": [
+              0.7,
+              0.72,
+              0.34
+            ],
+            "radius": 0.11
+          }
+        }
+      }
+    },
+    {
+      "name": "importer rejects scripts, URLs, DTDs, duplicate IDs and wrong profiles",
+      "status": "pass"
+    },
+    {
+      "name": "experiment package is internally consistent and round-trips",
+      "status": "pass",
+      "details": {
+        "bytes": 6139,
+        "members": [
+          "manifest.json",
+          "x3d/",
+          "x3d/scene.x3d",
+          "mjcf/",
+          "mjcf/model.xml",
+          "records/",
+          "records/observation.json",
+          "records/commands.json",
+          "README.txt"
+        ]
+      }
+    },
+    {
+      "name": "tampered package MJCF is rejected rather than silently substituted",
+      "status": "pass"
+    },
+    {
+      "name": "X_ITE adapter writes named transforms and physical sensor metadata",
+      "status": "pass",
+      "details": {
+        "fieldNamesVerified": true,
+        "actualWebGL": false
+      }
+    },
+    {
+      "name": "X3D drag callback submits a controller target to the actual engine",
+      "status": "pass"
+    },
+    {
+      "name": "high-precision target metadata survives X3D and package round-trip",
+      "status": "pass"
+    },
+    {
+      "name": "obstacle drag stages then commits an authored physical edit",
+      "status": "pass"
+    },
+    {
+      "name": "adapter disposal removes all field callbacks",
+      "status": "pass"
+    },
+    {
+      "name": "emitted node fields exist in the official X3D 4.0 UOM",
+      "status": "pass",
+      "details": {
+        "fieldsChecked": 105,
+        "uom": "Web3D X3DUOM 4.0, retrieved 2026-11-05",
+        "notClaimed": "Full ISO schema validation or native RigidBodyPhysics conformance"
+      }
+    }
+  ],
+  "summary": {
+    "passed": 19,
+    "failed": 0
+  }
+}

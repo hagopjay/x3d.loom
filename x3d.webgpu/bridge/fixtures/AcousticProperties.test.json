@@ -1,0 +1,185 @@
+{
+ "node": "AcousticProperties",
+ "mode": "events",
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "absorption",
+    0.25
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "diffuse",
+    0.5
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "specular",
+    0.75
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "refraction",
+    0.1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    "plaster"
+   ]
+  },
+  {
+   "expect": [
+    "D",
+    "absorption",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "D",
+    "diffuse",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "D",
+    "specular",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "D",
+    "refraction",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "D",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "D",
+    "description",
+    ""
+   ]
+  },
+  {
+   "set": [
+    "D",
+    "absorption",
+    0.9
+   ]
+  },
+  {
+   "expect": [
+    "D",
+    "absorption",
+    0.9
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "absorption",
+    0.25
+   ]
+  },
+  {
+   "set": [
+    "D",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "D",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "set": [
+    "D",
+    "absorption",
+    1.5
+   ]
+  },
+  {
+   "record": [
+    "D",
+    "absorption",
+    "hi"
+   ]
+  },
+  {
+   "set": [
+    "D",
+    "absorption",
+    -0.5
+   ]
+  },
+  {
+   "record": [
+    "D",
+    "absorption",
+    "lo"
+   ]
+  },
+  {
+   "set": [
+    "D",
+    "description",
+    "glass"
+   ]
+  },
+  {
+   "expect": [
+    "D",
+    "description",
+    "glass"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1],ap=w.defs.get('Ap');return JSON.stringify(__bridge.acoustics(ap))})()",
+    "$any"
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "hi",
+   0.0001
+  ],
+  [
+   "lo",
+   0.0001
+  ]
+ ],
+ "note": "fields held and independent between two instances; out-of-range values (1.5, -0.5) are recorded from both engines and must agree"
+}

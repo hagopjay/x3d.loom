@@ -60,6 +60,9 @@ RULES = {
     "loadurl-unbudgeted": Rule("loadurl-unbudgeted", "warning", "X_ITE 16.6.1 (source reading)",
         "replaceWorld can leave its promise pending when an internal wait rejects (X_ITE teardown F01, L2; not reproduced here, failure mode 89). "
         "Give the world load a time budget (Promise.race with a timeout)."),
+    "anchor-download-hosted": Rule("anchor-download-hosted", "warning", "sandboxed hosted pages",
+        "A 4K still button made the image and saved nothing: the hosting sandbox ignores a link's download attribute "
+        "(7 Nov, failure mode 113). Where the host offers a save capability, call it on the viewer's click and handle a refusal."),
 }
 
 WINDOW_PROPS = {"top", "name", "status", "parent", "length", "origin", "self", "frames", "location", "history",
@@ -187,6 +190,11 @@ def patterns(src: str, path: str = "<page>", globals_shared: bool = True) -> lis
         window = src[max(0, m.start() - 200):m.start() + 300]
         if "Promise.race" not in window and "timeout" not in window.lower():
             hits.append(Hit("loadurl-unbudgeted", "warning", f"{path}:{_line(src, m.start())}", "await loadURL without a time budget"))
+    # 6. a download through a synthetic link, which a sandboxed host ignores
+    for m in re.finditer(r"\.download\s*=(?!=)", src):
+        if re.search(r"\.click\s*\(", src[m.end():m.end() + 400]):
+            hits.append(Hit("anchor-download-hosted", "warning", f"{path}:{_line(src, m.start())}",
+                            "link download + click: a sandboxed host saves nothing; use its save capability"))
     return hits
 
 

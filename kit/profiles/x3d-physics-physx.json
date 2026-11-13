@@ -1,0 +1,62 @@
+{
+ "schema": "loom.profile/1",
+ "name": "x3d-physics-physx/v1",
+ "purpose": "The x3d-physics profile as the PhysX bridge is held to it (13 Nov 2026): two recorded Grand-cascade runs (1918 steps recorded in Chromium, 969 in Firefox), each replayed in Chromium, Firefox, WebKit and Node, with X_ITE's Bullet engine shown off in the three browsers, and at most three waivers (the smoke tests that failed under load). Everything the x3d-physics profile says it does not show, this one does not show either.",
+ "required": [
+  {
+   "witness": "grammar"
+  },
+  {
+   "witness": "meaning"
+  },
+  {
+   "witness": "traps",
+   "coverage": {
+    "rules": 15
+   }
+  },
+  {
+   "witness": "page-traps",
+   "coverage": {
+    "rules": 8
+   }
+  },
+  {
+   "witness": "physics",
+   "coverage": {
+    "runs": 2,
+    "max_waivers": 3,
+    "require_takeover": true
+   }
+  },
+  {
+   "witness": "behaviour"
+  }
+ ],
+ "visible_not_run": [
+  "eyes",
+  "cross-machine",
+  "host",
+  "listening",
+  "paired-visual-review"
+ ],
+ "gate_map": {
+  "PHYSICS-GRAMMAR": "grammar and meaning on every exported scene, including the pieces and the experiments",
+  "PHYSICS-PAGE": "traps and page-traps on the page code; the sim-nonportable-math rule binds the files marked // loom:sim",
+  "PHYSICS-RUN-RECORD": "physics: every run record carries a hash of every step, replayed on every host it names, with PHYS_* codes (PHYS_HASH_DRIFT names the first step that differs)",
+  "PHYSICS-EXACT-REFERENCE": "physics: at least one closed-form or scheme-exact reference per record, with limits declared before the run (PHYS_NO_REFERENCE, PHYS_LIMIT_WIDENED, PHYS_FALSE_GREEN)",
+  "PHYSICS-WAIVER": "physics: an excursion beyond a tolerance is an accepted_failure with owner, date, reason and its own numbers; the profile's coverage binds the cap (PHYS_WAIVER_INCOMPLETE, PHYS_WAIVERS_OVER_CAP)",
+  "PHYSICS-TAKEOVER": "physics: when page code replaces a runtime's engine, the old engine is shown off on every host that has it, and every leak is listed (law 41)",
+  "PHYSICS-LOSS": "physics: authored fields the engine cannot honour are reported, not dropped (law 40)",
+  "PHYSICS-RENDER-INDEPENDENCE": "behaviour: the shipped page reaches the recorded state at two very different frame rates",
+  "PHYSICS-CROSS-MACHINE": "visible_not_run: every host here ran on one Mac",
+  "PHYSICS-LISTENING": "visible_not_run: only a person can say the sound is right"
+ },
+ "limitations": [
+  "Grammar and Meaning need the x3d_mcp fork checkout (set X3D_MCP); a run that used another checkout says so in its witness.",
+  "Determinism is shown on the hosts and the machine the record names. A second machine, another engine build and a real GPU are visible_not_run, not passed.",
+  "A physics record answers to exact references where the physics has them (free fall, a pendulum, restitution, an incline, CCD). Where it has none (a ragdoll, a drum, a machine of 300 bodies) the record shows self-consistency and stated tolerances, not that the model is right.",
+  "A waiver is a recorded excursion. The profile caps how many; a passing run with waivers is a pass WITH those waivers on its receipt, never a clean pass.",
+  "Unsigned receipt: it shows drift; it does not authenticate authorship."
+ ]
+}

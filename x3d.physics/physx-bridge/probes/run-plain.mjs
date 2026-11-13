@@ -1,0 +1,14 @@
+import { chromium, firefox, webkit } from 'playwright';
+import { writeFileSync } from 'node:fs';
+const [, , which = 'chromium'] = process.argv;
+const B = { chromium, firefox, webkit }[which];
+const browser = await B.launch(which === 'chromium' ? { channel: 'chromium' } : {});
+const page = await browser.newPage({ locale: 'en-US', viewport: { width: 1200, height: 900 } });
+const logs = []; page.on('console', (m) => { if (m.type() === 'error') logs.push(m.text().slice(0, 200)); }); page.on('pageerror', (e) => logs.push(e.message));
+await page.goto('http://127.0.0.1:5181/probes/plain-xite.html');
+await page.waitForFunction(() => window.__plain?.done, null, { timeout: 90000 });
+await page.screenshot({ path: `evidence/p3-plain-xite-${which}.png` });
+const r = await page.evaluate(() => window.__plain);
+writeFileSync(`evidence/p3-plain-xite-${which}.json`, JSON.stringify({ browser: which, version: browser.version(), ...r, errors: logs }, null, 1));
+console.log(which, browser.version(), 'last', JSON.stringify(r.samples.at(-1)), 'first', JSON.stringify(r.samples[0]), 'errors', logs.slice(0, 3));
+await browser.close();

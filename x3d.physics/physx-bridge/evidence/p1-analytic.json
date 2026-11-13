@@ -1,0 +1,124 @@
+{
+ "measured": "2026-11-12T23:35:37.072Z",
+ "results": {
+  "freeFall": {
+   "t": 1,
+   "y": 5.074563980102539,
+   "vy": -9.810012817382812,
+   "discrete": 5.0745625,
+   "continuum": 5.095,
+   "errVsDiscrete": 0.0000014801025391975031,
+   "errVsContinuum": -0.02043601989746069,
+   "predictedContinuumErr": -0.0204375,
+   "errV": -0.00001281738281200262
+  },
+  "pendulum_BallJoint": {
+   "L": 0.5,
+   "r": 0.01,
+   "theta0": 0.05,
+   "T": 1.418818357449499,
+   "expected": 1.4188384880518734,
+   "relErr": -0.000014188085919504396,
+   "periods": 8,
+   "spread": 3.377806221394053e-7
+  },
+  "pendulum_SingleAxisHingeJoint": {
+   "L": 0.5,
+   "r": 0.01,
+   "theta0": 0.05,
+   "T": 1.4188183428442835,
+   "expected": 1.4188384880518734,
+   "relErr": -0.000014198379702485657,
+   "periods": 8,
+   "spread": 3.551582814509402e-7
+  },
+  "restitution": {
+   "e": 0.6,
+   "h0": 0.5,
+   "step": 0.004166666666666667,
+   "bounceThreshold": 0.12262500077486038,
+   "authoredMinBounceSpeed": 0.01,
+   "bounces": [
+    {
+     "vIn": -3.1064982414245605,
+     "vOut": 1.8884239196777344,
+     "ratio": 0.6078947332066577,
+     "ratioWithGh": 0.5999999920006304
+    },
+    {
+     "vIn": -1.8720749616622925,
+     "vOut": 1.1477700471878052,
+     "ratio": 0.6131004744428892,
+     "ratioWithGh": 0.6000000366922456
+    },
+    {
+     "vIn": -1.182105302810669,
+     "vOut": 0.733788251876831,
+     "ratio": 0.6207469420297134,
+     "ratioWithGh": 0.6000000573929355
+    },
+    {
+     "vIn": -0.7377121448516846,
+     "vOut": 0.46715229749679565,
+     "ratio": 0.6332446886728639,
+     "ratioWithGh": 0.6000000135961465
+    },
+    {
+     "vIn": -0.47297292947769165,
+     "vOut": 0.3083087205886841,
+     "ratio": 0.6518527834756891,
+     "ratioWithGh": 0.5999999278036774
+    },
+    {
+     "vIn": -0.3048163652420044,
+     "vOut": 0.20741480588912964,
+     "ratio": 0.6804582349916014,
+     "ratioWithGh": 0.5999999616534448
+    }
+   ],
+   "apexRatios": [
+    0.37447629451751707,
+    0.3963864578027601,
+    0.39953063429838026,
+    0.4182342076428326,
+    0.44520627596443707
+   ],
+   "expectedApexRatio": 0.36,
+   "finalHeight": -2.2351741811588166e-10,
+   "finalVy": 0,
+   "explanation": "PhysX applies restitution to the pre-solver velocity, which already includes this step's g·h; the apex ratio exceeds e² by about 2gh/v_impact"
+  },
+  "incline_mu0.3": {
+   "thetaDeg": 30,
+   "mu": 0.3,
+   "aMeasured": 2.379441989041521,
+   "aExpected": 2.3562872366623964,
+   "travelled": 0.28467307162301103
+  },
+  "incline_mu0.7": {
+   "thetaDeg": 30,
+   "mu": 0.7,
+   "aMeasured": 0.005473601645159968,
+   "aExpected": 0,
+   "travelled": 0.00030350911951615434
+  },
+  "tunnelling": {
+   "speed": 5,
+   "step": 0.004166666666666667,
+   "wall": 0.005,
+   "marbleRadius": 0.008,
+   "startPhases": 40,
+   "tunnelled": {
+    "withoutCCD": 10,
+    "withCCD": 0
+   },
+   "note": "contact offsets as the bridge sizes them (25 % of the smallest dimension)"
+  },
+  "determinismSameProcess": {
+   "steps": 480,
+   "identical": true,
+   "firstDiff": -1,
+   "lastHash": "ef0410c8"
+  }
+ }
+}

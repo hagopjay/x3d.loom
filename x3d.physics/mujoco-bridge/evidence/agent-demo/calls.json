@@ -1,0 +1,649 @@
+[
+  {
+    "server": "x3d-mcp",
+    "toolsListed": 38,
+    "bridgeTools": [
+      "validate_scene",
+      "mjcf_to_x3d",
+      "simulate"
+    ]
+  },
+  {
+    "call": "mjcf_to_x3d",
+    "arguments": {
+      "path": "<project>/evidence/agent-demo/pendulum.xml",
+      "keyframe": "tilted"
+    },
+    "response": {
+      "x3d": "<4402 characters, saved as pendulum.x3d>",
+      "profile": "mjcf-snapshot/0",
+      "losses": [
+        {
+          "what": "dynamics, contacts and solver options stay in MuJoCo (no X3D RigidBodyPhysics mapping)",
+          "count": 1
+        },
+        {
+          "what": "joints (kinematic tree kept as metadata only) not represented in X3D",
+          "count": 2
+        },
+        {
+          "what": "keyframes not represented in X3D",
+          "count": 1
+        }
+      ],
+      "stats": {
+        "bytes": 4404,
+        "nbody": 3,
+        "ngeom": 4,
+        "geomsWritten": 4,
+        "njnt": 2,
+        "nu": 0,
+        "nsensor": 0
+      },
+      "validation": {
+        "xsd": {
+          "valid": true,
+          "schema_version": "4.0",
+          "errors": []
+        },
+        "semantic": {
+          "errors": 0,
+          "warnings": 2,
+          "codes": {
+            "naming-convention": 2,
+            "unused-def": 6
+          },
+          "errorLines": []
+        }
+      }
+    }
+  },
+  {
+    "call": "validate_scene",
+    "arguments": {
+      "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<X3D profile=\"Interchange\" version=\"4.0\">\n<head><unit category=\"length\" name=\"metre\" conversionFactor=\"1\"/><unit category=\"angle\" name=\"radian\" conversionFactor=\"1\"/><unit category=\"mass\" name=\"kilogram\" conversionFactor=\"1\"/><meta name=\"title\" content=\"pendulum\"/><meta name=\"generator\" content=\"x3d_mcp mjcf_to_x3d (mjcf-snapshot/0, MuJoCo 3.17.0)\"/></head>\n<Scene>\n<WorldInfo title=\"pendulum\" info=\"&quot;Visual snapshot of a MuJoCo model. Dynamics stay in MuJoCo; see the manifest's losses.&quot;\">\n<MetadataSet DEF=\"BridgeContract\" containerField=\"metadata\" name=\"x3d-mujoco/0.1\">\n<MetadataString DEF=\"BridgeManifest\" containerField=\"value\" name=\"manifest\" value='\"{\\\"protocol\\\": \\\"x3d-mujoco/0.1\\\", \\\"profile\\\": \\\"mjcf-snapshot/0\\\", \\\"engine\\\": \\\"MuJoCo 3.17.0\\\", \\\"source\\\": {\\\"sha256\\\": \\\"9fbfcd4bf61d753a26fcb057e9fdeaaf146923b4d2f5f3580bc05e4359ef5888\\\", \\\"model\\\": \\\"double_pendulum\\\"}, \\\"pose\\\": {\\\"keyframe\\\": \\\"tilted\\\", \\\"qpos\\\": [1.2, -0.6]}, \\\"authority\\\": {\\\"dynamics\\\": \\\"MuJoCo\\\", \\\"presentation\\\": \\\"X3D\\\"}, \\\"coordinates\\\": {\\\"mujoco\\\": \\\"Z-up metres, wxyz quaternions\\\", \\\"x3d\\\": \\\"Y-up metres, axis-angle rotations\\\", \\\"basis\\\": \\\"(x,y,z)_M → (x,z,-y)_X\\\"}, \\\"counts\\\": {\\\"nbody\\\": 3, \\\"ngeom\\\": 4, \\\"geomsWritten\\\": 4, \\\"njnt\\\": 2, \\\"nu\\\": 0, \\\"nsensor\\\": 0}, \\\"losses\\\": [{\\\"what\\\": \\\"dynamics, contacts and solver options stay in MuJoCo (no X3D RigidBodyPhysics mapping)\\\", \\\"count\\\": 1}, {\\\"what\\\": \\\"joints (kinematic tree kept as metadata only) not represented in X3D\\\", \\\"count\\\": 2}, {\\\"what\\\": \\\"keyframes not represented in X3D\\\", \\\"count\\\": 1}]}\"'/>\n</MetadataSet>\n</WorldInfo>\n<NavigationInfo type='\"EXAMINE\" \"ANY\"' headlight=\"true\"/>\n<Background skyColor=\".025 .045 .075\"/>\n<Viewpoint DEF=\"HomeView\" description=\"Overview\" position=\"0 1.762 2.926\" orientation=\"1 0 0 -0.388318718\" centerOfRotation=\"0 0.565 0\"/>\n<DirectionalLight direction=\"-.4 -1 -.3\" intensity=\"0.8\"/>\n<Transform DEF=\"Body_world\"><MetadataSet containerField=\"metadata\" name=\"mujoco_body\"><MetadataString containerField=\"value\" name=\"bridge.logicalId\" value='\"mj.body.world\"'/></MetadataSet><Transform translation=\"0 0 0\"><Transform translation=\"0 -0.001 0\"><Shape><Appearance><Material diffuseColor=\"0.300000012 0.349999994 0.400000006\"/></Appearance><Box size=\"2 0.002 2\"/></Shape></Transform></Transform></Transform>\n<Transform DEF=\"Body_link1\" translation=\"0 1.2 0\" rotation=\"0 0 -1 1.2\"><MetadataSet containerField=\"metadata\" name=\"mujoco_body\"><MetadataString containerField=\"value\" name=\"bridge.logicalId\" value='\"mj.body.link1\"'/><MetadataDouble containerField=\"value\" name=\"mass_kg\" value=\"1.244070691\"/><MetadataString containerField=\"value\" name=\"joints\" value='\"j1:hinge\"'/></MetadataSet><Transform translation=\"0 -0.2 0\"><Shape><Appearance><Material diffuseColor=\"0.200000003 0.699999988 0.899999976\"/></Appearance><Cylinder radius=\"0.03\" height=\"0.4\"/></Shape><Transform translation=\"0 0.2 0\"><Shape><Appearance><Material diffuseColor=\"0.200000003 0.699999988 0.899999976\"/></Appearance><Sphere radius=\"0.03\"/></Shape></Transform><Transform translation=\"0 -0.2 0\"><Shape><Appearance><Material diffuseColor=\"0.200000003 0.699999988 0.899999976\"/></Appearance><Sphere radius=\"0.03\"/></Shape></Transform></Transform></Transform>\n<Transform DEF=\"Body_link2\" translation=\"-0.372815634 1.055056898 0\" rotation=\"0 0 -1 0.6\"><MetadataSet containerField=\"metadata\" name=\"mujoco_body\"><MetadataString containerField=\"value\" name=\"bridge.logicalId\" value='\"mj.body.link2\"'/><MetadataDouble containerField=\"value\" name=\"mass_kg\" value=\"1.657451924\"/><MetadataString containerField=\"value\" name=\"joints\" value='\"j2:hinge\"'/></MetadataSet><Transform translation=\"0 -0.175 0\"><Shape><Appearance><Material diffuseColor=\"0.600000024 0.850000024 0.349999994\"/></Appearance><Cylinder radius=\"0.025\" height=\"0.35\"/></Shape><Transform translation=\"0 0.175 0\"><Shape><Appearance><Material diffuseColor=\"0.600000024 0.850000024 0.349999994\"/></Appearance><Sphere radius=\"0.025\"/></Shape></Transform><Transform translation=\"0 -0.175 0\"><Shape><Appearance><Material diffuseColor=\"0.600000024 0.850000024 0.349999994\"/></Appearance><Sphere radius=\"0.025\"/></Shape></Transform></Transform><Transform translation=\"0 -0.35 0\"><Shape><Appearance><Material diffuseColor=\"1 0.5 0.200000003\"/></Appearance><Sphere radius=\"0.06\"/></Shape></Transform></Transform>\n</Scene></X3D>\n"
+    },
+    "response": {
+      "input": "inline content",
+      "errors": [],
+      "kind": "X3D scene",
+      "xsd": {
+        "valid": true,
+        "schema_version": "4.0",
+        "errors": []
+      },
+      "semantic": {
+        "errors": 0,
+        "warnings": 2,
+        "codes": {
+          "naming-convention": 2,
+          "unused-def": 6
+        },
+        "errorLines": []
+      },
+      "bridge": {
+        "declared": "x3d-mujoco/0.1",
+        "profile": "mjcf-snapshot/0",
+        "losses": [
+          {
+            "what": "dynamics, contacts and solver options stay in MuJoCo (no X3D RigidBodyPhysics mapping)",
+            "count": 1
+          },
+          {
+            "what": "joints (kinematic tree kept as metadata only) not represented in X3D",
+            "count": 2
+          },
+          {
+            "what": "keyframes not represented in X3D",
+            "count": 1
+          }
+        ],
+        "counts": {
+          "nbody": 3,
+          "ngeom": 4,
+          "geomsWritten": 4,
+          "njnt": 2,
+          "nu": 0,
+          "nsensor": 0
+        },
+        "engine": "MuJoCo 3.17.0",
+        "note": "visual snapshot: dynamics stay in MuJoCo; this scene cannot be simulated by itself"
+      },
+      "valid": true
+    }
+  },
+  {
+    "call": "simulate",
+    "arguments": {
+      "path": "<project>/evidence/agent-demo/pendulum.xml",
+      "keyframe": "tilted",
+      "steps": 1000,
+      "max_returned_samples": 5
+    },
+    "response": {
+      "source": "MJCF",
+      "steps": 1000,
+      "keyframe": "tilted",
+      "controller": {
+        "type": "none"
+      },
+      "trial": {
+        "schema": "mujoco-observatory/trial-v1",
+        "createdAt": "2026-11-06T15:45:56.255178+00:00",
+        "engineVersion": "3.17.0",
+        "engineBuild": "native (MuJoCo Python bindings)",
+        "modelSha256": "9fbfcd4bf61d753a26fcb057e9fdeaaf146923b4d2f5f3580bc05e4359ef5888",
+        "controller": {
+          "mode": "none"
+        },
+        "controllerImplementation": {
+          "recipe": "none"
+        },
+        "start": {
+          "keyframe": "tilted",
+          "disturbance_rad": 0,
+          "qpos": [
+            1.2,
+            -0.6
+          ],
+          "qvel": [
+            0.0,
+            0.0
+          ]
+        },
+        "timestep": 0.002,
+        "duration": 2.0,
+        "columns": [
+          {
+            "id": "qpos:j1",
+            "label": "qpos:j1"
+          },
+          {
+            "id": "qvel:j1",
+            "label": "qvel:j1"
+          },
+          {
+            "id": "qpos:j2",
+            "label": "qpos:j2"
+          },
+          {
+            "id": "qvel:j2",
+            "label": "qvel:j2"
+          },
+          {
+            "id": "ncon",
+            "label": "ncon"
+          },
+          {
+            "id": "niter",
+            "label": "niter"
+          },
+          {
+            "id": "energy",
+            "label": "energy"
+          }
+        ],
+        "sampleEvery": 50,
+        "samples": [
+          {
+            "t": 0.0,
+            "v": [
+              1.2,
+              0.0,
+              -0.6,
+              0.0,
+              0.0,
+              0.0,
+              27.285128376657806
+            ]
+          },
+          {
+            "t": 0.5000000000000003,
+            "v": [
+              -0.06643415897671527,
+              -1.9475773598850354,
+              -0.673766094304647,
+              -4.45086359716472,
+              0.0,
+              0.0,
+              27.325575338892097
+            ]
+          },
+          {
+            "t": 1.0000000000000007,
+            "v": [
+              -0.7506243403301478,
+              5.296836544507382,
+              -0.0629848217381526,
+              -7.9328863500575695,
+              0.0,
+              0.0,
+              27.301830235780468
+            ]
+          },
+          {
+            "t": 1.500000000000001,
+            "v": [
+              0.7597593457572871,
+              4.526094618772505,
+              0.24738331308737313,
+              -6.691227989240834,
+              0.0,
+              0.0,
+              27.391397232152805
+            ]
+          },
+          {
+            "t": 2.0000000000000013,
+            "v": [
+              0.041934023628910494,
+              -1.720054330223815,
+              0.48933144557617064,
+              -5.287511994424521,
+              0.0,
+              0.0,
+              27.38077659741999
+            ]
+          }
+        ],
+        "metrics": {
+          "steps": 1000,
+          "peakContacts": 0,
+          "peakControlFraction": 0.0,
+          "finalQpos": [
+            0.041934023628910494,
+            0.48933144557617064
+          ],
+          "finite": true
+        },
+        "final": {
+          "time": 2.0000000000000013,
+          "qpos": [
+            0.041934023628910494,
+            0.48933144557617064
+          ],
+          "qvel": [
+            -1.720054330223815,
+            -5.287511994424521
+          ],
+          "sensordata": [],
+          "ncon": 0
+        },
+        "truncated": false,
+        "wallSeconds": 0.0053,
+        "samplesTotal": 21
+      }
+    }
+  },
+  {
+    "call": "simulate",
+    "arguments": {
+      "path": "<project>/bridge/samples/contact-arm.x3d",
+      "package_out": "<project>/evidence/agent-demo/agent-trial.zip",
+      "max_returned_samples": 5
+    },
+    "response": {
+      "source": "bridge X3D scene (contact-arm/1)",
+      "steps": 2500,
+      "keyframe": "home",
+      "controller": {
+        "type": "arm-pd",
+        "target": [
+          0.35,
+          0.6
+        ]
+      },
+      "package": {
+        "path": "<project>/evidence/agent-demo/agent-trial.zip",
+        "bytes": 278364
+      },
+      "trial": {
+        "schema": "mujoco-observatory/trial-v1",
+        "createdAt": "2026-11-06T15:45:56.290116+00:00",
+        "engineVersion": "3.17.0",
+        "engineBuild": "native (MuJoCo Python bindings)",
+        "modelSha256": "bfbeb4cc369477f024dc73d9b180aebd3810fb456541419231e5de8c5a879721",
+        "controller": {
+          "mode": "feedback",
+          "manual": [],
+          "target": [
+            0.35,
+            0.6
+          ]
+        },
+        "controllerImplementation": {
+          "recipe": "arm-joint-pd-v1",
+          "formula": "u_i = 12*(target_i-q_i) - 2.4*qvel_i",
+          "joints": [
+            "shoulder",
+            "elbow"
+          ],
+          "clamp": "compiled actuator ctrlrange",
+          "settings": {
+            "mode": "feedback",
+            "manual": [],
+            "target": [
+              0.35,
+              0.6
+            ]
+          }
+        },
+        "start": {
+          "keyframe": "home",
+          "disturbance_rad": 0,
+          "qpos": [
+            -0.45,
+            1.45
+          ],
+          "qvel": [
+            0.0,
+            0.0
+          ]
+        },
+        "timestep": 0.002,
+        "duration": 5.0,
+        "columns": [
+          {
+            "id": "qpos:shoulder",
+            "label": "qpos:shoulder"
+          },
+          {
+            "id": "qvel:shoulder",
+            "label": "qvel:shoulder"
+          },
+          {
+            "id": "qpos:elbow",
+            "label": "qpos:elbow"
+          },
+          {
+            "id": "qvel:elbow",
+            "label": "qvel:elbow"
+          },
+          {
+            "id": "ctrl:shoulder_motor",
+            "label": "ctrl:shoulder_motor"
+          },
+          {
+            "id": "force:shoulder_motor",
+            "label": "force:shoulder_motor"
+          },
+          {
+            "id": "ctrl:elbow_motor",
+            "label": "ctrl:elbow_motor"
+          },
+          {
+            "id": "force:elbow_motor",
+            "label": "force:elbow_motor"
+          },
+          {
+            "id": "sens:shoulder_angle[0]",
+            "label": "sens:shoulder_angle[0]"
+          },
+          {
+            "id": "sens:elbow_angle[0]",
+            "label": "sens:elbow_angle[0]"
+          },
+          {
+            "id": "sens:tip_position[0]",
+            "label": "sens:tip_position[0]"
+          },
+          {
+            "id": "sens:tip_position[1]",
+            "label": "sens:tip_position[1]"
+          },
+          {
+            "id": "sens:tip_position[2]",
+            "label": "sens:tip_position[2]"
+          },
+          {
+            "id": "sens:tip_touch[0]",
+            "label": "sens:tip_touch[0]"
+          },
+          {
+            "id": "ncon",
+            "label": "ncon"
+          },
+          {
+            "id": "niter",
+            "label": "niter"
+          },
+          {
+            "id": "energy",
+            "label": "energy"
+          }
+        ],
+        "sampleEvery": 1,
+        "samples": [
+          {
+            "t": 0.0,
+            "v": [
+              -0.45,
+              0.0,
+              1.45,
+              0.0,
+              8.0,
+              8.0,
+              -5.0,
+              -5.0,
+              -0.45,
+              1.45,
+              0.7383819439346353,
+              0.13943089940237685,
+              0.34,
+              0.0,
+              0.0,
+              0.0,
+              3.7356480000000003
+            ]
+          },
+          {
+            "t": 1.2500000000000009,
+            "v": [
+              0.0969205032598103,
+              0.013710867113585453,
+              0.7644298556664885,
+              -0.04845475011824668,
+              3.0043910596377206,
+              3.0043910596377206,
+              -1.8580493006112884,
+              -1.8580493006112884,
+              0.0969205032598103,
+              0.7644298556664885,
+              0.8405548673035637,
+              0.3946481632132759,
+              0.34,
+              12.66463892770279,
+              1.0,
+              1.0,
+              3.735696188011191
+            ]
+          },
+          {
+            "t": 2.4999999999999463,
+            "v": [
+              0.1420936883970001,
+              0.02174969056612829,
+              0.6256608526540006,
+              -0.07290999562227918,
+              2.4331389836175945,
+              2.4331389836175945,
+              -0.12029088997226531,
+              -0.12029088997226531,
+              0.1420936883970001,
+              0.6256608526540006,
+              0.868219317150158,
+              0.3904234567903543,
+              0.34,
+              6.531627109509825,
+              1.0,
+              1.0,
+              3.735751868979135
+            ]
+          },
+          {
+            "t": 3.7499999999998086,
+            "v": [
+              0.1581975441559547,
+              0.007724275193436385,
+              0.5817800033178498,
+              -0.020584065334367546,
+              2.2832607481785465,
+              2.2832607481785465,
+              0.26759171501928425,
+              0.26759171501928425,
+              0.1581975441559547,
+              0.5817800033178498,
+              0.8754497280725527,
+              0.3900682822932847,
+              0.34,
+              4.285561166697458,
+              1.0,
+              1.0,
+              3.7356571556342417
+            ]
+          },
+          {
+            "t": 4.999999999999671,
+            "v": [
+              0.16553859361855716,
+              0.004259520024203835,
+              0.5623790346008316,
+              -0.011167336653912483,
+              2.2034056821462173,
+              2.2034056821462173,
+              0.47801338191605347,
+              0.47801338191605347,
+              0.16553859361855716,
+              0.5623790346008316,
+              0.8784340161571409,
+              0.3900233792265464,
+              0.34,
+              3.5207360047864547,
+              1.0,
+              1.0,
+              3.735650710683237
+            ]
+          }
+        ],
+        "metrics": {
+          "steps": 2500,
+          "peakContacts": 1,
+          "peakControlFraction": 1.0,
+          "finalQpos": [
+            0.16553859361855716,
+            0.5623790346008316
+          ],
+          "finite": true
+        },
+        "final": {
+          "time": 4.999999999999671,
+          "qpos": [
+            0.16553859361855716,
+            0.5623790346008316
+          ],
+          "qvel": [
+            0.004259520024203835,
+            -0.011167336653912483
+          ],
+          "sensordata": [
+            0.16553859361855716,
+            0.5623790346008316,
+            0.8784340161571409,
+            0.3900233792265464,
+            0.34,
+            3.5207360047864547
+          ],
+          "ncon": 1
+        },
+        "truncated": false,
+        "wallSeconds": 0.0306,
+        "samplesTotal": 2501
+      }
+    }
+  },
+  {
+    "call": "validate_scene",
+    "arguments": {
+      "path": "<project>/evidence/agent-demo/agent-trial.zip"
+    },
+    "response": {
+      "input": "agent-trial.zip",
+      "errors": [],
+      "kind": "experiment package",
+      "members": [
+        "README.txt",
+        "manifest.json",
+        "mjcf/model.xml",
+        "records/simulate-request.json",
+        "records/trial.json",
+        "x3d/scene.x3d"
+      ],
+      "package": {
+        "consistent": true,
+        "checks": [
+          "manifest, X3D annotations and MJCF agree",
+          "MJCF equals the MJCF regenerated from the recipe"
+        ]
+      },
+      "xsd": {
+        "valid": true,
+        "schema_version": "4.0",
+        "errors": []
+      },
+      "semantic": {
+        "errors": 0,
+        "warnings": 2,
+        "codes": {
+          "naming-convention": 2,
+          "unused-def": 21
+        },
+        "errorLines": []
+      },
+      "bridge": {
+        "declared": "x3d-mujoco/0.1",
+        "profile": "contact-arm/1",
+        "recipe": {
+          "profile": "contact-arm/1",
+          "upperLength": 0.55,
+          "lowerLength": 0.45,
+          "upperMass": 0.65,
+          "lowerMass": 0.4,
+          "obstacle": {
+            "position": [
+              0.88,
+              0.56,
+              0.34
+            ],
+            "radius": 0.11
+          }
+        },
+        "target": [
+          0.35,
+          0.6
+        ],
+        "mjcfCompiles": true,
+        "model": {
+          "nbody": 3,
+          "ngeom": 8,
+          "njnt": 2,
+          "nu": 2,
+          "nsensor": 4
+        },
+        "warnings": [
+          "Imported X3D is normalized to this profile. Only declared physical annotations, obstacle position/radius and joint targets are read; other presentation edits are reported as outside the importer contract.",
+          "Serialized body poses, sensor values and drag state are observations only; import resets physics to home."
+        ]
+      },
+      "valid": true
+    }
+  },
+  {
+    "call": "simulate",
+    "arguments": {
+      "content": "<mujoco><include file=\"/etc/passwd\"/></mujoco>"
+    },
+    "response": {
+      "error": "MJCF <include> is refused (it reads other files or loads native code)"
+    }
+  }
+]

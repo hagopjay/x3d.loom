@@ -1,0 +1,185 @@
+{
+ "node": "KeySensor",
+ "mode": "scene",
+ "note": "real key events on the focused canvas in both engines",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "key": [
+    "focus"
+   ]
+  },
+  {
+   "key": [
+    "down",
+    "a"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "keyPress",
+    "a"
+   ]
+  },
+  {
+   "key": [
+    "up",
+    "a"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "keyRelease",
+    "a"
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "down",
+    "Shift"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "shiftKey",
+    true
+   ]
+  },
+  {
+   "key": [
+    "up",
+    "Shift"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "shiftKey",
+    false
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "down",
+    "ArrowLeft"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyPress",
+    19
+   ]
+  },
+  {
+   "key": [
+    "up",
+    "ArrowLeft"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyRelease",
+    19
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "press",
+    "F5"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyPress",
+    5
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyRelease",
+    5
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "press",
+    "Enter"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "keyPress",
+    "\n"
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "b"
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "keyPress"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  }
+ ],
+ "gaps": [
+  "Alt/Control flags follow the Shift path but were only tested with Shift",
+  "key repeat while a key is held fires keyPress again, as in the browser"
+ ]
+}

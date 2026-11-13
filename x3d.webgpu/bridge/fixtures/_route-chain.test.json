@@ -1,0 +1,64 @@
+{
+ "node": "_route-chain",
+ "mode": "events",
+ "steps": [
+  {
+   "settle": 3.2
+  },
+  {
+   "reset": true
+  },
+  {
+   "settle": 3.2
+  },
+  {
+   "atleast": [
+    "BT",
+    "triggerTrue",
+    4
+   ]
+  },
+  {
+   "atleast": [
+    "BG",
+    "toggle",
+    4
+   ]
+  },
+  {
+   "atleast": [
+    "IT",
+    "triggerValue",
+    1
+   ]
+  },
+  {
+   "atleast": [
+    "TT",
+    "triggerTime",
+    1
+   ]
+  },
+  {
+   "atleast": [
+    "Ch",
+    "value_changed",
+    4
+   ]
+  },
+  {
+   "atleast": [
+    "Dm",
+    "value_changed",
+    4
+   ]
+  },
+  {
+   "expect": [
+    "Sw",
+    "whichChoice",
+    1
+   ]
+  }
+ ]
+}

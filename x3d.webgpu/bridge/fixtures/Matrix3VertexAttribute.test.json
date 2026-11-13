@@ -1,0 +1,143 @@
+{
+ "node": "Matrix3VertexAttribute",
+ "mode": "events",
+ "note": "Event level test: name and the matrices are kept (read back flat, because the engines hold a list of matrices differently); the node sits in the attrib field of an IndexedFaceSet.",
+ "gaps": [
+  "the matrices are attributes for a shader program; the bridge has none (WGSL ports only), so nothing is drawn from them"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "name",
+    "m3"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n.f.value.flat(Infinity)})()",
+    [
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2
+    ]
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue()._value;return v.length?Array.from(v).map(m=>String(m)).join(' ').split(' ').map(Number):[]})()",
+    [
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1,
+     2,
+     0,
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     2
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "value",
+    [
+     3,
+     0,
+     0,
+     0,
+     3,
+     0,
+     0,
+     0,
+     3
+    ],
+    "MFMatrix3f"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n.f.value.flat(Infinity)})()",
+    [
+     3,
+     0,
+     0,
+     0,
+     3,
+     0,
+     0,
+     0,
+     3
+    ]
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue()._value;return v.length?Array.from(v).map(m=>String(m)).join(' ').split(' ').map(Number):[]})()",
+    [
+     3,
+     0,
+     0,
+     0,
+     3,
+     0,
+     0,
+     0,
+     3
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "value",
+    [],
+    "MFMatrix3f"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n.f.value.flat(Infinity)})()",
+    []
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue()._value;return v.length?Array.from(v).map(m=>String(m)).join(' ').split(' ').map(Number):[]})()",
+    []
+   ]
+  }
+ ]
+}

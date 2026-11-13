@@ -1,0 +1,33 @@
+{
+ "node": "BufferAudioSource",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/BufferAudioSource.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 47/47",
+  "xite": "pass 47/47",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "the field is bufferLength in X_ITE 16.6.0 and bufferlength (lowercase l, output only) in the X3D 4.0 XSD and UOM; both names exist here and the test uses the X_ITE one at run time, because the XSD one cannot be written",
+   "loading from url is written (fetch and decodeAudioData, then numberOfChannels, sampleRate, bufferLength, buffer and bufferDuration are filled in) but not tested here: it needs a sound file",
+   "a pause stops the source and resume starts it again at the paused position, since a Web Audio buffer source cannot pause",
+   "autoRefresh and autoRefreshTimeLimit are held, not acted on",
+   "X_ITE 16.6.0 reports bufferDuration -1 (not the UOM's 0) from the start while load is TRUE and nothing has loaded; the bridge does the same"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 79d1f27294c6",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "506d2b1"
+}

@@ -1,0 +1,283 @@
+{
+ "node": "PeriodicWave",
+ "mode": "events",
+ "note": "type, optionsReal and optionsImag are held; the arrays an oscillator would receive (createPeriodicWave) have the longer of the two lengths, at least two, zero-filled, as in X_ITE 16.6.0. The sound is not compared.",
+ "gaps": [
+  "the waveform is only used through an OscillatorSource; the type to wave-type mapping is tested there"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "type",
+    "SQUARE"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "optionsReal",
+    []
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "optionsImag",
+    []
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');n.createPeriodicWave();return n.real.length})()",
+    2
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(()=>{const n=X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue();n.createPeriodicWave();return n.real.length})()",
+    2
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');n.createPeriodicWave();return n.imag.length})()",
+    2
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(()=>{const n=X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue();n.createPeriodicWave();return n.imag.length})()",
+    2
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "optionsReal",
+    [
+     0,
+     1,
+     0.5
+    ]
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "expect": [
+    "N",
+    "optionsReal",
+    [
+     0,
+     1,
+     0.5
+    ]
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');n.createPeriodicWave();return n.real.length})()",
+    3
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(()=>{const n=X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue();n.createPeriodicWave();return n.real.length})()",
+    3
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');n.createPeriodicWave();return n.real[2]})()",
+    0.5
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(()=>{const n=X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue();n.createPeriodicWave();return n.real[2]})()",
+    0.5
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');n.createPeriodicWave();return n.imag.length})()",
+    3
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(()=>{const n=X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue();n.createPeriodicWave();return n.imag.length})()",
+    3
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "optionsImag",
+    [
+     0,
+     0,
+     0,
+     0.25,
+     0.125
+    ]
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');n.createPeriodicWave();return n.real.length})()",
+    5
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(()=>{const n=X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue();n.createPeriodicWave();return n.real.length})()",
+    5
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');n.createPeriodicWave();return n.imag[3]})()",
+    0.25
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(()=>{const n=X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue();n.createPeriodicWave();return n.imag[3]})()",
+    0.25
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');n.createPeriodicWave();return n.real[4]})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(()=>{const n=X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue();n.createPeriodicWave();return n.real[4]})()",
+    0
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "type",
+    "SINE"
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "expect": [
+    "N",
+    "type",
+    "SINE"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "type",
+    "SAWTOOTH"
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "expect": [
+    "N",
+    "type",
+    "SAWTOOTH"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "type",
+    "TRIANGLE"
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "expect": [
+    "N",
+    "type",
+    "TRIANGLE"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "type",
+    "CUSTOM"
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "expect": [
+    "N",
+    "type",
+    "CUSTOM"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "type",
+    "SQUARE"
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "expect": [
+    "N",
+    "type",
+    "SQUARE"
+   ]
+  }
+ ]
+}

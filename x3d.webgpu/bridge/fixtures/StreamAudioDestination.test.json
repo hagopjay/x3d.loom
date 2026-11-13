@@ -1,0 +1,134 @@
+{
+ "node": "StreamAudioDestination",
+ "mode": "events",
+ "note": "X_ITE 16.6.0 marks this node as not supported: it keeps its fields and never sets isActive, even when enabled. The bridge does the same; nothing is sent anywhere.",
+ "gaps": [
+  "no network stream is made: streamIdentifier and mediaDeviceID are held"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "mediaDeviceID",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "streamIdentifier",
+    []
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "channelCountMode",
+    "MAX"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "channelInterpretation",
+    "SPEAKERS"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "mediaDeviceID",
+    "x"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "mediaDeviceID",
+    "x"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  }
+ ]
+}

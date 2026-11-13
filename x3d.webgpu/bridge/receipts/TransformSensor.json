@@ -1,0 +1,55 @@
+{
+ "node": "TransformSensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/TransformSensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 23/23",
+  "xite": "pass 23/23",
+  "map": {
+   "pos": [
+    1,
+    2,
+    0
+   ],
+   "rot": [
+    0,
+    1.0000000003690044,
+    0,
+    1.1999999882413739
+   ]
+  },
+  "oursOk": true,
+  "mapX": {
+   "pos": [
+    1,
+    2,
+    0
+   ],
+   "rot": [
+    0,
+    1,
+    0,
+    1.2000000000000002
+   ]
+  },
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "the sensor frame is its parent's; a parent that itself moves is followed through the world matrix, tested only with the root",
+   "a target that is a Shape uses its group's matrix",
+   "the official x3d-4.0.xsd cannot express TransformSensor.targetObject (containerField is limited to children, proxy, rootNode, shape, skin), so the fixture leaves it out and the test sets it through the SAI"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 3b32691c2a96",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2b54cb9"
+}

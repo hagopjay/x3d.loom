@@ -1,0 +1,242 @@
+{
+ "node": "PlaneSensor",
+ "mode": "scene",
+ "note": "real Babylon body (SwiftShader), pointer events through the page; compared with X_ITE 16.6.0 on the same synthetic mouse path; the first settle outlasts the 1 s camera transition the body runs after a world is replaced",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "down",
+    160,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    218,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    218,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "atleast": [
+    "N",
+    "translation_changed",
+    2
+   ]
+  },
+  {
+   "atleast": [
+    "N",
+    "isActive",
+    2
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "record": [
+    "N",
+    "translation_changed",
+    "tr"
+   ]
+  },
+  {
+   "record": [
+    "N",
+    "offset",
+    "off"
+   ]
+  },
+  {
+   "record": [
+    "T",
+    "translation",
+    "box"
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "offset",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "minPosition",
+    [
+     -1,
+     -1
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "maxPosition",
+    [
+     1,
+     1
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    160,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    218,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    218,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N",
+    "translation_changed",
+    "clamped"
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "offset",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    160,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    218,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    218,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N",
+    "translation_changed",
+    "disabled"
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "tr",
+   0.12
+  ],
+  [
+   "off",
+   0.12
+  ],
+  [
+   "box",
+   0.12
+  ],
+  [
+   "clamped",
+   0.02
+  ],
+  [
+   "disabled",
+   0.001
+  ]
+ ],
+ "gaps": [
+  "axisRotation is implemented (frame turned by it) but not exercised against X_ITE",
+  "trackPoint_changed is not compared: X_ITE reports it in the sensor frame, ours in the sensor frame at the press, to be checked",
+  "isOver (hover) is not raised by the drag sensors"
+ ]
+}

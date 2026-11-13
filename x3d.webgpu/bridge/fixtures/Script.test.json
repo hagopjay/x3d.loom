@@ -1,0 +1,115 @@
+{
+ "node": "Script",
+ "mode": "events",
+ "note": "inputs, outputs, an inputOutput counter and a vector output",
+ "steps": [
+  {
+   "wait": 0.3
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "S",
+    "n",
+    100
+   ]
+  },
+  {
+   "set": [
+    "S",
+    "a",
+    2,
+    null
+   ]
+  },
+  {
+   "set": [
+    "S",
+    "b",
+    3,
+    null
+   ]
+  },
+  {
+   "expect": [
+    "S",
+    "sum",
+    5
+   ]
+  },
+  {
+   "nearv": [
+    "S",
+    "pos",
+    [
+     2,
+     0,
+     2
+    ],
+    1e-06
+   ]
+  },
+  {
+   "expect": [
+    "S",
+    "n",
+    101
+   ]
+  },
+  {
+   "set": [
+    "S",
+    "a",
+    10,
+    null
+   ]
+  },
+  {
+   "expect": [
+    "S",
+    "sum",
+    13
+   ]
+  },
+  {
+   "nearv": [
+    "S",
+    "pos",
+    [
+     10,
+     3,
+     13
+    ],
+    1e-06
+   ]
+  },
+  {
+   "expect": [
+    "S",
+    "n",
+    102
+   ]
+  },
+  {
+   "set": [
+    "S",
+    "reset",
+    true,
+    null
+   ]
+  },
+  {
+   "expect": [
+    "S",
+    "sum",
+    0
+   ]
+  }
+ ],
+ "gaps": [
+  "scripts are OFF unless the page sets R.bridge.allowScripts = true (they run code that comes with the scene); the test pages set it",
+  "shutdown(), node-valued fields, directOutput, external script files and the less common methods of the classic vector classes are not provided"
+ ]
+}

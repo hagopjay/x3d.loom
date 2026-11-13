@@ -1,0 +1,169 @@
+{
+ "node": "IndexedQuadSet",
+ "mode": "scene",
+ "note": "two quads sharing an edge; set_index then keeps only the first",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    131,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    189,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    169,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    88,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    77
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const s=__body.world.nodes.find(n=>n.def==='S');return __body.rec.get(s.id).meshes.reduce((a,m)=>a+m.getTotalIndices()/3,0)})()",
+    4
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const g=__body.world.nodes.find(n=>n.def==='G');const d=__body.geometryData(g);return d.nrm.every((v,i)=>i%3!==2||v>0.99)})()",
+    true
+   ]
+  },
+  {
+   "set": [
+    "G",
+    "set_index",
+    [
+     0,
+     1,
+     4,
+     3
+    ],
+    "MFInt32"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "mouse": [
+    "move",
+    189,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    131,
+    120
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const s=__body.world.nodes.find(n=>n.def==='S');return __body.rec.get(s.id).meshes.reduce((a,m)=>a+m.getTotalIndices()/3,0)})()",
+    2
+   ]
+  }
+ ],
+ "gaps": [
+  "compared by where the pointer is over the shape (a TouchSensor) in both engines, plus triangle count and normals in our body only; colour, texture and lighting are not compared with X_ITE"
+ ]
+}

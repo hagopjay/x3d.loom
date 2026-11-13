@@ -1,0 +1,173 @@
+{
+  "generatedAt": "2026-11-07T16:29:27.999Z",
+  "engine": "3.17.0",
+  "node": "v24.22.2",
+  "scope": "Real WASM tests of live controllers, cooperative measured trials, records and comparisons. Does not validate WebGL or browser interaction.",
+  "checks": [
+    {
+      "name": "contact arm: named touch and bounded tracking over five seconds",
+      "status": "pass",
+      "detail": {
+        "workspaceUnchanged": true,
+        "finalTouchN": 4.0253772787193585,
+        "steps": 2500,
+        "peakContacts": 1,
+        "peakControlFraction": 1,
+        "finalQpos": [
+          0.16161804131620047,
+          0.5726751438241162
+        ],
+        "finite": true
+      }
+    },
+    {
+      "name": "repeatability: identical full trajectories from recorded reset",
+      "status": "pass",
+      "detail": {
+        "equalSamples": 2501
+      }
+    },
+    {
+      "name": "unobstructed arm target tracks accurately",
+      "status": "pass",
+      "detail": {
+        "steps": 2500,
+        "peakContacts": 0,
+        "peakControlFraction": 1,
+        "finalQpos": [
+          -0.20001792153558254,
+          0.9999979117581335
+        ],
+        "finite": true
+      }
+    },
+    {
+      "name": "trial captures live options without changing original state",
+      "status": "pass",
+      "detail": {
+        "timestep": 0.004,
+        "iterations": 157,
+        "samples": 1251
+      }
+    },
+    {
+      "name": "cartpole feedback recovers from positive and negative tilts",
+      "status": "pass",
+      "detail": [
+        {
+          "tilt": 0.08,
+          "peak": 0.079690195422787,
+          "final": 0.00007581514184712343
+        },
+        {
+          "tilt": -0.08,
+          "peak": 0.079690195422787,
+          "final": 0.00007581514184712343
+        }
+      ]
+    },
+    {
+      "name": "cartpole measured trial documents and applies disturbance",
+      "status": "pass",
+      "detail": {
+        "steps": 500,
+        "peakContacts": 0,
+        "peakControlFraction": 0.16,
+        "finalQpos": [
+          0.0008241273080101352,
+          0.00007581514184712343
+        ],
+        "finite": true
+      }
+    },
+    {
+      "name": "manual control clamps commands to named actuator range",
+      "status": "pass",
+      "detail": {
+        "applied": [
+          8,
+          -5
+        ]
+      }
+    },
+    {
+      "name": "off mode clears previous actuator commands",
+      "status": "pass",
+      "detail": {
+        "ctrl": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "cancellation cleans trial and preserves live state",
+      "status": "pass",
+      "detail": {
+        "cancelledAfterYield": true,
+        "workspaceStillSteps": true
+      }
+    },
+    {
+      "name": "interactive trial step limit rejects oversized work",
+      "status": "pass",
+      "detail": {
+        "limitEnforced": true
+      }
+    },
+    {
+      "name": "ball passive trial records contact without feedback",
+      "status": "pass",
+      "detail": {
+        "steps": 2500,
+        "peakContacts": 5,
+        "peakControlFraction": 0,
+        "finalQpos": [
+          0,
+          0,
+          0.15993400188976212,
+          1,
+          0,
+          0,
+          0,
+          0.8,
+          5.9183836423171965e-22,
+          0.24989224457976844,
+          1,
+          5.855369559523249e-18,
+          0,
+          0
+        ],
+        "finite": true
+      }
+    },
+    {
+      "name": "CSV and observation exports preserve source, controller and signal layout",
+      "status": "pass",
+      "detail": {
+        "csvRows": 2501,
+        "columns": 17,
+        "observationSchema": "mujoco-observatory/observation-v1"
+      }
+    },
+    {
+      "name": "modified models cannot attach an incompatible automatic controller",
+      "status": "pass",
+      "detail": {
+        "offModeStillWorks": true
+      }
+    },
+    {
+      "name": "scheduler accounts for dropped catch-up time",
+      "status": "pass",
+      "detail": {
+        "oneSecondGapDropped": 0.95,
+        "advanced": 0.05
+      }
+    }
+  ],
+  "summary": {
+    "passed": 14,
+    "failed": 0
+  }
+}

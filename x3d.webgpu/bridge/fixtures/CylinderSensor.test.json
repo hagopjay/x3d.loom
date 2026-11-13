@@ -1,0 +1,121 @@
+{
+ "node": "CylinderSensor",
+ "mode": "scene",
+ "note": "side-on view, so the cylinder (not the disk) is dragged; the first settle outlasts the 1 s camera transition the body runs after a world is replaced The drag is 15 px: a 30 px drag ends at the cylinder edge, where the angle jumps by half a radian between two pointer samples, so the result depended on which sample was last (1.18 and 1.47 rad were both seen from the same code).",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "down",
+    160,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    175,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    175,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N",
+    "rotation_changed",
+    "r1"
+   ]
+  },
+  {
+   "record": [
+    "N",
+    "offset",
+    "o1"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "offset",
+    0,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "minAngle",
+    -0.2,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "maxAngle",
+    0.2,
+    "SFFloat"
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    160,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    175,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    175,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N",
+    "rotation_changed",
+    "clamped"
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "r1",
+   0.12
+  ],
+  [
+   "o1",
+   0.12
+  ],
+  [
+   "clamped",
+   0.12
+  ]
+ ],
+ "gaps": [
+  "disk mode (view along the axis) is implemented but only the cylinder mode is compared with X_ITE",
+  "trackPoint_changed not compared"
+ ]
+}

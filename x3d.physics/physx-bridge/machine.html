@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Marble Machine · standard X3D on PhysX</title>
+<link rel="stylesheet" href="./src/demo/machine.css">
+<script src="./vendor/x_ite/x_ite.min.js"></script>
+</head>
+<body data-mode="build">
+<header>
+  <a href="index.html" class="dim" style="color:var(--dim);text-decoration:none">← all demos</a>
+  <h1>Marble Machine</h1>
+  <span id="machine-name" class="dim"></span>
+  <nav class="modes">
+    <button id="mode-build" aria-pressed="true">Build</button>
+    <button id="mode-run" aria-pressed="false">Run</button>
+    <span class="dim">switch <kbd>Tab</kbd></span>
+  </nav>
+  <span id="status" class="dim" role="status"></span>
+</header>
+<main>
+  <aside id="palette" aria-label="Pieces">
+    <h2>Pieces</h2>
+    <p class="hint">Click to add, then drag on the pegboard. Snaps to 4 cm.</p>
+    <div id="palette-buttons"></div>
+  </aside>
+  <section id="stage">
+    <x3d-canvas id="canvas" splashScreen="false" contextMenu="false" notifications="false"></x3d-canvas>
+    <div id="hud" aria-live="polite"></div>
+  </section>
+  <aside id="side">
+    <section id="inspector" class="build-only">
+      <h2>Selected piece</h2>
+      <div id="inspector-body" class="dim">Nothing selected. Click a piece on the board.</div>
+      <div class="row">
+        <button id="rot-left">Rotate −15° <kbd>Q</kbd></button>
+        <button id="rot-right">Rotate +15° <kbd>E</kbd></button>
+      </div>
+      <div class="row">
+        <button id="param-down">Less <kbd>[</kbd></button>
+        <button id="param-up">More <kbd>]</kbd></button>
+        <button id="delete">Delete <kbd>Del</kbd></button>
+      </div>
+      <div class="row">
+        <button id="undo">Undo <kbd>⌘Z</kbd></button>
+        <button id="redo">Redo <kbd>⇧⌘Z</kbd></button>
+      </div>
+    </section>
+    <section id="run-controls" class="run-only">
+      <h2>Run</h2>
+      <div class="row">
+        <button id="run">Run <kbd>Space</kbd></button>
+        <button id="step">Step <kbd>S</kbd></button>
+        <button id="reset">Reset <kbd>R</kbd></button>
+      </div>
+      <div class="row">
+        <button id="drop1">Drop 1 <kbd>1</kbd></button>
+        <button id="drop5">Drop 5 <kbd>5</kbd></button>
+        <button id="drop20">Drop 20 <kbd>0</kbd></button>
+      </div>
+      <div class="row">
+        <button id="flip">Flip <kbd>F</kbd></button>
+        <button id="launch">Launch <kbd>L</kbd></button>
+      </div>
+      <div class="row">
+        <button id="record">Record <kbd>C</kbd></button>
+        <button id="replay" disabled>Replay <kbd>P</kbd></button>
+      </div>
+      <div class="row">
+        <button id="save-run" disabled>Save run <kbd>⇧S</kbd></button>
+        <button id="load-run">Load run <kbd>⇧O</kbd></button>
+        <input type="file" id="run-file" accept=".json,application/json" hidden>
+      </div>
+      <p id="replay-result" class="dim"></p>
+      <div class="row">
+        <button id="look">Look: photoreal <kbd>K</kbd></button>
+      </div>
+      <div class="row">
+        <button id="mute" aria-pressed="true">Sound on <kbd>M</kbd></button>
+        <button id="vol-down">Quieter <kbd>−</kbd></button>
+        <button id="vol-up">Louder <kbd>=</kbd></button>
+        <span id="volume" class="dim">volume 80 %</span>
+      </div>
+      <div class="row">
+        <button id="slower">Slower <kbd>,</kbd></button>
+        <button id="faster">Faster <kbd>.</kbd></button>
+        <span id="speed" class="dim">×1</span>
+      </div>
+      <dl id="counters"></dl>
+    </section>
+    <section id="race-panel" class="run-only">
+      <h2>Race: PhysX vs Bullet</h2>
+      <div class="row">
+        <button id="race" aria-pressed="false">Race vs Bullet <kbd>G</kbd></button>
+        <button id="race-table">Table <kbd>T</kbd></button>
+      </div>
+      <p class="hint">Solid marbles: PhysX 5 through the bridge (fixed 1/240 s). Ghosts: the same file on X_ITE's Bullet (one step per frame), loaded with an Inline and reached by X3D IMPORT. Each marble and its ghost are dropped together.</p>
+      <dl id="race-readout"></dl>
+      <figure id="race-figure">
+        <figcaption class="dim">Distance between each marble and its ghost (gold: mean; grey: each marble)</figcaption>
+        <div id="race-chart"></div>
+        <div id="race-table-view" hidden></div>
+      </figure>
+    </section>
+    <section id="file">
+      <h2>File</h2>
+      <div class="row">
+        <button id="export">Export .x3d <kbd>⌘S</kbd></button>
+        <button id="import">Import .x3d <kbd>⌘O</kbd></button>
+      </div>
+      <div class="row">
+        <button id="load-default">Grand cascade <kbd>⇧G</kbd></button>
+        <button id="clear">Empty board <kbd>⇧N</kbd></button>
+      </div>
+      <input type="file" id="import-file" accept=".x3d,model/x3d+xml" hidden>
+      <p id="loss" class="dim run-only"></p>
+      <div class="row run-only"><button id="loss-toggle">Loss report <kbd>I</kbd></button></div>
+      <div id="loss-detail" class="run-only" hidden></div>
+    </section>
+  </aside>
+</main>
+<script type="module" src="./src/demo/machine.ts"></script>
+</body>
+</html>

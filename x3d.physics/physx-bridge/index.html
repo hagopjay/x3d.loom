@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>X3D ⇄ PhysX · demos</title>
+<style>
+:root { color-scheme: dark; --bg: #0d0f13; --panel: #14171d; --fg: #e8e3d5; --dim: #9a968b; --gold: #d8b25a; --line: #2a2e37; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { max-width: 1180px; margin: 0 auto; padding: 36px 24px 8px; }
+h1 { margin: 0; font-size: 26px; color: var(--gold); font-weight: 600; }
+header p { color: var(--dim); max-width: 760px; margin: 8px 0 0; }
+main { max-width: 1180px; margin: 0 auto; padding: 20px 24px 48px; display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+a.card { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; color: inherit; text-decoration: none; transition: border-color 0.15s, transform 0.15s; }
+a.card:hover, a.card:focus-visible { border-color: var(--gold); transform: translateY(-2px); outline: none; }
+a.card img { width: 100%; aspect-ratio: 1.6; object-fit: cover; display: block; background: #05070a; }
+a.card .ph { width: 100%; aspect-ratio: 1.6; display: grid; place-items: center; background: #05070a; color: var(--dim); font: 13px ui-monospace, Menlo, monospace; }
+.body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+h2 { margin: 0; font-size: 17px; color: var(--gold); font-weight: 600; }
+.tag { color: var(--fg); }
+.nodes { color: var(--dim); font: 12px/1.5 ui-monospace, Menlo, monospace; }
+.measured { color: var(--dim); font-size: 13px; margin-top: auto; border-top: 1px solid var(--line); padding-top: 8px; }
+.measured b { color: var(--fg); font-weight: 500; }
+footer { max-width: 1180px; margin: 0 auto; padding: 0 24px 40px; color: var(--dim); font-size: 13px; }
+footer a { color: var(--gold); }
+kbd { font: 11px ui-monospace, monospace; color: var(--dim); border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Standard X3D, real physics</h1>
+  <p>Every scene here is a plain X3D 4.0 file using the RigidBodyPhysics component. A bridge switches off the viewer's built-in engine and runs the same nodes on NVIDIA PhysX 5 (WebAssembly, in a worker), writing the results back as ordinary X3D events. Each demo exports its scene as a standard file. Every control is a button with a keyboard shortcut; press <kbd>?</kbd> on any page to see them all.</p>
+</header>
+<main>
+  <a class="card" href="machine.html">
+    <img src="thumbs/machine.webp" alt="The Marble Machine in the gold-on-dark look: ramps, a domino row, a wheel and marbles falling into a cup">
+    <div class="body">
+      <h2>Marble Machine</h2>
+      <span class="tag">Build a marble run on a pegboard, then run it, race it against the viewer's own engine, record and replay it.</span>
+      <span class="nodes">14 piece types · PlaneSensor drag and snap · Inline + IMPORT race</span>
+      <span class="measured">Replays are <b>bit-exact</b> across Chromium, Firefox, WebKit and Node.</span>
+    </div>
+  </a>
+  <a class="card" href="musicbox.html">
+    <img src="thumbs/musicbox.webp" alt="A brass drum with pegs, ten wooden hammers and coloured tuned bars">
+    <div class="body">
+      <h2>Physics music box</h2>
+      <span class="tag">Set pegs on a turning drum; hammers on hinges fall on tuned bars. Every note is a contact.</span>
+      <span class="nodes">OrientationInterpolator (kinematic drum) · SingleAxisHingeJoint · CollidableShape.enabled live</span>
+      <span class="measured">Every peg gives <b>exactly one note</b>, on its own bar, at 60, 120 and 200 BPM.</span>
+    </div>
+  </a>
+  <a class="card" href="dominoes.html">
+    <img src="thumbs/dominoes.webp" alt="A spiral of red dominoes toppling on a green felt table">
+    <div class="body">
+      <h2>Draw-a-domino run</h2>
+      <span class="tag">Draw rows on the table, push, and time the toppling wave against real dominoes.</span>
+      <span class="nodes">PlaneSensor drawing · one RigidBody per domino · sleeping</span>
+      <span class="measured">PhysX's wave speed against <b>Larham's measured dominoes</b> (arXiv:1302.3311): friction decides.</span>
+    </div>
+  </a>
+  <a class="card" href="trebuchet.html">
+    <img src="thumbs/trebuchet.webp" alt="A wooden trebuchet mid-swing, its counterweight falling">
+    <div class="body">
+      <h2>Trebuchet vs castle</h2>
+      <span class="tag">Tune counterweight, sling and release angle; knock the castle down.</span>
+      <span class="nodes">Hinged counterweight · BallJoint sling · joints removed from the collection to fire and release</span>
+      <span class="measured">Release within a step of the angle asked; Node and browser agree to <b>0.2 m in 166 m</b>.</span>
+    </div>
+  </a>
+  <a class="card" href="galton.html">
+    <img src="thumbs/galton.webp" alt="A Galton board: beads falling through hexagonal pins into bins">
+    <div class="body">
+      <h2>Galton board</h2>
+      <span class="tag">Pour glass beads through pins and watch a bell curve build; tilt and shake the board.</span>
+      <span class="nodes">CollisionSensor on the pins · RigidBodyCollection.gravity live</span>
+      <span class="measured">Ideal pins are not coins: the bell is <b>wider than binomial</b>, and the pin pitch decides how much.</span>
+    </div>
+  </a>
+  <a class="card" href="ragdoll.html">
+    <img src="thumbs/ragdoll.webp" alt="A yellow crash-test dummy tumbling down red stairs with WHAM and CRUNCH words popping up">
+    <div class="body">
+      <h2>Stairs of doom</h2>
+      <span class="tag">A standard H-Anim humanoid as a PhysX ragdoll: push him down the stairs, score the bonks, replay the best crash.</span>
+      <span class="nodes">HAnimHumanoid → articulation · HAnimJoint.stiffness live · TNT · power flicker</span>
+      <span class="measured">The bridge reads H-Anim's own <b>mass and joint-limit fields</b>; the browser's model matches Node's to 1e-5.</span>
+    </div>
+  </a>
+  <a class="card" href="barrage.html">
+    <img src="thumbs/barrage.webp" alt="A castle with red conical roofs and blue banners, its wall blown open by flying dummies">
+    <div class="body">
+      <h2>Dummy barrage</h2>
+      <span class="tag">Three trebuchets hurl toon crash-test dummies at a castle. Explosive dummies optional (on).</span>
+      <span class="nodes">three trebuchets · ragdoll swapped in at release · 331 stones</span>
+      <span class="measured">Measured in Chromium: <b>59 % of the castle</b> knocked out by three explosive dummies.</span>
+    </div>
+  </a>
+  <a class="card" href="sidebyside.html">
+    <div class="ph">marble-minimal.x3d · PhysX | Bullet</div>
+    <div class="body">
+      <h2>One file, two engines</h2>
+      <span class="tag">The same X3D scene on PhysX through the bridge and on X_ITE's built-in Bullet, side by side.</span>
+      <span class="nodes">RigidBodyCollection.enabled · the bridge's loss report</span>
+      <span class="measured">Where the engines differ, and why (the mapping table).</span>
+    </div>
+  </a>
+</main>
+<footer>
+  PhysX 5 (BSD-3-Clause, NVIDIA) through physx-js-webidl (MIT); X_ITE (MIT); ammo.js (zlib). Notices: <a href="legal/THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a> in the build.
+</footer>
+</body>
+</html>

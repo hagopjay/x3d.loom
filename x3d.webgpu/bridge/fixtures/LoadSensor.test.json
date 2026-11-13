@@ -1,0 +1,133 @@
+{
+ "node": "LoadSensor",
+ "mode": "events",
+ "note": "real image loads from the test server in both engines; the timeOut case follows X_ITE: aborted, then isLoaded once the late image arrives",
+ "steps": [
+  {
+   "wait": 1
+  },
+  {
+   "expect": [
+    "Ok",
+    "isLoaded",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "Ok",
+    "progress",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "Ok",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "Ok",
+    "loadTime",
+    "$time"
+   ]
+  },
+  {
+   "expect": [
+    "Bad",
+    "isLoaded",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "Bad",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "Bad",
+    "progress",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "Slow",
+    "isLoaded",
+    false
+   ],
+   "only": "ours"
+  },
+  {
+   "expect": [
+    "Slow",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "Slow",
+    "progress",
+    0
+   ],
+   "only": "ours"
+  },
+  {
+   "expect": [
+    "Off",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "Off",
+    "isLoaded",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "Empty",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "Empty",
+    "isLoaded",
+    false
+   ]
+  },
+  {
+   "wait": 2.5
+  },
+  {
+   "expect": [
+    "Slow",
+    "isLoaded",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "Slow",
+    "progress",
+    1
+   ]
+  }
+ ],
+ "gaps": [
+  "a change of children after load does not restart the count (X_ITE restarts)",
+  "Inline, audio and movie children are fetched, not decoded: loaded means the url answered",
+  "only the first working url of a child is used",
+  "X_ITE 16.6.0 hands the world over only after every resource has loaded, so the in-flight timeOut state (aborted, not yet loaded) can only be checked in our reader; the end state is compared"
+ ]
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Scripting" level="1"/><meta name="title" content="Script.x3d"/><meta name="description" content="Bridge fixture for Script"/></head>
+  <Scene>
+    <Script DEF="S">
+      <field name="a" type="SFFloat" accessType="inputOnly"/>
+      <field name="b" type="SFFloat" accessType="inputOnly"/>
+      <field name="reset" type="SFBool" accessType="inputOnly"/>
+      <field name="sum" type="SFFloat" accessType="outputOnly"/>
+      <field name="pos" type="SFVec3f" accessType="outputOnly"/>
+      <field name="n" type="SFInt32" accessType="inputOutput" value="0"/>
+<![CDATA[ecmascript:
+var A = 0, B = 0;
+function initialize() { n = 100; }
+function a(v) { A = v; sum = A + B; pos = new SFVec3f(A, B, sum); n = n + 1; }
+function b(v) { B = v; sum = A + B; }
+function reset(v) { if (v) { A = 0; B = 0; sum = 0; } }
+]]>
+    </Script>
+  </Scene>
+</X3D>

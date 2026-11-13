@@ -1,0 +1,400 @@
+{
+ "node": "OscillatorSource",
+ "mode": "scene",
+ "note": "an oscillator is made when the clock starts the node and compared with X_ITE 16.6.0 while running: wave type (default square; SINE, TRIANGLE, SAWTOOTH and CUSTOM from a PeriodicWave), frequency held at 0 or more, detune, and the source's output gain. A second start builds a new oscillator with the current settings. Runs on the real clock. The tone is not compared.",
+ "gaps": [
+  "pause stops the tone (30 ms fade) and resume starts a new one, as in X_ITE",
+  "the four extra OscillatorSources are only there to hold the waves for the test"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "frequency",
+    440
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "detune",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "periodicWave",
+    null
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.out.gain.value})()",
+    0.5
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioSource.gain.value",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "gain",
+    1
+   ]
+  },
+  {
+   "settle": 0.05
+  },
+  {
+   "set": [
+    "N",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.osc.type})()",
+    "square"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().oscillatorNode.type",
+    "square"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.osc.frequency.value})()",
+    440
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().oscillatorNode.frequency.value",
+    440
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.osc.detune.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().oscillatorNode.detune.value",
+    0
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "frequency",
+    880
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.osc.frequency.value})()",
+    880
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().oscillatorNode.frequency.value",
+    880
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "frequency",
+    -30
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.osc.frequency.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().oscillatorNode.frequency.value",
+    0
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "detune",
+    100
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.osc.detune.value})()",
+    100
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().oscillatorNode.detune.value",
+    100
+   ]
+  },
+  {
+   "setnode": [
+    "N",
+    "periodicWave",
+    "W1"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.osc.type})()",
+    "sine"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().oscillatorNode.type",
+    "sine"
+   ]
+  },
+  {
+   "setnode": [
+    "N",
+    "periodicWave",
+    "W2"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.osc.type})()",
+    "triangle"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().oscillatorNode.type",
+    "triangle"
+   ]
+  },
+  {
+   "setnode": [
+    "N",
+    "periodicWave",
+    "W3"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.osc.type})()",
+    "sawtooth"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().oscillatorNode.type",
+    "sawtooth"
+   ]
+  },
+  {
+   "setnode": [
+    "N",
+    "periodicWave",
+    "W4"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.osc.type})()",
+    "custom"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().oscillatorNode.type",
+    "custom"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.osc.type})()",
+    "custom"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().oscillatorNode.type",
+    "custom"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.osc.frequency.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().oscillatorNode.frequency.value",
+    0
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.4
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  }
+ ]
+}

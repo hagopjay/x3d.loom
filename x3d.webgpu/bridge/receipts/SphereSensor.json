@@ -1,0 +1,81 @@
+{
+ "node": "SphereSensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/SphereSensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 13/13",
+  "xite": "pass 13/13",
+  "map": {
+   "r1": [
+    0,
+    1.000000000000002,
+    0,
+    0.35358815417213146
+   ],
+   "o1": [
+    0,
+    1.000000000000002,
+    0,
+    0.35358815417213146
+   ],
+   "r2": [
+    0.5222441365841151,
+    0.7892938641943643,
+    0.322918345326876,
+    0.4451943587340421
+   ],
+   "o2": [
+    0.5222441365841151,
+    0.7892938641943643,
+    0.322918345326876,
+    0.4451943587340421
+   ]
+  },
+  "oursOk": true,
+  "mapX": {
+   "r1": [
+    0.03980452693660579,
+    0.9990771553166277,
+    -0.01613807174959925,
+    0.36995958017487907
+   ],
+   "o1": [
+    0.03980452693660579,
+    0.9990771553166277,
+    -0.01613807174959925,
+    0.36995958017487907
+   ],
+   "r2": [
+    0.6391322152568066,
+    0.6816313290354411,
+    0.356214461663622,
+    0.523541291552342
+   ],
+   "o2": [
+    0.6391322152568066,
+    0.6816313290354411,
+    0.356214461663622,
+    0.523541291552342
+   ]
+  },
+  "xiteOk": true,
+  "msg": "",
+  "gaps": [
+   "after the second drag the rotation angle agrees with X_ITE 16.6.0 (0.5205 vs 0.5235 rad) but one axis component differs by 0.2: the hit point of a press on an already turned box is read differently, not chased (no pixel perfection)",
+   "trackPoint_changed not compared",
+   "a drag that leaves the sphere uses the nearest point of the sphere to the ray; X_ITE does the same by its own rule, only tested inside the sphere"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 3b32691c2a96",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2b54cb9"
+}

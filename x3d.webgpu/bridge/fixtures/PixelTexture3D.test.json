@@ -1,0 +1,178 @@
+{
+ "node": "PixelTexture3D",
+ "mode": "scene",
+ "note": "A box with a PixelTexture3D (no Material, so the texture colour is the colour). The box has its normal 2D texture coordinates, so the volume is cut at r = 0 in both engines: the first slice, with the first row of the image at the bottom. The probes sit in the middle of the four quarters of the front face (red, green, blue, white), then the image is replaced by a grey one slice deep.",
+ "gaps": [
+  "the volume is not sampled in 3D: the Texturing3D coordinate nodes (TextureCoordinate3D, TextureCoordinate4D, TextureTransform3D, TextureTransformMatrix3D) come in later batches and only the first slice is drawn",
+  "repeatR, repeatS and repeatT are read for S and T only"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "repeatR",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "repeatS",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "repeatT",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "image",
+    [
+     3,
+     2,
+     2,
+     2,
+     16711680,
+     65280,
+     255,
+     16777215,
+     65535,
+     16711935,
+     16776960,
+     0
+    ]
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    124,
+    156,
+    [
+     255,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    196,
+    156,
+    [
+     0,
+     255,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    124,
+    84,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    196,
+    84,
+    [
+     255,
+     255,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "image",
+    [
+     1,
+     2,
+     2,
+     1,
+     0,
+     85,
+     170,
+     255
+    ],
+    "MFInt32"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    124,
+    156,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    196,
+    156,
+    [
+     85,
+     85,
+     85
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    124,
+    84,
+    [
+     170,
+     170,
+     170
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    196,
+    84,
+    [
+     255,
+     255,
+     255
+    ],
+    45
+   ]
+  }
+ ]
+}

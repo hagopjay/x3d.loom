@@ -1,0 +1,1290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Interchange" version="4.0">
+ <head>
+  <component name="Shape" level="2"/>
+  <component name="Lighting" level="2"/>
+  <component name="Texturing" level="2"/>
+  <component name="Grouping" level="2"/>
+  <component name="RigidBodyPhysics" level="2"/>
+  <component name="Navigation" level="2"/>
+
+  <meta name="title" content="Trebuchet"/>
+  <meta name="description" content="A trebuchet (7.5 m arm, 2000 kg hinged counterweight, 37 kg stone, 5 m sling) and a keep 166 m away. Remove the Latch joint from the collection to fire; remove Sling to release."/>
+  <meta name="generator" content="x3d-physx-bridge demos (src/demos/trebuchet-scene.ts)"/>
+ </head>
+ <Scene>
+  <WorldInfo title="Trebuchet" info='"Units: metres, kilograms, seconds, radians. Y up; it throws along +x."'>
+   <MetadataString DEF="MachineDescription" containerField="metadata" name="X3dPhysxDemo" value='&quot;{\&quot;demo\&quot;:\&quot;trebuchet\&quot;,\&quot;state\&quot;:{\&quot;format\&quot;:\&quot;x3d-physx-trebuchet/1\&quot;,\&quot;name\&quot;:\&quot;Trebuchet\&quot;,\&quot;counterweight\&quot;:2000,\&quot;stone\&quot;:37,\&quot;sling\&quot;:5,\&quot;release\&quot;:40,\&quot;castle\&quot;:\&quot;keep\&quot;,\&quot;distance\&quot;:166}}&quot;'/>
+  </WorldInfo>
+  <NavigationInfo type='"EXAMINE" "ANY"' headlight="false"/>
+  <Background DEF="Sky" skyColor="0.05 0.06 0.08"/>
+  <Viewpoint DEF="Trebuchet" description="The trebuchet" position="-9 6 16" orientation="-0.19133 -0.98012 -0.05252 0.54615" centerOfRotation="0.5 4 0" fieldOfView="0.75"/>
+  <Viewpoint DEF="Field" description="The whole field" position="83 22 124.5" orientation="-1 0 0 0.14358" centerOfRotation="83 4 0" fieldOfView="0.8"/>
+  <Viewpoint DEF="Castle" description="The castle" position="150 7 18" orientation="-0.23575 -0.96767 -0.08963 0.74874" centerOfRotation="166 2.5 0" fieldOfView="0.8"/>
+  <DirectionalLight DEF="Key" direction="-0.3 -0.8 -0.6" intensity="2.2" shadows="true"/>
+  <DirectionalLight DEF="Fill" direction="0.1 -0.25 -1" intensity="1.6"/>
+  <DirectionalLight DEF="Rim" direction="0.6 -0.2 -1" intensity="0.5"/>
+  <Shape><Appearance DEF="LoomLine"><Material emissiveColor="0.95 0.74 0.3" diffuseColor="0 0 0"/></Appearance><PointSet><Coordinate point="0 -10 0"/></PointSet></Shape>
+  <Transform DEF="GroundT" translation="60 -0.5 0">
+   <Shape DEF="GroundSS"><Appearance DEF="Mat_grass"><PhysicalMaterial baseColor="0.3 0.42 0.2" metallic="0" roughness="0.95"/></Appearance><Box size="420 1 80"/></Shape>
+  </Transform>
+  <Transform DEF="FrameT">
+   <Transform translation="-1.1 2.5 -0.9" rotation="0 0 -1 0.414507"><Shape DEF="LegSBS"><Appearance DEF="Mat_wood"><PhysicalMaterial baseColor="0.66 0.45 0.26" metallic="0" roughness="0.55"/></Appearance><Box size="0.3 5.6626 0.3"/></Shape></Transform>
+   <Transform translation="1.1 2.5 -0.9" rotation="0 0 1 0.414507"><Shape USE="LegSBS"/></Transform>
+   <Transform translation="0 0.15 -0.9"><Shape DEF="SillSS"><Appearance USE="Mat_wood"/><Box size="5.4 0.3 0.3"/></Shape></Transform>
+   <Transform translation="-1.1 2.5 0.9" rotation="0 0 -1 0.414507"><Shape USE="LegSBS"/></Transform>
+   <Transform translation="1.1 2.5 0.9" rotation="0 0 1 0.414507"><Shape USE="LegSBS"/></Transform>
+   <Transform translation="0 0.15 0.9"><Shape USE="SillSS"/></Transform>
+   <Transform translation="0 5 -0.65" rotation="1 0 0 1.5708"><Shape DEF="AxleSS"><Appearance DEF="Mat_iron"><PhysicalMaterial baseColor="0.32 0.32 0.34" metallic="1" roughness="0.5"/></Appearance><Cylinder radius="0.12" height="0.9"/></Shape></Transform>
+   <Transform translation="0 5 0.65" rotation="1 0 0 1.5708"><Shape USE="AxleSS"/></Transform>
+  </Transform>
+  <Transform DEF="ArmT" translation="-1.42191 3.25625 0" rotation="0 0 -1 2.25488">
+   <Group><Shape DEF="ArmSS"><Appearance USE="Mat_wood"/><Box size="7.5 0.3 0.3"/></Shape><Switch DEF="ArmSO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-3.75 -0.15 -0.15 3.75 -0.15 -0.15 3.75 0.15 -0.15 -3.75 0.15 -0.15 -3.75 -0.15 0.15 3.75 -0.15 0.15 3.75 0.15 0.15 -3.75 0.15 0.15"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="CounterweightT" translation="0.947942 5.0625 0">
+   <Group><Shape DEF="CounterweightSS"><Appearance USE="Mat_iron"/><Box size="1.03514 1.03514 1.2"/></Shape><Switch DEF="CounterweightSO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.51757 -0.51757 -0.6 0.51757 -0.51757 -0.6 0.51757 0.51757 -0.6 -0.51757 0.51757 -0.6 -0.51757 -0.51757 0.6 0.51757 -0.51757 0.6 0.51757 0.51757 0.6 -0.51757 0.51757 0.6"/></IndexedLineSet></Shape></Switch></Group>
+   <Transform translation="0 0.808785 0"><Shape DEF="HangerS"><Appearance USE="Mat_iron"/><Box size="0.12 0.58243 0.12"/></Shape><Switch DEF="HangerO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.06 -0.291215 -0.06 0.06 -0.291215 -0.06 0.06 0.291215 -0.06 -0.06 0.291215 -0.06 -0.06 -0.291215 0.06 0.06 -0.291215 0.06 0.06 0.291215 0.06 -0.06 0.291215 0.06"/></IndexedLineSet></Shape></Switch></Transform>
+  </Transform>
+  <Transform DEF="StoneT" translation="1.20424 0.15033 0">
+   <Shape DEF="StoneSS"><Appearance DEF="Mat_stoneDark"><PhysicalMaterial baseColor="0.46 0.43 0.39" metallic="0" roughness="0.9"/></Appearance><Sphere radius="0.15033"/></Shape>
+  </Transform>
+  <Transform DEF="Block0T" translation="166 0.25 -4.5" rotation="0 1 0 1.5708">
+   <Group><Shape DEF="Block0SS"><Appearance USE="Mat_stoneDark"/><Box size="1 0.5 0.5"/></Shape><Switch DEF="Block0SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block1T" translation="166 0.25 -3.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block1SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block2T" translation="166 0.25 -2.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block2SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block3T" translation="166 0.25 -1.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block3SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block4T" translation="166 0.25 1.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block4SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block5T" translation="166 0.25 2.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block5SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block6T" translation="166 0.25 3.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block6SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block7T" translation="166 0.25 4.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block7SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block8T" translation="166 0.7505 -4" rotation="0 1 0 1.5708">
+   <Group><Shape DEF="Block8SS"><Appearance DEF="Mat_stone"><PhysicalMaterial baseColor="0.66 0.61 0.53" metallic="0" roughness="0.9"/></Appearance><Box size="1 0.5 0.5"/></Shape><Switch DEF="Block8SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block9T" translation="166 0.7505 -3" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block9SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block10T" translation="166 0.7505 -2" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block10SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block11T" translation="166 0.7505 -1" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block11SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block12T" translation="166 0.7505 1" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block12SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block13T" translation="166 0.7505 2" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block13SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block14T" translation="166 0.7505 3" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block14SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block15T" translation="166 0.7505 4" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block15SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block16T" translation="166 1.251 -4.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block16SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block17T" translation="166 1.251 -3.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block17SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block18T" translation="166 1.251 -2.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block18SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block19T" translation="166 1.251 -1.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block19SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block20T" translation="166 1.251 1.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block20SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block21T" translation="166 1.251 2.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block21SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block22T" translation="166 1.251 3.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block22SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block23T" translation="166 1.251 4.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block23SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block24T" translation="166 1.7515 -4" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block24SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block25T" translation="166 1.7515 -3" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block25SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block26T" translation="166 1.7515 -2" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block26SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block27T" translation="166 1.7515 -1" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block27SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block28T" translation="166 1.7515 0" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block28SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block29T" translation="166 1.7515 1" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block29SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block30T" translation="166 1.7515 2" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block30SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block31T" translation="166 1.7515 3" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block31SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block32T" translation="166 1.7515 4" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block32SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block33T" translation="166 2.252 -4.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block33SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block34T" translation="166 2.252 -3.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block34SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block35T" translation="166 2.252 -2.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block35SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block36T" translation="166 2.252 -1.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block36SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block37T" translation="166 2.252 -0.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block37SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block38T" translation="166 2.252 0.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block38SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block39T" translation="166 2.252 1.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block39SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block40T" translation="166 2.252 2.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block40SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block41T" translation="166 2.252 3.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block41SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block42T" translation="166 2.252 4.5" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block42SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block43T" translation="166 2.7525 -4" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block43SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block44T" translation="166 2.7525 -3" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block44SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block45T" translation="166 2.7525 -2" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block45SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block46T" translation="166 2.7525 -1" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block46SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block47T" translation="166 2.7525 0" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block47SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block48T" translation="166 2.7525 1" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block48SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block49T" translation="166 2.7525 2" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block49SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block50T" translation="166 2.7525 3" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block50SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block51T" translation="166 2.7525 4" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block51SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block52T" translation="165.75 0.25 -6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block52SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block53T" translation="165.75 0.25 -5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block53SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block54T" translation="166.75 0.25 -6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block54SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block55T" translation="166.75 0.25 -5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block55SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block56T" translation="165.75 0.7505 -6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block56SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block57T" translation="165.75 0.7505 -5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block57SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block58T" translation="166.75 0.7505 -6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block58SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block59T" translation="166.75 0.7505 -5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block59SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block60T" translation="165.75 1.251 -6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block60SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block61T" translation="165.75 1.251 -5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block61SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block62T" translation="166.75 1.251 -6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block62SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block63T" translation="166.75 1.251 -5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block63SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block64T" translation="165.75 1.7515 -6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block64SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block65T" translation="165.75 1.7515 -5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block65SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block66T" translation="166.75 1.7515 -6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block66SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block67T" translation="166.75 1.7515 -5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block67SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block68T" translation="165.75 2.252 -6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block68SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block69T" translation="165.75 2.252 -5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block69SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block70T" translation="166.75 2.252 -6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block70SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block71T" translation="166.75 2.252 -5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block71SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block72T" translation="165.75 2.7525 -6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block72SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block73T" translation="165.75 2.7525 -5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block73SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block74T" translation="166.75 2.7525 -6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block74SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block75T" translation="166.75 2.7525 -5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block75SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block76T" translation="165.75 3.253 -6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block76SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block77T" translation="165.75 3.253 -5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block77SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block78T" translation="166.75 3.253 -6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block78SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block79T" translation="166.75 3.253 -5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block79SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block80T" translation="165.75 3.7535 -6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block80SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block81T" translation="165.75 3.7535 -5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block81SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block82T" translation="166.75 3.7535 -6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block82SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block83T" translation="166.75 3.7535 -5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block83SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block84T" translation="165.75 4.254 -6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block84SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block85T" translation="165.75 4.254 -5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block85SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block86T" translation="166.75 4.254 -6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block86SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block87T" translation="166.75 4.254 -5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block87SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block88T" translation="165.75 4.7545 -6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block88SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block89T" translation="165.75 4.7545 -5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block89SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block90T" translation="166.75 4.7545 -6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block90SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block91T" translation="166.75 4.7545 -5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block91SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block92T" translation="165.75 0.25 5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block92SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block93T" translation="165.75 0.25 6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block93SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block94T" translation="166.75 0.25 5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block94SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block95T" translation="166.75 0.25 6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block95SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block96T" translation="165.75 0.7505 5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block96SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block97T" translation="165.75 0.7505 6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block97SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block98T" translation="166.75 0.7505 5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block98SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block99T" translation="166.75 0.7505 6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block99SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block100T" translation="165.75 1.251 5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block100SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block101T" translation="165.75 1.251 6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block101SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block102T" translation="166.75 1.251 5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block102SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block103T" translation="166.75 1.251 6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block103SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block104T" translation="165.75 1.7515 5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block104SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block105T" translation="165.75 1.7515 6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block105SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block106T" translation="166.75 1.7515 5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block106SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block107T" translation="166.75 1.7515 6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block107SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block108T" translation="165.75 2.252 5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block108SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block109T" translation="165.75 2.252 6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block109SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block110T" translation="166.75 2.252 5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block110SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block111T" translation="166.75 2.252 6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block111SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block112T" translation="165.75 2.7525 5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block112SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block113T" translation="165.75 2.7525 6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block113SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block114T" translation="166.75 2.7525 5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block114SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block115T" translation="166.75 2.7525 6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block115SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block116T" translation="165.75 3.253 5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block116SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block117T" translation="165.75 3.253 6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block117SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block118T" translation="166.75 3.253 5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block118SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block119T" translation="166.75 3.253 6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block119SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block120T" translation="165.75 3.7535 5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block120SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block121T" translation="165.75 3.7535 6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block121SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block122T" translation="166.75 3.7535 5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block122SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block123T" translation="166.75 3.7535 6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block123SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block124T" translation="165.75 4.254 5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block124SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block125T" translation="165.75 4.254 6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block125SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block126T" translation="166.75 4.254 5.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block126SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block127T" translation="166.75 4.254 6.7" rotation="0 1 0 1.5708">
+   <Group><Shape USE="Block0SS"/><Switch DEF="Block127SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block128T" translation="165.75 4.7545 5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block128SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block129T" translation="165.75 4.7545 6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block129SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block130T" translation="166.75 4.7545 5.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block130SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <Transform DEF="Block131T" translation="166.75 4.7545 6.7">
+   <Group><Shape USE="Block8SS"/><Switch DEF="Block131SO" whichChoice="-1"><Shape><Appearance USE="LoomLine"/><IndexedLineSet coordIndex="0 1 2 3 0 -1 4 5 6 7 4 -1 0 4 -1 1 5 -1 2 6 -1 3 7"><Coordinate point="-0.5 -0.25 -0.25 0.5 -0.25 -0.25 0.5 0.25 -0.25 -0.5 0.25 -0.25 -0.5 -0.25 0.25 0.5 -0.25 0.25 0.5 0.25 0.25 -0.5 0.25 0.25"/></IndexedLineSet></Shape></Switch></Group>
+  </Transform>
+  <RigidBodyCollection DEF="Machine" gravity="0 -9.81 0" iterations="24" preferAccuracy="true" autoDisable="true" disableLinearSpeed="0.05" disableAngularSpeed="0.05" disableTime="0.6">
+   <RigidBody DEF="GroundBody" containerField="bodies" position="60 -0.5 0" fixed="true">
+     <CollidableShape DEF="GroundS" containerField="geometry"><Shape USE="GroundSS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="FrameBody" containerField="bodies" position="0 0 0" fixed="true">
+     <CollidableOffset DEF="LegSBOffset" containerField="geometry"><CollidableShape DEF="LegSB" containerField="collidable" translation="-1.1 2.5 -0.9" rotation="0 0 -1 0.414507"><Shape USE="LegSBS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="LegSFOffset" containerField="geometry"><CollidableShape DEF="LegSF" containerField="collidable" translation="1.1 2.5 -0.9" rotation="0 0 1 0.414507"><Shape USE="LegSBS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="SillSOffset" containerField="geometry"><CollidableShape DEF="SillS" containerField="collidable" translation="0 0.15 -0.9"><Shape USE="SillSS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="LegNBOffset" containerField="geometry"><CollidableShape DEF="LegNB" containerField="collidable" translation="-1.1 2.5 0.9" rotation="0 0 -1 0.414507"><Shape USE="LegSBS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="LegNFOffset" containerField="geometry"><CollidableShape DEF="LegNF" containerField="collidable" translation="1.1 2.5 0.9" rotation="0 0 1 0.414507"><Shape USE="LegSBS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="SillNOffset" containerField="geometry"><CollidableShape DEF="SillN" containerField="collidable" translation="0 0.15 0.9"><Shape USE="SillSS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="AxleSOffset" containerField="geometry"><CollidableShape DEF="AxleS" containerField="collidable" translation="0 5 -0.65" rotation="1 0 0 1.5708"><Shape USE="AxleSS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="AxleNOffset" containerField="geometry"><CollidableShape DEF="AxleN" containerField="collidable" translation="0 5 0.65" rotation="1 0 0 1.5708"><Shape USE="AxleSS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="ArmBody" containerField="bodies" position="-1.42191 3.25625 0" orientation="0 0 -1 2.25488" mass="220">
+     <CollidableShape DEF="ArmS" containerField="geometry"><Shape USE="ArmSS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="CounterweightBody" containerField="bodies" position="0.947942 5.0625 0" mass="2000">
+     <CollidableOffset DEF="CounterweightSOffset" containerField="geometry"><CollidableShape DEF="CounterweightS" containerField="collidable"><Shape USE="CounterweightSS" containerField="shape"/></CollidableShape></CollidableOffset>
+     <CollidableOffset DEF="HangerOffset" containerField="geometry"><CollidableShape DEF="Hanger" containerField="collidable" translation="0 0.808785 0"><Shape USE="HangerS" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="StoneBody" containerField="bodies" position="1.20424 0.15033 0" mass="37">
+     <CollidableShape DEF="StoneS" containerField="geometry"><Shape USE="StoneSS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block0Body" containerField="bodies" position="166 0.25 -4.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block0S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block1Body" containerField="bodies" position="166 0.25 -3.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block1S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block2Body" containerField="bodies" position="166 0.25 -2.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block2S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block3Body" containerField="bodies" position="166 0.25 -1.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block3S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block4Body" containerField="bodies" position="166 0.25 1.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block4S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block5Body" containerField="bodies" position="166 0.25 2.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block5S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block6Body" containerField="bodies" position="166 0.25 3.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block6S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block7Body" containerField="bodies" position="166 0.25 4.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block7S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block8Body" containerField="bodies" position="166 0.7505 -4" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block8S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block9Body" containerField="bodies" position="166 0.7505 -3" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block9S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block10Body" containerField="bodies" position="166 0.7505 -2" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block10S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block11Body" containerField="bodies" position="166 0.7505 -1" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block11S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block12Body" containerField="bodies" position="166 0.7505 1" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block12S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block13Body" containerField="bodies" position="166 0.7505 2" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block13S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block14Body" containerField="bodies" position="166 0.7505 3" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block14S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block15Body" containerField="bodies" position="166 0.7505 4" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block15S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block16Body" containerField="bodies" position="166 1.251 -4.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block16S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block17Body" containerField="bodies" position="166 1.251 -3.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block17S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block18Body" containerField="bodies" position="166 1.251 -2.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block18S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block19Body" containerField="bodies" position="166 1.251 -1.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block19S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block20Body" containerField="bodies" position="166 1.251 1.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block20S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block21Body" containerField="bodies" position="166 1.251 2.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block21S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block22Body" containerField="bodies" position="166 1.251 3.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block22S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block23Body" containerField="bodies" position="166 1.251 4.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block23S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block24Body" containerField="bodies" position="166 1.7515 -4" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block24S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block25Body" containerField="bodies" position="166 1.7515 -3" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block25S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block26Body" containerField="bodies" position="166 1.7515 -2" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block26S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block27Body" containerField="bodies" position="166 1.7515 -1" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block27S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block28Body" containerField="bodies" position="166 1.7515 0" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block28S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block29Body" containerField="bodies" position="166 1.7515 1" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block29S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block30Body" containerField="bodies" position="166 1.7515 2" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block30S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block31Body" containerField="bodies" position="166 1.7515 3" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block31S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block32Body" containerField="bodies" position="166 1.7515 4" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block32S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block33Body" containerField="bodies" position="166 2.252 -4.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block33S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block34Body" containerField="bodies" position="166 2.252 -3.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block34S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block35Body" containerField="bodies" position="166 2.252 -2.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block35S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block36Body" containerField="bodies" position="166 2.252 -1.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block36S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block37Body" containerField="bodies" position="166 2.252 -0.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block37S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block38Body" containerField="bodies" position="166 2.252 0.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block38S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block39Body" containerField="bodies" position="166 2.252 1.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block39S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block40Body" containerField="bodies" position="166 2.252 2.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block40S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block41Body" containerField="bodies" position="166 2.252 3.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block41S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block42Body" containerField="bodies" position="166 2.252 4.5" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block42S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block43Body" containerField="bodies" position="166 2.7525 -4" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block43S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block44Body" containerField="bodies" position="166 2.7525 -3" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block44S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block45Body" containerField="bodies" position="166 2.7525 -2" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block45S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block46Body" containerField="bodies" position="166 2.7525 -1" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block46S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block47Body" containerField="bodies" position="166 2.7525 0" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block47S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block48Body" containerField="bodies" position="166 2.7525 1" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block48S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block49Body" containerField="bodies" position="166 2.7525 2" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block49S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block50Body" containerField="bodies" position="166 2.7525 3" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block50S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block51Body" containerField="bodies" position="166 2.7525 4" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block51S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block52Body" containerField="bodies" position="165.75 0.25 -6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block52S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block53Body" containerField="bodies" position="165.75 0.25 -5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block53S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block54Body" containerField="bodies" position="166.75 0.25 -6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block54S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block55Body" containerField="bodies" position="166.75 0.25 -5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block55S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block56Body" containerField="bodies" position="165.75 0.7505 -6.7" mass="40">
+     <CollidableShape DEF="Block56S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block57Body" containerField="bodies" position="165.75 0.7505 -5.7" mass="40">
+     <CollidableShape DEF="Block57S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block58Body" containerField="bodies" position="166.75 0.7505 -6.7" mass="40">
+     <CollidableShape DEF="Block58S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block59Body" containerField="bodies" position="166.75 0.7505 -5.7" mass="40">
+     <CollidableShape DEF="Block59S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block60Body" containerField="bodies" position="165.75 1.251 -6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block60S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block61Body" containerField="bodies" position="165.75 1.251 -5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block61S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block62Body" containerField="bodies" position="166.75 1.251 -6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block62S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block63Body" containerField="bodies" position="166.75 1.251 -5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block63S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block64Body" containerField="bodies" position="165.75 1.7515 -6.7" mass="40">
+     <CollidableShape DEF="Block64S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block65Body" containerField="bodies" position="165.75 1.7515 -5.7" mass="40">
+     <CollidableShape DEF="Block65S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block66Body" containerField="bodies" position="166.75 1.7515 -6.7" mass="40">
+     <CollidableShape DEF="Block66S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block67Body" containerField="bodies" position="166.75 1.7515 -5.7" mass="40">
+     <CollidableShape DEF="Block67S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block68Body" containerField="bodies" position="165.75 2.252 -6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block68S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block69Body" containerField="bodies" position="165.75 2.252 -5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block69S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block70Body" containerField="bodies" position="166.75 2.252 -6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block70S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block71Body" containerField="bodies" position="166.75 2.252 -5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block71S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block72Body" containerField="bodies" position="165.75 2.7525 -6.7" mass="40">
+     <CollidableShape DEF="Block72S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block73Body" containerField="bodies" position="165.75 2.7525 -5.7" mass="40">
+     <CollidableShape DEF="Block73S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block74Body" containerField="bodies" position="166.75 2.7525 -6.7" mass="40">
+     <CollidableShape DEF="Block74S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block75Body" containerField="bodies" position="166.75 2.7525 -5.7" mass="40">
+     <CollidableShape DEF="Block75S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block76Body" containerField="bodies" position="165.75 3.253 -6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block76S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block77Body" containerField="bodies" position="165.75 3.253 -5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block77S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block78Body" containerField="bodies" position="166.75 3.253 -6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block78S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block79Body" containerField="bodies" position="166.75 3.253 -5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block79S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block80Body" containerField="bodies" position="165.75 3.7535 -6.7" mass="40">
+     <CollidableShape DEF="Block80S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block81Body" containerField="bodies" position="165.75 3.7535 -5.7" mass="40">
+     <CollidableShape DEF="Block81S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block82Body" containerField="bodies" position="166.75 3.7535 -6.7" mass="40">
+     <CollidableShape DEF="Block82S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block83Body" containerField="bodies" position="166.75 3.7535 -5.7" mass="40">
+     <CollidableShape DEF="Block83S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block84Body" containerField="bodies" position="165.75 4.254 -6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block84S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block85Body" containerField="bodies" position="165.75 4.254 -5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block85S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block86Body" containerField="bodies" position="166.75 4.254 -6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block86S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block87Body" containerField="bodies" position="166.75 4.254 -5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block87S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block88Body" containerField="bodies" position="165.75 4.7545 -6.7" mass="40">
+     <CollidableShape DEF="Block88S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block89Body" containerField="bodies" position="165.75 4.7545 -5.7" mass="40">
+     <CollidableShape DEF="Block89S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block90Body" containerField="bodies" position="166.75 4.7545 -6.7" mass="40">
+     <CollidableShape DEF="Block90S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block91Body" containerField="bodies" position="166.75 4.7545 -5.7" mass="40">
+     <CollidableShape DEF="Block91S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block92Body" containerField="bodies" position="165.75 0.25 5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block92S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block93Body" containerField="bodies" position="165.75 0.25 6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block93S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block94Body" containerField="bodies" position="166.75 0.25 5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block94S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block95Body" containerField="bodies" position="166.75 0.25 6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block95S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block96Body" containerField="bodies" position="165.75 0.7505 5.7" mass="40">
+     <CollidableShape DEF="Block96S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block97Body" containerField="bodies" position="165.75 0.7505 6.7" mass="40">
+     <CollidableShape DEF="Block97S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block98Body" containerField="bodies" position="166.75 0.7505 5.7" mass="40">
+     <CollidableShape DEF="Block98S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block99Body" containerField="bodies" position="166.75 0.7505 6.7" mass="40">
+     <CollidableShape DEF="Block99S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block100Body" containerField="bodies" position="165.75 1.251 5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block100S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block101Body" containerField="bodies" position="165.75 1.251 6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block101S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block102Body" containerField="bodies" position="166.75 1.251 5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block102S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block103Body" containerField="bodies" position="166.75 1.251 6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block103S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block104Body" containerField="bodies" position="165.75 1.7515 5.7" mass="40">
+     <CollidableShape DEF="Block104S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block105Body" containerField="bodies" position="165.75 1.7515 6.7" mass="40">
+     <CollidableShape DEF="Block105S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block106Body" containerField="bodies" position="166.75 1.7515 5.7" mass="40">
+     <CollidableShape DEF="Block106S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block107Body" containerField="bodies" position="166.75 1.7515 6.7" mass="40">
+     <CollidableShape DEF="Block107S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block108Body" containerField="bodies" position="165.75 2.252 5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block108S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block109Body" containerField="bodies" position="165.75 2.252 6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block109S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block110Body" containerField="bodies" position="166.75 2.252 5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block110S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block111Body" containerField="bodies" position="166.75 2.252 6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block111S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block112Body" containerField="bodies" position="165.75 2.7525 5.7" mass="40">
+     <CollidableShape DEF="Block112S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block113Body" containerField="bodies" position="165.75 2.7525 6.7" mass="40">
+     <CollidableShape DEF="Block113S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block114Body" containerField="bodies" position="166.75 2.7525 5.7" mass="40">
+     <CollidableShape DEF="Block114S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block115Body" containerField="bodies" position="166.75 2.7525 6.7" mass="40">
+     <CollidableShape DEF="Block115S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block116Body" containerField="bodies" position="165.75 3.253 5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block116S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block117Body" containerField="bodies" position="165.75 3.253 6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block117S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block118Body" containerField="bodies" position="166.75 3.253 5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block118S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block119Body" containerField="bodies" position="166.75 3.253 6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block119S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block120Body" containerField="bodies" position="165.75 3.7535 5.7" mass="40">
+     <CollidableShape DEF="Block120S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block121Body" containerField="bodies" position="165.75 3.7535 6.7" mass="40">
+     <CollidableShape DEF="Block121S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block122Body" containerField="bodies" position="166.75 3.7535 5.7" mass="40">
+     <CollidableShape DEF="Block122S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block123Body" containerField="bodies" position="166.75 3.7535 6.7" mass="40">
+     <CollidableShape DEF="Block123S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block124Body" containerField="bodies" position="165.75 4.254 5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block124S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block125Body" containerField="bodies" position="165.75 4.254 6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block125S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block126Body" containerField="bodies" position="166.75 4.254 5.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block126S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block127Body" containerField="bodies" position="166.75 4.254 6.7" orientation="0 1 0 1.5708" mass="40">
+     <CollidableShape DEF="Block127S" containerField="geometry"><Shape USE="Block0SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block128Body" containerField="bodies" position="165.75 4.7545 5.7" mass="40">
+     <CollidableShape DEF="Block128S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block129Body" containerField="bodies" position="165.75 4.7545 6.7" mass="40">
+     <CollidableShape DEF="Block129S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block130Body" containerField="bodies" position="166.75 4.7545 5.7" mass="40">
+     <CollidableShape DEF="Block130S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="Block131Body" containerField="bodies" position="166.75 4.7545 6.7" mass="40">
+     <CollidableShape DEF="Block131S" containerField="geometry"><Shape USE="Block8SS" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <SingleAxisHingeJoint DEF="ArmHinge" containerField="joints" anchorPoint="0 5 0" axis="0 0 1" forceOutput='"ALL"'><RigidBody USE="ArmBody" containerField="body1"/><RigidBody USE="FrameBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="CounterweightHinge" containerField="joints" anchorPoint="0.947942 6.1625 0" axis="0 0 1" forceOutput='"ALL"'><RigidBody USE="CounterweightBody" containerField="body1"/><RigidBody USE="ArmBody" containerField="body2"/></SingleAxisHingeJoint>
+   <BallJoint DEF="Sling" containerField="joints" anchorPoint="-3.79177 0.35 0" forceOutput='"ALL"'><RigidBody USE="StoneBody" containerField="body1"/><RigidBody USE="ArmBody" containerField="body2"/></BallJoint>
+   <BallJoint DEF="Latch" containerField="joints" anchorPoint="-3.79177 0.35 0" forceOutput='"ALL"'><RigidBody USE="ArmBody" containerField="body1"/><RigidBody USE="FrameBody" containerField="body2"/></BallJoint>
+   <CollisionCollection DEF="Surfaces" containerField="collider" appliedParameters='"BOUNCE" "FRICTION_COEFFICIENT-2"' bounce="0.05" minBounceSpeed="0.5" frictionCoefficients="0.6 0.6">
+    <CollidableShape USE="GroundS" containerField="collidables"/>
+    <CollidableOffset USE="LegSBOffset" containerField="collidables"/>
+    <CollidableOffset USE="LegSFOffset" containerField="collidables"/>
+    <CollidableOffset USE="SillSOffset" containerField="collidables"/>
+    <CollidableOffset USE="LegNBOffset" containerField="collidables"/>
+    <CollidableOffset USE="LegNFOffset" containerField="collidables"/>
+    <CollidableOffset USE="SillNOffset" containerField="collidables"/>
+    <CollidableOffset USE="AxleSOffset" containerField="collidables"/>
+    <CollidableOffset USE="AxleNOffset" containerField="collidables"/>
+    <CollidableShape USE="ArmS" containerField="collidables"/>
+    <CollidableOffset USE="CounterweightSOffset" containerField="collidables"/>
+    <CollidableOffset USE="HangerOffset" containerField="collidables"/>
+    <CollidableShape USE="StoneS" containerField="collidables"/>
+    <CollidableShape USE="Block0S" containerField="collidables"/>
+    <CollidableShape USE="Block1S" containerField="collidables"/>
+    <CollidableShape USE="Block2S" containerField="collidables"/>
+    <CollidableShape USE="Block3S" containerField="collidables"/>
+    <CollidableShape USE="Block4S" containerField="collidables"/>
+    <CollidableShape USE="Block5S" containerField="collidables"/>
+    <CollidableShape USE="Block6S" containerField="collidables"/>
+    <CollidableShape USE="Block7S" containerField="collidables"/>
+    <CollidableShape USE="Block8S" containerField="collidables"/>
+    <CollidableShape USE="Block9S" containerField="collidables"/>
+    <CollidableShape USE="Block10S" containerField="collidables"/>
+    <CollidableShape USE="Block11S" containerField="collidables"/>
+    <CollidableShape USE="Block12S" containerField="collidables"/>
+    <CollidableShape USE="Block13S" containerField="collidables"/>
+    <CollidableShape USE="Block14S" containerField="collidables"/>
+    <CollidableShape USE="Block15S" containerField="collidables"/>
+    <CollidableShape USE="Block16S" containerField="collidables"/>
+    <CollidableShape USE="Block17S" containerField="collidables"/>
+    <CollidableShape USE="Block18S" containerField="collidables"/>
+    <CollidableShape USE="Block19S" containerField="collidables"/>
+    <CollidableShape USE="Block20S" containerField="collidables"/>
+    <CollidableShape USE="Block21S" containerField="collidables"/>
+    <CollidableShape USE="Block22S" containerField="collidables"/>
+    <CollidableShape USE="Block23S" containerField="collidables"/>
+    <CollidableShape USE="Block24S" containerField="collidables"/>
+    <CollidableShape USE="Block25S" containerField="collidables"/>
+    <CollidableShape USE="Block26S" containerField="collidables"/>
+    <CollidableShape USE="Block27S" containerField="collidables"/>
+    <CollidableShape USE="Block28S" containerField="collidables"/>
+    <CollidableShape USE="Block29S" containerField="collidables"/>
+    <CollidableShape USE="Block30S" containerField="collidables"/>
+    <CollidableShape USE="Block31S" containerField="collidables"/>
+    <CollidableShape USE="Block32S" containerField="collidables"/>
+    <CollidableShape USE="Block33S" containerField="collidables"/>
+    <CollidableShape USE="Block34S" containerField="collidables"/>
+    <CollidableShape USE="Block35S" containerField="collidables"/>
+    <CollidableShape USE="Block36S" containerField="collidables"/>
+    <CollidableShape USE="Block37S" containerField="collidables"/>
+    <CollidableShape USE="Block38S" containerField="collidables"/>
+    <CollidableShape USE="Block39S" containerField="collidables"/>
+    <CollidableShape USE="Block40S" containerField="collidables"/>
+    <CollidableShape USE="Block41S" containerField="collidables"/>
+    <CollidableShape USE="Block42S" containerField="collidables"/>
+    <CollidableShape USE="Block43S" containerField="collidables"/>
+    <CollidableShape USE="Block44S" containerField="collidables"/>
+    <CollidableShape USE="Block45S" containerField="collidables"/>
+    <CollidableShape USE="Block46S" containerField="collidables"/>
+    <CollidableShape USE="Block47S" containerField="collidables"/>
+    <CollidableShape USE="Block48S" containerField="collidables"/>
+    <CollidableShape USE="Block49S" containerField="collidables"/>
+    <CollidableShape USE="Block50S" containerField="collidables"/>
+    <CollidableShape USE="Block51S" containerField="collidables"/>
+    <CollidableShape USE="Block52S" containerField="collidables"/>
+    <CollidableShape USE="Block53S" containerField="collidables"/>
+    <CollidableShape USE="Block54S" containerField="collidables"/>
+    <CollidableShape USE="Block55S" containerField="collidables"/>
+    <CollidableShape USE="Block56S" containerField="collidables"/>
+    <CollidableShape USE="Block57S" containerField="collidables"/>
+    <CollidableShape USE="Block58S" containerField="collidables"/>
+    <CollidableShape USE="Block59S" containerField="collidables"/>
+    <CollidableShape USE="Block60S" containerField="collidables"/>
+    <CollidableShape USE="Block61S" containerField="collidables"/>
+    <CollidableShape USE="Block62S" containerField="collidables"/>
+    <CollidableShape USE="Block63S" containerField="collidables"/>
+    <CollidableShape USE="Block64S" containerField="collidables"/>
+    <CollidableShape USE="Block65S" containerField="collidables"/>
+    <CollidableShape USE="Block66S" containerField="collidables"/>
+    <CollidableShape USE="Block67S" containerField="collidables"/>
+    <CollidableShape USE="Block68S" containerField="collidables"/>
+    <CollidableShape USE="Block69S" containerField="collidables"/>
+    <CollidableShape USE="Block70S" containerField="collidables"/>
+    <CollidableShape USE="Block71S" containerField="collidables"/>
+    <CollidableShape USE="Block72S" containerField="collidables"/>
+    <CollidableShape USE="Block73S" containerField="collidables"/>
+    <CollidableShape USE="Block74S" containerField="collidables"/>
+    <CollidableShape USE="Block75S" containerField="collidables"/>
+    <CollidableShape USE="Block76S" containerField="collidables"/>
+    <CollidableShape USE="Block77S" containerField="collidables"/>
+    <CollidableShape USE="Block78S" containerField="collidables"/>
+    <CollidableShape USE="Block79S" containerField="collidables"/>
+    <CollidableShape USE="Block80S" containerField="collidables"/>
+    <CollidableShape USE="Block81S" containerField="collidables"/>
+    <CollidableShape USE="Block82S" containerField="collidables"/>
+    <CollidableShape USE="Block83S" containerField="collidables"/>
+    <CollidableShape USE="Block84S" containerField="collidables"/>
+    <CollidableShape USE="Block85S" containerField="collidables"/>
+    <CollidableShape USE="Block86S" containerField="collidables"/>
+    <CollidableShape USE="Block87S" containerField="collidables"/>
+    <CollidableShape USE="Block88S" containerField="collidables"/>
+    <CollidableShape USE="Block89S" containerField="collidables"/>
+    <CollidableShape USE="Block90S" containerField="collidables"/>
+    <CollidableShape USE="Block91S" containerField="collidables"/>
+    <CollidableShape USE="Block92S" containerField="collidables"/>
+    <CollidableShape USE="Block93S" containerField="collidables"/>
+    <CollidableShape USE="Block94S" containerField="collidables"/>
+    <CollidableShape USE="Block95S" containerField="collidables"/>
+    <CollidableShape USE="Block96S" containerField="collidables"/>
+    <CollidableShape USE="Block97S" containerField="collidables"/>
+    <CollidableShape USE="Block98S" containerField="collidables"/>
+    <CollidableShape USE="Block99S" containerField="collidables"/>
+    <CollidableShape USE="Block100S" containerField="collidables"/>
+    <CollidableShape USE="Block101S" containerField="collidables"/>
+    <CollidableShape USE="Block102S" containerField="collidables"/>
+    <CollidableShape USE="Block103S" containerField="collidables"/>
+    <CollidableShape USE="Block104S" containerField="collidables"/>
+    <CollidableShape USE="Block105S" containerField="collidables"/>
+    <CollidableShape USE="Block106S" containerField="collidables"/>
+    <CollidableShape USE="Block107S" containerField="collidables"/>
+    <CollidableShape USE="Block108S" containerField="collidables"/>
+    <CollidableShape USE="Block109S" containerField="collidables"/>
+    <CollidableShape USE="Block110S" containerField="collidables"/>
+    <CollidableShape USE="Block111S" containerField="collidables"/>
+    <CollidableShape USE="Block112S" containerField="collidables"/>
+    <CollidableShape USE="Block113S" containerField="collidables"/>
+    <CollidableShape USE="Block114S" containerField="collidables"/>
+    <CollidableShape USE="Block115S" containerField="collidables"/>
+    <CollidableShape USE="Block116S" containerField="collidables"/>
+    <CollidableShape USE="Block117S" containerField="collidables"/>
+    <CollidableShape USE="Block118S" containerField="collidables"/>
+    <CollidableShape USE="Block119S" containerField="collidables"/>
+    <CollidableShape USE="Block120S" containerField="collidables"/>
+    <CollidableShape USE="Block121S" containerField="collidables"/>
+    <CollidableShape USE="Block122S" containerField="collidables"/>
+    <CollidableShape USE="Block123S" containerField="collidables"/>
+    <CollidableShape USE="Block124S" containerField="collidables"/>
+    <CollidableShape USE="Block125S" containerField="collidables"/>
+    <CollidableShape USE="Block126S" containerField="collidables"/>
+    <CollidableShape USE="Block127S" containerField="collidables"/>
+    <CollidableShape USE="Block128S" containerField="collidables"/>
+    <CollidableShape USE="Block129S" containerField="collidables"/>
+    <CollidableShape USE="Block130S" containerField="collidables"/>
+    <CollidableShape USE="Block131S" containerField="collidables"/>
+   </CollisionCollection>
+  </RigidBodyCollection>
+  <ROUTE fromNode="ArmBody" fromField="position" toNode="ArmT" toField="set_translation"/>
+  <ROUTE fromNode="ArmBody" fromField="orientation" toNode="ArmT" toField="set_rotation"/>
+  <ROUTE fromNode="CounterweightBody" fromField="position" toNode="CounterweightT" toField="set_translation"/>
+  <ROUTE fromNode="CounterweightBody" fromField="orientation" toNode="CounterweightT" toField="set_rotation"/>
+  <ROUTE fromNode="StoneBody" fromField="position" toNode="StoneT" toField="set_translation"/>
+  <ROUTE fromNode="StoneBody" fromField="orientation" toNode="StoneT" toField="set_rotation"/>
+  <ROUTE fromNode="Block0Body" fromField="position" toNode="Block0T" toField="set_translation"/>
+  <ROUTE fromNode="Block0Body" fromField="orientation" toNode="Block0T" toField="set_rotation"/>
+  <ROUTE fromNode="Block1Body" fromField="position" toNode="Block1T" toField="set_translation"/>
+  <ROUTE fromNode="Block1Body" fromField="orientation" toNode="Block1T" toField="set_rotation"/>
+  <ROUTE fromNode="Block2Body" fromField="position" toNode="Block2T" toField="set_translation"/>
+  <ROUTE fromNode="Block2Body" fromField="orientation" toNode="Block2T" toField="set_rotation"/>
+  <ROUTE fromNode="Block3Body" fromField="position" toNode="Block3T" toField="set_translation"/>
+  <ROUTE fromNode="Block3Body" fromField="orientation" toNode="Block3T" toField="set_rotation"/>
+  <ROUTE fromNode="Block4Body" fromField="position" toNode="Block4T" toField="set_translation"/>
+  <ROUTE fromNode="Block4Body" fromField="orientation" toNode="Block4T" toField="set_rotation"/>
+  <ROUTE fromNode="Block5Body" fromField="position" toNode="Block5T" toField="set_translation"/>
+  <ROUTE fromNode="Block5Body" fromField="orientation" toNode="Block5T" toField="set_rotation"/>
+  <ROUTE fromNode="Block6Body" fromField="position" toNode="Block6T" toField="set_translation"/>
+  <ROUTE fromNode="Block6Body" fromField="orientation" toNode="Block6T" toField="set_rotation"/>
+  <ROUTE fromNode="Block7Body" fromField="position" toNode="Block7T" toField="set_translation"/>
+  <ROUTE fromNode="Block7Body" fromField="orientation" toNode="Block7T" toField="set_rotation"/>
+  <ROUTE fromNode="Block8Body" fromField="position" toNode="Block8T" toField="set_translation"/>
+  <ROUTE fromNode="Block8Body" fromField="orientation" toNode="Block8T" toField="set_rotation"/>
+  <ROUTE fromNode="Block9Body" fromField="position" toNode="Block9T" toField="set_translation"/>
+  <ROUTE fromNode="Block9Body" fromField="orientation" toNode="Block9T" toField="set_rotation"/>
+  <ROUTE fromNode="Block10Body" fromField="position" toNode="Block10T" toField="set_translation"/>
+  <ROUTE fromNode="Block10Body" fromField="orientation" toNode="Block10T" toField="set_rotation"/>
+  <ROUTE fromNode="Block11Body" fromField="position" toNode="Block11T" toField="set_translation"/>
+  <ROUTE fromNode="Block11Body" fromField="orientation" toNode="Block11T" toField="set_rotation"/>
+  <ROUTE fromNode="Block12Body" fromField="position" toNode="Block12T" toField="set_translation"/>
+  <ROUTE fromNode="Block12Body" fromField="orientation" toNode="Block12T" toField="set_rotation"/>
+  <ROUTE fromNode="Block13Body" fromField="position" toNode="Block13T" toField="set_translation"/>
+  <ROUTE fromNode="Block13Body" fromField="orientation" toNode="Block13T" toField="set_rotation"/>
+  <ROUTE fromNode="Block14Body" fromField="position" toNode="Block14T" toField="set_translation"/>
+  <ROUTE fromNode="Block14Body" fromField="orientation" toNode="Block14T" toField="set_rotation"/>
+  <ROUTE fromNode="Block15Body" fromField="position" toNode="Block15T" toField="set_translation"/>
+  <ROUTE fromNode="Block15Body" fromField="orientation" toNode="Block15T" toField="set_rotation"/>
+  <ROUTE fromNode="Block16Body" fromField="position" toNode="Block16T" toField="set_translation"/>
+  <ROUTE fromNode="Block16Body" fromField="orientation" toNode="Block16T" toField="set_rotation"/>
+  <ROUTE fromNode="Block17Body" fromField="position" toNode="Block17T" toField="set_translation"/>
+  <ROUTE fromNode="Block17Body" fromField="orientation" toNode="Block17T" toField="set_rotation"/>
+  <ROUTE fromNode="Block18Body" fromField="position" toNode="Block18T" toField="set_translation"/>
+  <ROUTE fromNode="Block18Body" fromField="orientation" toNode="Block18T" toField="set_rotation"/>
+  <ROUTE fromNode="Block19Body" fromField="position" toNode="Block19T" toField="set_translation"/>
+  <ROUTE fromNode="Block19Body" fromField="orientation" toNode="Block19T" toField="set_rotation"/>
+  <ROUTE fromNode="Block20Body" fromField="position" toNode="Block20T" toField="set_translation"/>
+  <ROUTE fromNode="Block20Body" fromField="orientation" toNode="Block20T" toField="set_rotation"/>
+  <ROUTE fromNode="Block21Body" fromField="position" toNode="Block21T" toField="set_translation"/>
+  <ROUTE fromNode="Block21Body" fromField="orientation" toNode="Block21T" toField="set_rotation"/>
+  <ROUTE fromNode="Block22Body" fromField="position" toNode="Block22T" toField="set_translation"/>
+  <ROUTE fromNode="Block22Body" fromField="orientation" toNode="Block22T" toField="set_rotation"/>
+  <ROUTE fromNode="Block23Body" fromField="position" toNode="Block23T" toField="set_translation"/>
+  <ROUTE fromNode="Block23Body" fromField="orientation" toNode="Block23T" toField="set_rotation"/>
+  <ROUTE fromNode="Block24Body" fromField="position" toNode="Block24T" toField="set_translation"/>
+  <ROUTE fromNode="Block24Body" fromField="orientation" toNode="Block24T" toField="set_rotation"/>
+  <ROUTE fromNode="Block25Body" fromField="position" toNode="Block25T" toField="set_translation"/>
+  <ROUTE fromNode="Block25Body" fromField="orientation" toNode="Block25T" toField="set_rotation"/>
+  <ROUTE fromNode="Block26Body" fromField="position" toNode="Block26T" toField="set_translation"/>
+  <ROUTE fromNode="Block26Body" fromField="orientation" toNode="Block26T" toField="set_rotation"/>
+  <ROUTE fromNode="Block27Body" fromField="position" toNode="Block27T" toField="set_translation"/>
+  <ROUTE fromNode="Block27Body" fromField="orientation" toNode="Block27T" toField="set_rotation"/>
+  <ROUTE fromNode="Block28Body" fromField="position" toNode="Block28T" toField="set_translation"/>
+  <ROUTE fromNode="Block28Body" fromField="orientation" toNode="Block28T" toField="set_rotation"/>
+  <ROUTE fromNode="Block29Body" fromField="position" toNode="Block29T" toField="set_translation"/>
+  <ROUTE fromNode="Block29Body" fromField="orientation" toNode="Block29T" toField="set_rotation"/>
+  <ROUTE fromNode="Block30Body" fromField="position" toNode="Block30T" toField="set_translation"/>
+  <ROUTE fromNode="Block30Body" fromField="orientation" toNode="Block30T" toField="set_rotation"/>
+  <ROUTE fromNode="Block31Body" fromField="position" toNode="Block31T" toField="set_translation"/>
+  <ROUTE fromNode="Block31Body" fromField="orientation" toNode="Block31T" toField="set_rotation"/>
+  <ROUTE fromNode="Block32Body" fromField="position" toNode="Block32T" toField="set_translation"/>
+  <ROUTE fromNode="Block32Body" fromField="orientation" toNode="Block32T" toField="set_rotation"/>
+  <ROUTE fromNode="Block33Body" fromField="position" toNode="Block33T" toField="set_translation"/>
+  <ROUTE fromNode="Block33Body" fromField="orientation" toNode="Block33T" toField="set_rotation"/>
+  <ROUTE fromNode="Block34Body" fromField="position" toNode="Block34T" toField="set_translation"/>
+  <ROUTE fromNode="Block34Body" fromField="orientation" toNode="Block34T" toField="set_rotation"/>
+  <ROUTE fromNode="Block35Body" fromField="position" toNode="Block35T" toField="set_translation"/>
+  <ROUTE fromNode="Block35Body" fromField="orientation" toNode="Block35T" toField="set_rotation"/>
+  <ROUTE fromNode="Block36Body" fromField="position" toNode="Block36T" toField="set_translation"/>
+  <ROUTE fromNode="Block36Body" fromField="orientation" toNode="Block36T" toField="set_rotation"/>
+  <ROUTE fromNode="Block37Body" fromField="position" toNode="Block37T" toField="set_translation"/>
+  <ROUTE fromNode="Block37Body" fromField="orientation" toNode="Block37T" toField="set_rotation"/>
+  <ROUTE fromNode="Block38Body" fromField="position" toNode="Block38T" toField="set_translation"/>
+  <ROUTE fromNode="Block38Body" fromField="orientation" toNode="Block38T" toField="set_rotation"/>
+  <ROUTE fromNode="Block39Body" fromField="position" toNode="Block39T" toField="set_translation"/>
+  <ROUTE fromNode="Block39Body" fromField="orientation" toNode="Block39T" toField="set_rotation"/>
+  <ROUTE fromNode="Block40Body" fromField="position" toNode="Block40T" toField="set_translation"/>
+  <ROUTE fromNode="Block40Body" fromField="orientation" toNode="Block40T" toField="set_rotation"/>
+  <ROUTE fromNode="Block41Body" fromField="position" toNode="Block41T" toField="set_translation"/>
+  <ROUTE fromNode="Block41Body" fromField="orientation" toNode="Block41T" toField="set_rotation"/>
+  <ROUTE fromNode="Block42Body" fromField="position" toNode="Block42T" toField="set_translation"/>
+  <ROUTE fromNode="Block42Body" fromField="orientation" toNode="Block42T" toField="set_rotation"/>
+  <ROUTE fromNode="Block43Body" fromField="position" toNode="Block43T" toField="set_translation"/>
+  <ROUTE fromNode="Block43Body" fromField="orientation" toNode="Block43T" toField="set_rotation"/>
+  <ROUTE fromNode="Block44Body" fromField="position" toNode="Block44T" toField="set_translation"/>
+  <ROUTE fromNode="Block44Body" fromField="orientation" toNode="Block44T" toField="set_rotation"/>
+  <ROUTE fromNode="Block45Body" fromField="position" toNode="Block45T" toField="set_translation"/>
+  <ROUTE fromNode="Block45Body" fromField="orientation" toNode="Block45T" toField="set_rotation"/>
+  <ROUTE fromNode="Block46Body" fromField="position" toNode="Block46T" toField="set_translation"/>
+  <ROUTE fromNode="Block46Body" fromField="orientation" toNode="Block46T" toField="set_rotation"/>
+  <ROUTE fromNode="Block47Body" fromField="position" toNode="Block47T" toField="set_translation"/>
+  <ROUTE fromNode="Block47Body" fromField="orientation" toNode="Block47T" toField="set_rotation"/>
+  <ROUTE fromNode="Block48Body" fromField="position" toNode="Block48T" toField="set_translation"/>
+  <ROUTE fromNode="Block48Body" fromField="orientation" toNode="Block48T" toField="set_rotation"/>
+  <ROUTE fromNode="Block49Body" fromField="position" toNode="Block49T" toField="set_translation"/>
+  <ROUTE fromNode="Block49Body" fromField="orientation" toNode="Block49T" toField="set_rotation"/>
+  <ROUTE fromNode="Block50Body" fromField="position" toNode="Block50T" toField="set_translation"/>
+  <ROUTE fromNode="Block50Body" fromField="orientation" toNode="Block50T" toField="set_rotation"/>
+  <ROUTE fromNode="Block51Body" fromField="position" toNode="Block51T" toField="set_translation"/>
+  <ROUTE fromNode="Block51Body" fromField="orientation" toNode="Block51T" toField="set_rotation"/>
+  <ROUTE fromNode="Block52Body" fromField="position" toNode="Block52T" toField="set_translation"/>
+  <ROUTE fromNode="Block52Body" fromField="orientation" toNode="Block52T" toField="set_rotation"/>
+  <ROUTE fromNode="Block53Body" fromField="position" toNode="Block53T" toField="set_translation"/>
+  <ROUTE fromNode="Block53Body" fromField="orientation" toNode="Block53T" toField="set_rotation"/>
+  <ROUTE fromNode="Block54Body" fromField="position" toNode="Block54T" toField="set_translation"/>
+  <ROUTE fromNode="Block54Body" fromField="orientation" toNode="Block54T" toField="set_rotation"/>
+  <ROUTE fromNode="Block55Body" fromField="position" toNode="Block55T" toField="set_translation"/>
+  <ROUTE fromNode="Block55Body" fromField="orientation" toNode="Block55T" toField="set_rotation"/>
+  <ROUTE fromNode="Block56Body" fromField="position" toNode="Block56T" toField="set_translation"/>
+  <ROUTE fromNode="Block56Body" fromField="orientation" toNode="Block56T" toField="set_rotation"/>
+  <ROUTE fromNode="Block57Body" fromField="position" toNode="Block57T" toField="set_translation"/>
+  <ROUTE fromNode="Block57Body" fromField="orientation" toNode="Block57T" toField="set_rotation"/>
+  <ROUTE fromNode="Block58Body" fromField="position" toNode="Block58T" toField="set_translation"/>
+  <ROUTE fromNode="Block58Body" fromField="orientation" toNode="Block58T" toField="set_rotation"/>
+  <ROUTE fromNode="Block59Body" fromField="position" toNode="Block59T" toField="set_translation"/>
+  <ROUTE fromNode="Block59Body" fromField="orientation" toNode="Block59T" toField="set_rotation"/>
+  <ROUTE fromNode="Block60Body" fromField="position" toNode="Block60T" toField="set_translation"/>
+  <ROUTE fromNode="Block60Body" fromField="orientation" toNode="Block60T" toField="set_rotation"/>
+  <ROUTE fromNode="Block61Body" fromField="position" toNode="Block61T" toField="set_translation"/>
+  <ROUTE fromNode="Block61Body" fromField="orientation" toNode="Block61T" toField="set_rotation"/>
+  <ROUTE fromNode="Block62Body" fromField="position" toNode="Block62T" toField="set_translation"/>
+  <ROUTE fromNode="Block62Body" fromField="orientation" toNode="Block62T" toField="set_rotation"/>
+  <ROUTE fromNode="Block63Body" fromField="position" toNode="Block63T" toField="set_translation"/>
+  <ROUTE fromNode="Block63Body" fromField="orientation" toNode="Block63T" toField="set_rotation"/>
+  <ROUTE fromNode="Block64Body" fromField="position" toNode="Block64T" toField="set_translation"/>
+  <ROUTE fromNode="Block64Body" fromField="orientation" toNode="Block64T" toField="set_rotation"/>
+  <ROUTE fromNode="Block65Body" fromField="position" toNode="Block65T" toField="set_translation"/>
+  <ROUTE fromNode="Block65Body" fromField="orientation" toNode="Block65T" toField="set_rotation"/>
+  <ROUTE fromNode="Block66Body" fromField="position" toNode="Block66T" toField="set_translation"/>
+  <ROUTE fromNode="Block66Body" fromField="orientation" toNode="Block66T" toField="set_rotation"/>
+  <ROUTE fromNode="Block67Body" fromField="position" toNode="Block67T" toField="set_translation"/>
+  <ROUTE fromNode="Block67Body" fromField="orientation" toNode="Block67T" toField="set_rotation"/>
+  <ROUTE fromNode="Block68Body" fromField="position" toNode="Block68T" toField="set_translation"/>
+  <ROUTE fromNode="Block68Body" fromField="orientation" toNode="Block68T" toField="set_rotation"/>
+  <ROUTE fromNode="Block69Body" fromField="position" toNode="Block69T" toField="set_translation"/>
+  <ROUTE fromNode="Block69Body" fromField="orientation" toNode="Block69T" toField="set_rotation"/>
+  <ROUTE fromNode="Block70Body" fromField="position" toNode="Block70T" toField="set_translation"/>
+  <ROUTE fromNode="Block70Body" fromField="orientation" toNode="Block70T" toField="set_rotation"/>
+  <ROUTE fromNode="Block71Body" fromField="position" toNode="Block71T" toField="set_translation"/>
+  <ROUTE fromNode="Block71Body" fromField="orientation" toNode="Block71T" toField="set_rotation"/>
+  <ROUTE fromNode="Block72Body" fromField="position" toNode="Block72T" toField="set_translation"/>
+  <ROUTE fromNode="Block72Body" fromField="orientation" toNode="Block72T" toField="set_rotation"/>
+  <ROUTE fromNode="Block73Body" fromField="position" toNode="Block73T" toField="set_translation"/>
+  <ROUTE fromNode="Block73Body" fromField="orientation" toNode="Block73T" toField="set_rotation"/>
+  <ROUTE fromNode="Block74Body" fromField="position" toNode="Block74T" toField="set_translation"/>
+  <ROUTE fromNode="Block74Body" fromField="orientation" toNode="Block74T" toField="set_rotation"/>
+  <ROUTE fromNode="Block75Body" fromField="position" toNode="Block75T" toField="set_translation"/>
+  <ROUTE fromNode="Block75Body" fromField="orientation" toNode="Block75T" toField="set_rotation"/>
+  <ROUTE fromNode="Block76Body" fromField="position" toNode="Block76T" toField="set_translation"/>
+  <ROUTE fromNode="Block76Body" fromField="orientation" toNode="Block76T" toField="set_rotation"/>
+  <ROUTE fromNode="Block77Body" fromField="position" toNode="Block77T" toField="set_translation"/>
+  <ROUTE fromNode="Block77Body" fromField="orientation" toNode="Block77T" toField="set_rotation"/>
+  <ROUTE fromNode="Block78Body" fromField="position" toNode="Block78T" toField="set_translation"/>
+  <ROUTE fromNode="Block78Body" fromField="orientation" toNode="Block78T" toField="set_rotation"/>
+  <ROUTE fromNode="Block79Body" fromField="position" toNode="Block79T" toField="set_translation"/>
+  <ROUTE fromNode="Block79Body" fromField="orientation" toNode="Block79T" toField="set_rotation"/>
+  <ROUTE fromNode="Block80Body" fromField="position" toNode="Block80T" toField="set_translation"/>
+  <ROUTE fromNode="Block80Body" fromField="orientation" toNode="Block80T" toField="set_rotation"/>
+  <ROUTE fromNode="Block81Body" fromField="position" toNode="Block81T" toField="set_translation"/>
+  <ROUTE fromNode="Block81Body" fromField="orientation" toNode="Block81T" toField="set_rotation"/>
+  <ROUTE fromNode="Block82Body" fromField="position" toNode="Block82T" toField="set_translation"/>
+  <ROUTE fromNode="Block82Body" fromField="orientation" toNode="Block82T" toField="set_rotation"/>
+  <ROUTE fromNode="Block83Body" fromField="position" toNode="Block83T" toField="set_translation"/>
+  <ROUTE fromNode="Block83Body" fromField="orientation" toNode="Block83T" toField="set_rotation"/>
+  <ROUTE fromNode="Block84Body" fromField="position" toNode="Block84T" toField="set_translation"/>
+  <ROUTE fromNode="Block84Body" fromField="orientation" toNode="Block84T" toField="set_rotation"/>
+  <ROUTE fromNode="Block85Body" fromField="position" toNode="Block85T" toField="set_translation"/>
+  <ROUTE fromNode="Block85Body" fromField="orientation" toNode="Block85T" toField="set_rotation"/>
+  <ROUTE fromNode="Block86Body" fromField="position" toNode="Block86T" toField="set_translation"/>
+  <ROUTE fromNode="Block86Body" fromField="orientation" toNode="Block86T" toField="set_rotation"/>
+  <ROUTE fromNode="Block87Body" fromField="position" toNode="Block87T" toField="set_translation"/>
+  <ROUTE fromNode="Block87Body" fromField="orientation" toNode="Block87T" toField="set_rotation"/>
+  <ROUTE fromNode="Block88Body" fromField="position" toNode="Block88T" toField="set_translation"/>
+  <ROUTE fromNode="Block88Body" fromField="orientation" toNode="Block88T" toField="set_rotation"/>
+  <ROUTE fromNode="Block89Body" fromField="position" toNode="Block89T" toField="set_translation"/>
+  <ROUTE fromNode="Block89Body" fromField="orientation" toNode="Block89T" toField="set_rotation"/>
+  <ROUTE fromNode="Block90Body" fromField="position" toNode="Block90T" toField="set_translation"/>
+  <ROUTE fromNode="Block90Body" fromField="orientation" toNode="Block90T" toField="set_rotation"/>
+  <ROUTE fromNode="Block91Body" fromField="position" toNode="Block91T" toField="set_translation"/>
+  <ROUTE fromNode="Block91Body" fromField="orientation" toNode="Block91T" toField="set_rotation"/>
+  <ROUTE fromNode="Block92Body" fromField="position" toNode="Block92T" toField="set_translation"/>
+  <ROUTE fromNode="Block92Body" fromField="orientation" toNode="Block92T" toField="set_rotation"/>
+  <ROUTE fromNode="Block93Body" fromField="position" toNode="Block93T" toField="set_translation"/>
+  <ROUTE fromNode="Block93Body" fromField="orientation" toNode="Block93T" toField="set_rotation"/>
+  <ROUTE fromNode="Block94Body" fromField="position" toNode="Block94T" toField="set_translation"/>
+  <ROUTE fromNode="Block94Body" fromField="orientation" toNode="Block94T" toField="set_rotation"/>
+  <ROUTE fromNode="Block95Body" fromField="position" toNode="Block95T" toField="set_translation"/>
+  <ROUTE fromNode="Block95Body" fromField="orientation" toNode="Block95T" toField="set_rotation"/>
+  <ROUTE fromNode="Block96Body" fromField="position" toNode="Block96T" toField="set_translation"/>
+  <ROUTE fromNode="Block96Body" fromField="orientation" toNode="Block96T" toField="set_rotation"/>
+  <ROUTE fromNode="Block97Body" fromField="position" toNode="Block97T" toField="set_translation"/>
+  <ROUTE fromNode="Block97Body" fromField="orientation" toNode="Block97T" toField="set_rotation"/>
+  <ROUTE fromNode="Block98Body" fromField="position" toNode="Block98T" toField="set_translation"/>
+  <ROUTE fromNode="Block98Body" fromField="orientation" toNode="Block98T" toField="set_rotation"/>
+  <ROUTE fromNode="Block99Body" fromField="position" toNode="Block99T" toField="set_translation"/>
+  <ROUTE fromNode="Block99Body" fromField="orientation" toNode="Block99T" toField="set_rotation"/>
+  <ROUTE fromNode="Block100Body" fromField="position" toNode="Block100T" toField="set_translation"/>
+  <ROUTE fromNode="Block100Body" fromField="orientation" toNode="Block100T" toField="set_rotation"/>
+  <ROUTE fromNode="Block101Body" fromField="position" toNode="Block101T" toField="set_translation"/>
+  <ROUTE fromNode="Block101Body" fromField="orientation" toNode="Block101T" toField="set_rotation"/>
+  <ROUTE fromNode="Block102Body" fromField="position" toNode="Block102T" toField="set_translation"/>
+  <ROUTE fromNode="Block102Body" fromField="orientation" toNode="Block102T" toField="set_rotation"/>
+  <ROUTE fromNode="Block103Body" fromField="position" toNode="Block103T" toField="set_translation"/>
+  <ROUTE fromNode="Block103Body" fromField="orientation" toNode="Block103T" toField="set_rotation"/>
+  <ROUTE fromNode="Block104Body" fromField="position" toNode="Block104T" toField="set_translation"/>
+  <ROUTE fromNode="Block104Body" fromField="orientation" toNode="Block104T" toField="set_rotation"/>
+  <ROUTE fromNode="Block105Body" fromField="position" toNode="Block105T" toField="set_translation"/>
+  <ROUTE fromNode="Block105Body" fromField="orientation" toNode="Block105T" toField="set_rotation"/>
+  <ROUTE fromNode="Block106Body" fromField="position" toNode="Block106T" toField="set_translation"/>
+  <ROUTE fromNode="Block106Body" fromField="orientation" toNode="Block106T" toField="set_rotation"/>
+  <ROUTE fromNode="Block107Body" fromField="position" toNode="Block107T" toField="set_translation"/>
+  <ROUTE fromNode="Block107Body" fromField="orientation" toNode="Block107T" toField="set_rotation"/>
+  <ROUTE fromNode="Block108Body" fromField="position" toNode="Block108T" toField="set_translation"/>
+  <ROUTE fromNode="Block108Body" fromField="orientation" toNode="Block108T" toField="set_rotation"/>
+  <ROUTE fromNode="Block109Body" fromField="position" toNode="Block109T" toField="set_translation"/>
+  <ROUTE fromNode="Block109Body" fromField="orientation" toNode="Block109T" toField="set_rotation"/>
+  <ROUTE fromNode="Block110Body" fromField="position" toNode="Block110T" toField="set_translation"/>
+  <ROUTE fromNode="Block110Body" fromField="orientation" toNode="Block110T" toField="set_rotation"/>
+  <ROUTE fromNode="Block111Body" fromField="position" toNode="Block111T" toField="set_translation"/>
+  <ROUTE fromNode="Block111Body" fromField="orientation" toNode="Block111T" toField="set_rotation"/>
+  <ROUTE fromNode="Block112Body" fromField="position" toNode="Block112T" toField="set_translation"/>
+  <ROUTE fromNode="Block112Body" fromField="orientation" toNode="Block112T" toField="set_rotation"/>
+  <ROUTE fromNode="Block113Body" fromField="position" toNode="Block113T" toField="set_translation"/>
+  <ROUTE fromNode="Block113Body" fromField="orientation" toNode="Block113T" toField="set_rotation"/>
+  <ROUTE fromNode="Block114Body" fromField="position" toNode="Block114T" toField="set_translation"/>
+  <ROUTE fromNode="Block114Body" fromField="orientation" toNode="Block114T" toField="set_rotation"/>
+  <ROUTE fromNode="Block115Body" fromField="position" toNode="Block115T" toField="set_translation"/>
+  <ROUTE fromNode="Block115Body" fromField="orientation" toNode="Block115T" toField="set_rotation"/>
+  <ROUTE fromNode="Block116Body" fromField="position" toNode="Block116T" toField="set_translation"/>
+  <ROUTE fromNode="Block116Body" fromField="orientation" toNode="Block116T" toField="set_rotation"/>
+  <ROUTE fromNode="Block117Body" fromField="position" toNode="Block117T" toField="set_translation"/>
+  <ROUTE fromNode="Block117Body" fromField="orientation" toNode="Block117T" toField="set_rotation"/>
+  <ROUTE fromNode="Block118Body" fromField="position" toNode="Block118T" toField="set_translation"/>
+  <ROUTE fromNode="Block118Body" fromField="orientation" toNode="Block118T" toField="set_rotation"/>
+  <ROUTE fromNode="Block119Body" fromField="position" toNode="Block119T" toField="set_translation"/>
+  <ROUTE fromNode="Block119Body" fromField="orientation" toNode="Block119T" toField="set_rotation"/>
+  <ROUTE fromNode="Block120Body" fromField="position" toNode="Block120T" toField="set_translation"/>
+  <ROUTE fromNode="Block120Body" fromField="orientation" toNode="Block120T" toField="set_rotation"/>
+  <ROUTE fromNode="Block121Body" fromField="position" toNode="Block121T" toField="set_translation"/>
+  <ROUTE fromNode="Block121Body" fromField="orientation" toNode="Block121T" toField="set_rotation"/>
+  <ROUTE fromNode="Block122Body" fromField="position" toNode="Block122T" toField="set_translation"/>
+  <ROUTE fromNode="Block122Body" fromField="orientation" toNode="Block122T" toField="set_rotation"/>
+  <ROUTE fromNode="Block123Body" fromField="position" toNode="Block123T" toField="set_translation"/>
+  <ROUTE fromNode="Block123Body" fromField="orientation" toNode="Block123T" toField="set_rotation"/>
+  <ROUTE fromNode="Block124Body" fromField="position" toNode="Block124T" toField="set_translation"/>
+  <ROUTE fromNode="Block124Body" fromField="orientation" toNode="Block124T" toField="set_rotation"/>
+  <ROUTE fromNode="Block125Body" fromField="position" toNode="Block125T" toField="set_translation"/>
+  <ROUTE fromNode="Block125Body" fromField="orientation" toNode="Block125T" toField="set_rotation"/>
+  <ROUTE fromNode="Block126Body" fromField="position" toNode="Block126T" toField="set_translation"/>
+  <ROUTE fromNode="Block126Body" fromField="orientation" toNode="Block126T" toField="set_rotation"/>
+  <ROUTE fromNode="Block127Body" fromField="position" toNode="Block127T" toField="set_translation"/>
+  <ROUTE fromNode="Block127Body" fromField="orientation" toNode="Block127T" toField="set_rotation"/>
+  <ROUTE fromNode="Block128Body" fromField="position" toNode="Block128T" toField="set_translation"/>
+  <ROUTE fromNode="Block128Body" fromField="orientation" toNode="Block128T" toField="set_rotation"/>
+  <ROUTE fromNode="Block129Body" fromField="position" toNode="Block129T" toField="set_translation"/>
+  <ROUTE fromNode="Block129Body" fromField="orientation" toNode="Block129T" toField="set_rotation"/>
+  <ROUTE fromNode="Block130Body" fromField="position" toNode="Block130T" toField="set_translation"/>
+  <ROUTE fromNode="Block130Body" fromField="orientation" toNode="Block130T" toField="set_rotation"/>
+  <ROUTE fromNode="Block131Body" fromField="position" toNode="Block131T" toField="set_translation"/>
+  <ROUTE fromNode="Block131Body" fromField="orientation" toNode="Block131T" toField="set_rotation"/>
+ </Scene>
+</X3D>

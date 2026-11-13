@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>X3D ⇄ PhysX bridge · side by side with X_ITE's Bullet</title>
+<link rel="stylesheet" href="./src/demo/sidebyside.css">
+<script src="./vendor/x_ite/x_ite.min.js"></script>
+</head>
+<body>
+<header>
+  <h1>One standard X3D file, two engines</h1>
+  <p id="scene-name"></p>
+</header>
+<main>
+  <section class="pane">
+    <h2>PhysX 5 <small id="px-version"></small></h2>
+    <p class="sub">WASM in a Web Worker, via the x3d-physx bridge · fixed step 1/240 s · CCD from <code>preferAccuracy</code></p>
+    <x3d-canvas id="px" splashScreen="false" contextMenu="false" notifications="false"></x3d-canvas>
+    <dl class="readout" id="px-readout"></dl>
+  </section>
+  <section class="pane">
+    <h2>Bullet <small>X_ITE 16.7 built-in (ammo.js)</small></h2>
+    <p class="sub">the same file, unmodified · X_ITE steps once per frame (1/frame-rate, averaged)</p>
+    <x3d-canvas id="bt" splashScreen="false" contextMenu="false" notifications="false"></x3d-canvas>
+    <dl class="readout" id="bt-readout"></dl>
+  </section>
+</main>
+<nav class="controls">
+  <button id="run" title="Space">Run <kbd>Space</kbd></button>
+  <button id="reset" title="R">Reset <kbd>R</kbd></button>
+  <button id="step" title="S">Step PhysX 1/60 s <kbd>S</kbd></button>
+  <button id="report" title="L">Loss report <kbd>L</kbd></button>
+  <span id="divergence"></span>
+</nav>
+<pre id="loss" hidden></pre>
+<script type="module" src="./src/demo/sidebyside.ts"></script>
+</body>
+</html>
