@@ -78,6 +78,7 @@ What the illustration is and is not: AlphaFold 3 builds coordinates with a diffu
 - WebGPU frames are not judged headless, and nothing has been timed on a real GPU. On Windows Chrome with an older Intel GPU, `chrome://flags/#enable-unsafe-webgpu` may be needed.
 - x3d-blender-io (commit in `cinema/receipt.json`) writes vertex colours unclamped, and the molecularnodes pLDDT palette has channels of 1.000169, which the X3D 4.0 XSD refuses. The stage clamps them and counts how many in the receipt; the exporter fix is a one-line clamp where `ColorRGBA` is emitted.
 - The Blender X3D keeps `ColorRGBA` with alpha 1 everywhere; converting it to `Color` would shrink it.
+- The Cycles film (`blender/diffcine.py`) is written and tested on single frames, but the full 2 x 288-frame render has not been run yet, so no `.mp4` ships; the page shows the film card only when `cinema/diffusion.json` exists.
 - The diffusion frames are an illustration on known coordinates, not a prediction; a live OpenFold3 run needs a GPU and the owner's yes.
 - The AlphaFold 3 output reader and a finder for candidate zinc sites in predicted models are not built.
 - The witness shares written rules with the builder (guide smoothing, ring layout, palette, the 2.5 and 3.0 angstrom zinc rules, the 800-residue focus rule); it is independent in parsing and arithmetic only.

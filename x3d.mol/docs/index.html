@@ -63,6 +63,7 @@ body.cinema #info,body.cinema #receipt,body.cinema #pae,body.cinema #side,body.c
 #diff .drow{display:flex;gap:8px;align-items:center}#diff input[type=range]{flex:1;min-width:60px;accent-color:var(--accent)}#diff p{margin:6px 0 0;font-size:12px}#diff #dRead{color:var(--mut);min-height:1.45em}#diff #dRead b{color:var(--text)}
 #dLegend{display:flex;gap:4px 12px;flex-wrap:wrap}#dLegend u{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .badge{font:600 10px/1.2 ui-monospace,Menlo,monospace;letter-spacing:.04em;text-transform:uppercase;color:#ffd9a0;border:1px solid rgba(255,180,84,.5);border-radius:6px;padding:4px 6px;white-space:nowrap}
+.film{margin:4px 6px 10px}.film video{width:100%;aspect-ratio:16/9;border-radius:6px;background:#02040a;display:block;border:1px solid var(--line)}.film figcaption{color:var(--mut);font-size:11px;margin-top:4px}
 #dFollow.on{background:rgba(124,196,255,.28);border-color:rgba(124,196,255,.6)}.note{margin:4px 6px 8px;color:var(--mut);font-size:12px}
 body.anim #legend,body.anim #residue{display:none}
 body.nui #diff{display:none}
@@ -115,7 +116,7 @@ body.nui #diff{display:none}
 <div id="cineBox" hidden><div class="card"><div id="cineBody"></div><p class="cinebtns"><button class="btn" id="cineOpen">Open this structure in the live viewer</button><a class="btn" id="cineGet" download>Download the X3D (gzip)</a><button class="btn" id="cineClose">Close</button></p></div></div>
 <div id="aboutBox" hidden><div class="card"><div id="aboutBody"></div><p><button class="btn" id="aboutClose">Close</button></p></div></div>
 <script src="https://cdn.jsdelivr.net/npm/babylonjs@9.32.0/babylon.js" integrity="sha384-1XDybi1454WehNQaPHwhcTlpJ6oDdq/L4KKyDu7JiWPOBUzoBC0yEcuKDzHpdXyo" crossorigin="anonymous"></script>
-<script>window.__xmolBuild="d108ed321a72";</script>
+<script>window.__xmolBuild="6cb114a92e7d";</script>
 <script>
 /* One WebGPU adapter request that does not give up early. Babylon asks navigator.gpu.requestAdapter() with its own options (the high-performance
    hint); on some machines only the plain call, the low-power hint or the software adapter answers (x3d.loom PR 14, playbook 4.1). This wraps the
@@ -765,6 +766,10 @@ body.nui #diff{display:none}
     div.innerHTML = `<h3>AlphaFold 3, diffusion · illustration</h3><p class="note">AlphaFold 3 places atoms by diffusion: it starts from atoms scattered as noise and removes the noise step by step, on a fixed schedule, until a structure is left. Here that schedule is run backwards onto known coordinates. <b>Nothing is predicted in your browser.</b></p>` +
       a.scenes.map((s) => `<button class="item" data-anim="${esc(s.id)}"><b>${esc(s.id.replace(/-F1$/, "").toUpperCase())}</b><span>${esc(s.title.replace(/^[^:]+:\s*/, "").replace(/, diffusion illustration$/, ""))}</span>` +
         `<i>${s.atoms.toLocaleString("en")} atoms${s.zinc ? " · " + s.zinc + " Zn" : ""} · ${s.keys} keys · ${s.kind === "afdb" ? "pLDDT and PAE" : "crystal, no scores"}</i></button>`).join("");
+    const film = state.film && state.film.scenes ? Object.entries(state.film.scenes).filter(([, f]) => f.mp4) : [];
+    if (film.length) div.insertAdjacentHTML("beforeend", `<h3>Rendered in Blender · Cycles</h3>` + film.map(([id, f]) =>
+      `<figure class="film"><video src="cinema/${esc(f.mp4.file)}" poster="cinema/${esc(f.poster.file)}" controls loop muted playsinline preload="none" aria-label="${esc(id)} diffusion illustration, rendered in Blender"></video>` +
+      `<figcaption>${esc(id.replace(/-F1$/, "").toUpperCase())} · the same X3D keyframes, ${f.frames} frames in Cycles · last frame ${f.check ? f.check.last_frame_rms_from_rest_A : "?"} Å from the file's atoms · illustration, not a live run</figcaption></figure>`).join(""));
     $("#list").appendChild(div);
     for (const b of div.querySelectorAll("[data-anim]")) b.onclick = () => openAnim(b.dataset.anim);
   }
@@ -979,9 +984,9 @@ body.nui #diff{display:none}
 
   async function boot() {
     try {
-      const [cat, rec, cred, cine, gate, anim] = await Promise.all([getJSON("scenes/catalog.json"), getJSON("scenes/receipt.json").catch(() => null), getJSON("scenes/credits.json").catch(() => null),
-        getJSON("cinema/receipt.json").catch(() => null), getJSON("cinema/gate.json").catch(() => null), getJSON("scenes/anim/anim.json").catch(() => null)]);
-      Object.assign(state, { catalog: cat, receipt: rec, credits: cred, cine, gate, animIndex: anim });
+      const [cat, rec, cred, cine, gate, anim, film] = await Promise.all([getJSON("scenes/catalog.json"), getJSON("scenes/receipt.json").catch(() => null), getJSON("scenes/credits.json").catch(() => null),
+        getJSON("cinema/receipt.json").catch(() => null), getJSON("cinema/gate.json").catch(() => null), getJSON("scenes/anim/anim.json").catch(() => null), getJSON("cinema/diffusion.json").catch(() => null)]);
+      Object.assign(state, { catalog: cat, receipt: rec, credits: cred, cine, gate, animIndex: anim, film });
       buildCatalogue();
       const q = hp.get("q") || (matchMedia("(max-width:700px)").matches ? "low" : "high");
       state.body = await XMolBody.create($("#stage"), { quality: q, webgpu: hp.get("gpu") !== "0" });
