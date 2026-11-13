@@ -71,11 +71,13 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 4,
-   "status": "gap",
-   "batch": 9,
+   "status": "bridged",
+   "batch": 25,
    "receipt": "receipts/Arc2D.json",
-   "note": "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared",
-   "rank": 43
+   "note": "lines are not pickable, so the check is the picture (silhouette overlap and the mean colour of the drawn pixels, SwiftShader CPU raster) plus the segment count between the engines (X_ITE vertex pairs through its internal getVertices, a private API) and one line mesh in our body; line width is one pixel in both, ours is an anti-aliased ribbon",
+   "rank": 43,
+   "prev_batch": 25,
+   "prev_note": "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared"
   },
   "ArcClose2D": {
    "component": "Geometry2D",
@@ -84,11 +86,13 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 6,
-   "status": "gap",
-   "batch": 9,
+   "status": "bridged",
+   "batch": 25,
    "receipt": "receipts/ArcClose2D.json",
-   "note": "compared by pointer-over probes in both engines and the triangle count; texture mapping and lighting are not compared",
-   "rank": 44
+   "note": "compared by pointer-over probes, the triangle count and the picture; texture mapping and lighting of ArcClose2D are not compared with X_ITE",
+   "rank": 44,
+   "prev_batch": 25,
+   "prev_note": "compared by pointer-over probes in both engines and the triangle count; texture mapping and lighting are not compared"
   },
   "AudioClip": {
    "component": "Sound",
@@ -396,11 +400,13 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 2,
-   "status": "gap",
-   "batch": 9,
+   "status": "bridged",
+   "batch": 25,
    "receipt": "receipts/Circle2D.json",
-   "note": "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared",
-   "rank": 45
+   "note": "lines are not pickable, so the check is the picture (silhouette overlap and the mean colour of the drawn pixels, SwiftShader CPU raster) plus the segment count between the engines (X_ITE vertex pairs through its internal getVertices, a private API) and one line mesh in our body; line width is one pixel in both, ours is an anti-aliased ribbon",
+   "rank": 45,
+   "prev_batch": 25,
+   "prev_note": "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared"
   },
   "ClipPlane": {
    "component": "Rendering",
@@ -734,11 +740,13 @@
    "inherits": "X3DCoordinateNode",
    "container": "coord",
    "nfields": 2,
-   "status": "gap",
-   "batch": 13,
+   "status": "wip",
+   "batch": null,
    "receipt": "receipts/CoordinateDouble.json",
    "note": "the points are kept as 32-bit floats (the geometry code reads Float32Array); doubles finer than about 7 digits or larger than 3e38 are not kept; only the triangle positions are compared with X_ITE (pointer hit and miss), not shading",
-   "rank": 99
+   "rank": 99,
+   "prev_batch": 13,
+   "prev_note": "the points are kept as 32-bit floats (the geometry code reads Float32Array); doubles finer than about 7 digits or larger than 3e38 are not kept; only the triangle positions are compared with X_ITE (pointer hit and miss), not shading"
   },
   "CoordinateInterpolator": {
    "component": "Interpolation",
@@ -1593,10 +1601,12 @@
    "container": "geometry",
    "nfields": 7,
    "status": "gap",
-   "batch": 9,
+   "batch": 25,
    "receipt": "receipts/LineSet.json",
-   "note": "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared; normal, fogCoord and attrib are read and ignored",
-   "rank": 41
+   "note": "normal, fogCoord and attrib are read and ignored; line colour: the drawn pixels are about 20 percent brighter than X_ITE's one pixel lines in the picture (mean colour 60,120,61 against 48,99,51), the anti-aliased ribbon covers more pixels than a raw GL line",
+   "rank": 41,
+   "prev_batch": 25,
+   "prev_note": "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared; normal, fogCoord and attrib are read and ignored"
   },
   "ListenerPointSource": {
    "component": "Sound",
@@ -2268,11 +2278,13 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 2,
-   "status": "gap",
-   "batch": 10,
+   "status": "wip",
+   "batch": null,
    "receipt": "receipts/Polyline2D.json",
    "note": "lines are not pickable: the segment count is compared between the engines (X_ITE vertex pairs via its private getVertices); colour and width are not compared",
-   "rank": 46
+   "rank": 46,
+   "prev_batch": 10,
+   "prev_note": "lines are not pickable: the segment count is compared between the engines (X_ITE vertex pairs via its private getVertices); colour and width are not compared"
   },
   "PolylineEmitter": {
    "component": "ParticleSystems",
@@ -2294,11 +2306,13 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 2,
-   "status": "gap",
-   "batch": 10,
+   "status": "wip",
+   "batch": null,
    "receipt": "receipts/Polypoint2D.json",
    "note": "points cannot be picked: the point count is compared between the engines; WebGPU draws each point one pixel, X_ITE draws them with its point size; colour is not compared",
-   "rank": 47
+   "rank": 47,
+   "prev_batch": 10,
+   "prev_note": "points cannot be picked: the point count is compared between the engines; WebGPU draws each point one pixel, X_ITE draws them with its point size; colour is not compared"
   },
   "PositionChaser": {
    "component": "Followers",
@@ -3204,11 +3218,13 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 3,
-   "status": "gap",
-   "batch": 9,
+   "status": "bridged",
+   "batch": 25,
    "receipt": "receipts/TriangleSet2D.json",
-   "note": "compared by pointer-over probes in both engines and the triangle count; the clockwise second triangle is turned to face +z in ours, X_ITE draws it two-sided",
-   "rank": 42
+   "note": "compared by pointer-over probes, the triangle count and the picture; X_ITE 16.6.0 culls the clockwise second triangle although solid is false, ours draws it facing +z (the 4.0 text: a 2D geometry has no back side), a deliberate difference",
+   "rank": 42,
+   "prev_batch": 25,
+   "prev_note": "compared by pointer-over probes in both engines and the triangle count; the clockwise second triangle is turned to face +z in ours, X_ITE draws it two-sided"
   },
   "TriangleStripSet": {
    "component": "Rendering",
