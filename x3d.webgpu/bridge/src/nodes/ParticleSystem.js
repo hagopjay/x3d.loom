@@ -16,7 +16,7 @@ const PS = (BR.ps = {
     if (!g) return [];
     const out = [], P = (a) => a.length ? a : [];
     if (g.type === 'Box') { const [x, y, z] = g.f.size.map((v) => v / 2); const v = [[-x, -y, -z], [x, -y, -z], [x, y, -z], [-x, y, -z], [-x, -y, z], [x, -y, z], [x, y, z], [-x, y, z]]; for (const q of [[0, 3, 2, 1], [4, 5, 6, 7], [0, 1, 5, 4], [3, 7, 6, 2], [0, 4, 7, 3], [1, 2, 6, 5]]) out.push([v[q[0]], v[q[1]], v[q[2]]], [v[q[0]], v[q[2]], v[q[3]]]); return out; }
-    if (g.type === 'Sphere') { const r = g.f.radius, N = 16, M = 12, p = (i, j) => { const t = (i / N) * Math.PI * 2, f = (j / M) * Math.PI; return [r * Math.sin(f) * Math.cos(t), r * Math.cos(f), r * Math.sin(f) * Math.sin(t)]; }; for (let i = 0; i < N; i++) for (let j = 0; j < M; j++) { const a = p(i, j), b = p(i + 1, j), c = p(i + 1, j + 1), d = p(i, j + 1); out.push([a, d, c], [a, c, b]); } return out; }
+    if (g.type === 'Sphere') { const r = g.f.radius, N = 16, M = 12, p = (i, j) => { const t = (i / N) * Math.PI * 2, f = (j / M) * Math.PI; return [r * Math.sin(f) * Math.cos(t), r * Math.cos(f), r * Math.sin(f) * Math.sin(t)]; }; for (let i = 0; i < N; i++) for (let j = 0; j < M; j++) { const a = p(i, j), b = p(i + 1, j), c = p(i + 1, j + 1), d = p(i, j + 1); out.push([a, c, d], [a, b, c]); } return out; }
     let d = null; try { d = body.geometryData(g); } catch (e) { /* no vertex data */ }
     if (d && d.pos && d.idx) { for (let i = 0; i + 2 < d.idx.length; i += 3) { const v = [0, 1, 2].map((k) => [d.pos[d.idx[i + k] * 3], d.pos[d.idx[i + k] * 3 + 1], d.pos[d.idx[i + k] * 3 + 2]]); out.push(v); } return out; }
     return out;
@@ -58,9 +58,10 @@ const PS = (BR.ps = {
       pos = () => { if (!sg.length) return f.position.slice(); let r = PS.rnd() * tot, i = 0; while (i < sg.length - 1 && r > len[i]) { r -= len[i]; i++; } const t = len[i] ? r / len[i] : 0, s = sg[i]; return [0, 1, 2].map((k) => s[0][k] + (s[1][k] - s[0][k]) * t); };
     } else if (em.type === 'SurfaceEmitter') {
       const tris = (cache = PS.tris(body, f.surface)), cum = []; let A = 0; for (const t of tris) { A += PS.area(t).a; cum.push(A); }
-      let last = null;
-      pos = () => { if (!tris.length) return [0, 0, 0]; const r = PS.rnd() * A; let i = cum.findIndex((c) => c >= r); if (i < 0) i = tris.length - 1; const o = PS.onTri(tris[i]); last = o.n; return o.p; };
-      dir = () => { const sp = PS.speedOf(em), n = last || [0, 1, 0]; return [n[0] * sp, n[1] * sp, n[2] * sp]; };
+      // Babylon asks for the start direction and the start position of a particle in either order; both must come from the same point of the surface, so the pair is made on the first call and used up on the second
+      let cur = null; const fresh = () => { if (!tris.length) return { p: [0, 0, 0], n: [0, 1, 0] }; const r = PS.rnd() * A; let k = cum.findIndex((c) => c >= r); if (k < 0) k = tris.length - 1; return PS.onTri(tris[k]); };
+      pos = () => { if (!cur || cur.pd) cur = Object.assign(fresh(), { pd: false, dd: false }); cur.pd = true; const o = cur.p; if (cur.dd) cur = null; return o; };
+      dir = () => { if (!cur || cur.dd) cur = Object.assign(fresh(), { pd: false, dd: false }); cur.dd = true; const sp = PS.speedOf(em), n = cur.n; if (cur.pd) cur = null; return [n[0] * sp, n[1] * sp, n[2] * sp]; };
     }
     const set = (v, a) => v.copyFromFloats(a[0], a[1], a[2]);
     return {
