@@ -1,0 +1,15 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch({ channel: 'chromium' });
+const page = await browser.newPage({ locale: 'en-US', viewport: { width: 1500, height: 1000 } });
+const errs = []; page.on('pageerror', (e) => errs.push(e.message));
+await page.goto((process.env.BASE ?? 'http://127.0.0.1:5181/') + 'machine.html');
+await page.waitForFunction(() => window.__mm?.ready, null, { timeout: 60000 });
+await page.evaluate(() => window.__mm.select(32)); await page.waitForTimeout(500);
+await page.screenshot({ path: 'evidence/p4-info-build-chromium.webp' });
+const inspector = await page.locator('#inspector-body').innerText();
+await page.evaluate(() => window.__mm.enterRun()); await page.waitForFunction(() => window.__mm.looks);
+await page.locator('#canvas').click({ position: { x: 5, y: 5 } }); await page.keyboard.press('i'); await page.waitForTimeout(400);
+await page.screenshot({ path: 'evidence/p4-info-run-chromium.webp' });
+const loss = await page.locator('#loss-detail').innerText();
+console.log('INSPECTOR\n' + inspector.slice(0, 900) + '\nLOSS\n' + loss.slice(0, 700), '\nerrors', errs);
+await browser.close();

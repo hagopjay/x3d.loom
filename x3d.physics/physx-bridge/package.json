@@ -1,0 +1,31 @@
+{
+  "name": "x3d-physx-bridge",
+  "private": true,
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "type": "module",
+  "description": "Standard X3D 4.0 RigidBodyPhysics scenes on NVIDIA PhysX 5 (WASM) in the browser; the Marble Machine demo.",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run vendor && tsc --noEmit && vite build && node scripts/copy-legal.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.ts",
+    "smoke": "npm run build && playwright test",
+    "vendor": "node scripts/vendor-xite.mjs",
+    "validate": "node tools/export-scenes.ts && ~/Projects/x3d/x3d_mcp/.venv/bin/python tools/validate_one.py scenes/*.x3d scenes/pieces/*.x3d scenes/experiments/*.x3d scenes/demos/*.x3d",
+    "sounds": "node tools/make-sounds.ts"
+  },
+  "dependencies": {
+    "physx-js-webidl": "2.9.1",
+    "x_ite": "16.7.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2",
+    "esbuild": "0.27.7",
+    "typescript": "5.9.3",
+    "vite": "7.3.2"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

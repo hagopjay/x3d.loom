@@ -1,0 +1,54 @@
+{
+  "name": "x3d-mujoco-proto-bridge",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run vendor && tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "verify": "node --import ./scripts/register-loader.mjs ./scripts/verify.mjs",
+    "verify:workbench": "node --import ./scripts/register-loader.mjs ./scripts/verify-workbench.mjs",
+    "test": "npm run verify && npm run verify:workbench && npm run verify:ui && npm run verify:bridge && npm run verify:bridge-ui && npm run verify:threats && npm run verify:notices",
+    "verify:ui": "node scripts/verify-ui.mjs",
+    "vendor": "node scripts/vendor-xite.mjs && node scripts/tour-evidence.mjs",
+    "verify:bridge": "node --import ./scripts/register-loader.mjs ./scripts/verify-bridge.mjs",
+    "verify:bridge-ui": "node scripts/verify-bridge-ui.mjs",
+    "verify:x3d": "python3 scripts/verify-x3d-schema.py",
+    "smoke": "playwright test",
+    "verify:threats": "node --import ./scripts/register-loader.mjs ./scripts/verify-importer-threats.mjs",
+    "verify:x3d-mcp": "${X3D_MCP_PYTHON:-$HOME/Projects/x3d/x3d_mcp/.venv/bin/python} -I scripts/validate-with-x3d-mcp.py samples/contact-arm.x3d samples/contact-arm-experiment.zip",
+    "notices": "node scripts/third-party-notices.mjs",
+    "verify:notices": "node scripts/third-party-notices.mjs --check"
+  },
+  "dependencies": {
+    "@mujoco/mujoco": "3.17.0",
+    "@types/three": "0.186.0",
+    "clsx": "2.1.1",
+    "jszip": "3.10.1",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "tailwind-merge": "3.4.0",
+    "three": "0.186.1",
+    "x_ite": "16.7.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2",
+    "@tailwindcss/vite": "4.1.17",
+    "@types/node": "22.19.17",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "5.1.1",
+    "esbuild": "0.27.7",
+    "jsdom": "26.1.0",
+    "tailwindcss": "4.1.17",
+    "typescript": "5.9.3",
+    "vite": "7.3.2",
+    "vite-plugin-singlefile": "2.3.0"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "license": "Apache-2.0"
+}

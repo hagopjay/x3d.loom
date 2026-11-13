@@ -1,0 +1,40 @@
+<mujoco model="cartpole_balance">
+  <!-- Salvaged starter from archive A. See ../model-provenance.json for changes and limitations. -->
+  <!-- Keep the pole upright using one actuator on the cart. -->
+  <option gravity="0 0 -9.81"
+          timestep="0.002" integrator="implicitfast"/>
+
+  <worldbody>
+    <light pos="0 2.4 3" dir="0 -1 -1" directional="true"/>
+    <geom name="floor" type="plane" size="5 5 0.1"
+          rgba="0.35 0.37 0.32 1"/>
+
+    <body name="cart" pos="0 0 0.18">
+      <joint name="slide" type="slide" axis="1 0 0"
+             damping="0.060" limited="true"
+             range="-2.2 2.2"/>
+      <geom name="cart" type="box" size="0.26 0.16 0.11"
+            mass="1.00" rgba="0.86 0.84 0.74 1"/>
+
+      <body name="pole" pos="0 0 0.11">
+        <joint name="hinge" type="hinge" axis="0 1 0"
+               damping="0.004"/>
+        <geom name="pole" type="capsule"
+              fromto="0 0 0 0 0 0.90"
+              size="0.026" mass="0.22"
+              rgba="0.93 0.51 0.27 1"/>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="drive" joint="slide" gear="1"
+           ctrlrange="-20 20"/>
+  </actuator>
+
+  <sensor>
+    <jointpos name="pole_angle" joint="hinge"/>
+    <jointvel name="pole_velocity" joint="hinge"/>
+    <framepos name="pole_tip" objtype="body" objname="pole"/>
+  </sensor>
+</mujoco>

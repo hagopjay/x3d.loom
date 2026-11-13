@@ -8,6 +8,7 @@
   python -m loomkit sci       ROOT --evidence DIR --profile kit/profiles/x3d-stem-science.json
   python -m loomkit play      ROOT --evidence DIR --tapes GLOB --levels GLOB --runner FILE [--repeats 2]
   python -m loomkit hepevent  ROOT --evidence DIR --events GLOB --spec FILE
+  python -m loomkit physics   ROOT --evidence DIR --runs GLOB [--hosts chromium,firefox,webkit,node] [--max-waivers N] [--require-takeover]
   python -m loomkit command   ROOT --evidence DIR --name NAME -- CMD ...
   python -m loomkit record    ROOT --evidence DIR --name NAME --status not_run --reason TEXT
   python -m loomkit accept    ROOT --evidence DIR --profile FILE
@@ -26,7 +27,7 @@ import sys
 from pathlib import Path
 
 from . import accept as acc
-from . import foldback, grammar, hepevent, metalsite, pagetraps, picture, play, receipt, sci, sweep, traps
+from . import foldback, grammar, hepevent, metalsite, pagetraps, physics, picture, play, receipt, sci, sweep, traps
 from .core import GateError, InstrumentError, candidate, need, portable, sha256_file, write_witness
 
 
@@ -215,6 +216,28 @@ def cmd_play(a) -> dict:
                          reason=reason)
 
 
+def cmd_physics(a) -> dict:
+    """Physics witness: every run record carries its own proof (per-step hashes replayed on every named host,
+    exact references, a takeover proof where an engine was replaced) and every excursion is on the record."""
+    root = Path(a.root)
+    subject = candidate(root)["sha256"]
+    runs = _files(root, a.runs)
+    hosts = [h for h in a.hosts.split(",") if h] if a.hosts else None
+    try:
+        res = physics.check(runs, root, required_hosts=hosts, max_waivers=a.max_waivers, require_takeover=a.require_takeover)
+        status, reason = "pass", ""
+    except GateError as e:
+        res, status, reason = {"rejected": e.code, "detail": e.detail}, "fail", f"{e.code}: {e.detail}"
+    return write_witness(a.evidence, root, subject, "physics", status, "C",
+                         {"tool": "loomkit.physics", "rules_sha256": sha256_file(Path(physics.__file__)), "hosts": hosts or "as each record names them",
+                          "max_waivers": a.max_waivers, "require_takeover": a.require_takeover},
+                         measurements=res, coverage={"runs": len(runs), "max_waivers": a.max_waivers, "require_takeover": bool(a.require_takeover)},
+                         limitations=["Determinism is shown on the hosts and the machine the record names; another machine or another engine build needs its own replay (law 42).",
+                                      "A passing record shows the run answers to its references and hashes; it does not show the engine's model is right where no exact reference exists.",
+                                      "The witness reads the record a project's own harness wrote; the harness is trusted to have replayed what it says (the project's browser evidence is the behaviour witness)."],
+                         reason=reason)
+
+
 def cmd_command(a) -> dict:
     """Adapter for a project's own gate: exit 0 pass, 1 fail, anything else error."""
     root = Path(a.root)
@@ -295,6 +318,8 @@ def main(argv: list[str] | None = None) -> int:
     p = common("metalsite"); p.add_argument("--files", required=True); p.add_argument("--spec", required=True)
     p.add_argument("--name", default="metal-site")
     p = common("hepevent"); p.add_argument("--events", required=True); p.add_argument("--spec", required=True)
+    p = common("physics"); p.add_argument("--runs", required=True); p.add_argument("--hosts", default="")
+    p.add_argument("--max-waivers", type=int, default=0); p.add_argument("--require-takeover", action="store_true")
     p = common("play"); p.add_argument("--tapes", required=True); p.add_argument("--levels", required=True)
     p.add_argument("--runner", required=True); p.add_argument("--node", default="node"); p.add_argument("--repeats", type=int, default=2)
     p = common("command"); p.add_argument("--name", required=True)
@@ -328,7 +353,7 @@ def main(argv: list[str] | None = None) -> int:
         elif a.cmd_name == "picture":
             out = picture.validate(json.loads(Path(a.review).read_text()), a.subject, json.loads(Path(a.frames).read_text()))
         else:
-            out = {"sci": cmd_sci, "metalsite": cmd_metalsite, "hepevent": cmd_hepevent, "play": cmd_play, "pagetraps": cmd_pagetraps, "traps": cmd_traps, "grammar": cmd_grammar, "foldback": cmd_foldback, "command": cmd_command,
+            out = {"sci": cmd_sci, "metalsite": cmd_metalsite, "hepevent": cmd_hepevent, "play": cmd_play, "physics": cmd_physics, "pagetraps": cmd_pagetraps, "traps": cmd_traps, "grammar": cmd_grammar, "foldback": cmd_foldback, "command": cmd_command,
                    "record": cmd_record, "accept": cmd_accept, "receipt": cmd_receipt}[a.cmd_name](a)
     except GateError as e:
         print(json.dumps({"rejected": e.code, "detail": e.detail}))

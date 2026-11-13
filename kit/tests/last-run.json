@@ -228,6 +228,158 @@
             "result": "exact"
           }
         ],
+        "physics": [
+          {
+            "case": "clean fixture",
+            "hosts": [
+              "chromium",
+              "firefox",
+              "node"
+            ],
+            "result": "pass"
+          },
+          {
+            "case": "a complete waiver within the profile's cap",
+            "result": "pass, reported as 1 waiver"
+          },
+          {
+            "case": "takeover required and proved",
+            "result": "pass, 1 leak listed"
+          },
+          {
+            "case": "a required field is missing",
+            "caught": "PHYS_SCHEMA",
+            "expected": "PHYS_SCHEMA"
+          },
+          {
+            "case": "a step hash edited after the trace was stamped",
+            "caught": "PHYS_TRACE_TAMPERED",
+            "expected": "PHYS_TRACE_TAMPERED"
+          },
+          {
+            "case": "a required host never replayed",
+            "caught": "PHYS_REPLAY_MISSING",
+            "expected": "PHYS_REPLAY_MISSING"
+          },
+          {
+            "case": "a replay ran a different number of steps",
+            "caught": "PHYS_REPLAY_STEPS",
+            "expected": "PHYS_REPLAY_STEPS"
+          },
+          {
+            "case": "a replay on another engine version",
+            "caught": "PHYS_ENGINE_DRIFT",
+            "expected": "PHYS_ENGINE_DRIFT"
+          },
+          {
+            "case": "a replay differs at some step",
+            "caught": "PHYS_HASH_DRIFT",
+            "expected": "PHYS_HASH_DRIFT"
+          },
+          {
+            "case": "no exact reference",
+            "caught": "PHYS_NO_REFERENCE",
+            "expected": "PHYS_NO_REFERENCE"
+          },
+          {
+            "case": "a limit widened after the fact",
+            "caught": "PHYS_LIMIT_WIDENED",
+            "expected": "PHYS_LIMIT_WIDENED"
+          },
+          {
+            "case": "a tolerance marked pass whose numbers fail it",
+            "caught": "PHYS_FALSE_GREEN",
+            "expected": "PHYS_FALSE_GREEN"
+          },
+          {
+            "case": "a reference that is missed",
+            "caught": "PHYS_REFERENCE_FAIL",
+            "expected": "PHYS_REFERENCE_FAIL"
+          },
+          {
+            "case": "a tolerance exceeded with no waiver",
+            "caught": "PHYS_TOLERANCE_FAIL",
+            "expected": "PHYS_TOLERANCE_FAIL"
+          },
+          {
+            "case": "a waiver without a reason",
+            "caught": "PHYS_WAIVER_INCOMPLETE",
+            "expected": "PHYS_WAIVER_INCOMPLETE"
+          },
+          {
+            "case": "a waiver that states other numbers",
+            "caught": "PHYS_WAIVER_INCOMPLETE",
+            "expected": "PHYS_WAIVER_INCOMPLETE"
+          },
+          {
+            "case": "a complete waiver the profile does not allow",
+            "caught": "PHYS_WAIVERS_OVER_CAP",
+            "expected": "PHYS_WAIVERS_OVER_CAP"
+          },
+          {
+            "case": "a negative control that did not fail",
+            "caught": "PHYS_CONTROL_SURVIVED",
+            "expected": "PHYS_CONTROL_SURVIVED"
+          },
+          {
+            "case": "the old engine not shown off on one host",
+            "caught": "PHYS_TAKEOVER_UNPROVEN",
+            "expected": "PHYS_TAKEOVER_UNPROVEN"
+          },
+          {
+            "case": "a takeover claimed for a host that is not a required host",
+            "caught": "PHYS_TAKEOVER_UNPROVEN",
+            "expected": "PHYS_TAKEOVER_UNPROVEN"
+          },
+          {
+            "case": "a takeover with no applies_to, so Node must show an engine it never ran",
+            "caught": "PHYS_TAKEOVER_UNPROVEN",
+            "expected": "PHYS_TAKEOVER_UNPROVEN"
+          },
+          {
+            "case": "a takeover required and not recorded",
+            "caught": "PHYS_TAKEOVER_UNPROVEN",
+            "expected": "PHYS_TAKEOVER_UNPROVEN"
+          },
+          {
+            "case": "authored fields dropped without a loss report",
+            "caught": "PHYS_LOSS_UNREPORTED",
+            "expected": "PHYS_LOSS_UNREPORTED"
+          },
+          {
+            "case": "model edited after the run",
+            "caught": "PHYS_MODEL_STALE",
+            "expected": "PHYS_MODEL_STALE"
+          },
+          {
+            "case": "no run record at all",
+            "caught": "PHYS_NO_RUNS",
+            "expected": "PHYS_NO_RUNS"
+          },
+          {
+            "case": "CLI: clean fixture; the witness records the waiver cap it ran with",
+            "result": "exit 0, witness pass"
+          },
+          {
+            "case": "profile caps waivers at 0 but the witness ran with a cap of 1",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          },
+          {
+            "case": "profile caps waivers at 1 and the witness ran with a cap of 1",
+            "result": "accepted"
+          },
+          {
+            "case": "CLI: hash drift is a witness fail with its code",
+            "caught": "PHYS_HASH_DRIFT",
+            "expected": "PHYS_HASH_DRIFT"
+          },
+          {
+            "case": "CLI: unreadable record exits 2",
+            "caught": "exit 2",
+            "expected": "exit 2"
+          }
+        ],
         "picture": [
           {
             "case": "located suspected flag",
@@ -545,7 +697,7 @@
           }
         ]
       },
-      "negative_controls_caught": 57,
+      "negative_controls_caught": 82,
       "optimized": false,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,
@@ -779,6 +931,158 @@
             "result": "exact"
           }
         ],
+        "physics": [
+          {
+            "case": "clean fixture",
+            "hosts": [
+              "chromium",
+              "firefox",
+              "node"
+            ],
+            "result": "pass"
+          },
+          {
+            "case": "a complete waiver within the profile's cap",
+            "result": "pass, reported as 1 waiver"
+          },
+          {
+            "case": "takeover required and proved",
+            "result": "pass, 1 leak listed"
+          },
+          {
+            "case": "a required field is missing",
+            "caught": "PHYS_SCHEMA",
+            "expected": "PHYS_SCHEMA"
+          },
+          {
+            "case": "a step hash edited after the trace was stamped",
+            "caught": "PHYS_TRACE_TAMPERED",
+            "expected": "PHYS_TRACE_TAMPERED"
+          },
+          {
+            "case": "a required host never replayed",
+            "caught": "PHYS_REPLAY_MISSING",
+            "expected": "PHYS_REPLAY_MISSING"
+          },
+          {
+            "case": "a replay ran a different number of steps",
+            "caught": "PHYS_REPLAY_STEPS",
+            "expected": "PHYS_REPLAY_STEPS"
+          },
+          {
+            "case": "a replay on another engine version",
+            "caught": "PHYS_ENGINE_DRIFT",
+            "expected": "PHYS_ENGINE_DRIFT"
+          },
+          {
+            "case": "a replay differs at some step",
+            "caught": "PHYS_HASH_DRIFT",
+            "expected": "PHYS_HASH_DRIFT"
+          },
+          {
+            "case": "no exact reference",
+            "caught": "PHYS_NO_REFERENCE",
+            "expected": "PHYS_NO_REFERENCE"
+          },
+          {
+            "case": "a limit widened after the fact",
+            "caught": "PHYS_LIMIT_WIDENED",
+            "expected": "PHYS_LIMIT_WIDENED"
+          },
+          {
+            "case": "a tolerance marked pass whose numbers fail it",
+            "caught": "PHYS_FALSE_GREEN",
+            "expected": "PHYS_FALSE_GREEN"
+          },
+          {
+            "case": "a reference that is missed",
+            "caught": "PHYS_REFERENCE_FAIL",
+            "expected": "PHYS_REFERENCE_FAIL"
+          },
+          {
+            "case": "a tolerance exceeded with no waiver",
+            "caught": "PHYS_TOLERANCE_FAIL",
+            "expected": "PHYS_TOLERANCE_FAIL"
+          },
+          {
+            "case": "a waiver without a reason",
+            "caught": "PHYS_WAIVER_INCOMPLETE",
+            "expected": "PHYS_WAIVER_INCOMPLETE"
+          },
+          {
+            "case": "a waiver that states other numbers",
+            "caught": "PHYS_WAIVER_INCOMPLETE",
+            "expected": "PHYS_WAIVER_INCOMPLETE"
+          },
+          {
+            "case": "a complete waiver the profile does not allow",
+            "caught": "PHYS_WAIVERS_OVER_CAP",
+            "expected": "PHYS_WAIVERS_OVER_CAP"
+          },
+          {
+            "case": "a negative control that did not fail",
+            "caught": "PHYS_CONTROL_SURVIVED",
+            "expected": "PHYS_CONTROL_SURVIVED"
+          },
+          {
+            "case": "the old engine not shown off on one host",
+            "caught": "PHYS_TAKEOVER_UNPROVEN",
+            "expected": "PHYS_TAKEOVER_UNPROVEN"
+          },
+          {
+            "case": "a takeover claimed for a host that is not a required host",
+            "caught": "PHYS_TAKEOVER_UNPROVEN",
+            "expected": "PHYS_TAKEOVER_UNPROVEN"
+          },
+          {
+            "case": "a takeover with no applies_to, so Node must show an engine it never ran",
+            "caught": "PHYS_TAKEOVER_UNPROVEN",
+            "expected": "PHYS_TAKEOVER_UNPROVEN"
+          },
+          {
+            "case": "a takeover required and not recorded",
+            "caught": "PHYS_TAKEOVER_UNPROVEN",
+            "expected": "PHYS_TAKEOVER_UNPROVEN"
+          },
+          {
+            "case": "authored fields dropped without a loss report",
+            "caught": "PHYS_LOSS_UNREPORTED",
+            "expected": "PHYS_LOSS_UNREPORTED"
+          },
+          {
+            "case": "model edited after the run",
+            "caught": "PHYS_MODEL_STALE",
+            "expected": "PHYS_MODEL_STALE"
+          },
+          {
+            "case": "no run record at all",
+            "caught": "PHYS_NO_RUNS",
+            "expected": "PHYS_NO_RUNS"
+          },
+          {
+            "case": "CLI: clean fixture; the witness records the waiver cap it ran with",
+            "result": "exit 0, witness pass"
+          },
+          {
+            "case": "profile caps waivers at 0 but the witness ran with a cap of 1",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          },
+          {
+            "case": "profile caps waivers at 1 and the witness ran with a cap of 1",
+            "result": "accepted"
+          },
+          {
+            "case": "CLI: hash drift is a witness fail with its code",
+            "caught": "PHYS_HASH_DRIFT",
+            "expected": "PHYS_HASH_DRIFT"
+          },
+          {
+            "case": "CLI: unreadable record exits 2",
+            "caught": "exit 2",
+            "expected": "exit 2"
+          }
+        ],
         "picture": [
           {
             "case": "located suspected flag",
@@ -1096,7 +1400,7 @@
           }
         ]
       },
-      "negative_controls_caught": 57,
+      "negative_controls_caught": 82,
       "optimized": true,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,

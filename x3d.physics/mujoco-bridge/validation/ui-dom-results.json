@@ -1,0 +1,80 @@
+{
+  "generatedAt": "2026-11-07T16:29:29.663Z",
+  "environment": "Node + jsdom + React, actual MuJoCo WASM; no real browser or GPU",
+  "substitutions": [
+    "Canvas returns null, exercising the WebGL-unavailable fallback",
+    "Native dialog open/close is a DOM attribute shim",
+    "Object URLs and anchor download activation are captured; no real browser downloads"
+  ],
+  "checks": [
+    {
+      "name": "startup initializes WASM, applies the arm and attaches feedback",
+      "status": "pass",
+      "detail": {
+        "fallbackVisible": true,
+        "controller": "feedback"
+      }
+    },
+    {
+      "name": "measured run renders chart and real contact result",
+      "status": "pass",
+      "detail": {
+        "ticks": 2500,
+        "contacts": 1
+      }
+    },
+    {
+      "name": "navigation preserves measured runs and pinned baseline",
+      "status": "pass",
+      "detail": {
+        "preserved": true
+      }
+    },
+    {
+      "name": "Apply reattaches bundled feedback and preserves the pinned baseline",
+      "status": "pass",
+      "detail": {
+        "baselineSurvivedCompile": true
+      }
+    },
+    {
+      "name": "trial download contains actual samples and recipe",
+      "status": "pass",
+      "detail": {
+        "samples": 2501
+      }
+    },
+    {
+      "name": "cartpole mode offers disturbance and a measured recovery",
+      "status": "pass",
+      "detail": {
+        "finalPoleRad": 0.00007581514184712343
+      }
+    },
+    {
+      "name": "invalid editor input preserves compiled model and recovers after correction",
+      "status": "pass",
+      "detail": {
+        "preservedCompiledSource": true
+      }
+    },
+    {
+      "name": "command palette opens, selects navigation and closes",
+      "status": "pass",
+      "detail": {
+        "openedAndClosed": true
+      }
+    },
+    {
+      "name": "unhandled console errors are absent apart from the expected WebGL fallback",
+      "status": "pass",
+      "detail": {
+        "unexpectedErrors": 0
+      }
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 0
+  }
+}

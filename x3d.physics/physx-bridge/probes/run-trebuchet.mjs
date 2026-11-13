@@ -1,0 +1,30 @@
+// The trebuchet in a real browser: fire the default shot, screenshots of the swing, the flight and the castle; compare with Node.
+import { chromium, firefox, webkit } from 'playwright';
+import { writeFileSync } from 'node:fs';
+const [, , which = 'chromium'] = process.argv;
+const B = { chromium, firefox, webkit }[which];
+const browser = await B.launch({ ...(which === 'chromium' ? { channel: 'chromium' } : {}) });
+const page = await browser.newPage({ locale: 'en-US', viewport: { width: 1500, height: 950 } });
+const errors = [];
+page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+page.on('pageerror', (e) => errors.push(String(e)));
+await page.goto(`${process.env.BASE ?? 'http://127.0.0.1:5181/'}trebuchet.html`);
+await page.waitForFunction(() => window.__demo?.ready || window.__demo?.error, null, { timeout: 60000 });
+if (await page.evaluate(() => window.__demo.error)) { console.log(await page.evaluate(() => window.__demo.error)); process.exit(1); }
+await page.evaluate(() => localStorage.removeItem('x3d-physx-trebuchet-shots'));
+await page.waitForTimeout(1500);
+await page.screenshot({ path: `evidence/trebuchet-cocked-${which}.png` });
+await page.locator('#canvas').click({ position: { x: 5, y: 5 } });
+await page.keyboard.press('f');
+await page.waitForTimeout(1100);
+await page.screenshot({ path: `evidence/trebuchet-swing-${which}.png` });
+await page.waitForFunction(() => window.__treb.phase === 'flying', null, { timeout: 20000 });
+await page.waitForTimeout(1500);
+await page.screenshot({ path: `evidence/trebuchet-flight-${which}.png` });
+await page.waitForFunction(() => window.__treb.shots.length > 0, null, { timeout: 30000 });
+await page.screenshot({ path: `evidence/trebuchet-castle-${which}.png` });
+const shot = await page.evaluate(() => { const s = window.__treb.shots.at(-1); return { ...s, path: s.path.length, joints: (() => { const c = window.__demo.bridge.scene.getNamedNode('Machine'); const n = []; for (let i = 0; i < c.joints.length; i++) n.push(c.joints[i].getNodeName()); return n; })(), physUs: window.__demo.bridge.stats.physicsMsPerStep * 1000, fps: window.__demo.browser.currentFrameRate, thuds: window.__demo.sound?.triggered }; });
+const out = { browser: which, version: browser.version(), shot, errors };
+console.log(JSON.stringify(out));
+writeFileSync(`evidence/trebuchet-${which}.json`, JSON.stringify(out, null, 1));
+await browser.close();

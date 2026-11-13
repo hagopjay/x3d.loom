@@ -1,0 +1,835 @@
+{
+  "schema": "mujoco-observatory-verification/1",
+  "generatedAt": "2026-11-07T16:29:26.573Z",
+  "nodeVersion": "v24.22.2",
+  "platform": "darwin/arm64",
+  "engineVersion": "3.17.0",
+  "physics": "actual @mujoco/mujoco WASM, no mocked dynamics",
+  "scope": "Headless engine, embedded MJCF, extracted MJCF and challenge predicates. Browser layout, WebGL and full lesson prose are outside this script.",
+  "checks": [
+    {
+      "name": "initialization is idempotent and loads real WASM",
+      "status": "pass",
+      "milliseconds": 336.328792,
+      "details": {
+        "version": "3.17.0"
+      }
+    },
+    {
+      "name": "live option selectors ignore Embind enum metadata",
+      "status": "pass",
+      "milliseconds": 0.136708,
+      "details": {
+        "mjtIntegrator": 5,
+        "mjtSolver": 3,
+        "mjtCone": 2,
+        "mjtJacobian": 3
+      }
+    },
+    {
+      "name": "preset compiles and steps: contact-arm",
+      "status": "pass",
+      "milliseconds": 47.845542,
+      "details": {
+        "id": "contact-arm",
+        "status": "compiled_and_stepped",
+        "nbody": 3,
+        "njnt": 2,
+        "ngeom": 8,
+        "nu": 2,
+        "nsensor": 4,
+        "nq": 2,
+        "nv": 2,
+        "nkey": 2,
+        "time": 0.1,
+        "energy": [
+          15.539642356086496,
+          0
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "preset compiles and steps: cartpole",
+      "status": "pass",
+      "milliseconds": 4.96375,
+      "details": {
+        "id": "cartpole",
+        "status": "compiled_and_stepped",
+        "nbody": 3,
+        "njnt": 2,
+        "ngeom": 4,
+        "nu": 1,
+        "nsensor": 3,
+        "nq": 2,
+        "nv": 2,
+        "nkey": 0,
+        "time": 0.1,
+        "energy": [
+          10.53593875987855,
+          0
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "preset compiles and steps: pendulum",
+      "status": "pass",
+      "milliseconds": 6.058875,
+      "details": {
+        "id": "pendulum",
+        "status": "compiled_and_stepped",
+        "nbody": 3,
+        "njnt": 1,
+        "ngeom": 4,
+        "nu": 1,
+        "nsensor": 2,
+        "nq": 1,
+        "nv": 1,
+        "nkey": 3,
+        "time": 0.1,
+        "energy": [
+          70.96328194156973,
+          0
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "preset compiles and steps: double-pendulum",
+      "status": "pass",
+      "milliseconds": 4.710709,
+      "details": {
+        "id": "double-pendulum",
+        "status": "compiled_and_stepped",
+        "nbody": 4,
+        "njnt": 2,
+        "ngeom": 5,
+        "nu": 0,
+        "nsensor": 0,
+        "nq": 2,
+        "nv": 2,
+        "nkey": 2,
+        "time": 0.1,
+        "energy": [
+          61.13532659544772,
+          0
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "preset compiles and steps: ball-drop",
+      "status": "pass",
+      "milliseconds": 5.695375,
+      "details": {
+        "id": "ball-drop",
+        "status": "compiled_and_stepped",
+        "nbody": 3,
+        "njnt": 2,
+        "ngeom": 3,
+        "nu": 0,
+        "nsensor": 4,
+        "nq": 14,
+        "nv": 12,
+        "nkey": 0,
+        "time": 0.1,
+        "energy": [
+          12.996958159880645,
+          0.24059029573706467
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "preset compiles and steps: spider",
+      "status": "pass",
+      "milliseconds": 7.865625,
+      "details": {
+        "id": "spider",
+        "status": "compiled_and_stepped",
+        "nbody": 10,
+        "njnt": 9,
+        "ngeom": 10,
+        "nu": 8,
+        "nsensor": 2,
+        "nq": 15,
+        "nv": 14,
+        "nkey": 0,
+        "time": 0.1,
+        "energy": [
+          6.78757014000087,
+          0.004953536509913558
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "preset compiles and steps: hopper",
+      "status": "pass",
+      "milliseconds": 8.90925,
+      "details": {
+        "id": "hopper",
+        "status": "compiled_and_stepped",
+        "nbody": 5,
+        "njnt": 4,
+        "ngeom": 5,
+        "nu": 4,
+        "nsensor": 2,
+        "nq": 4,
+        "nv": 4,
+        "nkey": 1,
+        "time": 0.1,
+        "energy": [
+          21.113835400672563,
+          6.846645283796343
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "preset compiles and steps: humanoid",
+      "status": "pass",
+      "milliseconds": 7.117375,
+      "details": {
+        "id": "humanoid",
+        "status": "compiled_and_stepped",
+        "nbody": 10,
+        "njnt": 9,
+        "ngeom": 13,
+        "nu": 8,
+        "nsensor": 0,
+        "nq": 15,
+        "nv": 14,
+        "nkey": 0,
+        "time": 0.1,
+        "energy": [
+          129.31193297137074,
+          5.642921327182887
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "extracted MJCF compiles and steps: cartpole_balance.xml",
+      "status": "pass",
+      "milliseconds": 3.4725,
+      "details": {
+        "filename": "cartpole_balance.xml",
+        "status": "compiled_and_stepped",
+        "nbody": 3,
+        "njnt": 2,
+        "ngeom": 3,
+        "nu": 1,
+        "nsensor": 3,
+        "nq": 2,
+        "nv": 2,
+        "nkey": 0,
+        "time": 0.1,
+        "warnings": []
+      }
+    },
+    {
+      "name": "extracted MJCF compiles and steps: double_pendulum.xml",
+      "status": "pass",
+      "milliseconds": 4.724917,
+      "details": {
+        "filename": "double_pendulum.xml",
+        "status": "compiled_and_stepped",
+        "nbody": 4,
+        "njnt": 2,
+        "ngeom": 4,
+        "nu": 0,
+        "nsensor": 4,
+        "nq": 2,
+        "nv": 2,
+        "nkey": 0,
+        "time": 0.1,
+        "warnings": []
+      }
+    },
+    {
+      "name": "extracted MJCF compiles and steps: driven_pendulum.xml",
+      "status": "pass",
+      "milliseconds": 8.36,
+      "details": {
+        "filename": "driven_pendulum.xml",
+        "status": "compiled_and_stepped",
+        "nbody": 3,
+        "njnt": 1,
+        "ngeom": 4,
+        "nu": 1,
+        "nsensor": 3,
+        "nq": 1,
+        "nv": 1,
+        "nkey": 0,
+        "time": 0.1,
+        "warnings": []
+      }
+    },
+    {
+      "name": "extracted MJCF compiles and steps: drop_test.xml",
+      "status": "pass",
+      "milliseconds": 2.64275,
+      "details": {
+        "filename": "drop_test.xml",
+        "status": "compiled_and_stepped",
+        "nbody": 2,
+        "njnt": 1,
+        "ngeom": 2,
+        "nu": 0,
+        "nsensor": 3,
+        "nq": 7,
+        "nv": 6,
+        "nkey": 0,
+        "time": 0.1,
+        "warnings": []
+      }
+    },
+    {
+      "name": "extracted MJCF compiles and steps: planar_arm.xml",
+      "status": "pass",
+      "milliseconds": 2.891,
+      "details": {
+        "filename": "planar_arm.xml",
+        "status": "compiled_and_stepped",
+        "nbody": 3,
+        "njnt": 2,
+        "ngeom": 5,
+        "nu": 2,
+        "nsensor": 0,
+        "nq": 2,
+        "nv": 2,
+        "nkey": 1,
+        "time": 0.1,
+        "warnings": []
+      }
+    },
+    {
+      "name": "one second of physics at 30, 60 and 144 display Hz",
+      "status": "pass",
+      "milliseconds": 4.479292,
+      "details": [
+        {
+          "displayHz": 30,
+          "steps": 100,
+          "simulatedSeconds": 1,
+          "position": 1
+        },
+        {
+          "displayHz": 60,
+          "steps": 100,
+          "simulatedSeconds": 1,
+          "position": 1
+        },
+        {
+          "displayHz": 144,
+          "steps": 100,
+          "simulatedSeconds": 1,
+          "position": 1
+        }
+      ]
+    },
+    {
+      "name": "slow motion, pause and single stepping",
+      "status": "pass",
+      "milliseconds": 2.064333,
+      "details": {
+        "secondsAfterTenSecondsAtOneTenthSpeed": 1,
+        "secondsAfterPausedSingleStep": 1.01
+      }
+    },
+    {
+      "name": "known kinetic energy and telemetry deduplication",
+      "status": "pass",
+      "milliseconds": 0.84475,
+      "details": {
+        "massKg": 1,
+        "velocityMPerSecond": 2,
+        "kineticJoules": 2,
+        "samples": 2
+      }
+    },
+    {
+      "name": "failed MJCF compilation retains the last valid running model",
+      "status": "pass",
+      "milliseconds": 11.352166,
+      "details": {
+        "retained": true,
+        "canStillStep": true
+      }
+    },
+    {
+      "name": "fork isolates model and state while copying live options",
+      "status": "pass",
+      "milliseconds": 6.832958,
+      "details": {
+        "liveStateUnchanged": true,
+        "liveTime": 0.049999999999999996,
+        "independentAllocations": true,
+        "copiedIterations": 123
+      }
+    },
+    {
+      "name": "controller restored when a headless observer throws",
+      "status": "pass",
+      "milliseconds": 1.311,
+      "details": {
+        "restored": true
+      }
+    },
+    {
+      "name": "invalid timestep is rejected",
+      "status": "pass",
+      "milliseconds": 1.115916,
+      "details": null
+    },
+    {
+      "name": "named pendulum keyframes match their described poses",
+      "status": "pass",
+      "milliseconds": 1.652542,
+      "details": {
+        "keyframeNames": [
+          "down",
+          "up",
+          "side"
+        ],
+        "downRadians": 0,
+        "upRadians": 3.141592653589793
+      }
+    },
+    {
+      "name": "unlimited hinge retains angles greater than one revolution",
+      "status": "pass",
+      "milliseconds": 1.103583,
+      "details": {
+        "inputAngleRadians": 12.816370614359172,
+        "retainedAngleRadians": 12.816370614359172
+      }
+    },
+    {
+      "name": "contact and warning handles support documented cleanup",
+      "status": "pass",
+      "milliseconds": 20.781208,
+      "details": {
+        "contactsInspected": 5,
+        "handleCleanupSupported": true
+      }
+    },
+    {
+      "name": "challenge executes on its starter: arm-contact",
+      "status": "pass",
+      "milliseconds": 67.145833,
+      "details": {
+        "id": "arm-contact",
+        "status": "goal_met",
+        "pass": true,
+        "detail": "tip–obstacle contact=true; final errors=[0.188, 0.027] rad; final touch=4.025 N. This is a local contact test, not a general manipulation policy.",
+        "simulatedSeconds": 5,
+        "milliseconds": 63.278666,
+        "warnings": []
+      }
+    },
+    {
+      "name": "challenge executes on its starter: first-contact",
+      "status": "pass",
+      "milliseconds": 27.094,
+      "details": {
+        "id": "first-contact",
+        "status": "goal_met",
+        "pass": true,
+        "detail": "ball min z=0.139 m; ball–floor contact=yes. Contacts from the neighboring box do not count.",
+        "simulatedSeconds": 2,
+        "milliseconds": 24.395125,
+        "warnings": []
+      }
+    },
+    {
+      "name": "challenge executes on its starter: bounce-detector",
+      "status": "pass",
+      "milliseconds": 38.613084,
+      "details": {
+        "id": "bounce-detector",
+        "status": "goal_met",
+        "pass": true,
+        "detail": "rebounds=1, fall faster than 2 m/s=yes, ball–floor contact=yes, minZ=0.139 m, final z=0.160 m",
+        "simulatedSeconds": 3,
+        "milliseconds": 35.735292,
+        "warnings": []
+      }
+    },
+    {
+      "name": "challenge executes on its starter: cartpole-balance",
+      "status": "pass",
+      "milliseconds": 15.854041,
+      "details": {
+        "id": "cartpole-balance",
+        "status": "goal_met",
+        "pass": true,
+        "detail": "start theta=0.080 rad; peak |theta|=0.080 (<0.5), peak |x|=0.250 m (<1.8); final |theta|=0.000 (<0.1), |x|=0.001 m",
+        "simulatedSeconds": 5,
+        "milliseconds": 12.771708,
+        "warnings": []
+      }
+    },
+    {
+      "name": "challenge executes on its starter: spider-crawl",
+      "status": "pass",
+      "milliseconds": 51.652791,
+      "details": {
+        "id": "spider-crawl",
+        "status": "goal_met",
+        "pass": true,
+        "detail": "dx=6.2 cm (>3), min torso z=0.094 m (>0.08), min up dot=0.890 (>0.5). Sliding on the torso or tumbling does not pass.",
+        "simulatedSeconds": 5,
+        "milliseconds": 46.68675,
+        "warnings": []
+      }
+    },
+    {
+      "name": "challenge executes on its starter: chaos",
+      "status": "pass",
+      "milliseconds": 17.770125,
+      "details": {
+        "id": "chaos",
+        "status": "goal_met",
+        "pass": true,
+        "detail": "peak |qvel| = 11.01 rad/s (need > 2.5); qmax = [1.00, 1.34]",
+        "simulatedSeconds": 3,
+        "milliseconds": 15.135,
+        "warnings": []
+      }
+    },
+    {
+      "name": "challenge executes on its starter: tune-the-solver",
+      "status": "pass",
+      "milliseconds": 2.05125,
+      "details": {
+        "id": "tune-the-solver",
+        "status": "goal_unmet",
+        "pass": false,
+        "detail": "solver=0 (Newton=2), iterations=10, nkey=0 — need Newton + >=100 iters + >=1 keyframe",
+        "simulatedSeconds": 0,
+        "milliseconds": 0.091,
+        "warnings": []
+      }
+    },
+    {
+      "name": "challenges reject an unrelated model without stepping it",
+      "status": "pass",
+      "milliseconds": 0.871708,
+      "details": {
+        "rejected": [
+          "arm-contact",
+          "first-contact",
+          "bounce-detector",
+          "cartpole-balance",
+          "spider-crawl",
+          "chaos",
+          "tune-the-solver"
+        ]
+      }
+    },
+    {
+      "name": "solver-tuning challenge passes a genuinely completed fixture",
+      "status": "pass",
+      "milliseconds": 0.830166,
+      "details": {
+        "pass": true,
+        "detail": "solver=2 (Newton=2), iterations=100, nkey=1 — need Newton + >=100 iters + >=1 keyframe"
+      }
+    }
+  ],
+  "presets": [
+    {
+      "id": "contact-arm",
+      "status": "compiled_and_stepped",
+      "nbody": 3,
+      "njnt": 2,
+      "ngeom": 8,
+      "nu": 2,
+      "nsensor": 4,
+      "nq": 2,
+      "nv": 2,
+      "nkey": 2,
+      "time": 0.1,
+      "energy": [
+        15.539642356086496,
+        0
+      ],
+      "warnings": []
+    },
+    {
+      "id": "cartpole",
+      "status": "compiled_and_stepped",
+      "nbody": 3,
+      "njnt": 2,
+      "ngeom": 4,
+      "nu": 1,
+      "nsensor": 3,
+      "nq": 2,
+      "nv": 2,
+      "nkey": 0,
+      "time": 0.1,
+      "energy": [
+        10.53593875987855,
+        0
+      ],
+      "warnings": []
+    },
+    {
+      "id": "pendulum",
+      "status": "compiled_and_stepped",
+      "nbody": 3,
+      "njnt": 1,
+      "ngeom": 4,
+      "nu": 1,
+      "nsensor": 2,
+      "nq": 1,
+      "nv": 1,
+      "nkey": 3,
+      "time": 0.1,
+      "energy": [
+        70.96328194156973,
+        0
+      ],
+      "warnings": []
+    },
+    {
+      "id": "double-pendulum",
+      "status": "compiled_and_stepped",
+      "nbody": 4,
+      "njnt": 2,
+      "ngeom": 5,
+      "nu": 0,
+      "nsensor": 0,
+      "nq": 2,
+      "nv": 2,
+      "nkey": 2,
+      "time": 0.1,
+      "energy": [
+        61.13532659544772,
+        0
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ball-drop",
+      "status": "compiled_and_stepped",
+      "nbody": 3,
+      "njnt": 2,
+      "ngeom": 3,
+      "nu": 0,
+      "nsensor": 4,
+      "nq": 14,
+      "nv": 12,
+      "nkey": 0,
+      "time": 0.1,
+      "energy": [
+        12.996958159880645,
+        0.24059029573706467
+      ],
+      "warnings": []
+    },
+    {
+      "id": "spider",
+      "status": "compiled_and_stepped",
+      "nbody": 10,
+      "njnt": 9,
+      "ngeom": 10,
+      "nu": 8,
+      "nsensor": 2,
+      "nq": 15,
+      "nv": 14,
+      "nkey": 0,
+      "time": 0.1,
+      "energy": [
+        6.78757014000087,
+        0.004953536509913558
+      ],
+      "warnings": []
+    },
+    {
+      "id": "hopper",
+      "status": "compiled_and_stepped",
+      "nbody": 5,
+      "njnt": 4,
+      "ngeom": 5,
+      "nu": 4,
+      "nsensor": 2,
+      "nq": 4,
+      "nv": 4,
+      "nkey": 1,
+      "time": 0.1,
+      "energy": [
+        21.113835400672563,
+        6.846645283796343
+      ],
+      "warnings": []
+    },
+    {
+      "id": "humanoid",
+      "status": "compiled_and_stepped",
+      "nbody": 10,
+      "njnt": 9,
+      "ngeom": 13,
+      "nu": 8,
+      "nsensor": 0,
+      "nq": 15,
+      "nv": 14,
+      "nkey": 0,
+      "time": 0.1,
+      "energy": [
+        129.31193297137074,
+        5.642921327182887
+      ],
+      "warnings": []
+    }
+  ],
+  "extractedModels": [
+    {
+      "filename": "cartpole_balance.xml",
+      "status": "compiled_and_stepped",
+      "nbody": 3,
+      "njnt": 2,
+      "ngeom": 3,
+      "nu": 1,
+      "nsensor": 3,
+      "nq": 2,
+      "nv": 2,
+      "nkey": 0,
+      "time": 0.1,
+      "warnings": []
+    },
+    {
+      "filename": "double_pendulum.xml",
+      "status": "compiled_and_stepped",
+      "nbody": 4,
+      "njnt": 2,
+      "ngeom": 4,
+      "nu": 0,
+      "nsensor": 4,
+      "nq": 2,
+      "nv": 2,
+      "nkey": 0,
+      "time": 0.1,
+      "warnings": []
+    },
+    {
+      "filename": "driven_pendulum.xml",
+      "status": "compiled_and_stepped",
+      "nbody": 3,
+      "njnt": 1,
+      "ngeom": 4,
+      "nu": 1,
+      "nsensor": 3,
+      "nq": 1,
+      "nv": 1,
+      "nkey": 0,
+      "time": 0.1,
+      "warnings": []
+    },
+    {
+      "filename": "drop_test.xml",
+      "status": "compiled_and_stepped",
+      "nbody": 2,
+      "njnt": 1,
+      "ngeom": 2,
+      "nu": 0,
+      "nsensor": 3,
+      "nq": 7,
+      "nv": 6,
+      "nkey": 0,
+      "time": 0.1,
+      "warnings": []
+    },
+    {
+      "filename": "planar_arm.xml",
+      "status": "compiled_and_stepped",
+      "nbody": 3,
+      "njnt": 2,
+      "ngeom": 5,
+      "nu": 2,
+      "nsensor": 0,
+      "nq": 2,
+      "nv": 2,
+      "nkey": 1,
+      "time": 0.1,
+      "warnings": []
+    }
+  ],
+  "challenges": [
+    {
+      "id": "arm-contact",
+      "status": "goal_met",
+      "pass": true,
+      "detail": "tip–obstacle contact=true; final errors=[0.188, 0.027] rad; final touch=4.025 N. This is a local contact test, not a general manipulation policy.",
+      "simulatedSeconds": 5,
+      "milliseconds": 63.278666,
+      "warnings": []
+    },
+    {
+      "id": "first-contact",
+      "status": "goal_met",
+      "pass": true,
+      "detail": "ball min z=0.139 m; ball–floor contact=yes. Contacts from the neighboring box do not count.",
+      "simulatedSeconds": 2,
+      "milliseconds": 24.395125,
+      "warnings": []
+    },
+    {
+      "id": "bounce-detector",
+      "status": "goal_met",
+      "pass": true,
+      "detail": "rebounds=1, fall faster than 2 m/s=yes, ball–floor contact=yes, minZ=0.139 m, final z=0.160 m",
+      "simulatedSeconds": 3,
+      "milliseconds": 35.735292,
+      "warnings": []
+    },
+    {
+      "id": "cartpole-balance",
+      "status": "goal_met",
+      "pass": true,
+      "detail": "start theta=0.080 rad; peak |theta|=0.080 (<0.5), peak |x|=0.250 m (<1.8); final |theta|=0.000 (<0.1), |x|=0.001 m",
+      "simulatedSeconds": 5,
+      "milliseconds": 12.771708,
+      "warnings": []
+    },
+    {
+      "id": "spider-crawl",
+      "status": "goal_met",
+      "pass": true,
+      "detail": "dx=6.2 cm (>3), min torso z=0.094 m (>0.08), min up dot=0.890 (>0.5). Sliding on the torso or tumbling does not pass.",
+      "simulatedSeconds": 5,
+      "milliseconds": 46.68675,
+      "warnings": []
+    },
+    {
+      "id": "chaos",
+      "status": "goal_met",
+      "pass": true,
+      "detail": "peak |qvel| = 11.01 rad/s (need > 2.5); qmax = [1.00, 1.34]",
+      "simulatedSeconds": 3,
+      "milliseconds": 15.135,
+      "warnings": []
+    },
+    {
+      "id": "tune-the-solver",
+      "status": "goal_unmet",
+      "pass": false,
+      "detail": "solver=0 (Newton=2), iterations=10, nkey=0 — need Newton + >=100 iters + >=1 keyframe",
+      "simulatedSeconds": 0,
+      "milliseconds": 0.091,
+      "warnings": []
+    }
+  ],
+  "summary": {
+    "checksPassed": 34,
+    "checksFailed": 0,
+    "presetsCompiled": 8,
+    "extractedModelsCompiled": 5,
+    "challengeGoalsMet": 6,
+    "challengeGoalsUnmet": 1,
+    "challengeRuntimeErrors": 0
+  }
+}

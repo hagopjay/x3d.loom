@@ -77,3 +77,11 @@ Terms as Loom v1 uses them. Source IDs are in [SOURCES.md](SOURCES.md).
 | **Fidelity tiers** | Any browser (WebGL), a streamed GPU workstation, offline hero renders: three presentations of the same verified case | X3D-STEM.md |
 | **Lens** | One audience's presentation of a verified case (Explorer, Lab, Instrument, Theatre); lenses change the explanation, never the data | X3D-STEM.md |
 | **Arrival epoch** | Navigation counts as arrived only after a frame later than the command shows the expected pose | REVIEW-loom2 |
+| **State hash** | A hash of every moving body's pose and velocity at one physics step (FNV-1a over the float32 values in the PhysX bridge). A run keeps one per step, so the first differing step is known | PXB; law 42 |
+| **Run record** | `loom.physics-run/1`: one simulation run with its engine, model sha256, per-step state hashes, replays per host, exact references, tolerances and waivers, controls, takeover proof and loss report. The physics witness reads it | PXB; PHYSICS-PLAYBOOK.md §4 |
+| **Discrete solution** | What the integrator's own scheme gives (for semi-implicit Euler, y0 − g h² n(n+1)/2). A stepped engine is judged against it; the continuum answer differs by a known 1/2 g h t | PXB; failure mode 124 |
+| **Takeover** | Page code replaces a runtime's own implementation (the bridge stops X_ITE's Bullet and steps PhysX instead). The record shows the old engine off on every host that has it | PXB; law 41 |
+| **Leak (takeover)** | A step or event the replaced engine produced before the switch took hold, listed with whether it is handled (`loadURL()` runs one Bullet step; `createX3DFromURL`, disable, `replaceWorld` leaks none) | PXB; law 41 |
+| **Waiver (accepted failure)** | A measure beyond its tolerance, recorded with owner, date, reason and its own numbers, within a profile's cap. It is a pass with the waiver on the receipt, never a clean pass. Physics profiles only, for now | PXB; law 43 |
+| **Loss report** | The list of authored fields an engine cannot honour, shown to the person instead of dropped (11 ODE-only fields for PhysX) | PXB; law 40, failure mode 132 |
+| **Build check** | A cross-check of an engine against itself (native MuJoCo against its own WASM). It tests the build, not the model | MJB; failure mode 142 |

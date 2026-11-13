@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Dummy barrage · standard X3D on PhysX</title>
+<link rel="stylesheet" href="./src/demos/demo.css">
+<script src="./vendor/x_ite/x_ite.min.js"></script>
+</head>
+<body data-mode="run">
+<header>
+  <div class="title"><h1>Dummy barrage</h1><span id="tagline"></span></div>
+  <nav id="demo-nav" aria-label="Demos"></nav>
+  <span id="status" class="dim" role="status"></span>
+</header>
+<main class="demo">
+  <section id="stage">
+    <x3d-canvas id="canvas" splashScreen="false" contextMenu="false" notifications="false"></x3d-canvas>
+    <div id="hud" aria-live="polite"></div>
+  </section>
+  <aside id="side"></aside>
+</main>
+<div hidden>
+  <section id="panels">
+    <section>
+      <h2>Castle damage</h2>
+      <div class="big" id="castle-big">0 %</div>
+      <dl id="castle-readout" class="readout"></dl>
+      <p class="hint">Each trebuchet throws a dummy-weight ball; at release the ball leaves the simulation and a real H-Anim ragdoll takes its place with the same velocity (an X3D joint cannot hold a humanoid in the sling). The castle's stones weigh 20 kg each: a toy castle, so a dummy can do real damage.</p>
+    </section>
+  </section>
+</div>
+<script type="module" src="./src/ragdoll/barrage.ts"></script>
+</body>
+</html>

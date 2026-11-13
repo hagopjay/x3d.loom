@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Trebuchet · standard X3D on PhysX</title>
+<link rel="stylesheet" href="./src/demos/demo.css">
+<script src="./vendor/x_ite/x_ite.min.js"></script>
+</head>
+<body data-mode="run">
+<header>
+  <div class="title"><h1>Trebuchet vs castle</h1><span id="tagline"></span></div>
+  <nav id="demo-nav" aria-label="Demos"></nav>
+  <span id="status" class="dim" role="status"></span>
+</header>
+<main class="demo">
+  <section id="stage">
+    <x3d-canvas id="canvas" splashScreen="false" contextMenu="false" notifications="false"></x3d-canvas>
+    <div id="hud" aria-live="polite"></div>
+  </section>
+  <aside id="side"></aside>
+</main>
+<div hidden>
+  <section id="panels">
+    <section>
+      <h2>Tune it</h2>
+      <label class="slider">counterweight <output id="counterweight-out"></output><input id="counterweight" type="range" aria-label="Counterweight mass"></label>
+      <label class="slider">stone <output id="stone-out"></output><input id="stone" type="range" aria-label="Stone mass"></label>
+      <label class="slider">sling length <output id="sling-out"></output><input id="sling" type="range" aria-label="Sling length"></label>
+      <label class="slider">release angle (the prong) <output id="release-out"></output><input id="release" type="range" aria-label="Release angle"></label>
+      <label class="slider">castle distance <output id="distance-out"></output><input id="distance" type="range" aria-label="Castle distance"></label>
+      <p class="hint">Changing these re-cocks the trebuchet and rebuilds the castle. The castle's blocks weigh 40 kg (real masonry of that size would be about 600 kg), so one stone visibly does damage.</p>
+    </section>
+    <section>
+      <h2>The shot</h2>
+      <div class="big" id="shot-big">–</div>
+      <dl id="shot-readout" class="readout"></dl>
+      <figure class="chart">
+        <figcaption class="dim">Flight paths seen from the side (height against distance from the axle)</figcaption>
+        <div class="legend" id="traj-legend"></div>
+        <div id="traj"></div>
+        <div class="row"><button id="traj-table-toggle">Table <kbd>Y</kbd></button><button id="traj-clear">Forget my shots</button></div>
+        <div id="traj-table" class="chart-table" hidden></div>
+      </figure>
+    </section>
+  </section>
+</div>
+<script type="module" src="./src/demos/trebuchet.ts"></script>
+</body>
+</html>

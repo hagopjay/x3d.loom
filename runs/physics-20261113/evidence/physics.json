@@ -1,0 +1,208 @@
+{
+  "coverage": {
+    "max_waivers": 3,
+    "require_takeover": true,
+    "runs": 2
+  },
+  "development": false,
+  "environment": {
+    "optimized": false,
+    "python": "3.13.2"
+  },
+  "evidence": [],
+  "finished_at": "2026-11-13T14:20:22+00:00",
+  "grade": "C",
+  "instrument": {
+    "hosts": [
+      "chromium",
+      "firefox",
+      "webkit",
+      "node"
+    ],
+    "max_waivers": 3,
+    "require_takeover": true,
+    "rules_sha256": "9c7b6cdd75d26b55f54b327d4834dd5f0d8233fc5410a8583522b50d240f79c6",
+    "tool": "loomkit.physics"
+  },
+  "limitations": [
+    "Determinism is shown on the hosts and the machine the record names; another machine or another engine build needs its own replay (law 42).",
+    "A passing record shows the run answers to its references and hashes; it does not show the engine's model is right where no exact reference exists.",
+    "The witness reads the record a project's own harness wrote; the harness is trusted to have replayed what it says (the project's browser evidence is the behaviour witness)."
+  ],
+  "measurements": {
+    "runs": {
+      "physx-grand-cascade-chromium.physics.json": {
+        "controls": 1,
+        "engine": "PhysX 5.12.0",
+        "id": "physx-bridge/grand-cascade/recorded-in-chromium",
+        "leaks": 1,
+        "recorded_in": "chromium",
+        "references": [
+          {
+            "id": "free fall: height against the discrete semi-implicit Euler solution, 1 s (m)",
+            "limit": 0.0001,
+            "observed": 1.4801025391975031e-06
+          },
+          {
+            "id": "free fall: velocity against -g t, 1 s (m/s)",
+            "limit": 0.0001,
+            "observed": 1.281738281200262e-05
+          },
+          {
+            "id": "free fall: the continuum gap equals the integrator's 1/2 g h t (m)",
+            "limit": 0.0001,
+            "observed": 1.4801025393119949e-06
+          },
+          {
+            "id": "pendulum, ball joint: period against 2 pi sqrt(I/(m g L)) (relative)",
+            "limit": 0.005,
+            "observed": 1.4188085919504396e-05
+          },
+          {
+            "id": "pendulum, hinge joint: period against 2 pi sqrt(I/(m g L)) (relative)",
+            "limit": 0.005,
+            "observed": 1.4198379702485657e-05
+          },
+          {
+            "id": "restitution: rebound speed against e (v + g h), worst of 5 bounces",
+            "limit": 0.001,
+            "observed": 7.219632258692599e-08
+          },
+          {
+            "id": "incline 30 deg, mu 0.3: sliding acceleration against g (sin t - mu cos t) (relative)",
+            "limit": 0.02,
+            "observed": 0.009826795315465285
+          },
+          {
+            "id": "incline 30 deg, mu 0.7: a body that must hold moved (m)",
+            "limit": 0.001,
+            "observed": 0.00030350911951615434
+          },
+          {
+            "id": "tunnelling with CCD on: phases (of 40) in which a 5 m/s marble crossed a 5 mm wall",
+            "limit": 0.0,
+            "observed": 0.0
+          }
+        ],
+        "replayed_in": [
+          "chromium",
+          "chromium-same-page",
+          "firefox",
+          "node",
+          "webkit"
+        ],
+        "required_hosts": [
+          "chromium",
+          "firefox",
+          "node",
+          "webkit"
+        ],
+        "steps": 1918,
+        "takeover": true,
+        "tolerances": 3,
+        "trace_sha256": "c8b3cc3fa4ae861fef6e5fd3c2515b98552dfb5c5f74ce162c0edaed1e3febb8",
+        "waivers": [
+          {
+            "id": "Galton board in Chromium: beads binned of 240 (smoke test)",
+            "limit": 225,
+            "observed": 220,
+            "owner": "the project owner (the thread's phase-5 note: '30/33 under heavy machine load (user accepted)'; SPEC.md section 7)",
+            "reason": "failed under machine load while the other browsers' suites ran; logged and accepted by the owner, to be re-run unloaded (SPEC.md section 7, evidence/p5-smoke-log.txt)"
+          },
+          {
+            "id": "Galton board in WebKit: beads binned of 240 (smoke test)",
+            "limit": 225,
+            "observed": 223,
+            "owner": "the project owner (the thread's phase-5 note: '30/33 under heavy machine load (user accepted)'; SPEC.md section 7)",
+            "reason": "failed under machine load while the other browsers' suites ran; logged and accepted by the owner, to be re-run unloaded (SPEC.md section 7, evidence/p5-smoke-log.txt)"
+          },
+          {
+            "id": "music box in WebKit: pegs sounded in the worse of two full turns (smoke test, 18 pegs)",
+            "limit": 18,
+            "observed": 15,
+            "owner": "the project owner (the thread's phase-5 note: '30/33 under heavy machine load (user accepted)'; SPEC.md section 7)",
+            "reason": "failed under machine load while the other browsers' suites ran; logged and accepted by the owner, to be re-run unloaded (SPEC.md section 7, evidence/p5-smoke-log.txt)"
+          }
+        ]
+      },
+      "physx-grand-cascade-firefox.physics.json": {
+        "controls": 1,
+        "engine": "PhysX 5.12.0",
+        "id": "physx-bridge/grand-cascade/recorded-in-firefox",
+        "leaks": 1,
+        "recorded_in": "firefox",
+        "references": [
+          {
+            "id": "free fall: height against the discrete semi-implicit Euler solution, 1 s (m)",
+            "limit": 0.0001,
+            "observed": 1.4801025391975031e-06
+          },
+          {
+            "id": "free fall: velocity against -g t, 1 s (m/s)",
+            "limit": 0.0001,
+            "observed": 1.281738281200262e-05
+          },
+          {
+            "id": "free fall: the continuum gap equals the integrator's 1/2 g h t (m)",
+            "limit": 0.0001,
+            "observed": 1.4801025393119949e-06
+          },
+          {
+            "id": "pendulum, ball joint: period against 2 pi sqrt(I/(m g L)) (relative)",
+            "limit": 0.005,
+            "observed": 1.4188085919504396e-05
+          },
+          {
+            "id": "pendulum, hinge joint: period against 2 pi sqrt(I/(m g L)) (relative)",
+            "limit": 0.005,
+            "observed": 1.4198379702485657e-05
+          },
+          {
+            "id": "restitution: rebound speed against e (v + g h), worst of 5 bounces",
+            "limit": 0.001,
+            "observed": 7.219632258692599e-08
+          },
+          {
+            "id": "incline 30 deg, mu 0.3: sliding acceleration against g (sin t - mu cos t) (relative)",
+            "limit": 0.02,
+            "observed": 0.009826795315465285
+          },
+          {
+            "id": "incline 30 deg, mu 0.7: a body that must hold moved (m)",
+            "limit": 0.001,
+            "observed": 0.00030350911951615434
+          },
+          {
+            "id": "tunnelling with CCD on: phases (of 40) in which a 5 m/s marble crossed a 5 mm wall",
+            "limit": 0.0,
+            "observed": 0.0
+          }
+        ],
+        "replayed_in": [
+          "chromium",
+          "firefox",
+          "firefox-same-page",
+          "node",
+          "webkit"
+        ],
+        "required_hosts": [
+          "chromium",
+          "firefox",
+          "node",
+          "webkit"
+        ],
+        "steps": 969,
+        "takeover": true,
+        "tolerances": 0,
+        "trace_sha256": "169f2508454b5c7c94be2465e7498c5c2d84847d3cac6ab14d22bcfa29b65303",
+        "waivers": []
+      }
+    },
+    "waivers": 3
+  },
+  "reason": "",
+  "schema": "loom.witness/1",
+  "status": "pass",
+  "subject_sha256": "ba4d4daa52c9517cc1b8b25f76538bf56525eb12e46b413b936c46f6194f71af",
+  "witness": "physics"
+}

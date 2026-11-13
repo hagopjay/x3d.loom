@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Interchange" version="4.0">
+ <head>
+  <component name="Shape" level="2"/>
+  <component name="Lighting" level="2"/>
+  <component name="RigidBodyPhysics" level="2"/>
+  <component name="Navigation" level="2"/>
+  <meta name="title" content="Joints and sensors: every X3D 4.0 joint type, a kinematic elevator, a CollisionSensor"/>
+  <meta name="description" content="Standard X3D 4.0 RigidBodyPhysics. Bench for the x3d-physx bridge, phase 2: BallJoint pendulum, SingleAxisHingeJoint seesaw, flipper (hinge with limits + MotorJoint torque), paddle wheel (DoubleAxisHingeJoint axle motor), launcher (SliderJoint force), UniversalJoint rod, elevator (fixed RigidBody driven by a ROUTE), CollisionSensor.isActive switching a lamp."/>
+  <meta name="generator" content="tools/make-joints-scene.py, x3d-physx-bridge 0.0.1"/>
+ </head>
+ <Scene>
+  <WorldInfo title="Joints and sensors" info='"Units: metres, kilograms, seconds, radians. Y up."'/>
+  <NavigationInfo type='"EXAMINE" "ANY"' headlight="false"/>
+  <Viewpoint description="Bench" position="0.08 0.55 2.45" orientation="1 0 0 -0.16" centerOfRotation="0.08 0.15 0"/>
+  <DirectionalLight direction="-0.4 -1 -0.5" intensity="2.5" shadows="true"/>
+  <DirectionalLight direction="0.5 -0.3 -1" intensity="0.8"/>
+  <PointLight DEF="ContactLamp" location="0.1 0.7 0.3" color="1 0.75 0.3" intensity="1.5" radius="3" on="false"/>
+  <Background skyColor="0.04 0.05 0.07"/>
+  <Transform DEF="FloorT" translation="0.1 -0.01 0">
+   <Shape DEF="FloorShape"><Appearance DEF="Mat_floor"><PhysicalMaterial baseColor="0.16 0.17 0.2" metallic="0" roughness="0.9"/></Appearance><Box size="2.6 0.02 0.5"/></Shape>
+  </Transform>
+  <Transform DEF="ElevatorT" translation="-0.9 0.05 0">
+   <Shape DEF="ElevatorShape"><Appearance DEF="Mat_steel"><PhysicalMaterial baseColor="0.7 0.72 0.75" metallic="1" roughness="0.3"/></Appearance><Box size="0.14 0.012 0.14"/></Shape>
+  </Transform>
+  <Transform DEF="CubeT" translation="-0.9 0.077 0">
+   <Shape DEF="CubeShape"><Appearance DEF="Mat_red"><PhysicalMaterial baseColor="0.8 0.2 0.15" metallic="0" roughness="0.5"/></Appearance><Box size="0.04 0.04 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="PendulumPivotT" translation="-0.55 0.45 0">
+   <Shape DEF="PendulumPivotShape"><Appearance USE="Mat_steel"/><Box size="0.03 0.03 0.03"/></Shape>
+  </Transform>
+  <Transform DEF="PendulumBobT" translation="-0.4 0.3 0.05">
+   <Shape DEF="PendulumBobShape"><Appearance DEF="Mat_brass"><PhysicalMaterial baseColor="0.85 0.66 0.3" metallic="1" roughness="0.35"/></Appearance><Sphere radius="0.03"/></Shape>
+  </Transform>
+  <Transform DEF="SeesawBaseT" translation="-0.15 0.04 0">
+   <Shape DEF="SeesawBaseShape"><Appearance DEF="Mat_wood"><PhysicalMaterial baseColor="0.62 0.42 0.24" metallic="0" roughness="0.6"/></Appearance><Box size="0.03 0.08 0.06"/></Shape>
+  </Transform>
+  <Transform DEF="SeesawT" translation="-0.15 0.086 0">
+   <Shape DEF="SeesawShape"><Appearance USE="Mat_wood"/><Box size="0.34 0.012 0.07"/></Shape>
+  </Transform>
+  <Transform DEF="MarbleAT" translation="-0.28 0.3 0">
+   <Shape DEF="MarbleAShape"><Appearance DEF="Mat_glass"><PhysicalMaterial baseColor="0.55 0.75 1" metallic="0.3" roughness="0.15"/></Appearance><Sphere radius="0.012"/></Shape>
+  </Transform>
+  <Transform DEF="FlipperBaseT" translation="0.15 0.06 0">
+   <Shape DEF="FlipperBaseShape"><Appearance USE="Mat_steel"/><Box size="0.02 0.12 0.05"/></Shape>
+  </Transform>
+  <Transform DEF="FlipperT" translation="0.21 0.12 0">
+   <Shape DEF="FlipperShape"><Appearance USE="Mat_red"/><Box size="0.12 0.016 0.05"/></Shape>
+  </Transform>
+  <Transform DEF="MarbleBT" translation="0.235 0.141 0">
+   <Shape DEF="MarbleBShape"><Appearance USE="Mat_glass"/><Sphere radius="0.012"/></Shape>
+  </Transform>
+  <Transform DEF="WheelHubT" translation="0.48 0.18 -0.03">
+   <Shape DEF="WheelHubShape"><Appearance USE="Mat_steel"/><Box size="0.03 0.03 0.02"/></Shape>
+  </Transform>
+  <Transform DEF="WheelT" translation="0.48 0.18 0">
+   <Transform translation="0 0 0"><Shape DEF="WheelShape0"><Appearance USE="Mat_wood"/><Box size="0.2 0.02 0.04"/></Shape></Transform>
+   <Transform translation="0 0 0"><Shape DEF="WheelShape1"><Appearance USE="Mat_wood"/><Box size="0.02 0.2 0.04"/></Shape></Transform>
+  </Transform>
+  <Transform DEF="LauncherRailT" translation="0.78 0.02 -0.04">
+   <Shape DEF="LauncherRailShape"><Appearance USE="Mat_steel"/><Box size="0.05 0.04 0.02"/></Shape>
+  </Transform>
+  <Transform DEF="PlungerT" translation="0.78 0.04 0">
+   <Shape DEF="PlungerShape"><Appearance USE="Mat_red"/><Box size="0.05 0.02 0.05"/></Shape>
+  </Transform>
+  <Transform DEF="MarbleCT" translation="0.78 0.0625 0">
+   <Shape DEF="MarbleCShape"><Appearance USE="Mat_glass"/><Sphere radius="0.012"/></Shape>
+  </Transform>
+  <Transform DEF="UniversalSupportT" translation="1.08 0.46 0">
+   <Shape DEF="UniversalSupportShape"><Appearance USE="Mat_steel"/><Box size="0.04 0.02 0.04"/></Shape>
+  </Transform>
+  <Transform DEF="RodT" translation="1.08 0.34 0">
+   <Shape DEF="RodShape"><Appearance USE="Mat_brass"/><Box size="0.02 0.22 0.02"/></Shape>
+  </Transform>
+  <TimeSensor DEF="ElevatorClock" cycleInterval="4" loop="true"/>
+  <PositionInterpolator DEF="ElevatorPath" key="0 0.5 1" keyValue="-0.9 0.05 0 -0.9 0.3 0 -0.9 0.05 0"/>
+
+  <RigidBodyCollection DEF="Bench" gravity="0 -9.81 0" iterations="10" preferAccuracy="true">
+   <RigidBody DEF="FloorBody" containerField="bodies" position="0.1 -0.01 0" fixed="true">
+    <CollidableShape DEF="FloorCollider" containerField="geometry"><Shape USE="FloorShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="ElevatorBody" containerField="bodies" position="-0.9 0.05 0" fixed="true">
+    <CollidableShape DEF="ElevatorCollider" containerField="geometry"><Shape USE="ElevatorShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="CubeBody" containerField="bodies" position="-0.9 0.077 0" mass="0.05">
+    <CollidableShape DEF="CubeCollider" containerField="geometry"><Shape USE="CubeShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="PendulumPivotBody" containerField="bodies" position="-0.55 0.45 0" fixed="true">
+    <CollidableShape DEF="PendulumPivotCollider" containerField="geometry"><Shape USE="PendulumPivotShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="PendulumBobBody" containerField="bodies" position="-0.4 0.3 0.05" mass="0.3">
+    <CollidableShape DEF="PendulumBobCollider" containerField="geometry"><Shape USE="PendulumBobShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="SeesawBaseBody" containerField="bodies" position="-0.15 0.04 0" fixed="true">
+    <CollidableShape DEF="SeesawBaseCollider" containerField="geometry"><Shape USE="SeesawBaseShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="SeesawBody" containerField="bodies" position="-0.15 0.086 0" mass="0.08">
+    <CollidableShape DEF="SeesawCollider" containerField="geometry"><Shape USE="SeesawShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="MarbleABody" containerField="bodies" position="-0.28 0.3 0" mass="0.02">
+    <CollidableShape DEF="MarbleACollider" containerField="geometry"><Shape USE="MarbleAShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="FlipperBaseBody" containerField="bodies" position="0.15 0.06 0" fixed="true">
+    <CollidableShape DEF="FlipperBaseCollider" containerField="geometry"><Shape USE="FlipperBaseShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="FlipperBody" containerField="bodies" position="0.21 0.12 0" mass="0.05">
+    <CollidableShape DEF="FlipperCollider" containerField="geometry"><Shape USE="FlipperShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="MarbleBBody" containerField="bodies" position="0.235 0.141 0" mass="0.02">
+    <CollidableShape DEF="MarbleBCollider" containerField="geometry"><Shape USE="MarbleBShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="WheelHubBody" containerField="bodies" position="0.48 0.18 -0.03" fixed="true">
+    <CollidableShape DEF="WheelHubCollider" containerField="geometry"><Shape USE="WheelHubShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="WheelBody" containerField="bodies" position="0.48 0.18 0" mass="0.1">
+    <CollidableOffset DEF="WheelCollider0Offset" containerField="geometry"><CollidableShape DEF="WheelCollider0" containerField="collidable" translation="0 0 0"><Shape USE="WheelShape0" containerField="shape"/></CollidableShape></CollidableOffset>
+    <CollidableOffset DEF="WheelCollider1Offset" containerField="geometry"><CollidableShape DEF="WheelCollider1" containerField="collidable" translation="0 0 0"><Shape USE="WheelShape1" containerField="shape"/></CollidableShape></CollidableOffset>
+   </RigidBody>
+   <RigidBody DEF="LauncherRailBody" containerField="bodies" position="0.78 0.02 -0.04" fixed="true">
+    <CollidableShape DEF="LauncherRailCollider" containerField="geometry"><Shape USE="LauncherRailShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="PlungerBody" containerField="bodies" position="0.78 0.04 0" mass="0.05">
+    <CollidableShape DEF="PlungerCollider" containerField="geometry"><Shape USE="PlungerShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="MarbleCBody" containerField="bodies" position="0.78 0.0625 0" mass="0.02">
+    <CollidableShape DEF="MarbleCCollider" containerField="geometry"><Shape USE="MarbleCShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="UniversalSupportBody" containerField="bodies" position="1.08 0.46 0" fixed="true">
+    <CollidableShape DEF="UniversalSupportCollider" containerField="geometry"><Shape USE="UniversalSupportShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <RigidBody DEF="RodBody" containerField="bodies" position="1.08 0.34 0" mass="0.1" angularVelocity="2 0 1.5">
+    <CollidableShape DEF="RodCollider" containerField="geometry"><Shape USE="RodShape" containerField="shape"/></CollidableShape>
+   </RigidBody>
+   <BallJoint DEF="Pendulum" containerField="joints" anchorPoint="-0.55 0.45 0" forceOutput='"ALL"'><RigidBody USE="PendulumBobBody" containerField="body1"/><RigidBody USE="PendulumPivotBody" containerField="body2"/></BallJoint>
+   <SingleAxisHingeJoint DEF="SeesawHinge" containerField="joints" anchorPoint="-0.15 0.08 0" axis="0 0 1" minAngle="-0.3" maxAngle="0.3" forceOutput='"ALL"'><RigidBody USE="SeesawBody" containerField="body1"/><RigidBody USE="SeesawBaseBody" containerField="body2"/></SingleAxisHingeJoint>
+   <SingleAxisHingeJoint DEF="FlipperHinge" containerField="joints" anchorPoint="0.15 0.12 0" axis="0 0 1" minAngle="0" maxAngle="0.8" stopBounce="0.2" forceOutput='"ALL"'><RigidBody USE="FlipperBody" containerField="body1"/><RigidBody USE="FlipperBaseBody" containerField="body2"/></SingleAxisHingeJoint>
+   <MotorJoint DEF="FlipperMotor" containerField="joints" enabledAxes="1" motor1Axis="0 0 1" axis1Torque="-0.02" autoCalc="true" forceOutput='"ALL"'><RigidBody USE="FlipperBody" containerField="body1"/><RigidBody USE="FlipperBaseBody" containerField="body2"/></MotorJoint>
+   <DoubleAxisHingeJoint DEF="WheelAxle" containerField="joints" anchorPoint="0.48 0.18 0" axis1="0 1 0" axis2="0 0 1" minAngle1="0" maxAngle1="0" desiredAngularVelocity2="-2" maxTorque2="0.2" forceOutput='"ALL"'><RigidBody USE="WheelHubBody" containerField="body1"/><RigidBody USE="WheelBody" containerField="body2"/></DoubleAxisHingeJoint>
+   <SliderJoint DEF="Launcher" containerField="joints" axis="0 1 0" minSeparation="0" maxSeparation="0.08" sliderForce="0" forceOutput='"ALL"'><RigidBody USE="PlungerBody" containerField="body1"/><RigidBody USE="LauncherRailBody" containerField="body2"/></SliderJoint>
+   <UniversalJoint DEF="Cardan" containerField="joints" anchorPoint="1.08 0.45 0" axis1="1 0 0" axis2="0 0 1" forceOutput='"ALL"'><RigidBody USE="UniversalSupportBody" containerField="body1"/><RigidBody USE="RodBody" containerField="body2"/></UniversalJoint>
+   <CollisionCollection DEF="BenchContacts" containerField="collider" appliedParameters='"BOUNCE" "FRICTION_COEFFICIENT-2"' bounce="0.3" minBounceSpeed="0.1" frictionCoefficients="0.4 0.4">
+    <CollidableShape USE="FloorCollider" containerField="collidables"/>
+    <CollidableShape USE="ElevatorCollider" containerField="collidables"/>
+    <CollidableShape USE="CubeCollider" containerField="collidables"/>
+    <CollidableShape USE="PendulumPivotCollider" containerField="collidables"/>
+    <CollidableShape USE="PendulumBobCollider" containerField="collidables"/>
+    <CollidableShape USE="SeesawBaseCollider" containerField="collidables"/>
+    <CollidableShape USE="SeesawCollider" containerField="collidables"/>
+    <CollidableShape USE="MarbleACollider" containerField="collidables"/>
+    <CollidableShape USE="FlipperBaseCollider" containerField="collidables"/>
+    <CollidableShape USE="FlipperCollider" containerField="collidables"/>
+    <CollidableShape USE="MarbleBCollider" containerField="collidables"/>
+    <CollidableShape USE="WheelHubCollider" containerField="collidables"/>
+    <CollidableOffset USE="WheelCollider0Offset" containerField="collidables"/>
+    <CollidableOffset USE="WheelCollider1Offset" containerField="collidables"/>
+    <CollidableShape USE="LauncherRailCollider" containerField="collidables"/>
+    <CollidableShape USE="PlungerCollider" containerField="collidables"/>
+    <CollidableShape USE="MarbleCCollider" containerField="collidables"/>
+    <CollidableShape USE="UniversalSupportCollider" containerField="collidables"/>
+    <CollidableShape USE="RodCollider" containerField="collidables"/>
+   </CollisionCollection>
+  </RigidBodyCollection>
+  <CollisionSensor DEF="BenchSensor"><CollisionCollection USE="BenchContacts" containerField="collider"/></CollisionSensor>
+
+  <ROUTE fromNode="ElevatorClock" fromField="fraction_changed" toNode="ElevatorPath" toField="set_fraction"/>
+  <ROUTE fromNode="ElevatorPath" fromField="value_changed" toNode="ElevatorBody" toField="set_position"/>
+  <ROUTE fromNode="ElevatorPath" fromField="value_changed" toNode="ElevatorT" toField="set_translation"/>
+  <ROUTE fromNode="BenchSensor" fromField="isActive" toNode="ContactLamp" toField="set_on"/>
+  <ROUTE fromNode="BenchSensor" fromField="contacts" toNode="Bench" toField="set_contacts"/>
+  <ROUTE fromNode="CubeBody" fromField="position" toNode="CubeT" toField="set_translation"/>
+  <ROUTE fromNode="CubeBody" fromField="orientation" toNode="CubeT" toField="set_rotation"/>
+  <ROUTE fromNode="PendulumBobBody" fromField="position" toNode="PendulumBobT" toField="set_translation"/>
+  <ROUTE fromNode="PendulumBobBody" fromField="orientation" toNode="PendulumBobT" toField="set_rotation"/>
+  <ROUTE fromNode="SeesawBody" fromField="position" toNode="SeesawT" toField="set_translation"/>
+  <ROUTE fromNode="SeesawBody" fromField="orientation" toNode="SeesawT" toField="set_rotation"/>
+  <ROUTE fromNode="MarbleABody" fromField="position" toNode="MarbleAT" toField="set_translation"/>
+  <ROUTE fromNode="MarbleABody" fromField="orientation" toNode="MarbleAT" toField="set_rotation"/>
+  <ROUTE fromNode="FlipperBody" fromField="position" toNode="FlipperT" toField="set_translation"/>
+  <ROUTE fromNode="FlipperBody" fromField="orientation" toNode="FlipperT" toField="set_rotation"/>
+  <ROUTE fromNode="MarbleBBody" fromField="position" toNode="MarbleBT" toField="set_translation"/>
+  <ROUTE fromNode="MarbleBBody" fromField="orientation" toNode="MarbleBT" toField="set_rotation"/>
+  <ROUTE fromNode="WheelBody" fromField="position" toNode="WheelT" toField="set_translation"/>
+  <ROUTE fromNode="WheelBody" fromField="orientation" toNode="WheelT" toField="set_rotation"/>
+  <ROUTE fromNode="PlungerBody" fromField="position" toNode="PlungerT" toField="set_translation"/>
+  <ROUTE fromNode="PlungerBody" fromField="orientation" toNode="PlungerT" toField="set_rotation"/>
+  <ROUTE fromNode="MarbleCBody" fromField="position" toNode="MarbleCT" toField="set_translation"/>
+  <ROUTE fromNode="MarbleCBody" fromField="orientation" toNode="MarbleCT" toField="set_rotation"/>
+  <ROUTE fromNode="RodBody" fromField="position" toNode="RodT" toField="set_translation"/>
+  <ROUTE fromNode="RodBody" fromField="orientation" toNode="RodT" toField="set_rotation"/>
+ </Scene>
+</X3D>
