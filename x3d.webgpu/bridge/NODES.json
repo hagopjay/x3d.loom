@@ -2,7 +2,7 @@
  "meta": {
   "uom": "X3dUnifiedObjectModel-4.0.xml (x3d_mcp src/validation/schemas)",
   "total": 260,
-  "census_commit": "e82ffe4",
+  "census_commit": "15277a6",
   "census_parts": "brain/reader, gobbler/reader-ext, demiurge/reader-ext-dm, dynasty/reader-ext-dl, manifold/manifold-reader-ext, drift/drift-ext",
   "reader_types_not_in_4_0": [
    "BlendMode",
@@ -71,11 +71,13 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 4,
-   "status": "gap",
-   "batch": 9,
+   "status": "bridged",
+   "batch": 25,
    "receipt": "receipts/Arc2D.json",
-   "note": "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared",
-   "rank": 43
+   "note": "lines are not pickable, so the check is the picture (silhouette overlap and the mean colour of the drawn pixels, SwiftShader CPU raster) plus the segment count between the engines (X_ITE vertex pairs through its internal getVertices, a private API) and one line mesh in our body; line width is one pixel in both, ours is an anti-aliased ribbon",
+   "rank": 43,
+   "prev_batch": 25,
+   "prev_note": "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared"
   },
   "ArcClose2D": {
    "component": "Geometry2D",
@@ -84,11 +86,13 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 6,
-   "status": "gap",
-   "batch": 9,
+   "status": "bridged",
+   "batch": 25,
    "receipt": "receipts/ArcClose2D.json",
-   "note": "compared by pointer-over probes in both engines and the triangle count; texture mapping and lighting are not compared",
-   "rank": 44
+   "note": "compared by pointer-over probes, the triangle count and the picture; texture mapping and lighting of ArcClose2D are not compared with X_ITE",
+   "rank": 44,
+   "prev_batch": 25,
+   "prev_note": "compared by pointer-over probes in both engines and the triangle count; texture mapping and lighting are not compared"
   },
   "AudioClip": {
    "component": "Sound",
@@ -318,9 +322,9 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 9,
-   "status": "wip",
-   "batch": null,
-   "receipt": null,
+   "status": "bridged",
+   "batch": 26,
+   "receipt": "receipts/CADLayer.json",
    "note": "",
    "rank": 214
   },
@@ -331,9 +335,9 @@
    "inherits": "X3DProductStructureChildNode",
    "container": "children",
    "nfields": 14,
-   "status": "wip",
-   "batch": null,
-   "receipt": null,
+   "status": "bridged",
+   "batch": 26,
+   "receipt": "receipts/CADPart.json",
    "note": "",
    "rank": 215
   },
@@ -396,11 +400,13 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 2,
-   "status": "gap",
-   "batch": 9,
+   "status": "bridged",
+   "batch": 25,
    "receipt": "receipts/Circle2D.json",
-   "note": "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared",
-   "rank": 45
+   "note": "lines are not pickable, so the check is the picture (silhouette overlap and the mean colour of the drawn pixels, SwiftShader CPU raster) plus the segment count between the engines (X_ITE vertex pairs through its internal getVertices, a private API) and one line mesh in our body; line width is one pixel in both, ours is an anti-aliased ribbon",
+   "rank": 45,
+   "prev_batch": 25,
+   "prev_note": "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared"
   },
   "ClipPlane": {
    "component": "Rendering",
@@ -592,9 +598,9 @@
    "container": "texture",
    "nfields": 7,
    "status": "gap",
-   "batch": 20,
+   "batch": 24,
    "receipt": "receipts/ComposedTexture3D.json",
-   "note": "the volume is not sampled in 3D, only the first slice is drawn (see PixelTexture3D); XSD finding: x3d-4.0.xsd writes the texture field of a ComposedTexture3D as an xs:sequence of ImageTexture, PixelTexture, MovieTexture, ProtoInstance repeated, not an xs:choice, so the slices must come in fours in that order and two ImageTextures do not validate; the fixture is checked against the XSD with that sequence made a choice (the receipt says so); the image field of a PixelTexture3D takes decimal numbers only in the XSD (no 0x hex)",
+   "note": "XSD finding: x3d-4.0.xsd writes the texture field of a ComposedTexture3D as an xs:sequence of ImageTexture, PixelTexture, MovieTexture, ProtoInstance repeated, not an xs:choice, so the slices must come in fours in that order and two ImageTextures do not validate; the fixture is checked against the XSD with that sequence made a choice (the receipt says so); the image field of a PixelTexture3D takes decimal numbers only in the XSD (no 0x hex); Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight only (N dot view axis, two sided); other lights, TextureProperties anisotropy and mipmaps are not applied to volumes",
    "rank": 171
   },
   "ComposedVolumeStyle": {
@@ -735,10 +741,12 @@
    "container": "coord",
    "nfields": 2,
    "status": "gap",
-   "batch": 13,
+   "batch": 26,
    "receipt": "receipts/CoordinateDouble.json",
    "note": "the points are kept as 32-bit floats (the geometry code reads Float32Array); doubles finer than about 7 digits or larger than 3e38 are not kept; only the triangle positions are compared with X_ITE (pointer hit and miss), not shading",
-   "rank": 99
+   "rank": 99,
+   "prev_batch": 13,
+   "prev_note": "the points are kept as 32-bit floats (the geometry code reads Float32Array); doubles finer than about 7 digits or larger than 3e38 are not kept; only the triangle positions are compared with X_ITE (pointer hit and miss), not shading"
   },
   "CoordinateInterpolator": {
    "component": "Interpolation",
@@ -969,7 +977,7 @@
    "container": "fillProperties",
    "nfields": 5,
    "status": "gap",
-   "batch": 11,
+   "batch": 24,
    "receipt": "receipts/FillProperties.json",
    "note": "a shape with filled=false and hatched=false is not drawn but still answers the pointer, as in X_ITE 16.6.0 (the 4.0 text does not say); compared by pointer-over probes (hidden fill is not hit, hatched and plain fills are) and, in our body only, the hatch overlay mesh; line pattern, thickness and screen-space scaling are not compared with X_ITE; hatchStyle 7 to 19 are drawn as style 6; the pattern follows the geometry's texture coordinates, a geometry without them shows no hatch",
    "rank": 52
@@ -1375,9 +1383,7 @@
    "batch": 21,
    "receipt": "receipts/IndexedQuadSet.json",
    "note": "attrib is read and kept; only a shader program would consume it, and no shader language runs in the bridge (see ShaderProgram, ProgramShader)",
-   "rank": 38,
-   "prev_batch": 8,
-   "prev_note": "compared by where the pointer is over the shape (a TouchSensor) in both engines, plus triangle count and normals in our body only; colour, texture and lighting are not compared with X_ITE"
+   "rank": 38
   },
   "IndexedTriangleFanSet": {
    "component": "Rendering",
@@ -1390,9 +1396,7 @@
    "batch": 21,
    "receipt": "receipts/IndexedTriangleFanSet.json",
    "note": "attrib is read and kept; only a shader program would consume it, and no shader language runs in the bridge (see ShaderProgram, ProgramShader)",
-   "rank": 39,
-   "prev_batch": 8,
-   "prev_note": "compared by where the pointer is over the shape (a TouchSensor) in both engines, plus triangle count and normals in our body only; colour, texture and lighting are not compared with X_ITE"
+   "rank": 39
   },
   "IndexedTriangleSet": {
    "component": "Rendering",
@@ -1418,9 +1422,7 @@
    "batch": 21,
    "receipt": "receipts/IndexedTriangleStripSet.json",
    "note": "attrib is read and kept; only a shader program would consume it, and no shader language runs in the bridge (see ShaderProgram, ProgramShader)",
-   "rank": 40,
-   "prev_batch": 8,
-   "prev_note": "compared by where the pointer is over the shape (a TouchSensor) in both engines, plus triangle count and normals in our body only; colour, texture and lighting are not compared with X_ITE"
+   "rank": 40
   },
   "Inline": {
    "component": "Networking",
@@ -1599,10 +1601,12 @@
    "container": "geometry",
    "nfields": 7,
    "status": "gap",
-   "batch": 9,
+   "batch": 25,
    "receipt": "receipts/LineSet.json",
-   "note": "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared; normal, fogCoord and attrib are read and ignored",
-   "rank": 41
+   "note": "normal, fogCoord and attrib are read and ignored; line colour: the drawn pixels are about 20 percent brighter than X_ITE's one pixel lines in the picture (mean colour 60,120,61 against 48,99,51), the anti-aliased ribbon covers more pixels than a raw GL line",
+   "rank": 41,
+   "prev_batch": 25,
+   "prev_note": "lines are not pickable, so there is no hit probe: the segment count is compared between the engines (X_ITE vertex pairs via its internal getVertices, which is a private API), and our body is checked to have built one line mesh; colour and line width are not compared; normal, fogCoord and attrib are read and ignored"
   },
   "ListenerPointSource": {
    "component": "Sound",
@@ -2184,9 +2188,9 @@
    "container": "texture",
    "nfields": 7,
    "status": "gap",
-   "batch": 20,
+   "batch": 24,
    "receipt": "receipts/PixelTexture3D.json",
-   "note": "the volume is not sampled in 3D: the Texturing3D coordinate nodes (TextureCoordinate3D, TextureCoordinate4D, TextureTransform3D, TextureTransformMatrix3D) come in later batches and only the first slice is drawn; repeatR, repeatS and repeatT are read for S and T only",
+   "note": "Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight only (N dot view axis, two sided); other lights, TextureProperties anisotropy and mipmaps are not applied to volumes",
    "rank": 172
   },
   "PlaneSensor": {
@@ -2274,11 +2278,13 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 2,
-   "status": "gap",
-   "batch": 10,
+   "status": "bridged",
+   "batch": 26,
    "receipt": "receipts/Polyline2D.json",
-   "note": "lines are not pickable: the segment count is compared between the engines (X_ITE vertex pairs via its private getVertices); colour and width are not compared",
-   "rank": 46
+   "note": "lines are not pickable, so the check is the picture (silhouette overlap and the mean colour of the drawn pixels, SwiftShader CPU raster) plus the segment count between the engines (X_ITE vertex pairs through its internal getVertices, a private API) and one line mesh in our body; line width is one pixel in both, ours is an anti-aliased ribbon",
+   "rank": 46,
+   "prev_batch": 10,
+   "prev_note": "lines are not pickable: the segment count is compared between the engines (X_ITE vertex pairs via its private getVertices); colour and width are not compared"
   },
   "PolylineEmitter": {
    "component": "ParticleSystems",
@@ -2301,10 +2307,12 @@
    "container": "geometry",
    "nfields": 2,
    "status": "gap",
-   "batch": 10,
+   "batch": 26,
    "receipt": "receipts/Polypoint2D.json",
-   "note": "points cannot be picked: the point count is compared between the engines; WebGPU draws each point one pixel, X_ITE draws them with its point size; colour is not compared",
-   "rank": 47
+   "note": "WebGPU has no point size: each point is a small camera-facing square drawn by a shader; X_ITE 16.6.0 draws its points much dimmer on this CPU raster (seen in the picture), colour and size are not compared; PointProperties sizing is not applied",
+   "rank": 47,
+   "prev_batch": 10,
+   "prev_note": "points cannot be picked: the point count is compared between the engines; WebGPU draws each point one pixel, X_ITE draws them with its point size; colour is not compared"
   },
   "PositionChaser": {
    "component": "Followers",
@@ -2460,9 +2468,7 @@
    "batch": 21,
    "receipt": "receipts/QuadSet.json",
    "note": "attrib is read and kept; only a shader program would consume it, and no shader language runs in the bridge (see ShaderProgram, ProgramShader)",
-   "rank": 37,
-   "prev_batch": 8,
-   "prev_note": "compared by where the pointer is over the shape (a TouchSensor) in both engines, plus triangle count and normals in our body only; colour, texture and lighting are not compared with X_ITE"
+   "rank": 37
   },
   "ReceiverPdu": {
    "component": "DIS",
@@ -2839,9 +2845,7 @@
    "batch": 22,
    "receipt": "receipts/StaticGroup.json",
    "note": "the static children are drawn as a Group and are not merged into one mesh as X_ITE does at load; the merge is an optimisation, it changes no field and no picture (compared below)",
-   "rank": 48,
-   "prev_batch": 10,
-   "prev_note": "compared by pointer-over probes on the box and sphere inside it (the sensor sits outside, as the node forbids sensors inside); X_ITE's merging of static children is not observable"
+   "rank": 48
   },
   "StreamAudioDestination": {
    "component": "Sound",
@@ -3007,9 +3011,9 @@
    "container": "texCoord",
    "nfields": 4,
    "status": "gap",
-   "batch": 10,
+   "batch": 24,
    "receipt": "receipts/TextureCoordinateGenerator.json",
-   "note": "X_ITE is compared on loading and drawing the shapes; the generated texture coordinates are not observable there, so they are checked against the formula in our body only; the camera is taken as the identity: SPHERE and the CAMERASPACE modes use the object-space normal or position; NOISE and reflection modes are not made",
+   "note": "the six modes of the fixture are compared in the picture (silhouette overlap 0.98) and against the formula in our body; the CAMERASPACENORMAL and CAMERASPACEREFLECTIONVECTOR spheres differ visibly from X_ITE 16.6.0 (mean RGB difference 11 of 255 over the picture): X_ITE's own scaling of the camera-space range is not reproduced; camera-space modes are recomputed on the CPU whenever the model-view matrix changes, not in a shader; NOISE and NOISE-EYE are not made",
    "rank": 49
   },
   "TextureProjector": {
@@ -3192,9 +3196,7 @@
    "batch": 21,
    "receipt": "receipts/TriangleFanSet.json",
    "note": "attrib is read and kept; only a shader program would consume it, and no shader language runs in the bridge (see ShaderProgram, ProgramShader)",
-   "rank": 36,
-   "prev_batch": 8,
-   "prev_note": "compared by where the pointer is over the shape (a TouchSensor) in both engines, plus triangle count and normals in our body only; colour, texture and lighting are not compared with X_ITE"
+   "rank": 36
   },
   "TriangleSet": {
    "component": "Rendering",
@@ -3216,11 +3218,13 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 3,
-   "status": "gap",
-   "batch": 9,
+   "status": "bridged",
+   "batch": 25,
    "receipt": "receipts/TriangleSet2D.json",
-   "note": "compared by pointer-over probes in both engines and the triangle count; the clockwise second triangle is turned to face +z in ours, X_ITE draws it two-sided",
-   "rank": 42
+   "note": "compared by pointer-over probes, the triangle count and the picture; X_ITE 16.6.0 culls the clockwise second triangle although solid is false, ours draws it facing +z (the 4.0 text: a 2D geometry has no back side), a deliberate difference",
+   "rank": 42,
+   "prev_batch": 25,
+   "prev_note": "compared by pointer-over probes in both engines and the triangle count; the clockwise second triangle is turned to face +z in ours, X_ITE draws it two-sided"
   },
   "TriangleStripSet": {
    "component": "Rendering",
@@ -3243,9 +3247,9 @@
    "container": "material",
    "nfields": 14,
    "status": "gap",
-   "batch": 11,
+   "batch": 24,
    "receipt": "receipts/TwoSidedMaterial.json",
-   "note": "X_ITE is compared on loading and picking the shapes; which side shows which colour is checked in our body only (two passes, culled front and back); specular, shininess and ambient are read and not shown",
+   "note": "which side shows which colour is compared in the picture (the lower row is turned round, so it shows the back colours; a solid=TRUE pair in the middle is culled in both engines), and in our body by pass: two meshes for solid=FALSE, one for solid=TRUE; ambient and ambientIntensity are read and not shown (no ambient term in the headlight model); the specular highlight of the sphere follows Phong shininess*128 and is compared in the picture",
    "rank": 53
   },
   "UniversalJoint": {
