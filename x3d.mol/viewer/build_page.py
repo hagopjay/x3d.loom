@@ -42,6 +42,8 @@ def main() -> None:
                 list(cinema.glob("*-diffusion.mp4")) + list(cinema.glob("*-diffusion-poster.jpg")):
             if f.exists():
                 shutil.copy(f, out / "cinema" / f.name)
+        if not (cinema / "diffusion.json").exists():  # no film rendered yet: an empty index, so the page fetch does not 404
+            (out / "cinema/diffusion.json").write_text(json.dumps({"schema": "x3d.mol.diffusion-film/1", "scenes": {}}))
     credits = ROOT / "data/credits/lab-papers.json"
     if credits.exists():
         shutil.copy(credits, out / "scenes" / "credits.json")
