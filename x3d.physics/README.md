@@ -69,7 +69,7 @@ Law 16: this folder went through `kit/loom sweep` (rules kept private) before it
 
 - PhysX 5 is BSD-3-Clause (`physx-bridge/licenses/NVIDIA-PhysX-BSD-3-Clause.md`, verbatim); `physx-js-webidl` is MIT, X_ITE is MIT, ammo.js is zlib.
 - `mujoco-bridge/` is Apache-2.0 (`LICENSE`, `NOTICE`; `LICENSE-REVIEW.md` records that the owner confirmed they hold the rights to the two archives and the generated code and chose Apache-2.0).
-- **`physx-bridge/` states no licence of its own** (its `package.json` has no `license` field and the folder has no LICENSE file). The owner decides before this is merged; see the PR's risk list.
+- `physx-bridge/` is Apache-2.0 too (`LICENSE`, and `"license"` in its `package.json`), added at the owner's word when it was collected here; the third-party texts above stay verbatim. No copyright line was added (the MuJoCo bridge's `NOTICE` names the owner; add the same to `physx-bridge/` if wanted).
 
 ## Decisions carried over from the threads
 
