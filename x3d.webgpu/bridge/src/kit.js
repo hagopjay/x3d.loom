@@ -364,8 +364,40 @@ BR.drag = {
       }
       return null;
     },
+    cross: (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]],
+    add: (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]],
+    scale: (a, s) => [a[0] * s, a[1] * s, a[2] * s],
+    norm: (a) => { const l = Math.hypot(a[0], a[1], a[2]); return l > 1e-12 ? [a[0] / l, a[1] / l, a[2] / l] : [0, 0, 0]; },
+    /* ray (o, d) against the plane through p with normal n: the point, or null when they are parallel */
+    rayPlane(o, d, p, n) { const den = dot(n, d); if (Math.abs(den) < 1e-12) return null; return BR.geo.at(o, d, dot(n, sub(p, o)) / den); },
+    /* the point of the line (p, u) nearest to the line (o, d); null when they are parallel */
+    nearOnLine(p, u, o, d) {
+      const w = sub(p, o), a = dot(u, u), b = dot(u, d), c = dot(d, d), e = dot(u, w), f = dot(d, w), den = a * c - b * b;
+      if (Math.abs(den) < 1e-12 * Math.max(1, a * c)) return null;
+      return BR.geo.at(p, u, (b * f - c * e) / den);
+    },
   };
 }
+
+/* the point of a line (p, u in the sensor's frame) that the pointer picks: the point of the line nearest the pointer on the screen (the line is projected, the pointer is dropped on it, the
+   ray through that screen point is taken back to the line). Where X_ITE does the same; a line that points at the viewer still has an answer. c carries pointer, ray(x, y) and scr(point). */
+BR.lineTrack = (c, line) => {
+  const a = c.scr(line.p), b = c.scr(BR.geo.add(line.p, BR.geo.scale(line.u, 1e8))), ab = [b[0] - a[0], b[1] - a[1]], l2 = ab[0] * ab[0] + ab[1] * ab[1];
+  const t = l2 > 1e-12 ? ((c.pointer[0] - a[0]) * ab[0] + (c.pointer[1] - a[1]) * ab[1]) / l2 : 0, rl = c.ray(a[0] + ab[0] * t, a[1] + ab[1] * t);
+  return BR.geo.nearOnLine(line.p, line.u, rl.o, rl.d);
+};
+
+/* CylinderSensor's tracking point (see the node): d holds the cylinder (y axis, radius r, the billboarded x and z normals), c the pointer ray */
+BR.cylTrack = (d, c) => {
+  const G = BR.geo, ray = { o: c.o, d: G.norm(c.d) };
+  if (d.disk) return G.rayPlane(ray.o, ray.d, d.hp, d.y);
+  const z = G.rayPlane(ray.o, ray.d, d.hp, d.back); if (!z) return null;
+  const axisPoint = G.scale(d.y, G.dot(z, d.y)), dist = G.dot(d.sx, z) / d.r, section = Math.floor((dist + 1) / 2);
+  const sinp = BR.interval(dist, -1, 1), phi = section === 0 ? Math.asin(sinp) : sinp * Math.PI / 2, ang = phi + section * Math.PI;
+  const k = G.scale(d.sz, d.r), s = Math.sin(ang), co = Math.cos(ang), cr = G.cross(d.y, k), dt = G.dot(d.y, k);    // Rodrigues about the axis
+  const rot = [k[0] * co + cr[0] * s + d.y[0] * dt * (1 - co), k[1] * co + cr[1] * s + d.y[1] * dt * (1 - co), k[2] * co + cr[2] * s + d.y[2] * dt * (1 - co)];
+  return G.add(rot, axisPoint);
+};
 
 /* key helpers shared by KeySensor and StringSensor: modifier keys, action key codes (X3D: F1-F12 = 1-12, Home 13, End 14, PageUp 15, PageDown 16, arrows 17-20), the text a key stands for */
 BR.keys = {
