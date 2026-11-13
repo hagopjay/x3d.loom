@@ -136,7 +136,7 @@ def build_anim(st: S.Structure, ident: str, kind: str, title: str, src_meta: dic
         meta.append(W.mflt("plddt", plddt, 2))
     ctr = x0.mean(0)
     rad = float(np.max(np.linalg.norm(x0 - ctr, axis=1)))
-    head = ("<?xml version='1.0' encoding='UTF-8'?>\n<!DOCTYPE X3D PUBLIC 'ISO//Web3D//DTD X3D 4.0//EN' 'https://www.web3d.org/specifications/x3d-4.0.dtd'>\n"
+    head = ("<?xml version='1.0' encoding='UTF-8'?>\n"
             "<X3D profile='Interchange' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' "
             "xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>\n"
             f"<head><meta name='title' content='{W.esc(ident)}.anim.x3d'/><meta name='description' content='{W.esc(DISCLAIMER)}'/>"
