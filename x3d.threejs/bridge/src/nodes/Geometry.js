@@ -67,4 +67,38 @@
     return tri.length ? body.dataGeometry(BR.compose(g, tri, faceOf)) : null;
   };
   R.bridge.three.changed.TriangleStripSet = (body, n, field) => { if (['stripCount', 'ccw', 'colorPerVertex', 'normalPerVertex'].includes(field)) body.regeo(n); };
+
+  /* IndexedFaceSet normals and colours that Body.geometryData (lifted verbatim from the Babylon body) leaves out: it makes flat face normals and per-corner colours only.
+     Here, walking the faces in the same order it does (one run of coordIndex per face, corners emitted in order), the three.js body adds
+       - a Normal node (normalPerVertex true: normalIndex or coordIndex per corner; false: one normal per face),
+       - creaseAngle (no Normal, creaseAngle > 0): corners at one position share the average of the face normals within creaseAngle of their own face; 0 keeps the flat normals,
+       - colorPerVertex false: one colour per face (colorIndex per face, or the face number).
+     Returns {nrm, col} (null where nothing changes). */
+  BR.ifsExtras = (g, d) => {
+    const f = g.f, ci = f.coordIndex || [], N = f.normal && f.normal.f.vector, C = f.color && f.color.f.color, out = { nrm: null, col: null };
+    const faces = []; let cur = [], fi = 0;   // cur: [[corner position in coordIndex, coord vertex]...]
+    for (let i = 0; i <= ci.length; i++) { if (i === ci.length || ci[i] < 0) { if (cur.length >= 3) faces.push({ fi, corners: cur }); if (i < ci.length || cur.length) fi++; cur = []; } else cur.push([i, ci[i]]); }
+    const nv = d.pos.length / 3, nrm = new Float32Array(nv * 3), col = C && f.colorPerVertex === false ? new Float32Array(nv * 3) : null;
+    if (N) {
+      const perV = f.normalPerVertex !== false, NI = f.normalIndex && f.normalIndex.length ? f.normalIndex : null; let c = 0;
+      for (const F of faces) for (const [pos, v] of F.corners) { const k = (perV ? (NI ? NI[pos] : v) : (NI ? NI[F.fi] : F.fi)) * 3; nrm[c * 3] = N[k]; nrm[c * 3 + 1] = N[k + 1]; nrm[c * 3 + 2] = N[k + 2]; c++; }
+      out.nrm = nrm;
+    } else if (f.creaseAngle > 0) {
+      const idx = d.idx, nt = idx.length / 3, tn = new Array(nt), at = new Map(), key = (v) => d.pos[v * 3].toFixed(5) + ',' + d.pos[v * 3 + 1].toFixed(5) + ',' + d.pos[v * 3 + 2].toFixed(5), tOf = new Int32Array(nv).fill(-1);
+      for (let t = 0; t < nt; t++) {
+        const a = idx[t * 3], b = idx[t * 3 + 1], e = idx[t * 3 + 2], u = [d.pos[b * 3] - d.pos[a * 3], d.pos[b * 3 + 1] - d.pos[a * 3 + 1], d.pos[b * 3 + 2] - d.pos[a * 3 + 2]], w = [d.pos[e * 3] - d.pos[a * 3], d.pos[e * 3 + 1] - d.pos[a * 3 + 1], d.pos[e * 3 + 2] - d.pos[a * 3 + 2]];
+        const n = [u[1] * w[2] - u[2] * w[1], u[2] * w[0] - u[0] * w[2], u[0] * w[1] - u[1] * w[0]], l = Math.hypot(n[0], n[1], n[2]) || 1; tn[t] = [n[0] / l, n[1] / l, n[2] / l];
+        for (const v of [a, b, e]) { if (tOf[v] < 0) tOf[v] = t; const k = key(v); (at.get(k) || at.set(k, new Set()).get(k)).add(t); }
+      }
+      const cosC = Math.cos(f.creaseAngle);
+      for (let v = 0; v < nv; v++) {
+        const me = tn[tOf[v]]; if (!me) continue; let x = 0, y = 0, z = 0;
+        for (const o of at.get(key(v))) { const n = tn[o]; if (o === tOf[v] || me[0] * n[0] + me[1] * n[1] + me[2] * n[2] > cosC) { x += n[0]; y += n[1]; z += n[2]; } }
+        const l = Math.hypot(x, y, z) || 1; nrm[v * 3] = x / l; nrm[v * 3 + 1] = y / l; nrm[v * 3 + 2] = z / l;
+      }
+      out.nrm = nrm;
+    }
+    if (col) { const CI = f.colorIndex && f.colorIndex.length ? f.colorIndex : null; let c = 0; for (const F of faces) { const k = (CI ? CI[F.fi] : F.fi) * 3; for (let q = 0; q < F.corners.length; q++, c++) { col[c * 3] = C[k]; col[c * 3 + 1] = C[k + 1]; col[c * 3 + 2] = C[k + 2]; } } out.col = col; }
+    return out;
+  };
 }

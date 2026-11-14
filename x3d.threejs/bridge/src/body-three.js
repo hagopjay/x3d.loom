@@ -88,7 +88,7 @@ class Body {
   build(n, parent, chain) {
     if (!n) return null;
     switch (n.type) {
-      case 'Group': case 'Switch': case 'Transform': case 'Billboard': case 'LOD': return this.buildGroup(n, parent, chain);
+      case 'Group': case 'Switch': case 'Transform': case 'Billboard': case 'LOD': case 'Anchor': case 'Collision': case 'StaticGroup': return this.buildGroup(n, parent, chain);   // Anchor, Collision and StaticGroup draw as plain groups (the link, the collision test and the freezing are the SAI's and the navigation's business)
       case 'ClipPlane': (this.clips ||= []).push({ node: n, parent }); this.clipDirty = true; return null;
       case 'Shape': return this.buildShape(n, parent, chain);
       case 'Viewpoint': { const r = { node: n, parent, tn: parent }; this.rec.set(n.id, r); (this.viewpoints ||= []).includes(n) || this.viewpoints.push(n); this.vpParent ||= new Map(); this.vpParent.set(n, parent); return r; }
@@ -138,7 +138,11 @@ class Body {
       case 'Sphere': { const g2 = new T.SphereGeometry(f.radius, 48, 32); g2.rotateY(-Math.PI / 2); return g2; }   // X3D: u = 0 at -Z and grows toward -X (X_ITE QuadSphereOptions); three.js starts at -X and grows toward +Z
       case 'Cylinder': return this.x3dRound(new T.CylinderGeometry(f.radius, f.radius, f.height, 48, 1, false));
       case 'Cone': return this.x3dRound(new T.ConeGeometry(f.bottomRadius, f.height, 48, 1, f.bottom === false));
-      case 'IndexedFaceSet': case 'IndexedTriangleSet': return this.dataGeometry(this.geometryData(g));
+      case 'IndexedFaceSet': case 'IndexedTriangleSet': {
+        let d = this.geometryData(g);
+        if (g.type === 'IndexedFaceSet') { const x = R.bridge.ifsExtras(g, d); if (x.nrm || x.col) d = { ...d, nrm: x.nrm || d.nrm, col: x.col || d.col }; }   // Normal node, creaseAngle, per-face colour: see Geometry.js
+        return this.dataGeometry(d);
+      }
       default: {
         const fn = T3.geometry[g.type]; if (fn) return fn(g, this);
         const sp = R.bridge.specs.get(g.type);   // a node of the shared bridge with a geometry() hook returns plain vertex data {pos, nrm, uv, col, idx}: the same hook the Babylon body reads, wrapped here in a BufferGeometry
@@ -237,6 +241,7 @@ class Body {
     let m;
     if (mat && mat.type === 'PhysicalMaterial') { m = new T.MeshPhysicalMaterial({ side }); this.refreshPBR(m, mat); m.map = this.texFor(mat.f.baseTexture, app && app.f.textureTransform); }
     else if (mat && mat.type === 'Material') { m = new T.MeshPhongMaterial({ side, specular: 0 }); this.refreshPhong(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }
+    else if (mat && mat.type === 'UnlitMaterial') { m = new T.MeshBasicMaterial({ side }); this.refreshUnlit(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }   // 19775-1 4.0: no lighting, emissiveColor is the colour
     else { m = new T.MeshBasicMaterial({ side, color: 0xffffff }); m.map = this.texFor(texN, app && app.f.textureTransform); }   // no Material: unlit, white, texture as is (19775-1 12.2.2)
     if (g.f.color || (g.f.colorPerVertex !== undefined && g.type.startsWith('Indexed') && g.f.color)) m.vertexColors = true;
     return m;
@@ -246,6 +251,7 @@ class Body {
     m.specular.setRGB(f.specularColor[0], f.specularColor[1], f.specularColor[2]); m.shininess = Math.max(f.shininess * 128 * (this.opts.shininessScale || 4), 1e-3);   // X_ITE evaluates Phong with the reflection vector; Blinn-Phong (three.js) needs about 4x the exponent for the same highlight width
     m.opacity = 1 - f.transparency; m.transparent = m.opacity < 0.999; m.depthWrite = !m.transparent; m.needsUpdate = true;
   }
+  refreshUnlit(m, mat) { const e = mat.f.emissiveColor || [1, 1, 1]; m.color.setRGB(e[0], e[1], e[2]); m.opacity = 1 - (mat.f.transparency || 0); m.transparent = m.opacity < 0.999; m.depthWrite = !m.transparent; m.needsUpdate = true; }
   refreshPBR(m, mat) {
     const f = mat.f; m.color.setRGB(f.baseColor[0], f.baseColor[1], f.baseColor[2]); m.metalness = f.metallic; m.roughness = f.roughness; m.emissive.setRGB(f.emissiveColor[0], f.emissiveColor[1], f.emissiveColor[2]);
     m.opacity = 1 - f.transparency; m.transparent = m.opacity < 0.999; m.depthWrite = !m.transparent;
@@ -305,6 +311,7 @@ class Body {
     else if ((t === 'Group' || t === 'Switch' || t === 'Transform') && field === 'children') this.rebuildGroup(node);
     else if (t === 'Material') for (const m of this.meshesOf.get(node.id) || []) { if (m.isLineSegments || m.isPoints) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshPhong(m.material, node); }
     else if (t === 'PhysicalMaterial') for (const m of this.meshesOf.get(node.id) || []) this.refreshPBR(m.material, node);
+    else if (t === 'UnlitMaterial') for (const m of this.meshesOf.get(node.id) || []) this.refreshUnlit(m.material, node);
     else if (t === 'DirectionalLight' || t === 'PointLight' || t === 'SpotLight') { const l = this.lights.find((x) => x.userData.node === node); if (l) { this.refreshLight(l); this.refreshAmbient(); } }
     else if (t === 'Fog') this.applyFog();
     else if (t === 'ClipPlane') this.clipDirty = true;

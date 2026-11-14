@@ -1,0 +1,22 @@
+{
+ "node": "PhysicalMaterial",
+ "mode": "scene",
+ "note": "PhysicalMaterial (glTF metallic-roughness): a rough dielectric, a smooth metal, and an emissive one, no environment",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.9,
+   "mad": 6,
+   "fg": 20
+  }
+ },
+ "lookNote": "PhysicalMaterial is the glTF metallic-roughness model. X_ITE adds a default environment glow that three.js has no counterpart for without an environment map (the red dielectric is 16 grey levels darker in green in ours, IoU 0.91); the bound is wide on purpose and the receipt records the measured numbers. With an EnvironmentLight / cube map the two would be compared again."
+}
