@@ -133,11 +133,11 @@ async function runSpec(eng, spec, xml) {
       else if (s.reset) { for (const k in events) events[k].length = 0; }
       else if (s.atleast) { const [d, f, n] = s.atleast; const l = events[d + '.' + f]; if (l.length < n) fail(d + '.' + f + ' fired ' + l.length + ' times, expected at least ' + n); }
       else if (s.noevent) { const [d, f] = s.noevent; const l = events[d + '.' + f]; if (l.length) fail(d + '.' + f + ' fired ' + show(l) + ', expected nothing'); }
-      else if (s.tap || s.untap || s.sig || s.fsig || s.jsmap || s.close || s.bytemap) await AUD.step(eng, s, out, fail, scene);     // Web Audio signal probes
+      else if (s.tap || s.untap || s.sig || s.fsig || s.jsmap || s.close || s.bytemap) await window.AUD.step(eng, s, out, fail, scene);     // Web Audio signal probes
       else fail('unknown or empty test step');
     } catch (e) { fail('threw ' + String(e).slice(0, 160)); }
   }
-  for (const k of Object.keys(AUD.taps)) await AUD.step(eng, { untap: k }, out, () => {}, scene);
+  for (const k of Object.keys(window.AUD.taps)) await window.AUD.step(eng, { untap: k }, out, () => {}, scene);
   return out;
 }
 `;
