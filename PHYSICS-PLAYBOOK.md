@@ -68,7 +68,7 @@ The restitution test found a limit cycle (failure mode 125): below minBounceSpee
 
 **12. Read each quantity where nothing has just enforced it.** A constraint residual after its own projection is zero by construction (a bead's "< 2e-16" was 2.4e-2 before the projection at 1 substep, 2.9e-6 at 100); an engine's derived energy may be one stage stale (MuJoCo under RK4: 3.4e-6 as read, 8.86e-9 after `mj_forward`); a scan that stops at a threshold reports the value at the stop. Say when the number was read (failure modes 149, 152).
 
-**13. Commit the limits first, and let the runner check.** In the Ten Minute Physics batch 6 the limits are a JSON file committed and pushed before the first run; `tmp6.py` refuses to start if the file differs from its last commit and writes the commit and the file's sha256 into each record (`limits` block, outside the schema the kit checks today). That is provable from history, which `limit` and `declared_limit` written by one run are not (failure mode 156). A development run still informs the scale of some limits; the notes say which. Open: have `loom physics` read and verify a `limits.commit`.
+**13. Commit the limits first, and let the witness check.** In the Ten Minute Physics batch 6 the limits are a JSON file committed and pushed before the first run; `tmp6.py` refuses to start if the file differs from its last commit and writes `limits` = {path, commit, sha256} into each record. `limit` and `declared_limit` written by one run cannot show that (failure mode 156); a commit can, and `loom physics` now checks it (`PHYS_LIMITS_UNPROVEN`): the commit exists and is an ancestor of HEAD, the file at that commit has the stated sha256, and every declared limit is a number in that file. It does not prove the commit is older than the run (dates are editable) or that history was not rewritten by the repository's owner. A development run still informs the scale of some limits; the notes say which.
 
 **14. A second reader breaks the numbers before they are Confirmed.** Four reviewers recomputed v1 to v4 of the ports and a skeptical agent tried to knock down each negative finding: 125 claims checked, 25 negative findings survived, 0 false alarms. They were mostly checks that could not fail and explanations nobody had tested, less often wrong arithmetic (Likely; a count of the 25 by kind was not made). The corrections live in `x3d.demo` v5 `ERRATA-v1-v4.md`; earlier folders are not edited.
 
@@ -95,6 +95,7 @@ One JSON file per run. `kit/loom physics ROOT --evidence DIR --runs 'runs/*.phys
 | `replays` | `[{host, steps, mismatches, first_mismatch, engine_version?, trace_sha256?}]` |
 | `required_hosts` | every one needs a replay (`PHYS_REPLAY_MISSING`); the CLI's `--hosts` overrides |
 | `references` | `[{id, observed, limit, rule?, declared_limit?, status}]`; at least one (`PHYS_NO_REFERENCE`) |
+| `limits` (optional) | `{path, commit, sha256}`: limits committed before the run; git must confirm the commit, the bytes and that each declared limit occurs in the file (`PHYS_LIMITS_UNPROVEN`, law 44) |
 | `tolerances` | the same shape, plus `status: "accepted_failure"` and `waiver` |
 | `controls` | `[{id, expect: "fail", observed_failed}]` |
 | `takeover` | `{replaces, applies_to?, engine_off_hosts, leaks: [{what, handled}]}` |
@@ -147,4 +148,3 @@ The ragdoll is a crash-test dummy and a cartoon person; effects are cartoon (sta
 - **MuJoCo has no run record.** Its phase 1 plans checkpoint replay with `mj_getState`. Until then, only the Gate 0 pattern and the failure modes carry over.
 - **Waiver ownership of the three smoke failures** is reconstructed from the thread's note ("user accepted"); the owner should confirm (LOOM-v1 §10, question 16).
 - **Real-GPU, listening and a paired visual review** stay `visible_not_run`.
-- **`loom physics` does not yet check a `limits.commit`.** The Ten Minute Physics batch 6 records carry one (`limits.path`, `limits.commit`, `limits.sha256`) and the generator verifies it; the kit ignores the block (pattern 13). A check that the file at that commit has the sha256 the record names is small.

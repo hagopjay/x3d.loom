@@ -527,6 +527,51 @@ def physics_run(td: Path) -> tuple[Path, dict]:
     return root, run
 
 
+def physics_limits_controls() -> list[dict]:
+    """Law 44: limits committed before the run, confirmed by git (needs the git binary; skipped, and said so, without it)."""
+    import shutil
+    import subprocess
+    if shutil.which("git") is None:
+        return [{"case": "committed limits (law 44)", "result": "skipped: git is not installed"}]
+
+    def git(root, *a):
+        return subprocess.run(["git", "-C", str(root), "-c", "user.name=t", "-c", "user.email=t@example.invalid", *a], capture_output=True, check=True, text=True).stdout.strip()
+
+    def fixture(td):
+        root, run = physics_run(td)
+        git(root, "init", "-q")
+        (root / "limits.json").write_text(json.dumps({"fall": 1e-5, "pose": 0.01}))
+        git(root, "add", "limits.json"); git(root, "commit", "-q", "-m", "limits first")
+        run["limits"] = {"path": "limits.json", "commit": git(root, "rev-parse", "HEAD"), "sha256": sha256_file(root / "limits.json")}
+        return root, run
+
+    rows = []
+    with tempfile.TemporaryDirectory(prefix="loomkit-phys-") as d:
+        root, run = fixture(Path(d))
+        res = physics.check_run(run, root)
+        if res["steps"] != 40:
+            raise RuntimeError(f"PHYS_LIMITS_CLEAN_FIXTURE: {res}")
+        rows.append({"case": "limits committed first, confirmed by git", "result": "pass"})
+    cases = [
+        ("limits file bytes differ from the sha256 the record names", lambda r, root: r["limits"].update(sha256="0" * 64)),
+        ("limits commit unknown to git", lambda r, root: r["limits"].update(commit="1" * 40)),
+        ("limits path not in that commit", lambda r, root: r["limits"].update(path="other.json")),
+        ("a limit widened in the record and its declared limit with it", lambda r, root: r["references"][0].update(limit=0.5, declared_limit=0.5)),
+        ("limits block incomplete", lambda r, root: r["limits"].pop("commit")),
+    ]
+    for label, mutate in cases:
+        with tempfile.TemporaryDirectory(prefix="loomkit-phys-") as d:
+            root, run = fixture(Path(d)); mutate(run, root)
+            rows.append({"case": label, **expect("PHYS_SCHEMA" if "incomplete" in label else "PHYS_LIMITS_UNPROVEN", lambda: physics.check_run(run, root))})
+    with tempfile.TemporaryDirectory(prefix="loomkit-phys-") as d:   # a commit that is not in HEAD's history
+        root, run = fixture(Path(d))
+        git(root, "checkout", "-q", "-b", "side"); (root / "limits.json").write_text(json.dumps({"fall": 1e-5, "pose": 0.01, "extra": 3}))
+        git(root, "commit", "-q", "-am", "side"); side = git(root, "rev-parse", "HEAD"); sha = sha256_file(root / "limits.json")
+        git(root, "checkout", "-q", "-"); run["limits"] = {"path": "limits.json", "commit": side, "sha256": sha}
+        rows.append({"case": "limits commit is not an ancestor of HEAD", **expect("PHYS_LIMITS_UNPROVEN", lambda: physics.check_run(run, root))})
+    return rows
+
+
 def physics_controls() -> list[dict]:
     waiver = {"owner": "owner", "date": "2026-11-13", "reason": "heavy machine load; tolerance written down", "observed": 0.4, "limit": 0.2}
 
@@ -578,6 +623,7 @@ def physics_controls() -> list[dict]:
     with tempfile.TemporaryDirectory(prefix="loomkit-phys-") as d:   # the model edited after the run was recorded
         root, run = physics_run(Path(d)); (root / "model.x3d").write_text("<X3D version='4.0'><Scene/></X3D>\n")
         rows.append({"case": "model edited after the run", **expect("PHYS_MODEL_STALE", lambda: physics.check_run(run, root))})
+    rows.extend(physics_limits_controls())
     rows.append({"case": "no run record at all", **expect("PHYS_NO_RUNS", lambda: physics.check([]))})
     with tempfile.TemporaryDirectory(prefix="loomkit-phys-") as d:
         root, run = physics_run(Path(d))
