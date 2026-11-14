@@ -1,0 +1,31 @@
+{
+ "node": "RigidBody",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/RigidBody.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 10/10",
+  "xite": "pass 10/10",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the bridge engine is its own (see RigidBodyCollection); the inertia field is ignored, the inertia is worked out from the shapes, as X_ITE's Bullet does",
+   "centerOfMass, finiteRotationAxis, useFiniteRotation, autoDamp, autoDisable and massDensityModel are kept but have no effect"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 15ac9844c4ed",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2d1d0dc"
+}

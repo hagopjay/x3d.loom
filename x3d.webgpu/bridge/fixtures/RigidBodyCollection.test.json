@@ -1,0 +1,149 @@
+{
+ "node": "RigidBodyCollection",
+ "mode": "scene",
+ "note": "A ball (radius 1, mass 1) drops from 5 m onto a fixed box ground whose top is at y = 0, with a CollisionCollection of bounce 0 and no friction. The world settles with the ball's centre 1 above the ground, in both engines. A page that writes the position gets it taken up; enabled false stops all stepping.",
+ "gaps": [
+  "the bridge engine is its own: sequential impulses at 240 Hz, spheres and boxes (cylinder and cone stand in as bounding spheres), one friction and bounce for the whole collection",
+  "autoDisable, disableTime and the disable speeds are kept but never put a body to sleep",
+  "centerOfMass is kept and not used; joints come in their own batch",
+  "contactSurfaceThickness, preferAccuracy and set_contacts are kept; CollisionSensor/Contact nodes come later"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "W",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "W",
+    "iterations",
+    10
+   ]
+  },
+  {
+   "expect": [
+    "W",
+    "gravity",
+    [
+     0,
+     -9.8,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "W",
+    "constantForceMix",
+    0.0001
+   ]
+  },
+  {
+   "expect": [
+    "W",
+    "errorCorrection",
+    0.8
+   ]
+  },
+  {
+   "settle": 5
+  },
+  {
+   "nearv": [
+    "N0",
+    "position",
+    [
+     0,
+     1,
+     0
+    ],
+    0.15
+   ]
+  },
+  {
+   "set": [
+    "W",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "set": [
+    "N0",
+    "position",
+    [
+     0,
+     6,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "nearv": [
+    "N0",
+    "position",
+    [
+     0,
+     6,
+     0
+    ],
+    0.05
+   ]
+  },
+  {
+   "set": [
+    "W",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 4
+  },
+  {
+   "nearv": [
+    "N0",
+    "position",
+    [
+     0,
+     1,
+     0
+    ],
+    0.15
+   ]
+  },
+  {
+   "set": [
+    "W",
+    "gravity",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "expect": [
+    "W",
+    "gravity",
+    [
+     0,
+     0,
+     0
+    ]
+   ]
+  }
+ ]
+}

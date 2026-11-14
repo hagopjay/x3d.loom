@@ -1,0 +1,33 @@
+{
+ "node": "RigidBodyCollection",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/RigidBodyCollection.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 17/17",
+  "xite": "pass 17/17",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the bridge engine is its own: sequential impulses at 240 Hz, spheres and boxes (cylinder and cone stand in as bounding spheres), one friction and bounce for the whole collection",
+   "autoDisable, disableTime and the disable speeds are kept but never put a body to sleep",
+   "centerOfMass is kept and not used; joints come in their own batch",
+   "contactSurfaceThickness, preferAccuracy and set_contacts are kept; CollisionSensor/Contact nodes come later"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 15ac9844c4ed",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2d1d0dc"
+}
