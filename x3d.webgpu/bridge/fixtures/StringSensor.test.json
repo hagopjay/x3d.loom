@@ -130,6 +130,90 @@
    ]
   },
   {
+   "key": [
+    "press",
+    "Backspace"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enteredText",
+    ""
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "A"
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "b"
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "Escape"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enteredText",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "Tab"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enteredText",
+    ""
+   ]
+  },
+  {
+   "key": [
+    "type",
+    "xy z"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enteredText",
+    "xy z"
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "Enter"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "finalText",
+    "xy z"
+   ]
+  },
+  {
    "set": [
     "N",
     "deletionAllowed",
@@ -175,7 +259,9 @@
    ]
   }
  ],
- "gaps": [
-  "IME and dead-key composition are not handled (the browser reports one key at a time)"
+ "gaps": [],
+ "scope": [
+  "compared with X_ITE 16.6.0 step for step: typing, Backspace (also on an empty string and with deletionAllowed false), Enter, Escape, Tab, a typed string with a space, shifted letters",
+  "IME and dead-key composition are not handled by either engine: both read keydown only (X_ITE 16.6.0 KeyDeviceSensorComponent registers keydown and keyup), so a composed character arrives only if the browser also reports it as a key"
  ]
 }

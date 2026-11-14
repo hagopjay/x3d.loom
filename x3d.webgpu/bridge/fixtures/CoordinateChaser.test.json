@@ -58,7 +58,205 @@
     ],
     1e-05
    ]
+  },
+  {
+   "curve": [
+    "N",
+    "value_changed",
+    "c"
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "set": [
+    "N",
+    "set_destination",
+    [
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      1,
+      1
+     ],
+     [
+      2,
+      2,
+      2
+     ]
+    ],
+    "MFVec3f"
+   ]
+  },
+  {
+   "settle": 3.5
+  },
+  {
+   "curve": [
+    "N",
+    "value_changed",
+    "c_grow"
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "value_changed",
+    [
+     0,
+     0,
+     0,
+     1,
+     1,
+     1,
+     2,
+     2,
+     2
+    ],
+    0.003
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_destination",
+    [
+     [
+      3,
+      3,
+      3
+     ],
+     [
+      4,
+      4,
+      4
+     ]
+    ],
+    "MFVec3f"
+   ]
+  },
+  {
+   "settle": 3.5
+  },
+  {
+   "curve": [
+    "N",
+    "value_changed",
+    "c_shrink"
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "value_changed",
+    [
+     3,
+     3,
+     3,
+     4,
+     4,
+     4
+    ],
+    0.003
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_destination",
+    [
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      1,
+      1
+     ],
+     [
+      2,
+      2,
+      2
+     ]
+    ],
+    "MFVec3f"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "set": [
+    "N",
+    "set_destination",
+    [
+     [
+      5,
+      5,
+      5
+     ],
+     [
+      6,
+      6,
+      6
+     ]
+    ],
+    "MFVec3f"
+   ]
+  },
+  {
+   "settle": 3.5
+  },
+  {
+   "nearv": [
+    "N",
+    "value_changed",
+    [
+     5,
+     5,
+     5,
+     6,
+     6,
+     6
+    ],
+    0.003
+   ]
   }
  ],
- "note": "bounds and end state only: time is virtual in ours and real in X_ITE"
+ "note": "bounds and end state only: time is virtual in ours and real in X_ITE",
+ "agree": [
+  [
+   "c",
+   0.02,
+   {
+    "curve": true
+   }
+  ],
+  [
+   "c_grow",
+   0.02,
+   {
+    "curve": true
+   }
+  ],
+  [
+   "c_shrink",
+   0.02,
+   {
+    "curve": true
+   }
+  ]
+ ],
+ "gaps": [],
+ "scope": [
+  "the intermediate values are pinned against X_ITE 16.6.0 as a curve: ours runs on a virtual clock (0.05 s steps), X_ITE on the real one (frames of about 17 ms), both measured from the isActive true event; every X_ITE sample must match ours interpolated within +-0.05 s of the same elapsed time (bound 0.02, measured 0.003): list of 2 from the initial value, grown to 3 points, shrunk to 2",
+  "a list that changes length mid-chase restarts the chase at the new length with a new tail at 0; the end state (5 5 5, 6 6 6 after a change at 0.3 s) agrees with X_ITE, the frame of the change is not pinned"
+ ]
 }

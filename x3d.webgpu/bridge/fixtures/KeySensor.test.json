@@ -152,6 +152,271 @@
    "reset": true
   },
   {
+   "reset": true
+  },
+  {
+   "key": [
+    "down",
+    "Control"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "controlKey",
+    true
+   ]
+  },
+  {
+   "key": [
+    "up",
+    "Control"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "controlKey",
+    false
+   ]
+  },
+  {
+   "key": [
+    "down",
+    "Alt"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "altKey",
+    true
+   ]
+  },
+  {
+   "key": [
+    "up",
+    "Alt"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "altKey",
+    false
+   ]
+  },
+  {
+   "key": [
+    "press",
+    "Home"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyPress",
+    13
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "press",
+    "End"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyPress",
+    14
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "press",
+    "PageUp"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyPress",
+    15
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "press",
+    "PageDown"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyPress",
+    16
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "press",
+    "ArrowUp"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyPress",
+    17
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "press",
+    "ArrowDown"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyPress",
+    18
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "press",
+    "ArrowRight"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyPress",
+    20
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "press",
+    "F1"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyPress",
+    1
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "press",
+    "F12"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "actionKeyPress",
+    12
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "down",
+    "a"
+   ]
+  },
+  {
+   "key": [
+    "down",
+    "b"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "key": [
+    "up",
+    "a"
+   ]
+  },
+  {
+   "key": [
+    "up",
+    "b"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "key": [
+    "down",
+    "a"
+   ]
+  },
+  {
+   "key": [
+    "down",
+    "a"
+   ]
+  },
+  {
+   "atleast": [
+    "N",
+    "keyPress",
+    2
+   ]
+  },
+  {
+   "key": [
+    "up",
+    "a"
+   ]
+  },
+  {
    "set": [
     "N",
     "enabled",
@@ -178,8 +443,9 @@
    ]
   }
  ],
- "gaps": [
-  "Alt/Control flags follow the Shift path but were only tested with Shift",
-  "key repeat while a key is held fires keyPress again, as in the browser"
+ "gaps": [],
+ "scope": [
+  "compared with X_ITE 16.6.0 event for event: Shift, Control and Alt flags, character keys, Enter, F1 and F12, Home, End, PageUp, PageDown and the four arrows (action codes 13-20), two keys held at once (isActive until the first release, as X_ITE), key repeat (a second keyDown raises keyPress again), enabled false",
+  "key events come from the focused canvas only (keydown and keyup, as in X_ITE); a page that keeps focus elsewhere must focus the canvas"
  ]
 }
