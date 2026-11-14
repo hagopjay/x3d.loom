@@ -1,0 +1,42 @@
+{
+ "node": "CollidableShape",
+ "mode": "scene",
+ "note": "A box (1 by 1 by 1) dropped tilted by 0.4 rad and a sphere (radius 0.7) both come to rest on the ground: the box centre 0.5 up, the sphere centre 0.7 up.",
+ "gaps": [
+  "box and sphere shapes are exact; cylinder and cone use their bounding sphere; indexed face sets and other geometry are not collided",
+  "a shape's own translation and rotation are used; enabled is read when the world is built"
+ ],
+ "steps": [
+  {
+   "settle": 6
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Math.round(__worlds[__worlds.length-1].nodes.find(n=>n.def==='BX').f.position[1]*10)/10",
+    0.5
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "Math.round(X3D.getBrowser('#c').currentScene.getNamedNode('BX').position[1]*10)/10",
+    0.5
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Math.round(__worlds[__worlds.length-1].nodes.find(n=>n.def==='SP').f.position[1]*10)/10",
+    0.7
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "Math.round(X3D.getBrowser('#c').currentScene.getNamedNode('SP').position[1]*10)/10",
+    0.7
+   ]
+  }
+ ]
+}

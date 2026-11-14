@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="RigidBodyPhysics" level="2"/><meta name="title" content="RigidBody.x3d"/><meta name="description" content="Bridge fixture for RigidBody: two equal spheres meet head-on and swap velocities; a force speeds a free body up"/></head>
+  <Scene>
+    <NavigationInfo type='"EXAMINE" "ANY"' transitionType='"TELEPORT"' headlight="false"/>
+    <Viewpoint position="0 0 10"/>
+    <RigidBodyCollection DEF="W" gravity="0 0 0">
+      <RigidBody DEF="A1" position="-3 0 0" mass="1" linearVelocity="2 0 0"><CollidableShape containerField="geometry"><Shape containerField="shape"><Sphere radius="0.5"/></Shape></CollidableShape></RigidBody>
+      <RigidBody DEF="A2" position="3 0 0" mass="1" linearVelocity="-2 0 0"><CollidableShape containerField="geometry"><Shape containerField="shape"><Sphere radius="0.5"/></Shape></CollidableShape></RigidBody>
+      <RigidBody DEF="F0" position="0 20 0" mass="1" useGlobalGravity="false"><CollidableShape containerField="geometry"><Shape containerField="shape"><Sphere radius="0.5"/></Shape></CollidableShape></RigidBody>
+      <CollisionCollection containerField="collider" bounce="1" minBounceSpeed="0"/>
+    </RigidBodyCollection>
+  </Scene>
+</X3D>

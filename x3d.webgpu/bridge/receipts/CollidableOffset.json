@@ -1,0 +1,31 @@
+{
+ "node": "CollidableOffset",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/CollidableOffset.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 2/2",
+  "xite": "pass 2/2",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "X_ITE 16.6.0 reads the translation and rotation of a CollidableOffset or CollidableShape only when the node first receives an event: a file that sets them and never touches them leaves the shape at the body origin so there it rests at 0.5 where the bridge rests at 1.5 (each engine is checked against its own value); the bridge applies them from the start",
+   "only translation and rotation of the offset are applied; the offset of an offset adds up"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 9a6af7d88230",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "7fc4f4b"
+}
