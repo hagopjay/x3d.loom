@@ -1,0 +1,24 @@
+{
+ "node": "PointLightAttenuation",
+ "mode": "scene",
+ "note": "a point light with attenuation 1 0 0.08 (a1 = 0: the 1 / (1 + b d^2) form three.js is made to draw) over three spheres at different distances",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1.2
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 1,
+   "fg": 4
+  }
+ },
+ "gaps": [
+  "attenuation with both a1 and a2 non-zero has no counterpart: the quadratic form is fitted at d = radius; this fixture uses the exact case"
+ ]
+}
