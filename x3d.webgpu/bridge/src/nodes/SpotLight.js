@@ -3,5 +3,5 @@
 BR.node('SpotLight', {
   component: 'Lighting', level: 2,
   build(body, n, parent) { BR.light.make(body, n, parent); return null; },
-  changed(body, n) { if (n._light) BR.light.refresh(n._light, n); },
+  changed(body, n, field) { if (n._light) { BR.light.refresh(n._light, n); if (field === 'global') BR.light.scope(body); } },
 });

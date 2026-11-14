@@ -277,7 +277,7 @@ R.bridge.tcg = {
     }
     if (!node || node.type !== 'MultiTexture') return _tex.call(this, node);
     const hit = this.texCache.get(node.id); if (hit) return hit;
-    const body = this, SZ = 256, dt = new BABYLON.DynamicTexture('mt-' + node.id, { width: SZ, height: SZ }, this.scene, true);
+    const body = this, SZ = 256, dt = new BABYLON.DynamicTexture('mt-' + node.id, { width: SZ, height: SZ }, this.scene, false);
     const imgs = [], ctx = dt.getContext();
     const app = this.world.nodes.find((x) => x.type === 'Appearance' && x.f.texture === node), tt = app && app.f.textureTransform;
     const stageTT = (i) => !tt ? null : tt.type === 'MultiTextureTransform' ? (tt.f.textureTransform || [])[i] || null : tt;
@@ -290,6 +290,7 @@ R.bridge.tcg = {
         const mode = String((node.f.mode || [])[i] || 'MODULATE').toUpperCase(), op = OPS[mode];
         if (!op && i) body.note('MultiTexture mode ' + mode + ' drawn as MODULATE');
         ctx.globalCompositeOperation = i === 0 ? 'source-over' : op || 'multiply';
+        ctx.imageSmoothingEnabled = im.naturalWidth >= SZ && im.naturalHeight >= SZ;   // a small image is magnified with hard texels, as X_ITE 16.6.0 does (a 2 x 1 image is two flat halves)
         const t = stageTT(i);
         if (t) {                                                        // canvas(px) = image(Q px) with Q = P M P^-1; the image is placed by Q^-1 and tiled
           const Q = mul(mul(P, ttMatrix(t)), inv(P)), D = inv(Q), pat = ctx.createPattern(im, 'repeat');
@@ -764,5 +765,21 @@ fn main(input: FragmentInputs) -> FragmentOutputs {
     }
     if (d && d.uvw && !geo._uv2) { const uv2 = new Float32Array(d.uvw.length / 2); for (let i = 0; i < d.uvw.length / 4; i++) { uv2[i * 2] = d.uvw[i * 4 + 2]; uv2[i * 2 + 1] = d.uvw[i * 4 + 3]; } geo.setVerticesData(BABYLON.VertexBuffer.UV2Kind, uv2, false, 2); geo._uv2 = true; }
     return geo;
+  };
+}
+
+/* Unlit textured shapes (a shape with a texture and no Material, 19775-1 17.2.2 table: the texture alone gives the colour). The stock body draws them with backFaceCulling off and depth write off for every
+   geometry, so a closed box shows its far faces over its near ones in whatever order they come (blocks of the wrong face in the picture). Now a solid geometry (solid TRUE, the default of the solid
+   shapes) culls its back faces, with the X3D winding, and writes depth; solid FALSE and every shape with a see-through image keep the stock look. */
+{
+  const _mm = Body.prototype.makeMaterial;
+  Body.prototype.makeMaterial = function (shape, g, spec, mesh) {
+    const m = _mm.call(this, shape, g, spec, mesh);
+    if (m instanceof BABYLON.ShaderMaterial && /^unlit-/.test(m.name) && g.f && g.f.solid === true) {
+      const tn = shape.f.appearance && shape.f.appearance.f.texture, alpha = !tn || (tn.type === 'PixelTexture' ? [2, 4].includes((tn.f.image || [0, 0, 0])[2]) : /\.(png|webp|gif|avif)(\?|$)|^data:image\/(png|webp|gif|avif)/i.test((tn.f.url && tn.f.url[0]) || ''));
+      m.backFaceCulling = true; m.sideOrientation = this.opts.ccw === false ? BABYLON.Material.CounterClockWiseSideOrientation : BABYLON.Material.ClockWiseSideOrientation;   // a solid never shows its back, see-through image or not
+      if (!alpha) m.disableDepthWrite = false;
+    }
+    return m;
   };
 }
