@@ -352,6 +352,40 @@
             "expected": "PHYS_MODEL_STALE"
           },
           {
+            "case": "limits committed first, confirmed by git",
+            "result": "pass"
+          },
+          {
+            "case": "limits file bytes differ from the sha256 the record names",
+            "caught": "PHYS_LIMITS_UNPROVEN",
+            "expected": "PHYS_LIMITS_UNPROVEN"
+          },
+          {
+            "case": "limits commit unknown to git",
+            "caught": "PHYS_LIMITS_UNPROVEN",
+            "expected": "PHYS_LIMITS_UNPROVEN"
+          },
+          {
+            "case": "limits path not in that commit",
+            "caught": "PHYS_LIMITS_UNPROVEN",
+            "expected": "PHYS_LIMITS_UNPROVEN"
+          },
+          {
+            "case": "a limit widened in the record and its declared limit with it",
+            "caught": "PHYS_LIMITS_UNPROVEN",
+            "expected": "PHYS_LIMITS_UNPROVEN"
+          },
+          {
+            "case": "limits block incomplete",
+            "caught": "PHYS_SCHEMA",
+            "expected": "PHYS_SCHEMA"
+          },
+          {
+            "case": "limits commit is not an ancestor of HEAD",
+            "caught": "PHYS_LIMITS_UNPROVEN",
+            "expected": "PHYS_LIMITS_UNPROVEN"
+          },
+          {
             "case": "no run record at all",
             "caught": "PHYS_NO_RUNS",
             "expected": "PHYS_NO_RUNS"
@@ -697,7 +731,7 @@
           }
         ]
       },
-      "negative_controls_caught": 82,
+      "negative_controls_caught": 88,
       "optimized": false,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,
@@ -1055,6 +1089,40 @@
             "expected": "PHYS_MODEL_STALE"
           },
           {
+            "case": "limits committed first, confirmed by git",
+            "result": "pass"
+          },
+          {
+            "case": "limits file bytes differ from the sha256 the record names",
+            "caught": "PHYS_LIMITS_UNPROVEN",
+            "expected": "PHYS_LIMITS_UNPROVEN"
+          },
+          {
+            "case": "limits commit unknown to git",
+            "caught": "PHYS_LIMITS_UNPROVEN",
+            "expected": "PHYS_LIMITS_UNPROVEN"
+          },
+          {
+            "case": "limits path not in that commit",
+            "caught": "PHYS_LIMITS_UNPROVEN",
+            "expected": "PHYS_LIMITS_UNPROVEN"
+          },
+          {
+            "case": "a limit widened in the record and its declared limit with it",
+            "caught": "PHYS_LIMITS_UNPROVEN",
+            "expected": "PHYS_LIMITS_UNPROVEN"
+          },
+          {
+            "case": "limits block incomplete",
+            "caught": "PHYS_SCHEMA",
+            "expected": "PHYS_SCHEMA"
+          },
+          {
+            "case": "limits commit is not an ancestor of HEAD",
+            "caught": "PHYS_LIMITS_UNPROVEN",
+            "expected": "PHYS_LIMITS_UNPROVEN"
+          },
+          {
             "case": "no run record at all",
             "caught": "PHYS_NO_RUNS",
             "expected": "PHYS_NO_RUNS"
@@ -1400,7 +1468,7 @@
           }
         ]
       },
-      "negative_controls_caught": 82,
+      "negative_controls_caught": 88,
       "optimized": true,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,
