@@ -80,12 +80,15 @@ window.AUD = (() => {
       for (let i = 0; i < N; i++) { const v = amp * Math.sin(2 * Math.PI * f * i / sr), k = (L - 1) * (v + 1) / 2; x[i] = k <= 0 ? curve[0] : k >= L - 1 ? curve[L - 1] : curve[Math.floor(k)] + (k - Math.floor(k)) * (curve[Math.floor(k) + 1] - curve[Math.floor(k)]); }
       return measure(x, sr, { f0: f });
     },
-    /* Web Audio panner, equal power, mono input: left and right gain for a source at (x, y, z) in listener space, distance model and reference distance 1, rolloff 1 (the Web Audio specification) */
-    panGain(x, y, z, model, ref, rolloff, maxD) {
+    /* Web Audio panner, equal power, stereo input made of two equal channels (mono = true: a true mono input): left and right gain for a source at (x, y, z) in listener space, distance model and reference distance 1, rolloff 1 (the Web Audio specification) */
+    panGain(x, y, z, model, ref, rolloff, maxD, mono) {
       const d = Math.hypot(x, y, z); let g;
       if (model === 'linear') g = 1 - rolloff * (Math.min(Math.max(d, ref), maxD) - ref) / (maxD - ref); else if (model === 'exponential') g = Math.pow(Math.max(d, ref) / ref, -rolloff); else g = ref / (ref + rolloff * (Math.max(d, ref) - ref));
       let az = Math.atan2(x, -z) * 180 / Math.PI; if (az < -90) az = -180 - az; else if (az > 90) az = 180 - az;
-      const p = (az + 90) / 180, th = p * Math.PI / 2; return [g * Math.cos(th), g * Math.sin(th)];
+      if (mono) { const p = (az + 90) / 180, th = p * Math.PI / 2; return [g * Math.cos(th), g * Math.sin(th)]; }
+      /* the input of both engines' panner is stereo (a mono source is up-mixed to two equal channels), so the stereo panning of the specification applies: x <= 0: L = inL + inR cos(z pi/2), R = inR sin(z pi/2) with z = x + 1; x > 0: L = inL cos(z pi/2), R = inR + inL sin(z pi/2) with z = x */
+      const x1 = az / 90, z1 = x1 <= 0 ? x1 + 1 : x1, gl = Math.cos(z1 * Math.PI / 2), gr = Math.sin(z1 * Math.PI / 2);
+      return x1 <= 0 ? [g * (1 + gl), g * gr] : [g * gl, g * (1 + gr)];
     },
     measure, taps, nodes,
     async step(eng, s, out, fail, scene) {

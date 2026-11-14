@@ -7,5 +7,13 @@
       <Gain DEF="O1" containerField="outputs"/>
       <Gain DEF="O2" containerField="outputs"/>
     </ChannelSplitter>
+    <ChannelSplitter DEF="SS">
+      <ChannelMerger DEF="SMG">
+        <OscillatorSource DEF="SOA" frequency="440"><PeriodicWave type="SINE"/></OscillatorSource>
+        <OscillatorSource DEF="SOB" frequency="880"><PeriodicWave type="SINE"/></OscillatorSource>
+      </ChannelMerger>
+      <Gain DEF="G1" containerField="outputs"/>
+      <Gain DEF="G2" containerField="outputs"/>
+    </ChannelSplitter>
   </Scene>
 </X3D>

@@ -5,5 +5,11 @@
     <ChannelSelector DEF="N">
       <BufferAudioSource DEF="S"/>
     </ChannelSelector>
+    <ChannelSelector DEF="SSel" channelSelection="1">
+      <ChannelMerger DEF="SMG">
+        <OscillatorSource DEF="SOA" frequency="440"><PeriodicWave type="SINE"/></OscillatorSource>
+        <OscillatorSource DEF="SOB" frequency="880"><PeriodicWave type="SINE"/></OscillatorSource>
+      </ChannelMerger>
+    </ChannelSelector>
   </Scene>
 </X3D>
