@@ -433,7 +433,7 @@
    "container": "children",
    "nfields": 9,
    "status": "gap",
-   "batch": 36,
+   "batch": 37,
    "receipt": "receipts/CollidableOffset.json",
    "note": "X_ITE 16.6.0 reads the translation and rotation of a CollidableOffset or CollidableShape only when the node first receives an event: a file that sets them and never touches them leaves the shape at the body origin so there it rests at 0.5 where the bridge rests at 1.5 (each engine is checked against its own value); the bridge applies them from the start; only translation and rotation of the offset are applied; the offset of an offset adds up",
    "rank": 227
@@ -446,7 +446,7 @@
    "container": "children",
    "nfields": 9,
    "status": "gap",
-   "batch": 36,
+   "batch": 37,
    "receipt": "receipts/CollidableShape.json",
    "note": "box and sphere shapes are exact; cylinder and cone use their bounding sphere; indexed face sets and other geometry are not collided; a shape's own translation and rotation are used; enabled is read when the world is built",
    "rank": 228
@@ -472,7 +472,7 @@
    "container": "collider",
    "nfields": 16,
    "status": "gap",
-   "batch": 36,
+   "batch": 37,
    "receipt": "receipts/CollisionCollection.json",
    "note": "friction is one Coulomb coefficient for each contact (frictionCoefficients.x, or 0.5 when FRICTION_COEFFICIENT-2 is not applied); X_ITE 16.6.0 multiplies the two bodies' values, so it slides twice as far here (3.27 m against 1.63 m); X_ITE 16.6.0 sets a body's restitution only if the body's own speed is at least minBounceSpeed when the bounce is configured, and a fixed wall or ground has speed 0, so nothing bounces off it unless minBounceSpeed is 0 (the fixture sets 0); the bridge bounces when the speed of the contact reaches minBounceSpeed; X_ITE 16.6.0 only knows the appliedParameters spelling FRICTION_COEFFICIENT_2, the 4.0 XSD and spec say FRICTION_COEFFICIENT-2, so a valid scene never gets its friction in X_ITE; surfaceSpeed, slipFactors, softnessConstantForceMix, softnessErrorCorrection and the second friction value (rolling friction in Bullet) are kept and not used; collidables is kept and not used: bodies collide through their own geometry, as in X_ITE",
    "rank": 229
@@ -1262,10 +1262,10 @@
    "inherits": "X3DGeometricPropertyNode",
    "container": "displacers",
    "nfields": 6,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 36,
+   "receipt": "receipts/HAnimDisplacer.json",
+   "note": "a vertex weighted over several joints is displaced before skinning (Babylon MorphTarget, the glTF order); X_ITE 16.6.0 adds joint rotation * (displacement * weight) after skinning with the rotation of the displacer's joint alone: identical (<= 1e-7 on the rig) for a vertex that follows the displacer's joint alone and at the rest pose, 0.053 (weight 0.5) to 0.106 (weight 1) world units apart on the half J0 / half J1 ring of this fixture for a 0.3 unit displacement in the 45 degree pose; a displacer on a segment moves the segment's own vertices in the segment's frame; X_ITE 16.6.0 rotates the displacement by the segment's matrix in the humanoid's frame and the shape's own transform rotates it again, so a bent segment collapses to a sliver there (see the bent shot); the bridge draws the intended rectangle",
    "rank": 206
   },
   "HAnimHumanoid": {
@@ -1275,10 +1275,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 31,
-   "status": "base",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 36,
+   "receipt": "receipts/HAnimHumanoid.json",
+   "note": "skinNormal, skinBindingCoords and skinBindingNormals are stored; neither engine uses them (X_ITE 16.6.0 reads skinCoord only): the skin normals follow the bone matrices in the shader (X_ITE blends the inverse transpose per joint, the same for rotations, different under non-uniform joint scale); only IndexedFaceSet and IndexedTriangleSet skin shapes are skinned (a vertex's coordinate index is known); a vertex with more than 8 joint influences keeps the 8 largest, X_ITE has no limit; the viewpoints, joints, segments and sites lists are references (not drawn twice)",
    "rank": 207
   },
   "HAnimJoint": {
@@ -1288,10 +1288,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 22,
-   "status": "base",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 36,
+   "receipt": "receipts/HAnimJoint.json",
+   "note": "llimit, ulimit, limitOrientation and stiffness are stored and routed but limit nothing: neither engine solves joint limits (X_ITE 16.6.0 does not either)",
    "rank": 208
   },
   "HAnimMotion": {
@@ -1301,9 +1301,9 @@
    "inherits": "X3DChildNode",
    "container": "motions",
    "nfields": 20,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
+   "status": "bridged",
+   "batch": 36,
+   "receipt": "receipts/HAnimMotion.json",
    "note": "",
    "rank": 211
   },
@@ -1314,10 +1314,10 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 15,
-   "status": "base",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 36,
+   "receipt": "receipts/HAnimSegment.json",
+   "note": "mass, centerOfMass and momentsOfInertia are stored and routed, no engine uses them (physics belongs to the RigidBodyPhysics group)",
    "rank": 209
   },
   "HAnimSite": {
@@ -1327,10 +1327,10 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 15,
-   "status": "base",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 36,
+   "receipt": "receipts/HAnimSite.json",
+   "note": "a Viewpoint inside a site of the humanoid's viewpoints list is not bound from the site in the bridge (the site is a Transform; HAnim viewpoints are not navigation viewpoints)",
    "rank": 210
   },
   "ImageCubeMapTexture": {
@@ -2556,7 +2556,7 @@
    "container": "bodies",
    "nfields": 28,
    "status": "gap",
-   "batch": 36,
+   "batch": 37,
    "receipt": "receipts/RigidBody.json",
    "note": "the bridge engine is its own (see RigidBodyCollection); the inertia field is ignored, the inertia is worked out from the shapes, as X_ITE's Bullet does; centerOfMass, finiteRotationAxis, useFiniteRotation, autoDamp, autoDisable and massDensityModel are kept but have no effect",
    "rank": 235
@@ -2569,7 +2569,7 @@
    "container": "children",
    "nfields": 21,
    "status": "gap",
-   "batch": 36,
+   "batch": 37,
    "receipt": "receipts/RigidBodyCollection.json",
    "note": "the bridge engine is its own: sequential impulses at 240 Hz, spheres and boxes (cylinder and cone stand in as bounding spheres), one friction and bounce for the whole collection; autoDisable, disableTime and the disable speeds are kept but never put a body to sleep; centerOfMass is kept and not used; joints come in their own batch; contactSurfaceThickness, preferAccuracy and set_contacts are kept; CollisionSensor/Contact nodes come later",
    "rank": 236
