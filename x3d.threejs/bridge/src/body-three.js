@@ -82,13 +82,14 @@ class Body {
     if (!this.root) return;
     this.root.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) [].concat(o.material).forEach((m) => { if (m.map) m.map.dispose(); m.dispose(); }); });
     this.scene.remove(this.root); this.scene.fog = null;
-    this.rec.clear(); this.geoCache.clear(); this.lights = []; this.bound = null; this.viewpoints = []; this.root = null;
+    this.rec.clear(); this.geoCache.clear(); this.lights = []; this.billboards = []; this.lods = []; this.clips = []; this.clipDirty = false; this.bound = null; this.viewpoints = []; this.root = null;
   }
 
   build(n, parent, chain) {
     if (!n) return null;
     switch (n.type) {
-      case 'Group': case 'Switch': case 'Transform': return this.buildGroup(n, parent, chain);
+      case 'Group': case 'Switch': case 'Transform': case 'Billboard': case 'LOD': return this.buildGroup(n, parent, chain);
+      case 'ClipPlane': (this.clips ||= []).push({ node: n, parent }); this.clipDirty = true; return null;
       case 'Shape': return this.buildShape(n, parent, chain);
       case 'Viewpoint': { const r = { node: n, parent, tn: parent }; this.rec.set(n.id, r); (this.viewpoints ||= []).includes(n) || this.viewpoints.push(n); this.vpParent ||= new Map(); this.vpParent.set(n, parent); return r; }
       case 'DirectionalLight': case 'PointLight': case 'SpotLight': return this.buildLight(n, parent);
@@ -100,6 +101,8 @@ class Body {
     const o = new THREE.Group(); o.name = n.def || n.type; parent.add(o);
     const r = { node: n, tn: o, kids: [], chain: [n, ...chain] }; this.rec.set(n.id, r);
     if (n.type === 'Transform') this.applyTransform(n, o);
+    if (n.type === 'Billboard') (this.billboards ||= []).push(r);   // turned toward the eye every frame (updateView)
+    if (n.type === 'LOD') { (this.lods ||= []).push(r); r.level = -1; }
     for (const c of n.f.children) r.kids.push(this.build(c, o, r.chain));
     if (n.type === 'Switch') this.applySwitch(n);
     if (n.f.visible === false) o.visible = false;
@@ -120,9 +123,10 @@ class Body {
     const f = n.f, g = f.geometry, app = f.appearance, r = { node: n, meshes: [], chain: [n, ...chain] }; this.rec.set(n.id, r);
     const o = new THREE.Group(); o.name = 'shape-' + (n.def || n.id); parent.add(o); r.tn = o;
     if (!g) return r;
-    const geo = this.threeGeometry(g); if (!geo) return r;
-    const mat = this.makeMaterial(n, g, app);
-    const mesh = new THREE.Mesh(geo, mat); mesh.userData = { shape: n, chain: r.chain }; o.add(mesh); r.meshes.push(mesh);
+    const pl = this.pointLine(g, app);   // lines and points: unlit, drawn in the Material's emissiveColor (or the Color node), not as triangles
+    const geo = pl ? pl.geo : this.threeGeometry(g); if (!geo) return r;
+    const mat = pl ? pl.mat : this.makeMaterial(n, g, app);
+    const mesh = pl ? new (pl.points ? THREE.Points : THREE.LineSegments)(geo, mat) : new THREE.Mesh(geo, mat); mesh.userData = { shape: n, chain: r.chain }; o.add(mesh); r.meshes.push(mesh);
     for (const dep of [app && app.f.material, app && app.f.texture, app && app.f.textureTransform, g]) if (dep) (this.meshesOf.get(dep.id) || this.meshesOf.set(dep.id, []).get(dep.id)).push(mesh);
     if (f.visible === false) o.visible = false;
     return r;
@@ -134,15 +138,13 @@ class Body {
       case 'Sphere': { const g2 = new T.SphereGeometry(f.radius, 48, 32); g2.rotateY(-Math.PI / 2); return g2; }   // X3D: u = 0 at -Z and grows toward -X (X_ITE QuadSphereOptions); three.js starts at -X and grows toward +Z
       case 'Cylinder': return this.x3dRound(new T.CylinderGeometry(f.radius, f.radius, f.height, 48, 1, false));
       case 'Cone': return this.x3dRound(new T.ConeGeometry(f.bottomRadius, f.height, 48, 1, f.bottom === false));
-      case 'IndexedFaceSet': case 'IndexedTriangleSet': {
-        const d = this.geometryData(g), geo = new T.BufferGeometry();
-        geo.setAttribute('position', new T.BufferAttribute(Float32Array.from(d.pos), 3)); geo.setIndex(new T.BufferAttribute(Uint32Array.from(d.idx), 1));
-        if (d.nrm) geo.setAttribute('normal', new T.BufferAttribute(Float32Array.from(d.nrm), 3)); else geo.computeVertexNormals();
-        if (d.uv) geo.setAttribute('uv', new T.BufferAttribute(Float32Array.from(d.uv), 2));
-        if (d.col) geo.setAttribute('color', new T.BufferAttribute(Float32Array.from(d.col), 3));
-        return geo;
+      case 'IndexedFaceSet': case 'IndexedTriangleSet': return this.dataGeometry(this.geometryData(g));
+      default: {
+        const fn = T3.geometry[g.type]; if (fn) return fn(g, this);
+        const sp = R.bridge.specs.get(g.type);   // a node of the shared bridge with a geometry() hook returns plain vertex data {pos, nrm, uv, col, idx}: the same hook the Babylon body reads, wrapped here in a BufferGeometry
+        if (sp && sp.geometry) { const d = sp.geometry(g, this); return d && d.pos && d.pos.length ? this.dataGeometry(d) : null; }
+        this.note('three.js body: skipped geometry <' + g.type + '>'); return null;
       }
-      default: { const fn = T3.geometry[g.type]; if (fn) return fn(g, this); this.note('three.js body: skipped geometry <' + g.type + '>'); return null; }
     }
   }
   /* Cylinder and Cone: X_ITE's side has u = 0 at -Z and grows toward -X (CylinderOptions: normal = (-sin, -cos)); three.js starts at +Z and grows toward +X, so the geometry is turned by PI.
@@ -155,6 +157,55 @@ class Body {
     return geo;
   }
   geometryData(g) { return Geo.geometryData.call(this, g); }
+  /* IndexedLineSet, LineSet (spec.lines) and Polyline2D draw as LineSegments, PointSet (and spec.points) as Points. 19775-1 12.2.2: with no Material they are white and unlit; with one, emissiveColor
+     is the colour, and a Color node replaces it. X_ITE draws both one pixel wide (line width and point size are not exposed in WebGL2 beyond that: LineProperties is a gap, see README). */
+  pointLine(g, app) {
+    const T = THREE, sp = R.bridge.specs.get(g.type), isPts = g.type === 'PointSet' || !!(sp && sp.points), isLine = g.type === 'IndexedLineSet' || !!(sp && sp.lines);
+    if (!isPts && !isLine) return null;
+    const geo = new T.BufferGeometry(); let colors = null;
+    if (isPts) {
+      const P = sp && sp.points ? sp.points(g) : g.f.coord && g.f.coord.f.point; if (!P || !P.length) return null;
+      geo.setAttribute('position', new T.BufferAttribute(Float32Array.from(P), 3));
+      const C = g.f.color && g.f.color.f.color; if (C && C.length >= P.length) { colors = Float32Array.from(C.subarray ? C.subarray(0, P.length) : C.slice(0, P.length)); }
+    } else {
+      const L = sp && sp.lines ? sp.lines(g) : null, P = L && L.coord ? L.coord : g.f.coord && g.f.coord.f.point, ci = L ? L.coordIndex : g.f.coordIndex; if (!P || !P.length) return null;
+      const C = g.f.color && g.f.color.f.color, perV = g.f.colorPerVertex !== false, pos = [], col = [];
+      let run = 0;
+      for (const r2 of R.bridge.runs(ci)) {
+        for (let k = 0; k + 1 < r2.length; k++) for (const v of [r2[k], r2[k + 1]]) {
+          pos.push(P[v * 3], P[v * 3 + 1], P[v * 3 + 2]);
+          if (C) { const c = (perV ? v : run) * 3; col.push(C[c], C[c + 1], C[c + 2]); }
+        }
+        run++;
+      }
+      if (!pos.length) return null;
+      geo.setAttribute('position', new T.BufferAttribute(Float32Array.from(pos), 3)); if (C && col.length) colors = Float32Array.from(col);
+    }
+    if (colors) geo.setAttribute('color', new T.BufferAttribute(colors, 3));
+    const mat = isPts ? new T.PointsMaterial({ size: 1, sizeAttenuation: false }) : new T.LineBasicMaterial();
+    this.refreshPlain(mat, app && app.f.material, !!colors); return { geo, mat, points: isPts };
+  }
+  refreshPlain(m, mat, hasColors) {
+    const e = mat && (mat.f.emissiveColor || (mat.f.baseColor && [0, 0, 0])) || [1, 1, 1];
+    m.color.setRGB(hasColors ? 1 : e[0], hasColors ? 1 : e[1], hasColors ? 1 : e[2]); m.vertexColors = hasColors; m.fog = true;
+    m.opacity = mat ? 1 - (mat.f.transparency || 0) : 1; m.transparent = m.opacity < 0.999; m.needsUpdate = true;
+  }
+  dataGeometry(d) {
+    const T = THREE, geo = new T.BufferGeometry();
+    geo.setAttribute('position', new T.BufferAttribute(Float32Array.from(d.pos), 3)); geo.setIndex(new T.BufferAttribute(Uint32Array.from(d.idx), 1));
+    if (d.nrm) geo.setAttribute('normal', new T.BufferAttribute(Float32Array.from(d.nrm), 3)); else geo.computeVertexNormals();
+    if (d.uv) geo.setAttribute('uv', new T.BufferAttribute(Float32Array.from(d.uv), 2));
+    if (d.col) geo.setAttribute('color', new T.BufferAttribute(Float32Array.from(d.col), 3));
+    return geo;
+  }
+  /* a geometry node's own fields changed (the shared bridge nodes call this as body.regeo(node)): drop its cached data and give every mesh that draws it a fresh BufferGeometry */
+  regeo(n) {
+    this.geoCache.delete(n.id);
+    for (const m of this.meshesOf.get(n.id) || []) {
+      const app = m.userData.shape.f.appearance, pl = (m.isLineSegments || m.isPoints) ? this.pointLine(n, app) : null, g = pl ? pl.geo : this.threeGeometry(n);
+      if (g) { m.geometry.dispose(); m.geometry = g; if (pl) { m.material.dispose(); m.material = pl.mat; } }
+    }
+  }
 
   /* ImageTexture (url) and PixelTexture (image: width height components pixels...; rows run bottom to top, as X3D images do, so flipY stays off for the data texture). */
   tex(node) {
@@ -252,19 +303,21 @@ class Body {
     if (t === 'Switch' && field === 'whichChoice') this.applySwitch(node);
     else if (t === 'Transform' && field !== 'children') { const r = this.rec.get(node.id); if (r && r.tn) { this.applyTransform(node, r.tn); } }
     else if ((t === 'Group' || t === 'Switch' || t === 'Transform') && field === 'children') this.rebuildGroup(node);
-    else if (t === 'Material') for (const m of this.meshesOf.get(node.id) || []) this.refreshPhong(m.material, node);
+    else if (t === 'Material') for (const m of this.meshesOf.get(node.id) || []) { if (m.isLineSegments || m.isPoints) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshPhong(m.material, node); }
     else if (t === 'PhysicalMaterial') for (const m of this.meshesOf.get(node.id) || []) this.refreshPBR(m.material, node);
     else if (t === 'DirectionalLight' || t === 'PointLight' || t === 'SpotLight') { const l = this.lights.find((x) => x.userData.node === node); if (l) { this.refreshLight(l); this.refreshAmbient(); } }
     else if (t === 'Fog') this.applyFog();
+    else if (t === 'ClipPlane') this.clipDirty = true;
     else if (t === 'TextureTransform') for (const m of this.meshesOf.get(node.id) || []) { const ap = m.userData.shape.f.appearance, mat = ap && ap.f.material, tex = mat && mat.type === 'PhysicalMaterial' ? mat.f.baseTexture : ap && ap.f.texture; const old = m.material.map; m.material.map = this.texFor(tex, node); m.material.needsUpdate = true; if (old && old.userData.copyOf) old.dispose(); }
     else if (t === 'Background') this.applyBackground();
     else if (t === 'NavigationInfo') this.applyNavigation();
     else if (t === 'Viewpoint') this.viewpointChanged(node, field);
-    else if (t === 'Coordinate' || t === 'Color' || t === 'Normal') this.geometryChanged(node);
+    else if (t === 'Coordinate' || t === 'Color' || t === 'Normal' || t === 'TextureCoordinate') this.geometryChanged(node);
+    const sp = R.bridge.specs.get(t); if (sp && sp.geometry && sp.changed) sp.changed(this, node, field);   // the geometry nodes of the shared bridge keep their own change hooks
     if (T3.changed[t]) T3.changed[t](this, node, field);
   }
   geometryChanged(n) {
-    for (const r of [...this.rec.values()]) if (r.node && r.node.type === 'Shape' && r.node.f.geometry && ['coord', 'color', 'normal'].some((k) => r.node.f.geometry.f[k] === n)) {
+    for (const r of [...this.rec.values()]) if (r.node && r.node.type === 'Shape' && r.node.f.geometry && ['coord', 'color', 'normal', 'texCoord'].some((k) => r.node.f.geometry.f[k] === n)) {
       this.geoCache.delete(r.node.f.geometry.id); const parent = r.tn.parent, vis = r.tn.visible; this.disposeObj(r.tn); const nr = this.buildShape(r.node, parent, r.chain.slice(1));
       for (const pr of this.rec.values()) if (pr.kids) { const i = pr.kids.indexOf(r); if (i >= 0) pr.kids[i] = nr; }
       nr.tn.visible = vis;
@@ -274,7 +327,7 @@ class Body {
   rebuildGroup(node) {
     const r = this.rec.get(node.id); if (!r) return;
     for (const k of r.kids) this.disposeRec(k);
-    r.kids = node.f.children.map((c) => this.build(c, r.tn, r.chain)); if (node.type === 'Switch') this.applySwitch(node);
+    r.kids = node.f.children.map((c) => this.build(c, r.tn, r.chain)); if (node.type === 'Switch') this.applySwitch(node); this.clipDirty = true;
   }
   disposeRec(k) { if (!k) return; (k.kids || []).forEach((x) => this.disposeRec(x)); if (k.tn && k.node && k.node.type !== 'Viewpoint') this.disposeObj(k.tn); if (k.node) this.rec.delete(k.node.id); }
   adopt(node, parentNode) {
@@ -342,11 +395,47 @@ class Body {
   frame() {
     const now = (performance.timeOrigin + performance.now()) / 1000;
     if (this.world) { R.events.begin(now); for (const n of this.timeSensors || []) R.tickTimeSensor(n, now); R.events.drain(); this.stepTransition(); }
-    this.renderer.render(this.scene, this.cam); this.stats.frames++;
+    this.updateView(); this.renderer.render(this.scene, this.cam); this.stats.frames++;
     this.frameTimes.push(performance.now()); if (this.frameTimes.length > 30) this.frameTimes.shift();
     if (this.frameWaiters && this.frameWaiters.length) { const w = this.frameWaiters; this.frameWaiters = []; w.forEach((f) => f()); }
     if (this.opts.onFrame) this.opts.onFrame(this);
   }
+  /* Per-frame state that depends on the camera: Billboard turning, LOD level, ClipPlane planes in world space. Called before every render (frame and shot). */
+  updateView() {
+    if (!this.world) return;
+    const T = THREE, V = T.Vector3; this.scene.updateMatrixWorld(true); this.cam.updateMatrixWorld(true);
+    const eye = this.cam.getWorldPosition(new V()), up = new V(0, 1, 0).transformDirection(this.cam.matrixWorld);
+    const toLocal = (o) => { const inv = new T.Matrix4().copy(o.parent ? o.parent.matrixWorld : new T.Matrix4()).invert(); return { inv, p: eye.clone().applyMatrix4(inv), up: up.clone().transformDirection(inv) }; };
+    /* 19775-1 Billboard: with axisOfRotation 0 0 0 the node's +Z points at the eye and its +Y follows the viewer's up; with an axis it turns about that axis only */
+    for (let i = (this.billboards || []).length - 1; i >= 0; i--) {
+      const r = this.billboards[i]; if (!r.tn.parent) { this.billboards.splice(i, 1); continue; }
+      const L = toLocal(r.tn), d = L.p.clone(); if (d.lengthSq() < 1e-12) continue; d.normalize();
+      const ax = r.node.f.axisOfRotation, q = r.tn.quaternion;
+      if (!ax[0] && !ax[1] && !ax[2]) {
+        let x = new V().crossVectors(L.up, d); if (x.lengthSq() < 1e-10) x = new V().crossVectors(new V(1, 0, 0), d); x.normalize();
+        q.setFromRotationMatrix(new T.Matrix4().makeBasis(x, new V().crossVectors(d, x), d));
+      } else {
+        const a = new V(ax[0], ax[1], ax[2]).normalize(), p = d.clone().sub(a.clone().multiplyScalar(a.dot(d)));
+        if (p.lengthSq() < 1e-10) { q.identity(); continue; }
+        p.normalize(); q.setFromAxisAngle(a, Math.atan2(new V(0, 0, 1).cross(p).dot(a), p.z));
+      }
+      r.tn.updateMatrixWorld(true);
+    }
+    /* LOD: the level is the number of ranges at or below the distance from the eye to the LOD's centre, measured in the LOD's own frame; children[level] is the one shown (X_ITE and the Babylon body agree) */
+    for (const r of this.lods || []) {
+      if (!r.tn.parent) continue; const c = r.node.f.center, rg = r.node.f.range, L = toLocal(r.tn);
+      const d = Math.hypot(L.p.x - c[0], L.p.y - c[1], L.p.z - c[2]); let lv = 0; while (lv < rg.length && d >= rg[lv]) lv++;
+      lv = Math.min(lv, r.kids.length - 1);
+      if (lv !== r.level) { r.level = lv; r.kids.forEach((k, i) => { if (k && k.tn) k.tn.visible = i === lv; }); }
+    }
+    /* ClipPlane: the plane (a b c d) of 19775-1 is in the frame of the node's parent group and keeps the half space where a x + b y + c z + d >= 0, which is three.js's own rule */
+    if (this.clipDirty) { this.clipDirty = false; for (const cl of this.clips) { cl.meshes = []; cl.parent.traverse((o) => { if (o.isMesh || o.isLine || o.isPoints) cl.meshes.push(o); }); } this.renderer.localClippingEnabled = this.clips.length > 0; }
+    for (const cl of this.clips || []) {
+      const f = cl.node.f, pl = f.plane, n = new V(pl[0], pl[1], pl[2]), len = n.length() || 1;
+      const plane = new T.Plane(n.divideScalar(len), pl[3] / len).applyMatrix4(cl.parent.matrixWorld);
+      for (const m of cl.meshes) { const mt = m.material; if (!mt) continue; if (f.enabled === false) { if (mt.clippingPlanes && mt.clippingPlanes.length) { mt.clippingPlanes = []; } } else { mt.clippingPlanes = [plane]; } }
+    }
+  }
   fps() { const t = this.frameTimes; return t.length > 2 ? 1000 * (t.length - 1) / (t[t.length - 1] - t[0]) : 0; }
-  shot() { this.renderer.render(this.scene, this.cam); return this.renderer.domElement.toDataURL('image/png'); }
+  shot() { this.updateView(); this.renderer.render(this.scene, this.cam); return this.renderer.domElement.toDataURL('image/png'); }
 }

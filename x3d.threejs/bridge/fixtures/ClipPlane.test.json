@@ -1,0 +1,64 @@
+{
+ "node": "ClipPlane",
+ "mode": "scene",
+ "note": "a sphere and a box inside a Group with a ClipPlane (plane 0 1 0 0.3: keeps y >= -0.3), then the plane tilted, then disabled; a second sphere outside the group is not clipped",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "C",
+    "plane",
+    [
+     1,
+     1,
+     0,
+     0
+    ],
+    "SFVec4f"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "tilt"
+  },
+  {
+   "set": [
+    "C",
+    "enabled",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "off"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "tilt": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "off": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  }
+ }
+}
