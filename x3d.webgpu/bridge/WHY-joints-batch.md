@@ -1,4 +1,4 @@
-# Why these six: joints (tracker batch 41)
+# Why these six: joints (tracker batch 42)
 
 Nodes: BallJoint, SingleAxisHingeJoint, SliderJoint, DoubleAxisHingeJoint, MotorJoint, UniversalJoint.
 Rig for every number below: Chromium 153.0.8010.12 on SwiftShader, X_ITE 16.6.0 (Bullet through Ammo), Babylon 9.32.0, the bridge's own engine in `src/nodes/RigidBodyCollection.js`. No real-GPU timings exist.
