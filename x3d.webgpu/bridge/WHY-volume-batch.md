@@ -42,7 +42,7 @@ The normal that Shaded, ToneMapped, Cartoon, Edge and Silhouette use is minus th
 
 All ten fixtures pass in both engines. Differences kept honestly:
 
-- **X_ITE blends 8 bit per slice and the bridge blends in float.** A faint stack of four layers (72, 72, 8, 8) comes out 10 in the bridge and 24 in X_ITE; the Edge stack with the style off 14 and 28; the Boundary defaults 40 and 78. The 8 bit blend stalls once a slice's alpha times the pixel is under half a level, so X_ITE is lighter. The bridge result is the more accurate one and is the one that looks better (no banding), which fits the aim of quality over X_ITE match; those three checks therefore use each engine's own value.
+- **X_ITE blends 8 bit per slice and the bridge blends in float.** A faint stack of four layers (72, 72, 8, 8) comes out 10 in the bridge and 24 in X_ITE; the Edge stack with the style off 14 and 28; the Boundary defaults 40 and 78. The likely cause (not isolated; the stacks sit on a white background): an 8 bit blend rounds each slice, and once a slice's alpha times the pixel value is under half a level the pixel stops moving, so X_ITE stays lighter than the float sum. The bridge result is the more accurate one and is the one that looks better (no banding), which fits the aim of quality over X_ITE match; those three checks therefore use each engine's own value.
 - **X_ITE does not take a new transfer function picture** after load: writing a PixelTexture image used as a transfer function changes nothing there (measured; toggling enabled does not help), the bridge does.
 - `visible` is honoured by X_ITE (it hides the volume), as in the spec, and by the bridge.
 
@@ -50,10 +50,14 @@ All ten fixtures pass in both engines. Differences kept honestly:
 
 Not applied: fog and clip planes; per-pixel cutting by opaque shapes that pierce a volume (the box is depth tested as a whole); attenuation, radius and spot cones of lights (only the headlight and up to three more lights act); `shadows` and `phaseFunction` (X_ITE ignores them too); `contourStepSize`; an ImageTexture as a 2D transfer function (only PixelTexture is read; the 3D kinds are); non-uniform scale of a volume node. The plane count is 400 (MEDIUM). Anisotropic `dimensions` tilt X_ITE's normals differently from the bridge's (the bridge divides the gradient by the dimensions; the tests use cubes). BlendedVolumeStyle, ComposedVolumeStyle and ProjectionVolumeStyle are the next batch.
 
-## 7. A bridge bug these tests found
+## 7. Back faces of solid=false shapes (found while here, fixed in the same PR)
+
+The Castle thread reported that a solid=false shape wound away from the camera drew black in the bridge and lit in X_ITE. Reproduced with two scratch fixtures (`_backface`: one quad each wound towards the camera, wound away with solid=false, wound away with solid=true; `_backface-inside`: the camera inside a solid=false Box). Cause: the stock body's Phong material neither culled nor turned on two sided lighting, so a face seen from behind was lit with an inward normal (black). Now: solid=TRUE culls the back faces, solid=FALSE lights them like a front face (the normal is flipped on the back side), and the side orientation follows the source (data geometry is counter-clockwise, Babylon's own Box, Sphere and Cylinder are not). Both fixtures pass in both engines (X_ITE already passed).
+
+## 8. A bridge bug these tests found
 
 The test runner could not set a colour field with an alpha (SFColorRGBA): the value went through unconverted in X_ITE and the style silently kept its old colours, which looked like an X_ITE bug until the conversion was added. The XSD also lacks `transferFunction` in the containerField list of the texture nodes, so the fixtures are checked against a copy of the schema that has it (the driver patch covers every list that names the texture containerFields).
 
-## 8. What this unlocks
+## 9. What this unlocks
 
 The brain loom and the molecular viz can show a voxel set directly, with a transfer function (colour by density), isosurfaces, segments (labelled regions) and lighting. Next: the three remaining volume nodes (Blended, Composed, Projection styles), then Geospatial.

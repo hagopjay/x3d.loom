@@ -285,7 +285,12 @@ class Body {
     }
     if (spec.kind === 'phong') {
       const m = new BABYLON.StandardMaterial('std-' + (spec.mat.def || shape.id), s);
-      m.backFaceCulling = false; m.specularColor.set(0, 0, 0);
+      m.specularColor.set(0, 0, 0);
+      // solid = TRUE culls the back faces, solid = FALSE draws them lit as a front face (two sided lighting: the normal is flipped on the back side, 19775-1 11.4.2 / X_ITE does the same).
+      // Data geometry is wound counter-clockwise (X3D); Babylon's own Box, Sphere and Cylinder are wound the other way in this right-handed scene, so the side orientation (which side is "front") follows the source.
+      let gd = null; try { gd = this.geometryData(g); } catch (e) { /* a primitive has no vertex data */ }
+      m.backFaceCulling = g.f.solid === true; m.twoSidedLighting = this.opts.twoSided !== false;
+      m.sideOrientation = gd && gd.pos ? BABYLON.Material.CounterClockWiseSideOrientation : BABYLON.Material.ClockWiseSideOrientation;
       this.refreshPhong(m, spec.mat);
       return m;
     }
