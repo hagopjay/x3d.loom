@@ -1,0 +1,40 @@
+{
+ "node": "CollidableOffset",
+ "mode": "scene",
+ "note": "The body's only shape is a CollidableOffset moving a sphere (radius 0.5) 1 m below the body origin: the sphere rests on the ground with the origin 1.5 up. X_ITE 16.6.0 never applies the offset of a file that does not touch it, and rests at 0.5.",
+ "gaps": [
+  "X_ITE 16.6.0 reads the translation and rotation of a CollidableOffset or CollidableShape only when the node first receives an event: a file that sets them and never touches them leaves the shape at the body origin so there it rests at 0.5 where the bridge rests at 1.5 (each engine is checked against its own value); the bridge applies them from the start",
+  "only translation and rotation of the offset are applied; the offset of an offset adds up"
+ ],
+ "steps": [
+  {
+   "settle": 5
+  },
+  {
+   "only": "ours",
+   "nearv": [
+    "N0",
+    "position",
+    [
+     0,
+     1.5,
+     0
+    ],
+    0.15
+   ]
+  },
+  {
+   "only": "xite",
+   "nearv": [
+    "N0",
+    "position",
+    [
+     0,
+     0.5,
+     0
+    ],
+    0.15
+   ]
+  }
+ ]
+}

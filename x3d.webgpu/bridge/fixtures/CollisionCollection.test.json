@@ -1,0 +1,102 @@
+{
+ "node": "CollisionCollection",
+ "mode": "scene",
+ "note": "A ball flies at a fixed wall with bounce 1 (minBounceSpeed 0) and leaves at the speed it came with. A box slides on the ground with friction the CollisionCollection does not apply (appliedParameters is BOUNCE only): the engine's 0.5 stops it after v squared over 2 mu g = 1.63 m; X_ITE's Bullet multiplies the friction of the box and of the ground (0.25) and stops it after 3.27 m. Each engine is checked against its own value.",
+ "gaps": [
+  "friction is one Coulomb coefficient for each contact (frictionCoefficients.x, or 0.5 when FRICTION_COEFFICIENT-2 is not applied); X_ITE 16.6.0 multiplies the two bodies' values, so it slides twice as far here (3.27 m against 1.63 m)",
+  "X_ITE 16.6.0 sets a body's restitution only if the body's own speed is at least minBounceSpeed when the bounce is configured, and a fixed wall or ground has speed 0, so nothing bounces off it unless minBounceSpeed is 0 (the fixture sets 0); the bridge bounces when the speed of the contact reaches minBounceSpeed",
+  "X_ITE 16.6.0 only knows the appliedParameters spelling FRICTION_COEFFICIENT_2, the 4.0 XSD and spec say FRICTION_COEFFICIENT-2, so a valid scene never gets its friction in X_ITE",
+  "surfaceSpeed, slipFactors, softnessConstantForceMix, softnessErrorCorrection and the second friction value (rolling friction in Bullet) are kept and not used",
+  "collidables is kept and not used: bodies collide through their own geometry, as in X_ITE"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "C",
+    "bounce",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "C",
+    "minBounceSpeed",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "C",
+    "frictionCoefficients",
+    [
+     0.5,
+     0.5
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "C",
+    "appliedParameters",
+    [
+     "BOUNCE"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "C",
+    "softnessConstantForceMix",
+    0.0001
+   ]
+  },
+  {
+   "expect": [
+    "C",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 5
+  },
+  {
+   "nearv": [
+    "BL",
+    "linearVelocity",
+    [
+     -3.6,
+     0,
+     0
+    ],
+    1.0
+   ]
+  },
+  {
+   "only": "ours",
+   "nearv": [
+    "S0",
+    "position",
+    [
+     1.63,
+     0.5,
+     -3
+    ],
+    0.3
+   ]
+  },
+  {
+   "only": "xite",
+   "nearv": [
+    "S0",
+    "position",
+    [
+     3.27,
+     0.55,
+     -3.3
+    ],
+    1.0
+   ]
+  }
+ ]
+}
