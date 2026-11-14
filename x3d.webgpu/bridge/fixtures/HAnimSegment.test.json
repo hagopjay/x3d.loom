@@ -1,0 +1,172 @@
+{
+ "node": "HAnimSegment",
+ "mode": "scene",
+ "tone": "none",
+ "note": "two segments (on the first and the last joint) holding boxes: they ride the bending joints, visible hides one, addChildren / removeChildren change what it holds; mass, centerOfMass and momentsOfInertia are stored; pictures compared as silhouettes with X_ITE 16.6.0. The displacers and coord of a segment are in the HAnimDisplacer fixture.",
+ "gaps": [],
+ "steps": [
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "SEG",
+    "name",
+    "head"
+   ]
+  },
+  {
+   "expect": [
+    "SEG",
+    "mass",
+    4.5
+   ]
+  },
+  {
+   "expect": [
+    "SEG",
+    "centerOfMass",
+    [
+     0,
+     0.5,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "SEG",
+    "momentsOfInertia",
+    [
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "shot": "rest"
+  },
+  {
+   "set": [
+    "J1",
+    "rotation",
+    [
+     0,
+     0,
+     1,
+     0.7853982
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "set": [
+    "J2",
+    "rotation",
+    [
+     0,
+     0,
+     1,
+     0.7853982
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "bent"
+  },
+  {
+   "set": [
+    "SEG",
+    "visible",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "SEG",
+    "visible",
+    false
+   ]
+  },
+  {
+   "shot": "hidden"
+  },
+  {
+   "set": [
+    "SEG",
+    "visible",
+    true
+   ]
+  },
+  {
+   "setnodes": [
+    "SEG",
+    "addChildren",
+    [
+     "EXTRA"
+    ]
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "added"
+  },
+  {
+   "setnodes": [
+    "SEG",
+    "removeChildren",
+    [
+     "EXTRA"
+    ]
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "removed"
+  }
+ ],
+ "agree": [],
+ "compare": {
+  "rest": {
+   "iou": 0.85,
+   "mad": 14
+  },
+  "bent": {
+   "iou": 0.8,
+   "mad": 18
+  },
+  "hidden": {
+   "iou": 0.8,
+   "mad": 18
+  },
+  "added": {
+   "iou": 0.7,
+   "mad": 24
+  },
+  "removed": {
+   "iou": 0.8,
+   "mad": 18
+  }
+ },
+ "scope": [
+  "mass, centerOfMass and momentsOfInertia are stored and routed, no engine uses them (physics belongs to the RigidBodyPhysics group)"
+ ]
+}
