@@ -8,6 +8,23 @@
   },
   {
    "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "N",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
     "down",
     160,
     120
@@ -42,6 +59,103 @@
     "N",
     "offset",
     "o1"
+   ]
+  },
+  {
+   "record": [
+    "N",
+    "trackPoint_changed",
+    "tp1"
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    83,
+    197
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    70,
+    190
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    55,
+    180
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    55,
+    180
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N2",
+    "rotation_changed",
+    "r2"
+   ]
+  },
+  {
+   "record": [
+    "N2",
+    "trackPoint_changed",
+    "tp2"
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    257,
+    43
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    280,
+    60
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    250,
+    75
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    250,
+    75
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N3",
+    "rotation_changed",
+    "r3"
+   ]
+  },
+  {
+   "record": [
+    "N3",
+    "trackPoint_changed",
+    "tp3"
    ]
   },
   {
@@ -103,19 +217,53 @@
  "agree": [
   [
    "r1",
-   0.12
+   0.05,
+   {
+    "quat": true
+   }
   ],
   [
    "o1",
-   0.12
+   0.05
+  ],
+  [
+   "tp1",
+   0.05
+  ],
+  [
+   "r2",
+   0.03,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "tp2",
+   0.03
+  ],
+  [
+   "r3",
+   0.03,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "tp3",
+   0.03
   ],
   [
    "clamped",
-   0.12
+   0.05,
+   {
+    "quat": true
+   }
   ]
  ],
- "gaps": [
-  "disk mode (view along the axis) is implemented but only the cylinder mode is compared with X_ITE",
-  "trackPoint_changed not compared"
+ "gaps": [],
+ "scope": [
+  "compared with X_ITE 16.6.0 numerically: trackPoint_changed and rotation_changed in cylinder mode (off-axis press), in disk mode (axisRotation turns the axis to the view direction) and with minAngle/maxAngle; rotations compared as quaternions (X_ITE writes the same turn with the axis flipped and the angle negated)",
+  "unlike X_ITE the angle accumulates past a half turn (X_ITE returns a rotation of at most 180 degrees, so a full drag around the axis jumps back); a deliberate difference, quality over match",
+  "isOver is picked once per animation frame and keeps its value while a drag is active"
  ]
 }

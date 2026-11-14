@@ -8,6 +8,23 @@
   },
   {
    "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "N",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
     "down",
     160,
     120
@@ -42,6 +59,13 @@
     "N",
     "offset",
     "o1"
+   ]
+  },
+  {
+   "record": [
+    "N",
+    "trackPoint_changed",
+    "tp1"
    ]
   },
   {
@@ -81,6 +105,110 @@
     "offset",
     "o2"
    ]
+  },
+  {
+   "record": [
+    "N",
+    "trackPoint_changed",
+    "tp2"
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    63,
+    197
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    100,
+    197
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    135,
+    185
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    135,
+    150
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    135,
+    150
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N2",
+    "rotation_changed",
+    "r3"
+   ]
+  },
+  {
+   "record": [
+    "N2",
+    "trackPoint_changed",
+    "tp3"
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    232,
+    62
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    245,
+    70
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    260,
+    80
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    260,
+    80
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N3",
+    "rotation_changed",
+    "r4"
+   ]
+  },
+  {
+   "record": [
+    "N3",
+    "trackPoint_changed",
+    "tp4"
+   ]
   }
  ],
  "agree": [
@@ -93,17 +221,42 @@
    0.05
   ],
   [
+   "tp1",
+   0.01
+  ],
+  [
    "r2",
    0.25
   ],
   [
    "o2",
    0.25
+  ],
+  [
+   "tp2",
+   0.03
+  ],
+  [
+   "r3",
+   0.02
+  ],
+  [
+   "tp3",
+   0.02
+  ],
+  [
+   "r4",
+   0.03
+  ],
+  [
+   "tp4",
+   0.02
   ]
  ],
- "gaps": [
-  "after the second drag the rotation angle agrees with X_ITE 16.6.0 (0.5205 vs 0.5235 rad) but one axis component differs by 0.2: the hit point of a press on an already turned box is read differently, not chased (no pixel perfection)",
-  "trackPoint_changed not compared",
-  "a drag that leaves the sphere uses the nearest point of the sphere to the ray; X_ITE does the same by its own rule, only tested inside the sphere"
+ "gaps": [],
+ "scope": [
+  "compared with X_ITE 16.6.0 numerically: trackPoint_changed agrees within 0.01 inside the sphere, within 0.02 where the pointer leaves the sphere (tangent plane rule) and for a press on the far half (sensor origin in front of the shape)",
+  "rotation_changed: the angle agrees within 0.015 rad; after two drags the axis differs by up to 0.2 in one component: X_ITE's press hit lies about half a pixel off the pointer ray ((0.016, 0.016, 1) at the box centre, seen in its first trackPoint_changed) where ours is the pick at the pointer ((0, 0, 1)), and the composition offset * rotation amplifies it; the test bounds it at 0.25",
+  "isOver is picked once per animation frame and keeps its value while a drag is active"
  ]
 }

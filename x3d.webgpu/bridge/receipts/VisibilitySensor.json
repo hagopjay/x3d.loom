@@ -3,28 +3,29 @@
  "pass": true,
  "xsd": {
   "ok": true,
-  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/VisibilitySensor.x3d validates",
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/VisibilitySensor.x3d validates",
   "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
  },
  "test": {
   "ok": true,
-  "ours": "pass 15/15",
-  "xite": "FAIL step 15: N.isActive is true, expected false",
+  "ours": "pass 34/34",
+  "xite": "FAIL step 34: N.isActive is true, expected false",
   "map": {},
   "oursOk": true,
   "mapX": {},
   "xiteOk": false,
+  "comparison": "failed",
   "msg": "X_ITE differs (X_ITE 16.6.0 keeps a size 0 0 0 sensor active (it treats it as unbounded); the 4.0 text says a zero size sensor never fires)",
-  "gaps": [
-   "occlusion by other shapes is not tested (X_ITE 16.6.0 does not test it either)",
+  "scope": [
+   "occlusion by other shapes is not tested, by either engine (X_ITE 16.6.0 tests the frustum only); compared with X_ITE: inside, behind the camera, beyond the side plane, a box straddling the side plane (active), just outside (inactive), centre moved out and back, enabled false and true",
    "one decision per frame; enterTime and exitTime are the frame timestamps"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 3b32691c2a96",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 2e2fe8a67f1c",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "2b54cb9"
+ "driver_commit": "17a5582"
 }

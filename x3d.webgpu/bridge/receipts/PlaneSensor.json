@@ -3,13 +3,13 @@
  "pass": true,
  "xsd": {
   "ok": true,
-  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/PlaneSensor.x3d validates",
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/PlaneSensor.x3d validates",
   "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
  },
  "test": {
   "ok": true,
-  "ours": "pass 28/28",
-  "xite": "pass 28/28",
+  "ours": "pass 57/57",
+  "xite": "pass 57/57",
   "map": {
    "tr": [
     1.801833809572515,
@@ -21,6 +21,11 @@
     0,
     0
    ],
+   "tp": [
+    1.801833809572515,
+    0,
+    1
+   ],
    "box": [
     1.801833809572515,
     0,
@@ -29,6 +34,51 @@
    "clamped": [
     1,
     0,
+    0
+   ],
+   "tr2": [
+    0.9319830049513006,
+    0.8387846742813173,
+    0
+   ],
+   "tp2": [
+    0.9185712889420952,
+    0.8466951429946195,
+    1
+   ],
+   "off2": [
+    0.9319830049513006,
+    0.8387846742813173,
+    0
+   ],
+   "box2": [
+    0.9319830049513006,
+    0.8387846742813173,
+    0
+   ],
+   "tr3": [
+    0,
+    0.6834541764495767,
+    0
+   ],
+   "tp3": [
+    0,
+    0.5015162761302261,
+    0
+   ],
+   "off3": [
+    0,
+    0.6834541764495767,
+    0
+   ],
+   "box3": [
+    0,
+    0.6834541764495767,
+    0
+   ],
+   "tr3b": [
+    0,
+    0.6834541764495767,
     0
    ],
    "disabled": [
@@ -49,6 +99,11 @@
     0,
     0
    ],
+   "tp": [
+    1.8018285799583382,
+    0,
+    1
+   ],
    "box": [
     1.8018285799583382,
     0,
@@ -59,6 +114,51 @@
     0,
     0
    ],
+   "tr2": [
+    0.9319802999784509,
+    0.8387822699806046,
+    0
+   ],
+   "tp2": [
+    0.9185773300481275,
+    0.8466995000359154,
+    1
+   ],
+   "off2": [
+    0.9319802999784509,
+    0.8387822699806046,
+    0
+   ],
+   "box2": [
+    0.9319802999784509,
+    0.8387822699806046,
+    0
+   ],
+   "tr3": [
+    0,
+    0.6834522199842087,
+    0
+   ],
+   "tp3": [
+    0,
+    0.5015216111550009,
+    0
+   ],
+   "off3": [
+    0,
+    0.6834522199842087,
+    0
+   ],
+   "box3": [
+    0,
+    0.6834522199842087,
+    0
+   ],
+   "tr3b": [
+    0,
+    0.6834522199842087,
+    0
+   ],
    "disabled": [
     1,
     0,
@@ -66,18 +166,19 @@
    ]
   },
   "xiteOk": true,
+  "comparison": "passed",
   "msg": "",
-  "gaps": [
-   "axisRotation is implemented (frame turned by it) but not exercised against X_ITE",
-   "trackPoint_changed is not compared: X_ITE reports it in the sensor frame, ours in the sensor frame at the press, to be checked",
-   "isOver (hover) is not raised by the drag sensors"
+  "scope": [
+   "compared with X_ITE 16.6.0 numerically (translation_changed, trackPoint_changed, offset, the routed box): plane drag, axisRotation 0 0 1 0.5, line mode (minPosition.x = maxPosition.x), clamp, disabled; agree within 0.1 relative on a 2 unit drag (the engines pick the press half a pixel apart)",
+   "isOver is picked once per animation frame and keeps its value while a drag is active (the press owns the pointer); X_ITE does the same",
+   "line mode with both minPosition components equal turns the line along the sensor's y axis (X_ITE's first branch); translation_changed is in the sensor's own frame, as X_ITE reports it"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 3b32691c2a96",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 2e2fe8a67f1c",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "2b54cb9"
+ "driver_commit": "17a5582"
 }

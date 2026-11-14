@@ -37,6 +37,25 @@
     cv.addEventListener('keyup', (e) => { if (each('keyup', e)) e.preventDefault(); });
     cv.addEventListener('blur', () => { for (const n of live.key || []) R.bridge.specs.get(n.type).release(n); });
   };
+  /* hover: a drag sensor is over (isOver) while the pointer is on its shape, like a TouchSensor; only the TouchSensor reports hitPoint_changed on hover (the drag sensors have no such field) */
+  Body.prototype.sensorsFor = function (mesh) {
+    const chain = (mesh.metadata && mesh.metadata.chain) || [];
+    for (const g of chain) {
+      const ts = (g.f.children || []).filter((c) => c.f.enabled && (c.type === 'TouchSensor' || (R.bridge.specs.get(c.type) || {}).dragStart));
+      if (ts.length) return ts.map((t) => ({ node: t, group: g }));
+    }
+    return [];
+  };
+  Body.prototype.setOver = function (sens, hit) {
+    const old = this.ptr.over || [], now = sens.map((s) => s.node);
+    for (const n of old) if (!now.includes(n)) R.hooks.fire(n, 'isOver', false);
+    for (const s of sens) {
+      if (!old.includes(s.node)) R.hooks.fire(s.node, 'isOver', true);
+      if (hit && s.node.type === 'TouchSensor') R.hooks.fire(s.node, 'hitPoint_changed', this.localPoint(s.group, hit.pickedPoint));
+    }
+    this.ptr.over = now;
+    this.canvas.classList.toggle('is-over-sensor', now.length > 0);
+  };
   R.bridge.pointerInit = (body) => {
     const cv = body.canvas, V = BABYLON.Vector3; let drag = null;
     const px = (e) => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * body.engine.getRenderWidth() / r.width, (e.clientY - r.top) * body.engine.getRenderHeight() / r.height]; };

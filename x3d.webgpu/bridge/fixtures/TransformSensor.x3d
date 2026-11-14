@@ -3,7 +3,8 @@
   <head><meta name="title" content="TransformSensor.x3d"/><meta name="description" content="Bridge fixture for TransformSensor: targetObject is set by the test, the 4.0 schema has no way to write it"/></head>
   <Scene>
     <Viewpoint position="0 0 10"/>
-    <Transform DEF="T"><Shape><Appearance><Material diffuseColor="0.9 0.35 0.2"/></Appearance><Box size="2 2 2"/></Shape></Transform>
+    <Transform DEF="T"><Shape DEF="S"><Appearance><Material diffuseColor="0.9 0.35 0.2"/></Appearance><Box size="2 2 2"/></Shape></Transform>
     <TransformSensor DEF="N" size="4 4 4"/>
+    <Transform DEF="P" translation="2 0 0" rotation="0 0 1 0.5"><TransformSensor DEF="N2" size="4 4 4"/></Transform>
   </Scene>
 </X3D>

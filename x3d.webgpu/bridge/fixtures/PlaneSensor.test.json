@@ -8,6 +8,40 @@
   },
   {
    "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "N",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    235
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "N",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
     "down",
     160,
     120
@@ -63,6 +97,13 @@
     "N",
     "offset",
     "off"
+   ]
+  },
+  {
+   "record": [
+    "N",
+    "trackPoint_changed",
+    "tp"
    ]
   },
   {
@@ -150,6 +191,148 @@
    ]
   },
   {
+   "mouse": [
+    "down",
+    63,
+    197
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    93,
+    197
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    93,
+    170
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    93,
+    170
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N2",
+    "translation_changed",
+    "tr2"
+   ]
+  },
+  {
+   "record": [
+    "N2",
+    "trackPoint_changed",
+    "tp2"
+   ]
+  },
+  {
+   "record": [
+    "N2",
+    "offset",
+    "off2"
+   ]
+  },
+  {
+   "record": [
+    "T2",
+    "translation",
+    "box2"
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    257,
+    197
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    277,
+    175
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    277,
+    175
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N3",
+    "translation_changed",
+    "tr3"
+   ]
+  },
+  {
+   "record": [
+    "N3",
+    "trackPoint_changed",
+    "tp3"
+   ]
+  },
+  {
+   "record": [
+    "N3",
+    "offset",
+    "off3"
+   ]
+  },
+  {
+   "record": [
+    "T3",
+    "translation",
+    "box3"
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    257,
+    197
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    237,
+    232
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    237,
+    232
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "record": [
+    "N3",
+    "translation_changed",
+    "tr3b"
+   ]
+  },
+  {
    "set": [
     "T",
     "translation",
@@ -226,17 +409,58 @@
    0.12
   ],
   [
+   "tp",
+   0.12
+  ],
+  [
    "clamped",
    0.02
   ],
   [
    "disabled",
    0.001
+  ],
+  [
+   "tr2",
+   0.1
+  ],
+  [
+   "tp2",
+   0.1
+  ],
+  [
+   "box2",
+   0.1
+  ],
+  [
+   "off2",
+   0.1
+  ],
+  [
+   "tr3",
+   0.1
+  ],
+  [
+   "tp3",
+   0.1
+  ],
+  [
+   "off3",
+   0.1
+  ],
+  [
+   "box3",
+   0.1
+  ],
+  [
+   "tr3b",
+   0.1
   ]
  ],
- "gaps": [
-  "axisRotation is implemented (frame turned by it) but not exercised against X_ITE",
-  "trackPoint_changed is not compared: X_ITE reports it in the sensor frame, ours in the sensor frame at the press, to be checked",
-  "isOver (hover) is not raised by the drag sensors"
+ "gaps": [],
+ "scope": [
+  "compared with X_ITE 16.6.0 numerically (translation_changed, trackPoint_changed, offset, the routed box): plane drag, axisRotation 0 0 1 0.5, line mode (minPosition.x = maxPosition.x), clamp, disabled; agree within 0.1 relative on a 2 unit drag (the engines pick the press half a pixel apart)",
+  "isOver is picked once per animation frame and keeps its value while a drag is active (the press owns the pointer); X_ITE does the same",
+  "line mode with both minPosition components equal turns the line along the sensor's y axis (X_ITE's first branch); translation_changed is in the sensor's own frame, as X_ITE reports it"
  ]
 }
