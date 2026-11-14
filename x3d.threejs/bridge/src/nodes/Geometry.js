@@ -50,11 +50,12 @@
       for (let j = 0; j < nz; j++) for (let i = 0; i < nx; i++) { const k = j * nx + i; P[k * 3] = i * f.xSpacing; P[k * 3 + 1] = H[k] || 0; P[k * 3 + 2] = j * f.zSpacing; UV[k * 2] = i / (nx - 1); UV[k * 2 + 1] = j / (nz - 1); }
       const tri = [], faceOf = [];
       for (let j = 0; j < nz - 1; j++) for (let i = 0; i < nx - 1; i++) { const a = j * nx + i, b = a + 1, c = a + nx, d = c + 1, q = j * (nx - 1) + i; tri.push(a, c, d, a, d, b); faceOf.push(q, q); }
-      const d = BR.compose({ f: { ...f, coord: { f: { point: P } }, texCoord: f.texCoord || { type: 'TextureCoordinate', f: { point: UV } }, normalPerVertex: true } }, tri, faceOf);
-      if (!f.normal) d.nrm = creaseNormals(d.pos, tri, Math.max(0, f.creaseAngle));   // BR.compose smooths over the shared source vertex, which is creaseAngle = pi; X3D's default (0) is flat faces
+      const d = BR.compose({ f: { ...f, coord: { f: { point: P } }, texCoord: f.texCoord || { type: 'TextureCoordinate', f: { point: UV } }, normalPerVertex: f.normal ? f.normalPerVertex !== false : true } }, tri, faceOf);   // with a Normal node, normalPerVertex false indexes it by square (faceOf)
+      if (!f.normal) d.nrm = creaseNormals(d.pos, tri, f.normalPerVertex === false ? 0 : Math.max(0, f.creaseAngle));   // BR.compose smooths over the shared source vertex, which is creaseAngle = pi; X3D's default (0) is flat faces
       if (f.ccw === false && d.nrm && !f.normal) for (let i = 0; i < d.nrm.length; i++) d.nrm[i] = -d.nrm[i];
       return d;
     },
+    receive(n, field, v) { if (field === 'set_height') { n.f.height = v.slice ? v.slice() : v; n.version = (n.version || 0) + 1; events.emit(n, 'height', n.f.height); if (R.bridge.body) R.bridge.body.regeo(n); return true; } },   // the input event of 19775-1 13.3.5
     changed(body, n, field) { if (['xDimension', 'zDimension', 'xSpacing', 'zSpacing', 'height', 'creaseAngle', 'ccw', 'colorPerVertex', 'normalPerVertex'].includes(field)) body.regeo(n); },
   });
 
@@ -63,42 +64,52 @@
   R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
   R.bridge.three.geometry.TriangleStripSet = (g, body) => {
     const tri = [], faceOf = []; let s0 = 0;
-    (g.f.stripCount || []).forEach((n, i) => { for (let k = 0; k + 2 < n; k++) { const a = s0 + k; if (k % 2) tri.push(a + 1, a, a + 2); else tri.push(a, a + 1, a + 2); faceOf.push(i); } s0 += n; });
+    (g.f.stripCount || []).forEach((n, i) => { for (let k = 0; k + 2 < n; k++) { const a = s0 + k; if (k % 2) tri.push(a + 1, a, a + 2); else tri.push(a, a + 1, a + 2); faceOf.push(faceOf.length); } s0 += n; });   // every triangle is a face: colorPerVertex / normalPerVertex false give one colour or normal per triangle (X_ITE counts face = corner / 3)
     return tri.length ? body.dataGeometry(BR.compose(g, tri, faceOf)) : null;
   };
   R.bridge.three.changed.TriangleStripSet = (body, n, field) => { if (['stripCount', 'ccw', 'colorPerVertex', 'normalPerVertex'].includes(field)) body.regeo(n); };
 
   /* IndexedFaceSet normals and colours that Body.geometryData (lifted verbatim from the Babylon body) leaves out: it makes flat face normals and per-corner colours only.
-     Here, walking the faces in the same order it does (one run of coordIndex per face, corners emitted in order), the three.js body adds
-       - a Normal node (normalPerVertex true: normalIndex or coordIndex per corner; false: one normal per face),
-       - creaseAngle (no Normal, creaseAngle > 0): corners at one position share the average of the face normals within creaseAngle of their own face; 0 keeps the flat normals,
-       - colorPerVertex false: one colour per face (colorIndex per face, or the face number).
-     Returns {nrm, col} (null where nothing changes). */
+     Here, walking the faces in the same order it does (one run of coordIndex per face with 3 or more corners, corners emitted in order, a face of n corners becomes n - 2 fan triangles), the three.js body adds
+       - a Normal node (normalPerVertex true: normalIndex or coordIndex per corner; false: normalIndex or the face number per face),
+       - creaseAngle (no Normal, normalPerVertex true, creaseAngle > 0): a corner takes the average of the face normals, one per face and counted once, of the faces that share its coordIndex vertex and
+         whose normals are within creaseAngle of its own face; with 0 or normalPerVertex false the flat normals stay,
+       - colorPerVertex false: one colour per face (colorIndex per face, or the face number); ColorRGBA is read with stride 4 on this path only (geometryData reads the per-corner colours with stride 3, so a ColorRGBA IndexedFaceSet with colorPerVertex true is still wrong; alpha is not drawn).
+     A lookup that falls outside its array falls back to the flat normal or the corner colour, never to NaN. Returns {nrm, col} (null where nothing changes). */
   BR.ifsExtras = (g, d) => {
-    const f = g.f, ci = f.coordIndex || [], N = f.normal && f.normal.f.vector, C = f.color && f.color.f.color, out = { nrm: null, col: null };
-    const faces = []; let cur = [], fi = 0;   // cur: [[corner position in coordIndex, coord vertex]...]
-    for (let i = 0; i <= ci.length; i++) { if (i === ci.length || ci[i] < 0) { if (cur.length >= 3) faces.push({ fi, corners: cur }); if (i < ci.length || cur.length) fi++; cur = []; } else cur.push([i, ci[i]]); }
-    const nv = d.pos.length / 3, nrm = new Float32Array(nv * 3), col = C && f.colorPerVertex === false ? new Float32Array(nv * 3) : null;
+    const f = g.f, ci = f.coordIndex || [], N = f.normal && f.normal.f.vector, C = f.color && f.color.f.color, cw = f.color && f.color.type === 'ColorRGBA' ? 4 : 3, out = { nrm: null, col: null };
+    const faces = []; let cur = [], fi = 0, tri0 = 0;   // cur: [[corner position in coordIndex, coord vertex]...]
+    for (let i = 0; i <= ci.length; i++) { if (i === ci.length || ci[i] < 0) { if (cur.length >= 3) { faces.push({ fi, corners: cur, tri: tri0 }); tri0 += cur.length - 2; } if (i < ci.length || cur.length) fi++; cur = []; } else cur.push([i, ci[i]]); }
+    const nv = d.pos.length / 3, nrm = d.nrm ? Float32Array.from(d.nrm) : new Float32Array(nv * 3), perV = f.normalPerVertex !== false;
+    const col = C && f.colorPerVertex === false ? (d.col ? Float32Array.from(d.col) : new Float32Array(nv * 3)) : null;
     if (N) {
-      const perV = f.normalPerVertex !== false, NI = f.normalIndex && f.normalIndex.length ? f.normalIndex : null; let c = 0;
-      for (const F of faces) for (const [pos, v] of F.corners) { const k = (perV ? (NI ? NI[pos] : v) : (NI ? NI[F.fi] : F.fi)) * 3; nrm[c * 3] = N[k]; nrm[c * 3 + 1] = N[k + 1]; nrm[c * 3 + 2] = N[k + 2]; c++; }
+      const NI = f.normalIndex && f.normalIndex.length ? f.normalIndex : null; let c = 0;
+      for (const F of faces) for (const [pos, v] of F.corners) {
+        const ix = perV ? (NI && NI[pos] !== undefined ? NI[pos] : v) : (NI && NI[F.fi] !== undefined ? NI[F.fi] : F.fi), k = ix * 3;
+        if (k >= 0 && k + 2 < N.length) { nrm[c * 3] = N[k]; nrm[c * 3 + 1] = N[k + 1]; nrm[c * 3 + 2] = N[k + 2]; }   // out of range: the flat normal stays
+        c++;
+      }
       out.nrm = nrm;
-    } else if (f.creaseAngle > 0) {
-      const idx = d.idx, nt = idx.length / 3, tn = new Array(nt), at = new Map(), key = (v) => d.pos[v * 3].toFixed(5) + ',' + d.pos[v * 3 + 1].toFixed(5) + ',' + d.pos[v * 3 + 2].toFixed(5), tOf = new Int32Array(nv).fill(-1);
-      for (let t = 0; t < nt; t++) {
-        const a = idx[t * 3], b = idx[t * 3 + 1], e = idx[t * 3 + 2], u = [d.pos[b * 3] - d.pos[a * 3], d.pos[b * 3 + 1] - d.pos[a * 3 + 1], d.pos[b * 3 + 2] - d.pos[a * 3 + 2]], w = [d.pos[e * 3] - d.pos[a * 3], d.pos[e * 3 + 1] - d.pos[a * 3 + 1], d.pos[e * 3 + 2] - d.pos[a * 3 + 2]];
-        const n = [u[1] * w[2] - u[2] * w[1], u[2] * w[0] - u[0] * w[2], u[0] * w[1] - u[1] * w[0]], l = Math.hypot(n[0], n[1], n[2]) || 1; tn[t] = [n[0] / l, n[1] / l, n[2] / l];
-        for (const v of [a, b, e]) { if (tOf[v] < 0) tOf[v] = t; const k = key(v); (at.get(k) || at.set(k, new Set()).get(k)).add(t); }
-      }
-      const cosC = Math.cos(f.creaseAngle);
-      for (let v = 0; v < nv; v++) {
-        const me = tn[tOf[v]]; if (!me) continue; let x = 0, y = 0, z = 0;
-        for (const o of at.get(key(v))) { const n = tn[o]; if (o === tOf[v] || me[0] * n[0] + me[1] * n[1] + me[2] * n[2] > cosC) { x += n[0]; y += n[1]; z += n[2]; } }
-        const l = Math.hypot(x, y, z) || 1; nrm[v * 3] = x / l; nrm[v * 3 + 1] = y / l; nrm[v * 3 + 2] = z / l;
-      }
+    } else if (f.creaseAngle > 0 && perV) {
+      const idx = d.idx, fn = new Array(faces.length), at = new Map();   // fn: unit normal of each face, from its first emitted triangle (the one geometryData's flat normal comes from)
+      faces.forEach((F, q) => {
+        const a = idx[F.tri * 3], b = idx[F.tri * 3 + 1], e = idx[F.tri * 3 + 2], u = [d.pos[b * 3] - d.pos[a * 3], d.pos[b * 3 + 1] - d.pos[a * 3 + 1], d.pos[b * 3 + 2] - d.pos[a * 3 + 2]], w = [d.pos[e * 3] - d.pos[a * 3], d.pos[e * 3 + 1] - d.pos[a * 3 + 1], d.pos[e * 3 + 2] - d.pos[a * 3 + 2]];
+        const n = [u[1] * w[2] - u[2] * w[1], u[2] * w[0] - u[0] * w[2], u[0] * w[1] - u[1] * w[0]], l = Math.hypot(n[0], n[1], n[2]) || 1; fn[q] = [n[0] / l, n[1] / l, n[2] / l];
+        for (const [, v] of F.corners) (at.get(v) || at.set(v, new Set()).get(v)).add(q);
+      });
+      const cosC = Math.cos(f.creaseAngle); let c = 0;
+      faces.forEach((F, q) => { for (const [, v] of F.corners) {
+        let x = 0, y = 0, z = 0; const me = fn[q];
+        for (const o of at.get(v)) { const n = fn[o]; if (o === q || me[0] * n[0] + me[1] * n[1] + me[2] * n[2] > cosC) { x += n[0]; y += n[1]; z += n[2]; } }
+        const l = Math.hypot(x, y, z) || 1; nrm[c * 3] = x / l; nrm[c * 3 + 1] = y / l; nrm[c * 3 + 2] = z / l; c++;
+      } });
       out.nrm = nrm;
     }
-    if (col) { const CI = f.colorIndex && f.colorIndex.length ? f.colorIndex : null; let c = 0; for (const F of faces) { const k = (CI ? CI[F.fi] : F.fi) * 3; for (let q = 0; q < F.corners.length; q++, c++) { col[c * 3] = C[k]; col[c * 3 + 1] = C[k + 1]; col[c * 3 + 2] = C[k + 2]; } } out.col = col; }
+    if (col) {
+      const CI = f.colorIndex && f.colorIndex.length ? f.colorIndex : null; let c = 0;
+      for (const F of faces) { const k = (CI && CI[F.fi] !== undefined ? CI[F.fi] : F.fi) * cw, ok = k >= 0 && k + 2 < C.length; for (let q = 0; q < F.corners.length; q++, c++) if (ok) { col[c * 3] = C[k]; col[c * 3 + 1] = C[k + 1]; col[c * 3 + 2] = C[k + 2]; } }
+      out.col = col;
+    }
     return out;
   };
 }

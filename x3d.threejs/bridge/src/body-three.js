@@ -70,7 +70,7 @@ class Body {
 
   /* ----------------------------------------------------------------- world */
   setWorld(world, baseUrl, resolve) {
-    this.clearWorld();
+    this.clearWorld(); R.bridge.body = this;   // the shared bridge nodes reach the body through this (receive hooks call body.regeo)
     this.world = world; this.baseUrl = baseUrl; this.resolve = resolve || ((u) => u);
     this.root = new THREE.Group(); this.root.name = 'x3d-root'; this.scene.add(this.root);
     for (const n of world.children) this.build(n, this.root, []);
@@ -116,7 +116,7 @@ class Body {
     const m = new M().multiplyMatrices(t(f.translation), t(c)).multiply(q(f.rotation)).multiply(q(sr)).multiply(new M().makeScale(f.scale[0], f.scale[1], f.scale[2])).multiply(q(srInv)).multiply(t([-c[0], -c[1], -c[2]]));
     o.matrixAutoUpdate = false; o.matrix.copy(m); o.matrixWorldNeedsUpdate = true;
   }
-  applySwitch(n) { const r = this.rec.get(n.id); if (r) r.kids.forEach((k, i) => { if (k && k.tn) k.tn.visible = i === n.f.whichChoice; }); }
+  applySwitch(n) { const r = this.rec.get(n.id); if (r) r.kids.forEach((k, i) => { if (k && k.tn && k.node.type !== 'Viewpoint') k.tn.visible = i === n.f.whichChoice && k.node.f.visible !== false; }); }   // a Viewpoint child's object is its parent's: leave it alone
 
   /* ---------------------------------------------------------------- shapes */
   buildShape(n, parent, chain) {
@@ -124,7 +124,8 @@ class Body {
     const o = new THREE.Group(); o.name = 'shape-' + (n.def || n.id); parent.add(o); r.tn = o;
     if (!g) return r;
     const pl = this.pointLine(g, app);   // lines and points: unlit, drawn in the Material's emissiveColor (or the Color node), not as triangles
-    const geo = pl ? pl.geo : this.threeGeometry(g); if (!geo) return r;
+    const geo = (pl ? pl.geo : this.threeGeometry(g)) || this.emptyGeometry();   // an empty node keeps its mesh so a later event (regeo) can fill it
+    this.clipDirty = true;
     const mat = pl ? pl.mat : this.makeMaterial(n, g, app);
     const mesh = pl ? new (pl.points ? THREE.Points : THREE.LineSegments)(geo, mat) : new THREE.Mesh(geo, mat); mesh.userData = { shape: n, chain: r.chain }; o.add(mesh); r.meshes.push(mesh);
     for (const dep of [app && app.f.material, app && app.f.texture, app && app.f.textureTransform, g]) if (dep) (this.meshesOf.get(dep.id) || this.meshesOf.set(dep.id, []).get(dep.id)).push(mesh);
@@ -168,22 +169,24 @@ class Body {
     if (!isPts && !isLine) return null;
     const geo = new T.BufferGeometry(); let colors = null;
     if (isPts) {
-      const P = sp && sp.points ? sp.points(g) : g.f.coord && g.f.coord.f.point; if (!P || !P.length) return null;
-      geo.setAttribute('position', new T.BufferAttribute(Float32Array.from(P), 3));
-      const C = g.f.color && g.f.color.f.color; if (C && C.length >= P.length) { colors = Float32Array.from(C.subarray ? C.subarray(0, P.length) : C.slice(0, P.length)); }
+      const P = sp && sp.points ? sp.points(g) : g.f.coord && g.f.coord.f.point;
+      if (P && P.length) {
+        geo.setAttribute('position', new T.BufferAttribute(Float32Array.from(P), 3));
+        const C = g.f.color && g.f.color.f.color, cw = g.f.color && g.f.color.type === 'ColorRGBA' ? 4 : 3, np = P.length / 3;   // ColorRGBA: stride 4, alpha is not drawn
+        if (C && C.length >= np * cw) { colors = new Float32Array(np * 3); for (let i = 0; i < np; i++) { colors[i * 3] = C[i * cw]; colors[i * 3 + 1] = C[i * cw + 1]; colors[i * 3 + 2] = C[i * cw + 2]; } }
+      } else geo.setAttribute('position', new T.BufferAttribute(new Float32Array(0), 3));
     } else {
-      const L = sp && sp.lines ? sp.lines(g) : null, P = L && L.coord ? L.coord : g.f.coord && g.f.coord.f.point, ci = L ? L.coordIndex : g.f.coordIndex; if (!P || !P.length) return null;
-      const C = g.f.color && g.f.color.f.color, perV = g.f.colorPerVertex !== false, pos = [], col = [];
+      const L = sp && sp.lines ? sp.lines(g) : null, P = (L && L.coord ? L.coord : g.f.coord && g.f.coord.f.point) || [], ci = (L ? L.coordIndex : g.f.coordIndex) || [];
+      const C = g.f.color && g.f.color.f.color, cw = g.f.color && g.f.color.type === 'ColorRGBA' ? 4 : 3, perV = g.f.colorPerVertex !== false, pos = [], col = [];   // IndexedLineSet has no colorIndex in the reader: colours follow coordIndex (per vertex) or the polyline number
       let run = 0;
       for (const r2 of R.bridge.runs(ci)) {
         for (let k = 0; k + 1 < r2.length; k++) for (const v of [r2[k], r2[k + 1]]) {
           pos.push(P[v * 3], P[v * 3 + 1], P[v * 3 + 2]);
-          if (C) { const c = (perV ? v : run) * 3; col.push(C[c], C[c + 1], C[c + 2]); }
+          if (C) { const c = (perV ? v : run) * cw; col.push(C[c], C[c + 1], C[c + 2]); }
         }
         run++;
       }
-      if (!pos.length) return null;
-      geo.setAttribute('position', new T.BufferAttribute(Float32Array.from(pos), 3)); if (C && col.length) colors = Float32Array.from(col);
+      geo.setAttribute('position', new T.BufferAttribute(Float32Array.from(pos), 3)); if (C && col.length && col.every((x) => x !== undefined)) colors = Float32Array.from(col);
     }
     if (colors) geo.setAttribute('color', new T.BufferAttribute(colors, 3));
     const mat = isPts ? new T.PointsMaterial({ size: 1, sizeAttenuation: false }) : new T.LineBasicMaterial();
@@ -194,6 +197,7 @@ class Body {
     m.color.setRGB(hasColors ? 1 : e[0], hasColors ? 1 : e[1], hasColors ? 1 : e[2]); m.vertexColors = hasColors; m.fog = true;
     m.opacity = mat ? 1 - (mat.f.transparency || 0) : 1; m.transparent = m.opacity < 0.999; m.needsUpdate = true;
   }
+  emptyGeometry() { const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(0), 3)); return geo; }
   dataGeometry(d) {
     const T = THREE, geo = new T.BufferGeometry();
     geo.setAttribute('position', new T.BufferAttribute(Float32Array.from(d.pos), 3)); geo.setIndex(new T.BufferAttribute(Uint32Array.from(d.idx), 1));
@@ -206,8 +210,9 @@ class Body {
   regeo(n) {
     this.geoCache.delete(n.id);
     for (const m of this.meshesOf.get(n.id) || []) {
-      const app = m.userData.shape.f.appearance, pl = (m.isLineSegments || m.isPoints) ? this.pointLine(n, app) : null, g = pl ? pl.geo : this.threeGeometry(n);
-      if (g) { m.geometry.dispose(); m.geometry = g; if (pl) { m.material.dispose(); m.material = pl.mat; } }
+      const app = m.userData.shape.f.appearance, pl = (m.isLineSegments || m.isPoints) ? this.pointLine(n, app) : null, g = (pl ? pl.geo : this.threeGeometry(n)) || this.emptyGeometry();
+      m.geometry.dispose(); m.geometry = g; if (pl) { m.material.dispose(); m.material = pl.mat; }
+      this.clipDirty = true;
     }
   }
 
@@ -238,22 +243,22 @@ class Body {
   /* Material -> MeshPhongMaterial (the Phong model X3D and X_ITE share); PhysicalMaterial -> MeshPhysicalMaterial (the glTF model, linear colours) */
   makeMaterial(shape, g, app) {
     const T = THREE, mat = app && app.f.material, texN = app && app.f.texture, side = g.f.solid === true ? T.FrontSide : T.DoubleSide;
-    let m;
+    let m; const vc = !!g.f.color;   // a Color node replaces diffuseColor (19775-1 12.2.2): the material colour is white so the vertex colour is not multiplied by it
     if (mat && mat.type === 'PhysicalMaterial') { m = new T.MeshPhysicalMaterial({ side }); this.refreshPBR(m, mat); m.map = this.texFor(mat.f.baseTexture, app && app.f.textureTransform); }
     else if (mat && mat.type === 'Material') { m = new T.MeshPhongMaterial({ side, specular: 0 }); this.refreshPhong(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }
     else if (mat && mat.type === 'UnlitMaterial') { m = new T.MeshBasicMaterial({ side }); this.refreshUnlit(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }   // 19775-1 4.0: no lighting, emissiveColor is the colour
     else { m = new T.MeshBasicMaterial({ side, color: 0xffffff }); m.map = this.texFor(texN, app && app.f.textureTransform); }   // no Material: unlit, white, texture as is (19775-1 12.2.2)
-    if (g.f.color || (g.f.colorPerVertex !== undefined && g.type.startsWith('Indexed') && g.f.color)) m.vertexColors = true;
+    if (vc) { m.vertexColors = true; if (mat && mat.type === 'Material') this.refreshPhong(m, mat); else if (mat && mat.type === 'PhysicalMaterial') this.refreshPBR(m, mat); }
     return m;
   }
   refreshPhong(m, mat) {
-    const f = mat.f; m.color.setRGB(f.diffuseColor[0], f.diffuseColor[1], f.diffuseColor[2]); m.emissive.setRGB(f.emissiveColor[0], f.emissiveColor[1], f.emissiveColor[2]);
+    const f = mat.f, vc = m.vertexColors; m.color.setRGB(vc ? 1 : f.diffuseColor[0], vc ? 1 : f.diffuseColor[1], vc ? 1 : f.diffuseColor[2]); m.emissive.setRGB(f.emissiveColor[0], f.emissiveColor[1], f.emissiveColor[2]);
     m.specular.setRGB(f.specularColor[0], f.specularColor[1], f.specularColor[2]); m.shininess = Math.max(f.shininess * 128 * (this.opts.shininessScale || 4), 1e-3);   // X_ITE evaluates Phong with the reflection vector; Blinn-Phong (three.js) needs about 4x the exponent for the same highlight width
     m.opacity = 1 - f.transparency; m.transparent = m.opacity < 0.999; m.depthWrite = !m.transparent; m.needsUpdate = true;
   }
   refreshUnlit(m, mat) { const e = mat.f.emissiveColor || [1, 1, 1]; m.color.setRGB(e[0], e[1], e[2]); m.opacity = 1 - (mat.f.transparency || 0); m.transparent = m.opacity < 0.999; m.depthWrite = !m.transparent; m.needsUpdate = true; }
   refreshPBR(m, mat) {
-    const f = mat.f; m.color.setRGB(f.baseColor[0], f.baseColor[1], f.baseColor[2]); m.metalness = f.metallic; m.roughness = f.roughness; m.emissive.setRGB(f.emissiveColor[0], f.emissiveColor[1], f.emissiveColor[2]);
+    const f = mat.f, vc = m.vertexColors; m.color.setRGB(vc ? 1 : f.baseColor[0], vc ? 1 : f.baseColor[1], vc ? 1 : f.baseColor[2]); m.metalness = f.metallic; m.roughness = f.roughness; m.emissive.setRGB(f.emissiveColor[0], f.emissiveColor[1], f.emissiveColor[2]);
     m.opacity = 1 - f.transparency; m.transparent = m.opacity < 0.999; m.depthWrite = !m.transparent;
   }
 
@@ -308,10 +313,10 @@ class Body {
     const t = node.type;
     if (t === 'Switch' && field === 'whichChoice') this.applySwitch(node);
     else if (t === 'Transform' && field !== 'children') { const r = this.rec.get(node.id); if (r && r.tn) { this.applyTransform(node, r.tn); } }
-    else if ((t === 'Group' || t === 'Switch' || t === 'Transform') && field === 'children') this.rebuildGroup(node);
+    else if (field === 'children' && this.rec.get(node.id) && this.rec.get(node.id).kids) this.rebuildGroup(node);   // Group, Switch, Transform, Billboard, LOD, Anchor, Collision, StaticGroup
     else if (t === 'Material') for (const m of this.meshesOf.get(node.id) || []) { if (m.isLineSegments || m.isPoints) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshPhong(m.material, node); }
-    else if (t === 'PhysicalMaterial') for (const m of this.meshesOf.get(node.id) || []) this.refreshPBR(m.material, node);
-    else if (t === 'UnlitMaterial') for (const m of this.meshesOf.get(node.id) || []) this.refreshUnlit(m.material, node);
+    else if (t === 'PhysicalMaterial') for (const m of this.meshesOf.get(node.id) || []) { if (m.isLineSegments || m.isPoints) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshPBR(m.material, node); }
+    else if (t === 'UnlitMaterial') for (const m of this.meshesOf.get(node.id) || []) { if (m.isLineSegments || m.isPoints) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshUnlit(m.material, node); }
     else if (t === 'DirectionalLight' || t === 'PointLight' || t === 'SpotLight') { const l = this.lights.find((x) => x.userData.node === node); if (l) { this.refreshLight(l); this.refreshAmbient(); } }
     else if (t === 'Fog') this.applyFog();
     else if (t === 'ClipPlane') this.clipDirty = true;
@@ -320,7 +325,7 @@ class Body {
     else if (t === 'NavigationInfo') this.applyNavigation();
     else if (t === 'Viewpoint') this.viewpointChanged(node, field);
     else if (t === 'Coordinate' || t === 'Color' || t === 'Normal' || t === 'TextureCoordinate') this.geometryChanged(node);
-    const sp = R.bridge.specs.get(t); if (sp && sp.geometry && sp.changed) sp.changed(this, node, field);   // the geometry nodes of the shared bridge keep their own change hooks
+    const sp = R.bridge.specs.get(t); if (sp && (sp.geometry || sp.lines || sp.points) && sp.changed) sp.changed(this, node, field);   // the geometry nodes of the shared bridge keep their own change hooks
     if (T3.changed[t]) T3.changed[t](this, node, field);
   }
   geometryChanged(n) {
@@ -334,7 +339,8 @@ class Body {
   rebuildGroup(node) {
     const r = this.rec.get(node.id); if (!r) return;
     for (const k of r.kids) this.disposeRec(k);
-    r.kids = node.f.children.map((c) => this.build(c, r.tn, r.chain)); if (node.type === 'Switch') this.applySwitch(node); this.clipDirty = true;
+    this.clips = (this.clips || []).filter((cl) => cl.parent !== r.tn);   // the ClipPlanes of this group are built again below
+    r.kids = node.f.children.map((c) => this.build(c, r.tn, r.chain)); if (node.type === 'Switch') this.applySwitch(node); if (node.type === 'LOD') r.level = -1; this.clipDirty = true;
   }
   disposeRec(k) { if (!k) return; (k.kids || []).forEach((x) => this.disposeRec(x)); if (k.tn && k.node && k.node.type !== 'Viewpoint') this.disposeObj(k.tn); if (k.node) this.rec.delete(k.node.id); }
   adopt(node, parentNode) {
@@ -414,8 +420,8 @@ class Body {
     const eye = this.cam.getWorldPosition(new V()), up = new V(0, 1, 0).transformDirection(this.cam.matrixWorld);
     const toLocal = (o) => { const inv = new T.Matrix4().copy(o.parent ? o.parent.matrixWorld : new T.Matrix4()).invert(); return { inv, p: eye.clone().applyMatrix4(inv), up: up.clone().transformDirection(inv) }; };
     /* 19775-1 Billboard: with axisOfRotation 0 0 0 the node's +Z points at the eye and its +Y follows the viewer's up; with an axis it turns about that axis only */
-    for (let i = (this.billboards || []).length - 1; i >= 0; i--) {
-      const r = this.billboards[i]; if (!r.tn.parent) { this.billboards.splice(i, 1); continue; }
+    this.billboards = (this.billboards || []).filter((r) => r.tn.parent);   // a record whose group left the scene is dropped
+    for (const r of this.billboards) {   // parent first, so a Billboard inside a Billboard sees its parent's new turn
       const L = toLocal(r.tn), d = L.p.clone(); if (d.lengthSq() < 1e-12) continue; d.normalize();
       const ax = r.node.f.axisOfRotation, q = r.tn.quaternion;
       if (!ax[0] && !ax[1] && !ax[2]) {
@@ -423,24 +429,31 @@ class Body {
         q.setFromRotationMatrix(new T.Matrix4().makeBasis(x, new V().crossVectors(d, x), d));
       } else {
         const a = new V(ax[0], ax[1], ax[2]).normalize(), p = d.clone().sub(a.clone().multiplyScalar(a.dot(d)));
-        if (p.lengthSq() < 1e-10) { q.identity(); continue; }
-        p.normalize(); q.setFromAxisAngle(a, Math.atan2(new V(0, 0, 1).cross(p).dot(a), p.z));
+        if (p.lengthSq() < 1e-10) q.identity(); else { p.normalize(); q.setFromAxisAngle(a, Math.atan2(new V(0, 0, 1).cross(p).dot(a), p.z)); }
       }
       r.tn.updateMatrixWorld(true);
     }
-    /* LOD: the level is the number of ranges at or below the distance from the eye to the LOD's centre, measured in the LOD's own frame; children[level] is the one shown (X_ITE and the Babylon body agree) */
+    /* LOD: the level is the number of ranges at or below the distance from the eye to the LOD's centre, measured in the LOD's own frame; children[level] is the one shown (X_ITE and the Babylon body agree).
+       A Viewpoint child shares its parent's object and is left alone; a child with visible FALSE stays hidden. */
     for (const r of this.lods || []) {
       if (!r.tn.parent) continue; const c = r.node.f.center, rg = r.node.f.range, L = toLocal(r.tn);
       const d = Math.hypot(L.p.x - c[0], L.p.y - c[1], L.p.z - c[2]); let lv = 0; while (lv < rg.length && d >= rg[lv]) lv++;
       lv = Math.min(lv, r.kids.length - 1);
-      if (lv !== r.level) { r.level = lv; r.kids.forEach((k, i) => { if (k && k.tn) k.tn.visible = i === lv; }); }
+      if (lv !== r.level) { r.level = lv; r.kids.forEach((k, i) => { if (k && k.tn && k.node.type !== 'Viewpoint') k.tn.visible = i === lv && k.node.f.visible !== false; }); }
     }
-    /* ClipPlane: the plane (a b c d) of 19775-1 is in the frame of the node's parent group and keeps the half space where a x + b y + c z + d >= 0, which is three.js's own rule */
-    if (this.clipDirty) { this.clipDirty = false; for (const cl of this.clips) { cl.meshes = []; cl.parent.traverse((o) => { if (o.isMesh || o.isLine || o.isPoints) cl.meshes.push(o); }); } this.renderer.localClippingEnabled = this.clips.length > 0; }
-    for (const cl of this.clips || []) {
-      const f = cl.node.f, pl = f.plane, n = new V(pl[0], pl[1], pl[2]), len = n.length() || 1;
-      const plane = new T.Plane(n.divideScalar(len), pl[3] / len).applyMatrix4(cl.parent.matrixWorld);
-      for (const m of cl.meshes) { const mt = m.material; if (!mt) continue; if (f.enabled === false) { if (mt.clippingPlanes && mt.clippingPlanes.length) { mt.clippingPlanes = []; } } else { mt.clippingPlanes = [plane]; } }
+    /* ClipPlane: the plane (a b c d) of 19775-1 is in the frame of the node's parent group and keeps the half space where a x + b y + c z + d >= 0, which is three.js's own rule.
+       Every enabled plane that applies to a mesh is set on its material (three.js intersects them); a disabled one adds nothing. Entries whose group left the scene are dropped. */
+    const attached = (o) => { while (o.parent) o = o.parent; return o === this.scene; };
+    const clips = (this.clips = (this.clips || []).filter((cl) => attached(cl.parent)));
+    if (this.clipDirty) { this.clipDirty = false; for (const cl of clips) { cl.meshes = []; cl.parent.traverse((o) => { if (o.isMesh || o.isLine || o.isPoints) cl.meshes.push(o); }); } this.renderer.localClippingEnabled = clips.length > 0; }
+    if (clips.length) {
+      const planesOf = new Map();
+      for (const cl of clips) {
+        const f = cl.node.f, pl = f.plane, n = new V(pl[0], pl[1], pl[2]), len = n.length() || 1;
+        const plane = new T.Plane(n.divideScalar(len), pl[3] / len).applyMatrix4(cl.parent.matrixWorld);
+        for (const m of cl.meshes) { const mt = m.material; if (!mt) continue; const l = planesOf.get(mt) || planesOf.set(mt, []).get(mt); if (f.enabled !== false) l.push(plane); }
+      }
+      for (const [mt, l] of planesOf) mt.clippingPlanes = l;
     }
   }
   fps() { const t = this.frameTimes; return t.length > 2 ? 1000 * (t.length - 1) / (t[t.length - 1] - t[0]) : 0; }

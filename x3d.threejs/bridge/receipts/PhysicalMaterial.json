@@ -3,7 +3,7 @@
  "date": "2026-11-14",
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha ab0886346649",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha d744bd6ba410",
   "three": "187",
   "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
   "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
@@ -61,5 +61,5 @@
  },
  "comparison": "passed",
  "msg": "",
- "lookNote": "PhysicalMaterial is the glTF metallic-roughness model. X_ITE adds a default environment glow that three.js has no counterpart for without an environment map (the red dielectric is 16 grey levels darker in green in ours, IoU 0.91); the bound is wide on purpose and the receipt records the measured numbers. With an EnvironmentLight / cube map the two would be compared again."
+ "lookNote": "PhysicalMaterial is the glTF metallic-roughness model. X_ITE adds a default environment glow that three.js has no counterpart for without an environment map (foreground mean green 70 in ours against 86 in X_ITE, IoU 0.91, mad 5.33); the bound is wide on purpose and the receipt records the measured numbers. With an EnvironmentLight / cube map the two would be compared again."
 }

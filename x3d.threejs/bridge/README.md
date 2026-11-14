@@ -8,10 +8,10 @@ How hard is the port, group by group: [ESTIMATE.md](ESTIMATE.md). Node-by-node s
 
 | | nodes | meaning |
 |---|---|---|
-| drawn | 49 | the three.js body draws it, a fixture passed against X_ITE (45 fixtures; Shape, Appearance, Material, Coordinate, Color, TextureCoordinate, NavigationInfo, Background, PixelTexture ride along) |
+| drawn | 53 | the three.js body draws it, a fixture passed against X_ITE (45 fixtures; Group, Normal, Collision, StaticGroup, Shape, Appearance, Material, Coordinate, Color, TextureCoordinate, NavigationInfo, Background, PixelTexture ride along) |
 | reader-checked | 29 | event or logic node; a shared fixture passed in the three.js bundle and in X_ITE |
 | reader | 46 | engine-free, not re-run here |
-| todo | 99 | needs the three.js body |
+| todo | 95 | needs the three.js body |
 | upstream | 37 | the Babylon bridge has not bridged it yet |
 
 ## Run it
@@ -30,7 +30,7 @@ Env: `XITE_DIR` (X_ITE `dist/`), `THREE_DIR` (three `build/`), `CHROMIUM_EXECUTA
 
 | file | what |
 |---|---|
-| `src/body-three.js` | the body: world build, Transform, Switch, Billboard, LOD, ClipPlane, Shape, primitives, IndexedFaceSet (Normal, creaseAngle, per-face colour via `src/nodes/Geometry.js`), the shared bridge `geometry()` and `lines()` / `points()` hooks, LineSegments and Points, Material, UnlitMaterial and PhysicalMaterial, textures, headlight and DirectionalLight, Background, Viewpoint binding and transitions, EXAMINE orbit, frame loop. Same contract with `sai.js` as the Babylon `Body` |
+| `src/body-three.js` | the body: world build, Transform, Switch, Billboard, LOD, ClipPlane, Shape, primitives, IndexedFaceSet (Normal, creaseAngle, per-face colour via `src/nodes/Geometry.js`), the shared bridge `geometry()` and `lines()` / `points()` hooks, LineSegments and Points, Material, UnlitMaterial and PhysicalMaterial (vertex colours replace diffuse), textures, headlight and DirectionalLight, Background, Viewpoint binding and transitions, EXAMINE orbit, frame loop. Same contract with `sai.js` as the Babylon `Body` |
 | `tools/bundle.js` | concatenates reader + kit + nodes + `Geo.geometryData` (lifted from Babylon's `body.js`) + the body + `sai.js` |
 | `tools/run-tests.js` | the Babylon rig's `RUNNER`, `verdict` and `judgeVisual` and `METRICS`, on a three.js page; events specs are hard, scene `compare` numbers are reference bounds |
 | `src/nodes/Geometry.js` | TriangleSet, ElevationGrid (creaseAngle), TriangleStripSet and `BR.ifsExtras` (IndexedFaceSet normals and colours); written as shared-bridge nodes (`BR.node` with a `geometry()` hook) |
@@ -39,7 +39,7 @@ Env: `XITE_DIR` (X_ITE `dist/`), `THREE_DIR` (three `build/`), `CHROMIUM_EXECUTA
 
 ## The choices, and why
 
-1. **Share the reader, replace only the body.** The reader holds no engine call; the Babylon `Body` is about 1,670 lines and the three.js one about 280 for the same core (448 after batch 2, with 44 more drawn nodes). A second bridge that forked the reader would fall behind it.
+1. **Share the reader, replace only the body.** The reader holds no engine call; the Babylon `Body` is about 1,670 lines and the three.js one about 280 for the same core (461 after batch 2, with 30 more drawn nodes). A second bridge that forked the reader would fall behind it.
 2. **Colour management off, linear output.** X3D colours are authored numbers and X_ITE 16.6.0 writes them as they are. Matching that makes the comparison honest; `opts.srgb` switches to the managed path as one flag, not a hidden default. The authored-sRGB question for lighting quality is the owner's call and stays open here.
 3. **Lights times PI.** since r155 three.js lights are in physical units: intensity 1 gives diffuse/PI. X3D wants diffuse x intensity x N.L, so every light carries a factor PI (`THREE_PI`).
 4. **Phong exponent x4.** X_ITE evaluates Phong with the reflection vector; three.js uses Blinn-Phong, which needs about four times the exponent for the same highlight (`opts.shininessScale`). Measured: Sphere 28.2 to 37.0 dB, Box 63.8 to 70.1 dB by that change alone [C].
@@ -53,7 +53,7 @@ Env: `XITE_DIR` (X_ITE `dist/`), `THREE_DIR` (three `build/`), `CHROMIUM_EXECUTA
 
 ## Known gaps (also in each spec's `gaps` and `scope`)
 
-`global=FALSE` lights light the whole scene; material `ambientIntensity` is a fixed 0.2; attenuation with both a1 and a2 non-zero is a fit, not exact; MultiTexture, movie and cube-map textures, TextureProperties, Text, Inline, LineProperties (lines are one pixel wide, as in X_ITE here), PointProperties, picking and pointer sensors are not drawn yet (the Babylon fixtures NurbsCurve, NurbsPatchSurface and Polypoint2D match X_ITE in the picture, IoU 1.00 and 0.99+, but their later steps call Babylon-only helpers (`getTotalVertices`, `window.__mouse`); 32 of the Babylon fixtures probe `__body.rec`, `scene.lights` or `geometryData` and run here for their pictures only) (`body-three.js` notes `skipped <Node>`); PhysicalMaterial is the glTF model and X_ITE lights it with a default environment glow that three.js has no counterpart for (the fixture is reference-only, IoU 0.91); IndexedTriangleSet and IndexedQuadSet generated normals match X_ITE to IoU 0.95 (a dim rim, cause not isolated); ClipPlane clips meshes of the group at the time of the last rebuild (a mesh added later is clipped after the next group rebuild); Billboard and LOD evaluate against the camera each frame, not per picking ray; no real-GPU timing exists and none is claimed.
+`global=FALSE` lights light the whole scene; material `ambientIntensity` is a fixed 0.2; attenuation with both a1 and a2 non-zero is a fit, not exact; MultiTexture, movie and cube-map textures, TextureProperties, Text, Inline, LineProperties (lines are one pixel wide, as in X_ITE here), PointProperties, picking and pointer sensors are not drawn yet (the Babylon fixtures NurbsCurve, NurbsPatchSurface and Polypoint2D match X_ITE in the picture, IoU 1.00 and 0.99+, but their later steps call Babylon-only helpers (`getTotalVertices`, `window.__mouse`); 32 of the Babylon fixtures probe `__body.rec`, `scene.lights` or `geometryData` and run here for their pictures only) (`body-three.js` notes `skipped <Node>`); PhysicalMaterial is the glTF model and X_ITE lights it with a default environment glow that three.js has no counterpart for (the fixture is reference-only, IoU 0.91); IndexedLineSet colours follow coordIndex only (the reader has no colorIndex for it) and ColorRGBA alpha is not drawn; a ClipPlane keeps working after geometry or child changes (the clip list is rebuilt on every shape build); IndexedTriangleSet and IndexedQuadSet generated normals match X_ITE to IoU 0.95 (a dim rim, cause not isolated); several ClipPlanes on one mesh intersect, a disabled one adds nothing; Billboard and LOD evaluate against the camera each frame, not per picking ray; no real-GPU timing exists and none is claimed.
 
 ## Adding a node
 
