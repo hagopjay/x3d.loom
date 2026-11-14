@@ -200,13 +200,21 @@ fn main(input: FragmentInputs) -> FragmentOutputs {
    Formulas: SPHERE s,t = n.x * 0.5 + 0.5, n.y * 0.5 + 0.5 (n = unit normal in camera space); CAMERASPACENORMAL and CAMERASPACEPOSITION give n and the camera-space position as they are; the reflection
    vector r = reflect(unit position, n); SPHERE-REFLECT maps r by the sphere-map formula s,t = r.x / m + 0.5, r.y / m + 0.5 with m = 2 sqrt(r.x^2 + r.y^2 + (r.z + 1)^2). */
 R.bridge.tcg = {
-  CAM: /^(SPHERE|CAMERASPACENORMAL|CAMERASPACEPOSITION|CAMERASPACEREFLECTIONVECTOR|COORD-EYE|SPHERE-REFLECT)$/,
-  LOCAL: /^(COORD|SPHERE-LOCAL|SPHERE-REFLECT-LOCAL)$/,
+  CAM: /^(SPHERE|CAMERASPACENORMAL|CAMERASPACEPOSITION|CAMERASPACEREFLECTIONVECTOR|COORD-EYE|SPHERE-REFLECT|NOISE-EYE)$/,
+  P: [],                                    // the parameter list of the generator being filled (NOISE: scale xyz, translation xyz)
+  perlin(x, y) {                            // the 2D value noise of X_ITE 16.6.0's Perlin2.glsl (hash of fract(sin(dot) * 43758.5453), cosine-smoothed), -1..1; the GPU's float32 sin gives other hash values, so the pattern is of the same kind, not the same pixels
+    const fr = (v) => v - Math.floor(v), rnd = (a, b) => fr(Math.sin(a * 12.9898 + b * 78.233) * 43758.5453), r3 = (a, b, l, t) => rnd(rnd(rnd(a, b), l), t);
+    const fx = Math.floor(x), fy = Math.floor(y), c = r3(fx, fy, 1, 0), cx = r3(fx + 1, fy, 1, 0), cy = r3(fx, fy + 1, 1, 0), cxy = r3(fx + 1, fy + 1, 1, 0);
+    const dx = -0.5 * Math.cos(fr(x) * Math.PI) + 0.5, dy = -0.5 * Math.cos(fr(y) * Math.PI) + 0.5;
+    return ((c + (cx - c) * dx) * (1 - dy) + (cy + (cxy - cy) * dx) * dy) * 2 - 1;
+  },
+  LOCAL: /^(COORD|SPHERE-LOCAL|SPHERE-REFLECT-LOCAL|NOISE)$/,
   fill(mode, uv, i, p, n) {                 // p, n: position and unit normal in the space of the mode
     const reflect = () => { const l = Math.hypot(p[0], p[1], p[2]) || 1, e = [p[0] / l, p[1] / l, p[2] / l], d = e[0] * n[0] + e[1] * n[1] + e[2] * n[2]; return [e[0] - 2 * d * n[0], e[1] - 2 * d * n[1], e[2] - 2 * d * n[2]]; };
     const sphereMap = (r) => { const m = 2 * Math.sqrt(r[0] * r[0] + r[1] * r[1] + (r[2] + 1) * (r[2] + 1)) || 1; uv[i * 2] = r[0] / m + 0.5; uv[i * 2 + 1] = r[1] / m + 0.5; };
     switch (mode) {
       case 'SPHERE': case 'SPHERE-LOCAL': uv[i * 2] = n[0] * 0.5 + 0.5; uv[i * 2 + 1] = n[1] * 0.5 + 0.5; break;
+      case 'NOISE': case 'NOISE-EYE': { const q = R.bridge.tcg.P, g = (k) => q[k] || 0, a = p[0] * g(0) + g(3), b = p[1] * g(1) + g(4), c = p[2] * g(2) + g(5); uv[i * 2] = R.bridge.tcg.perlin(a, b); uv[i * 2 + 1] = R.bridge.tcg.perlin(b, c); break; }   // texture s, t = the first two of vec3(perlin(p.xy), perlin(p.yz), perlin(p.zx))
       case 'CAMERASPACENORMAL': uv[i * 2] = n[0]; uv[i * 2 + 1] = n[1]; break;
       case 'CAMERASPACEPOSITION': case 'COORD-EYE': case 'COORD': uv[i * 2] = p[0]; uv[i * 2 + 1] = p[1]; break;
       case 'CAMERASPACEREFLECTIONVECTOR': { const r = reflect(); uv[i * 2] = r[0]; uv[i * 2 + 1] = r[1]; break; }
@@ -216,7 +224,7 @@ R.bridge.tcg = {
   },
   update(body, mesh, g) {                  // camera-space modes: one pass over the vertices with the current model-view matrix
     const T = (g.__src || g).f.texCoord, d = body.geometryData(g); if (!T || !d || !d.pos) return;
-    const mode = String(T.f.mode || 'SPHERE').toUpperCase(); if (!R.bridge.tcg.CAM.test(mode)) return;
+    const mode = String(T.f.mode || 'SPHERE').toUpperCase(); if (!R.bridge.tcg.CAM.test(mode)) return; R.bridge.tcg.P = T.f.parameter || [];
     const wv = mesh.getWorldMatrix().multiply(body.scene.activeCamera.getViewMatrix()), key = wv.m.join(',') + mode; if (mesh._tcgKey === key) return; mesh._tcgKey = key;
     const n = d.pos.length / 3, uv = new Float32Array(n * 2), m = wv.m, nrm = d.nrm || (() => { const a = new Float32Array(d.pos.length); BABYLON.VertexData.ComputeNormals(d.pos, d.idx, a); return a; })();
     for (let i = 0; i < n; i++) {
@@ -233,7 +241,7 @@ R.bridge.tcg = {
   Body.prototype.geometryData = function (g) {
     const d = _data.call(this, g), T = (g.f || {}).texCoord;
     if (!T || T.type !== 'TextureCoordinateGenerator' || !d || !d.pos) return d;
-    const mode = String(T.f.mode || 'SPHERE').toUpperCase(), key = (T.version || 0) + '/' + mode; if (d._gen === key) return d;
+    const mode = String(T.f.mode || 'SPHERE').toUpperCase(), key = (T.version || 0) + '/' + mode + '/' + (T.f.parameter || []).join(','); if (d._gen === key) return d; R.bridge.tcg.P = T.f.parameter || [];
     let nrm = d.nrm;
     if (!nrm) { nrm = new Float32Array(d.pos.length); BABYLON.VertexData.ComputeNormals(d.pos, d.idx, nrm); }
     if (!R.bridge.tcg.CAM.test(mode) && !R.bridge.tcg.LOCAL.test(mode)) this.note('TextureCoordinateGenerator mode ' + mode + ' is not made (uv left at 0)');

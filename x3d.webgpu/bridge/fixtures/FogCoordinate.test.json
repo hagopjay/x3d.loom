@@ -3,6 +3,7 @@
  "mode": "scene",
  "note": "two white unlit quads under the world Fog (red, range 20), the right one without fogCoord (distance fog, about half at 9.9 units), the left one with depths 0 0 1 1 (bottom row clear, top row fully fogged, interpolated between). Probed from the composited frame in both engines; the body's neutral tone map shifts pure colours, so the tolerances are 25 to 45. With the Fog off a FogCoordinate fogs nothing.",
  "gaps": [
+  "compared with X_ITE 16.6.0 in the picture (silhouette 1.0, mean abs diff 1.1 of 255, Chromium 153 SwiftShader)",
   "only IndexedTriangleSet and the bridged geometry sets take a fogCoord; IndexedFaceSet and the others the stock reader draws do not have the field",
   "the fog is a second copy of the mesh drawn over the first with vertex alpha = depth, so it blends after the surface is tone mapped (X_ITE blends inside the shader)",
   "vertices past the end of depth read as 0 (clear)",
@@ -59,6 +60,9 @@
   },
   {
    "settle": 2
+  },
+  {
+   "shot": "main"
   },
   {
    "px": [
@@ -211,5 +215,13 @@
     25
    ]
   }
- ]
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 3,
+   "fg": 10
+  }
+ }
 }

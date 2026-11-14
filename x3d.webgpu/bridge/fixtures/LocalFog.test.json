@@ -6,6 +6,9 @@
    "settle": 2
   },
   {
+   "shot": "main"
+  },
+  {
    "px": [
     240,
     120,
@@ -219,9 +222,18 @@
  ],
  "note": "two white unlit boxes 9.3 units from the camera, the left one inside the group that holds the LocalFog, the right one in a sibling group: only the left one fades. Probed at the face centres of both boxes from the composited frame in both engines; the body's neutral tone map turns white into 239 and desaturates a pure fog colour by about 15% (a fully fogged blue reads 38 38 241), X_ITE draws the raw colour, hence the tolerances of 25 to 45.",
  "gaps": [
+  "LINEAR fog compared with X_ITE 16.6.0 in the picture (silhouette 0.97, mean abs diff 1.9 of 255, Chromium 153 SwiftShader); the EXPONENTIAL laws below are checked in our body only",
   "EXPONENTIAL and EXPONENTIAL2 use Babylon's EXP and EXP2 scaled to 1/e at half the range: close to X3D's exp(-d/(range-d)) in the first half, softer at the end (X3D reaches full fog at the range)",
   "all LocalFogs of a world share the fog law of the first active one (Babylon picks the law per scene, not per mesh); colour and range are per scope",
   "the range is not scaled by the parent's transform scale, X3D measures it in the LocalFog's own coordinate system",
   "two meshes sharing one Babylon material would share the fog parameters of whichever draws first; the body makes one material per shape, so it does not happen here"
- ]
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.93,
+   "mad": 4,
+   "fg": 14
+  }
+ }
 }

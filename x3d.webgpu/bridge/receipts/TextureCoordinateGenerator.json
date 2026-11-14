@@ -31,21 +31,21 @@
      296,
      228
     ],
-    "nOurs": 23571,
-    "nXite": 24027,
-    "fgFracOurs": 0.31,
-    "fgFracXite": 0.31,
-    "mad": 10.99,
-    "psnr": 16.62,
+    "nOurs": 26175,
+    "nXite": 26685,
+    "fgFracOurs": 0.34,
+    "fgFracXite": 0.35,
+    "mad": 13.21,
+    "psnr": 15.89,
     "fgMeanOurs": [
-     160,
-     64,
-     101
+     157,
+     72,
+     103
     ],
     "fgMeanXite": [
-     152,
-     87,
-     93
+     148,
+     89,
+     97
     ],
     "bgOurs": [
      1,
@@ -62,15 +62,16 @@
   "comparison": "passed",
   "msg": "",
   "gaps": [
-   "the six modes of the fixture are compared in the picture (silhouette overlap 0.98) and against the formula in our body; the CAMERASPACENORMAL and CAMERASPACEREFLECTIONVECTOR spheres differ visibly from X_ITE 16.6.0 (mean RGB difference 11 of 255 over the picture): X_ITE's own scaling of the camera-space range is not reproduced",
-   "camera-space modes are recomputed on the CPU whenever the model-view matrix changes, not in a shader; NOISE and NOISE-EYE are not made"
+   "the seven modes of the fixture are compared in the picture with X_ITE 16.6.0 (silhouette overlap 0.98, mean abs diff 13 of 255 over the whole frame on Chromium 153 SwiftShader) and against the formula in our body; the CAMERASPACENORMAL and CAMERASPACEREFLECTIONVECTOR spheres differ visibly from X_ITE (X_ITE's own scaling of the camera-space range is not reproduced)",
+   "NOISE and NOISE-EYE are made from X_ITE's Perlin2.glsl (the same 2D value noise and cosine smoothing, parameter = scale xyz and translation xyz); the hash is fract(sin(..) * 43758.5453), which a GPU's float32 sin and JavaScript's double sin evaluate differently, so the picture shows the same kind of pattern, not the same pixels (the centre sphere of the fixture)",
+   "camera-space modes are recomputed on the CPU whenever the model-view matrix changes, not in a shader"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 8c8aadc83f99",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha c450fcbb0e5d",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "15277a6"
+ "driver_commit": "d138926"
 }
