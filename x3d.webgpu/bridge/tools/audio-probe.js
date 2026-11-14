@@ -5,9 +5,9 @@
      sig    [name, key, opts?, expect?]       measure the recording of a tap and store the numbers as map[key.rms], key.peak, key.f0 ... (compared between the engines by the spec's "agree")
      fsig   [def, field, key, opts?, expect?] the same measures on an Analyser data field (floatTimeDomainData, byteTimeDomainData, floatFrequencyData, byteFrequencyData)
      untap  name
-   close  [keyA, keyB, tol]                   fails when the two stored numbers differ by more than tol (a measured value against an expected one stored with jsmap)
+   close  [keyA, keyB, tol]                   fails when the two stored numbers differ by more than tol (a measured value against an expected one stored with amap)
    bytemap [def, key]                       checks an Analyser's byteFrequencyData against its floatFrequencyData and the decibel range: map[key.maxErr] = largest byte difference
-     jsmap  [code, key]                       a page expression (a number, an array of numbers or an object of numbers; `scene` is the loaded scene, AUD.ctx the audio context) stored as map[key] (map[key.name] for an object)
+     amap  [code, key]                       a page expression (a number, an array of numbers or an object of numbers; `scene` is the loaded scene, AUD.ctx the audio context) stored as map[key] (map[key.name] for an object)
    opts: after (seconds: look for the onset after this time), freq (the data is a spectrum: only argmax, max, len), freqHz (an Analyser field: expected peak frequency, key.binErr = peak bin minus the expected bin), from, to (seconds after the tap started; negative = from the end), default the last 0.5 s; f0 (expected frequency for the harmonics, else the estimate), harm (how many, default 5),
          ch (channel, default 0), bands [edges in Hz] (rms in each band), ref (another tap, or this one with refCh: the reference channel; lag = onset of this tap minus onset of ref, in seconds; corr = best normalised correlation with ref within +-8 samples, sign kept), thr (onset threshold, default 0.05), byte (data is 0..255 centred on 128)
    expect: {rms:[v,tol], peak:[..], f0:[..], h1:[..], lag:[..], band0:[..], silent:true (rms below 1e-4)}; a miss fails the step in the engine that produced it.
@@ -55,7 +55,7 @@ window.AUD = (() => {
   }
   const AUD = {
     ctx: null,
-    /* expected values computed on the page, for jsmap: independent of both engines' Web Audio nodes */
+    /* expected values computed on the page, for amap: independent of both engines' Web Audio nodes */
     sr: () => AUD.ctx.sampleRate,
     /* |H(f)| of a Web Audio BiquadFilterNode (the cookbook formulas of the Web Audio specification; lowpass and highpass take Q in dB there). gainDb is the filter's own gain (0 in the bridge: X3D gain is the input stage) */
     biquadMag(type, f0, Q, fs, f, gainDb) {
@@ -116,7 +116,7 @@ window.AUD = (() => {
         for (let i = 0; i < Math.min(fl.length, by.length); i++) { const e = Math.min(255, Math.max(0, Math.floor(255 * (fl[i] - lo) / (hi - lo)))); worst = Math.max(worst, Math.abs(e - by[i])); }
         out.map[key + '.maxErr'] = worst; out.map[key + '.len'] = fl.length; if (tol !== undefined && !(worst <= tol)) fail(key + ' byte data is off by ' + worst + ' from the float data and the decibel range (tol ' + tol + ')'); return;
       }
-      if (s.jsmap) { const [code, key] = s.jsmap; const v = await new Function('scene', 'map', 'return (' + code + ')')(scene, out.map); if (v && typeof v === 'object' && !Array.isArray(v)) store(out, key, v); else out.map[key] = v; return; }
+      if (s.amap) { const [code, key] = s.amap; const v = await new Function('scene', 'map', 'return (' + code + ')')(scene, out.map); if (v && typeof v === 'object' && !Array.isArray(v)) store(out, key, v); else out.map[key] = v; return; }
       if (s.sig) {
         const [name, key, o0, ex] = s.sig, o = o0 || {}, t = taps[name]; if (!t) throw new Error('no tap ' + name);
         await flush(t); if (o.ref && taps[o.ref]) await flush(taps[o.ref]);

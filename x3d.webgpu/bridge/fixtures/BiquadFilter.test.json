@@ -1,11 +1,7 @@
 {
  "node": "BiquadFilter",
  "mode": "scene",
- "note": "the filter's Web Audio node is compared with X_ITE 16.6.0 parameter by parameter (type for all eight names and an unknown one, frequency held at 0 or more, Q held to 0.0001..1000, detune), then the input stage, then the pass-through of enabled = FALSE (gain 1, mode max, speakers). Runs on the real clock for the start and stop. The processed sound itself is not compared.",
- "gaps": [
-  "the filter response is Web Audio's, the same engine under both; only the settings are compared",
-  "a time dependent node here only keeps the clock (isActive, isPaused, elapsedTime); the signal passes whether or not it is active, as in X_ITE"
- ],
+ "note": "the filter's Web Audio node is compared with X_ITE 16.6.0 parameter by parameter (type for all eight names and an unknown one, frequency held at 0 or more, Q held to 0.0001..1000, detune), then the input stage, then the pass-through of enabled = FALSE (gain 1, mode max, speakers). Runs on the real clock for the start and stop. The processed sound itself is not compared. Signal compared with X_ITE 16.6.0 on the page's real Web Audio clock: a sine of the stated frequency goes through the filter and the rms after it is compared with the magnitude response |H(f)| computed from the Web Audio specification's biquad formulas (independent of both engines) for LOWPASS, HIGHPASS, BANDPASS, NOTCH, ALLPASS and PEAKING (flat, since the filter's own gain is 0), LOWSHELF and HIGHSHELF (flat for the same reason), a resonant LOWPASS (qualityFactor 10 is 10 dB, Web Audio takes Q in dB for lowpass and highpass, and X_ITE passes the field straight on, as the bridge does), detune 1200 cents (the cutoff moves from 350 to 700 Hz) and frequency changed while it runs; every case within 0.012 of the expected rms and the same in X_ITE; a disabled filter passes the tone unchanged.",
  "steps": [
   {
    "expect": [
@@ -896,6 +892,1269 @@
     "isActive",
     false
    ]
+  },
+  {
+   "tap": [
+    "b",
+    [
+     "SO",
+     "SB"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1.0
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "LOWPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    350
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    100
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "lowpass350_100",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 100
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('lowpass',350*Math.pow(2,0/1200),1,AUD.sr(),100)",
+    "x.lowpass350_100"
+   ]
+  },
+  {
+   "close": [
+    "lowpass350_100.rms",
+    "x.lowpass350_100",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "LOWPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    350
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    350
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "lowpass350_350",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 350
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('lowpass',350*Math.pow(2,0/1200),1,AUD.sr(),350)",
+    "x.lowpass350_350"
+   ]
+  },
+  {
+   "close": [
+    "lowpass350_350.rms",
+    "x.lowpass350_350",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "LOWPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    350
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    3500
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "lowpass350_3500",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 3500
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('lowpass',350*Math.pow(2,0/1200),1,AUD.sr(),3500)",
+    "x.lowpass350_3500"
+   ]
+  },
+  {
+   "close": [
+    "lowpass350_3500.rms",
+    "x.lowpass350_3500",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "HIGHPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    350
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    100
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "highpass350_100",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 100
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('highpass',350*Math.pow(2,0/1200),1,AUD.sr(),100)",
+    "x.highpass350_100"
+   ]
+  },
+  {
+   "close": [
+    "highpass350_100.rms",
+    "x.highpass350_100",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "HIGHPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    350
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    350
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "highpass350_350",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 350
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('highpass',350*Math.pow(2,0/1200),1,AUD.sr(),350)",
+    "x.highpass350_350"
+   ]
+  },
+  {
+   "close": [
+    "highpass350_350.rms",
+    "x.highpass350_350",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "HIGHPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    350
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    3500
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "highpass350_3500",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 3500
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('highpass',350*Math.pow(2,0/1200),1,AUD.sr(),3500)",
+    "x.highpass350_3500"
+   ]
+  },
+  {
+   "close": [
+    "highpass350_3500.rms",
+    "x.highpass350_3500",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "BANDPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    5
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    500
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "bandpass1000_500",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 500
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('bandpass',1000*Math.pow(2,0/1200),5,AUD.sr(),500)",
+    "x.bandpass1000_500"
+   ]
+  },
+  {
+   "close": [
+    "bandpass1000_500.rms",
+    "x.bandpass1000_500",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "BANDPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    5
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "bandpass1000_1000",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 1000
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('bandpass',1000*Math.pow(2,0/1200),5,AUD.sr(),1000)",
+    "x.bandpass1000_1000"
+   ]
+  },
+  {
+   "close": [
+    "bandpass1000_1000.rms",
+    "x.bandpass1000_1000",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "BANDPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    5
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    4000
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "bandpass1000_4000",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 4000
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('bandpass',1000*Math.pow(2,0/1200),5,AUD.sr(),4000)",
+    "x.bandpass1000_4000"
+   ]
+  },
+  {
+   "close": [
+    "bandpass1000_4000.rms",
+    "x.bandpass1000_4000",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "NOTCH"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    5
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "notch1000_1000",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 1000
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('notch',1000*Math.pow(2,0/1200),5,AUD.sr(),1000)",
+    "x.notch1000_1000"
+   ]
+  },
+  {
+   "close": [
+    "notch1000_1000.rms",
+    "x.notch1000_1000",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "NOTCH"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    5
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    1500
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "notch1000_1500",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 1500
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('notch',1000*Math.pow(2,0/1200),5,AUD.sr(),1500)",
+    "x.notch1000_1500"
+   ]
+  },
+  {
+   "close": [
+    "notch1000_1500.rms",
+    "x.notch1000_1500",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "ALLPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "allpass1000_1000",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 1000
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('allpass',1000*Math.pow(2,0/1200),1,AUD.sr(),1000)",
+    "x.allpass1000_1000"
+   ]
+  },
+  {
+   "close": [
+    "allpass1000_1000.rms",
+    "x.allpass1000_1000",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "PEAKING"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "peaking1000_1000",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 1000
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('peaking',1000*Math.pow(2,0/1200),1,AUD.sr(),1000)",
+    "x.peaking1000_1000"
+   ]
+  },
+  {
+   "close": [
+    "peaking1000_1000.rms",
+    "x.peaking1000_1000",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "LOWSHELF"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    500
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "lowshelf1000_500",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 500
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('lowshelf',1000*Math.pow(2,0/1200),1,AUD.sr(),500)",
+    "x.lowshelf1000_500"
+   ]
+  },
+  {
+   "close": [
+    "lowshelf1000_500.rms",
+    "x.lowshelf1000_500",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "HIGHSHELF"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    1000
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    2000
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "highshelf1000_2000",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 2000
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('highshelf',1000*Math.pow(2,0/1200),1,AUD.sr(),2000)",
+    "x.highshelf1000_2000"
+   ]
+  },
+  {
+   "close": [
+    "highshelf1000_2000.rms",
+    "x.highshelf1000_2000",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "LOWPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    350
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    10
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    350
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "lpq10",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 350
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('lowpass',350*Math.pow(2,0/1200),10,AUD.sr(),350)",
+    "x.lpq10"
+   ]
+  },
+  {
+   "close": [
+    "lpq10.rms",
+    "x.lpq10",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "LOWPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    350
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    1200
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    700
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "lpdetune",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 700
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('lowpass',350*Math.pow(2,1200/1200),1,AUD.sr(),700)",
+    "x.lpdetune"
+   ]
+  },
+  {
+   "close": [
+    "lpdetune.rms",
+    "x.lpdetune",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "type",
+    "LOWPASS"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "frequency",
+    700
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "qualityFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    700
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "lp700",
+    {
+     "ch": 1,
+     "from": -0.3,
+     "f0": 700
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.7071067811865476*AUD.biquadMag('lowpass',700*Math.pow(2,0/1200),1,AUD.sr(),700)",
+    "x.lp700"
+   ]
+  },
+  {
+   "close": [
+    "lp700.rms",
+    "x.lp700",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    3500
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "b",
+    "off",
+    {
+     "ch": 1,
+     "ref": "b",
+     "refCh": 0,
+     "from": -0.3,
+     "f0": 3500
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "corr": [
+      1,
+      0.02
+     ]
+    }
+   ]
   }
+ ],
+ "agree": [
+  [
+   "lowpass350_100.rms",
+   0.012
+  ],
+  [
+   "lowpass350_350.rms",
+   0.012
+  ],
+  [
+   "lowpass350_3500.rms",
+   0.012
+  ],
+  [
+   "highpass350_100.rms",
+   0.012
+  ],
+  [
+   "highpass350_350.rms",
+   0.012
+  ],
+  [
+   "highpass350_3500.rms",
+   0.012
+  ],
+  [
+   "bandpass1000_500.rms",
+   0.012
+  ],
+  [
+   "bandpass1000_1000.rms",
+   0.012
+  ],
+  [
+   "bandpass1000_4000.rms",
+   0.012
+  ],
+  [
+   "notch1000_1000.rms",
+   0.012
+  ],
+  [
+   "notch1000_1500.rms",
+   0.012
+  ],
+  [
+   "allpass1000_1000.rms",
+   0.012
+  ],
+  [
+   "peaking1000_1000.rms",
+   0.012
+  ],
+  [
+   "lowshelf1000_500.rms",
+   0.012
+  ],
+  [
+   "highshelf1000_2000.rms",
+   0.012
+  ],
+  [
+   "lpq10.rms",
+   0.012
+  ],
+  [
+   "lpdetune.rms",
+   0.012
+  ],
+  [
+   "lp700.rms",
+   0.012
+  ],
+  [
+   "off.rms",
+   0.02
+  ]
+ ],
+ "scope": [
+  "the field gain is the input stage (as in X_ITE); the biquad's own gain (what makes PEAKING and the shelves boost or cut) is never set in either engine, so those three types are flat; a time dependent node here only keeps the clock (isActive, isPaused, elapsedTime); the signal passes whether or not it is active, as in X_ITE; the phase response is not compared, only the magnitude"
  ]
 }
