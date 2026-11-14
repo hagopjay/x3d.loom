@@ -1,0 +1,906 @@
+{
+ "node": "HAnimMotion",
+ "mode": "events",
+ "note": "a four frame motion of three joint groups (6 channels: position + ZXY Euler, 3 channels: ZXY, 1 channel Z padded to ZXY) driving a three joint humanoid: frameCount, the playback at load, frameIndex posing, next and previous, the play range, a played run, loop, enabled, channelsEnabled; joint values are compared with X_ITE 16.6.0 as quaternions",
+ "gaps": [],
+ "steps": [
+  {
+   "settle": 1.3
+  },
+  {
+   "expect": [
+    "M",
+    "frameCount",
+    4
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "startFrame",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "endFrame",
+    3
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "frameIndex",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "frameDuration",
+    0.2
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "translation",
+    "end_j0t"
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "rotation",
+    "end_j0r"
+   ]
+  },
+  {
+   "record": [
+    "J1",
+    "rotation",
+    "end_j1r"
+   ]
+  },
+  {
+   "record": [
+    "J2",
+    "rotation",
+    "end_j2r"
+   ]
+  },
+  {
+   "nearv": [
+    "J0",
+    "translation",
+    [
+     0.3,
+     0,
+     0
+    ],
+    0.0001
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "frameIndex",
+    2
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "expect": [
+    "M",
+    "frameIndex",
+    2
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "translation",
+    "f2_j0t"
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "rotation",
+    "f2_j0r"
+   ]
+  },
+  {
+   "record": [
+    "J1",
+    "rotation",
+    "f2_j1r"
+   ]
+  },
+  {
+   "record": [
+    "J2",
+    "rotation",
+    "f2_j2r"
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "frameIndex",
+    1
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "expect": [
+    "M",
+    "frameIndex",
+    1
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "translation",
+    "f1_j0t"
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "rotation",
+    "f1_j0r"
+   ]
+  },
+  {
+   "record": [
+    "J1",
+    "rotation",
+    "f1_j1r"
+   ]
+  },
+  {
+   "record": [
+    "J2",
+    "rotation",
+    "f1_j2r"
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "frameIndex",
+    0
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "expect": [
+    "M",
+    "frameIndex",
+    0
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "translation",
+    "f0_j0t"
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "rotation",
+    "f0_j0r"
+   ]
+  },
+  {
+   "record": [
+    "J1",
+    "rotation",
+    "f0_j1r"
+   ]
+  },
+  {
+   "record": [
+    "J2",
+    "rotation",
+    "f0_j2r"
+   ]
+  },
+  {
+   "nearv": [
+    "J0",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-05
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "next",
+    true
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "expect": [
+    "M",
+    "frameIndex",
+    1
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "translation",
+    "n1_j0t"
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "rotation",
+    "n1_j0r"
+   ]
+  },
+  {
+   "record": [
+    "J1",
+    "rotation",
+    "n1_j1r"
+   ]
+  },
+  {
+   "record": [
+    "J2",
+    "rotation",
+    "n1_j2r"
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "next",
+    true
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "next",
+    true
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "expect": [
+    "M",
+    "frameIndex",
+    3
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "translation",
+    "n3_j0t"
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "rotation",
+    "n3_j0r"
+   ]
+  },
+  {
+   "record": [
+    "J1",
+    "rotation",
+    "n3_j1r"
+   ]
+  },
+  {
+   "record": [
+    "J2",
+    "rotation",
+    "n3_j2r"
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "next",
+    true
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "expect": [
+    "M",
+    "frameIndex",
+    3
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "previous",
+    true
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "expect": [
+    "M",
+    "frameIndex",
+    2
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "frameIndex",
+    7
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "expect": [
+    "M",
+    "frameIndex",
+    7
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "translation",
+    "f7_j0t"
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "rotation",
+    "f7_j0r"
+   ]
+  },
+  {
+   "record": [
+    "J1",
+    "rotation",
+    "f7_j1r"
+   ]
+  },
+  {
+   "record": [
+    "J2",
+    "rotation",
+    "f7_j2r"
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "startFrame",
+    1
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "endFrame",
+    2
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "frameIndex",
+    1
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "set": [
+    "M",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 0.9
+  },
+  {
+   "expect": [
+    "M",
+    "frameIndex",
+    1
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "translation",
+    "run12_j0t"
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "rotation",
+    "run12_j0r"
+   ]
+  },
+  {
+   "record": [
+    "J1",
+    "rotation",
+    "run12_j1r"
+   ]
+  },
+  {
+   "record": [
+    "J2",
+    "rotation",
+    "run12_j2r"
+   ]
+  },
+  {
+   "nearv": [
+    "J0",
+    "translation",
+    [
+     0.2,
+     0,
+     0
+    ],
+    0.0001
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "startFrame",
+    0
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "endFrame",
+    3
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "frameIndex",
+    0
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "set": [
+    "M",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 0.25
+  },
+  {
+   "jsn": [
+    "(() => { const x = node('J0').translation.x, a = node('J2').rotation.angle; const f = x / 0.3; return Math.abs(a - f * Math.PI / 2) < 1e-4 && f > 0.15 && f < 0.75; })()",
+    true
+   ]
+  },
+  {
+   "settle": 0.9
+  },
+  {
+   "nearv": [
+    "J0",
+    "translation",
+    [
+     0.3,
+     0,
+     0
+    ],
+    0.0001
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "frameIndex",
+    0
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "reset": true
+  },
+  {
+   "set": [
+    "M",
+    "loop",
+    true
+   ]
+  },
+  {
+   "settle": 1.6
+  },
+  {
+   "atleast": [
+    "M",
+    "cycleTime",
+    2
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "jsn": [
+    "(() => { window.__x0 = node('J0').translation.x; return true; })()",
+    true
+   ]
+  },
+  {
+   "settle": 0.4
+  },
+  {
+   "jsn": [
+    "Math.abs(node('J0').translation.x - window.__x0) < 1e-9",
+    true
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "loop",
+    false
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "frameIndex",
+    0
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "set": [
+    "M",
+    "channelsEnabled",
+    [
+     false,
+     true,
+     true
+    ],
+    "MFBool"
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "frameIndex",
+    3
+   ]
+  },
+  {
+   "settle": 0.15
+  },
+  {
+   "nearv": [
+    "J0",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-05
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "translation",
+    "chOff_j0t"
+   ]
+  },
+  {
+   "record": [
+    "J0",
+    "rotation",
+    "chOff_j0r"
+   ]
+  },
+  {
+   "record": [
+    "J1",
+    "rotation",
+    "chOff_j1r"
+   ]
+  },
+  {
+   "record": [
+    "J2",
+    "rotation",
+    "chOff_j2r"
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "end_j0t",
+   1e-05
+  ],
+  [
+   "end_j0r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "end_j1r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "end_j2r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "f2_j0t",
+   1e-05
+  ],
+  [
+   "f2_j0r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "f2_j1r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "f2_j2r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "f1_j0t",
+   1e-05
+  ],
+  [
+   "f1_j0r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "f1_j1r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "f1_j2r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "f0_j0t",
+   1e-05
+  ],
+  [
+   "f0_j0r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "f0_j1r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "f0_j2r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "n1_j0t",
+   1e-05
+  ],
+  [
+   "n1_j0r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "n1_j1r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "n1_j2r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "n3_j0t",
+   1e-05
+  ],
+  [
+   "n3_j0r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "n3_j1r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "n3_j2r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "f7_j0t",
+   1e-05
+  ],
+  [
+   "f7_j0r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "f7_j1r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "f7_j2r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "run12_j0t",
+   1e-05
+  ],
+  [
+   "run12_j0r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "run12_j1r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "run12_j2r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "chOff_j0t",
+   1e-05
+  ],
+  [
+   "chOff_j0r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "chOff_j1r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "chOff_j2r",
+   1e-05,
+   {
+    "quat": true
+   }
+  ]
+ ]
+}
