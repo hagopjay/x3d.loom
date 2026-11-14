@@ -444,10 +444,10 @@
    "inherits": "X3DNBodyCollidableNode",
    "container": "children",
    "nfields": 9,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 37,
+   "receipt": "receipts/CollidableOffset.json",
+   "note": "X_ITE 16.6.0 reads the translation and rotation of a CollidableOffset or CollidableShape only when the node first receives an event: a file that sets them and never touches them leaves the shape at the body origin so there it rests at 0.5 where the bridge rests at 1.5 (each engine is checked against its own value); the bridge applies them from the start; only translation and rotation of the offset are applied; the offset of an offset adds up",
    "rank": 227
   },
   "CollidableShape": {
@@ -457,10 +457,10 @@
    "inherits": "X3DNBodyCollidableNode",
    "container": "children",
    "nfields": 9,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 37,
+   "receipt": "receipts/CollidableShape.json",
+   "note": "box and sphere shapes are exact; cylinder and cone use their bounding sphere; indexed face sets and other geometry are not collided; a shape's own translation and rotation are used; enabled is read when the world is built",
    "rank": 228
   },
   "Collision": {
@@ -483,10 +483,10 @@
    "inherits": "X3DChildNode",
    "container": "collider",
    "nfields": 16,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 37,
+   "receipt": "receipts/CollisionCollection.json",
+   "note": "friction is one Coulomb coefficient for each contact (frictionCoefficients.x, or 0.5 when FRICTION_COEFFICIENT-2 is not applied); X_ITE 16.6.0 multiplies the two bodies' values, so it slides twice as far here (3.27 m against 1.63 m); X_ITE 16.6.0 sets a body's restitution only if the body's own speed is at least minBounceSpeed when the bounce is configured, and a fixed wall or ground has speed 0, so nothing bounces off it unless minBounceSpeed is 0 (the fixture sets 0); the bridge bounces when the speed of the contact reaches minBounceSpeed; X_ITE 16.6.0 only knows the appliedParameters spelling FRICTION_COEFFICIENT_2, the 4.0 XSD and spec say FRICTION_COEFFICIENT-2, so a valid scene never gets its friction in X_ITE; surfaceSpeed, slipFactors, softnessConstantForceMix, softnessErrorCorrection and the second friction value (rolling friction in Bullet) are kept and not used; collidables is kept and not used: bodies collide through their own geometry, as in X_ITE",
    "rank": 229
   },
   "CollisionSensor": {
@@ -2581,10 +2581,10 @@
    "inherits": "X3DChildNode",
    "container": "bodies",
    "nfields": 28,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 37,
+   "receipt": "receipts/RigidBody.json",
+   "note": "the bridge engine is its own (see RigidBodyCollection); the inertia field is ignored, the inertia is worked out from the shapes, as X_ITE's Bullet does; centerOfMass, finiteRotationAxis, useFiniteRotation, autoDamp, autoDisable and massDensityModel are kept but have no effect",
    "rank": 235
   },
   "RigidBodyCollection": {
@@ -2594,10 +2594,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 21,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 37,
+   "receipt": "receipts/RigidBodyCollection.json",
+   "note": "the bridge engine is its own: sequential impulses at 240 Hz, spheres and boxes (cylinder and cone stand in as bounding spheres), one friction and bounce for the whole collection; autoDisable, disableTime and the disable speeds are kept but never put a body to sleep; centerOfMass is kept and not used; joints come in their own batch; contactSurfaceThickness, preferAccuracy and set_contacts are kept; CollisionSensor/Contact nodes come later",
    "rank": 236
   },
   "ScalarChaser": {
@@ -3115,10 +3115,10 @@
    "inherits": "X3DTextureProjectorNode",
    "container": "children",
    "nfields": 17,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 39,
+   "receipt": "receipts/TextureProjector.json",
+   "note": "WebGPU only: the projection is WGSL code added by a Babylon MaterialPluginBase to the Standard and PBR materials of the world; a WebGL engine draws the scene without it; a shape drawn by a ShaderMaterial (a textured UnlitMaterial, points, lines, volumes) is not tinted; X_ITE 16.6.0 tints those too; the PBR path (PhysicalMaterial: surfaceAlbedo is tinted before the lights) compiles but was not compared by picture: PhysicalMaterial draws black in the body on this rig with or without a projector, so no tint can show; upVector default: X3DUOM 4.0 says 0 1 0 (used here); X_ITE 16.6.0 reads 0 0 1 for a scene whose version is 4.0 or lower, so a tilted projector with no upVector written is rolled differently there; at most four projectors at a time (X_ITE's maxTextures), the first four that are on; the picture is read nearest-texel, mip levels and TextureProperties filters are not applied (X_ITE's default look is nearest as well); a face of an unlit shape that turns away from the projector: X_ITE 16.6.0 still tints a thin visible side strip of an unlit slab, the bridge does not (compare 'back', fg tolerance 20)",
    "rank": 259
   },
   "TextureProjectorParallel": {
@@ -3128,10 +3128,10 @@
    "inherits": "X3DTextureProjectorNode",
    "container": "children",
    "nfields": 17,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 39,
+   "receipt": "receipts/TextureProjectorParallel.json",
+   "note": "WebGPU only: the projection is WGSL code added by a Babylon MaterialPluginBase to the Standard and PBR materials of the world; a WebGL engine draws the scene without it; a shape drawn by a ShaderMaterial (a textured UnlitMaterial, points, lines, volumes) is not tinted; X_ITE 16.6.0 tints those too; the PBR path (PhysicalMaterial: surfaceAlbedo is tinted before the lights) compiles but was not compared by picture: PhysicalMaterial draws black in the body on this rig with or without a projector, so no tint can show; upVector default: X3DUOM 4.0 says 0 1 0 (used here); X_ITE 16.6.0 reads 0 0 1 for a scene whose version is 4.0 or lower, so a tilted projector with no upVector written is rolled differently there; at most four projectors at a time (X_ITE's maxTextures), the first four that are on; the picture is read nearest-texel, mip levels and TextureProperties filters are not applied (X_ITE's default look is nearest as well); shadows, shadowColor, shadowIntensity and shadowMapSize are stored and do nothing (X_ITE 16.6.0 does not shadow a projector either)",
    "rank": 260
   },
   "TextureProperties": {

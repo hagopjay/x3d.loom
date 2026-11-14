@@ -1,0 +1,31 @@
+{
+ "node": "CollidableShape",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/CollidableShape.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 3/3",
+  "xite": "pass 3/3",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "box and sphere shapes are exact; cylinder and cone use their bounding sphere; indexed face sets and other geometry are not collided",
+   "a shape's own translation and rotation are used; enabled is read when the world is built"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 9a6af7d88230",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "7fc4f4b"
+}
