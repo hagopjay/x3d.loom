@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
-  <head><meta name="title" content="IsoSurfaceVolumeData.x3d"/><meta name="description" content="Bridge fixture for IsoSurfaceVolumeData"/></head>
+  <head><component name="VolumeRendering" level="3"/><component name="Texturing3D" level="1"/><meta name="title" content="IsoSurfaceVolumeData.x3d"/><meta name="description" content="Bridge fixture for IsoSurfaceVolumeData: a block of voxels of 200 drawn as flat grey where the voxel passes the surface value"/></head>
   <Scene>
-    <IsoSurfaceVolumeData DEF="N"/>
+    <Background skyColor="0 0 1"/>
+    <NavigationInfo headlight="false"/>
+    <Viewpoint position="0 0 10"/>
+    <IsoSurfaceVolumeData DEF="N" dimensions="2 2 2" surfaceValues="0.5"><PixelTexture3D DEF="T" containerField="voxels" image="1 4 4 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 200 200 0 0 200 200 0 0 0 0 0 0 0 0 0 0 200 200 0 0 200 200 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/></IsoSurfaceVolumeData>
   </Scene>
 </X3D>

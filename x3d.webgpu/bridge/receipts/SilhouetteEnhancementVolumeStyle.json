@@ -1,0 +1,31 @@
+{
+ "node": "SilhouetteEnhancementVolumeStyle",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/SilhouetteEnhancementVolumeStyle.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 10/10",
+  "xite": "pass 10/10",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "a constant volume draws nothing with this style whatever the parameters (X_ITE 16.6.0 drops every sample with no gradient)",
+   "the opacity is the alpha of a sample times the factor; nearly-saturating stacks hide small errors, so the faint case is the one that discriminates"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f716580aaa87",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2e15c1b"
+}

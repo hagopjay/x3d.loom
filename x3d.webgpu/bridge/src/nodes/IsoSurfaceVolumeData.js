@@ -17,7 +17,6 @@ BR.node('IsoSurfaceVolumeData', {
     visible: ['SFBool', IO, true],
     voxels: ['SFNode', IO, null],
   },
-  // receive(n, field, value): return true when the event is handled here
-  // tick(n, now): once per timestamp, before the event queue drains
-  // build(body, n, parent, chain): a drawn node
+  build(body, n, parent, chain) { return BR.volr.build(body, n, parent, chain); },
+  changed(body, n, field) { BR.volr.changed(body, n, field); },
 });

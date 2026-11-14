@@ -1,0 +1,32 @@
+{
+ "node": "IsoSurfaceVolumeData",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/IsoSurfaceVolumeData.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 18/18",
+  "xite": "pass 18/18",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "X_ITE 16.6.0 draws the 'surface' as every sample above the value (a first-hit march), flat grey and unlit unless a renderStyle is given",
+   "contourStepSize with a surface value is not applied: X_ITE 16.6.0 tests only the lowest contour of its generated list, which is not the specification's meaning, so the bridge leaves the field kept and unused",
+   "the voxels and gradients events after load are honoured by the bridge, ignored by X_ITE"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f716580aaa87",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2e15c1b"
+}

@@ -1,0 +1,32 @@
+{
+ "node": "CartoonVolumeStyle",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/CartoonVolumeStyle.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 11/11",
+  "xite": "pass 11/11",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "X_ITE measures the angle against the direction eye to sample (not sample to eye), so the faces turned towards the eye are dropped and the far side of the cube shows; the bridge copies that (a convex cube looks the same either way)",
+   "colorSteps 4 puts the 45 degree band exactly on a band edge, so it is not tested",
+   "the colours' alpha is not used"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f716580aaa87",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2e15c1b"
+}

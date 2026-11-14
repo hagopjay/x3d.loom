@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
-  <head><meta name="title" content="OpacityMapVolumeStyle.x3d"/><meta name="description" content="Bridge fixture for OpacityMapVolumeStyle"/></head>
+  <head><component name="VolumeRendering" level="3"/><component name="Texturing3D" level="1"/><meta name="title" content="OpacityMapVolumeStyle.x3d"/><meta name="description" content="Bridge fixture for OpacityMapVolumeStyle: a 2 by 2 volume of four grey levels coloured through a transfer function of four colours"/></head>
   <Scene>
-    <OpacityMapVolumeStyle DEF="N"/>
+    <Background skyColor="0 0 1"/>
+    <NavigationInfo headlight="false"/>
+    <Viewpoint position="0 0 10"/>
+    <VolumeData DEF="V" dimensions="2 2 2"><PixelTexture3D containerField="voxels" image="1 2 2 2 0 85 170 255 0 85 170 255"/><OpacityMapVolumeStyle DEF="N" containerField="renderStyle"><PixelTexture DEF="TF" containerField="transferFunction" repeatS="false" repeatT="false" image="4 1 4 0xff0000ff 0x00ff00ff 0x0000ffff 0xffffffff"/></OpacityMapVolumeStyle></VolumeData>
   </Scene>
 </X3D>

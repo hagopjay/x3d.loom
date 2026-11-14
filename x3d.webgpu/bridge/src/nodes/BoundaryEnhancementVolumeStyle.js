@@ -10,7 +10,17 @@ BR.node('BoundaryEnhancementVolumeStyle', {
     opacityFactor: ['SFFloat', IO, 2],
     retainedOpacity: ['SFFloat', IO, 0.2],
   },
-  // receive(n, field, value): return true when the event is handled here
-  // tick(n, now): once per timestamp, before the event queue drains
-  // build(body, n, parent, chain): a drawn node
+  changed(body, n) { BR.volr.touch(body, n); },
 });
+
+/* X_ITE 16.6.0: not a gradient magnitude: f = |voxel(r) - voxel(r + one voxel)| along the third texture axis of the red channel only, alpha times (retainedOpacity + boundaryOpacity f^opacityFactor),
+   colour untouched. A constant volume stays visible at retainedOpacity times its alpha. */
+(BR.volr ||= { styles: {} }).styles.BoundaryEnhancementVolumeStyle = (n, C) => {
+  if (n.f.enabled === false) return null;
+  const id = C.id;
+  return { name: 'st_' + id, fn: `fn st_${id}(c: vec4f, tc: vec3f, vp: vec3f) -> vec4f {
+  let o = 1.0 / f32(textureDimensions(vol, 0).z);
+  let f = abs(vox(tc).r - vox(tc + vec3f(0.0, 0.0, o)).r);
+  return vec4f(c.rgb, c.a * (${C.fl(n.f.retainedOpacity)} + ${C.fl(n.f.boundaryOpacity)} * pow(f, ${C.fl(n.f.opacityFactor)})));
+}` };
+};

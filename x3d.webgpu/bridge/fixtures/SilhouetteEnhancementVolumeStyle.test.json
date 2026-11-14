@@ -1,19 +1,86 @@
 {
  "node": "SilhouetteEnhancementVolumeStyle",
- "mode": "events",
+ "mode": "scene",
+ "tone": "none",
+ "note": "The same four layers with a SilhouetteEnhancementVolumeStyle: samples with no gradient (the two end layers) are dropped; on the axis (N . V = 1) the opacity is retainedOpacity, so with the defaults (1) the middle layers draw as plain 55, and with retainedOpacity 0.2 they are faint (about 187).",
+ "gaps": [
+  "a constant volume draws nothing with this style whatever the parameters (X_ITE 16.6.0 drops every sample with no gradient)",
+  "the opacity is the alpha of a sample times the factor; nearly-saturating stacks hide small errors, so the faint case is the one that discriminates"
+ ],
  "steps": [
   {
-   "set": [
+   "expect": [
     "N",
-    "FIELD",
-    null
+    "silhouetteRetainedOpacity",
+    1
    ]
   },
   {
    "expect": [
     "N",
-    "FIELD",
-    null
+    "silhouetteBoundaryOpacity",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "silhouetteSharpness",
+    0.5
+   ]
+  },
+  {
+   "settle": 4
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     55,
+     55,
+     55
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "silhouetteRetainedOpacity",
+    0.2,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "silhouetteBoundaryOpacity",
+    0.4,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "silhouetteSharpness",
+    1,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     187,
+     187,
+     187
+    ],
+    14
    ]
   }
  ]

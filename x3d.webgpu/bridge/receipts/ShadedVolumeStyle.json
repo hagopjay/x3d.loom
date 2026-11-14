@@ -1,0 +1,33 @@
+{
+ "node": "ShadedVolumeStyle",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/ShadedVolumeStyle.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 19/19",
+  "xite": "pass 19/19",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the gradient is taken one voxel either side of the sample in the red channel, so a volume with no empty margin has no gradient at its border and draws nothing (as in X_ITE)",
+   "only the headlight and up to three more lights act; their attenuation, radius and spot cone are not applied (X_ITE applies them)",
+   "shadows and phaseFunction are kept and not used (X_ITE does not use them either)",
+   "anisotropic dimensions tilt X_ITE's normals differently from the bridge's (the bridge divides the gradient by the dimensions); the test uses a cube"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f716580aaa87",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2e15c1b"
+}

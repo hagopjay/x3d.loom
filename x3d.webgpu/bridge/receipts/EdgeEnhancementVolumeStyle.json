@@ -1,0 +1,32 @@
+{
+ "node": "EdgeEnhancementVolumeStyle",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/EdgeEnhancementVolumeStyle.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 8/8",
+  "xite": "pass 8/8",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "a flat region has no gradient and is dropped, so a constant volume draws nothing with this style (tested in the Silhouette fixture)",
+   "edgeColor's alpha is not used",
+   "edgeColor mixing needs a normal that is not along the view axis; it is covered by the formula and the rotated-view test is left to the next batch"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f716580aaa87",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2e15c1b"
+}

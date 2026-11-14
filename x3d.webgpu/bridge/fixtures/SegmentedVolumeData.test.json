@@ -1,20 +1,123 @@
 {
  "node": "SegmentedVolumeData",
- "mode": "events",
+ "mode": "scene",
+ "tone": "none",
+ "note": "A SegmentedVolumeData: all voxels are 255 and a second volume of identifiers gives the segment of each column (0, 0, 1, 2). Two styles colour segment 0 red and segment 1 green; segment 2 has no style, so it keeps the plain voxel colour (white). Disabling segment 1 makes it transparent.",
+ "gaps": [
+  "X_ITE reads the segment as int(r * 255), which truncates; the bridge rounds (no difference for exact ids, and none for a 1 voxel texture of ids with nearest filtering)",
+  "the segment ids are read through the texture's own filtering, so a segmentIdentifiers volume of 16 or more voxels across is blended at the segment borders in both engines"
+ ],
  "steps": [
-  {
-   "set": [
-    "N",
-    "FIELD",
-    null
-   ]
-  },
   {
    "expect": [
     "N",
-    "FIELD",
-    null
+    "segmentEnabled",
+    []
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    138,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    153,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    167,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    182,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    6
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "segmentEnabled",
+    [
+     true,
+     false
+    ],
+    "MFBool"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "px": [
+    138,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    167,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    182,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    6
    ]
   }
+ ],
+ "xsdContainerField": [
+  "transferFunction"
  ]
 }

@@ -1,0 +1,34 @@
+{
+ "node": "OpacityMapVolumeStyle",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/OpacityMapVolumeStyle.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp + XSD patched: transferFunction added to the containerField values"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 19/19",
+  "xite": "pass 19/19",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the 4.0 XSD lacks transferFunction in its containerField enumeration (the fixture is checked against a copy that has it)",
+   "only a PixelTexture is read as a 2D transfer function (an ImageTexture is not: the white texel stands in); a 3D transfer function (PixelTexture3D, ComposedTexture3D, ImageTexture3D) is read as X_ITE does, at (r, r, r)",
+   "X_ITE reads the table at (r, g) of the colour the default ramp already made, which is (r, r): the spec's intensity against gradient is not what 16.6.0 does and the bridge copies 16.6.0",
+   "a changed transfer function picture is taken up by the bridge and not by X_ITE 16.6.0 (measured: a PixelTexture image written after load changes nothing there, a toggle of enabled does not help)",
+   "the 2D transfer function repeats in X_ITE unless repeatS and repeatT are false: voxel 255 then lands on texel 0 (the fixture sets repeatS and repeatT to false)"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f716580aaa87",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2e15c1b"
+}

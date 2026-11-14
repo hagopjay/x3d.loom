@@ -231,6 +231,8 @@ def xsd_patched(xsd, allow, choice=(), fields=(), elements=None):
         anchor2 = '      <xs:enumeration value="rootNode">'
         if anchor2 not in s: return None
         s = s.replace(anchor2, '      <xs:enumeration value="%s"/>\n' % fld + anchor2, 1)
+        anchor3 = '      <xs:enumeration value="occlusionTexture">'      # the enumeration of the texture nodes (PixelTexture, ImageTexture, ...) is a second list of its own
+        if anchor3 in s: s = s.replace(anchor3, '      <xs:enumeration value="%s"/>\n' % fld + anchor3)
     for el, extra in (elements or {}).items():
         i = s.find('<xs:element name="%s">' % el); j = s.find('<xs:sequence minOccurs="0" maxOccurs="unbounded">', i); k = s.find('</xs:sequence>', j)
         if i < 0 or j < 0 or k < 0: return None
