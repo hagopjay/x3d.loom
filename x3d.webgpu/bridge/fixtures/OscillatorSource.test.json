@@ -1,11 +1,7 @@
 {
  "node": "OscillatorSource",
  "mode": "scene",
- "note": "an oscillator is made when the clock starts the node and compared with X_ITE 16.6.0 while running: wave type (default square; SINE, TRIANGLE, SAWTOOTH and CUSTOM from a PeriodicWave), frequency held at 0 or more, detune, and the source's output gain. A second start builds a new oscillator with the current settings. Runs on the real clock. The tone is not compared.",
- "gaps": [
-  "pause stops the tone (30 ms fade) and resume starts a new one, as in X_ITE",
-  "the four extra OscillatorSources are only there to hold the waves for the test"
- ],
+ "note": "an oscillator is made when the clock starts the node and compared with X_ITE 16.6.0 while running: wave type (default square; SINE, TRIANGLE, SAWTOOTH and CUSTOM from a PeriodicWave), frequency held at 0 or more, detune, and the source's output gain. A second start builds a new oscillator with the current settings. Runs on the real clock. Signal compared with X_ITE 16.6.0 on the page's real Web Audio clock (a tap on the node's output). SINE gives rms 0.7071 and a pure 440 Hz, TRIANGLE rms 0.5774 with odd harmonics 8/(pi k)^2, CUSTOM from optionsReal/optionsImag matches the normalised harmonics computed from the coefficients; the default SQUARE and SAWTOOTH are compared with the browser's own OscillatorNode of the same type (Web Audio's band limited waves are peak normalised: rms 0.843 and 0.485, not the ideal 1 and 0.577) and keep the harmonic ratios 1/3 (square) and 1/2, 1/3 (sawtooth); frequency, detune (+-1200 cents = an octave), gain, stop (silent after the 30 ms fade), restart, pause and resume are measured the same way. Each number is held to the analytic value or the reference and to X_ITE.",
  "steps": [
   {
    "expect": [
@@ -395,6 +391,648 @@
     "isActive",
     false
    ]
+  },
+  {
+   "tap": [
+    "n",
+    "SO"
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1.2
+  },
+  {
+   "jsmap": [
+    "(()=>{const c=AUD.ctx;const o=c.createOscillator();o.type='square';o.frequency.value=440;const g=c.createGain();g.gain.value=1;o.connect(g);AUD.nodes.r1=g;AUD.nodes.o1=o;o.start();return 0})()",
+    "mk1"
+   ]
+  },
+  {
+   "tap": [
+    "r1",
+    "$r1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const c=AUD.ctx;const o=c.createOscillator();o.type='sawtooth';o.frequency.value=440;const g=c.createGain();g.gain.value=1;o.connect(g);AUD.nodes.r2=g;AUD.nodes.o2=o;o.start();return 0})()",
+    "mk2"
+   ]
+  },
+  {
+   "tap": [
+    "r2",
+    "$r2"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "r1",
+    "rsq",
+    {
+     "f0": 440,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "r2",
+    "rsa",
+    {
+     "f0": 440,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "n",
+    "sq",
+    {
+     "f0": 440,
+     "from": -0.3
+    },
+    {
+     "f0": [
+      440,
+      1.5
+     ],
+     "h2": [
+      0,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "jsmap": [
+    "map['sq.h3']/map['sq.h1']",
+    "sq.r31"
+   ]
+  },
+  {
+   "close": [
+    "sq.r31",
+    0.3333333333333333,
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "sq.rms",
+    "rsq.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "sq.h1",
+    "rsq.h1",
+    0.03
+   ]
+  },
+  {
+   "setnode": [
+    "SO",
+    "periodicWave",
+    "W1"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "sig": [
+    "n",
+    "si",
+    {
+     "f0": 440,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      440,
+      1.5
+     ],
+     "h1": [
+      1.0,
+      0.03
+     ],
+     "h2": [
+      0,
+      0.02
+     ],
+     "h3": [
+      0,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "setnode": [
+    "SO",
+    "periodicWave",
+    "W3"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "sig": [
+    "n",
+    "sa",
+    {
+     "f0": 440,
+     "from": -0.3
+    },
+    {
+     "f0": [
+      440,
+      1.5
+     ]
+    }
+   ]
+  },
+  {
+   "jsmap": [
+    "map['sa.h2']/map['sa.h1']",
+    "sa.r21"
+   ]
+  },
+  {
+   "close": [
+    "sa.r21",
+    0.5,
+    0.02
+   ]
+  },
+  {
+   "jsmap": [
+    "map['sa.h3']/map['sa.h1']",
+    "sa.r31"
+   ]
+  },
+  {
+   "close": [
+    "sa.r31",
+    0.3333333333333333,
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "sa.rms",
+    "rsa.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "sa.h1",
+    "rsa.h1",
+    0.03
+   ]
+  },
+  {
+   "setnode": [
+    "SO",
+    "periodicWave",
+    "W2"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "sig": [
+    "n",
+    "tr",
+    {
+     "f0": 440,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.5773502691896257,
+      0.02
+     ],
+     "h1": [
+      0.8105694691387022,
+      0.03
+     ],
+     "h2": [
+      0,
+      0.02
+     ],
+     "h3": [
+      0.09006327434874468,
+      0.03
+     ]
+    }
+   ]
+  },
+  {
+   "setnode": [
+    "SO",
+    "periodicWave",
+    "W4"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "sig": [
+    "n",
+    "cu",
+    {
+     "f0": 440,
+     "from": -0.3
+    },
+    {
+     "h1": [
+      0.6491458128419342,
+      0.03
+     ],
+     "h2": [
+      0.3628835412059802,
+      0.03
+     ],
+     "h3": [
+      0,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "setnode": [
+    "SO",
+    "periodicWave",
+    "W1"
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    880
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "sig": [
+    "n",
+    "f880",
+    {
+     "f0": 880,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      880,
+      2
+     ],
+     "h1": [
+      1.0,
+      0.03
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "frequency",
+    440
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "detune",
+    1200
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "sig": [
+    "n",
+    "dt",
+    {
+     "f0": 880,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      880,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "detune",
+    -1200
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "sig": [
+    "n",
+    "dm",
+    {
+     "f0": 220,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      220,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "detune",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "sig": [
+    "n",
+    "g5",
+    {
+     "f0": 440,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.3535533905932738,
+      0.02
+     ],
+     "f0": [
+      440,
+      1.5
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "gain",
+    1
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "set": [
+    "SO",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.7
+  },
+  {
+   "sig": [
+    "n",
+    "stopped",
+    {
+     "from": -0.3
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.9
+  },
+  {
+   "sig": [
+    "n",
+    "again",
+    {
+     "f0": 440,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      440,
+      1.5
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "pauseTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.7
+  },
+  {
+   "sig": [
+    "n",
+    "paused",
+    {
+     "from": -0.3
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "resumeTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.9
+  },
+  {
+   "sig": [
+    "n",
+    "resumed",
+    {
+     "f0": 440,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      440,
+      1.5
+     ]
+    }
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{AUD.nodes.o1.stop();return 0})()",
+    "rs1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{AUD.nodes.o2.stop();return 0})()",
+    "rs2"
+   ]
   }
+ ],
+ "agree": [
+  [
+   "sq.rms",
+   0.03
+  ],
+  [
+   "sq.h1",
+   0.04
+  ],
+  [
+   "sq.h3",
+   0.03
+  ],
+  [
+   "si.rms",
+   0.02
+  ],
+  [
+   "sa.rms",
+   0.02
+  ],
+  [
+   "sa.h2",
+   0.03
+  ],
+  [
+   "tr.rms",
+   0.02
+  ],
+  [
+   "tr.h3",
+   0.03
+  ],
+  [
+   "cu.rms",
+   0.02
+  ],
+  [
+   "cu.h1",
+   0.03
+  ],
+  [
+   "cu.h2",
+   0.03
+  ],
+  [
+   "f880.f0",
+   0.003
+  ],
+  [
+   "dt.f0",
+   0.003
+  ],
+  [
+   "dm.f0",
+   0.005
+  ],
+  [
+   "g5.rms",
+   0.02
+  ],
+  [
+   "stopped.rms",
+   0.0001
+  ],
+  [
+   "again.rms",
+   0.02
+  ],
+  [
+   "paused.rms",
+   0.0001
+  ],
+  [
+   "resumed.rms",
+   0.02
+  ]
+ ],
+ "scope": [
+  "pause stops the tone (30 ms fade) and resume starts a new one, as in X_ITE; the four extra OscillatorSources are only there to hold the waves for the test; the tone is measured by rms, frequency and harmonic amplitude (Hann window, exact frequency), not sample by sample, because the two engines run on separate real time audio clocks; the exact phase and the start instant (which follows the 3 frames per second of the rig in our reader) are not compared"
  ]
 }

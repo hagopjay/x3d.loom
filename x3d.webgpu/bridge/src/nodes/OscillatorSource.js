@@ -56,7 +56,7 @@ BR.snd.types.OscillatorSource = {
   source: true,
   apply(n, field) {
     const au = n._au, f = n.f, o = au.osc; if (!au) return;
-    if (!f.isActive || field === 'gain') au.out.gain.value = f.gain;
+    if (f.isActive || !o) au.out.gain.value = f.gain;                 // a running tone follows gain at once (not while the 30 ms stop fade is playing out)
     if (o) { o.detune.value = f.detune; o.frequency.value = Math.max(f.frequency, 0); BR.osc.type(n); }
   },
 };
