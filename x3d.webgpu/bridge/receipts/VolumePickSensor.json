@@ -1,0 +1,32 @@
+{
+ "node": "VolumePickSensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/VolumePickSensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp + XSD patched: pickTarget added to the containerField values"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 28/28",
+  "xite": "pass 28/28",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "scope": [
+   "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); Cylinder and IndexedFaceSet tetrahedron as picking geometry, BOUNDS and GEOMETRY against a Box and a Sphere",
+   "picking geometries the body cannot read as vertices (anything beyond the primitives, IndexedFaceSet, IndexedTriangleSet, PointSet, line sets) never pick; the sensor stays inactive",
+   "GEOMETRY is a convex hull test (GJK); a concave picking geometry counts as its hull"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 48d8293ca0ad",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "df092f5"
+}

@@ -1,0 +1,149 @@
+{
+ "node": "PointPickSensor",
+ "mode": "scene",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pickedGeometry",
+    [
+     "[node BA]",
+     "[node SB]",
+     "[node BC]"
+    ]
+   ]
+  },
+  {
+   "record": [
+    "N",
+    "pickedPoint",
+    "pp"
+   ]
+  },
+  {
+   "expect": [
+    "NB",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NB",
+    "pickedGeometry",
+    [
+     "[node BA]",
+     "[node SB]",
+     "[node BC]"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "TN",
+    "translation",
+    [
+     0,
+     -0.8,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "TNB",
+    "translation",
+    [
+     0,
+     -0.8,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "record": [
+    "N",
+    "pickedPoint",
+    "pp2"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pickedGeometry",
+    [
+     "[node BA]",
+     "[node SB]"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "TN",
+    "translation",
+    [
+     20,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pickedGeometry",
+    []
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "pp",
+   0.001,
+   {
+    "sort": true
+   }
+  ],
+  [
+   "pp2",
+   0.001,
+   {
+    "sort": true
+   }
+  ]
+ ],
+ "xsdContainerField": [
+  "pickTarget"
+ ],
+ "gaps": [],
+ "scope": [
+  "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); PointSet points inside a Box, a Sphere and a PickableGroup of another objectType; pickedPoint compared as a set (0.001), BOUNDS and GEOMETRY",
+  "pickedPoint holds the points of the PointSet in the sensor's frame, one entry per point inside a picked target (as X_ITE 16.6.0); with sortOrder CLOSEST or ANY only the reported target's points are listed"
+ ]
+}

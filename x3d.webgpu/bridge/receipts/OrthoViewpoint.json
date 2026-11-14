@@ -3,29 +3,162 @@
  "pass": true,
  "xsd": {
   "ok": true,
-  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/OrthoViewpoint.x3d validates",
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/OrthoViewpoint.x3d validates",
   "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
  },
  "test": {
   "ok": true,
-  "ours": "pass 71/71",
-  "xite": "pass 71/71",
+  "ours": "pass 74/74",
+  "xite": "pass 74/74",
   "map": {},
   "oursOk": true,
   "mapX": {},
   "xiteOk": true,
+  "visual": {
+   "default": {
+    "iou": 1,
+    "coverOurs": 1,
+    "coverXite": 1,
+    "bboxOurs": [
+     40,
+     0,
+     279,
+     239
+    ],
+    "bboxXite": [
+     40,
+     0,
+     279,
+     239
+    ],
+    "nOurs": 57600,
+    "nXite": 57600,
+    "fgFracOurs": 0.75,
+    "fgFracXite": 0.75,
+    "mad": 0.42,
+    "psnr": 48.51,
+    "fgMeanOurs": [
+     230,
+     128,
+     51
+    ],
+    "fgMeanXite": [
+     230,
+     128,
+     51
+    ],
+    "bgOurs": [
+     1,
+     1,
+     3
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   },
+   "wide": {
+    "iou": 1,
+    "coverOurs": 1,
+    "coverXite": 1,
+    "bboxOurs": [
+     100,
+     60,
+     219,
+     179
+    ],
+    "bboxXite": [
+     100,
+     60,
+     219,
+     179
+    ],
+    "nOurs": 14400,
+    "nXite": 14400,
+    "fgFracOurs": 0.19,
+    "fgFracXite": 0.19,
+    "mad": 1.35,
+    "psnr": 43.39,
+    "fgMeanOurs": [
+     230,
+     128,
+     51
+    ],
+    "fgMeanXite": [
+     230,
+     128,
+     51
+    ],
+    "bgOurs": [
+     1,
+     1,
+     3
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   },
+   "shifted": {
+    "iou": 1,
+    "coverOurs": 1,
+    "coverXite": 1,
+    "bboxOurs": [
+     160,
+     0,
+     319,
+     239
+    ],
+    "bboxXite": [
+     160,
+     0,
+     319,
+     239
+    ],
+    "nOurs": 38400,
+    "nXite": 38400,
+    "fgFracOurs": 0.5,
+    "fgFracXite": 0.5,
+    "mad": 0.83,
+    "psnr": 45.5,
+    "fgMeanOurs": [
+     1,
+     1,
+     3
+    ],
+    "fgMeanXite": [
+     0,
+     0,
+     0
+    ],
+    "bgOurs": [
+     230,
+     128,
+     51
+    ],
+    "bgXite": [
+     230,
+     128,
+     51
+    ]
+   }
+  },
+  "comparison": "passed",
   "msg": "",
-  "gaps": [
-   "a bind between an OrthoViewpoint and another viewpoint is a cut: no fly-through is drawn",
-   "the user's mouse wheel scales the area, the drag pans in view units; X_ITE's fieldOfViewOffset / fieldOfViewScale animations and viewAll are not modelled",
+  "scope": [
+   "three pictures (default view, a wider fieldOfView, a shifted position) agree with X_ITE 16.6.0: silhouette iou 1.0 and mean difference 0.4 to 1.4 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0; the bound is iou 0.99, mad 3",
+   "a bind between an OrthoViewpoint and another viewpoint is a cut here (the fixture uses transitionType TELEPORT in both engines): no fly-through is drawn between a perspective and an orthographic view",
+   "the user's mouse wheel scales the area and the drag pans in view units; X_ITE's fieldOfViewOffset / fieldOfViewScale animations and viewAll are not modelled",
    "near and far default to 0.1 and 10000 when nearDistance or farDistance is not positive (X_ITE takes the navigation avatar size for near)"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ece5768b88af",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 88ac15df29b1",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "744b32a"
+ "driver_commit": "6820371"
 }

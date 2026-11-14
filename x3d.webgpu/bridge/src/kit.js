@@ -12,6 +12,7 @@
      build(body, n, parent, chain)   Babylon side: make what the node draws; return the record body.rec keeps
      geometry(g, body)        Babylon side: vertex data for a geometry node, same shape Body.geometryData returns
      changed(body, n, field)  Babylon side: a field changed after build
+     fieldSet(n, field)       the page set a field through the SAI (with or without a body); the field already holds the new value
      preparse(text)           the scene text before it is parsed (language features that are rewritten into plain nodes, ProtoInstance)
      postparse(world)         the parsed world, before init (ProtoInstance connects its fields)
    The kit never touches a node type it does not own, so every earlier port parses and runs as before. */
@@ -113,6 +114,12 @@ parseX3D = function (text) {
   return w;
 };
 R.parseX3D = parseX3D;
+
+/* a spec's fieldSet(n, field) hears a field the page set through the SAI (the page-side change hook is installed after the kit, so the accessor wraps whatever is assigned later; it runs with or without a body) */
+{
+  let hook = R.hooks.changed;
+  Object.defineProperty(R.hooks, 'changed', { configurable: true, get: () => hook, set: (fn) => { hook = (node, field) => { const s = BR.specs.get(node.type); if (s && s.fieldSet && !node._disposed) s.fieldSet(node, field); if (fn) fn(node, field); }; } });
+}
 
 const _recv = receive;
 receive = function (node, field, value) {
@@ -400,6 +407,168 @@ BR.cylTrack = (d, c) => {
   return G.add(rot, axisPoint);
 };
 
+
+/* ---- picking (Picking component): the engine the five pick nodes share --------------------------------------------------------------------------------
+   X_ITE 16.6.0 (Components/Picking, read for the rules): a pick sensor looks at every Shape that lies under a PickableGroup (pickable true, objectType not NONE) and under a node named in its pickTarget;
+   objectType and matchCriterion filter the PickableGroups a sensor may look through. The sensor's picking geometry lives in the frame of the sensor's parent. BOUNDS intersects the oriented boxes of the
+   picking geometry and of the target geometry; GEOMETRY tests the geometry itself (LinePickSensor: line segments against the triangles; PointPickSensor: points inside the convex hull of the target;
+   PrimitivePickSensor and VolumePickSensor: convex hull against convex hull, GJK). sortOrder: CLOSEST and ANY report one geometry, ALL and ALL_SORTED all of them (distance between the box centres). */
+BR.pick = (() => {
+  const G = () => BR.geo, V = (p) => new BABYLON.Vector3(p[0], p[1], p[2]), arr = (v) => [v.x, v.y, v.z];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2], sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]], cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]], neg = (a) => [-a[0], -a[1], -a[2]];
+  const xf = (p, M) => arr(BABYLON.Vector3.TransformCoordinates(V(p), M)), xd = (p, M) => arr(BABYLON.Vector3.TransformNormal(V(p), M));
+  const CHILD_LISTS = ['children'];
+
+  /* ---- shapes of the picking geometry, in the sensor's frame: bounds, and what each test needs ---- */
+  const circle = (r, y, n = 24) => Array.from({ length: n }, (_, i) => [r * Math.cos((2 * Math.PI * i) / n), y, r * Math.sin((2 * Math.PI * i) / n)]);
+  const ico = (() => { const t = (1 + Math.sqrt(5)) / 2, v = [[-1, t, 0], [1, t, 0], [-1, -t, 0], [1, -t, 0], [0, -1, t], [0, 1, t], [0, -1, -t], [0, 1, -t], [t, 0, -1], [t, 0, 1], [-t, 0, -1], [-t, 0, 1]].map((p) => { const l = Math.hypot(...p); return p.map((x) => x / l); });
+    const f = [[0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11], [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8], [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9], [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]];
+    const mid = (a, b) => { const m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2], l = Math.hypot(...m); return m.map((x) => x / l); };
+    let pts = v.slice(); for (const [a, b, c] of f) { pts.push(mid(v[a], v[b]), mid(v[b], v[c]), mid(v[c], v[a])); } const seen = new Map(); pts.forEach((p) => seen.set(p.map((x) => x.toFixed(5)).join(), p)); return [...seen.values()]; })();
+  /* a description of a geometry node by its vertices (the convex hull is taken by the tests), its segments or points; null when the node is not one the picking supports */
+  function describe(g, body) {
+    if (!g) return null; const f = g.f;
+    const flat = (a) => { const o = []; for (let i = 0; i + 2 < a.length; i += 3) o.push([a[i], a[i + 1], a[i + 2]]); return o; };
+    switch (g.type) {
+      case 'Box': { const [x, y, z] = f.size.map((s) => s / 2); return { verts: [-1, 1].flatMap((a) => [-1, 1].flatMap((b) => [-1, 1].map((c) => [a * x, b * y, c * z]))) }; }
+      case 'Sphere': return { verts: ico.map((p) => p.map((x) => x * f.radius)) };
+      case 'Cylinder': { const h = f.height / 2; return { verts: [...circle(f.radius, -h), ...circle(f.radius, h)] }; }
+      case 'Cone': { const h = f.height / 2; return { verts: [...circle(f.bottomRadius, -h), [0, h, 0]] }; }
+      case 'PointSet': { const c = f.coord && f.coord.f.point; return c ? { points: flat(c), verts: flat(c) } : null; }
+      case 'IndexedLineSet': { const c = f.coord && f.coord.f.point; if (!c) return null; const P = flat(c), segs = []; let run = [];
+        const flush = () => { for (let i = 0; i + 1 < run.length; i++) segs.push([P[run[i]], P[run[i + 1]]]); run = []; };
+        for (const i of f.coordIndex) { if (i < 0) flush(); else run.push(i); } flush(); return { segs, verts: P }; }
+      case 'LineSet': { const c = f.coord && f.coord.f.point; if (!c) return null; const P = flat(c), segs = []; let at = 0;
+        for (const n of f.vertexCount) { for (let i = 0; i + 1 < n; i++) segs.push([P[at + i], P[at + i + 1]]); at += n; } return { segs, verts: P }; }
+      default: { if (!body || !g.f.coord) return null; try { const d = body.geometryData(g); if (d && d.pos && d.pos.length) return { verts: flat(d.pos) }; } catch (e) { /* not a geometry the body can read */ } return null; }
+    }
+  }
+  const boundsOf = (verts) => { const mn = [Infinity, Infinity, Infinity], mx = [-Infinity, -Infinity, -Infinity]; for (const p of verts) for (let k = 0; k < 3; k++) { if (p[k] < mn[k]) mn[k] = p[k]; if (p[k] > mx[k]) mx[k] = p[k]; } return { mn, mx }; };
+  /* an oriented box: centre and the three half-axes in the world */
+  const obb = (b, M) => { const c = [(b.mn[0] + b.mx[0]) / 2, (b.mn[1] + b.mx[1]) / 2, (b.mn[2] + b.mx[2]) / 2], h = [(b.mx[0] - b.mn[0]) / 2, (b.mx[1] - b.mn[1]) / 2, (b.mx[2] - b.mn[2]) / 2];
+    return { c: xf(c, M), u: [xd([h[0], 0, 0], M), xd([0, h[1], 0], M), xd([0, 0, h[2]], M)] }; };
+  /* separating axis test of two parallelepipeds: the three face normals of each and the nine edge crossings */
+  function obbHit(A, B) {
+    const axes = []; for (const O of [A, B]) { axes.push(cross(O.u[0], O.u[1]), cross(O.u[1], O.u[2]), cross(O.u[2], O.u[0])); }
+    for (const a of A.u) for (const b of B.u) axes.push(cross(a, b));
+    const d = sub(B.c, A.c);
+    for (const ax of axes) { const l = Math.hypot(...ax); if (l < 1e-9) continue; const n = [ax[0] / l, ax[1] / l, ax[2] / l];
+      const ra = A.u.reduce((s, u) => s + Math.abs(dot(n, u)), 0), rb = B.u.reduce((s, u) => s + Math.abs(dot(n, u)), 0); if (Math.abs(dot(n, d)) > ra + rb + 1e-9) return false; }
+    return true;
+  }
+  /* GJK: do two convex vertex sets (world coordinates) touch or overlap */
+  function gjk(A, B) {
+    const sup = (S, d) => { let best = S[0], bd = dot(S[0], d); for (let i = 1; i < S.length; i++) { const t = dot(S[i], d); if (t > bd) { bd = t; best = S[i]; } } return best; };
+    const mink = (d) => sub(sup(A, d), sup(B, neg(d)));
+    let dir = [1, 0, 0], sx = [mink(dir)]; dir = neg(sx[0]); if (Math.hypot(...dir) < 1e-12) return true;
+    for (let it = 0; it < 64; it++) {
+      const a = mink(dir); if (dot(a, dir) < -1e-9) return false;
+      sx.unshift(a);
+      if (sx.length === 2) { const [A_, B_] = sx, ab = sub(B_, A_), ao = neg(A_); if (dot(ab, ao) > 0) dir = cross(cross(ab, ao), ab); else { sx = [A_]; dir = ao; } if (Math.hypot(...dir) < 1e-12) return true; }
+      else if (sx.length === 3) {
+        const [A_, B_, C_] = sx, ab = sub(B_, A_), ac = sub(C_, A_), ao = neg(A_), abc = cross(ab, ac);
+        if (dot(cross(abc, ac), ao) > 0) { if (dot(ac, ao) > 0) { sx = [A_, C_]; dir = cross(cross(ac, ao), ac); } else { sx = [A_, B_]; if (dot(ab, ao) > 0) dir = cross(cross(ab, ao), ab); else { sx = [A_]; dir = ao; } } }
+        else if (dot(cross(ab, abc), ao) > 0) { sx = [A_, B_]; if (dot(ab, ao) > 0) dir = cross(cross(ab, ao), ab); else { sx = [A_]; dir = ao; } }
+        else { if (dot(abc, ao) > 0) dir = abc; else { sx = [A_, C_, B_]; dir = neg(abc); } if (Math.hypot(...dir) < 1e-12) return true; }
+      } else if (sx.length === 4) {
+        const [A_, B_, C_, D_] = sx, ao = neg(A_), ab = sub(B_, A_), ac = sub(C_, A_), ad = sub(D_, A_), abc = cross(ab, ac), acd = cross(ac, ad), adb = cross(ad, ab);
+        if (dot(abc, ao) > 0) { sx = [A_, B_, C_]; dir = abc; } else if (dot(acd, ao) > 0) { sx = [A_, C_, D_]; dir = acd; } else if (dot(adb, ao) > 0) { sx = [A_, D_, B_]; dir = adb; } else return true;
+      }
+    }
+    return false;
+  }
+  /* segment against triangle (Moller-Trumbore, t in [0, 1]); the barycentric weights for the point, normal and texture coordinate */
+  function segTri(p, q, a, b, c) {
+    const e1 = sub(b, a), e2 = sub(c, a), d = sub(q, p), h = cross(d, e2), det = dot(e1, h); if (Math.abs(det) < 1e-12) return null;
+    const s = sub(p, a), u = dot(s, h) / det; if (u < 0 || u > 1) return null; const qv = cross(s, e1), v = dot(d, qv) / det; if (v < 0 || u + v > 1) return null; const t = dot(e2, qv) / det; return t < 0 || t > 1 ? null : { u, v, w: 1 - u - v, t };
+  }
+
+  /* ---- the world: which Shapes a sensor may look at ---- */
+  const types = (a) => (Array.isArray(a) ? a : []).filter((x) => typeof x === 'string');
+  function matches(sensor, groupTypes) {
+    const st = types(sensor.f.objectType); if (!st.length || st.includes('ALL')) return true;
+    let hit = 0; for (const t of st) if (groupTypes.includes(t)) hit++;
+    switch (sensor.f.matchCriterion) { case 'MATCH_EVERY': return hit === st.length; case 'MATCH_ONLY_ONE': return hit === 1; default: return hit > 0; }
+  }
+  function targetsOf(body, sensor) {
+    const out = [], want = new Set((sensor.f.pickTarget || []).filter(Boolean)); if (!want.size || !body.world) return out;
+    const walk = (n, st) => {
+      if (!n || n.f.visible === false) return;
+      if (n.type === 'PickableGroup') {
+        if (n.f.pickable === false) return; const gt = types(n.f.objectType); if (gt.includes('NONE')) return;
+        if (!(gt.includes('ALL') || !gt.length) && !matches(sensor, gt)) return; st = { pickable: true, hier: st.hier };
+      }
+      const hier = st.hier.concat([n]);
+      if (n.type === 'Shape') {
+        if (!st.pickable || !n.f.geometry || !hier.some((x) => want.has(x))) return;
+        const r = body.rec.get(n.id), m = r && r.meshes && r.meshes[0]; if (!m || !m.isEnabled(true)) return;
+        out.push({ shape: n, geometry: n.f.geometry, mesh: m }); return;
+      }
+      if (n.type === 'Switch') { const k = n.f.children[n.f.whichChoice]; if (k) walk(k, { pickable: st.pickable, hier }); return; }
+      for (const k of n.f.children || []) walk(k, { pickable: st.pickable, hier });
+    };
+    for (const n of body.world.children) walk(n, { pickable: false, hier: [] });
+    return out;
+  }
+  const meshWorld = (m) => m.computeWorldMatrix(true), meshBounds = (m) => { const b = m.getBoundingInfo().boundingBox; return { mn: arr(b.minimum), mx: arr(b.maximum) }; };
+  const meshVerts = (m) => { const p = m.getVerticesData(BABYLON.VertexBuffer.PositionKind) || [], o = []; for (let i = 0; i + 2 < p.length; i += 3) o.push([p[i], p[i + 1], p[i + 2]]); return o; };
+
+  /* what a sensor evaluates each timestamp; returns { geometries: [..], points, normals, texCoords } or null when the sensor cannot be evaluated yet */
+  function evaluate(n, kind) {
+    const body = R.bridge.body, f = n.f; if (!body || !n._tn || !body.world) return null;
+    const ot = types(f.objectType); if (!f.enabled || ot.includes('NONE')) return { geometries: [], points: [], normals: [], texCoords: [] };
+    const pg = f.pickingGeometry; if (!pg) return { geometries: [], points: [], normals: [], texCoords: [] };
+    if (kind === 'line' && !(pg.type === 'IndexedLineSet' || pg.type === 'LineSet')) return null;
+    if (kind === 'point' && pg.type !== 'PointSet') return null;
+    if (kind === 'primitive' && !['Box', 'Cone', 'Cylinder', 'Sphere'].includes(pg.type)) return null;
+    const desc = n._desc && n._descFor === pg ? n._desc : (n._desc = describe(pg, body), n._descFor = pg, n._desc); if (!desc || !desc.verts || !desc.verts.length) return { geometries: [], points: [], normals: [], texCoords: [] };
+    const M = n._tn.computeWorldMatrix(true), pb = obb(boundsOf(desc.verts), M), geo = f.intersectionType === 'GEOMETRY';
+    const hits = [];
+    for (const t of targetsOf(body, n)) {
+      const W = meshWorld(t.mesh), tb = obb(meshBounds(t.mesh), W); if (!obbHit(pb, tb)) continue;
+      const rec = { t, dist: Math.hypot(...sub(pb.c, tb.c)), points: [], normals: [], texCoords: [] };
+      if (geo) {
+        if (kind === 'line') {
+          const inv = W.clone().invert(), pos = t.mesh.getVerticesData(BABYLON.VertexBuffer.PositionKind), idx = t.mesh.getIndices(), nrm = t.mesh.getVerticesData(BABYLON.VertexBuffer.NormalKind), uv = t.mesh.getVerticesData(BABYLON.VertexBuffer.UVKind);
+          const P = (i) => [pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]];
+          for (const [s0, s1] of desc.segs) {
+            const p = xf(xf(s0, M), inv), q = xf(xf(s1, M), inv);
+            for (let k = 0; k + 2 < idx.length; k += 3) {
+              const i = idx[k], j = idx[k + 1], l = idx[k + 2], h = segTri(p, q, P(i), P(j), P(l)); if (!h) continue;
+              const mix = (a, c) => [0, 1, 2].map((x) => h.w * a[x] + h.u * c[0][x] + h.v * c[1][x]);
+              rec.points.push([0, 1, 2].map((x) => h.w * P(i)[x] + h.u * P(j)[x] + h.v * P(l)[x]));
+              const N = (q2) => nrm ? [nrm[q2 * 3], nrm[q2 * 3 + 1], nrm[q2 * 3 + 2]] : null;
+              rec.normals.push(nrm ? [0, 1, 2].map((x) => h.w * N(i)[x] + h.u * N(j)[x] + h.v * N(l)[x]) : G().norm(cross(sub(P(j), P(i)), sub(P(l), P(i)))));
+              rec.texCoords.push(uv ? [h.w * uv[i * 2] + h.u * uv[j * 2] + h.v * uv[l * 2], h.w * uv[i * 2 + 1] + h.u * uv[j * 2 + 1] + h.v * uv[l * 2 + 1], 0] : [0, 0, 0]);
+            }
+          }
+          if (!rec.points.length) continue;
+        } else {
+          const tv = meshVerts(t.mesh).map((p) => xf(p, W));
+          if (kind === 'point') { for (const p of desc.points) if (gjk([xf(p, M)], tv)) rec.points.push(p); if (!rec.points.length) continue; }
+          else if (!gjk(desc.verts.map((p) => xf(p, M)), tv)) continue;
+        }
+      }
+      hits.push(rec);
+    }
+    const order = f.sortOrder || 'CLOSEST'; if (order === 'CLOSEST' || order === 'ALL_SORTED') hits.sort((a, b) => a.dist - b.dist);
+    const chosen = order === 'CLOSEST' || order === 'ANY' ? hits.slice(0, 1) : hits;
+    return { geometries: chosen.map((h) => h.t.geometry), points: chosen.flatMap((h) => h.points), normals: chosen.flatMap((h) => h.normals), texCoords: chosen.flatMap((h) => h.texCoords) };
+  }
+  const same = (a, b) => a.length === b.length && a.every((x, i) => (Array.isArray(x) ? x.length === b[i].length && x.every((y, k) => Math.abs(y - b[i][k]) < 1e-7) : x === b[i]));
+  /* the shared tick: evaluate, then raise the events that changed */
+  function tick(n, kind) {
+    const r = evaluate(n, kind); if (!r) return; const f = n.f, act = r.geometries.length > 0;
+    if (act !== !!f.isActive) BR.fire(n, 'isActive', act);
+    if (!same(r.geometries, f.pickedGeometry || [])) BR.fire(n, 'pickedGeometry', r.geometries);
+    if (f.pickedPoint !== undefined && n.f.intersectionType === 'GEOMETRY' || kind === 'line' || kind === 'point') {
+      if ('pickedPoint' in f && !same(r.points, f.pickedPoint || [])) BR.fire(n, 'pickedPoint', r.points);
+      if ('pickedNormal' in f && !same(r.normals, f.pickedNormal || [])) BR.fire(n, 'pickedNormal', r.normals);
+      if ('pickedTextureCoordinate' in f && !same(r.texCoords, f.pickedTextureCoordinate || [])) BR.fire(n, 'pickedTextureCoordinate', r.texCoords);
+    }
+  }
+  return { tick, evaluate, describe, obbHit, gjk, segTri };
+})();
 
 /* key helpers shared by KeySensor and StringSensor: modifier keys, action key codes (X3D: F1-F12 = 1-12, Home 13, End 14, PageUp 15, PageDown 16, arrows 17-20), the text a key stands for */
 BR.keys = {

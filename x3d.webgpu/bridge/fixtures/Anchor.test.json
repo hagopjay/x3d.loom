@@ -1,7 +1,7 @@
 {
  "node": "Anchor",
  "mode": "scene",
- "note": "a click on the box follows #V2 in both engines",
+ "note": "a click on the box follows #V2 in both engines; addChildren puts a second box in the anchor (a click on it follows the url too), removeChildren takes it out, a child added twice stays once",
  "steps": [
   {
    "settle": 2
@@ -108,14 +108,169 @@
     "isBound",
     false
    ]
+  },
+  {
+   "set": [
+    "V1",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "set": [
+    "A",
+    "load",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "A",
+    "children",
+    [
+     "[node T]"
+    ]
+   ]
+  },
+  {
+   "setnodes": [
+    "A",
+    "addChildren",
+    [
+     "T2"
+    ]
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "A",
+    "children",
+    [
+     "[node T]",
+     "[node T2]"
+    ]
+   ]
+  },
+  {
+   "setnodes": [
+    "A",
+    "addChildren",
+    [
+     "T2"
+    ]
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "expect": [
+    "A",
+    "children",
+    [
+     "[node T]",
+     "[node T2]"
+    ]
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    247,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    247,
+    120
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "V2",
+    "isBound",
+    true
+   ]
+  },
+  {
+   "set": [
+    "V1",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "setnodes": [
+    "A",
+    "removeChildren",
+    [
+     "T2"
+    ]
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "A",
+    "children",
+    [
+     "[node T]"
+    ]
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    247,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    247,
+    120
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "V1",
+    "isBound",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "V2",
+    "isBound",
+    false
+   ]
   }
  ],
- "gaps": [
-  "only #Viewpoint urls are followed in the test; other urls go to body.opts.onAnchor, a page without one gets a note and stays",
+ "gaps": [],
+ "scope": [
+  "only a #Viewpoint url is followed in the test; any other url goes to body.opts.onAnchor, a page without a handler gets a note and stays where it is (X_ITE 16.6.0 loads the url itself: the bridge never loads a world, that is the host's job)",
   "javascript: urls are refused on purpose",
-  "addChildren and removeChildren are accepted and not acted on",
-  "autoRefresh is not implemented",
-  "target= in parameter is passed to onAnchor, not acted on",
+  "target= in parameter is passed to onAnchor, not acted on; autoRefresh and autoRefreshTimeLimit are held, since the bridge loads nothing there is nothing to refresh",
   "the stock body does not report isBound for the first Viewpoint at load (X_ITE does), so the test binds V1 first"
  ]
 }

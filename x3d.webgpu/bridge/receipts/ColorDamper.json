@@ -3,24 +3,35 @@
  "pass": true,
  "xsd": {
   "ok": true,
-  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/ColorDamper.x3d validates",
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/ColorDamper.x3d validates",
   "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
  },
  "test": {
   "ok": true,
-  "ours": "pass 7/7",
+  "ours": "pass 8/8",
   "xite": "FAIL step 6: N.isActive fired 0 times ([]), expected 1",
   "map": {},
   "oursOk": true,
   "mapX": {},
   "xiteOk": false,
-  "msg": "X_ITE differs (X_ITE 16.6.0 ColorDamper never goes inactive when the hue path crosses the 0/1 seam (blue to red): isActive stayed true 7.3 s after the value was within 3e-14 of the destination, because its stop test subtracts unwrapped hues. Ours measures the hue difference on the circle and stops.)"
+  "curves": {
+   "c": {
+    "samples": 64,
+    "worst": 0.0206
+   }
+  },
+  "comparison": "failed",
+  "msg": "X_ITE differs (X_ITE 16.6.0 ColorDamper never goes inactive when the hue path crosses the 0/1 seam (blue to red): isActive stayed true 7.3 s after the value was within 3e-14 of the destination, because its stop test subtracts unwrapped hues. Ours measures the hue difference on the circle and stops.)",
+  "scope": [
+   "the intermediate values are pinned against X_ITE 16.6.0 as a curve: ours runs on a virtual clock (0.05 s steps), X_ITE on the real one (frames of about 17 ms), both measured from the isActive true event; every X_ITE sample must match ours interpolated within +-0.05 s of the same elapsed time (bound 0.03)",
+   "X_ITE 16.6.0 never reports isActive false when the hue path crosses the 0/1 seam; the curve itself agrees (documented in xiteDisagrees)"
+  ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 3b32691c2a96",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 88ac15df29b1",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "2b54cb9"
+ "driver_commit": "6820371"
 }

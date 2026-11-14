@@ -45,11 +45,13 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 14,
-   "status": "gap",
-   "batch": 7,
+   "status": "bridged",
+   "batch": 30,
    "receipt": "receipts/Anchor.json",
-   "note": "only #Viewpoint urls are followed in the test; other urls go to body.opts.onAnchor, a page without one gets a note and stays; javascript: urls are refused on purpose; addChildren and removeChildren are accepted and not acted on; autoRefresh is not implemented; target= in parameter is passed to onAnchor, not acted on; the stock body does not report isBound for the first Viewpoint at load (X_ITE does), so the test binds V1 first",
-   "rank": 35
+   "note": "only a #Viewpoint url is followed in the test; any other url goes to body.opts.onAnchor, a page without a handler gets a note and stays where it is (X_ITE 16.6.0 loads the url itself: the bridge never loads a world, that is the host's job); javascript: urls are refused on purpose; target= in parameter is passed to onAnchor, not acted on; autoRefresh and autoRefreshTimeLimit are held, since the bridge loads nothing there is nothing to refresh; the stock body does not report isBound for the first Viewpoint at load (X_ITE does), so the test binds V1 first",
+   "rank": 35,
+   "prev_batch": 7,
+   "prev_note": "only #Viewpoint urls are followed in the test; other urls go to body.opts.onAnchor, a page without one gets a note and stays; javascript: urls are refused on purpose; addChildren and removeChildren are accepted and not acted on; autoRefresh is not implemented; target= in parameter is passed to onAnchor, not acted on; the stock body does not report isBound for the first Viewpoint at load (X_ITE does), so the test binds V1 first"
   },
   "Appearance": {
    "component": "Shape",
@@ -534,11 +536,13 @@
    "inherits": "X3DDamperNode",
    "container": "children",
    "nfields": 10,
-   "status": "gap",
-   "batch": 4,
+   "status": "bridged",
+   "batch": 30,
    "receipt": "receipts/ColorDamper.json",
-   "note": "X_ITE 16.6.0 keeps isActive true after a hue-seam path (observed 7.3 s); ours stops. Intermediate colours not pinned",
-   "rank": 20
+   "note": "the intermediate values are pinned against X_ITE 16.6.0 as a curve: ours runs on a virtual clock (0.05 s steps), X_ITE on the real one (frames of about 17 ms), both measured from the isActive true event; every X_ITE sample must match ours interpolated within +-0.05 s of the same elapsed time (bound 0.03); X_ITE 16.6.0 never reports isActive false when the hue path crosses the 0/1 seam; the curve itself agrees (documented in xiteDisagrees)",
+   "rank": 20,
+   "prev_batch": 4,
+   "prev_note": "X_ITE 16.6.0 keeps isActive true after a hue-seam path (observed 7.3 s); ours stops. Intermediate colours not pinned"
   },
   "ColorInterpolator": {
    "component": "Interpolation",
@@ -1584,10 +1588,10 @@
    "inherits": "X3DPickSensorNode",
    "container": "children",
    "nfields": 14,
-   "status": "wip",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 29,
+   "receipt": "receipts/LinePickSensor.json",
+   "note": "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); two segments through a Box and a Sphere: pickedGeometry, pickedPoint and pickedNormal compared as sets, BOUNDS and GEOMETRY; pickedPoint, pickedNormal agree within 0.02: Babylon's Sphere is tessellated differently from X_ITE's (points on the sphere differ by up to 1 percent); pickedTextureCoordinate is filled from the mesh UVs and not compared (box UV layouts differ between the engines); pickedPoint is in the target's own coordinates (as X_ITE 16.6.0)",
    "rank": 188
   },
   "LineProperties": {
@@ -1638,11 +1642,13 @@
    "inherits": "X3DNetworkSensorNode",
    "container": "children",
    "nfields": 9,
-   "status": "gap",
-   "batch": 7,
+   "status": "bridged",
+   "batch": 30,
    "receipt": "receipts/LoadSensor.json",
-   "note": "a change of children after load does not restart the count (X_ITE restarts); Inline, audio and movie children are fetched, not decoded: loaded means the url answered; only the first working url of a child is used; X_ITE 16.6.0 hands the world over only after every resource has loaded, so the in-flight timeOut state (aborted, not yet loaded) can only be checked in our reader; the end state is compared",
-   "rank": 34
+   "note": "Inline, audio and movie children are fetched, not decoded: loaded means the url answered; only the first working url of a child is used; X_ITE 16.6.0 hands the world over only after every resource has loaded, so the in-flight timeOut state (aborted, not yet loaded) can only be checked in our reader; the end state is compared; a change of children or enabled true restarts the count as in X_ITE 16.6.0; a child that loaded before counts at once",
+   "rank": 34,
+   "prev_batch": 7,
+   "prev_note": "a change of children after load does not restart the count (X_ITE restarts); Inline, audio and movie children are fetched, not decoded: loaded means the url answered; only the first working url of a child is used; X_ITE 16.6.0 hands the world over only after every resource has loaded, so the in-flight timeOut state (aborted, not yet loaded) can only be checked in our reader; the end state is compared"
   },
   "LocalFog": {
    "component": "EnvironmentalEffects",
@@ -2097,11 +2103,13 @@
    "inherits": "X3DViewpointNode",
    "container": "children",
    "nfields": 15,
-   "status": "gap",
-   "batch": 13,
+   "status": "bridged",
+   "batch": 30,
    "receipt": "receipts/OrthoViewpoint.json",
-   "note": "a bind between an OrthoViewpoint and another viewpoint is a cut: no fly-through is drawn; the user's mouse wheel scales the area, the drag pans in view units; X_ITE's fieldOfViewOffset / fieldOfViewScale animations and viewAll are not modelled; near and far default to 0.1 and 10000 when nearDistance or farDistance is not positive (X_ITE takes the navigation avatar size for near)",
-   "rank": 119
+   "note": "three pictures (default view, a wider fieldOfView, a shifted position) agree with X_ITE 16.6.0: silhouette iou 1.0 and mean difference 0.4 to 1.4 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0; the bound is iou 0.99, mad 3; a bind between an OrthoViewpoint and another viewpoint is a cut here (the fixture uses transitionType TELEPORT in both engines): no fly-through is drawn between a perspective and an orthographic view; the user's mouse wheel scales the area and the drag pans in view units; X_ITE's fieldOfViewOffset / fieldOfViewScale animations and viewAll are not modelled; near and far default to 0.1 and 10000 when nearDistance or farDistance is not positive (X_ITE takes the navigation avatar size for near)",
+   "rank": 119,
+   "prev_batch": 13,
+   "prev_note": "a bind between an OrthoViewpoint and another viewpoint is a cut: no fly-through is drawn; the user's mouse wheel scales the area, the drag pans in view units; X_ITE's fieldOfViewOffset / fieldOfViewScale animations and viewAll are not modelled; near and far default to 0.1 and 10000 when nearDistance or farDistance is not positive (X_ITE takes the navigation avatar size for near)"
   },
   "OscillatorSource": {
    "component": "Sound",
@@ -2175,10 +2183,10 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 11,
-   "status": "wip",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 29,
+   "receipt": "receipts/PickableGroup.json",
+   "note": "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); pickable, objectType (ALL, NONE, one type), MATCH_ANY, MATCH_EVERY and MATCH_ONLY_ONE with one matching type, visible false; a sensor of objectType ALL sees through any group; a group of type ALL is seen by every sensor (as X_ITE 16.6.0); MATCH_EVERY and MATCH_ONLY_ONE with two matching types follow 19775-1 (every type of the sensor must be in the group, exactly one must be); X_ITE 16.6.0 counts at most one match, so those two steps run in ours only",
    "rank": 189
   },
   "PixelTexture": {
@@ -2255,10 +2263,10 @@
    "inherits": "X3DPickSensorNode",
    "container": "children",
    "nfields": 12,
-   "status": "wip",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 29,
+   "receipt": "receipts/PointPickSensor.json",
+   "note": "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); PointSet points inside a Box, a Sphere and a PickableGroup of another objectType; pickedPoint compared as a set (0.001), BOUNDS and GEOMETRY; pickedPoint holds the points of the PointSet in the sensor's frame, one entry per point inside a picked target (as X_ITE 16.6.0); with sortOrder CLOSEST or ANY only the reported target's points are listed",
    "rank": 190
   },
   "PointProperties": {
@@ -2415,10 +2423,10 @@
    "inherits": "X3DPickSensorNode",
    "container": "children",
    "nfields": 11,
-   "status": "wip",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 29,
+   "receipt": "receipts/PrimitivePickSensor.json",
+   "note": "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); BOUNDS and GEOMETRY (Sphere against Box where the boxes overlap and the geometries do not), sortOrder CLOSEST / ANY / ALL / ALL_SORTED, objectType filter, pickable false, enabled false; a shape outside every PickableGroup is not pickable here (as 19775-1 asks); X_ITE 16.6.0 picks it, the fixture checks it in ours only; disabling a sensor that is active raises isActive false here; X_ITE 16.6.0 keeps it true, checked in ours only; a Sphere picking geometry is a 162 point hull (0.4 percent inside the true sphere); the target is the convex hull of its mesh, so a concave target counts as its hull, as in X_ITE 16.6.0; the hull of the pickingGeometry is made when first needed and cached by geometry node, so a pickingGeometry node that is replaced is picked up on the next timestamp; non-uniform scale on the sensor is applied to the hull",
    "rank": 191
   },
   "ProgramShader": {
@@ -3320,11 +3328,13 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 7,
-   "status": "gap",
-   "batch": 13,
+   "status": "bridged",
+   "batch": 30,
    "receipt": "receipts/ViewpointGroup.json",
-   "note": "the proximity box is tested in world coordinates: a ViewpointGroup under a moved Transform is tested as if the Transform were not there; retainUserOffsets is held but not applied (the stock body keeps no user offsets per viewpoint); the page decides how to show the list; the stock pages have none, so Body.viewpointList() is the only way to read it",
-   "rank": 120
+   "note": "the proximity box is tested in the frame of the group's parent (a Transform above moves it); the test moves a group with a Transform and compares the list with X_ITE 16.6.0; retainUserOffsets is held; X_ITE 16.6.0 reads it only on the viewpoint nodes, never on a ViewpointGroup; the page decides how to show the list; the stock pages have none, so Body.viewpointList() is the only way to read it (X_ITE: getUserViewpoints)",
+   "rank": 120,
+   "prev_batch": 13,
+   "prev_note": "the proximity box is tested in world coordinates: a ViewpointGroup under a moved Transform is tested as if the Transform were not there; retainUserOffsets is held but not applied (the stock body keeps no user offsets per viewpoint); the page decides how to show the list; the stock pages have none, so Body.viewpointList() is the only way to read it"
   },
   "Viewport": {
    "component": "Layering",
@@ -3387,10 +3397,10 @@
    "inherits": "X3DPickSensorNode",
    "container": "children",
    "nfields": 11,
-   "status": "wip",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 29,
+   "receipt": "receipts/VolumePickSensor.json",
+   "note": "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); Cylinder and IndexedFaceSet tetrahedron as picking geometry, BOUNDS and GEOMETRY against a Box and a Sphere; picking geometries the body cannot read as vertices (anything beyond the primitives, IndexedFaceSet, IndexedTriangleSet, PointSet, line sets) never pick; the sensor stays inactive; GEOMETRY is a convex hull test (GJK); a concave picking geometry counts as its hull",
    "rank": 192
   },
   "WaveShaper": {

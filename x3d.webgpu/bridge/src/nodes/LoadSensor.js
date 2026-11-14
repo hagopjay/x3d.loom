@@ -17,7 +17,7 @@ BR.node('LoadSensor', {
   // NetworkSensor: watches the children that carry a url (textures, Inline, audio, ...). isActive from the first count until all are loaded, one failed, or timeOut passed;
   // progress = loaded / total; loadTime when all loaded. The count rules are X_ITE 16.6.0's (an aborted sensor still reports isLoaded when the last child later completes).
   init(n) {
-    const L = n._ls = { objs: [], aborted: false, timer: 0 };
+    const L = n._ls = { objs: [], recs: new Map(), aborted: false, timer: 0 };
     const set = (f, v) => { if (JSON.stringify(n.f[f]) !== JSON.stringify(v)) BR.fire(n, f, v); };
     const now = () => performance.timeOrigin / 1000 + performance.now() / 1000;
     const setTimeOut = () => {
@@ -42,10 +42,27 @@ BR.node('LoadSensor', {
       };
       next();
     };
-    setTimeout(() => {
-      if (!n.f.enabled) return;
-      L.objs = (n.f.children || []).filter((c) => c.f && Array.isArray(c.f.url)).map((node) => ({ node, state: 'loading' }));
-      count(); for (const o of L.objs) load(o);
-    }, 0);
+    // X_ITE 16.6.0 reset(): forget the list, and when enabled take the children that carry a url (a child that loaded earlier counts at once), then count. A change of children or of enabled to true runs it again.
+    const remove = () => { clearTimeout(L.timer); L.objs = []; };
+    const reset = () => {
+      remove(); if (!n.f.enabled) return;
+      const fresh = [];
+      L.objs = (n.f.children || []).filter((c) => c.f && Array.isArray(c.f.url)).map((node) => {
+        let o = L.recs.get(node); if (!o) { o = { node, state: 'loading' }; L.recs.set(node, o); fresh.push(o); } return o;
+      });
+      count(); for (const o of fresh) load(o);
+    };
+    L.reset = reset; L.remove = remove;
+    L.abort = () => { clearTimeout(L.timer); L.aborted = true; if (n.f.enabled) count(); };
+    setTimeout(reset, 0);
+  },
+  fieldSet(n, field) { if (field === 'children' && n._ls) n._ls.reset(); },
+  receive(n, field, v) {
+    const L = n._ls; if (!L || !(field === 'enabled' || field === 'children' || field === 'timeOut')) return false;
+    n.f[field] = v; events.emit(n, field, v);
+    if (field === 'enabled') { if (v) L.reset(); else { L.abort(); L.remove(); } }
+    else if (field === 'children') L.reset();
+    else if (n.f.isActive) { clearTimeout(L.timer); L.aborted = false; if (v > 0) L.timer = setTimeout(L.abort, v * 1000); }
+    return true;
   },
 });

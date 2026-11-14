@@ -3,32 +3,31 @@
  "pass": true,
  "xsd": {
   "ok": true,
-  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/Anchor.x3d validates",
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/Anchor.x3d validates",
   "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
  },
  "test": {
   "ok": true,
-  "ours": "pass 18/18",
-  "xite": "pass 18/18",
+  "ours": "pass 42/42",
+  "xite": "pass 42/42",
   "map": {},
   "oursOk": true,
   "mapX": {},
   "xiteOk": true,
+  "comparison": "passed",
   "msg": "",
-  "gaps": [
-   "only #Viewpoint urls are followed in the test; other urls go to body.opts.onAnchor, a page without one gets a note and stays",
+  "scope": [
+   "only a #Viewpoint url is followed in the test; any other url goes to body.opts.onAnchor, a page without a handler gets a note and stays where it is (X_ITE 16.6.0 loads the url itself: the bridge never loads a world, that is the host's job)",
    "javascript: urls are refused on purpose",
-   "addChildren and removeChildren are accepted and not acted on",
-   "autoRefresh is not implemented",
-   "target= in parameter is passed to onAnchor, not acted on",
+   "target= in parameter is passed to onAnchor, not acted on; autoRefresh and autoRefreshTimeLimit are held, since the bridge loads nothing there is nothing to refresh",
    "the stock body does not report isBound for the first Viewpoint at load (X_ITE does), so the test binds V1 first"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 3b32691c2a96",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 88ac15df29b1",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "2b54cb9"
+ "driver_commit": "6820371"
 }

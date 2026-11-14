@@ -1,0 +1,34 @@
+{
+ "node": "PrimitivePickSensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/PrimitivePickSensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp + XSD patched: pickTarget added to the containerField values"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 40/40",
+  "xite": "pass 37/37",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "scope": [
+   "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); BOUNDS and GEOMETRY (Sphere against Box where the boxes overlap and the geometries do not), sortOrder CLOSEST / ANY / ALL / ALL_SORTED, objectType filter, pickable false, enabled false",
+   "a shape outside every PickableGroup is not pickable here (as 19775-1 asks); X_ITE 16.6.0 picks it, the fixture checks it in ours only",
+   "disabling a sensor that is active raises isActive false here; X_ITE 16.6.0 keeps it true, checked in ours only",
+   "a Sphere picking geometry is a 162 point hull (0.4 percent inside the true sphere); the target is the convex hull of its mesh, so a concave target counts as its hull, as in X_ITE 16.6.0",
+   "the pickingGeometry is read at build; a replaced pickingGeometry node is picked up on the next timestamp; non-uniform scale on the sensor is applied to the hull"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 48d8293ca0ad",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "df092f5"
+}

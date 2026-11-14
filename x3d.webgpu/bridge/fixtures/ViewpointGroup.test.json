@@ -12,7 +12,8 @@
     [
      "Top level",
      "Rooms » Hall",
-     "Rooms » Upstairs » Attic"
+     "Rooms » Upstairs » Attic",
+     "Moved » Under Move"
     ]
    ]
   },
@@ -23,7 +24,8 @@
     [
      "Top level",
      "Rooms » Hall",
-     "Rooms » Upstairs » Attic"
+     "Rooms » Upstairs » Attic",
+     "Moved » Under Move"
     ]
    ]
   },
@@ -42,7 +44,8 @@
    "js": [
     "__body.viewpointList().map(e=>e.text)",
     [
-     "Top level"
+     "Top level",
+     "Moved » Under Move"
     ]
    ]
   },
@@ -69,7 +72,8 @@
     "__body.viewpointList().map(e=>e.text)",
     [
      "Top level",
-     "Rooms » Hall"
+     "Rooms » Hall",
+     "Moved » Under Move"
     ]
    ]
   },
@@ -98,7 +102,8 @@
      "Top level",
      "Rooms » Hall",
      "Rooms » Upstairs » Attic",
-     "Hidden » Secret"
+     "Hidden » Secret",
+     "Moved » Under Move"
     ]
    ]
   },
@@ -119,7 +124,8 @@
     [
      "Top level",
      "Rooms » Hall",
-     "Rooms » Upstairs » Attic"
+     "Rooms » Upstairs » Attic",
+     "Moved » Under Move"
     ]
    ]
   },
@@ -146,7 +152,8 @@
      "Top level",
      "Rooms » Hall",
      "Rooms » Upstairs » Attic",
-     "Near » Far room"
+     "Near » Far room",
+     "Moved » Under Move"
     ]
    ]
   },
@@ -158,7 +165,8 @@
      "Top level",
      "Rooms » Hall",
      "Rooms » Upstairs » Attic",
-     "Near » Far room"
+     "Near » Far room",
+     "Moved » Under Move"
     ]
    ]
   },
@@ -197,7 +205,8 @@
      "Top level",
      "Rooms » Hall",
      "Rooms » Upstairs » Attic",
-     "Near » Far room"
+     "Near » Far room",
+     "Moved » Under Move"
     ]
    ]
   },
@@ -209,7 +218,8 @@
      "Top level",
      "Rooms » Hall",
      "Rooms » Upstairs » Attic",
-     "Near » Far room"
+     "Near » Far room",
+     "Moved » Under Move"
     ]
    ]
   },
@@ -221,6 +231,59 @@
      2,
      2,
      2
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.viewpointList().map(e=>e.text)",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic",
+     "Moved » Under Move"
+    ]
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').getActiveLayer().getUserViewpoints().map(v=>v.getDescriptions().join(' \\u00bb '))",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic",
+     "Moved » Under Move"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "G1",
+    "retainUserOffsets",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "G4",
+    "displayed",
+    false
+   ]
+  },
+  {
+   "set": [
+    "TT",
+    "translation",
+    [
+     0,
+     0,
+     -50
     ],
     "SFVec3f"
    ]
@@ -251,25 +314,39 @@
    ]
   },
   {
-   "expect": [
-    "G1",
-    "retainUserOffsets",
-    false
+   "set": [
+    "TT",
+    "translation",
+    [
+     0,
+     0,
+     10
+    ],
+    "SFVec3f"
    ]
   },
   {
-   "expect": [
-    "G4",
-    "displayed",
-    false
+   "settle": 0.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.viewpointList().map(e=>e.text)",
+    [
+     "Top level",
+     "Rooms » Hall",
+     "Rooms » Upstairs » Attic",
+     "Moved » Under Move"
+    ]
    ]
   }
  ],
  "note": "the viewpoint list of a scene with nested groups, a group hidden at load, one with a proximity box and a viewpoint with no description; each engine reads its own list (ours: Body.viewpointList(); X_ITE: the active layer's getUserViewpoints with their descriptions) and both must equal the same literal list after each change they can both make. Switching `displayed` while the scene runs is checked in ours only (see gaps).",
  "xiteDisagrees": "X_ITE 16.6.0 reads `displayed` once at load and ignores later changes (its ViewpointGroup listens to size and children, not displayed); the 4.0 text makes displayed an inputOutput field. Ours follows the text",
- "gaps": [
-  "the proximity box is tested in world coordinates: a ViewpointGroup under a moved Transform is tested as if the Transform were not there",
-  "retainUserOffsets is held but not applied (the stock body keeps no user offsets per viewpoint)",
-  "the page decides how to show the list; the stock pages have none, so Body.viewpointList() is the only way to read it"
+ "gaps": [],
+ "scope": [
+  "the proximity box is tested in the frame of the group's parent (a Transform above moves it); the test moves a group with a Transform and compares the list with X_ITE 16.6.0",
+  "retainUserOffsets is held; X_ITE 16.6.0 reads it only on the viewpoint nodes, never on a ViewpointGroup",
+  "the page decides how to show the list; the stock pages have none, so Body.viewpointList() is the only way to read it (X_ITE: getUserViewpoints)"
  ]
 }
