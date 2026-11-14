@@ -30,7 +30,7 @@ window.runOurs = async (spec, xml) => (window.__R && (__R.bridge.allowScripts = 
   settle: async (dt) => { const steps = Math.max(1, Math.round((dt || 0.05) / 0.05)); for (let i = 0; i < steps; i++) { __events.begin(ts += 0.05); for (const n of (window.__worlds || [])) for (const t of n.nodes) if (t.type === 'TimeSensor') __R.tickTimeSensor(t, ts); __events.drain(); } },
 }, spec, xml));</script>`;
 const PAGE_XITE = (w, h) => `<!doctype html><meta charset=utf-8><link rel=stylesheet href="/x_ite/x_ite.css"><body style="margin:0"><x3d-canvas id=c style="width:${w}px;height:${h}px;display:block"></x3d-canvas><script src="/x_ite/x_ite.min.js"></script><script>${RUNNER}
-window.runXite = async (spec, xml) => { const b = X3D.getBrowser('#c'); await b.loadComponents?.(b.getProfile ? b.getProfile('Full') : undefined).catch(() => {});
+window.runXite = async (spec, xml) => { const b = X3D.getBrowser('#c'); try { b.setBrowserOption('Notifications', false); b.setBrowserOption('Timings', false); } catch (e) {} await b.loadComponents?.(b.getProfile ? b.getProfile('Full') : undefined).catch(() => {});
   return runSpec({ name: 'xite', open: async (x) => { const sc = await b.createX3DFromString(x); await b.replaceWorld(sc); await b.nextFrame(); await b.nextFrame(); return sc; },
     apply: async (fn) => { fn(); await b.nextFrame(); await b.nextFrame(); }, settle: async (dt) => { await new Promise((r) => setTimeout(r, (dt || 0.05) * 1000)); await b.nextFrame(); } }, spec, xml); };
 window.xiteInfo = () => ({ name: X3D.getBrowser('#c').name, version: X3D.getBrowser('#c').version });</script>`;
@@ -76,7 +76,7 @@ async function main() {
       else { if (!po) { po = await newPage(); await po.goto(base + '/ours.html'); } if (haveX && spec.xite !== false && !px) { px = await newPage(); await px.goto(base + '/xite.html'); await px.waitForFunction(() => window.X3D && X3D.getBrowser('#c')); env.xite = await px.evaluate(() => JSON.stringify(window.xiteInfo())); } }
       const P = scene ? pos : po, PX = !haveX || spec.xite === false ? null : scene ? pxs : px;
       const r = { ok: false, ours: '?', xite: PX ? '?' : spec.xite === false ? 'not applicable (fixture)' : 'unavailable', mode: scene ? 'scene (look: reference bounds)' : 'events (hard)' };
-      try { const o = await P.evaluate(([f, s, x]) => window[f](s, x), [scene ? 'runScene' : 'runOurs', spec, xml]); r.shotsOurs = o.shots; r.ours = o.ok ? `pass ${o.steps}/${o.steps}` : 'FAIL ' + o.fails.join(' | '); r.oursOk = o.ok; r.map = o.map; } catch (e) { r.ours = 'ERROR ' + String(e).slice(0, 200); r.oursOk = false; }
+      try { const o = await P.evaluate(([f, s, x]) => window[f](s, x), [scene ? 'runScene' : 'runOurs', spec, xml]); r.shotsOurs = o.shots; if (o.recorded && o.recorded.length) r.recordedOurs = o.recorded; r.ours = o.ok ? `pass ${o.steps}/${o.steps}` : 'FAIL ' + o.fails.join(' | '); r.oursOk = o.ok; r.map = o.map; } catch (e) { r.ours = 'ERROR ' + String(e).slice(0, 200); r.oursOk = false; }
       if (PX) { try { const o = await PX.evaluate(([f, s, x]) => window[f](s, x), ['runXite', spec, xml]); r.shotsXite = o.shots; r.xite = o.ok ? `pass ${o.steps}/${o.steps}` : 'FAIL ' + o.fails.join(' | '); r.xiteOk = o.ok; r.mapX = o.map; } catch (e) { r.xite = 'ERROR ' + String(e).slice(0, 200); r.xiteOk = false; r.xiteError = true; } }
       if (r.shotsOurs && Object.keys(r.shotsOurs).length) { r.visual = {};
         for (const name of Object.keys(r.shotsOurs)) {

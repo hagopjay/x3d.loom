@@ -4,15 +4,15 @@ A three.js drawing half for the reader that the Babylon bridge ([`../../x3d.webg
 
 How hard is the port, group by group: [ESTIMATE.md](ESTIMATE.md). Node-by-node state: [NODES.md](NODES.md) (generated). Why each choice was made: below and in the headers of `src/body-three.js` and `tools/run-tests.js`.
 
-## Status (14 Nov 2026, `x3d.loom@ed1bed8`, three.js r187, X_ITE 16.6.0, Chromium 153.0.8010.12 SwiftShader)
+## Status (14 Nov 2026, batch 1 on `x3d.loom@87b1a35`, three.js r187, X_ITE 16.6.0, Chromium 153.0.8010.12 SwiftShader)
 
 | | nodes | meaning |
 |---|---|---|
-| drawn | 15 | the three.js body draws it, a fixture passed against X_ITE (10 fixtures; Shape, Appearance, Material, Coordinate, Color, NavigationInfo ride along) |
+| drawn | 23 | the three.js body draws it, a fixture passed against X_ITE (18 fixtures; Shape, Appearance, Material, Coordinate, Color, TextureCoordinate, NavigationInfo, Background, PixelTexture ride along) |
 | reader-checked | 29 | event or logic node; a shared fixture passed in the three.js bundle and in X_ITE |
-| reader | 50 | engine-free, not re-run here |
-| todo | 119 | needs the three.js body |
-| upstream | 47 | the Babylon bridge has not bridged it yet |
+| reader | 49 | engine-free, not re-run here |
+| todo | 122 | needs the three.js body |
+| upstream | 37 | the Babylon bridge has not bridged it yet |
 
 ## Run it
 
@@ -34,7 +34,7 @@ Env: `XITE_DIR` (X_ITE `dist/`), `THREE_DIR` (three `build/`), `CHROMIUM_EXECUTA
 | `tools/bundle.js` | concatenates reader + kit + nodes + `Geo.geometryData` (lifted from Babylon's `body.js`) + the body + `sai.js` |
 | `tools/run-tests.js` | the Babylon rig's `RUNNER`, `verdict` and `judgeVisual` and `METRICS`, on a three.js page; events specs are hard, scene `compare` numbers are reference bounds |
 | `tools/driver.py` | `init`, `status`, `check`, `next`; keeps `NODES.json`, `NODES.md`, `receipts/` |
-| `fixtures/` | 10 scene fixtures and specs: Box, Sphere, Cone, Cylinder, IndexedFaceSet, Transform, Switch, DirectionalLight, Material, Viewpoint |
+| `fixtures/` | 18 scene fixtures and specs: Box, Sphere, Cone, Cylinder, IndexedFaceSet, Transform, Switch, DirectionalLight, Material, Viewpoint (batch 0); PointLight, PointLightAttenuation, SpotLight, Fog, PixelTexture, ImageTexture, TextureTransform, TexturedPrimitives (batch 1) |
 
 ## The choices, and why
 
@@ -46,9 +46,13 @@ Env: `XITE_DIR` (X_ITE `dist/`), `THREE_DIR` (three `build/`), `CHROMIUM_EXECUTA
 6. **Transform is one matrix.** T C R SR S -SR -C keeps a shear; the Babylon body decomposes to TRS and logs the loss.
 7. **The first Viewpoint is bound at load** (19775-1 23.4.1). The first run drew at the default pose and missed X_ITE by IoU 0.34 to 0.64 on every fixture until this was added; with it, 1.00.
 
+8. **Shader chunks patched, once, with the X3D formula** (`patchThreeShaders`; a replace that finds nothing throws, so a three.js upgrade fails loudly): point and spot `radius` is a hard edge (three.js dims with a window), the spot cone is a linear ramp in the angle (three.js: smoothstep over cosines), fog uses the distance to the eye and X_ITE's LINEAR and EXPONENTIAL formulas (three.js: view depth and smoothstep), attenuation is the polynomial normalised by a0 (`decay` carries b2 or minus b1). Measured against X_ITE: SpotLight 63.1 dB, PointLight 36.3 to 51.2 dB, Fog 46.6 to 53.4 dB, attenuation 59.2 dB.
+9. **Lights are children of their parent group's object**, so a Transform above a light moves and turns it with no refresh.
+10. **UV conventions, found by reading X_ITE 16.6.0 and checking the picture:** Sphere u = 0 at -Z growing toward -X; Cylinder and Cone the same, with planar cap images; TextureTransform is the matrix `-C S R C T` read as a column matrix, not the T C R S -C order of Transform (50.1 dB against 21.3 dB for the wrong order). Box needed nothing (99 dB).
+
 ## Known gaps (also in each spec's `gaps` and `scope`)
 
-`global=FALSE` lights light the whole scene; material `ambientIntensity` is a fixed 0.2; PointLight, SpotLight, Fog, textures beyond a plain `ImageTexture`, Billboard, ClipPlane, picking and pointer sensors are not drawn yet (`body-three.js` notes `skipped <Node>`; `src/nodes/` is empty on purpose, the registry is in place); the PhysicalMaterial sphere has no environment, so it is near black in both engines; no real-GPU timing exists and none is claimed.
+`global=FALSE` lights light the whole scene; material `ambientIntensity` is a fixed 0.2; attenuation with both a1 and a2 non-zero is a fit, not exact; MultiTexture, movie and cube-map textures, TextureProperties, Billboard, ClipPlane, picking and pointer sensors are not drawn yet (`body-three.js` notes `skipped <Node>`; `src/nodes/` is empty on purpose, the registry is in place); the PhysicalMaterial sphere has no environment, so it is near black in both engines; no real-GPU timing exists and none is claimed.
 
 ## Adding a node
 

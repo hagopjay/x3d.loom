@@ -19,9 +19,9 @@ TRK = os.path.join(HERE, 'NODES.json')
 # nodes the Babylon core body (demo/src/brain/body.js) draws without a bridge node file
 CORE_DRAW = {'Group', 'Switch', 'Transform', 'Shape', 'Appearance', 'Viewpoint', 'Box', 'Sphere', 'Cylinder', 'IndexedFaceSet', 'IndexedTriangleSet', 'IndexedLineSet', 'Text', 'Material', 'PhysicalMaterial',
              'ImageTexture', 'TextureTransform', 'TextureCoordinate', 'Coordinate', 'Color', 'Normal', 'Background', 'Fog', 'NavigationInfo', 'TouchSensor', 'ClipPlane', 'Billboard', 'EnvironmentLight', 'Sound',
-             'LineProperties', 'ComposedShader', 'ShaderPart', 'PointLight', 'SpotLight', 'DirectionalLight', 'Cone', 'ElevationGrid', 'Extrusion', 'PointSet', 'Inline', 'LOD', 'Anchor', 'Collision', 'Rectangle2D', 'Disk2D'}
+             'LineProperties', 'ComposedShader', 'ShaderPart', 'PointLight', 'SpotLight', 'DirectionalLight', 'Cone', 'ElevationGrid', 'Extrusion', 'PointSet', 'Inline', 'LOD', 'Anchor', 'Collision', 'Rectangle2D', 'Disk2D', 'PixelTexture', 'SpotLight'}
 # what a three.js fixture exercises besides its own node (the fixture name is the node it is about)
-COVERS = {'Box': ['Shape', 'Appearance', 'Material', 'NavigationInfo', 'Viewpoint'], 'IndexedFaceSet': ['Coordinate', 'Color'], 'DirectionalLight': ['NavigationInfo']}
+COVERS = {'Box': ['Shape', 'Appearance', 'Material', 'NavigationInfo', 'Viewpoint'], 'IndexedFaceSet': ['Coordinate', 'Color'], 'DirectionalLight': ['NavigationInfo'], 'ImageTexture': ['TextureCoordinate'], 'Fog': ['Background'], 'PointLightAttenuation': ['PointLight'], 'TexturedPrimitives': ['PixelTexture']}
 
 def load(p): return json.load(open(p))
 def hooks(name):
