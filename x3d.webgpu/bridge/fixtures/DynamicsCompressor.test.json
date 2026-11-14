@@ -1,10 +1,7 @@
 {
  "node": "DynamicsCompressor",
  "mode": "scene",
- "note": "attack, knee, ratio, release and threshold each held to their Web Audio range and compared with X_ITE 16.6.0, the input stage, and reduction (0 dB for silence) while active. Runs on the real clock. The compressed sound is not compared.",
- "gaps": [
-  "reduction is read from the audio node every tick while active; with real sound it follows the signal, here only silence is tested"
- ],
+ "note": "attack, knee, ratio, release and threshold each held to their Web Audio range and compared with X_ITE 16.6.0, the input stage, and reduction (0 dB for silence) while active. Runs on the real clock. The compressed sound is not compared. Signal compared with X_ITE 16.6.0 on the page's real Web Audio clock against a DynamicsCompressorNode made on the page with the same threshold, knee, ratio, attack and release and the same 1 kHz sine: for four settings (loud sine with the defaults, low threshold with ratio 20 and a hard knee, a quiet sine below the threshold, a full scale sine against threshold -10) the output rms (within 0.02), the first harmonic (0.03) and the reduction output (within 1.5 dB of the audio node's own reading) agree with the reference and with X_ITE.",
  "steps": [
   {
    "expect": [
@@ -879,6 +876,567 @@
     "isActive",
     false
    ]
+  },
+  {
+   "tap": [
+    "c",
+    [
+     "SO",
+     "SC"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "set": [
+    "SC",
+    "threshold",
+    -24
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "knee",
+    30
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "ratio",
+    12
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "attack",
+    0.003
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "release",
+    0.25
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const c=AUD.ctx;const o=c.createOscillator();o.type='sine';o.frequency.value=1000;const g=c.createGain();g.gain.value=0.5;const d=c.createDynamicsCompressor();d.threshold.value=-24;d.knee.value=30;d.ratio.value=12;d.attack.value=0.003;d.release.value=0.25;o.connect(g);g.connect(d);AUD.nodes.r1=d;AUD.nodes.o1=o;o.start();return 0})()",
+    "mk1"
+   ]
+  },
+  {
+   "tap": [
+    "rc1",
+    "$r1"
+   ]
+  },
+  {
+   "settle": 1.8
+  },
+  {
+   "sig": [
+    "c",
+    "cA",
+    {
+     "ch": 1,
+     "f0": 1000
+    }
+   ]
+  },
+  {
+   "sig": [
+    "rc1",
+    "refcA",
+    {
+     "f0": 1000
+    }
+   ]
+  },
+  {
+   "amap": [
+    "scene.getNamedNode('SC').reduction",
+    "cA.red"
+   ]
+  },
+  {
+   "amap": [
+    "AUD.nodes.r1.reduction",
+    "refcA.red"
+   ]
+  },
+  {
+   "close": [
+    "cA.rms",
+    "refcA.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "cA.red",
+    "refcA.red",
+    1.5
+   ]
+  },
+  {
+   "close": [
+    "cA.h1",
+    "refcA.h1",
+    0.03
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{AUD.nodes.o1.stop();return 0})()",
+    "rs1"
+   ]
+  },
+  {
+   "untap": "rc1"
+  },
+  {
+   "set": [
+    "SC",
+    "threshold",
+    -50
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "knee",
+    0
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "ratio",
+    20
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "attack",
+    0.003
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "release",
+    0.25
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const c=AUD.ctx;const o=c.createOscillator();o.type='sine';o.frequency.value=1000;const g=c.createGain();g.gain.value=0.5;const d=c.createDynamicsCompressor();d.threshold.value=-50;d.knee.value=0;d.ratio.value=20;d.attack.value=0.003;d.release.value=0.25;o.connect(g);g.connect(d);AUD.nodes.r2=d;AUD.nodes.o2=o;o.start();return 0})()",
+    "mk2"
+   ]
+  },
+  {
+   "tap": [
+    "rc2",
+    "$r2"
+   ]
+  },
+  {
+   "settle": 1.8
+  },
+  {
+   "sig": [
+    "c",
+    "cB",
+    {
+     "ch": 1,
+     "f0": 1000
+    }
+   ]
+  },
+  {
+   "sig": [
+    "rc2",
+    "refcB",
+    {
+     "f0": 1000
+    }
+   ]
+  },
+  {
+   "amap": [
+    "scene.getNamedNode('SC').reduction",
+    "cB.red"
+   ]
+  },
+  {
+   "amap": [
+    "AUD.nodes.r2.reduction",
+    "refcB.red"
+   ]
+  },
+  {
+   "close": [
+    "cB.rms",
+    "refcB.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "cB.red",
+    "refcB.red",
+    1.5
+   ]
+  },
+  {
+   "close": [
+    "cB.h1",
+    "refcB.h1",
+    0.03
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{AUD.nodes.o2.stop();return 0})()",
+    "rs2"
+   ]
+  },
+  {
+   "untap": "rc2"
+  },
+  {
+   "set": [
+    "SC",
+    "threshold",
+    -24
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "knee",
+    30
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "ratio",
+    12
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "attack",
+    0.003
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "release",
+    0.25
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "gain",
+    0.01
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const c=AUD.ctx;const o=c.createOscillator();o.type='sine';o.frequency.value=1000;const g=c.createGain();g.gain.value=0.01;const d=c.createDynamicsCompressor();d.threshold.value=-24;d.knee.value=30;d.ratio.value=12;d.attack.value=0.003;d.release.value=0.25;o.connect(g);g.connect(d);AUD.nodes.r3=d;AUD.nodes.o3=o;o.start();return 0})()",
+    "mk3"
+   ]
+  },
+  {
+   "tap": [
+    "rc3",
+    "$r3"
+   ]
+  },
+  {
+   "settle": 1.8
+  },
+  {
+   "sig": [
+    "c",
+    "cC",
+    {
+     "ch": 1,
+     "f0": 1000
+    }
+   ]
+  },
+  {
+   "sig": [
+    "rc3",
+    "refcC",
+    {
+     "f0": 1000
+    }
+   ]
+  },
+  {
+   "amap": [
+    "scene.getNamedNode('SC').reduction",
+    "cC.red"
+   ]
+  },
+  {
+   "amap": [
+    "AUD.nodes.r3.reduction",
+    "refcC.red"
+   ]
+  },
+  {
+   "close": [
+    "cC.rms",
+    "refcC.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "cC.red",
+    "refcC.red",
+    1.5
+   ]
+  },
+  {
+   "close": [
+    "cC.h1",
+    "refcC.h1",
+    0.03
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{AUD.nodes.o3.stop();return 0})()",
+    "rs3"
+   ]
+  },
+  {
+   "untap": "rc3"
+  },
+  {
+   "set": [
+    "SC",
+    "threshold",
+    -10
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "knee",
+    5
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "ratio",
+    4
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "attack",
+    0.003
+   ]
+  },
+  {
+   "set": [
+    "SC",
+    "release",
+    0.25
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "gain",
+    1.0
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const c=AUD.ctx;const o=c.createOscillator();o.type='sine';o.frequency.value=1000;const g=c.createGain();g.gain.value=1.0;const d=c.createDynamicsCompressor();d.threshold.value=-10;d.knee.value=5;d.ratio.value=4;d.attack.value=0.003;d.release.value=0.25;o.connect(g);g.connect(d);AUD.nodes.r4=d;AUD.nodes.o4=o;o.start();return 0})()",
+    "mk4"
+   ]
+  },
+  {
+   "tap": [
+    "rc4",
+    "$r4"
+   ]
+  },
+  {
+   "settle": 1.8
+  },
+  {
+   "sig": [
+    "c",
+    "cD",
+    {
+     "ch": 1,
+     "f0": 1000
+    }
+   ]
+  },
+  {
+   "sig": [
+    "rc4",
+    "refcD",
+    {
+     "f0": 1000
+    }
+   ]
+  },
+  {
+   "amap": [
+    "scene.getNamedNode('SC').reduction",
+    "cD.red"
+   ]
+  },
+  {
+   "amap": [
+    "AUD.nodes.r4.reduction",
+    "refcD.red"
+   ]
+  },
+  {
+   "close": [
+    "cD.rms",
+    "refcD.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "cD.red",
+    "refcD.red",
+    1.5
+   ]
+  },
+  {
+   "close": [
+    "cD.h1",
+    "refcD.h1",
+    0.03
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{AUD.nodes.o4.stop();return 0})()",
+    "rs4"
+   ]
+  },
+  {
+   "untap": "rc4"
+  },
+  {
+   "amap": [
+    "map['cA.red']<-2?1:0",
+    "chkA"
+   ]
+  },
+  {
+   "close": [
+    "chkA",
+    1,
+    0.5
+   ]
+  },
+  {
+   "amap": [
+    "Math.abs(map['cC.red'])<1?1:0",
+    "chkC"
+   ]
+  },
+  {
+   "close": [
+    "chkC",
+    1,
+    0.5
+   ]
   }
+ ],
+ "agree": [
+  [
+   "cA.rms",
+   0.02
+  ],
+  [
+   "cA.red",
+   0.12
+  ],
+  [
+   "cB.rms",
+   0.02
+  ],
+  [
+   "cB.red",
+   0.12
+  ],
+  [
+   "cC.rms",
+   0.02
+  ],
+  [
+   "cC.red",
+   0.3
+  ],
+  [
+   "cD.rms",
+   0.02
+  ],
+  [
+   "cD.red",
+   0.12
+  ]
+ ],
+ "scope": [
+  "the compressor's time response (attack and release as a function of time) is not compared, only the settled level; Web Audio's compressor adds a makeup gain and a look-ahead of about 6 ms that no X3D field controls; the reduction output is read once per frame (3 frames per second in our reader)"
  ]
 }

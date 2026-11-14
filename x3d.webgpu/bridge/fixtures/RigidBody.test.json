@@ -1,0 +1,97 @@
+{
+ "node": "RigidBody",
+ "mode": "scene",
+ "note": "Two equal spheres (mass 1, radius 0.5) fly at each other at 2 m/s with no gravity, bounce 1 and minBounceSpeed 0: after the hit each has the other's velocity (the exact pair test of a collision). A third body with a force of 2 N along x gains 2 m/s every second.",
+ "gaps": [
+  "the bridge engine is its own (see RigidBodyCollection); the inertia field is ignored, the inertia is worked out from the shapes, as X_ITE's Bullet does",
+  "centerOfMass, finiteRotationAxis, useFiniteRotation, autoDamp, autoDisable and massDensityModel are kept but have no effect"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "A1",
+    "mass",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "A1",
+    "fixed",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "A1",
+    "useGlobalGravity",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "A1",
+    "linearDampingFactor",
+    0.001
+   ]
+  },
+  {
+   "settle": 4
+  },
+  {
+   "nearv": [
+    "A1",
+    "linearVelocity",
+    [
+     -2,
+     0,
+     0
+    ],
+    0.4
+   ]
+  },
+  {
+   "nearv": [
+    "A2",
+    "linearVelocity",
+    [
+     2,
+     0,
+     0
+    ],
+    0.4
+   ]
+  },
+  {
+   "set": [
+    "F0",
+    "forces",
+    [
+     [
+      2,
+      0,
+      0
+     ]
+    ],
+    "MFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(async()=>{const n=__worlds[__worlds.length-1].nodes.find(n=>n.def==='F0');const v0=n.f.linearVelocity[0];await new Promise(r=>setTimeout(r,1000));return Math.abs(n.f.linearVelocity[0]-v0-2)<0.35})()",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(async()=>{const n=X3D.getBrowser('#c').currentScene.getNamedNode('F0');const v0=n.linearVelocity[0];await new Promise(r=>setTimeout(r,1000));return Math.abs(n.linearVelocity[0]-v0-2)<0.35})()",
+    true
+   ]
+  }
+ ]
+}

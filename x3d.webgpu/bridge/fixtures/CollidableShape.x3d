@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="RigidBodyPhysics" level="2"/><meta name="title" content="CollidableShape.x3d"/><meta name="description" content="Bridge fixture for CollidableShape: a tilted box falls flat on the ground and a sphere sits on its radius"/></head>
+  <Scene>
+    <NavigationInfo type='"EXAMINE" "ANY"' transitionType='"TELEPORT"' headlight="false"/>
+    <Viewpoint position="0 0 10"/>
+    <RigidBodyCollection DEF="W" >
+      <RigidBody DEF="G" position="0 -0.5 0" mass="1" fixed="true" ><CollidableShape containerField="geometry"><Shape containerField="shape"><Box size="20 1 20"/></Shape></CollidableShape></RigidBody>
+      <RigidBody DEF="BX" position="-3 3 0" mass="1" orientation="0 0 1 0.4" ><CollidableShape containerField="geometry"><Shape containerField="shape"><Box size="1 1 1"/></Shape></CollidableShape></RigidBody>
+      <RigidBody DEF="SP" position="3 3 0" mass="1" ><CollidableShape containerField="geometry"><Shape containerField="shape"><Sphere radius="0.7"/></Shape></CollidableShape></RigidBody>
+      <CollisionCollection containerField="collider" bounce="0" frictionCoefficients="0.8 0.8"/>
+    </RigidBodyCollection>
+  </Scene>
+</X3D>
