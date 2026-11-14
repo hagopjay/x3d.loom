@@ -1,0 +1,217 @@
+{
+ "node": "NurbsPositionInterpolator",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/NurbsPositionInterpolator.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 55/55",
+  "xite": "pass 52/52",
+  "map": {
+   "a0": [
+    0,
+    0,
+    0
+   ],
+   "b0": [
+    0,
+    0,
+    0
+   ],
+   "a1": [
+    0.39999999999999997,
+    0.7200000000000001,
+    0.02
+   ],
+   "b1": [
+    0.813773148148148,
+    1.7,
+    0.09756944444444443
+   ],
+   "a2": [
+    1,
+    1.5,
+    0.125
+   ],
+   "b2": [
+    1.543330439814815,
+    1.25,
+    0.3526475694444445
+   ],
+   "a3": [
+    2,
+    2,
+    0.5
+   ],
+   "b3": [
+    2.3929209183673477,
+    0.606122448979592,
+    0.058992346938775475
+   ],
+   "a4": [
+    3.08,
+    1.4168,
+    0.8942000000000001
+   ],
+   "b4": [
+    3.337113329081633,
+    0.8930938775510204,
+    -0.4031777423469388
+   ],
+   "a5": [
+    4,
+    0,
+    1
+   ],
+   "b5": [
+    5,
+    1,
+    2
+   ],
+   "a6": [
+    0,
+    0,
+    0
+   ],
+   "b6": [
+    0,
+    0,
+    0
+   ],
+   "a7": [
+    4,
+    0,
+    1
+   ],
+   "b7": [
+    5,
+    1,
+    2
+   ],
+   "c0": [
+    2.1,
+    -0.14,
+    0.5599999999999999
+   ],
+   "c1": [
+    2,
+    -1,
+    1
+   ]
+  },
+  "oursOk": true,
+  "mapX": {
+   "a0": [
+    0,
+    0,
+    0
+   ],
+   "b0": [
+    0,
+    0,
+    0
+   ],
+   "a1": [
+    0.4000000000000001,
+    0.7200000000000001,
+    0.020000000000000004
+   ],
+   "b1": [
+    0.8137731481481483,
+    1.7000000000000002,
+    0.09756944444444446
+   ],
+   "a2": [
+    1,
+    1.5,
+    0.125
+   ],
+   "b2": [
+    1.5433304398148149,
+    1.25,
+    0.3526475694444445
+   ],
+   "a3": [
+    2,
+    2,
+    0.5
+   ],
+   "b3": [
+    2.3929209183673468,
+    0.6061224489795918,
+    0.0589923469387755
+   ],
+   "a4": [
+    3.08,
+    1.4167999999999998,
+    0.8942
+   ],
+   "b4": [
+    3.3371133290816335,
+    0.8930938775510203,
+    -0.4031777423469387
+   ],
+   "a5": [
+    4,
+    0,
+    1
+   ],
+   "b5": [
+    5,
+    1,
+    2
+   ],
+   "a6": [
+    0,
+    0,
+    0
+   ],
+   "b6": [
+    0,
+    0,
+    0
+   ],
+   "a7": [
+    4,
+    0,
+    1
+   ],
+   "b7": [
+    5,
+    1,
+    2
+   ],
+   "c0": [
+    2.1,
+    -0.13999999999999999,
+    0.5599999999999999
+   ],
+   "c1": [
+    2,
+    -1,
+    1
+   ]
+  },
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "weights: X_ITE 16.6.0 returns the unweighted B-spline point (0.75, 0.75, 0) where a rational B-spline has (0.7071, 0.7071, 0); this node follows the standard (the weighted quarter circle is exact to 1e-6)",
+   "the curve is open (the node has no closed field): a closed loop needs its own start point repeated and ends on it",
+   "X_ITE 16.6.0 throws TypeError (reading domain of undefined) when set_fraction reaches an interpolator whose curve is invalid (order 4 with three control points) and the page stops answering; the bridge raises no event, so that case is only sent to this engine"
+  ],
+  "scope": [
+   "every number compared here is the value_changed event of the node, read through the SAI in both engines"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 8257de7f6cd3",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "e1a2371"
+}
