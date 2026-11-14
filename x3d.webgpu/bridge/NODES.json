@@ -1541,11 +1541,13 @@
    "inherits": "X3DLayerNode",
    "container": "layers",
    "nfields": 8,
-   "status": "gap",
-   "batch": 17,
+   "status": "bridged",
+   "batch": 35,
    "receipt": "receipts/Layer.json",
-   "note": "pickable, objectType, pointerEvents and viewport are held: picking does not respect layers; addChildren and removeChildren rebuild the layer; this is checked in the SAI test of LayerSet only if the engine exposes them (X_ITE does), here only the fields are compared",
-   "rank": 152
+   "note": "viewport of a Layer is a clip rectangle of the layer's camera, compared with X_ITE in the Viewport fixture, not here; a pick sensor sees only the shapes of its own layer (X_ITE gives every layer a pickable group of its own); the world counts as layer 0; a layer's pointer events: the top drawn layer that has a hit wins whatever its depth; compared on the LayerSet fixture",
+   "rank": 152,
+   "prev_batch": 17,
+   "prev_note": "pickable, objectType, pointerEvents and viewport are held: picking does not respect layers; addChildren and removeChildren rebuild the layer; this is checked in the SAI test of LayerSet only if the engine exposes them (X_ITE does), here only the fields are compared"
   },
   "LayerSet": {
    "component": "Layering",
@@ -1557,7 +1559,7 @@
    "status": "gap",
    "batch": 17,
    "receipt": "receipts/LayerSet.json",
-   "note": "activeLayer (which layer the user navigates) and the navigation of a layer's own Viewpoint are held, not acted on: the user always navigates the world's camera; a layer's Viewpoint is read once and per frame, not bound or animated; the layer has no NavigationInfo, Background or headlight of its own; picking does not respect layers: a ray hits the meshes of every layer, and pickable / objectType / viewport are held; lights of the world light the meshes of every layer; a layer has no lights of its own; order without any visible layer draws the world (Babylon needs a camera)",
+   "note": "activeLayer (which layer the user navigates) and the navigation of a layer's own Viewpoint are held, not acted on: the user always navigates the world's camera; a layer's Viewpoint is read once and per frame, not bound or animated; the layer has no NavigationInfo, Background or headlight of its own; lights of the world light the meshes of every layer; a layer has no lights of its own; order without any visible layer draws the world (Babylon needs a camera)",
    "rank": 153
   },
   "Layout": {
@@ -1567,11 +1569,13 @@
    "inherits": "X3DLayoutNode",
    "container": "layout",
    "nfields": 7,
-   "status": "gap",
-   "batch": 18,
+   "status": "bridged",
+   "batch": 35,
    "receipt": "receipts/Layout.json",
-   "note": "a Layout inside a LayoutGroup that sits in the perspective world uses the near plane of the camera as the viewport size (like X_ITE); only the orthographic layer is probed here; the offset and size units of PIXEL count CSS pixels of the canvas; no device pixel ratio is read",
-   "rank": 155
+   "note": "three pictures (settings of all six fields) agree with X_ITE 16.6.0: silhouette iou 1.0, mean difference 1.2 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0; a Layout inside a LayoutGroup that sits in the perspective world uses the near plane of the camera as the viewport size (as X_ITE does), so only the orthographic layer is probed; the offset and size units of PIXEL count CSS pixels of the canvas; no device pixel ratio is read (X_ITE divides by its ContentScale)",
+   "rank": 155,
+   "prev_batch": 18,
+   "prev_note": "a Layout inside a LayoutGroup that sits in the perspective world uses the near plane of the camera as the viewport size (like X_ITE); only the orthographic layer is probed here; the offset and size units of PIXEL count CSS pixels of the canvas; no device pixel ratio is read"
   },
   "LayoutGroup": {
    "component": "Layout",
@@ -1593,11 +1597,13 @@
    "inherits": "X3DLayerNode",
    "container": "layers",
    "nfields": 9,
-   "status": "gap",
-   "batch": 18,
+   "status": "bridged",
+   "batch": 35,
    "receipt": "receipts/LayoutLayer.json",
-   "note": "pickable, objectType and pointerEvents are held: picking does not respect layers; a LayoutLayer without a Layout shows its children as they are, a Layout is probed in the Layout fixture",
-   "rank": 157
+   "note": "pickable and objectType gate a pick sensor in the layer, pointerEvents gates a TouchSensor in it, addChildren / removeChildren change what it draws (all compared with X_ITE 16.6.0); two pictures of the layer's viewport (left and right half) agree with X_ITE 16.6.0: silhouette iou 1.0, mean difference 1.5 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0; a LayoutLayer without a Layout shows its children as they are; a Layout is probed in the Layout fixture",
+   "rank": 157,
+   "prev_batch": 18,
+   "prev_note": "pickable, objectType and pointerEvents are held: picking does not respect layers; a LayoutLayer without a Layout shows its children as they are, a Layout is probed in the Layout fixture"
   },
   "LinePickSensor": {
    "component": "Picking",
@@ -2627,11 +2633,13 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 8,
-   "status": "gap",
-   "batch": 19,
+   "status": "bridged",
+   "batch": 35,
    "receipt": "receipts/ScreenGroup.json",
-   "note": "the pixel size comes from the depth of the group's origin only, as in X_ITE: the nearer face of a deep child looks a little larger; no snapping to whole pixels (X_ITE does not snap for ScreenGroup either); the device content scale is 1",
-   "rank": 159
+   "note": "three pictures agree with X_ITE 16.6.0 on place and size (bounding boxes within 1 px; silhouette iou 0.93, mean difference 1.7 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0); X_ITE's picture has an anti-aliased ring of about one pixel that the body's does not, which is what the iou below 1 measures (bound iou 0.9); the pixel size comes from the depth of the group's origin only, as in X_ITE: the nearer face of a deep child looks a little larger; no snapping to whole pixels (X_ITE does not snap for ScreenGroup either); the device content scale is taken as 1 (X_ITE multiplies by its ContentScale)",
+   "rank": 159,
+   "prev_batch": 19,
+   "prev_note": "the pixel size comes from the depth of the group's origin only, as in X_ITE: the nearer face of a deep child looks a little larger; no snapping to whole pixels (X_ITE does not snap for ScreenGroup either); the device content scale is 1"
   },
   "Script": {
    "component": "Scripting",
@@ -3375,11 +3383,13 @@
    "inherits": "X3DViewportNode",
    "container": "viewport",
    "nfields": 9,
-   "status": "gap",
-   "batch": 18,
+   "status": "bridged",
+   "batch": 35,
    "receipt": "receipts/Viewport.json",
-   "note": "a Viewport used as a grouping node of the world builds its children but does not clip them (Babylon has one viewport per camera; the world's camera is shared); the layer's picture is squeezed into the clip rectangle, not cut out of the full picture: the same as X_ITE's viewport, which also changes the aspect",
-   "rank": 154
+   "note": "the layer's viewport (clip rectangle) and a Viewport node in the world are compared with X_ITE 16.6.0 as pictures (silhouette iou 1.0, mean difference 1.3 to 1.6 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0; bound iou 0.97, mad 4): in a layer the rectangle is the layer's own projection, in the world the projection of the whole canvas is squeezed into the rectangle (both as X_ITE does); a Viewport in the world is drawn by a camera of its own over the world, with the depth cleared between the two; X_ITE keeps one depth buffer, so a world object in front of the Viewport's content is not hidden behind it here (not compared); a pointer outside the rectangle does not reach the layer or the Viewport's children (compared with TouchSensors); XSD finding: x3d-4.0.xsd (x3d_mcp) takes a Viewport as the viewport of a layer, not as a child of Scene or a group; the world-level fixture is checked against the XSD plus one line (xsdAllow, the receipt names it)",
+   "rank": 154,
+   "prev_batch": 18,
+   "prev_note": "a Viewport used as a grouping node of the world builds its children but does not clip them (Babylon has one viewport per camera; the world's camera is shared); the layer's picture is squeezed into the clip rectangle, not cut out of the full picture: the same as X_ITE's viewport, which also changes the aspect"
   },
   "VisibilitySensor": {
    "component": "EnvironmentalSensor",

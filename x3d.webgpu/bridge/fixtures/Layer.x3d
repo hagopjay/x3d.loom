@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
-  <head><component name="Layering" level="1"/><meta name="title" content="Layer.x3d"/><meta name="description" content="Bridge fixture for Layer: a layer with a blue box, drawn over the empty world, visible, and the held fields (the last LayerSet of the scene is the active one in both engines; the first is a spare that stays unused)"/></head>
+  <head><component name="Layering" level="1"/><component name="Picking" level="3"/><meta name="title" content="Layer.x3d"/><meta name="description" content="Bridge fixture for Layer: a layer with a blue box, drawn over the empty world, visible, and the held fields (the last LayerSet of the scene is the active one in both engines; the first is a spare that stays unused)"/></head>
   <Scene>
     <NavigationInfo type='"EXAMINE" "ANY"' transitionType='"TELEPORT"' headlight="false"/>
     <Viewpoint position="0 0 10"/>
+    <Switch whichChoice="-1"><Transform DEF="LX" translation="3 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="2 2 2"/></Shape></Transform></Switch>
     <LayerSet DEF="Spare">
       <Layer DEF="P">
         <Transform translation="0 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="2 2 2"/></Shape></Transform>
@@ -11,7 +12,10 @@
     </LayerSet>
     <LayerSet order="0 1">
       <Layer DEF="N">
-        <Transform translation="0 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 0 1"/></Appearance><Box size="2 2 2"/></Shape></Transform>
+        <Transform DEF="LT" translation="0 0 0"><TouchSensor DEF="LTS"/><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 0 1"/></Appearance><Box DEF="LB" size="2 2 2"/></Shape></Transform>
+        <Transform translation="0 0 0"><Shape><Box size="0.02 0.02 0.02"/></Shape>
+          <PointPickSensor DEF="PS" intersectionType="GEOMETRY"><PointSet containerField="pickingGeometry"><Coordinate point="0 0 0"/></PointSet><Transform USE="LT" containerField="pickTarget"/></PointPickSensor>
+        </Transform>
       </Layer>
     </LayerSet>
   </Scene>

@@ -2,10 +2,7 @@
  "node": "Layout",
  "mode": "scene",
  "note": "A blue box of size 1 sits in a LayoutLayer. Each step sets all six fields of the Layout and probes the picture (composited frame, both engines): inside the predicted box blue, a few pixels outside it black. The predictions follow the arithmetic of X_ITE 16.6.0's Layout (size and offset units FRACTION / PIXEL / WORLD, align, scale mode NONE / FRACTION / PIXEL / STRETCH; at the top level NONE counts as FRACTION). The canvas is 320 by 240 and the layer's camera is orthographic (-1 -1 1 1), so one unit is 120 pixels.",
- "gaps": [
-  "a Layout inside a LayoutGroup that sits in the perspective world uses the near plane of the camera as the viewport size (like X_ITE); only the orthographic layer is probed here",
-  "the offset and size units of PIXEL count CSS pixels of the canvas; no device pixel ratio is read"
- ],
+ "gaps": [],
  "steps": [
   {
    "expect": [
@@ -267,6 +264,9 @@
   },
   {
    "settle": 0.4
+  },
+  {
+   "shot": "v2"
   },
   {
    "px": [
@@ -573,6 +573,9 @@
   },
   {
    "settle": 0.4
+  },
+  {
+   "shot": "v3"
   },
   {
    "px": [
@@ -891,6 +894,9 @@
   },
   {
    "settle": 0.4
+  },
+  {
+   "shot": "v1"
   },
   {
    "px": [
@@ -1294,5 +1300,28 @@
     45
    ]
   }
+ ],
+ "tone": "none",
+ "compare": {
+  "v3": {
+   "iou": 0.97,
+   "mad": 4,
+   "fg": 10
+  },
+  "v2": {
+   "iou": 0.97,
+   "mad": 4,
+   "fg": 10
+  },
+  "v1": {
+   "iou": 0.97,
+   "mad": 4,
+   "fg": 10
+  }
+ },
+ "scope": [
+  "three pictures (settings of all six fields) agree with X_ITE 16.6.0: silhouette iou 1.0, mean difference 1.2 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0",
+  "a Layout inside a LayoutGroup that sits in the perspective world uses the near plane of the camera as the viewport size (as X_ITE does), so only the orthographic layer is probed",
+  "the offset and size units of PIXEL count CSS pixels of the canvas; no device pixel ratio is read (X_ITE divides by its ContentScale)"
  ]
 }

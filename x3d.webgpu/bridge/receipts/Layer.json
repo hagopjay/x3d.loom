@@ -3,28 +3,30 @@
  "pass": true,
  "xsd": {
   "ok": true,
-  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/Layer.x3d validates",
-  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/Layer.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp + XSD patched: pickTarget added to the containerField values"
  },
  "test": {
   "ok": true,
-  "ours": "pass 17/17",
-  "xite": "pass 17/17",
+  "ours": "pass 59/59",
+  "xite": "pass 59/59",
   "map": {},
   "oursOk": true,
   "mapX": {},
   "xiteOk": true,
+  "comparison": "passed",
   "msg": "",
-  "gaps": [
-   "pickable, objectType, pointerEvents and viewport are held: picking does not respect layers",
-   "addChildren and removeChildren rebuild the layer; this is checked in the SAI test of LayerSet only if the engine exposes them (X_ITE does), here only the fields are compared"
+  "scope": [
+   "viewport of a Layer is a clip rectangle of the layer's camera, compared with X_ITE in the Viewport fixture, not here",
+   "a pick sensor sees only the shapes of its own layer (X_ITE gives every layer a pickable group of its own); the world counts as layer 0",
+   "a layer's pointer events: the top drawn layer that has a hit wins whatever its depth; compared on the LayerSet fixture"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha d4e15ecfee7a",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f0bc711b3d9e",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "9df2df5"
+ "driver_commit": "6c3135a"
 }

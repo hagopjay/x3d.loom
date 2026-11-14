@@ -2,10 +2,7 @@
  "node": "ScreenGroup",
  "mode": "scene",
  "note": "A box of size 50 sits in a ScreenGroup under a Transform. One unit of a ScreenGroup is one pixel, so the box is about 50 pixels wide on the 320 by 240 canvas wherever the Transform puts it - near, far, left, right, and under a scale of 3 (the group keeps only the rotation of its place). The probes sit inside the box and 42 pixels from its centre (outside it) in both engines; the box centre is predicted from the camera (fieldOfView 45 degrees, viewpoint at 0 0 10).",
- "gaps": [
-  "the pixel size comes from the depth of the group's origin only, as in X_ITE: the nearer face of a deep child looks a little larger",
-  "no snapping to whole pixels (X_ITE does not snap for ScreenGroup either); the device content scale is 1"
- ],
+ "gaps": [],
  "steps": [
   {
    "expect": [
@@ -16,6 +13,9 @@
   },
   {
    "settle": 2
+  },
+  {
+   "shot": "v1"
   },
   {
    "px": [
@@ -264,6 +264,9 @@
    "settle": 0.4
   },
   {
+   "shot": "v2"
+  },
+  {
    "px": [
     160,
     120,
@@ -508,6 +511,9 @@
   },
   {
    "settle": 0.4
+  },
+  {
+   "shot": "v3"
   },
   {
    "px": [
@@ -784,5 +790,28 @@
     45
    ]
   }
+ ],
+ "tone": "none",
+ "compare": {
+  "v3": {
+   "iou": 0.9,
+   "mad": 4,
+   "fg": 15
+  },
+  "v2": {
+   "iou": 0.9,
+   "mad": 4,
+   "fg": 15
+  },
+  "v1": {
+   "iou": 0.9,
+   "mad": 4,
+   "fg": 15
+  }
+ },
+ "scope": [
+  "three pictures agree with X_ITE 16.6.0 on place and size (bounding boxes within 1 px; silhouette iou 0.93, mean difference 1.7 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0); X_ITE's picture has an anti-aliased ring of about one pixel that the body's does not, which is what the iou below 1 measures (bound iou 0.9)",
+  "the pixel size comes from the depth of the group's origin only, as in X_ITE: the nearer face of a deep child looks a little larger; no snapping to whole pixels (X_ITE does not snap for ScreenGroup either)",
+  "the device content scale is taken as 1 (X_ITE multiplies by its ContentScale)"
  ]
 }

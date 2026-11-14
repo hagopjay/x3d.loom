@@ -2,10 +2,7 @@
  "node": "LayoutLayer",
  "mode": "scene",
  "note": "The LayoutLayer looks through an OrthoViewpoint of its own (the canvas is 2 units high), so a box of size 1 is 120 pixels wide in the middle of the frame. Its viewport (a Viewport node) cuts the picture into the left or right half of the canvas, where the layer is squeezed in; visible FALSE takes it out.",
- "gaps": [
-  "pickable, objectType and pointerEvents are held: picking does not respect layers",
-  "a LayoutLayer without a Layout shows its children as they are, a Layout is probed in the Layout fixture"
- ],
+ "gaps": [],
  "steps": [
   {
    "expect": [
@@ -105,6 +102,9 @@
    "settle": 0.5
   },
   {
+   "shot": "half_left"
+  },
+  {
    "px": [
     80,
     120,
@@ -155,6 +155,9 @@
   },
   {
    "settle": 0.5
+  },
+  {
+   "shot": "half_right"
   },
   {
    "px": [
@@ -253,11 +256,101 @@
    ]
   },
   {
+   "expect": [
+    "PS",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "PS",
+    "pickedGeometry",
+    [
+     "[node LB]"
+    ]
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "LTS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "pointerEvents",
+    false
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "mouse": [
+    "move",
+    161,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "LTS",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "pointerEvents",
+    true
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "LTS",
+    "isOver",
+    true
+   ]
+  },
+  {
    "set": [
     "N",
     "pickable",
     false
    ]
+  },
+  {
+   "settle": 0.5
   },
   {
    "expect": [
@@ -267,23 +360,170 @@
    ]
   },
   {
+   "expect": [
+    "PS",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "pickable",
+    true
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "PS",
+    "isActive",
+    true
+   ]
+  },
+  {
    "set": [
     "N",
     "objectType",
     [
-     "NAVIGATION"
+     "NONE"
     ],
     "MFString"
    ]
   },
   {
+   "settle": 0.5
+  },
+  {
    "expect": [
     "N",
     "objectType",
     [
-     "NAVIGATION"
+     "NONE"
     ]
    ]
+  },
+  {
+   "expect": [
+    "PS",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "objectType",
+    [
+     "ALL"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "PS",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "px": [
+    256,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "setnodes": [
+    "N",
+    "addChildren",
+    [
+     "LX"
+    ]
+   ]
+  },
+  {
+   "settle": 0.7
+  },
+  {
+   "px": [
+    256,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "setnodes": [
+    "N",
+    "removeChildren",
+    [
+     "LX"
+    ]
+   ]
+  },
+  {
+   "settle": 0.7
+  },
+  {
+   "px": [
+    256,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
   }
+ ],
+ "xsdContainerField": [
+  "pickTarget"
+ ],
+ "tone": "none",
+ "compare": {
+  "half_left": {
+   "iou": 0.97,
+   "mad": 4,
+   "fg": 10
+  },
+  "half_right": {
+   "iou": 0.97,
+   "mad": 4,
+   "fg": 10
+  }
+ },
+ "scope": [
+  "pickable and objectType gate a pick sensor in the layer, pointerEvents gates a TouchSensor in it, addChildren / removeChildren change what it draws (all compared with X_ITE 16.6.0)",
+  "two pictures of the layer's viewport (left and right half) agree with X_ITE 16.6.0: silhouette iou 1.0, mean difference 1.5 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0",
+  "a LayoutLayer without a Layout shows its children as they are; a Layout is probed in the Layout fixture"
  ]
 }
