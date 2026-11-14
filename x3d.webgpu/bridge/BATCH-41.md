@@ -1,0 +1,12 @@
+# Bridge batch 41
+
+Reader knows **200/260** X3D 4.0 node types after this batch (132 bridged in this work so far, 68 baseline). Rig: {"chromium": "153.0.8010.12", "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 0bbb593fae98", "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)", "babylon": "9.32.0"}.
+
+Regression gate (all bridged event nodes in one ROUTE chain, ours + X_ITE): PASS; inside the real Babylon 9.32.0 WebGPU body on swiftshader: 13 frames, page errors 0, Switch ended on [1].
+
+| node | component | xsd | ours | X_ITE | verdict | note |
+|---|---|---|---|---|---|---|
+| AudioDestination | Sound | ok | pass 74/74 | pass 74/74 | PASS | the audio only plays once the page's audio context is allowed to run (a click or key on the page, or the browser's autoplay flag in the test); this is the browser's rule, not the bridge's; the signal is compared at the node's output stage, not at the loudspeaker (the test browser has no output device), so which physical device a real id reaches is not compared, only that the id is accepted or refused and the signal is unchanged |
+| MicrophoneSource | Sound | ok | pass 42/42 | pass 42/42 | PASS | the test browser has a fake capture device, not a real microphone, so which physical device a real mediaDeviceID reaches and the permission prompt are not compared; the browser's own capture processing (echo cancellation, gain control) is whatever the browser applies to both engines; streamIdentifier is held (X_ITE lists it, the 4.0 UOM does not for this node) |
+| StreamAudioDestination | Sound | ok | pass 46/46 | pass 26/26 | PASS | X_ITE 16.6.0 does nothing with this node (not supported), so the stream is checked against Web Audio only, in our reader; the stream is read back inside the same page (not sent over a network); mediaDeviceID has no meaning for a stream and is held; how a page uses the stream (a WebRTC connection, a recorder) is the page's business |
+| StreamAudioSource | Sound | ok | pass 64/64 | pass 36/36 | PASS | X_ITE 16.6.0 does nothing with this node (not supported): no sound is made there and the sound is checked against Web Audio only, in our reader; the stream comes from inside the same page (a StreamAudioDestination or a stream the page adds), a stream from the network (WebRTC) is the page's to connect and is not tested; a stream that is added to the table after the node started is found within one frame |

@@ -1,10 +1,7 @@
 {
  "node": "StreamAudioDestination",
- "mode": "events",
- "note": "X_ITE 16.6.0 marks this node as not supported: it keeps its fields and never sets isActive, even when enabled. The bridge does the same; nothing is sent anywhere.",
- "gaps": [
-  "no network stream is made: streamIdentifier and mediaDeviceID are held"
- ],
+ "mode": "scene",
+ "note": "A StreamAudioDestination makes a real media stream (a MediaStreamAudioDestinationNode of the page's audio context): the children's sound goes into it through a gain stage, the stream is published in the page's stream table under every name in streamIdentifier (__bridge.snd.streams), isActive follows enabled, and gain and enabled act on the stream. Compared with the Web Audio specification, not with X_ITE: X_ITE 16.6.0 marks this node as not supported, keeps the fields, never sets isActive and makes no stream, so the test reads the stream back with a MediaStreamAudioSourceNode of the page (a 1 kHz sine of rms 0.7071 comes out at rms 0.7071 in the stream, gain 0.5 halves it, enabled = FALSE silences it, streamIdentifier moves the names) in our reader only, and the field and isActive lines that X_ITE can answer run in both.",
  "steps": [
   {
    "expect": [
@@ -39,7 +36,8 @@
     "N",
     "isActive",
     false
-   ]
+   ],
+   "only": "xite"
   },
   {
    "expect": [
@@ -128,7 +126,262 @@
     "N",
     "isActive",
     false
-   ]
+   ],
+   "only": "xite"
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false
+   ],
+   "only": "ours"
+  },
+  {
+   "amap": [
+    "(()=>{const ms=__bridge.snd.streams.get('loop');if(!ms)return 0;const s=AUD.ctx.createMediaStreamSource(ms);AUD.nodes.rl=s;return 1})()",
+    "have"
+   ],
+   "only": "ours"
+  },
+  {
+   "close": [
+    "have",
+    1,
+    0.5
+   ],
+   "only": "ours"
+  },
+  {
+   "tap": [
+    "l",
+    "$rl"
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "SDE",
+    "isActive",
+    true
+   ],
+   "only": "ours"
+  },
+  {
+   "sig": [
+    "l",
+    "on",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.4
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.03
+     ],
+     "f0": [
+      1000,
+      3
+     ],
+     "h1": [
+      1,
+      0.04
+     ]
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SDE",
+    "gain",
+    0.5
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "l",
+    "g5",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.4
+    },
+    {
+     "rms": [
+      0.3535533905932738,
+      0.02
+     ]
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SDE",
+    "gain",
+    1
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SDE",
+    "enabled",
+    false
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "l",
+    "dis",
+    {
+     "ch": 0,
+     "from": -0.4
+    },
+    {
+     "silent": true
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "expect": [
+    "SDE",
+    "isActive",
+    false
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SDE",
+    "enabled",
+    true
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "l",
+    "back",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.4
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.03
+     ]
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "expect": [
+    "SDE",
+    "isActive",
+    true
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SDE",
+    "streamIdentifier",
+    [
+     "a",
+     "b"
+    ],
+    "MFString"
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 0.4
+  },
+  {
+   "amap": [
+    "(()=>{const m=__bridge.snd.streams;return {a:m.get('a')&&m.get('a')===m.get('b')?1:0,old:m.has('loop')?1:0}})()",
+    "ids"
+   ],
+   "only": "ours"
+  },
+  {
+   "close": [
+    "ids.a",
+    1,
+    0.5
+   ],
+   "only": "ours"
+  },
+  {
+   "close": [
+    "ids.old",
+    0,
+    0.5
+   ],
+   "only": "ours"
+  },
+  {
+   "expect": [
+    "SDE",
+    "streamIdentifier",
+    [
+     "a",
+     "b"
+    ]
+   ],
+   "only": "ours"
+  },
+  {
+   "expect": [
+    "SDE",
+    "isActive",
+    false
+   ],
+   "only": "xite"
+  },
+  {
+   "amap": [
+    "(()=>{AUD.nodes.rl.disconnect();return 0})()",
+    "rd"
+   ],
+   "only": "ours"
+  },
+  {
+   "untap": "l",
+   "only": "ours"
   }
+ ],
+ "agree": [],
+ "scope": [
+  "X_ITE 16.6.0 does nothing with this node (not supported), so the stream is checked against Web Audio only, in our reader; the stream is read back inside the same page (not sent over a network); mediaDeviceID has no meaning for a stream and is held; how a page uses the stream (a WebRTC connection, a recorder) is the page's business"
  ]
 }

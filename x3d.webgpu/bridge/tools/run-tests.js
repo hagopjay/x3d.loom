@@ -199,6 +199,10 @@ window.runScene = async (spec, xml) => { const b = X3D.getBrowser('#c'); await b
   }, spec, xml); };
 window.xiteInfo = () => ({ name: X3D.getBrowser('#c').name, version: X3D.getBrowser('#c').version });
 </script>`;
+const MICFIX = () => {
+  // the browser's capture processing (noise suppression, gain control) eats a steady test tone within seconds (0.44 -> 0.04 rms in 3 s); the rig switches it off for both engines so the microphone level can be compared
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) { const g = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices); navigator.mediaDevices.getUserMedia = (c) => g(c && c.audio ? { ...c, audio: Object.assign({}, c.audio === true ? {} : c.audio, { echoCancellation: false, noiseSuppression: false, autoGainControl: false }) } : c); }
+};
 const STUB = () => {   // as the earlier port harnesses do: headless WebGPU draws into an offscreen texture, frames paced at 300 ms
   window.requestAnimationFrame = (cb) => setTimeout(() => cb(performance.now()), 300);
   const o = HTMLCanvasElement.prototype.getContext;
@@ -239,10 +243,11 @@ async function main() {
   b = await chromium.launch({ executablePath: process.env.CHROMIUM_EXECUTABLE || undefined, args: ['--autoplay-policy=no-user-gesture-required', '--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream', '--use-file-for-fake-audio-capture=' + fakeMic(), '--enable-unsafe-webgpu', '--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--use-webgpu-adapter=swiftshader'] });
   const env = { chromium: b.version(), ours: 'x3d.webgpu reader + SAI shim, headless, bundle sha ' + require('crypto').createHash('sha256').update(files['/bundle.js']).digest('hex').slice(0, 12) };
   const results = {};
-  const po = await b.newPage(), errs = []; po.on('pageerror', (e) => errs.push(e.message.slice(0, 200)));
+  const newPage = async () => { const pg = await b.newPage(); await pg.addInitScript(MICFIX); return pg; };
+  const po = await newPage(), errs = []; po.on('pageerror', (e) => errs.push(e.message.slice(0, 200)));
   await po.goto(base + '/ours.html');
   let px = null;
-  if (!noXite && fs.existsSync(path.join(XITE_DIR, 'x_ite.min.js'))) { px = await b.newPage(); px.on('pageerror', (e) => errs.push('xite: ' + e.message.slice(0, 160))); await px.goto(base + '/xite.html'); await px.waitForFunction(() => window.X3D && X3D.getBrowser('#c'), null, { timeout: 60000 }).catch(() => {}); env.xite = 'X_ITE ' + (await px.evaluate(() => window.xiteInfo && window.xiteInfo().version).catch(() => '?')) + ' (WebGL2, SwiftShader)'; }
+  if (!noXite && fs.existsSync(path.join(XITE_DIR, 'x_ite.min.js'))) { px = await newPage(); px.on('pageerror', (e) => errs.push('xite: ' + e.message.slice(0, 160))); await px.goto(base + '/xite.html'); await px.waitForFunction(() => window.X3D && X3D.getBrowser('#c'), null, { timeout: 60000 }).catch(() => {}); env.xite = 'X_ITE ' + (await px.evaluate(() => window.xiteInfo && window.xiteInfo().version).catch(() => '?')) + ' (WebGL2, SwiftShader)'; }
   else env.xite = noXite ? 'skipped (--no-xite)' : 'not found at ' + XITE_DIR;
   const startupErrors = errs.slice();
   let pos = null, pxs = null, mp = null;
@@ -256,8 +261,8 @@ async function main() {
   });
   async function scenePages(needX) {
     if (!files['/babylon.js']) files['/babylon.js'] = fs.readFileSync(babylon, 'utf8');
-    if (!pos) { pos = await b.newPage(); pos.on('pageerror', (e) => errs.push('scene: ' + e.message.slice(0, 200))); await pos.addInitScript(STUB); await mouseFor(pos); await pxFor(pos); await keyFor(pos); await pos.goto(base + '/ours-scene.html'); env.babylon = await pos.evaluate(() => window.sceneReady.then(() => BABYLON.Engine.Version)); }
-    if (needX && !pxs && fs.existsSync(path.join(XITE_DIR, 'x_ite.min.js'))) { pxs = await b.newPage(); pxs.on('pageerror', (e) => errs.push('xite scene: ' + e.message.slice(0, 160))); await mouseFor(pxs); await pxFor(pxs); await keyFor(pxs); await pxs.goto(base + '/xite-scene.html'); await pxs.waitForFunction(() => window.X3D && X3D.getBrowser('#c'), null, { timeout: 60000 }).catch(() => {}); }
+    if (!pos) { pos = await newPage(); pos.on('pageerror', (e) => errs.push('scene: ' + e.message.slice(0, 200))); await pos.addInitScript(STUB); await mouseFor(pos); await pxFor(pos); await keyFor(pos); await pos.goto(base + '/ours-scene.html'); env.babylon = await pos.evaluate(() => window.sceneReady.then(() => BABYLON.Engine.Version)); }
+    if (needX && !pxs && fs.existsSync(path.join(XITE_DIR, 'x_ite.min.js'))) { pxs = await newPage(); pxs.on('pageerror', (e) => errs.push('xite scene: ' + e.message.slice(0, 160))); await mouseFor(pxs); await pxFor(pxs); await keyFor(pxs); await pxs.goto(base + '/xite-scene.html'); await pxs.waitForFunction(() => window.X3D && X3D.getBrowser('#c'), null, { timeout: 60000 }).catch(() => {}); }
   }
   for (const n of names) {
     const errorStart = errs.length;
@@ -273,10 +278,10 @@ async function main() {
     if (PX && spec.xite !== false) { try { const o = await PX.evaluate(([f, s, x]) => window[f](s, x), [fnX, spec, xml]); r.mapX = o.map; r.shotsXite = o.shots; r.xite = o.ok ? `pass ${o.steps}/${o.steps}` : 'FAIL ' + o.fails.join(' | '); r.xiteOk = o.ok; if (o.recorded.length) r.recordedXite = o.recorded; } catch (e) { r.xite = 'ERROR ' + String(e).slice(0, 200); r.xiteOk = false; r.xiteError = true; } }
     if (o_shots(r)) { const sh = o_shots(r); r.visual = {};
       for (const name of Object.keys(sh.ours)) {
-        if (shotsDir) { fs.mkdirSync(shotsDir, { recursive: true }); const wr = (suffix, u) => fs.writeFileSync(path.join(shotsDir, `${n}.${name}${suffix}.png`), Buffer.from(u.split(',')[1], 'base64')); wr('.ours', sh.ours[name]); if (sh.xite[name]) { wr('.xite', sh.xite[name]); wr('', await (mp ||= await b.newPage()).evaluate(SIDE, [sh.ours[name], sh.xite[name]])); } else wr('', sh.ours[name]); }
+        if (shotsDir) { fs.mkdirSync(shotsDir, { recursive: true }); const wr = (suffix, u) => fs.writeFileSync(path.join(shotsDir, `${n}.${name}${suffix}.png`), Buffer.from(u.split(',')[1], 'base64')); wr('.ours', sh.ours[name]); if (sh.xite[name]) { wr('.xite', sh.xite[name]); wr('', await (mp ||= await newPage()).evaluate(SIDE, [sh.ours[name], sh.xite[name]])); } else wr('', sh.ours[name]); }
         const want = spec.compare && spec.compare[name];
         if (sh.xite[name] && (want || shotsDir)) {
-          const m = await (mp ||= await b.newPage()).evaluate(METRICS, [sh.ours[name], sh.xite[name], want]); r.visual[name] = m;
+          const m = await (mp ||= await newPage()).evaluate(METRICS, [sh.ours[name], sh.xite[name], want]); r.visual[name] = m;
           if (want && m.error) { r.oursOk = false; r.ours += ` | compare ${name}: ${m.error}`; }
           else if (want) { const bad = judgeVisual(m, want); if (bad.length) { r.oursOk = false; r.ours += ` | compare ${name}: ${bad.join('; ')}`; } }
         }
