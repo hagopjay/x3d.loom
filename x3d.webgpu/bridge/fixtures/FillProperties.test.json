@@ -91,18 +91,16 @@
    "shot": "main"
   }
  ],
- "gaps": [
-  "a shape with filled=false and hatched=false is not drawn but still answers the pointer, as in X_ITE 16.6.0 (the 4.0 text does not say)",
-  "compared by pointer-over probes (hidden fill is not hit, hatched and plain fills are) and, in our body only, the hatch overlay mesh; line pattern, thickness and screen-space scaling are not compared with X_ITE",
-  "hatchStyle 7 to 19 are drawn as style 6",
-  "the pattern follows the geometry's texture coordinates, a geometry without them shows no hatch"
- ],
  "tone": "none",
  "compare": {
   "main": {
-   "iou": 0.6,
-   "mad": 14,
-   "fg": 40
+   "iou": 0.93,
+   "mad": 4,
+   "fg": 20
   }
- }
+ },
+ "scope": [
+  "a shape with filled=false and hatched=false is not drawn but still answers the pointer, as in X_ITE 16.6.0 (the 4.0 text does not say); compared by pointer-over probes",
+  "the 19 hatch patterns are drawn in screen space, one texel per pixel, like X_ITE 16.6.0 (the masks are derived from its hatching images); compared in the picture with styles 3, 6, 12 and 17 (silhouette 0.96, mean abs diff 1.8 of 255 on SwiftShader); the pixel scale of a high-density screen is not read (scale 1)"
+ ]
 }

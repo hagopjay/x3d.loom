@@ -20,32 +20,32 @@
     "coverOurs": 1,
     "coverXite": 0.96,
     "bboxOurs": [
-     128,
+     31,
      88,
      288,
-     151
+     238
     ],
     "bboxXite": [
-     127,
+     31,
      87,
      288,
-     152
+     239
     ],
-    "nOurs": 8256,
-    "nXite": 8642,
-    "fgFracOurs": 0.11,
-    "fgFracXite": 0.11,
-    "mad": 6.07,
-    "psnr": 19.87,
+    "nOurs": 18374,
+    "nXite": 19188,
+    "fgFracOurs": 0.24,
+    "fgFracXite": 0.25,
+    "mad": 1.76,
+    "psnr": 32.9,
     "fgMeanOurs": [
-     69,
-     179,
-     199
+     92,
+     182,
+     174
     ],
     "fgMeanXite": [
-     92,
-     188,
-     173
+     88,
+     176,
+     167
     ],
     "bgOurs": [
      1,
@@ -61,18 +61,16 @@
   },
   "comparison": "passed",
   "msg": "",
-  "gaps": [
-   "a shape with filled=false and hatched=false is not drawn but still answers the pointer, as in X_ITE 16.6.0 (the 4.0 text does not say)",
-   "compared by pointer-over probes (hidden fill is not hit, hatched and plain fills are) and, in our body only, the hatch overlay mesh; line pattern, thickness and screen-space scaling are not compared with X_ITE",
-   "hatchStyle 7 to 19 are drawn as style 6",
-   "the pattern follows the geometry's texture coordinates, a geometry without them shows no hatch"
+  "scope": [
+   "a shape with filled=false and hatched=false is not drawn but still answers the pointer, as in X_ITE 16.6.0 (the 4.0 text does not say); compared by pointer-over probes",
+   "the 19 hatch patterns are drawn in screen space, one texel per pixel, like X_ITE 16.6.0 (the masks are derived from its hatching images); compared in the picture with styles 3, 6, 12 and 17 (silhouette 0.96, mean abs diff 1.8 of 255 on SwiftShader); the pixel scale of a high-density screen is not read (scale 1)"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha a1adb764a1bc",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ddd9b8231ea0",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "15277a6"
+ "driver_commit": "dee5a2b"
 }

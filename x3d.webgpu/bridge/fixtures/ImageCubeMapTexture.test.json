@@ -3,6 +3,7 @@
  "mode": "scene",
  "note": "A ball (radius 3 at the origin, seen from 10 units away) whose Appearance holds an ImageCubeMapTexture of a 4:3 cross: left red, front green, right blue, back yellow, top magenta, bottom cyan. It mirrors the cube: the middle of the ball reflects the front (green), the sides at 45 degrees the left and right faces, above and below the top and bottom. The front face is only seen in a ring a pixel wide at the edge and is not probed. load FALSE takes the picture away.",
  "gaps": [
+  "measured against X_ITE 16.6.0 on a mirrored ball with six flat face colours (Chromium 153 SwiftShader): silhouette overlap 0.99 and mean abs diff 10.4 of 255 over the ball region (0.87 and 15.9 over the whole frame, which holds the X_ITE badge), the six face colours land at the same places (pixel probes) but our face borders are soft and curved differently from X_ITE's hard diagonal borders (Babylon samples the cube per pixel with a linear filter, X_ITE per vertex coordinate); not closed",
   "the Material is added to the reflection, not multiplied with it; the reflection is of the world (it does not turn with the camera as CAMERASPACEREFLECTIONVECTOR does in X_ITE)",
   "flat face colours cannot show if the face images are turned like X_ITE's; a 2:1 panorama is converted but its orientation is not compared; KTX2 and DDS are not read"
  ],
@@ -108,6 +109,9 @@
    ]
   },
   {
+   "shot": "main"
+  },
+  {
    "set": [
     "N",
     "load",
@@ -139,5 +143,19 @@
     45
    ]
   }
- ]
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.8,
+   "mad": 20,
+   "fg": 40,
+   "region": [
+    0,
+    60,
+    320,
+    180
+   ]
+  }
+ }
 }

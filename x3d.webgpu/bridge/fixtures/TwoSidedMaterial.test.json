@@ -83,16 +83,17 @@
    "shot": "main"
   }
  ],
- "gaps": [
-  "which side shows which colour is compared in the picture (the lower row is turned round, so it shows the back colours; a solid=TRUE pair in the middle is culled in both engines), and in our body by pass: two meshes for solid=FALSE, one for solid=TRUE",
-  "ambient and ambientIntensity are read and not shown (no ambient term in the headlight model); the specular highlight of the sphere follows Phong shininess*128 and is compared in the picture"
- ],
  "tone": "none",
  "compare": {
   "main": {
-   "iou": 0.9,
-   "mad": 8,
-   "fg": 14
+   "iou": 0.95,
+   "mad": 6.5,
+   "fg": 26
   }
- }
+ },
+ "gaps": [
+  "with a light that adds ambient (ambientIntensity 0.6) and TwoSidedMaterial.ambientIntensity 1 on the sphere, our picture is brighter at the sphere's edge than X_ITE 16.6.0's (mean abs diff 4.9 of 255 against 2.5 with the default 0.2, Chromium 153 SwiftShader); ours follows 19775-1 (ambient = light ambientIntensity x material ambientIntensity x diffuseColor), X_ITE appears not to take the value (Suspected, not isolated); backAmbientIntensity is read and not compared",
+  "which side shows which colour is compared in the picture with X_ITE 16.6.0 (the lower row is turned round, so it shows the back colours; a solid=TRUE pair in the middle is culled in both engines; silhouette 0.98, mean abs diff 2.5 of 255 on SwiftShader), and in our body by pass: two meshes for solid=FALSE, one for solid=TRUE",
+  "the specular highlight of the sphere follows Phong shininess*128 and is compared in the picture"
+ ]
 }

@@ -17,7 +17,7 @@
   "visual": {
    "main": {
     "iou": 0.98,
-    "coverOurs": 1,
+    "coverOurs": 0.99,
     "coverXite": 0.98,
     "bboxOurs": [
      59,
@@ -31,16 +31,16 @@
      261,
      224
     ],
-    "nOurs": 17354,
+    "nOurs": 17420,
     "nXite": 17681,
     "fgFracOurs": 0.23,
     "fgFracXite": 0.23,
-    "mad": 1.66,
-    "psnr": 32.13,
+    "mad": 4.89,
+    "psnr": 23.18,
     "fgMeanOurs": [
-     59,
-     121,
-     87
+     66,
+     137,
+     106
     ],
     "fgMeanXite": [
      58,
@@ -62,15 +62,16 @@
   "comparison": "passed",
   "msg": "",
   "gaps": [
-   "which side shows which colour is compared in the picture (the lower row is turned round, so it shows the back colours; a solid=TRUE pair in the middle is culled in both engines), and in our body by pass: two meshes for solid=FALSE, one for solid=TRUE",
-   "ambient and ambientIntensity are read and not shown (no ambient term in the headlight model); the specular highlight of the sphere follows Phong shininess*128 and is compared in the picture"
+   "with a light that adds ambient (ambientIntensity 0.6) and TwoSidedMaterial.ambientIntensity 1 on the sphere, our picture is brighter at the sphere's edge than X_ITE 16.6.0's (mean abs diff 4.9 of 255 against 2.5 with the default 0.2, Chromium 153 SwiftShader); ours follows 19775-1 (ambient = light ambientIntensity x material ambientIntensity x diffuseColor), X_ITE appears not to take the value (Suspected, not isolated); backAmbientIntensity is read and not compared",
+   "which side shows which colour is compared in the picture with X_ITE 16.6.0 (the lower row is turned round, so it shows the back colours; a solid=TRUE pair in the middle is culled in both engines; silhouette 0.98, mean abs diff 2.5 of 255 on SwiftShader), and in our body by pass: two meshes for solid=FALSE, one for solid=TRUE",
+   "the specular highlight of the sphere follows Phong shininess*128 and is compared in the picture"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha a1adb764a1bc",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ddd9b8231ea0",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "15277a6"
+ "driver_commit": "dee5a2b"
 }

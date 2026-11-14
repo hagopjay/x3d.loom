@@ -31,21 +31,21 @@
      284,
      207
     ],
-    "nOurs": 13346,
-    "nXite": 13314,
-    "fgFracOurs": 0.17,
-    "fgFracXite": 0.17,
-    "mad": 1.6,
-    "psnr": 38.86,
+    "nOurs": 13538,
+    "nXite": 13541,
+    "fgFracOurs": 0.18,
+    "fgFracXite": 0.18,
+    "mad": 1.62,
+    "psnr": 38.2,
     "fgMeanOurs": [
-     125,
-     112,
-     101
+     137,
+     120,
+     110
     ],
     "fgMeanXite": [
-     124,
-     111,
-     100
+     136,
+     119,
+     109
     ],
     "bgOurs": [
      1,
@@ -74,21 +74,21 @@
      284,
      207
     ],
-    "nOurs": 9172,
-    "nXite": 9282,
-    "fgFracOurs": 0.12,
-    "fgFracXite": 0.12,
-    "mad": 1.56,
-    "psnr": 37.57,
+    "nOurs": 9740,
+    "nXite": 9846,
+    "fgFracOurs": 0.13,
+    "fgFracXite": 0.13,
+    "mad": 1.59,
+    "psnr": 36.87,
     "fgMeanOurs": [
-     89,
-     101,
-     86
+     97,
+     107,
+     93
     ],
     "fgMeanXite": [
-     87,
-     99,
-     84
+     95,
+     105,
+     91
     ],
     "bgOurs": [
      1,
@@ -147,16 +147,17 @@
   },
   "comparison": "passed",
   "msg": "",
-  "gaps": [
-   "ambientIntensity is not used (no ambient term in the Babylon light); shadows are not made",
-   "global FALSE lights the meshes below the parent group; meshes added later are picked up when the mesh count changes (checked in our body, X_ITE draws the same picture)"
+  "scope": [
+   "shadows and shadowIntensity are read and not used (no shadow generator is made)",
+   "ambientIntensity feeds Babylon's one scene ambient colour (the sum over the lights that are on, times material ambientIntensity * diffuseColor, compared with X_ITE 16.6.0 in the picture, mad 1.6); a light with global FALSE adds its ambient to every shape, not only its group",
+   "global FALSE lights the meshes below the parent group; meshes added later are picked up when the mesh count changes (checked in our body)"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 96dc51493fc5",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ddd9b8231ea0",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "b21d180"
+ "driver_commit": "dee5a2b"
 }

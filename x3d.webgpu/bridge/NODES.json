@@ -854,11 +854,13 @@
    "inherits": "X3DLightNode",
    "container": "children",
    "nfields": 9,
-   "status": "gap",
-   "batch": 29,
+   "status": "bridged",
+   "batch": 30,
    "receipt": "receipts/DirectionalLight.json",
-   "note": "ambientIntensity is not used (no ambient term in the Babylon light); shadows are not made; global FALSE lights the meshes below the parent group; meshes added later are picked up when the mesh count changes (checked in our body, X_ITE draws the same picture)",
-   "rank": 121
+   "note": "shadows and shadowIntensity are read and not used (no shadow generator is made); ambientIntensity feeds Babylon's one scene ambient colour (the sum over the lights that are on, times material ambientIntensity * diffuseColor, compared with X_ITE 16.6.0 in the picture, mad 1.6); a light with global FALSE adds its ambient to every shape, not only its group; global FALSE lights the meshes below the parent group; meshes added later are picked up when the mesh count changes (checked in our body)",
+   "rank": 121,
+   "prev_batch": 29,
+   "prev_note": "ambientIntensity is not used (no ambient term in the Babylon light); shadows are not made; global FALSE lights the meshes below the parent group; meshes added later are picked up when the mesh count changes (checked in our body, X_ITE draws the same picture)"
   },
   "Disk2D": {
    "component": "Geometry2D",
@@ -984,11 +986,13 @@
    "inherits": "X3DAppearanceChildNode",
    "container": "fillProperties",
    "nfields": 5,
-   "status": "gap",
-   "batch": 24,
+   "status": "bridged",
+   "batch": 30,
    "receipt": "receipts/FillProperties.json",
-   "note": "a shape with filled=false and hatched=false is not drawn but still answers the pointer, as in X_ITE 16.6.0 (the 4.0 text does not say); compared by pointer-over probes (hidden fill is not hit, hatched and plain fills are) and, in our body only, the hatch overlay mesh; line pattern, thickness and screen-space scaling are not compared with X_ITE; hatchStyle 7 to 19 are drawn as style 6; the pattern follows the geometry's texture coordinates, a geometry without them shows no hatch",
-   "rank": 52
+   "note": "a shape with filled=false and hatched=false is not drawn but still answers the pointer, as in X_ITE 16.6.0 (the 4.0 text does not say); compared by pointer-over probes; the 19 hatch patterns are drawn in screen space, one texel per pixel, like X_ITE 16.6.0 (the masks are derived from its hatching images); compared in the picture with styles 3, 6, 12 and 17 (silhouette 0.96, mean abs diff 1.8 of 255 on SwiftShader); the pixel scale of a high-density screen is not read (scale 1)",
+   "rank": 52,
+   "prev_batch": 24,
+   "prev_note": "a shape with filled=false and hatched=false is not drawn but still answers the pointer, as in X_ITE 16.6.0 (the 4.0 text does not say); compared by pointer-over probes (hidden fill is not hit, hatched and plain fills are) and, in our body only, the hatch overlay mesh; line pattern, thickness and screen-space scaling are not compared with X_ITE; hatchStyle 7 to 19 are drawn as style 6; the pattern follows the geometry's texture coordinates, a geometry without them shows no hatch"
   },
   "FloatVertexAttribute": {
    "component": "Shaders",
@@ -1323,10 +1327,12 @@
    "container": "texture",
    "nfields": 7,
    "status": "gap",
-   "batch": 20,
+   "batch": 30,
    "receipt": "receipts/ImageCubeMapTexture.json",
-   "note": "the Material is added to the reflection, not multiplied with it; the reflection is of the world (it does not turn with the camera as CAMERASPACEREFLECTIONVECTOR does in X_ITE); flat face colours cannot show if the face images are turned like X_ITE's; a 2:1 panorama is converted but its orientation is not compared; KTX2 and DDS are not read",
-   "rank": 169
+   "note": "measured against X_ITE 16.6.0 on a mirrored ball with six flat face colours (Chromium 153 SwiftShader): silhouette overlap 0.99 and mean abs diff 10.4 of 255 over the ball region (0.87 and 15.9 over the whole frame, which holds the X_ITE badge), the six face colours land at the same places (pixel probes) but our face borders are soft and curved differently from X_ITE's hard diagonal borders (Babylon samples the cube per pixel with a linear filter, X_ITE per vertex coordinate); not closed; the Material is added to the reflection, not multiplied with it; the reflection is of the world (it does not turn with the camera as CAMERASPACEREFLECTIONVECTOR does in X_ITE); flat face colours cannot show if the face images are turned like X_ITE's; a 2:1 panorama is converted but its orientation is not compared; KTX2 and DDS are not read",
+   "rank": 169,
+   "prev_batch": 20,
+   "prev_note": "the Material is added to the reflection, not multiplied with it; the reflection is of the world (it does not turn with the camera as CAMERASPACEREFLECTIONVECTOR does in X_ITE); flat face colours cannot show if the face images are turned like X_ITE's; a 2:1 panorama is converted but its orientation is not compared; KTX2 and DDS are not read"
   },
   "ImageTexture": {
    "component": "Texturing",
@@ -2979,10 +2985,12 @@
    "container": "children",
    "nfields": 15,
    "status": "gap",
-   "batch": 12,
+   "batch": 30,
    "receipt": "receipts/TextureBackground.json",
-   "note": "only ImageTexture faces are drawn (the stock texture reader); PixelTexture and MovieTexture faces are not; transparency lowers the alpha of the sky and the six faces (checked in ours only); what shows through is the body's clear colour, which the stock Background node still sets from its first Background, where X_ITE shows the page behind; the sky sphere has 48 segments and a ring every 1/32 of PI plus one at every angle, so a gradient is stepped finer than the eye sees; colours are linear between rings; the sky is a sphere of radius 900 around the camera, the six faces a cube of half-size 500 inside it; scenes with a camera far clip below 900 would cut it (the body uses at least 2000)",
-   "rank": 56
+   "note": "ImageTexture and PixelTexture faces are drawn and compared with X_ITE 16.6.0 by pixel probes (right and bottom faces are PixelTextures); MovieTexture faces are not drawn (a video element is not read for a background); transparency lowers the alpha of the sky and the six faces (checked in ours only); what shows through is the body's clear colour, which the stock Background node still sets from its first Background, where X_ITE shows the page behind; the sky sphere has 48 segments and a ring every 1/32 of PI plus one at every angle, so a gradient is stepped finer than the eye sees; colours are linear between rings; the sky is a sphere of radius 900 around the camera, the six faces a cube of half-size 500 inside it; scenes with a camera far clip below 900 would cut it (the body uses at least 2000)",
+   "rank": 56,
+   "prev_batch": 12,
+   "prev_note": "only ImageTexture faces are drawn (the stock texture reader); PixelTexture and MovieTexture faces are not; transparency lowers the alpha of the sky and the six faces (checked in ours only); what shows through is the body's clear colour, which the stock Background node still sets from its first Background, where X_ITE shows the page behind; the sky sphere has 48 segments and a ring every 1/32 of PI plus one at every angle, so a gradient is stepped finer than the eye sees; colours are linear between rings; the sky is a sphere of radius 900 around the camera, the six faces a cube of half-size 500 inside it; scenes with a camera far clip below 900 would cut it (the body uses at least 2000)"
   },
   "TextureCoordinate": {
    "component": "Texturing",
@@ -3269,10 +3277,12 @@
    "container": "material",
    "nfields": 14,
    "status": "gap",
-   "batch": 24,
+   "batch": 30,
    "receipt": "receipts/TwoSidedMaterial.json",
-   "note": "which side shows which colour is compared in the picture (the lower row is turned round, so it shows the back colours; a solid=TRUE pair in the middle is culled in both engines), and in our body by pass: two meshes for solid=FALSE, one for solid=TRUE; ambient and ambientIntensity are read and not shown (no ambient term in the headlight model); the specular highlight of the sphere follows Phong shininess*128 and is compared in the picture",
-   "rank": 53
+   "note": "with a light that adds ambient (ambientIntensity 0.6) and TwoSidedMaterial.ambientIntensity 1 on the sphere, our picture is brighter at the sphere's edge than X_ITE 16.6.0's (mean abs diff 4.9 of 255 against 2.5 with the default 0.2, Chromium 153 SwiftShader); ours follows 19775-1 (ambient = light ambientIntensity x material ambientIntensity x diffuseColor), X_ITE appears not to take the value (Suspected, not isolated); backAmbientIntensity is read and not compared; which side shows which colour is compared in the picture with X_ITE 16.6.0 (the lower row is turned round, so it shows the back colours; a solid=TRUE pair in the middle is culled in both engines; silhouette 0.98, mean abs diff 2.5 of 255 on SwiftShader), and in our body by pass: two meshes for solid=FALSE, one for solid=TRUE; the specular highlight of the sphere follows Phong shininess*128 and is compared in the picture",
+   "rank": 53,
+   "prev_batch": 24,
+   "prev_note": "which side shows which colour is compared in the picture (the lower row is turned round, so it shows the back colours; a solid=TRUE pair in the middle is culled in both engines), and in our body by pass: two meshes for solid=FALSE, one for solid=TRUE; ambient and ambientIntensity are read and not shown (no ambient term in the headlight model); the specular highlight of the sphere follows Phong shininess*128 and is compared in the picture"
   },
   "UniversalJoint": {
    "component": "RigidBodyPhysics",

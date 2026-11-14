@@ -3,28 +3,75 @@
  "pass": true,
  "xsd": {
   "ok": true,
-  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/ImageCubeMapTexture.x3d validates",
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/ImageCubeMapTexture.x3d validates",
   "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
  },
  "test": {
   "ok": true,
-  "ours": "pass 16/16",
-  "xite": "pass 16/16",
+  "ours": "pass 17/17",
+  "xite": "pass 17/17",
   "map": {},
   "oursOk": true,
   "mapX": {},
   "xiteOk": true,
+  "visual": {
+   "main": {
+    "iou": 0.99,
+    "coverOurs": 1,
+    "coverXite": 0.99,
+    "bboxOurs": [
+     69,
+     60,
+     250,
+     210
+    ],
+    "bboxXite": [
+     69,
+     60,
+     250,
+     210
+    ],
+    "nOurs": 22884,
+    "nXite": 23028,
+    "fgFracOurs": 0.4,
+    "fgFracXite": 0.4,
+    "mad": 10.37,
+    "psnr": 14.97,
+    "fgMeanOurs": [
+     101,
+     109,
+     142
+    ],
+    "fgMeanXite": [
+     94,
+     127,
+     127
+    ],
+    "bgOurs": [
+     1,
+     1,
+     3
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  "comparison": "passed",
   "msg": "",
   "gaps": [
+   "measured against X_ITE 16.6.0 on a mirrored ball with six flat face colours (Chromium 153 SwiftShader): silhouette overlap 0.99 and mean abs diff 10.4 of 255 over the ball region (0.87 and 15.9 over the whole frame, which holds the X_ITE badge), the six face colours land at the same places (pixel probes) but our face borders are soft and curved differently from X_ITE's hard diagonal borders (Babylon samples the cube per pixel with a linear filter, X_ITE per vertex coordinate); not closed",
    "the Material is added to the reflection, not multiplied with it; the reflection is of the world (it does not turn with the camera as CAMERASPACEREFLECTIONVECTOR does in X_ITE)",
    "flat face colours cannot show if the face images are turned like X_ITE's; a 2:1 panorama is converted but its orientation is not compared; KTX2 and DDS are not read"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha d4e15ecfee7a",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ddd9b8231ea0",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "9df2df5"
+ "driver_commit": "dee5a2b"
 }

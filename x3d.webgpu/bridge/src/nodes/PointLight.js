@@ -4,7 +4,7 @@
      SpotLight    the same plus direction, beamWidth (full intensity cone) and cutOffAngle (no light outside), both half angles as X3D gives them
    attenuation 1 0 0 (the default) is a light with no fall-off up to its radius. Otherwise the Babylon light range is set where 1 / (a0 + a1 d + a2 d^2) drops under 1/32, which is a close fit,
    not X_ITE's per pixel polynomial (logged as a difference). global = FALSE lights only the meshes below the parent group (BR.light.scope, run after each build). on = FALSE switches it off.
-   ambientIntensity is not used. */
+   ambientIntensity feeds the scene ambient colour (BR.light.ambient). */
 BR.light = {
   make(body, n, parent) {
     const f = n.f, sc = body.scene, name = (n.def || n.type) + '-light', V = BABYLON.Vector3;
@@ -15,9 +15,17 @@ BR.light = {
     sc.materials.forEach((m) => { if (m.maxSimultaneousLights !== undefined) m.maxSimultaneousLights = 8; });
     BR.light.refresh(l, n); return l;
   },
+  /* ambientIntensity: X3D adds light.color * light.ambientIntensity * material.ambientIntensity * diffuseColor for every light that is on (17.2.2.4). Babylon has one scene ambient colour times the
+     material's ambientColor: the scene colour is the sum over the enabled bridge lights, the material's is ambientIntensity * diffuseColor (refreshPhong in body-br). The scene colour is global:
+     the ambient of a light with global FALSE reaches every shape, not only its group (logged), and the light's attenuation and cone do not weigh it. */
+  ambient(body) {
+    const a = [0, 0, 0]; for (const l of body._x3dLights || []) { const f = l.node.f; if (l.isEnabled() && f.ambientIntensity > 0) for (let i = 0; i < 3; i++) a[i] += f.color[i] * f.ambientIntensity; }
+    body.scene.ambientColor.set(Math.min(1, a[0]), Math.min(1, a[1]), Math.min(1, a[2]));
+  },
   refresh(l, n) {
     const f = n.f, c = f.color, a = f.attenuation || [1, 0, 0], R_ = f.radius > 0 ? f.radius : 1e4;
     l.diffuse = new BABYLON.Color3(c[0], c[1], c[2]); l.specular = l.diffuse.clone(); l.intensity = f.intensity * ((l._body && l._body.opts && l._body.opts.lightScale) ?? 1); l.setEnabled(f.on !== false);
+    if (l._body) BR.light.ambient(l._body);
     if (n.type === 'DirectionalLight') { l.direction.set(f.direction[0], f.direction[1], f.direction[2]); return; }
     l.position.set(f.location[0], f.location[1], f.location[2]);
     if (a[1] === 0 && a[2] === 0) l.range = 1e4; else { let d = 0.01; while (d < R_ && 1 / (a[0] + a[1] * d + a[2] * d * d) > 1 / 32) d *= 1.25; l.range = Math.min(R_, d); }
@@ -57,7 +65,7 @@ BR.light = {
   scope(body) {
     BR.light.cull(body);
     for (const l of body._x3dLights || []) l.includedOnlyMeshes = l.node.f.global === false && l.parent ? l.parent.getChildMeshes(false) : [];
-    body._lightMeshCount = body.scene.meshes.length;
+    body._lightMeshCount = body.scene.meshes.length; BR.light.ambient(body);
   },
 };
 BR.node('PointLight', {
