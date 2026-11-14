@@ -24,7 +24,8 @@ BR.node('Layer', {
     visible: ['SFBool', IO, true],
   },
   /* A layer is drawn by its LayerSet (LayerSet.js): its children are built under a node of their own, seen by a camera of their own (the layer's first Viewpoint, or one at 0 0 10 looking down -z),
-     on top of the layers before it. visible = FALSE takes it out of the draw order. addChildren and removeChildren change the list. pickable, objectType, pointerEvents and viewport are held. */
+     on top of the layers before it. visible = FALSE takes it out of the draw order. addChildren and removeChildren change the list. pointerEvents FALSE passes the pointer over the layer (Body.pickMesh in body-br.js); pickable and objectType gate the pick sensors inside it (kit.js, targetsOf);
+     viewport is the layer camera's clip rectangle (LayerSet.js, pose). */
   receive(n, field, v) { return BR.addRemove(n, field, v); },
   changed(body, n, field) { BR.layers.layerChanged(body, n, field); },
 });

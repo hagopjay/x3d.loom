@@ -15,6 +15,24 @@
   };
 }
 
+/* a pointer ray with layers: the layers that are drawn are tried from the top one down (each through its own camera and its own mask bit); a layer with pointerEvents FALSE is passed over, a layer that is
+   not drawn (not in order, or visible FALSE) is never hit; the first layer that has a hit wins whatever its depth, as in X_ITE 16.6.0 (the world is layer 0) */
+{
+  const _pick = Body.prototype.pickMesh;
+  Body.prototype.pickMesh = function (x, y) {
+    const st = this._layers, cams = this.scene.activeCameras; if (!cams || !cams.length || (!st && !this._wvp)) return _pick.call(this, x, y);
+    const r = this.canvas.getBoundingClientRect(), sx = this.engine.getRenderWidth() / r.width, sy = this.engine.getRenderHeight() / r.height, fx = (x - r.left) / r.width, fy = 1 - (y - r.top) / r.height;
+    for (let i = cams.length - 1; i >= 0; i--) {
+      const cam = cams[i], it = st && st.items.find((q) => q && q.cam === cam), vp = cam.viewport;
+      if (it && it.layer.f.pointerEvents === false) continue;
+      if (fx < vp.x || fx > vp.x + vp.width || fy < vp.y || fy > vp.y + vp.height) continue;          // the pointer is outside the layer's (or viewport's) rectangle
+      const hit = this.scene.pick((x - r.left) * sx, (y - r.top) * sy, (m) => m.isPickable && m.isEnabled() && m.isVisible && m.metadata && m.metadata.pick && (m.layerMask & cam.layerMask) !== 0, false, cam);
+      if (hit && hit.hit) return hit;
+    }
+    return new BABYLON.PickingInfo();
+  };
+}
+
 /* pointer drag sensors: a press on a Shape starts every drag sensor (a spec with dragStart) that is a child of the Shape's nearest group that has one; the ray is expressed in that group's
    frame as it was at the press. A press that starts a drag does not orbit the camera. */
 {
@@ -464,7 +482,7 @@ Body.prototype.viewpointList = function () { return this.world ? R.bridge.viewpo
 /* Layers: a world that goes away takes its layer cameras with it */
 {
   const _cw = Body.prototype.clearWorld;
-  Body.prototype.clearWorld = function () { if (this._layers) { for (const it of this._layers.items) if (it) it.cam.dispose(); this._layers = null; this.scene.activeCameras = []; } return _cw.call(this); };
+  Body.prototype.clearWorld = function () { BR.wvp.drop(this); if (this._layers) { for (const it of this._layers.items) if (it) it.cam.dispose(); this._layers = null; this.scene.activeCameras = []; } return _cw.call(this); };
 }
 
 /* Textures that are not a plain picture. PixelTexture (2D) and PixelTexture3D / ComposedTexture3D (their first slice, since the geometry has 2D texture coordinates only) are drawn as pictures; an

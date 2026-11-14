@@ -490,6 +490,7 @@ BR.pick = (() => {
     let hit = 0; for (const t of st) if (groupTypes.includes(t)) hit++;
     switch (sensor.f.matchCriterion) { case 'MATCH_EVERY': return hit === st.length; case 'MATCH_ONLY_ONE': return hit === 1; default: return hit > 0; }
   }
+  const layerOf = (sensor) => { for (let p = sensor._tn; p; p = p.parent) if (p.metadata && p.metadata.layer) return p.metadata.layer; return null; };
   function targetsOf(body, sensor) {
     const out = [], want = new Set((sensor.f.pickTarget || []).filter(Boolean)); if (!want.size || !body.world) return out;
     const walk = (n, st) => {
@@ -507,6 +508,8 @@ BR.pick = (() => {
       if (n.type === 'Switch') { const k = n.f.children[n.f.whichChoice]; if (k) walk(k, { pickable: st.pickable, hier }); return; }
       for (const k of n.f.children || []) walk(k, { pickable: st.pickable, hier });
     };
+    const lay = layerOf(sensor);      // a sensor sees the Shapes of its own layer only; a Layer is a PickableGroup of its own (its pickable and objectType), as in X_ITE 16.6.0
+    if (lay) { const gt = types(lay.f.objectType); if (lay.f.pickable !== false && !gt.includes('NONE') && ((gt.includes('ALL') || !gt.length) || matches(sensor, gt))) for (const n of lay.f.children || []) walk(n, { pickable: true, hier: [] }); return out; }
     for (const n of body.world.children) walk(n, { pickable: false, hier: [] });
     return out;
   }

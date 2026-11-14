@@ -4,10 +4,11 @@
   <Scene>
     <NavigationInfo type='"EXAMINE" "ANY"' transitionType='"TELEPORT"' headlight="false"/>
     <Viewpoint position="0 0 10"/>
+    <Viewport DEF="WV" containerField="children" visible="false" clipBoundary="0 0.5 0 1"><Transform translation="0 0 -6"><TouchSensor DEF="WT"/><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 1 0"/></Appearance><Box size="6 6 1"/></Shape></Transform></Viewport>
     <LayerSet order="0 1">
       <Layer DEF="N">
         <Viewport DEF="V" containerField="viewport" clipBoundary="0 0.5 0 1"/>
-        <Transform><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 0 1"/></Appearance><Box size="8 8 8"/></Shape></Transform>
+        <Transform><TouchSensor DEF="LT"/><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 0 1"/></Appearance><Box size="8 8 8"/></Shape></Transform>
       </Layer>
     </LayerSet>
   </Scene>

@@ -1,11 +1,10 @@
 {
  "node": "LayerSet",
  "mode": "scene",
- "note": "the world draws a red box at the origin, layer 1 a blue box behind it (z -5), layer 2 a green box off to the right. Probed from the composited frame in both engines: with order 0 1 the blue box shows in front of the red one (depth is cleared between layers), with order 1 0 the red one is in front, with order 0 only the world shows, with 0 1 2 the green box appears; visible FALSE takes a layer out. The body's neutral tone map shifts pure colours, so the tolerance is 45.",
+ "note": "the world draws a red box at the origin, layer 1 a blue box behind it (z -5), layer 2 a green box off to the right. Probed from the composited frame in both engines: with order 0 1 the blue box shows in front of the red one (depth is cleared between layers), with order 1 0 the red one is in front, with order 0 only the world shows, with 0 1 2 the green box appears; visible FALSE takes a layer out. The body's neutral tone map shifts pure colours, so the tolerance is 45.; hovering: the top drawn layer that has a hit wins, a layer with pointerEvents FALSE or one that is not drawn is passed over (both engines)",
  "gaps": [
   "activeLayer (which layer the user navigates) and the navigation of a layer's own Viewpoint are held, not acted on: the user always navigates the world's camera",
   "a layer's Viewpoint is read once and per frame, not bound or animated; the layer has no NavigationInfo, Background or headlight of its own",
-  "picking does not respect layers: a ray hits the meshes of every layer, and pickable / objectType / viewport are held",
   "lights of the world light the meshes of every layer; a layer has no lights of its own",
   "order without any visible layer draws the world (Babylon needs a camera)"
  ],
@@ -276,6 +275,338 @@
     "N",
     "activeLayer",
     1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "order",
+    [
+     0,
+     1,
+     2
+    ],
+    "MFInt32"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "TW",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    210,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "TW",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    185,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "TW",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "set": [
+    "L1",
+    "pointerEvents",
+    false
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    121
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "TW",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "set": [
+    "L1",
+    "pointerEvents",
+    true
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "TW",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "set": [
+    "L1",
+    "visible",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    121
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "TW",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "set": [
+    "L1",
+    "visible",
+    true
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "set": [
+    "N",
+    "order",
+    [
+     0,
+     1
+    ],
+    "MFInt32"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "mouse": [
+    "move",
+    210,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "TW",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "order",
+    [
+     0,
+     1,
+     2
+    ],
+    "MFInt32"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "mouse": [
+    "move",
+    210,
+    121
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "TW",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    true
    ]
   },
   {

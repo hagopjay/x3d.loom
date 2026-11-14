@@ -17,6 +17,16 @@ BR.node('LayerSet', {
   changed(body, n, field) { if (field === 'layers') BR.layers.remake(body); else if (field === 'order') BR.layers.refresh(body); },
 });
 
+/* A Viewport node in the world (Viewport.js): X_ITE 16.6.0 keeps the projection of the whole canvas and only narrows the rectangle, so the picture is squeezed into it. (The viewport of a Layer is
+   different: the layer's projection is made for the rectangle's own aspect, which is what Babylon does by itself.) A perspective camera gets the canvas aspect as a frozen projection; an orthographic one is left to Babylon. */
+BR.squeeze = (body, cam) => {
+  const v = cam.viewport, full = Math.abs(v.width - 1) < 1e-6 && Math.abs(v.height - 1) < 1e-6 && Math.abs(v.x) < 1e-6 && Math.abs(v.y) < 1e-6;
+  if (cam._squeezed) { cam.unfreezeProjectionMatrix(); cam._squeezed = false; }
+  if (full || cam.mode !== BABYLON.Camera.PERSPECTIVE_CAMERA) return;
+  const asp = (body.canvas.clientWidth || 1) / (body.canvas.clientHeight || 1);
+  const mk = body.scene.useRightHandedSystem ? BABYLON.Matrix.PerspectiveFovRH : BABYLON.Matrix.PerspectiveFovLH;
+  cam.freezeProjectionMatrix(mk(cam.fov, asp, cam.minZ, cam.maxZ, body.engine.isNDCHalfZRange)); cam._squeezed = true;
+};
 BR.layers = {
   make(body, set, parent, chain) {
     BR.layers.drop(body);
@@ -24,7 +34,7 @@ BR.layers = {
     const st = body._layers = { set, parent, chain, tn, items: [] };
     (set.f.layers || []).forEach((layer, i) => {
       if (!layer || (layer.type !== 'Layer' && layer.type !== 'LayoutLayer')) { st.items.push(null); return; }
-      const bit = 1 << (i + 1), lt = new BABYLON.TransformNode(layer.def || 'Layer' + (i + 1), sc); lt.parent = tn; lt.metadata = { layerBit: bit };
+      const bit = 1 << (i + 1), lt = new BABYLON.TransformNode(layer.def || 'Layer' + (i + 1), sc); lt.parent = tn; lt.metadata = { layerBit: bit, layer };
       const saved = body.viewpoints; body.viewpoints = [];                                  // a Viewpoint of the layer belongs to the layer, not to the world
       const isLay = layer.type === 'LayoutLayer', host = isLay ? new BABYLON.TransformNode((layer.def || 'LayoutLayer' + (i + 1)) + '-layout', sc) : lt;     // a LayoutLayer lays its children out with its Layout (LayoutGroup.js)
       if (isLay) host.parent = lt;
@@ -59,7 +69,7 @@ BR.layers = {
     const st = body._layers; if (!st) return;
     const cams = [];
     for (const idx of st.set.f.order || [0]) {
-      if (idx === 0) cams.push(body.cam);
+      if (idx === 0) cams.push(body.cam, ...BR.wvp.cams(body));
       else { const it = st.items[idx - 1]; if (it && it.layer.f.visible !== false) cams.push(it.cam); }
     }
     body.scene.activeCameras = cams.length ? cams : [];

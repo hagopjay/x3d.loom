@@ -1,11 +1,8 @@
 {
  "node": "Viewport",
  "mode": "scene",
- "note": "A big blue box is seen by a Layer whose viewport is a Viewport. clipBoundary (left right bottom top, fractions of the canvas) decides which part of the canvas the layer is drawn into: left half, right half, lower half, all. The probes sit inside the box in both engines (the box is 8 units wide, so it fills the clip whatever the field of view does), and outside the clip, where nothing is drawn.",
- "gaps": [
-  "a Viewport used as a grouping node of the world builds its children but does not clip them (Babylon has one viewport per camera; the world's camera is shared)",
-  "the layer's picture is squeezed into the clip rectangle, not cut out of the full picture: the same as X_ITE's viewport, which also changes the aspect"
- ],
+ "note": "A big blue box is seen by a Layer whose viewport is a Viewport. clipBoundary (left right bottom top, fractions of the canvas) decides which part of the canvas the layer is drawn into: left half, right half, lower half, all. The probes sit inside the box in both engines (the box is 8 units wide, so it fills the clip whatever the field of view does), and outside the clip, where nothing is drawn.; a Viewport node in the world is drawn squeezed into its rectangle, like X_ITE",
+ "gaps": [],
  "steps": [
   {
    "expect": [
@@ -85,6 +82,40 @@
    ]
   },
   {
+   "mouse": [
+    "move",
+    80,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "LT",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    240,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "LT",
+    "isOver",
+    false
+   ]
+  },
+  {
    "set": [
     "V",
     "clipBoundary",
@@ -151,6 +182,9 @@
   },
   {
    "settle": 0.5
+  },
+  {
+   "shot": "lay_bottom"
   },
   {
    "px": [
@@ -229,6 +263,268 @@
     "visible",
     false
    ]
+  },
+  {
+   "set": [
+    "N",
+    "visible",
+    false
+   ]
+  },
+  {
+   "set": [
+    "WV",
+    "visible",
+    true
+   ]
+  },
+  {
+   "settle": 0.7
+  },
+  {
+   "shot": "wv_left"
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    240,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    80,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "WT",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    240,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "WT",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "set": [
+    "WV",
+    "clipBoundary",
+    [
+     0.5,
+     1,
+     0,
+     1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 0.7
+  },
+  {
+   "shot": "wv_right"
+  },
+  {
+   "px": [
+    240,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    80,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    240,
+    121
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "WT",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    80,
+    121
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "WT",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "set": [
+    "WV",
+    "clipBoundary",
+    [
+     0.5,
+     1,
+     0.5,
+     1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 0.7
+  },
+  {
+   "shot": "wv_quad"
+  },
+  {
+   "mouse": [
+    "move",
+    240,
+    60
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "WT",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    240,
+    200
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "WT",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "set": [
+    "WV",
+    "visible",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    240,
+    60,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
   }
+ ],
+ "tone": "none",
+ "compare": {
+  "wv_left": {
+   "iou": 0.97,
+   "mad": 4,
+   "fg": 10
+  },
+  "wv_right": {
+   "iou": 0.97,
+   "mad": 4,
+   "fg": 10
+  },
+  "wv_quad": {
+   "iou": 0.97,
+   "mad": 4,
+   "fg": 10
+  },
+  "lay_bottom": {
+   "iou": 0.97,
+   "mad": 4,
+   "fg": 10
+  }
+ },
+ "xsdAllow": [
+  "Viewport"
+ ],
+ "scope": [
+  "the layer's viewport (clip rectangle) and a Viewport node in the world are compared with X_ITE 16.6.0 as pictures (silhouette iou 1.0, mean difference 1.3 to 1.6 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0; bound iou 0.97, mad 4): in a layer the rectangle is the layer's own projection, in the world the projection of the whole canvas is squeezed into the rectangle (both as X_ITE does)",
+  "a Viewport in the world is drawn by a camera of its own over the world, with the depth cleared between the two; X_ITE keeps one depth buffer, so a world object in front of the Viewport's content is not hidden behind it here (not compared)",
+  "a pointer outside the rectangle does not reach the layer or the Viewport's children (compared with TouchSensors)",
+  "XSD finding: x3d-4.0.xsd (x3d_mcp) takes a Viewport as the viewport of a layer, not as a child of Scene or a group; the world-level fixture is checked against the XSD plus one line (xsdAllow, the receipt names it)"
  ]
 }
