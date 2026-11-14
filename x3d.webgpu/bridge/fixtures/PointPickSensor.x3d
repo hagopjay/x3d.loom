@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Picking" level="3"/><meta name="title" content="PointPickSensor.x3d"/><meta name="description" content="Bridge fixture for PointPickSensor: a PointSet against a Box, a Sphere and a PickableGroup of another objectType"/></head>
+  <Scene>
+    <Viewpoint position="0 0 14"/>
+    <Group DEF="WORLD">
+      <PickableGroup DEF="PG">
+        <Transform translation="-2 0 0"><Shape><Appearance><Material diffuseColor="0.9 0.3 0.2"/></Appearance><Box DEF="BA" size="2 2 2"/></Shape></Transform>
+        <Transform translation="2 0 0"><Shape><Appearance><Material diffuseColor="0.2 0.5 0.9"/></Appearance><Sphere DEF="SB" radius="1"/></Shape></Transform>
+      </PickableGroup>
+      <PickableGroup DEF="PGW" objectType='"WALL"'>
+        <Transform translation="0 3 0"><Shape><Appearance><Material diffuseColor="0.3 0.8 0.3"/></Appearance><Box DEF="BC" size="2 1 2"/></Shape></Transform>
+      </PickableGroup>
+      <PickableGroup DEF="PGOFF" pickable="false">
+        <Transform translation="0 -3 0"><Shape><Appearance><Material diffuseColor="0.8 0.8 0.2"/></Appearance><Box DEF="BD" size="2 1 2"/></Shape></Transform>
+      </PickableGroup>
+      <Transform translation="6 -3 0"><Shape><Appearance><Material diffuseColor="0.6 0.3 0.8"/></Appearance><Box DEF="BE" size="1 1 1"/></Shape></Transform>
+    </Group>
+    <Transform DEF="TN" translation="0 0 0">
+      <Shape><Box size="0.02 0.02 0.02"/></Shape>
+      <PointPickSensor DEF="N" intersectionType="GEOMETRY" sortOrder="ALL">
+        <PointSet DEF="PP" containerField="pickingGeometry"><Coordinate point="-2.2 0.2 0.1 0 0 0 1.4 0.3 0.2 0 3.2 0"/></PointSet>
+        <Group USE="WORLD" containerField="pickTarget"/>
+      </PointPickSensor>
+    </Transform>
+    <Transform DEF="TNB" translation="0 0 0">
+      <Shape><Box size="0.02 0.02 0.02"/></Shape>
+      <PointPickSensor DEF="NB" intersectionType="BOUNDS" sortOrder="ALL">
+        <PointSet USE="PP" containerField="pickingGeometry"/>
+        <Group USE="WORLD" containerField="pickTarget"/>
+      </PointPickSensor>
+    </Transform>
+  </Scene>
+</X3D>

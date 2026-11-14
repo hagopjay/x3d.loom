@@ -1,0 +1,91 @@
+{
+ "node": "PointPickSensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/PointPickSensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp + XSD patched: pickTarget added to the containerField values"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 15/15",
+  "xite": "pass 15/15",
+  "map": {
+   "pp": [
+    [
+     -2.200000047683716,
+     0.20000000298023224,
+     0.10000000149011612
+    ],
+    [
+     1.399999976158142,
+     0.30000001192092896,
+     0.20000000298023224
+    ],
+    [
+     0,
+     3.200000047683716,
+     0
+    ]
+   ],
+   "pp2": [
+    [
+     -2.200000047683716,
+     0.20000000298023224,
+     0.10000000149011612
+    ],
+    [
+     1.399999976158142,
+     0.30000001192092896,
+     0.20000000298023224
+    ]
+   ]
+  },
+  "oursOk": true,
+  "mapX": {
+   "pp": [
+    [
+     -2.200000047683716,
+     0.20000000298023224,
+     0.10000000149011612
+    ],
+    [
+     1.399999976158142,
+     0.30000001192092896,
+     0.20000000298023224
+    ],
+    [
+     0,
+     3.200000047683716,
+     0
+    ]
+   ],
+   "pp2": [
+    [
+     -2.200000047683716,
+     0.20000000298023224,
+     0.10000000149011612
+    ],
+    [
+     1.399999976158142,
+     0.30000001192092896,
+     0.20000000298023224
+    ]
+   ]
+  },
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "scope": [
+   "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); PointSet points inside a Box, a Sphere and a PickableGroup of another objectType; pickedPoint compared as a set (0.001), BOUNDS and GEOMETRY",
+   "pickedPoint holds the points of the PointSet in the sensor's frame, one entry per point inside a picked target (as X_ITE 16.6.0); with sortOrder CLOSEST or ANY only the reported target's points are listed"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 48d8293ca0ad",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "df092f5"
+}

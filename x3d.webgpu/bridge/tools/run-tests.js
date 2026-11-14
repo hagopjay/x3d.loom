@@ -279,6 +279,7 @@ async function main() {
       const fl = (x) => (Array.isArray(x) ? x.flatMap(fl) : [x]), a = fl(r.map[name]);
       let c = fl(r.mapX[name]);
       if (opt && opt.rot && c.length === 3) { const [ax, ay, az, an] = opt.rot, l = Math.hypot(ax, ay, az) || 1, k = [ax / l, ay / l, az / l], co = Math.cos(an), si = Math.sin(an), d = k[0] * c[0] + k[1] * c[1] + k[2] * c[2], x = [k[1] * c[2] - k[2] * c[1], k[2] * c[0] - k[0] * c[2], k[0] * c[1] - k[1] * c[0]]; c = c.map((v, i) => v * co + x[i] * si + k[i] * d * (1 - co)); }
+      if (opt && opt.sort && a.length % 3 === 0 && c.length % 3 === 0) { const rows = (x) => { const o = []; for (let i = 0; i < x.length; i += 3) o.push(x.slice(i, i + 3)); return o.sort((p, q) => p[0] - q[0] || p[1] - q[1] || p[2] - q[2]).flat(); }; a.splice(0, a.length, ...rows(a)); c = rows(c); }   // opt.sort: lists of points compare as sets (the two engines walk the triangles in their own order)
       let a2 = a;
       if (opt && opt.quat && a.length === 4 && c.length === 4) { const q = (r) => { const l = Math.hypot(r[0], r[1], r[2]) || 1, h = Math.sin(r[3] / 2), w = Math.cos(r[3] / 2), v = [r[0] / l * h, r[1] / l * h, r[2] / l * h, w]; return v[3] < 0 ? v.map((x) => -x) : v; }; a2 = q(a); c = q(c); }   // opt.quat: the same turn may be written with the axis flipped and the angle negated
       const sc = Math.max(1, ...c.map(Math.abs));
