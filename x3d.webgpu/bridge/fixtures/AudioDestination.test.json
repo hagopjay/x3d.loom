@@ -1,11 +1,7 @@
 {
  "node": "AudioDestination",
- "mode": "events",
- "note": "the Web Audio input stage of the node is compared piece by piece with X_ITE 16.6.0 (gain, channelCount held to 1..32, channelCountMode, channelInterpretation). isActive follows enabled. maxChannelCount is the audio device's number (2 on the test machine, written once at load; X_ITE ignores a write to it, so the bridge's copy is read-only in effect too).",
- "gaps": [
-  "mediaDeviceID would pick the output device with setSinkId; the bridge's graph ends at the page's default output with no Audio element, so it is held but not applied",
-  "the audio only plays once the page's audio context is allowed to run (a click or key on the page); this is the browser's rule, not the bridge's"
- ],
+ "mode": "scene",
+ "note": "Signal compared with X_ITE 16.6.0 on the page's real Web Audio clock (a tap on the node's output stage): a 1 kHz sine (rms 0.7071) through an AudioDestination of gain 0.5 comes out at rms 0.3536, gain 1 gives 0.7071, enabled = FALSE blocks it (silent, isActive FALSE; the other Sound nodes pass the signal through when disabled) and enabled again brings it back; mediaDeviceID picks the output device as X_ITE 16.6.0 does: the signal goes through a media stream into an Audio element whose sinkId is the device (setSinkId), the empty id is the default output; the default id is accepted in both engines (sinkId reads back default), a device that does not exist is refused by the browser (the error goes to the console, the signal stays on the default output) and the signal is the same in all three cases. Switched to scene mode for it.",
  "steps": [
   {
    "expect": [
@@ -362,6 +358,301 @@
     "maxChannelCount",
     2
    ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "tap": [
+    "d",
+    "SD",
+    "out",
+    {
+     "channels": 2
+    }
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "d",
+    "g5",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.3535533905932738,
+      0.02
+     ],
+     "f0": [
+      1000,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "expect": [
+    "SD",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "SD",
+    "gain",
+    1
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "d",
+    "g1",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SD",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "d",
+    "blocked",
+    {
+     "ch": 0,
+     "from": -0.3
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "expect": [
+    "SD",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "SD",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "d",
+    "back",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "expect": [
+    "SD",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "amap": [
+    "scene.getNamedNode('SD').maxChannelCount",
+    "maxch"
+   ]
+  },
+  {
+   "set": [
+    "SD",
+    "mediaDeviceID",
+    "default"
+   ]
+  },
+  {
+   "settle": 1.2
+  },
+  {
+   "sig": [
+    "d",
+    "dev",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      1000,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='SD');return n._au.el?n._au.el.sinkId:'none'})()",
+    "default"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('SD').getValue().audioElement.sinkId",
+    "default"
+   ]
+  },
+  {
+   "set": [
+    "SD",
+    "mediaDeviceID",
+    "no-such-device"
+   ]
+  },
+  {
+   "settle": 1.2
+  },
+  {
+   "sig": [
+    "d",
+    "bogus",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SD",
+    "mediaDeviceID",
+    ""
+   ]
+  },
+  {
+   "settle": 1.2
+  },
+  {
+   "sig": [
+    "d",
+    "dflt",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "expect": [
+    "SD",
+    "mediaDeviceID",
+    ""
+   ]
   }
+ ],
+ "agree": [
+  [
+   "g5.rms",
+   0.02
+  ],
+  [
+   "g1.rms",
+   0.02
+  ],
+  [
+   "blocked.rms",
+   0.0001
+  ],
+  [
+   "back.rms",
+   0.02
+  ],
+  [
+   "maxch",
+   0.001
+  ],
+  [
+   "dev.rms",
+   0.02
+  ],
+  [
+   "bogus.rms",
+   0.02
+  ],
+  [
+   "dflt.rms",
+   0.02
+  ]
+ ],
+ "scope": [
+  "the audio only plays once the page's audio context is allowed to run (a click or key on the page, or the browser's autoplay flag in the test); this is the browser's rule, not the bridge's; the signal is compared at the node's output stage, not at the loudspeaker (the test browser has no output device), so which physical device a real id reaches is not compared, only that the id is accepted or refused and the signal is unchanged"
  ]
 }
