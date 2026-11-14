@@ -1,0 +1,79 @@
+{
+ "node": "DoubleAxisHingeJoint",
+ "mode": "scene",
+ "note": "A ball on a DoubleAxisHingeJoint whose first axis is z, in zero gravity, with the motor on axis 1 set to 1 rad/s (torque limit 100): in 1.5 s the bridge turns it about 1.5 rad (hinge1Angle 1.1 to 1.9, ball above 6.3 m), staying 2 m from the pivot and within 0.1 m of the plane despite a sideways kick. X_ITE 16.6.0 keeps the 2 m radius but swings the ball about the vertical (from (2,5,0) to (0,5,2), no fall) and never raises hinge1Angle, so only the radius and its own height are checked there.",
+ "gaps": [
+  "the bridge builds the hinge-2 joint (anchors meet, the axes stay at 90 degrees, a motor and limit on each); X_ITE 16.6.0 builds a plain btHingeConstraint about axis1, so axis2 does nothing there",
+  "desiredAngularVelocity1 and 2 with maxTorque1 and 2 turn the hinges in the bridge; X_ITE ignores them",
+  "suspensionForce and suspensionErrorCorrection are kept and not used"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "axis1",
+    [
+     0,
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "axis2",
+    [
+     1,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "suspensionErrorCorrection",
+    0.8
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Math.abs(Math.hypot(__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[0]-0,__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[1]-5,__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[2]-0)-2)<0.12",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "Math.abs(Math.hypot(X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[0]-0,X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[1]-5,X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[2]-0)-2)<0.12",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Math.abs(__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[2])<0.1",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Math.abs(__worlds[__worlds.length-1].nodes.find(n=>n.def==='N').f.hinge1Angle-1.5)<0.4&&__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[1]>6.3",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "Math.abs(X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[1]-5)<0.1",
+    true
+   ]
+  }
+ ]
+}

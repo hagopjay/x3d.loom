@@ -1,0 +1,32 @@
+{
+ "node": "SliderJoint",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/SliderJoint.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 6/6",
+  "xite": "pass 6/6",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "separation is measured along the axis between the two body origins, as in X_ITE's slider",
+   "sliderForce is applied by the bridge as a force along the axis; X_ITE 16.6.0 reads the field and never applies it",
+   "stopBounce is kept and not used by the slider"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 405205adb314",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "523b353"
+}

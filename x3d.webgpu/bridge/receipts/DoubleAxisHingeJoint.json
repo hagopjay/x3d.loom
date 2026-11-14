@@ -1,0 +1,32 @@
+{
+ "node": "DoubleAxisHingeJoint",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/DoubleAxisHingeJoint.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 7/7",
+  "xite": "pass 6/6",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the bridge builds the hinge-2 joint (anchors meet, the axes stay at 90 degrees, a motor and limit on each); X_ITE 16.6.0 builds a plain btHingeConstraint about axis1, so axis2 does nothing there",
+   "desiredAngularVelocity1 and 2 with maxTorque1 and 2 turn the hinges in the bridge; X_ITE ignores them",
+   "suspensionForce and suspensionErrorCorrection are kept and not used"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 405205adb314",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "523b353"
+}

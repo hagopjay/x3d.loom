@@ -1,0 +1,31 @@
+{
+ "node": "MotorJoint",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/MotorJoint.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 5/5",
+  "xite": "pass 5/5",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the bridge applies axisNTorque about motorNAxis (fixed in body 1) on body 2 and the opposite on body 1 for the first enabledAxes axes; autoCalc and the stop bounce and error correction fields are kept and not used",
+   "motorNAngle is the signed twist of body 2 about each axis; X_ITE 16.6.0 has no motor at all"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 405205adb314",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "523b353"
+}

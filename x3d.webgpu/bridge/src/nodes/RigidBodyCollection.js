@@ -124,6 +124,107 @@ BR.phys = (() => {
   const prepare = (B) => { B.R = toM(B.q); B.iw = B.invMass ? mm(mm(B.R, B.invIb), mT(B.R)) : B.invIb; for (const s of B.shapes) { s.wp = add(B.x, mv(B.R, s.lp)); s.wR = mm(B.R, toM(s.lq)); s.rad = s.kind === 'box' ? len(s.half) : s.r; } };
   const velAt = (B, r) => add(B.v, cross(B.w, r));
   const applyImpulse = (B, J, r) => { if (!B.invMass) return; B.v = add(B.v, mul(J, B.invMass)); B.w = add(B.w, mv(B.iw, cross(r, J))); };
+
+  /* ---- joints: scalar constraint rows (Jacobian rows on the two bodies) solved with the contacts. A row says  jla.vA + jaa.wA + jlb.vB + jab.wB = rhs  within [lo, hi] (impulse, accumulated). Anchors and axes are given in
+     world coordinates at load and are stored in each body's frame, so they follow the bodies. Joint error is eased out at rate JERP per step (Baumgarte). ---------------------------------------------------- */
+  const JERP = 0.2, TWO_PI = Math.PI * 2, Z3 = [0, 0, 0];
+  const unitAxes = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+  const perp = (a) => { const t1 = norm(Math.abs(a[1]) < 0.9 ? cross(a, [0, 1, 0]) : cross(a, [1, 0, 0])); return [t1, cross(a, t1)]; };
+  const qconj = (q) => [-q[0], -q[1], -q[2], q[3]];
+  const row = (A, B, jla, jaa, jlb, jab, rhs, lo = -Infinity, hi = Infinity) => ({ A, B, jla, jaa, jlb, jab, rhs, lo, hi, acc: 0 });
+  const prepRow = (r) => { const A = r.A, B = r.B, ia = mv(A.iw, r.jaa), ib = mv(B.iw, r.jab); r.ia = ia; r.ib = ib; const k = A.invMass * dot(r.jla, r.jla) + dot(r.jaa, ia) + B.invMass * dot(r.jlb, r.jlb) + dot(r.jab, ib); r.m = k > 0 ? 1 / k : 0; };
+  const solveRow = (r) => {
+    const A = r.A, B = r.B; if (!r.m) return;
+    const vel = dot(r.jla, A.v) + dot(r.jaa, A.w) + dot(r.jlb, B.v) + dot(r.jab, B.w);
+    let l = r.m * (r.rhs - vel); const n = Math.max(r.lo, Math.min(r.hi, r.acc + l)); l = n - r.acc; r.acc = n;
+    if (A.invMass) { A.v = add(A.v, mul(r.jla, A.invMass * l)); A.w = add(A.w, mul(r.ia, l)); }
+    if (B.invMass) { B.v = add(B.v, mul(r.jlb, B.invMass * l)); B.w = add(B.w, mul(r.ib, l)); }
+  };
+  const worldAnchor = (B, loc) => add(B.x, mv(B.R, loc));
+  const pointRows = (J, h, rows) => {                     // the two anchor points stay together
+    const A = J.A, B = J.B, wa = worldAnchor(A, J.pa), wb = worldAnchor(B, J.pb), e = sub(wb, wa), ra = sub(wa, A.x), rb = sub(wb, B.x);
+    for (let i = 0; i < 3; i++) { const n = unitAxes[i]; rows.push(row(A, B, mul(n, -1), mul(cross(ra, n), -1), n, cross(rb, n), -JERP * e[i] / h)); }
+  };
+  const alignRows = (J, a1, a2, h, rows) => {            // axis a1 (world, from body A) and axis a2 (from body B) stay parallel
+    const e = cross(a1, a2), [t1, t2] = perp(a1);
+    for (const t of [t1, t2]) rows.push(row(J.A, J.B, Z3, mul(t, -1), Z3, t, -JERP * dot(e, t) / h));
+  };
+  const perpRow = (J, a1, a2, h, rows) => { const c = cross(a1, a2); rows.push(row(J.A, J.B, Z3, c, Z3, mul(c, -1), -JERP * dot(a1, a2) / h)); };   // axis a1 and axis a2 stay at 90 degrees
+  const twist = (J, a) => {                                // signed angle of body B relative to body A about the world axis a, continuous
+    const qt = qmul(J.A.q, J.qrel0), qe = qmul(J.B.q, qconj(qt)), w = qe[3] < 0 ? -1 : 1, th = 2 * Math.atan2(w * dot([qe[0], qe[1], qe[2]], a), Math.abs(qe[3]));
+    let t = th; if (J.lastTh !== undefined) { while (t - J.lastTh > Math.PI) t -= TWO_PI; while (t - J.lastTh < -Math.PI) t += TWO_PI; } J.lastTh = t; return t;
+  };
+  const lockRotation = (J, h, rows) => {                   // the whole relative rotation is locked
+    const qt = qmul(J.A.q, J.qrel0), qe = qmul(J.B.q, qconj(qt)), w = qe[3] < 0 ? -1 : 1, th = mul([qe[0], qe[1], qe[2]], 2 * w);
+    for (let i = 0; i < 3; i++) { const n = unitAxes[i]; rows.push(row(J.A, J.B, Z3, mul(n, -1), Z3, n, -JERP * th[i] / h)); }
+  };
+  const limitRows = (J, a, th, lo, hi, bounce, erp, rows, h) => {
+    const rel = dot(sub(J.B.w, J.A.w), a);
+    if (th < lo) rows.push(row(J.A, J.B, Z3, mul(a, -1), Z3, a, erp * (lo - th) / h + (rel < -0.5 ? -bounce * rel : 0), 0, Infinity));
+    else if (th > hi) rows.push(row(J.A, J.B, Z3, a, Z3, mul(a, -1), erp * (th - hi) / h + (rel > 0.5 ? bounce * rel : 0), 0, Infinity));
+  };
+  const motorRow = (J, a, speed, maxT, h, rows) => { if (maxT > 0) rows.push(row(J.A, J.B, Z3, mul(a, -1), Z3, a, speed, -maxT * h, maxT * h)); };
+  const JOINT_KINDS = {
+    BallJoint: {
+      rows(J, h, rows) { pointRows(J, h, rows); },
+      out(J) { return { body1AnchorPoint: J.pa, body2AnchorPoint: J.pb }; },
+    },
+    SingleAxisHingeJoint: {
+      rows(J, h, rows) {
+        const f = J.node.f, a1 = mv(J.A.R, J.axA), a2 = mv(J.B.R, J.axB);
+        pointRows(J, h, rows); alignRows(J, a1, a2, h, rows);
+        J.th = twist(J, a1); limitRows(J, a1, J.th, f.minAngle, f.maxAngle, f.stopBounce, Math.min(1, f.stopErrorCorrection), rows, h);
+      },
+      out(J, h) { const th = J.th || 0, rate = J.prevTh === undefined ? 0 : (th - J.prevTh) / h; J.prevTh = th; return { body1AnchorPoint: J.pa, body2AnchorPoint: J.pb, angle: th, angleRate: rate }; },
+    },
+    DoubleAxisHingeJoint: {            // hinge-2: the anchors meet, axis 1 sits on body 1, axis 2 on body 2, and the two axes stay at 90 degrees; motors turn each
+      rows(J, h, rows) {
+        const f = J.node.f, a1 = mv(J.A.R, J.axA), a2 = mv(J.B.R, J.axB);
+        pointRows(J, h, rows); perpRow(J, a1, a2, h, rows);
+        J.th = twist(J, a1); limitRows(J, a1, J.th, f.minAngle1, f.maxAngle1, f.stop1Bounce, Math.min(1, f.stop1ErrorCorrection), rows, h);
+        motorRow(J, a1, f.desiredAngularVelocity1, f.maxTorque1, h, rows); motorRow(J, a2, f.desiredAngularVelocity2, f.maxTorque2, h, rows);
+      },
+      out(J, h) { const th = J.th || 0, rate = J.prevTh === undefined ? 0 : (th - J.prevTh) / h; J.prevTh = th; return { body1AnchorPoint: J.pa, body2AnchorPoint: J.pb, body1Axis: mv(J.A.R, J.axA), body2Axis: mv(J.B.R, J.axB), hinge1Angle: th, hinge1AngleRate: rate, hinge2Angle: 0, hinge2AngleRate: dot(sub(J.B.w, J.A.w), mv(J.B.R, J.axB)) }; },
+    },
+    UniversalJoint: {                  // the anchors meet and the two axes stay at 90 degrees: a cardan joint
+      rows(J, h, rows) { pointRows(J, h, rows); perpRow(J, mv(J.A.R, J.axA), mv(J.B.R, J.axB), h, rows); },
+      out(J) { return { body1AnchorPoint: J.pa, body2AnchorPoint: J.pb, body1Axis: mv(J.A.R, J.axA), body2Axis: mv(J.B.R, J.axB) }; },
+    },
+    SliderJoint: {                     // body B slides along an axis fixed in body A; rotation is locked; separation is measured along the axis between the two body origins, as X_ITE's Bullet slider does
+      rows(J, h, rows) {
+        const f = J.node.f, A = J.A, B = J.B, ax = mv(A.R, J.axA), d = sub(B.x, A.x), pl = mv(A.R, J.d0), [n1, n2] = perp(ax);
+        for (const n of [n1, n2]) { const e = dot(sub(d, pl), n) - dot(mul(ax, dot(sub(d, pl), ax)), n); rows.push(row(A, B, mul(n, -1), Z3, n, Z3, -JERP * dot(sub(d, pl), n) / h)); }
+        lockRotation(J, h, rows);
+        const s = dot(d, ax); J.sep = s;
+        if (s < f.minSeparation) rows.push(row(A, B, mul(ax, -1), Z3, ax, Z3, Math.min(1, f.stopErrorCorrection) * (f.minSeparation - s) / h, 0, Infinity));
+        else if (s > f.maxSeparation) rows.push(row(A, B, ax, Z3, mul(ax, -1), Z3, Math.min(1, f.stopErrorCorrection) * (s - f.maxSeparation) / h, 0, Infinity));
+        if (f.sliderForce) { const F = mul(ax, f.sliderForce * h); if (B.invMass) B.v = add(B.v, mul(F, B.invMass)); if (A.invMass) A.v = sub(A.v, mul(F, A.invMass)); }
+      },
+      out(J, h) { const s = J.sep || 0, rate = J.prevSep === undefined ? 0 : (s - J.prevSep) / h; J.prevSep = s; return { separation: s, separationRate: rate }; },
+    },
+    MotorJoint: {                      // user torques: axisNTorque about motorNAxis (fixed in body 1) on body 2, the opposite on body 1; the angles are the twist of body 2 about each axis
+      rows(J, h, rows) {
+        const f = J.node.f, n = Math.max(0, Math.min(3, f.enabledAxes | 0)), T = [f.axis1Torque, f.axis2Torque, f.axis3Torque], X = [f.motor1Axis, f.motor2Axis, f.motor3Axis];
+        for (let i = 0; i < 3; i++) {
+          const a = norm(mv(J.A.R, norm(X[i]))); J.angles ||= [0, 0, 0]; J.lastTh3 ||= [undefined, undefined, undefined];
+          J.lastTh = J.lastTh3[i]; J.angles[i] = twist(J, a); J.lastTh3[i] = J.lastTh;
+          if (i < n && T[i]) { const t = mul(a, T[i] * h); if (J.B.invMass) J.B.w = add(J.B.w, mv(J.B.iw, t)); if (J.A.invMass) J.A.w = sub(J.A.w, mv(J.A.iw, t)); }
+        }
+      },
+      out(J, h) { const a = J.angles || [0, 0, 0], p = J.prevAng || a, r = a.map((x, i) => (x - p[i]) / h); J.prevAng = a.slice(); return { motor1Angle: a[0], motor2Angle: a[1], motor3Angle: a[2], motor1AngleRate: r[0], motor2AngleRate: r[1], motor3AngleRate: r[2] }; },
+    },
+  };
+  const makeJoint = (st, node) => {
+    const kind = JOINT_KINDS[node.type]; if (!kind) return null;
+    const A = st.bodies.find((b) => b.node === node.f.body1), B = st.bodies.find((b) => b.node === node.f.body2); if (!A || !B) return null;
+    prepare(A); prepare(B);
+    const f = node.f, anchor = f.anchorPoint || [0, 0, 0], ax1 = f.axis || f.axis1 || [1, 0, 0], ax2 = f.axis || f.axis2 || [1, 0, 0];
+    const J = { node, kind, A, B, pa: mtv(A.R, sub(anchor, A.x)), pb: mtv(B.R, sub(anchor, B.x)), axA: mtv(A.R, norm(ax1)), axB: mtv(B.R, norm(node.type === 'DoubleAxisHingeJoint' || node.type === 'UniversalJoint' ? ax2 : ax1)),
+      qrel0: qmul(qconj(A.q), B.q), d0: mtv(A.R, sub(B.x, A.x)), last: null };
+    if (node.type === 'SliderJoint') { J.axA = mtv(A.R, norm(f.axis)); J.axB = mtv(B.R, norm(f.axis)); }
+    if (node.type === 'MotorJoint') { J.pa = Z3; J.pb = Z3; }
+    return J;
+  };
   const step = (st, h) => {
     const n = st.node, g = n.f.gravity, cn = n.f.collider, col = cn && cn.f.enabled !== false ? cn : null, ap = col ? col.f.appliedParameters || [] : [];
     // as in X3D 4.0 and X_ITE: the CollisionCollection only supplies what appliedParameters names (BOUNCE by default, friction only with FRICTION_COEFFICIENT-2); without it bodies still collide, with the engine's own friction 0.5 and no bounce
@@ -159,21 +260,31 @@ BR.phys = (() => {
       c.bounceV = vn < -Math.max(minB, 1e-9) && bounce > 0 ? -bounce * vn : 0;
       let bias = erp * Math.max(0, c.depth - 0.005) / h; if (cap >= 0) bias = Math.min(bias, cap); c.bias = bias;
     }
+    const jrows = []; for (const J of st.joints) J.kind.rows(J, h, jrows); for (const r of jrows) prepRow(r);
     const its = Math.max(1, n.f.iterations | 0);
-    for (let it = 0; it < its; it++) for (const c of cs) {
+    for (let it = 0; it < its; it++) { for (const r of jrows) solveRow(r); for (const c of cs) {
       let vr = sub(velAt(c.b, c.rb), velAt(c.a, c.ra)), vn = dot(vr, c.n);
       let dj = c.mn * (-(vn) + Math.max(c.bounceV, c.bias)), nj = Math.max(0, c.jn + dj); dj = nj - c.jn; c.jn = nj; const Jn = mul(c.n, dj); applyImpulse(c.a, mul(Jn, -1), c.ra); applyImpulse(c.b, Jn, c.rb);
       if (mu > 0) for (const [t, m, k] of [[c.t1, c.m1, 'j1'], [c.t2, c.m2, 'j2']]) {
         vr = sub(velAt(c.b, c.rb), velAt(c.a, c.ra)); const lim = mu * c.jn; let d = -m * dot(vr, t); const nv = Math.max(-lim, Math.min(lim, c[k] + d)); d = nv - c[k]; c[k] = nv; const J = mul(t, d); applyImpulse(c.a, mul(J, -1), c.ra); applyImpulse(c.b, J, c.rb);
       }
-    }
+    } }
     for (const B of st.bodies) if (B.invMass && B.node.f.enabled !== false) { B.x = add(B.x, mul(B.v, h)); const dq = qmul([B.w[0] * h * 0.5, B.w[1] * h * 0.5, B.w[2] * h * 0.5, 0], B.q); B.q = qnorm([B.q[0] + dq[0], B.q[1] + dq[1], B.q[2] + dq[2], B.q[3] + dq[3]]); }
     st.contacts = cs.length;
   };
   const build = (n) => {
     const st = { node: n, bodies: [], all: [], t: null, acc: 0, contacts: 0 };
     for (const rb of n.f.bodies || []) { if (!rb || rb.type !== 'RigidBody') continue; const B = buildBody(rb); st.bodies.push(B); st.all.push(B); }
+    st.joints = []; for (const j of n.f.joints || []) { const J = j && makeJoint(st, j); if (J) st.joints.push(J); }
     return st;
+  };
+  /* a joint raises the outputs named in forceOutput (ALL for every one; the default NONE raises none) when they change */
+  const jointOutputs = (st, dt) => {
+    for (const J of st.joints) {
+      const fo = J.node.f.forceOutput || []; if (!fo.length || (fo.length === 1 && fo[0] === 'NONE')) continue;
+      const o = J.kind.out(J, Math.max(dt, 1e-6)), names = fo.includes('ALL') ? Object.keys(o) : fo.filter((k) => k in o);
+      for (const k of names) { const v = o[k], old = J.node.f[k]; const ch = Array.isArray(v) ? !(Array.isArray(old) && same(old, v)) : Math.abs((old || 0) - v) > 1e-9; if (ch) { J.node.f[k] = v; events.emit(J.node, k, v); } }
+    }
   };
   const same = (a, b) => a.length === b.length && a.every((x, i) => Math.abs(x - b[i]) < 1e-12);
   const tick = (n, now) => {
@@ -185,8 +296,9 @@ BR.phys = (() => {
     }
     if (st.t === null) { st.t = now; return; }
     st.acc += Math.min(0.5, Math.max(0, now - st.t)); st.t = now;
-    let ran = false; while (st.acc >= H) { step(st, H); st.acc -= H; ran = true; }
+    const dtT = now - (st.lastOut ?? now); let ran = false; while (st.acc >= H) { step(st, H); st.acc -= H; ran = true; }
     if (!ran) return;
+    st.lastOut = now; jointOutputs(st, dtT);
     for (const B of st.bodies) {
       if (!B.invMass) continue; const f = B.node.f, o = B.out || {}, pos = B.x.slice(), ori = toAA(B.q), lv = B.v.slice(), av = B.w.slice();
       B.out = { position: pos, orientation: ori, linearVelocity: lv, angularVelocity: av };
