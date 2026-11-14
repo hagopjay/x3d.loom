@@ -37,6 +37,7 @@ Goal (owner's ask, 8 Nov 2026): walk every X3D 4.0 node type, in value order, an
 | `tools/smoke.js` | loads a fixture into the real Babylon WebGPU body (SwiftShader) for a few seconds; the batch regression gate |
 | `tools/census.js` | which node types the reader parts define (the baseline) |
 | `src/kit.js` | `BR.node(name, spec)`: field table, `receive`, `tick`, `init`, `build`, `geometry`, `changed`; wraps `parseX3D`, `receive`, `events.drain` once |
+| `src/nurbs.js` | `BR.nurbs`: knot checks, span search, basis derivatives, rational curve and surface evaluation, tessellation rule, swung-surface extrusion; shared by the NURBS nodes (load it right after `kit.js`) |
 | `src/body-br.js` | the Babylon side of the kit: bridge nodes without a `build` stay silent, others build through their spec |
 | `src/nodes/NODE.js` | one file per node; the field table is generated from the UOM (`driver.py scaffold`), the behaviour is hand written |
 | `receipts/NODE.json` | the last check of each node: XSD verdict, both engines' results, versions |
@@ -59,7 +60,7 @@ Two more test steps for numbers the SAI cannot read: `{"jsn": [code, value]}` is
 Web Audio steps for the Sound nodes (`tools/audio-probe.js`, injected into both pages): `tap` records a node's output with an AudioWorklet, `sig` measures it (rms, peak, f0, harmonics, bands, onset lag, correlation) against an `expect` object, `fsig` and `bytemap` read an Analyser's data fields, `amap` stores a page expression for `close` or the spec's `agree` list (the name is `amap`, not `jsmap`, which is the HAnim step above), `untap` ends a recording. Signals are compared as phase independent numbers because both engines share one realtime AudioContext per page. The rig starts Chromium with the autoplay flag and a fake capture device. See knowledge/SOUND-FINDINGS.md.
 
 ## Putting the kit in a page
-Concatenate after the reader and its extensions and before the body: `kit.js`, then `src/nodes/*.js` (or just the ones the page needs), then (after `body-cam.js`) `body-br.js`. Nothing in the older reader files changes; a type the kit does not own takes the stock path. The page builders (`demo/src/build-*.py`) do not include the kit yet; a port adds those parts to its `PARTS` when it wants the nodes.
+Concatenate after the reader and its extensions and before the body: `kit.js`, then `nurbs.js` (needed by the NURBS nodes), then `src/nodes/*.js` (or just the ones the page needs), then (after `body-cam.js`) `body-br.js`. Nothing in the older reader files changes; a type the kit does not own takes the stock path. The page builders (`demo/src/build-*.py`) do not include the kit yet; a port adds those parts to its `PARTS` when it wants the nodes.
 
 ## Rig and limits (batch 1)
 Chromium 153.0.8010.12 (Chrome for Testing), SwiftShader, headless; X_ITE 16.6.0; Babylon 9.32.0. Correctness only: no real-GPU timing exists and none is claimed. Event nodes are Babylon-independent, so their tests do not draw; the smoke run proves they load in the full bundle, not that anything is drawn.

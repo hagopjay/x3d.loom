@@ -1,0 +1,290 @@
+{
+ "node": "NurbsPatchSurface",
+ "mode": "scene",
+ "note": "six patches in view (a 4 x 4 bump at 12 x 12 cells, the same with texture coordinates per control point, a periodic tube closed in u, a solid patch seen from behind (culled in both engines)) and five off screen (weighted quarter cylinder, orders 4 x 2 with explicit knots and a negative tessellation, too high an order, default tessellation, a closed order 4 loop); every triangle corner, uv and (for two) normal agrees with X_ITE 16.6.0, then the tessellation is changed by events",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    3,
+    3
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P1'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())))",
+    "posP1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P4'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('P4').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())))",
+    "posP4"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P2'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('P2').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())))",
+    "posP2"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='PK'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('PK').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())))",
+    "posPK"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='PJ'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('PJ').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())))",
+    "posPJ"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='PU'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('PU').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())))",
+    "posPU"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P4'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('P4').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvP4"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P1'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvP1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='PK'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('PK').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvPK"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P1'));const o=[];for(const i of m.idx)o.push(m.nrm[i*3],m.nrm[i*3+1],m.nrm[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().getNormals();return Array.from(v)})())))",
+    "nrmP1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='PJ'));const o=[];for(const i of m.idx)o.push(m.nrm[i*3],m.nrm[i*3+1],m.nrm[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('PJ').getValue().getNormals();return Array.from(v)})())))",
+    "nrmPJ"
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P1')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().getVertices().length/12)))",
+    288
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P4')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('P4').getValue().getVertices().length/12)))",
+    200
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P2')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('P2').getValue().getVertices().length/12)))",
+    192
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P5')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('P5').getValue().getVertices().length/12)))",
+    128
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P6')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('P6').getValue().getVertices().length/12)))",
+    128
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='PW')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('PW').getValue().getVertices().length/12)))",
+    32
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='PK')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('PK').getValue().getVertices().length/12)))",
+    112
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='PI')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('PI').getValue().getVertices().length/12)))",
+    0
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='PJ')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('PJ').getValue().getVertices().length/12)))",
+    128
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='PU')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('PU').getValue().getVertices().length/12)))",
+    90
+   ]
+  },
+  {
+   "only": "ours",
+   "jsn": [
+    "(()=>{const a=(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='PW'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('PW').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())));let m=0,n=0;for(let i=0;i<a.length;i+=3){const r=Math.hypot(a[i],a[i+1]);m=Math.max(m,Math.abs(r-1));n=Math.max(n,r)}return [Math.round(m*1e5)/1e5, Math.round(n*100)/100]})()",
+    [
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "only": "xite",
+   "jsn": [
+    "(()=>{const a=(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='PW'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('PW').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())));let m=0,n=0;for(let i=0;i<a.length;i+=3){const r=Math.hypot(a[i],a[i+1]);m=Math.max(m,Math.abs(r-1));n=Math.max(n,r)}return [Math.round(m*1e5)/1e5, Math.round(n*100)/100]})()",
+    [
+     0.24264,
+     1.24
+    ]
+   ]
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "P1",
+    "uTessellation",
+    4
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P1')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().getVertices().length/12)))",
+    96
+   ]
+  },
+  {
+   "set": [
+    "P1",
+    "uTessellation",
+    12
+   ]
+  },
+  {
+   "set": [
+    "P1",
+    "vTessellation",
+    6
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P1')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().getVertices().length/12)))",
+    144
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P1'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())))",
+    "posP1b"
+   ]
+  },
+  {
+   "shot": "tess"
+  }
+ ],
+ "agree": [
+  [
+   "posP1",
+   1e-05
+  ],
+  [
+   "posP4",
+   1e-05
+  ],
+  [
+   "posP2",
+   1e-05
+  ],
+  [
+   "posPK",
+   1e-05
+  ],
+  [
+   "posPJ",
+   1e-05
+  ],
+  [
+   "posPU",
+   1e-05
+  ],
+  [
+   "uvP4",
+   1e-05
+  ],
+  [
+   "uvP1",
+   1e-05
+  ],
+  [
+   "uvPK",
+   1e-05
+  ],
+  [
+   "nrmP1",
+   0.3
+  ],
+  [
+   "nrmPJ",
+   0.3
+  ],
+  [
+   "posP1b",
+   1e-05
+  ]
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.9,
+   "mad": 12,
+   "cover": 0.9
+  },
+  "tess": {
+   "iou": 0.9,
+   "mad": 12,
+   "cover": 0.9
+  }
+ },
+ "gaps": [
+  "normals: this node draws the analytic normal dS/du x dS/dv at every grid point; X_ITE 16.6.0 averages face normals inside an 85 degree crease, so at low tessellation its shading is faceted where ours is smooth (measured largest component difference 0.21 at 12 x 12 cells and 0.28 at 8 x 8, compared at 0.3)",
+  "weights: X_ITE 16.6.0 does not apply them as a rational surface needs (the quarter cylinder reaches radius 1.24); this node follows the standard (radius 1 to 1e-5), checked in this engine only",
+  "solid FALSE seen from behind: X_ITE 16.6.0 lights the back face, the Babylon body draws a counter-clockwise face seen from behind black (the same for an IndexedFaceSet with solid FALSE, measured in a two-quad fixture: 9312 against 19012 drawn pixels); the patch P6 is therefore off screen and only its triangles are compared",
+  "a closed surface (uClosed): positions, texture coordinates and the triangles agree with X_ITE; the shading is smooth across the seam here, X_ITE leaves a seam in its normals (its own source says \"TODO: handle uClosed\")",
+  "NurbsTextureCoordinate as texCoord is a later batch (a TextureCoordinate with one point per control point is supported and compared)"
+ ],
+ "scope": [
+  "triangle corners, texture coordinates and normals come from the vertex arrays X_ITE builds (private getVertices, getMultiTexCoords, getNormals) and from the mesh this reader builds; the pictures are silhouette and mean colour (SwiftShader CPU raster, no tone curve)"
+ ]
+}

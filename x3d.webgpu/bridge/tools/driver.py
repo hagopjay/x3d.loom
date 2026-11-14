@@ -222,7 +222,7 @@ def xsd_patched(xsd, allow, choice=(), fields=(), elements=None):
     checked against a copy of the XSD with that one change; the receipt says so."""
     s = open(xsd).read(); anchor = '      <xs:element ref="ScreenGroup"/>\n      <xs:element ref="LinePickSensor"/>'
     if allow and anchor not in s: return None
-    for n in allow: s = s.replace(anchor, anchor.replace('      <xs:element ref="LinePickSensor"/>', '      <xs:element ref="%s"/>\n      <xs:element ref="LinePickSensor"/>' % n), 1)
+    if allow: s = s.replace(anchor, anchor.replace('      <xs:element ref="LinePickSensor"/>', ''.join('      <xs:element ref="%s"/>\n' % n for n in allow) + '      <xs:element ref="LinePickSensor"/>'), 1)    # all at once: after the first insert the anchor no longer matches, so a loop added only the first node
     for n in choice:
         i = s.find('<xs:element name="%s">' % n); j = s.find('<xs:sequence minOccurs="0" maxOccurs="unbounded">', i); k = s.find('</xs:sequence>', j)
         if i < 0 or j < 0 or k < 0: return None

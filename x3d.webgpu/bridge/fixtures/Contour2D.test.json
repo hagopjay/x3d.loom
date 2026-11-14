@@ -1,0 +1,186 @@
+{
+ "node": "Contour2D",
+ "mode": "events",
+ "note": "a trimming contour: its curve segments joined into one run of u-v points; addChildren adds only nodes not in the list, removeChildren takes them out, children replaces the list",
+ "xsdAllow": [
+  "Contour2D",
+  "NurbsCurve2D",
+  "ContourPolyline2D"
+ ],
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "jsn": [
+    "Array.from(node('K').children, c => c.getNodeName())",
+    [
+     "N1",
+     "P1"
+    ]
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('Contour2D').contour(__worlds.at(-1).nodes.find(n=>n.def==='K')))) : (((()=>{const out=[]; X3D.getBrowser('#c').currentScene.getNamedNode('K').getValue().addTrimmingContour({x:0,y:0,z:0}, {x:1,y:1,z:1}, out); return out.flat().flatMap(v=>[v.x,v.y,v.z])})())))",
+    "c0"
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('Contour2D').contour(__worlds.at(-1).nodes.find(n=>n.def==='K')))) : (((()=>{const out=[]; X3D.getBrowser('#c').currentScene.getNamedNode('K').getValue().addTrimmingContour({x:0,y:0,z:0}, {x:1,y:1,z:1}, out); return out.flat().flatMap(v=>[v.x,v.y,v.z])})()))).length/3",
+    7
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('Contour2D').contour(__worlds.at(-1).nodes.find(n=>n.def==='K2')))) : (((()=>{const out=[]; X3D.getBrowser('#c').currentScene.getNamedNode('K2').getValue().addTrimmingContour({x:0,y:0,z:0}, {x:1,y:1,z:1}, out); return out.flat().flatMap(v=>[v.x,v.y,v.z])})()))).length",
+    0
+   ]
+  },
+  {
+   "setnodes": [
+    "K",
+    "addChildren",
+    [
+     "N2",
+     "P1"
+    ]
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "jsn": [
+    "Array.from(node('K').children, c => c.getNodeName())",
+    [
+     "N1",
+     "P1",
+     "N2"
+    ]
+   ]
+  },
+  {
+   "atleast": [
+    "K",
+    "children",
+    0
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('Contour2D').contour(__worlds.at(-1).nodes.find(n=>n.def==='K')))) : (((()=>{const out=[]; X3D.getBrowser('#c').currentScene.getNamedNode('K').getValue().addTrimmingContour({x:0,y:0,z:0}, {x:1,y:1,z:1}, out); return out.flat().flatMap(v=>[v.x,v.y,v.z])})())))",
+    "c1"
+   ]
+  },
+  {
+   "setnodes": [
+    "K",
+    "removeChildren",
+    [
+     "N1",
+     "P2"
+    ]
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "jsn": [
+    "Array.from(node('K').children, c => c.getNodeName())",
+    [
+     "P1",
+     "N2"
+    ]
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('Contour2D').contour(__worlds.at(-1).nodes.find(n=>n.def==='K')))) : (((()=>{const out=[]; X3D.getBrowser('#c').currentScene.getNamedNode('K').getValue().addTrimmingContour({x:0,y:0,z:0}, {x:1,y:1,z:1}, out); return out.flat().flatMap(v=>[v.x,v.y,v.z])})())))",
+    "c2"
+   ]
+  },
+  {
+   "setnodes": [
+    "K2",
+    "addChildren",
+    [
+     "P2",
+     "N1"
+    ]
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "jsn": [
+    "Array.from(node('K2').children, c => c.getNodeName())",
+    [
+     "P2",
+     "N1"
+    ]
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('Contour2D').contour(__worlds.at(-1).nodes.find(n=>n.def==='K2')))) : (((()=>{const out=[]; X3D.getBrowser('#c').currentScene.getNamedNode('K2').getValue().addTrimmingContour({x:0,y:0,z:0}, {x:1,y:1,z:1}, out); return out.flat().flatMap(v=>[v.x,v.y,v.z])})())))",
+    "c3"
+   ]
+  },
+  {
+   "setnodes": [
+    "K2",
+    "children",
+    [
+     "N2"
+    ]
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "jsn": [
+    "Array.from(node('K2').children, c => c.getNodeName())",
+    [
+     "N2"
+    ]
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('Contour2D').contour(__worlds.at(-1).nodes.find(n=>n.def==='K2')))) : (((()=>{const out=[]; X3D.getBrowser('#c').currentScene.getNamedNode('K2').getValue().addTrimmingContour({x:0,y:0,z:0}, {x:1,y:1,z:1}, out); return out.flat().flatMap(v=>[v.x,v.y,v.z])})())))",
+    "c4"
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "c0",
+   1e-06
+  ],
+  [
+   "c1",
+   1e-06
+  ],
+  [
+   "c2",
+   1e-06
+  ],
+  [
+   "c3",
+   1e-06
+  ],
+  [
+   "c4",
+   1e-06
+  ]
+ ],
+ "gaps": [],
+ "scope": [
+  "a Contour2D draws nothing by itself; what is compared is the run of u-v points a NurbsTrimmedSurface would read (X_ITE addTrimmingContour with no offset and unit scale, ours spec.contour), the list order and the add / remove rules"
+ ]
+}

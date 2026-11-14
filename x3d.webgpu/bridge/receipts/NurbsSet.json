@@ -1,0 +1,35 @@
+{
+ "node": "NurbsSet",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/NurbsSet.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp + XSD patched: NurbsSet children as a choice, not a sequence"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 47/47",
+  "xite": "pass 46/46",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "a scale of 0 or below leaves X_ITE 16.6.0 with 0 segments (NaN vertices); here the surface keeps one cell",
+   "the set draws nothing itself in either engine: the surfaces are drawn by the Shapes that hold them; bboxSize / bboxCenter / bboxDisplay / visible are kept as field values and do not move anything (X_ITE 16.6.0 uses the bbox of the surfaces for culling only)",
+   "NurbsTrimmedSurface (a later batch) joins the set the same way (the scale code names it already)"
+  ],
+  "scope": [
+   "the triangle count of each surface, from the vertices X_ITE builds (getVertices) and from the mesh this reader builds, after each change"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 8257de7f6cd3",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "e1a2371"
+}

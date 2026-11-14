@@ -116,7 +116,7 @@
   const _data = Body.prototype.geometryData;
   Body.prototype.geometryData = function (g) {
     const s = specOf(g); if (!s) return _data.call(this, g);
-    const f = g.f, ver = [g, f.coord, f.normal, f.color, f.texCoord].map((x) => (x ? x.version || 0 : -1)).join('.');
+    const f = g.f, ver = [g, f.coord, f.normal, f.color, f.texCoord, ...(s.refs || []).map((k) => f[k])].map((x) => (x ? x.version || 0 : -1)).join('.');   // spec.refs: more node fields the data is made from (NURBS controlPoint)
     const hit = this.geoCache.get(g.id); if (hit && hit.ver === ver) return hit;
     const out = Object.assign({ ver }, s.geometry(g.__src || g, this)); this.geoCache.set(g.id, out); return out;
   };
@@ -133,7 +133,7 @@
   const _gc = Body.prototype.geometryChanged;
   Body.prototype.geometryChanged = function (n) {
     _gc.call(this, n);
-    for (const x of this.world.nodes) if (specOf(x) && (x.f.color === n || x.f.coord === n || x.f.normal === n || x.f.texCoord === n)) this.regeo(x);
+    for (const x of this.world.nodes) { const sp = specOf(x); if (sp && (x.f.color === n || x.f.coord === n || x.f.normal === n || x.f.texCoord === n || (sp.refs || []).some((k) => x.f[k] === n))) this.regeo(x); }
   };
 }
 
@@ -152,7 +152,7 @@
   const _gc = Body.prototype.geometryChanged;
   Body.prototype.geometryChanged = function (n) {
     _gc.call(this, n);
-    for (const x of this.world.nodes) if (linesSpec(x) && (x.f.color === n || x.f.coord === n)) this.regeo(x);
+    for (const x of this.world.nodes) { const sp = linesSpec(x); if (sp && (x.f.color === n || x.f.coord === n || (sp.refs || []).some((k) => x.f[k] === n))) this.regeo(x); }
   };
 }
 

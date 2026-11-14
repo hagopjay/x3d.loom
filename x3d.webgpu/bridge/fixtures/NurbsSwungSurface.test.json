@@ -1,0 +1,144 @@
+{
+ "node": "NurbsSwungSurface",
+ "mode": "scene",
+ "note": "a vase (profile curve swung round a closed trajectory loop), a polyline profile along an arc, the vase with ccw FALSE, the arc one with solid FALSE, and a trajectory with too few points (off screen); triangle corners agree with X_ITE 16.6.0, then the profile tessellation is changed by an event",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    3,
+    3
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsSwungSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='W1'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('W1').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())))",
+    "posW1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsSwungSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='W2'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('W2').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())))",
+    "posW2"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsSwungSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='W6'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('W6').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())))",
+    "posW6"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsSwungSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='W1'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('W1').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvW1"
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsSwungSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='W1')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('W1').getValue().getVertices().length/12)))",
+    256
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsSwungSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='W2')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('W2').getValue().getVertices().length/12)))",
+    60
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsSwungSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='W3')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('W3').getValue().getVertices().length/12)))",
+    256
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsSwungSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='W4')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('W4').getValue().getVertices().length/12)))",
+    60
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsSwungSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='W5')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('W5').getValue().getVertices().length/12)))",
+    0
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsSwungSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='W6')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('W6').getValue().getVertices().length/12)))",
+    128
+   ]
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "PR1",
+    "tessellation",
+    4
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsSwungSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='W1')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('W1').getValue().getVertices().length/12)))",
+    128
+   ]
+  },
+  {
+   "shot": "coarse"
+  }
+ ],
+ "agree": [
+  [
+   "posW1",
+   0.02
+  ],
+  [
+   "posW2",
+   0.02
+  ],
+  [
+   "posW6",
+   1e-05
+  ],
+  [
+   "uvW1",
+   1e-05
+  ]
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.85,
+   "mad": 6,
+   "cover": 0.85,
+   "fg": 12
+  },
+  "coarse": {
+   "iou": 0.88,
+   "mad": 6,
+   "cover": 0.88,
+   "fg": 12
+  }
+ },
+ "gaps": [
+  "the frame at an interior spine point: this node (like the Library hall Extrusion) takes the Y axis along the chord spine[i+1] - spine[i-1], which is how the standard words it (Likely: read from memory of 19775-1 13.3.5, the text itself is not in the repository); X_ITE 16.6.0 takes the bisector of the two unit vectors. The two are the same for an evenly spaced spine (octagon trajectory: 1.2e-7) and differ by up to 0.017 in the 2.2 unit vase whose spine points are unevenly spaced (compared at 0.02)",
+  "solid FALSE seen from behind: X_ITE 16.6.0 lights the back face, the Babylon body draws it black (the same gap as the patch and IndexedFaceSet); the two sided swung surface here is seen from the front",
+  "no scale, orientation or caps (the NURBS nodes have none); texture coordinates run 0..1 along the profile (s) and the trajectory (t), the same numbers as X_ITE",
+  "the normals are smoothed over every shared vertex (crease angle pi, as X_ITE sets it): the shading agrees in the pictures (mean colour within 10 of 255, picture difference about 3 of 255), not per vertex"
+ ],
+ "scope": [
+  "triangle corners and texture coordinates come from the vertex arrays X_ITE builds (private getVertices, getMultiTexCoords) and from the mesh this reader builds; pictures are silhouette and mean colour (SwiftShader CPU raster, no tone curve); NurbsSweptSurface (a later batch) shares the extrusion code"
+ ]
+}
