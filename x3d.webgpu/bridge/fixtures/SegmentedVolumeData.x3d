@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="VolumeRendering" level="3"/><component name="Texturing3D" level="1"/><meta name="title" content="SegmentedVolumeData.x3d"/><meta name="description" content="Bridge fixture for SegmentedVolumeData: a full volume split into segments, each segment its own transfer function"/></head>
+  <Scene>
+    <Background skyColor="0 0 1"/>
+    <NavigationInfo headlight="false"/>
+    <Viewpoint position="0 0 10"/>
+    <SegmentedVolumeData DEF="N" dimensions="2 2 2"><PixelTexture3D containerField="voxels" image="1 4 4 4 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255"/><PixelTexture3D containerField="segmentIdentifiers" image="1 4 4 4 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2 0 0 1 2"/><OpacityMapVolumeStyle containerField="renderStyle"><PixelTexture containerField="transferFunction" image="1 1 4 0xff0000ff"/></OpacityMapVolumeStyle><OpacityMapVolumeStyle containerField="renderStyle"><PixelTexture containerField="transferFunction" image="1 1 4 0x00ff00ff"/></OpacityMapVolumeStyle></SegmentedVolumeData>
+  </Scene>
+</X3D>

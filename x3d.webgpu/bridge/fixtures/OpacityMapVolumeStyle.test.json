@@ -1,0 +1,266 @@
+{
+ "node": "OpacityMapVolumeStyle",
+ "mode": "scene",
+ "tone": "none",
+ "note": "A VolumeData whose 2 x 2 x 2 voxels hold grey 0, 85, 170 and 255, drawn through an OpacityMapVolumeStyle whose 2D transfer function is a 4 x 1 picture (red, green, blue, white). X_ITE looks the table up at (r, r), the diagonal, so each grey picks one colour and the table's own alpha decides, so even the voxel 0 is drawn (red). Disabling the style leaves the default grey ramp (0 is transparent), and writing the picture again swaps the colours in the bridge (X_ITE 16.6.0 does not take the new picture: it keeps drawing with the colours the table had when the shader was built, so each engine is checked against its own value).",
+ "gaps": [
+  "the 4.0 XSD lacks transferFunction in its containerField enumeration (the fixture is checked against a copy that has it)",
+  "only a PixelTexture is read as a 2D transfer function (an ImageTexture is not: the white texel stands in); a 3D transfer function (PixelTexture3D, ComposedTexture3D, ImageTexture3D) is read as X_ITE does, at (r, r, r)",
+  "X_ITE reads the table at (r, g) of the colour the default ramp already made, which is (r, r): the spec's intensity against gradient is not what 16.6.0 does and the bridge copies 16.6.0",
+  "a changed transfer function picture is taken up by the bridge and not by X_ITE 16.6.0 (measured: a PixelTexture image written after load changes nothing there, a toggle of enabled does not help)",
+  "the 2D transfer function repeats in X_ITE unless repeatS and repeatT are false: voxel 255 then lands on texel 0 (the fixture sets repeatS and repeatT to false)"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    144,
+    136,
+    [
+     255,
+     0,
+     0
+    ],
+    8
+   ]
+  },
+  {
+   "px": [
+    176,
+    136,
+    [
+     0,
+     255,
+     0
+    ],
+    8
+   ]
+  },
+  {
+   "px": [
+    144,
+    104,
+    [
+     0,
+     0,
+     255
+    ],
+    8
+   ]
+  },
+  {
+   "px": [
+    176,
+    104,
+    [
+     255,
+     255,
+     255
+    ],
+    8
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "px": [
+    144,
+    136,
+    [
+     0,
+     0,
+     255
+    ],
+    8
+   ]
+  },
+  {
+   "px": [
+    176,
+    136,
+    [
+     85,
+     85,
+     85
+    ],
+    8
+   ]
+  },
+  {
+   "px": [
+    144,
+    104,
+    [
+     170,
+     170,
+     170
+    ],
+    8
+   ]
+  },
+  {
+   "px": [
+    176,
+    104,
+    [
+     255,
+     255,
+     255
+    ],
+    8
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "set": [
+    "TF",
+    "image",
+    [
+     4,
+     1,
+     4,
+     -1,
+     65535,
+     16711935,
+     -16776961
+    ],
+    "MFInt32"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "px": [
+    144,
+    136,
+    [
+     255,
+     255,
+     255
+    ],
+    8
+   ],
+   "only": "ours"
+  },
+  {
+   "px": [
+    176,
+    136,
+    [
+     0,
+     0,
+     255
+    ],
+    8
+   ],
+   "only": "ours"
+  },
+  {
+   "px": [
+    144,
+    104,
+    [
+     0,
+     255,
+     0
+    ],
+    8
+   ],
+   "only": "ours"
+  },
+  {
+   "px": [
+    176,
+    104,
+    [
+     255,
+     0,
+     0
+    ],
+    8
+   ],
+   "only": "ours"
+  },
+  {
+   "px": [
+    144,
+    136,
+    [
+     255,
+     0,
+     0
+    ],
+    8
+   ],
+   "only": "xite"
+  },
+  {
+   "px": [
+    176,
+    136,
+    [
+     0,
+     255,
+     0
+    ],
+    8
+   ],
+   "only": "xite"
+  },
+  {
+   "px": [
+    144,
+    104,
+    [
+     0,
+     0,
+     255
+    ],
+    8
+   ],
+   "only": "xite"
+  },
+  {
+   "px": [
+    176,
+    104,
+    [
+     255,
+     255,
+     255
+    ],
+    8
+   ],
+   "only": "xite"
+  }
+ ],
+ "xsdContainerField": [
+  "transferFunction"
+ ]
+}

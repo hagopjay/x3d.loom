@@ -1,0 +1,33 @@
+{
+ "node": "VolumeData",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/VolumeData.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 30/30",
+  "xite": "pass 30/30",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "X_ITE 16.6.0 draws 400 view-aligned slices with no opacity correction; the bridge marches a ray on the same planes but accumulates in float where X_ITE blends 8 bit per slice, so a volume of faint alpha differs by tens of levels (the tests check saturated colours)",
+   "bboxSize and bboxCenter are kept and change nothing (they only matter for culling, as in X_ITE)",
+   "opaque shapes that cut through a volume are not cut per pixel (the box is depth tested as a whole)",
+   "fog and clip planes are not applied to the volume"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f716580aaa87",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2e15c1b"
+}

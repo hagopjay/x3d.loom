@@ -1,0 +1,32 @@
+{
+ "node": "ToneMappedVolumeStyle",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/ToneMappedVolumeStyle.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 11/11",
+  "xite": "pass 11/11",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the colours' alpha is not used (the voxel alpha stays)",
+   "with no light the colour is black",
+   "only the headlight and up to three more lights act, with no attenuation or cone"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f716580aaa87",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2e15c1b"
+}

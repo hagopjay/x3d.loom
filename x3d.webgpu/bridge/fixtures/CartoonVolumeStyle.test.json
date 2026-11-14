@@ -1,0 +1,124 @@
+{
+ "node": "CartoonVolumeStyle",
+ "mode": "scene",
+ "tone": "none",
+ "note": "A CartoonVolumeStyle with 3 colour bands on the same cube, turned 40 degrees about the vertical. The band follows the angle between the normal and the direction from the eye to the sample, and the colour is the HSV mix of orthogonalColor (white) and parallelColor (black): the turned face (40 degrees, the middle of three bands of 30 degrees) is grey 75 (the border where the normal is nearly across the view takes the orthogonalColor, white, but its width differs by a few pixels between the engines and is not tested). With red and blue the HSV mix goes the short way round the hue circle (through purple): the face is (150, 0, 255).",
+ "gaps": [
+  "X_ITE measures the angle against the direction eye to sample (not sample to eye), so the faces turned towards the eye are dropped and the far side of the cube shows; the bridge copies that (a convex cube looks the same either way)",
+  "colorSteps 4 puts the 45 degree band exactly on a band edge, so it is not tested",
+  "the colours' alpha is not used"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "colorSteps",
+    3
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "orthogonalColor",
+    [
+     1,
+     1,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "parallelColor",
+    [
+     0,
+     0,
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "settle": 4
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     75,
+     75,
+     75
+    ],
+    8
+   ]
+  },
+  {
+   "px": [
+    152,
+    120,
+    [
+     75,
+     75,
+     75
+    ],
+    8
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "orthogonalColor",
+    [
+     1,
+     0,
+     0,
+     1
+    ],
+    "SFColorRGBA"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "parallelColor",
+    [
+     0,
+     0,
+     1,
+     1
+    ],
+    "SFColorRGBA"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     150,
+     0,
+     255
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    152,
+    120,
+    [
+     150,
+     0,
+     255
+    ],
+    12
+   ]
+  }
+ ]
+}

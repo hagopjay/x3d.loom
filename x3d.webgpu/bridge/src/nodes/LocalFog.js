@@ -65,7 +65,7 @@ BR.fog = {
       if (!m.getTotalVertices || !m.getTotalVertices()) continue;
       const o = m.clone(m.name + '-fog', m.parent, true); o.makeGeometryUnique(); o.isPickable = false; o.metadata = { fogOverlay: true };
       const mat = new BABYLON.StandardMaterial('fogmat-' + shape.id, body.scene);
-      mat.disableLighting = true; mat.emissiveColor.set(1, 1, 1); mat.diffuseColor.set(0, 0, 0); mat.specularColor.set(0, 0, 0); mat.backFaceCulling = m.material ? m.material.backFaceCulling : false;
+      mat.disableLighting = true; mat.emissiveColor.set(1, 1, 1); mat.diffuseColor.set(0, 0, 0); mat.specularColor.set(0, 0, 0); mat.backFaceCulling = m.material ? m.material.backFaceCulling : false; if (m.material) mat.sideOrientation = m.material.sideOrientation;
       mat.transparencyMode = BABYLON.Material.MATERIAL_ALPHABLEND; mat.zOffset = -1; mat.fogEnabled = false;
       o.material = mat; o.useVertexColors = true; o.hasVertexAlpha = true; o.applyFog = false; o.setEnabled(false);
       m.applyFog = false; F.fc.add(m); over.push(o); F.list.push({ base: m, over: o, fc, key: '' });

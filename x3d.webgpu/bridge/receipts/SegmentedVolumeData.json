@@ -1,0 +1,31 @@
+{
+ "node": "SegmentedVolumeData",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/SegmentedVolumeData.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp + XSD patched: transferFunction added to the containerField values"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 11/11",
+  "xite": "pass 11/11",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "X_ITE reads the segment as int(r * 255), which truncates; the bridge rounds (no difference for exact ids, and none for a 1 voxel texture of ids with nearest filtering)",
+   "the segment ids are read through the texture's own filtering, so a segmentIdentifiers volume of 16 or more voxels across is blended at the segment borders in both engines"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f716580aaa87",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "2e15c1b"
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="VolumeRendering" level="3"/><component name="Texturing3D" level="1"/><meta name="title" content="VolumeData.x3d"/><meta name="description" content="Bridge fixture for VolumeData: a 2 by 2 by 2 box of voxels whose columns grow from grey 64 to white, over a blue background; a second volume with no voxels is a white box"/></head>
+  <Scene>
+    <Background skyColor="0 0 1"/>
+    <NavigationInfo headlight="false"/>
+    <Viewpoint position="0 0 10"/>
+    <VolumeData DEF="N" dimensions="2 2 2"><PixelTexture3D DEF="T" containerField="voxels" image="1 4 4 4 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255 64 128 192 255"/></VolumeData>
+    <Transform translation="3 0 0"><VolumeData DEF="D"/></Transform>
+  </Scene>
+</X3D>

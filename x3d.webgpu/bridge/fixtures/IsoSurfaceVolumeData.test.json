@@ -1,0 +1,250 @@
+{
+ "node": "IsoSurfaceVolumeData",
+ "mode": "scene",
+ "tone": "none",
+ "note": "An IsoSurfaceVolumeData with a block of 2 x 2 x 2 voxels of value 200 inside a 4 x 4 x 4 volume and one surface value 0.5: every sample brighter than 0.5 is drawn opaque, flat grey 0.5 (not 200, the colour is the surface value), the nearest one wins. Raising the value to 0.9 draws nothing. With the voxels changed to a core of 230 inside a ring of 128 and two surface values 0.3 and 0.7, the core is drawn grey 0.7 (179) and the ring grey 0.3 (77): the highest surface value the sample passes gives its colour.",
+ "gaps": [
+  "X_ITE 16.6.0 draws the 'surface' as every sample above the value (a first-hit march), flat grey and unlit unless a renderStyle is given",
+  "contourStepSize with a surface value is not applied: X_ITE 16.6.0 tests only the lowest contour of its generated list, which is not the specification's meaning, so the bridge leaves the field kept and unused",
+  "the voxels and gradients events after load are honoured by the bridge, ignored by X_ITE"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "surfaceValues",
+    [
+     0.5
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "contourStepSize",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "surfaceTolerance",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "dimensions",
+    [
+     2,
+     2,
+     2
+    ]
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     128,
+     128,
+     128
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    170,
+    120,
+    [
+     128,
+     128,
+     128
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    182,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    160,
+    98,
+    [
+     0,
+     0,
+     255
+    ],
+    6
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "surfaceValues",
+    [
+     0.9
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    170,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    6
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "image",
+    [
+     1,
+     4,
+     4,
+     4,
+     128,
+     128,
+     128,
+     128,
+     128,
+     230,
+     230,
+     128,
+     128,
+     230,
+     230,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     230,
+     230,
+     128,
+     128,
+     230,
+     230,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     230,
+     230,
+     128,
+     128,
+     230,
+     230,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     128,
+     230,
+     230,
+     128,
+     128,
+     230,
+     230,
+     128,
+     128,
+     128,
+     128,
+     128
+    ],
+    "MFInt32"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "surfaceValues",
+    [
+     0.3,
+     0.7
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "px": [
+    153,
+    120,
+    [
+     179,
+     179,
+     179
+    ],
+    5
+   ]
+  },
+  {
+   "px": [
+    138,
+    120,
+    [
+     77,
+     77,
+     77
+    ],
+    5
+   ]
+  }
+ ]
+}

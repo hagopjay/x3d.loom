@@ -1,0 +1,170 @@
+{
+ "node": "ShadedVolumeStyle",
+ "mode": "scene",
+ "tone": "none",
+ "note": "A cube of 4 x 4 x 4 voxels of 255 inside an 8 x 8 x 8 volume, seen face on from 3 m, with a ShadedVolumeStyle holding a Material (diffuse 0.8). With lighting off (the default) the colour is the Material's diffuse 204 whatever the angle; with lighting on the headlight gives 204 on the face (N . L = 1) and 144 on the left edge band where the normal is at 45 degrees (204 x 0.7071). With the headlight off and no other light the colour is black. Disabling the style leaves the white ramp.",
+ "gaps": [
+  "the gradient is taken one voxel either side of the sample in the red channel, so a volume with no empty margin has no gradient at its border and draws nothing (as in X_ITE)",
+  "only the headlight and up to three more lights act; their attenuation, radius and spot cone are not applied (X_ITE applies them)",
+  "shadows and phaseFunction are kept and not used (X_ITE does not use them either)",
+  "anisotropic dimensions tilt X_ITE's normals differently from the bridge's (the bridge divides the gradient by the dimensions); the test uses a cube"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "lighting",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "shadows",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "phaseFunction",
+    "Henyey-Greenstein"
+   ]
+  },
+  {
+   "settle": 4
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     204,
+     204,
+     204
+    ],
+    8
+   ]
+  },
+  {
+   "px": [
+    140,
+    113,
+    [
+     204,
+     204,
+     204
+    ],
+    8
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "lighting",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     204,
+     204,
+     204
+    ],
+    8
+   ]
+  },
+  {
+   "px": [
+    140,
+    113,
+    [
+     144,
+     144,
+     144
+    ],
+    10
+   ]
+  },
+  {
+   "set": [
+    "NI",
+    "headlight",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "set": [
+    "NI",
+    "headlight",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    8
+   ]
+  },
+  {
+   "px": [
+    140,
+    113,
+    [
+     255,
+     255,
+     255
+    ],
+    8
+   ]
+  }
+ ]
+}

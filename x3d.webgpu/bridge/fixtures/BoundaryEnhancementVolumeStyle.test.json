@@ -1,0 +1,160 @@
+{
+ "node": "BoundaryEnhancementVolumeStyle",
+ "mode": "scene",
+ "tone": "none",
+ "note": "Four layers of voxels (72, 72, 8, 8 from the back, the camera is at the front) seen end on in white. X_ITE multiplies the alpha of a sample by retainedOpacity + boundaryOpacity x f^opacityFactor where f = |voxel - the voxel one step further along the third texture axis|, the red channel only: f is zero inside a layer and only the step between layers 1 and 2 (64/255) raises the opacity. With the defaults the stack is a pale 40 in the bridge (78 in X_ITE); switched off, or with retainedOpacity 1 and boundaryOpacity 0, it is the plain dark 10 (24 in X_ITE). The difference is X_ITE's 8 bit blending of faint slices, which stalls once the alpha times the destination is under half a level, so the dark stack is lighter there; each engine is checked against its own value.",
+ "gaps": [
+  "the numbers depend on the 400 slice count and the 8 bit blend of X_ITE for faint samples; the bridge adds up the same alpha in float, the tolerance is 10 levels",
+  "pow(0, 0) is hardware defined and is not tested",
+  "the surfaceNormals field does not exist on this node"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "retainedOpacity",
+    0.2
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "boundaryOpacity",
+    0.9
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "opacityFactor",
+    2
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 4
+  },
+  {
+   "only": "ours",
+   "px": [
+    160,
+    120,
+    [
+     40,
+     40,
+     40
+    ],
+    10
+   ]
+  },
+  {
+   "only": "xite",
+   "px": [
+    160,
+    120,
+    [
+     78,
+     78,
+     78
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "only": "ours",
+   "px": [
+    160,
+    120,
+    [
+     10,
+     10,
+     10
+    ],
+    10
+   ]
+  },
+  {
+   "only": "xite",
+   "px": [
+    160,
+    120,
+    [
+     24,
+     24,
+     24
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "retainedOpacity",
+    1,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "boundaryOpacity",
+    0,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "only": "ours",
+   "px": [
+    160,
+    120,
+    [
+     10,
+     10,
+     10
+    ],
+    10
+   ]
+  },
+  {
+   "only": "xite",
+   "px": [
+    160,
+    120,
+    [
+     24,
+     24,
+     24
+    ],
+    12
+   ]
+  }
+ ]
+}

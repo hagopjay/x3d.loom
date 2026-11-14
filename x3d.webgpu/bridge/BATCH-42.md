@@ -1,0 +1,14 @@
+# Bridge batch 42
+
+Reader knows **206/260** X3D 4.0 node types after this batch (138 bridged in this work so far, 68 baseline). Rig: {"chromium": "153.0.8010.12", "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 405205adb314", "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)", "babylon": "9.32.0"}.
+
+Regression gate (all bridged event nodes in one ROUTE chain, ours + X_ITE): PASS; inside the real Babylon 9.32.0 WebGPU body on swiftshader: 13 frames, page errors 0, Switch ended on [1].
+
+| node | component | xsd | ours | X_ITE | verdict | note |
+|---|---|---|---|---|---|---|
+| BallJoint | RigidBodyPhysics | ok | pass 7/7 | pass 7/7 | PASS | the bridge solves joints as velocity rows with a 0.2 per step error correction; a long chain of joints needs more iterations; anchor outputs are local to each body, as in X_ITE; changing anchorPoint after load does not move the joint (it is fixed from the initial poses); forceOutput ALL raises every output of the node |
+| DoubleAxisHingeJoint | RigidBodyPhysics | ok | pass 7/7 | pass 6/6 | PASS | the bridge builds the hinge-2 joint (anchors meet, the axes stay at 90 degrees, a motor and limit on each); X_ITE 16.6.0 builds a plain btHingeConstraint about axis1, so axis2 does nothing there; desiredAngularVelocity1 and 2 with maxTorque1 and 2 turn the hinges in the bridge; X_ITE ignores them; suspensionForce and suspensionErrorCorrection are kept and not used |
+| MotorJoint | RigidBodyPhysics | ok | pass 5/5 | pass 5/5 | PASS | the bridge applies axisNTorque about motorNAxis (fixed in body 1) on body 2 and the opposite on body 1 for the first enabledAxes axes; autoCalc and the stop bounce and error correction fields are kept and not used; motorNAngle is the signed twist of body 2 about each axis; X_ITE 16.6.0 has no motor at all |
+| SingleAxisHingeJoint | RigidBodyPhysics | ok | pass 9/9 | pass 9/9 | PASS | minAngle, maxAngle, stopBounce and stopErrorCorrection are applied by the bridge (one-sided limit rows); X_ITE 16.6.0 makes a btHingeConstraint without limits, so it ignores them (see the limit fixture lines); angle is signed in the bridge and unsigned in X_ITE (the angle of the axis-angle rotation); angleRate comes from the angle change over the time since the last tick; X_ITE multiplies by the frame rate |
+| SliderJoint | RigidBodyPhysics | ok | pass 6/6 | pass 6/6 | PASS | separation is measured along the axis between the two body origins, as in X_ITE's slider; sliderForce is applied by the bridge as a force along the axis; X_ITE 16.6.0 reads the field and never applies it; stopBounce is kept and not used by the slider |
+| UniversalJoint | RigidBodyPhysics | ok | pass 5/5 | pass 4/4 | PASS | X_ITE 16.6.0 does not support UniversalJoint or MotorJoint; the bridge solves them (anchors meet, axes at 90 degrees); stop1Bounce, stop1ErrorCorrection, stop2Bounce and stop2ErrorCorrection are kept and not used |
