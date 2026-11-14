@@ -1,10 +1,7 @@
 {
  "node": "WaveShaper",
  "mode": "scene",
- "note": "the shaping curve (fewer than two values read as two zeros) and oversample (NONE, 2X, 4X; anything else none) are compared with X_ITE 16.6.0 on the Web Audio node, then the input stage and the clock. The distorted sound is not compared.",
- "gaps": [
-  "the curve is read back by length and by values, the shaping itself is Web Audio's"
- ],
+ "note": "the shaping curve (fewer than two values read as two zeros) and oversample (NONE, 2X, 4X; anything else none) are compared with X_ITE 16.6.0 on the Web Audio node, then the input stage and the clock. The distorted sound is not compared. Signal compared with X_ITE 16.6.0 on the page's real Web Audio clock: a 1 kHz sine of amplitude 1 through the curve; the rms and the first and third harmonic after it are compared with a numerical shaping of the same sine by the curve with linear interpolation over -1..1 (the Web Audio specification), for the identity curve, a half scale curve, a hard clipper -1 -1 0 1 1, a soft curve, an inverting curve (1 -1); a curve with fewer than two values is two zeros (silent); oversample NONE, 2X and 4X are compared with X_ITE on the total rms and on the energy above 8 kHz (aliasing); a disabled shaper passes the tone unchanged.",
  "steps": [
   {
    "expect": [
@@ -638,6 +635,581 @@
     "isActive",
     false
    ]
+  },
+  {
+   "tap": [
+    "w",
+    [
+     "SO",
+     "SW"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1.0
+  },
+  {
+   "set": [
+    "SW",
+    "curve",
+    [
+     -1,
+     1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "oversample",
+    "NONE"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "w",
+    "id",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "harm": 7,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "AUD.shaped([-1, 1],1.0,1000,AUD.sr())",
+    "x.id"
+   ]
+  },
+  {
+   "close": [
+    "id.rms",
+    "x.id.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "id.h1",
+    "x.id.h1",
+    0.03
+   ]
+  },
+  {
+   "close": [
+    "id.h3",
+    "x.id.h3",
+    0.03
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "curve",
+    [
+     -0.5,
+     0.5
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "oversample",
+    "NONE"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "w",
+    "half",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "harm": 7,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "AUD.shaped([-0.5, 0.5],1.0,1000,AUD.sr())",
+    "x.half"
+   ]
+  },
+  {
+   "close": [
+    "half.rms",
+    "x.half.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "half.h1",
+    "x.half.h1",
+    0.03
+   ]
+  },
+  {
+   "close": [
+    "half.h3",
+    "x.half.h3",
+    0.03
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "curve",
+    [
+     -1,
+     -1,
+     0,
+     1,
+     1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "oversample",
+    "NONE"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "w",
+    "clip",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "harm": 7,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "AUD.shaped([-1, -1, 0, 1, 1],1.0,1000,AUD.sr())",
+    "x.clip"
+   ]
+  },
+  {
+   "close": [
+    "clip.rms",
+    "x.clip.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "clip.h1",
+    "x.clip.h1",
+    0.03
+   ]
+  },
+  {
+   "close": [
+    "clip.h3",
+    "x.clip.h3",
+    0.03
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "curve",
+    [
+     -1,
+     -0.9,
+     -0.5,
+     0,
+     0.5,
+     0.9,
+     1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "oversample",
+    "NONE"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "w",
+    "soft",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "harm": 7,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "AUD.shaped([-1, -0.9, -0.5, 0, 0.5, 0.9, 1],1.0,1000,AUD.sr())",
+    "x.soft"
+   ]
+  },
+  {
+   "close": [
+    "soft.rms",
+    "x.soft.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "soft.h1",
+    "x.soft.h1",
+    0.03
+   ]
+  },
+  {
+   "close": [
+    "soft.h3",
+    "x.soft.h3",
+    0.03
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "curve",
+    [
+     1,
+     -1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "oversample",
+    "NONE"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "w",
+    "inv",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "harm": 7,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "AUD.shaped([1, -1],1.0,1000,AUD.sr())",
+    "x.inv"
+   ]
+  },
+  {
+   "close": [
+    "inv.rms",
+    "x.inv.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "inv.h1",
+    "x.inv.h1",
+    0.03
+   ]
+  },
+  {
+   "close": [
+    "inv.h3",
+    "x.inv.h3",
+    0.03
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "curve",
+    [
+     0.3
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "w",
+    "empty",
+    {
+     "ch": 1,
+     "from": -0.3
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "curve",
+    [
+     -1,
+     -1,
+     0,
+     1,
+     1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "oversample",
+    "NONE"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "w",
+    "ovNONE",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3,
+     "bands": [
+      0,
+      8000,
+      22000
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "oversample",
+    "2X"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "w",
+    "ov2X",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3,
+     "bands": [
+      0,
+      8000,
+      22000
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "oversample",
+    "4X"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "w",
+    "ov4X",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3,
+     "bands": [
+      0,
+      8000,
+      22000
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "w",
+    "off",
+    {
+     "ch": 1,
+     "ref": "w",
+     "refCh": 0,
+     "f0": 1000,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "corr": [
+      1,
+      0.02
+     ]
+    }
+   ]
   }
+ ],
+ "agree": [
+  [
+   "id.rms",
+   0.02
+  ],
+  [
+   "id.h1",
+   0.03
+  ],
+  [
+   "id.h3",
+   0.03
+  ],
+  [
+   "half.rms",
+   0.02
+  ],
+  [
+   "half.h1",
+   0.03
+  ],
+  [
+   "half.h3",
+   0.03
+  ],
+  [
+   "clip.rms",
+   0.02
+  ],
+  [
+   "clip.h1",
+   0.03
+  ],
+  [
+   "clip.h3",
+   0.03
+  ],
+  [
+   "soft.rms",
+   0.02
+  ],
+  [
+   "soft.h1",
+   0.03
+  ],
+  [
+   "soft.h3",
+   0.03
+  ],
+  [
+   "inv.rms",
+   0.02
+  ],
+  [
+   "inv.h1",
+   0.03
+  ],
+  [
+   "inv.h3",
+   0.03
+  ],
+  [
+   "empty.rms",
+   0.0001
+  ],
+  [
+   "ovNONE.rms",
+   0.02
+  ],
+  [
+   "ovNONE.band1",
+   0.01
+  ],
+  [
+   "ov2X.rms",
+   0.02
+  ],
+  [
+   "ov2X.band1",
+   0.01
+  ],
+  [
+   "ov4X.rms",
+   0.02
+  ],
+  [
+   "ov4X.band1",
+   0.01
+  ],
+  [
+   "off.rms",
+   0.02
+  ]
+ ],
+ "scope": [
+  "oversample is compared against X_ITE only (the aliasing energy above 8 kHz agrees within 0.01), not against an ideal band limited reference; the curve is held to Float32 as in Web Audio"
  ]
 }
