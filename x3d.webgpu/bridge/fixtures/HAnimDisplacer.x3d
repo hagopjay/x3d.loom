@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="HAnim" level="2"/><meta name="title" content="HAnimDisplacer.x3d"/><meta name="description" content="Bridge fixture for HAnimDisplacer: the skinned tube with two displacers (the top ring pushed sideways by a displacer of the last joint, the first ring pushed by one of the middle joint), and a segment whose own coordinates are displaced"/></head>
+  <Scene>
+    <NavigationInfo type='"EXAMINE" "ANY"' transitionType='"TELEPORT"' headlight="true"/>
+    <OrthoViewpoint DEF="V" position="0 1.5 10" fieldOfView="-3 -2.25 3 2.25"/>
+    <HAnimHumanoid DEF="H" name="tube" version="2.0" skeletalConfiguration="BASIC" loa="1"
+        jointBindingPositions="0 0 0, 0 -1 0, 0 -2 0">
+      <Coordinate DEF="SKIN" containerField="skinCoord" point="-0.25 0 -0.25 0.25 0 -0.25 0.25 0 0.25 -0.25 0 0.25 -0.25 1 -0.25 0.25 1 -0.25 0.25 1 0.25 -0.25 1 0.25 -0.25 2 -0.25 0.25 2 -0.25 0.25 2 0.25 -0.25 2 0.25 -0.25 3 -0.25 0.25 3 -0.25 0.25 3 0.25 -0.25 3 0.25"/>
+      <HAnimJoint DEF="J0" name="humanoid_root" containerField="skeleton" skinCoordIndex="0 1 2 3 4 5 6 7" skinCoordWeight="1 1 1 1 0.5 0.5 0.5 0.5">
+        <HAnimJoint DEF="J1" name="vl5" translation="0 1 0" skinCoordIndex="4 5 6 7 8 9 10 11" skinCoordWeight="0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5">
+          <HAnimDisplacer DEF="DMID" name="belly" coordIndex="4 5 6 7" displacements="0.3 0 0, 0.3 0 0, 0.3 0 0, 0.3 0 0" weight="0.5"/>
+          <HAnimJoint DEF="J2" name="vc7" translation="0 1 0" skinCoordIndex="8 9 10 11 12 13 14 15" skinCoordWeight="0.5 0.5 0.5 0.5 1 1 1 1">
+            <HAnimDisplacer DEF="DTOP" name="smile" coordIndex="12 13 14 15" displacements="0.3 0 0, 0.3 0 0, 0.3 0 0, 0.3 0 0" weight="1"/>
+            <HAnimSegment DEF="SEG" name="head">
+              <Shape><Appearance><Material diffuseColor="0.9 0.2 0.2"/></Appearance><IndexedFaceSet solid="false" ccw="true" coordIndex="0 1 2 3 -1"><Coordinate DEF="SC" point="0.4 -0.2 0 0.7 -0.2 0 0.7 0.1 0 0.4 0.1 0"/></IndexedFaceSet></Shape>
+              <HAnimSite DEF="SITE" name="head_tip" translation="0 1 0"><Shape><Appearance><Material diffuseColor="0.2 0.2 0.9"/></Appearance><Box size="0.15 0.15 0.15"/></Shape></HAnimSite>
+              <HAnimDisplacer DEF="DSEG" name="nod" coordIndex="2 3" displacements="0 0.4 0, 0 0.4 0" weight="1"/>
+              <Coordinate USE="SC" containerField="coord"/>
+            </HAnimSegment>
+          </HAnimJoint>
+        </HAnimJoint>
+      </HAnimJoint>
+      <HAnimJoint USE="J0" containerField="joints"/>
+      <HAnimJoint USE="J1" containerField="joints"/>
+      <HAnimJoint USE="J2" containerField="joints"/>
+      <HAnimSegment USE="SEG" containerField="segments"/>
+      <HAnimSite USE="SITE" containerField="sites"/>
+      <Shape containerField="skin">
+        <Appearance><Material diffuseColor="0.3 0.8 0.4"/></Appearance>
+        <IndexedFaceSet solid="false" ccw="true" coordIndex="0 4 5 1 -1 1 5 6 2 -1 2 6 7 3 -1 3 7 4 0 -1 4 8 9 5 -1 5 9 10 6 -1 6 10 11 7 -1 7 11 8 4 -1 8 12 13 9 -1 9 13 14 10 -1 10 14 15 11 -1 11 15 12 8 -1"><Coordinate USE="SKIN"/></IndexedFaceSet>
+      </Shape>
+    </HAnimHumanoid>
+  </Scene>
+</X3D>

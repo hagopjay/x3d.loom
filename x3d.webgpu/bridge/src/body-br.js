@@ -888,3 +888,22 @@ R.bridge.winding = (mesh) => {   // +1 when the first triangles run counter-cloc
     return r;
   };
 }
+
+/* HAnim skin: a shape the body rebuilds (a Coordinate changed) loses its bone weights and morph targets, so the humanoids and segments bind again; a world that goes takes its skeletons with it
+   (the node file HAnimHumanoid.js holds the skin; Body is not defined yet when node files load, so the two wrappers live here) */
+{
+  const H = R.bridge.hanim;
+  const _re = Body.prototype.rebuildShapeIn;
+  Body.prototype.rebuildShapeIn = function (r) {
+    const out = _re.call(this, r);
+    for (const rec of this.rec.values()) if (rec.hum && rec.node._hs && rec.node.f.skinCoord) H.bindSkin(this, rec.node);
+    for (const x of this.world.nodes) if (x.type === 'HAnimSegment' && x._hs) H.bindSegment(this, x);
+    return out;
+  };
+  const _cw = Body.prototype.clearWorld;
+  Body.prototype.clearWorld = function () {
+    if (this._hanimObs) { this.scene.onBeforeRenderObservable.remove(this._hanimObs); this._hanimObs = null; }
+    if (this.world) for (const n of this.world.nodes) { if (n.type === 'HAnimHumanoid') H.unbind(this, n); if (n.type === 'HAnimSegment') H.unbindSegment(n); }
+    return _cw.call(this);
+  };
+}

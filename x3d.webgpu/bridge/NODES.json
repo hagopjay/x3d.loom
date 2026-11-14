@@ -1262,10 +1262,10 @@
    "inherits": "X3DGeometricPropertyNode",
    "container": "displacers",
    "nfields": 6,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 36,
+   "receipt": "receipts/HAnimDisplacer.json",
+   "note": "a vertex weighted over several joints is displaced before skinning (Babylon MorphTarget, the glTF order); X_ITE 16.6.0 adds joint rotation * (displacement * weight) after skinning with the rotation of the displacer's joint alone: identical (<= 1e-7 on the rig) for a vertex that follows the displacer's joint alone and at the rest pose, 0.053 (weight 0.5) to 0.106 (weight 1) world units apart on the half J0 / half J1 ring of this fixture for a 0.3 unit displacement in the 45 degree pose; a displacer on a segment moves the segment's own vertices in the segment's frame; X_ITE 16.6.0 rotates the displacement by the segment's matrix in the humanoid's frame and the shape's own transform rotates it again, so a bent segment collapses to a sliver there (see the bent shot); the bridge draws the intended rectangle",
    "rank": 206
   },
   "HAnimHumanoid": {
@@ -1275,10 +1275,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 31,
-   "status": "base",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 36,
+   "receipt": "receipts/HAnimHumanoid.json",
+   "note": "skinNormal, skinBindingCoords and skinBindingNormals are stored; neither engine uses them (X_ITE 16.6.0 reads skinCoord only): the skin normals follow the bone matrices in the shader (X_ITE blends the inverse transpose per joint, the same for rotations, different under non-uniform joint scale); only IndexedFaceSet and IndexedTriangleSet skin shapes are skinned (a vertex's coordinate index is known); a vertex with more than 8 joint influences keeps the 8 largest, X_ITE has no limit; the viewpoints, joints, segments and sites lists are references (not drawn twice)",
    "rank": 207
   },
   "HAnimJoint": {
@@ -1288,10 +1288,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 22,
-   "status": "base",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 36,
+   "receipt": "receipts/HAnimJoint.json",
+   "note": "llimit, ulimit, limitOrientation and stiffness are stored and routed but limit nothing: neither engine solves joint limits (X_ITE 16.6.0 does not either)",
    "rank": 208
   },
   "HAnimMotion": {
@@ -1301,9 +1301,9 @@
    "inherits": "X3DChildNode",
    "container": "motions",
    "nfields": 20,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
+   "status": "bridged",
+   "batch": 36,
+   "receipt": "receipts/HAnimMotion.json",
    "note": "",
    "rank": 211
   },
@@ -1314,10 +1314,10 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 15,
-   "status": "base",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 36,
+   "receipt": "receipts/HAnimSegment.json",
+   "note": "mass, centerOfMass and momentsOfInertia are stored and routed, no engine uses them (physics belongs to the RigidBodyPhysics group)",
    "rank": 209
   },
   "HAnimSite": {
@@ -1327,10 +1327,10 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 15,
-   "status": "base",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 36,
+   "receipt": "receipts/HAnimSite.json",
+   "note": "a Viewpoint inside a site of the humanoid's viewpoints list is not bound from the site in the bridge (the site is a Transform; HAnim viewpoints are not navigation viewpoints)",
    "rank": 210
   },
   "ImageCubeMapTexture": {
