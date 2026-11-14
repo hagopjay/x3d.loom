@@ -30,7 +30,7 @@ Every run record passed `loom physics` with fresh-process replay and `--max-waiv
 ## What the work taught the Loom
 
 1. **A check has to be able to fail for a wrong implementation** (law 44, pattern 11). The first kinetic-energy check read the same for the buggy and the fixed collision rule.
-2. **Pre-registration is only as good as git history** (pattern 13). `limit` and `declared_limit` come from one run. In v6 the limits were committed before the run and the runner refuses to start if the file differs from its commit.
+2. **Pre-registration is only as good as git history** (pattern 13). `limit` and `declared_limit` come from one run. In v6 the limits were committed before the run, the generator refuses to start if the file differs from its commit, and `loom physics` now verifies the record's `limits` block against git (`PHYS_LIMITS_UNPROVEN`).
 3. **A second reader finds what the author cannot** (pattern 14). 125 claims, 25 negative findings survived a skeptical second pass, 0 false alarms, mostly about checks that could not fail and untested explanations (Likely).
 4. **Falsified predictions stay in the notes** (pattern 19). Two tunnelling rules failed; they are readable and are not in the witness.
 5. **Integrators and spatial structures** (patterns 16, 17): order depends on the end time you read; bounded energy is not accuracy; a broad phase is verified by set equality with brute force and by counting tests, not by timing.

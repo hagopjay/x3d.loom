@@ -79,7 +79,7 @@ python3 -I kit/tests/test_metalsite.py && kit/examples/run_zinc_site.sh
 python3 -I kit/examples/check_all_foldbacks.py
 ```
 
-The first runs 82 negative controls, 15 two-sided trap rules and 8 page-trap rules (with 10 page forms) under normal Python and `-O`, including the play witness and the CLI itself. The second takes the delivered Data City Loom (copied, never edited), accepts it under `x3d-static/v1`, writes a receipt, then shows that a post-witness edit and a planted trap are both rejected. The third applies every PR patch from the project zips in an empty repo and runs its smoke test both ways.
+The first runs 88 negative controls, 15 two-sided trap rules and 8 page-trap rules (with 10 page forms) under normal Python and `-O`, including the play witness and the CLI itself. The second takes the delivered Data City Loom (copied, never edited), accepts it under `x3d-static/v1`, writes a receipt, then shows that a post-witness edit and a planted trap are both rejected. The third applies every PR patch from the project zips in an empty repo and runs its smoke test both ways.
 
 ## Where it stands (3 Nov)
 
