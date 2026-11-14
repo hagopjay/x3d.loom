@@ -1,10 +1,7 @@
 {
  "node": "StreamAudioSource",
  "mode": "scene",
- "note": "X_ITE 16.6.0 marks this node as not supported; only the clock of every time dependent node runs there (start, pause, resume, stop). The bridge does the same and plays nothing.",
- "gaps": [
-  "no stream is read: streamIdentifier is held"
- ],
+ "note": "A StreamAudioSource plays the media stream that the page's stream table (__bridge.snd.streams) holds under one of the names in streamIdentifier: a StreamAudioDestination publishes its stream there, and a page can put in a stream of its own (WebRTC, getUserMedia). It looks for the stream when it starts and while it is active, lets go on pause and stop, plays through gain. Compared with the Web Audio specification, not with X_ITE: X_ITE 16.6.0 marks this node as not supported and only runs the clock (isActive, isPaused, elapsedTime) there, so the clock lines run in both engines and the sound lines (a 1 kHz loop through a StreamAudioDestination at rms 0.7071, gain 0.5 halves it, pause and stop silence it, an unknown name is silent and the stream is taken up when the name becomes known, a page made 440 Hz stream at rms 0.7071) in our reader only.",
  "steps": [
   {
    "expect": [
@@ -159,6 +156,351 @@
     "isActive",
     false
    ]
+  },
+  {
+   "tap": [
+    "r",
+    "SSR",
+    "out",
+    {
+     "channels": 2
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 1.2
+  },
+  {
+   "set": [
+    "SSR",
+    "startTime",
+    "$now"
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "SSR",
+    "isActive",
+    true
+   ],
+   "only": "ours"
+  },
+  {
+   "sig": [
+    "r",
+    "on",
+    {
+     "ch": 0,
+     "from": -0.4,
+     "f0": 1000
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.03
+     ],
+     "f0": [
+      1000,
+      3
+     ],
+     "h1": [
+      1,
+      0.04
+     ]
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SSR",
+    "gain",
+    0.5
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "r",
+    "g5",
+    {
+     "ch": 0,
+     "from": -0.4,
+     "f0": 1000
+    },
+    {
+     "rms": [
+      0.3535533905932738,
+      0.02
+     ]
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SSR",
+    "gain",
+    1
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SSR",
+    "pauseTime",
+    "$now"
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "expect": [
+    "SSR",
+    "isPaused",
+    true
+   ],
+   "only": "ours"
+  },
+  {
+   "sig": [
+    "r",
+    "paused",
+    {
+     "ch": 0,
+     "from": -0.4
+    },
+    {
+     "silent": true
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SSR",
+    "resumeTime",
+    "$now"
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 1.0
+  },
+  {
+   "sig": [
+    "r",
+    "resumed",
+    {
+     "ch": 0,
+     "from": -0.4,
+     "f0": 1000
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.03
+     ]
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SSR",
+    "stopTime",
+    "$now"
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "r",
+    "stopped",
+    {
+     "ch": 0,
+     "from": -0.4
+    },
+    {
+     "silent": true
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "expect": [
+    "SSR",
+    "isActive",
+    false
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SSR",
+    "streamIdentifier",
+    [
+     "nobody"
+    ],
+    "MFString"
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SSR",
+    "startTime",
+    "$now"
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 1.0
+  },
+  {
+   "sig": [
+    "r",
+    "none",
+    {
+     "ch": 0,
+     "from": -0.4
+    },
+    {
+     "silent": true
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "expect": [
+    "SSR",
+    "isActive",
+    true
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SSR",
+    "streamIdentifier",
+    [
+     "x",
+     "loop"
+    ],
+    "MFString"
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 1.2
+  },
+  {
+   "sig": [
+    "r",
+    "late",
+    {
+     "ch": 0,
+     "from": -0.4,
+     "f0": 1000
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.03
+     ]
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "amap": [
+    "(()=>{const c=AUD.ctx,d=c.createMediaStreamDestination(),o=c.createOscillator();o.frequency.value=440;o.connect(d);o.start();__bridge.snd.streams.set('page',d.stream);AUD.nodes.po=o;return 1})()",
+    "mk"
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SSR",
+    "streamIdentifier",
+    [
+     "page"
+    ],
+    "MFString"
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 1.2
+  },
+  {
+   "sig": [
+    "r",
+    "page",
+    {
+     "ch": 0,
+     "from": -0.4,
+     "f0": 440
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.03
+     ],
+     "f0": [
+      440,
+      2
+     ]
+    }
+   ],
+   "only": "ours"
+  },
+  {
+   "amap": [
+    "(()=>{AUD.nodes.po.stop();return 0})()",
+    "ps"
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "SSR",
+    "stopTime",
+    "$now"
+   ],
+   "only": "ours"
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "untap": "r",
+   "only": "ours"
   }
+ ],
+ "agree": [],
+ "scope": [
+  "X_ITE 16.6.0 does nothing with this node (not supported): no sound is made there and the sound is checked against Web Audio only, in our reader; the stream comes from inside the same page (a StreamAudioDestination or a stream the page adds), a stream from the network (WebRTC) is the page's to connect and is not tested; a stream that is added to the table after the node started is found within one frame"
  ]
 }
