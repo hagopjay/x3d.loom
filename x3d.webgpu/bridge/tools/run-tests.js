@@ -94,7 +94,14 @@ async function runSpec(eng, spec, xml) {
       default: return v;
     }
   };
-  for (const s of spec.steps) for (const k of ["event", "noevent", "atleast"]) if (s[k]) {
+  // curve: the events a field raises with their time, from the moment the node's isActive went true (the follower's start), so a run on a virtual clock and one on the real clock can be laid side by side
+  const curves = {};
+  for (const s of spec.steps) if (s.curve) {
+    const [d, f, name] = s.curve; if (curves[name]) continue; const c = (curves[name] = { t0: null, pts: [] }), tNow = () => (eng.now ? eng.now() : performance.now() / 1000);
+    node(d).addFieldCallback('cA' + name, 'isActive', (v) => { if (plain(v) === true) { c.t0 = tNow(); c.pts = []; } });
+    node(d).addFieldCallback('cB' + name, f, (v) => { if (c.t0 !== null) c.pts.push([tNow() - c.t0, plain(v)]); });
+  }
+  for (const s of spec.steps) for (const k of ["event", "noevent", "atleast", "trace"]) if (s[k]) {
     const [d, f] = s[k], key = d + '.' + f;
     if (!events[key]) { events[key] = []; node(d).addFieldCallback('w' + key, f, (v) => events[key].push(plain(v))); }
   }
@@ -118,6 +125,8 @@ async function runSpec(eng, spec, xml) {
       else if (s.key) { await window.__key(...s.key); await eng.settle(0.1); }
       else if (s.mouse) { await window.__mouse(...s.mouse); await eng.settle(0.15); }
       else if (s.record) { const [d, f, name] = s.record; out.map[name] = plain(node(d)[f]); }
+      else if (s.curve) { out.map[s.curve[2]] = { t0: curves[s.curve[2]].t0, pts: curves[s.curve[2]].pts.slice() }; }     // the sampled curve so far (agree with {curve: tol} compares the two engines at the same elapsed times)
+      else if (s.trace) { const [d, f, name] = s.trace; out.map[name] = events[d + '.' + f].slice(); }     // every event the field has raised since the last set or reset, in order (compare with agree)
       else if (s.reset) { for (const k in events) events[k].length = 0; }
       else if (s.atleast) { const [d, f, n] = s.atleast; const l = events[d + '.' + f]; if (l.length < n) fail(d + '.' + f + ' fired ' + l.length + ' times, expected at least ' + n); }
       else if (s.noevent) { const [d, f] = s.noevent; const l = events[d + '.' + f]; if (l.length) fail(d + '.' + f + ' fired ' + show(l) + ', expected nothing'); }
@@ -131,6 +140,7 @@ const PAGE_OURS = `<!doctype html><meta charset=utf-8><body><script src="/bundle
 let ts = performance.timeOrigin / 1000 + performance.now() / 1000;
 window.runOurs = async (spec, xml) => (window.__R && (__R.bridge.allowScripts = spec.scripts !== false), runSpec({ name: 'ours',
   open: async (x) => { const sc = await X3DSAI.B.createX3DFromString(x); return sc; },
+  now: () => ts,
   apply: async (fn) => { __events.begin(ts += 0.05); fn(); __events.drain(); },
   settle: async (dt) => { const sc = X3DSAI.B.currentScene, steps = Math.max(1, Math.round((dt || 0.05) / 0.05));
     for (let i = 0; i < steps; i++) { __events.begin(ts += 0.05); for (const n of (window.__worlds || [])) for (const t of n.nodes) if (t.type === 'TimeSensor') __R.tickTimeSensor(t, ts); __events.drain(); } },
@@ -254,9 +264,25 @@ async function main() {
       }
       if (!Object.keys(r.visual).length) delete r.visual; }
     delete r.shotsOurs; delete r.shotsXite;
-    if (r.map && r.mapX) for (const [name, tol] of spec.agree || []) {   // recorded values must agree between the engines, relative tol
-      const fl = (x) => (Array.isArray(x) ? x.flatMap(fl) : [x]), a = fl(r.map[name]), c = fl(r.mapX[name]), sc = Math.max(1, ...c.map(Math.abs));
-      if (!(a.length === c.length && a.every((v, i) => Math.abs(v - c[i]) <= tol * sc))) { r.oursOk = false; r.ours += ` | ${name}: ours ${JSON.stringify(r.map[name])} vs X_ITE ${JSON.stringify(r.mapX[name])} (tol ${tol})`; }
+    if (r.map && r.mapX) for (const [name, tol, opt] of spec.agree || []) {
+      if (opt && opt.curve) {   // sampled curves: every X_ITE sample (elapsed seconds, value) against ours interpolated at the same elapsed time; max absolute difference <= tol
+        const A = (r.map[name] || {}).pts || [], C = (r.mapX[name] || {}).pts || [], fl = (x) => (Array.isArray(x) ? x.flatMap(fl) : [x]);
+        const at = (t) => { if (!A.length || t < A[0][0] - 1e-9 || t > A[A.length - 1][0] + 1e-9) return null; let i = 0; while (i < A.length - 1 && A[i + 1][0] < t) i++; const j = Math.min(i + 1, A.length - 1), u = A[j][0] > A[i][0] ? (t - A[i][0]) / (A[j][0] - A[i][0]) : 0, a = fl(A[i][1]), b = fl(A[j][1]); if (a.length !== b.length) return u < 0.5 ? a : b; return a.map((x, k) => x + (b[k] - x) * u); };
+        // the real clock jitters by a frame or two against the virtual one: each X_ITE sample takes the best match of ours within +-opt.jitter seconds (default 0.05, the virtual clock steps by 0.05); the difference is relative to the largest value on the curve (at least 1)
+        // a list that changes length is compared over the shorter prefix (the frame where the length changes differs by one)
+        const jit = opt.jitter ?? 0.05, scale = Math.max(1, ...C.flatMap(([, v]) => fl(v).map(Math.abs)));
+        let worst = 0, n = 0; for (const [t, v] of C) { if (!at(t)) continue; const c = fl(v); let best = null; for (let dj = -jit; dj <= jit + 1e-9; dj += 0.005) { const o = at(t + dj); if (!o) continue; const m = Math.min(o.length, c.length), e = m ? Math.max(...c.slice(0, m).map((x, k) => Math.abs(o[k] - x))) : Infinity; if (best === null || e < best) best = e; } if (best === null) continue; n++; worst = Math.max(worst, best / scale); }
+        if (n < (opt.min || 5) || !(worst <= tol)) { r.oursOk = false; r.ours += ` | ${name}: curve over ${n} X_ITE samples (ours ${A.length}, X_ITE ${C.length}), worst difference ${worst.toFixed(4)} (tol ${tol})`; }
+        else (r.curves ||= {})[name] = { samples: n, worst: Math.round(worst * 1e4) / 1e4 };
+        if (process.env.KEEP_CURVES) (r.curveData ||= {})[name] = { ours: A, xite: C }; delete r.map[name]; delete r.mapX[name]; continue;
+      }   // recorded values must agree between the engines, relative tol; opt.rot [x,y,z,angle] turns X_ITE's vec3 first (a documented frame difference)
+      const fl = (x) => (Array.isArray(x) ? x.flatMap(fl) : [x]), a = fl(r.map[name]);
+      let c = fl(r.mapX[name]);
+      if (opt && opt.rot && c.length === 3) { const [ax, ay, az, an] = opt.rot, l = Math.hypot(ax, ay, az) || 1, k = [ax / l, ay / l, az / l], co = Math.cos(an), si = Math.sin(an), d = k[0] * c[0] + k[1] * c[1] + k[2] * c[2], x = [k[1] * c[2] - k[2] * c[1], k[2] * c[0] - k[0] * c[2], k[0] * c[1] - k[1] * c[0]]; c = c.map((v, i) => v * co + x[i] * si + k[i] * d * (1 - co)); }
+      let a2 = a;
+      if (opt && opt.quat && a.length === 4 && c.length === 4) { const q = (r) => { const l = Math.hypot(r[0], r[1], r[2]) || 1, h = Math.sin(r[3] / 2), w = Math.cos(r[3] / 2), v = [r[0] / l * h, r[1] / l * h, r[2] / l * h, w]; return v[3] < 0 ? v.map((x) => -x) : v; }; a2 = q(a); c = q(c); }   // opt.quat: the same turn may be written with the axis flipped and the angle negated
+      const sc = Math.max(1, ...c.map(Math.abs));
+      if (!(a2.length === c.length && a2.every((v, i) => Math.abs(v - c[i]) <= tol * sc))) { r.oursOk = false; r.ours += ` | ${name}: ours ${JSON.stringify(r.map[name])} vs X_ITE ${JSON.stringify(r.mapX[name])} (tol ${tol})`; }
     }
     verdict(r, spec, noXite, startupErrors.concat(errs.slice(errorStart)));
     if (spec.gaps && spec.gaps.length) r.gaps = spec.gaps;

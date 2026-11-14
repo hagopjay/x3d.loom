@@ -37,13 +37,39 @@
     cv.addEventListener('keyup', (e) => { if (each('keyup', e)) e.preventDefault(); });
     cv.addEventListener('blur', () => { for (const n of live.key || []) R.bridge.specs.get(n.type).release(n); });
   };
+  /* hover: a drag sensor is over (isOver) while the pointer is on its shape, like a TouchSensor; only the TouchSensor reports hitPoint_changed on hover (the drag sensors have no such field) */
+  Body.prototype.sensorsFor = function (mesh) {
+    const chain = (mesh.metadata && mesh.metadata.chain) || [];
+    for (const g of chain) {
+      const ts = (g.f.children || []).filter((c) => c.f.enabled && (c.type === 'TouchSensor' || (R.bridge.specs.get(c.type) || {}).dragStart));
+      if (ts.length) return ts.map((t) => ({ node: t, group: g }));
+    }
+    return [];
+  };
+  Body.prototype.setOver = function (sens, hit) {
+    const old = this.ptr.over || [], now = sens.map((s) => s.node);
+    for (const n of old) if (!now.includes(n)) R.hooks.fire(n, 'isOver', false);
+    for (const s of sens) {
+      if (!old.includes(s.node)) R.hooks.fire(s.node, 'isOver', true);
+      if (hit && s.node.type === 'TouchSensor') R.hooks.fire(s.node, 'hitPoint_changed', this.localPoint(s.group, hit.pickedPoint));
+    }
+    this.ptr.over = now;
+    this.canvas.classList.toggle('is-over-sensor', now.length > 0);
+  };
   R.bridge.pointerInit = (body) => {
     const cv = body.canvas, V = BABYLON.Vector3; let drag = null;
-    const ray = (e, inv) => {
-      const r = cv.getBoundingClientRect(), sx = body.engine.getRenderWidth() / r.width, sy = body.engine.getRenderHeight() / r.height;
-      const pr = body.scene.createPickingRay((e.clientX - r.left) * sx, (e.clientY - r.top) * sy, BABYLON.Matrix.IdentityReadOnly, body.scene.activeCamera);
-      const o = V.TransformCoordinates(pr.origin, inv), d = V.TransformNormal(pr.direction, inv);
-      return { o: [o.x, o.y, o.z], d: [d.x, d.y, d.z] };
+    const px = (e) => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * body.engine.getRenderWidth() / r.width, (e.clientY - r.top) * body.engine.getRenderHeight() / r.height]; };
+    // the ray through render pixel (x, y), and the helpers a sensor may need, all in the frame of the sensor's group as it was at the press (M = that frame's matrix, inv its inverse)
+    const frame = (inv, M) => {
+      const cam = body.scene.activeCamera, rl = (x, y) => {
+        const pr = body.scene.createPickingRay(x, y, BABYLON.Matrix.IdentityReadOnly, cam), o = V.TransformCoordinates(pr.origin, inv), d = V.TransformNormal(pr.direction, inv);
+        return { o: [o.x, o.y, o.z], d: [d.x, d.y, d.z] };
+      };
+      const vp = cam.viewport.toGlobal(body.engine.getRenderWidth(), body.engine.getRenderHeight()), tm = body.scene.getTransformMatrix();
+      const scr = (p) => { const s = V.Project(V.TransformCoordinates(new V(p[0], p[1], p[2]), M), BABYLON.Matrix.IdentityReadOnly, tm, vp); return [s.x, s.y]; };
+      // the camera as the sensor sees it: where it is, and the unit vector that points back out of the screen (towards the viewer), both in the sensor's frame
+      const eye = V.TransformCoordinates(cam.globalPosition, inv), fw = V.TransformNormal(cam.getForwardRay(1).direction, inv).normalize();
+      return { ray: rl, scr, cam: { pos: [eye.x, eye.y, eye.z], back: [-fw.x, -fw.y, -fw.z] } };
     };
     cv.addEventListener('pointerdown', (e) => {
       if (e.button !== 0) return;
@@ -51,14 +77,15 @@
       for (const g of (hit.pickedMesh.metadata && hit.pickedMesh.metadata.chain) || []) {
         const sens = (g.f.children || []).filter((c) => { const s = R.bridge.specs.get(c.type); return s && s.dragStart && c.f.enabled !== false; });
         if (!sens.length) continue;
-        const rec = body.rec.get(g.id), inv = (rec && rec.tn ? rec.tn.computeWorldMatrix(true) : BABYLON.Matrix.Identity()).clone().invert();
-        const rl = ray(e, inv), hp = V.TransformCoordinates(hit.pickedPoint, inv);
-        drag = { sens, inv }; cv.setPointerCapture(e.pointerId); e.stopImmediatePropagation();
-        for (const s of sens) R.bridge.drag.start(s, { o: rl.o, d: rl.d, hit: [hp.x, hp.y, hp.z] });
+        const rec = body.rec.get(g.id), M = (rec && rec.tn ? rec.tn.computeWorldMatrix(true) : BABYLON.Matrix.Identity()).clone(), inv = M.clone().invert();
+        const fr = frame(inv, M), pt = px(e), rl = fr.ray(pt[0], pt[1]), hp = V.TransformCoordinates(hit.pickedPoint, inv);
+        drag = { sens, inv, M, fr, group: g };
+        cv.setPointerCapture(e.pointerId); e.stopImmediatePropagation();
+        for (const s of sens) R.bridge.drag.start(s, { o: rl.o, d: rl.d, hit: [hp.x, hp.y, hp.z], pointer: pt, ray: fr.ray, scr: fr.scr, cam: fr.cam });
         return;
       }
     }, true);
-    cv.addEventListener('pointermove', (e) => { if (!drag) return; e.stopImmediatePropagation(); const rl = ray(e, drag.inv); for (const s of drag.sens) R.bridge.drag.move(s, { o: rl.o, d: rl.d }); }, true);
+    cv.addEventListener('pointermove', (e) => { if (!drag) return; e.stopImmediatePropagation(); const pt = px(e), rl = drag.fr.ray(pt[0], pt[1]); for (const s of drag.sens) R.bridge.drag.move(s, { o: rl.o, d: rl.d, pointer: pt, ray: drag.fr.ray, scr: drag.fr.scr, cam: drag.fr.cam }); }, true);
     const up = (e) => { if (!drag) return; e.stopImmediatePropagation(); const d = drag; drag = null; for (const s of d.sens) R.bridge.drag.end(s); };
     cv.addEventListener('pointerup', up, true); cv.addEventListener('pointercancel', up, true);
   };

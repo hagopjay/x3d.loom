@@ -7,6 +7,16 @@
       <Shape><Appearance><Material diffuseColor="0.9 0.35 0.2"/></Appearance><Box size="2 2 2"/></Shape>
       <CylinderSensor DEF="N" />
     </Transform>
+    <Transform DEF="T2" translation="-3 -2.4 0">
+      <Shape><Appearance><Material diffuseColor="0.2 0.6 0.9"/></Appearance><Box size="2 2 2"/></Shape>
+      <CylinderSensor DEF="N2"/>
+    </Transform>
+    <Transform DEF="T3" translation="3 2.4 0">
+      <Shape><Appearance><Material diffuseColor="0.3 0.8 0.3"/></Appearance><Box size="2 2 2"/></Shape>
+      <CylinderSensor DEF="N3" axisRotation="1 0 0 1.5707963"/>
+    </Transform>
     <ROUTE fromNode="N" fromField="rotation_changed" toNode="T" toField="set_rotation"/>
+    <ROUTE fromNode="N2" fromField="rotation_changed" toNode="T2" toField="set_rotation"/>
+    <ROUTE fromNode="N3" fromField="rotation_changed" toNode="T3" toField="set_rotation"/>
   </Scene>
 </X3D>
