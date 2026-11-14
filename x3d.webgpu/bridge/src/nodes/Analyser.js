@@ -54,7 +54,7 @@ BR.snd = {
     const au = n._au = { c, in: c.createGain(), out: c.createGain(), proc: null };
     au.in.gain.value = 0; au.out.gain.value = T.source ? 0 : 1;
     if (T.make) au.proc = T.make(c, n);
-    if (T.dest) au.out.connect(c.destination);
+    if (T.dest) au.out.connect(T.sink ? T.sink(c, n, au) : c.destination);     // a destination type may end its graph somewhere else than the speakers (a media stream)
     BR.snd.settle(n); BR.snd.wire(n);
     for (const p of w.nodes) if (p._au && p !== n && ((p.f.children || []).includes(n) || (p.f.outputs || []).includes(n))) BR.snd.wire(p);
     if (T.dest) n.f.isActive = n.f.enabled !== false;

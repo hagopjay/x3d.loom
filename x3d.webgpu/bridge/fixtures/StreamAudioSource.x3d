@@ -3,5 +3,9 @@
   <head><component name="Sound" level="2"/><meta name="title" content="StreamAudioSource.x3d"/><meta name="description" content="Bridge fixture for StreamAudioSource: sound from a network stream (not supported by X_ITE), clock only"/></head>
   <Scene>
     <StreamAudioSource DEF="N"/>
+    <StreamAudioDestination DEF="SDE" streamIdentifier="loop">
+      <OscillatorSource DEF="SO" frequency="1000"><PeriodicWave type="SINE"/></OscillatorSource>
+    </StreamAudioDestination>
+    <StreamAudioSource DEF="SSR" streamIdentifier="loop"/>
   </Scene>
 </X3D>

@@ -1,11 +1,7 @@
 {
  "node": "MicrophoneSource",
  "mode": "scene",
- "note": "the node's gain stage and its start and stop clock, compared with X_ITE 16.6.0. The test machine has no microphone, so asking the browser for one fails (a console message, as in X_ITE) and nothing is heard; the capture itself is not tested.",
- "gaps": [
-  "getUserMedia is not tested (no device, no permission prompt in the test browser)",
-  "streamIdentifier is held; X_ITE lists it, the 4.0 UOM does not for this node"
- ],
+ "note": "Signal compared with X_ITE 16.6.0 on the page's real Web Audio clock, with the browser's fake capture device (a file of a 1 kHz sine of amplitude 0.5 played in a loop instead of a microphone): when the node starts the captured sine comes out of the node (rms 0.3536, 1 kHz), gain 0.5 halves it, pause and stop silence it, resume and a second start bring it back, and disabling it stops it. Both engines ask the browser for the microphone with the same constraints (the device id from mediaDeviceID); the levels agree within the tolerance in the agree list.",
  "steps": [
   {
    "expect": [
@@ -113,6 +109,273 @@
     "isActive",
     false
    ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "tap": [
+    "m",
+    "SM",
+    "out",
+    {
+     "channels": 2
+    }
+   ]
+  },
+  {
+   "set": [
+    "SM",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 2.0
+  },
+  {
+   "expect": [
+    "SM",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "sig": [
+    "m",
+    "on",
+    {
+     "ch": 0,
+     "from": -0.4,
+     "f0": 1000
+    },
+    {
+     "rms": [
+      0.3535533905932738,
+      0.03
+     ],
+     "f0": [
+      1000,
+      3
+     ],
+     "h1": [
+      0.5,
+      0.04
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SM",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "m",
+    "g5",
+    {
+     "ch": 0,
+     "from": -0.4,
+     "f0": 1000
+    },
+    {
+     "rms": [
+      0.1767766952966369,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SM",
+    "gain",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SM",
+    "pauseTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "m",
+    "paused",
+    {
+     "ch": 0,
+     "from": -0.4
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "set": [
+    "SM",
+    "resumeTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "sig": [
+    "m",
+    "resumed",
+    {
+     "ch": 0,
+     "from": -0.4,
+     "f0": 1000
+    },
+    {
+     "rms": [
+      0.3535533905932738,
+      0.03
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SM",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "m",
+    "off",
+    {
+     "ch": 0,
+     "from": -0.4
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "expect": [
+    "SM",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "SM",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 2.0
+  },
+  {
+   "sig": [
+    "m",
+    "again",
+    {
+     "ch": 0,
+     "from": -0.4,
+     "f0": 1000
+    },
+    {
+     "rms": [
+      0.3535533905932738,
+      0.03
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SM",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "m",
+    "dis",
+    {
+     "ch": 0,
+     "from": -0.4
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "expect": [
+    "SM",
+    "isActive",
+    false
+   ]
   }
+ ],
+ "agree": [
+  [
+   "on.rms",
+   0.03
+  ],
+  [
+   "on.f0",
+   0.004
+  ],
+  [
+   "g5.rms",
+   0.02
+  ],
+  [
+   "paused.rms",
+   0.0001
+  ],
+  [
+   "resumed.rms",
+   0.03
+  ],
+  [
+   "off.rms",
+   0.0001
+  ],
+  [
+   "again.rms",
+   0.03
+  ],
+  [
+   "dis.rms",
+   0.0001
+  ]
+ ],
+ "scope": [
+  "the test browser has a fake capture device, not a real microphone, so which physical device a real mediaDeviceID reaches and the permission prompt are not compared; the browser's own capture processing (echo cancellation, gain control) is whatever the browser applies to both engines; streamIdentifier is held (X_ITE lists it, the 4.0 UOM does not for this node)"
  ]
 }
