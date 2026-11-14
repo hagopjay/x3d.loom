@@ -3,19 +3,66 @@
  "pass": true,
  "xsd": {
   "ok": true,
-  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/LocalFog.x3d validates",
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/LocalFog.x3d validates",
   "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
  },
  "test": {
   "ok": true,
-  "ours": "pass 26/26",
-  "xite": "pass 26/26",
+  "ours": "pass 27/27",
+  "xite": "pass 27/27",
   "map": {},
   "oursOk": true,
   "mapX": {},
   "xiteOk": true,
+  "visual": {
+   "main": {
+    "iou": 0.97,
+    "coverOurs": 1,
+    "coverXite": 0.97,
+    "bboxOurs": [
+     47,
+     88,
+     272,
+     151
+    ],
+    "bboxXite": [
+     47,
+     87,
+     272,
+     152
+    ],
+    "nOurs": 9312,
+    "nXite": 9636,
+    "fgFracOurs": 0.12,
+    "fgFracXite": 0.13,
+    "mad": 1.89,
+    "psnr": 32.54,
+    "fgMeanOurs": [
+     255,
+     195,
+     195
+    ],
+    "fgMeanXite": [
+     247,
+     189,
+     189
+    ],
+    "bgOurs": [
+     1,
+     1,
+     3
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  "comparison": "passed",
   "msg": "",
   "gaps": [
+   "LINEAR fog compared with X_ITE 16.6.0 in the picture (silhouette 0.97, mean abs diff 1.9 of 255, Chromium 153 SwiftShader); the EXPONENTIAL laws below are checked in our body only",
    "EXPONENTIAL and EXPONENTIAL2 use Babylon's EXP and EXP2 scaled to 1/e at half the range: close to X3D's exp(-d/(range-d)) in the first half, softer at the end (X3D reaches full fog at the range)",
    "all LocalFogs of a world share the fog law of the first active one (Babylon picks the law per scene, not per mesh); colour and range are per scope",
    "the range is not scaled by the parent's transform scale, X3D measures it in the LocalFog's own coordinate system",
@@ -24,9 +71,9 @@
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha fb73883023bb",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha c450fcbb0e5d",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "93ef82e"
+ "driver_commit": "d138926"
 }

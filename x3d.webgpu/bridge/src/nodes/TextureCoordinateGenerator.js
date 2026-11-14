@@ -10,6 +10,6 @@ BR.node('TextureCoordinateGenerator', {
     parameter: ['MFFloat', IO, []],
   },
   // X3DTextureCoordinateNode: texture coordinates made from the geometry. Done per vertex when the geometry is built (see body-br genUV): SPHERE, SPHERE-LOCAL and CAMERASPACENORMAL
-  // from the normal, COORD, COORD-EYE and CAMERASPACEPOSITION from the position. The camera is taken as the identity (gap), NOISE and reflection modes are not made.
+  // from the normal, COORD, COORD-EYE and CAMERASPACEPOSITION from the position. NOISE and NOISE-EYE use X_ITE's Perlin2 value noise (see body-br tcg.perlin); the reflection modes follow the camera.
   changed(body, n, field) { for (const x of body.world.nodes) if (x.f && x.f.texCoord === n) body.regeo(x); },
 });

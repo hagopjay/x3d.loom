@@ -3,6 +3,7 @@
  "mode": "scene",
  "note": "A ball (radius 3 at the origin) with a GeneratedCubeMapTexture. Three big boxes sit off screen: red on the left, green on the right, blue above (the ball sees them in its sides and top; nothing is behind the camera). update NONE: nothing is drawn, the ball is black; NEXT_FRAME_ONLY: one picture is taken on the next frame and update goes back to NONE (an event, in both engines), the ball then shows the boxes; ALWAYS: a picture every frame.",
  "gaps": [
+  "measured against X_ITE 16.6.0 on a mirrored ball with face colours (Chromium 153 SwiftShader): the three visible face patches sit at the same places, silhouette overlap 0.73, mean abs diff 2.2 of 255; ours draws the top (blue) patch taller; not closed",
   "the faces of the cube are not turned like X_ITE's (flat colours cannot show it)",
   "the picture is taken from the origin of the ball in world space, not in the camera space of X_ITE's cube",
   "the probe renders meshes as they are: it does not draw the Background spheres of other layers"
@@ -209,6 +210,20 @@
     ],
     45
    ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
   }
- ]
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.6,
+   "mad": 6,
+   "fg": 70
+  }
+ }
 }

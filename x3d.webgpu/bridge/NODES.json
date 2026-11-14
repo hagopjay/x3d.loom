@@ -1038,10 +1038,12 @@
    "container": "fogCoord",
    "nfields": 2,
    "status": "gap",
-   "batch": 13,
+   "batch": 34,
    "receipt": "receipts/FogCoordinate.json",
-   "note": "only IndexedTriangleSet and the bridged geometry sets take a fogCoord; IndexedFaceSet and the others the stock reader draws do not have the field; the fog is a second copy of the mesh drawn over the first with vertex alpha = depth, so it blends after the surface is tone mapped (X_ITE blends inside the shader); vertices past the end of depth read as 0 (clear); the world Fog is new to the bridge (stock body never drew it): it fogs every mesh no LocalFog covers; all fogs share the fog law of the first active one",
-   "rank": 126
+   "note": "compared with X_ITE 16.6.0 in the picture (silhouette 1.0, mean abs diff 1.1 of 255, Chromium 153 SwiftShader); only IndexedTriangleSet and the bridged geometry sets take a fogCoord; IndexedFaceSet and the others the stock reader draws do not have the field; the fog is a second copy of the mesh drawn over the first with vertex alpha = depth, so it blends after the surface is tone mapped (X_ITE blends inside the shader); vertices past the end of depth read as 0 (clear); the world Fog is new to the bridge (stock body never drew it): it fogs every mesh no LocalFog covers; all fogs share the fog law of the first active one",
+   "rank": 126,
+   "prev_batch": 13,
+   "prev_note": "only IndexedTriangleSet and the bridged geometry sets take a fogCoord; IndexedFaceSet and the others the stock reader draws do not have the field; the fog is a second copy of the mesh drawn over the first with vertex alpha = depth, so it blends after the surface is tone mapped (X_ITE blends inside the shader); vertices past the end of depth read as 0 (clear); the world Fog is new to the bridge (stock body never drew it): it fogs every mesh no LocalFog covers; all fogs share the fog law of the first active one"
   },
   "FontStyle": {
    "component": "Text",
@@ -1090,10 +1092,12 @@
    "container": "texture",
    "nfields": 5,
    "status": "gap",
-   "batch": 20,
+   "batch": 34,
    "receipt": "receipts/GeneratedCubeMapTexture.json",
-   "note": "the faces of the cube are not turned like X_ITE's (flat colours cannot show it); the picture is taken from the origin of the ball in world space, not in the camera space of X_ITE's cube; the probe renders meshes as they are: it does not draw the Background spheres of other layers",
-   "rank": 170
+   "note": "measured against X_ITE 16.6.0 on a mirrored ball with face colours (Chromium 153 SwiftShader): the three visible face patches sit at the same places, silhouette overlap 0.73, mean abs diff 2.2 of 255; ours draws the top (blue) patch taller; not closed; the faces of the cube are not turned like X_ITE's (flat colours cannot show it); the picture is taken from the origin of the ball in world space, not in the camera space of X_ITE's cube; the probe renders meshes as they are: it does not draw the Background spheres of other layers",
+   "rank": 170,
+   "prev_batch": 20,
+   "prev_note": "the faces of the cube are not turned like X_ITE's (flat colours cannot show it); the picture is taken from the origin of the ball in world space, not in the camera space of X_ITE's cube; the probe renders meshes as they are: it does not draw the Background spheres of other layers"
   },
   "GeoCoordinate": {
    "component": "Geospatial",
@@ -1672,10 +1676,12 @@
    "container": "children",
    "nfields": 5,
    "status": "gap",
-   "batch": 12,
+   "batch": 34,
    "receipt": "receipts/LocalFog.json",
-   "note": "EXPONENTIAL and EXPONENTIAL2 use Babylon's EXP and EXP2 scaled to 1/e at half the range: close to X3D's exp(-d/(range-d)) in the first half, softer at the end (X3D reaches full fog at the range); all LocalFogs of a world share the fog law of the first active one (Babylon picks the law per scene, not per mesh); colour and range are per scope; the range is not scaled by the parent's transform scale, X3D measures it in the LocalFog's own coordinate system; two meshes sharing one Babylon material would share the fog parameters of whichever draws first; the body makes one material per shape, so it does not happen here",
-   "rank": 57
+   "note": "LINEAR fog compared with X_ITE 16.6.0 in the picture (silhouette 0.97, mean abs diff 1.9 of 255, Chromium 153 SwiftShader); the EXPONENTIAL laws below are checked in our body only; EXPONENTIAL and EXPONENTIAL2 use Babylon's EXP and EXP2 scaled to 1/e at half the range: close to X3D's exp(-d/(range-d)) in the first half, softer at the end (X3D reaches full fog at the range); all LocalFogs of a world share the fog law of the first active one (Babylon picks the law per scene, not per mesh); colour and range are per scope; the range is not scaled by the parent's transform scale, X3D measures it in the LocalFog's own coordinate system; two meshes sharing one Babylon material would share the fog parameters of whichever draws first; the body makes one material per shape, so it does not happen here",
+   "rank": 57,
+   "prev_batch": 12,
+   "prev_note": "EXPONENTIAL and EXPONENTIAL2 use Babylon's EXP and EXP2 scaled to 1/e at half the range: close to X3D's exp(-d/(range-d)) in the first half, softer at the end (X3D reaches full fog at the range); all LocalFogs of a world share the fog law of the first active one (Babylon picks the law per scene, not per mesh); colour and range are per scope; the range is not scaled by the parent's transform scale, X3D measures it in the LocalFog's own coordinate system; two meshes sharing one Babylon material would share the fog parameters of whichever draws first; the body makes one material per shape, so it does not happen here"
   },
   "Material": {
    "component": "Shape",
@@ -3059,10 +3065,12 @@
    "container": "texCoord",
    "nfields": 4,
    "status": "gap",
-   "batch": 24,
+   "batch": 34,
    "receipt": "receipts/TextureCoordinateGenerator.json",
-   "note": "the six modes of the fixture are compared in the picture (silhouette overlap 0.98) and against the formula in our body; the CAMERASPACENORMAL and CAMERASPACEREFLECTIONVECTOR spheres differ visibly from X_ITE 16.6.0 (mean RGB difference 11 of 255 over the picture): X_ITE's own scaling of the camera-space range is not reproduced; camera-space modes are recomputed on the CPU whenever the model-view matrix changes, not in a shader; NOISE and NOISE-EYE are not made",
-   "rank": 49
+   "note": "the seven modes of the fixture are compared in the picture with X_ITE 16.6.0 (silhouette overlap 0.98, mean abs diff 13 of 255 over the whole frame on Chromium 153 SwiftShader) and against the formula in our body; the CAMERASPACENORMAL and CAMERASPACEREFLECTIONVECTOR spheres differ visibly from X_ITE (X_ITE's own scaling of the camera-space range is not reproduced); NOISE and NOISE-EYE are made from X_ITE's Perlin2.glsl (the same 2D value noise and cosine smoothing, parameter = scale xyz and translation xyz); the hash is fract(sin(..) * 43758.5453), which a GPU's float32 sin and JavaScript's double sin evaluate differently, so the picture shows the same kind of pattern, not the same pixels (the centre sphere of the fixture); camera-space modes are recomputed on the CPU whenever the model-view matrix changes, not in a shader",
+   "rank": 49,
+   "prev_batch": 24,
+   "prev_note": "the six modes of the fixture are compared in the picture (silhouette overlap 0.98) and against the formula in our body; the CAMERASPACENORMAL and CAMERASPACEREFLECTIONVECTOR spheres differ visibly from X_ITE 16.6.0 (mean RGB difference 11 of 255 over the picture): X_ITE's own scaling of the camera-space range is not reproduced; camera-space modes are recomputed on the CPU whenever the model-view matrix changes, not in a shader; NOISE and NOISE-EYE are not made"
   },
   "TextureProjector": {
    "component": "TextureProjection",
@@ -3124,10 +3132,12 @@
    "container": "textureTransform",
    "nfields": 6,
    "status": "gap",
-   "batch": 22,
+   "batch": 34,
    "receipt": "receipts/TextureTransform3D.json",
-   "note": "the moved strip (left) is compared by its matrix in our body only: X_ITE 16.6.0 draws it as a mostly flat colour, while its own TextureTransformMatrix3D with the same matrix (fixture TextureTransformMatrix3D) agrees with ours, so X_ITE's TextureTransform3D field handling differs from the 4.0 text (tc' = T C R S -C tc), Likely; the picture comparison covers the unmoved strip",
-   "rank": 175
+   "note": "the moved strip (left) is compared by its matrix in our body only: X_ITE 16.6.0 draws it as a mostly flat colour, while its own TextureTransformMatrix3D with the same matrix (fixture TextureTransformMatrix3D) agrees with ours, so X_ITE's TextureTransform3D field handling differs from the 4.0 text (tc' = T C R S -C tc), Likely; the picture comparison covers the unmoved strip; the whole picture against X_ITE 16.6.0: silhouette 0.99, mean abs diff 1.6 of 255 (Chromium 153 SwiftShader), the moved strip is a flat colour in X_ITE and a gradient in ours",
+   "rank": 175,
+   "prev_batch": 22,
+   "prev_note": "the moved strip (left) is compared by its matrix in our body only: X_ITE 16.6.0 draws it as a mostly flat colour, while its own TextureTransformMatrix3D with the same matrix (fixture TextureTransformMatrix3D) agrees with ours, so X_ITE's TextureTransform3D field handling differs from the 4.0 text (tc' = T C R S -C tc), Likely; the picture comparison covers the unmoved strip"
   },
   "TextureTransformMatrix3D": {
    "component": "Texturing3D",

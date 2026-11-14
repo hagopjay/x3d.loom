@@ -118,14 +118,15 @@
   }
  ],
  "gaps": [
-  "the six modes of the fixture are compared in the picture (silhouette overlap 0.98) and against the formula in our body; the CAMERASPACENORMAL and CAMERASPACEREFLECTIONVECTOR spheres differ visibly from X_ITE 16.6.0 (mean RGB difference 11 of 255 over the picture): X_ITE's own scaling of the camera-space range is not reproduced",
-  "camera-space modes are recomputed on the CPU whenever the model-view matrix changes, not in a shader; NOISE and NOISE-EYE are not made"
+  "the seven modes of the fixture are compared in the picture with X_ITE 16.6.0 (silhouette overlap 0.98, mean abs diff 13 of 255 over the whole frame on Chromium 153 SwiftShader) and against the formula in our body; the CAMERASPACENORMAL and CAMERASPACEREFLECTIONVECTOR spheres differ visibly from X_ITE (X_ITE's own scaling of the camera-space range is not reproduced)",
+  "NOISE and NOISE-EYE are made from X_ITE's Perlin2.glsl (the same 2D value noise and cosine smoothing, parameter = scale xyz and translation xyz); the hash is fract(sin(..) * 43758.5453), which a GPU's float32 sin and JavaScript's double sin evaluate differently, so the picture shows the same kind of pattern, not the same pixels (the centre sphere of the fixture)",
+  "camera-space modes are recomputed on the CPU whenever the model-view matrix changes, not in a shader"
  ],
  "tone": "none",
  "compare": {
   "main": {
    "iou": 0.85,
-   "mad": 14,
+   "mad": 18,
    "fg": 25
   }
  }

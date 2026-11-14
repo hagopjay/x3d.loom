@@ -3,19 +3,66 @@
  "pass": true,
  "xsd": {
   "ok": true,
-  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/GeneratedCubeMapTexture.x3d validates",
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/GeneratedCubeMapTexture.x3d validates",
   "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
  },
  "test": {
   "ok": true,
-  "ours": "pass 22/22",
-  "xite": "pass 22/22",
+  "ours": "pass 24/24",
+  "xite": "pass 24/24",
   "map": {},
   "oursOk": true,
   "mapX": {},
   "xiteOk": true,
+  "visual": {
+   "main": {
+    "iou": 0.73,
+    "coverOurs": 0.76,
+    "coverXite": 0.95,
+    "bboxOurs": [
+     82,
+     36,
+     237,
+     145
+    ],
+    "bboxXite": [
+     81,
+     41,
+     238,
+     144
+    ],
+    "nOurs": 3374,
+    "nXite": 2701,
+    "fgFracOurs": 0.04,
+    "fgFracXite": 0.04,
+    "mad": 2.21,
+    "psnr": 23.78,
+    "fgMeanOurs": [
+     72,
+     72,
+     110
+    ],
+    "fgMeanXite": [
+     82,
+     82,
+     82
+    ],
+    "bgOurs": [
+     1,
+     1,
+     3
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  "comparison": "passed",
   "msg": "",
   "gaps": [
+   "measured against X_ITE 16.6.0 on a mirrored ball with face colours (Chromium 153 SwiftShader): the three visible face patches sit at the same places, silhouette overlap 0.73, mean abs diff 2.2 of 255; ours draws the top (blue) patch taller; not closed",
    "the faces of the cube are not turned like X_ITE's (flat colours cannot show it)",
    "the picture is taken from the origin of the ball in world space, not in the camera space of X_ITE's cube",
    "the probe renders meshes as they are: it does not draw the Background spheres of other layers"
@@ -23,9 +70,9 @@
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha d4e15ecfee7a",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha c450fcbb0e5d",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "9df2df5"
+ "driver_commit": "d138926"
 }
