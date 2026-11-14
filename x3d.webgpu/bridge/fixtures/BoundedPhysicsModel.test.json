@@ -39,11 +39,12 @@
    "count": [
     0.5,
     2.0
-   ]
+   ],
+   "fg": 70
   }
  },
  "gaps": [
-  "X_ITE 16.6.0 draws the particles white on this raster, ours uses the Material emissive colour (colour is not compared)",
+  "colour is compared: a quad particle is lit like a surface (emissive + diffuse x headlight, white for this Material); ours is 255 white, X_ITE 16.6.0's mean over its drawn pixels is about 200 (its edges are blended), fg tolerance 70; no fade at the end of life without a colorRamp (as X_ITE)",
   "the bounds are tested in ours from the particle list (a box of 3 x 2 x 2 holds every particle, which reflect at the faces); X_ITE's particle positions are not read, its picture is compared by extent"
  ],
  "xsdChoice": [

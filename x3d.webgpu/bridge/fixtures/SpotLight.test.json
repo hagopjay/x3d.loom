@@ -121,7 +121,8 @@
   "the cone is a projection texture over tan(angle) (a Babylon SpotLight with its own exponent 0), full inside beamWidth and a linear ramp in the angle down to cutOffAngle as 19775-1 gives it; X_ITE and ours agree on the picture; two lights of the same angles share no texture (each light makes its own 256 x 256 table)",
   "attenuation and radius as on PointLight",
   "a spot with cutOffAngle above about 88 degrees is held at 88 (a projection texture needs a cone under 180 degrees)",
-  "Babylon only marks the projection of a SpotLight for update when the light's own position or direction changes, not when a parent Transform moves it: the bridge sets the (internal) dirty flag every frame; this is Likely stable on 9.32.0 but not a public API"
+  "Babylon only marks the projection of a SpotLight for update when the light's own position or direction changes, not when a parent Transform moves it: the bridge sets the (internal) dirty flag every frame; this is Likely stable on 9.32.0 but not a public API",
+  "ambientIntensity feeds the scene ambient colour (global, not weighted by attenuation or cone)"
  ],
  "tone": "none",
  "compare": {

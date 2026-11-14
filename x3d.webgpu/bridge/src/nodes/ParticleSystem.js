@@ -132,9 +132,10 @@ BR.node('ParticleSystem', {
     else { ps.minScaleX = ps.maxScaleX = sz[0]; ps.minScaleY = ps.maxScaleY = sz[1]; }
     if (type === 'LINE') ps.billboardMode = BABYLON.ParticleSystem.BILLBOARDMODE_STRETCHED;
     ps.blendMode = BABYLON.ParticleSystem.BLENDMODE_STANDARD;
-    const tint = mat ? ((mat.f.emissiveColor && (mat.f.emissiveColor[0] || mat.f.emissiveColor[1] || mat.f.emissiveColor[2])) ? mat.f.emissiveColor : mat.f.diffuseColor || [1, 1, 1]) : [1, 1, 1], tr = mat ? 1 - (mat.f.transparency || 0) : 1;
+    const lit = type !== 'POINT' && type !== 'LINE' && (() => { const ni = body.world && body.world.nodes.find((x) => x.type === 'NavigationInfo'); return !ni || ni.f.headlight !== false; })(),      // a quad, triangle or sprite particle is a surface: emissive + diffuse * headlight (it faces the camera, N . V = 1), as X_ITE 16.6.0 draws it; points and lines are emissive only
+      tint = mat ? (() => { const e = mat.f.emissiveColor || [0, 0, 0], d = mat.f.diffuseColor || [0.8, 0.8, 0.8]; return (e[0] || e[1] || e[2]) || lit ? [0, 1, 2].map((i) => Math.min(1, e[i] + (lit ? d[i] : 0))) : d; })() : [1, 1, 1], tr = mat ? 1 - (mat.f.transparency || 0) : 1;
     const ramp = f.color, keys = f.colorKey || [], cs = ramp && ramp.f.color, w = ramp && ramp.type === 'ColorRGBA' ? 4 : 3;
-    ps.color1 = ps.color2 = new BABYLON.Color4(tint[0], tint[1], tint[2], tr); ps.colorDead = new BABYLON.Color4(tint[0], tint[1], tint[2], 0);
+    ps.color1 = ps.color2 = new BABYLON.Color4(tint[0], tint[1], tint[2], tr); ps.colorDead = new BABYLON.Color4(tint[0], tint[1], tint[2], tr);   // no fade at the end of life unless a colorRamp says so (X_ITE 16.6.0 draws none)
     if (cs && cs.length >= w) {
       const nC = cs.length / w;
       for (let i = 0; i < nC; i++) { const k = keys.length === nC ? keys[i] : i / Math.max(1, nC - 1); ps.addColorGradient(Math.min(1, Math.max(0, k)), new BABYLON.Color4(cs[i * w] * tint[0], cs[i * w + 1] * tint[1], cs[i * w + 2] * tint[2], (w === 4 ? cs[i * w + 3] : 1) * tr)); }

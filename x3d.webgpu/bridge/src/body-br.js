@@ -322,7 +322,7 @@ R.bridge.tcg = {
   Body.prototype.makeMaterial = function (shape, g, spec, mesh) {
     if (spec.kind !== 'twosided') return _mm.call(this, shape, g, spec, mesh);
     const f = spec.mat.f, sep = f.separateBackColor, B = spec.back && sep;
-    const src = { f: { diffuseColor: B ? f.backDiffuseColor : f.diffuseColor, emissiveColor: B ? f.backEmissiveColor : f.emissiveColor, transparency: B ? f.backTransparency : f.transparency, specularColor: B ? f.backSpecularColor : f.specularColor, shininess: B ? f.backShininess : f.shininess } };
+    const src = { f: { diffuseColor: B ? f.backDiffuseColor : f.diffuseColor, emissiveColor: B ? f.backEmissiveColor : f.emissiveColor, transparency: B ? f.backTransparency : f.transparency, specularColor: B ? f.backSpecularColor : f.specularColor, shininess: B ? f.backShininess : f.shininess, ambientIntensity: B ? f.backAmbientIntensity : f.ambientIntensity } };
     const m = new BABYLON.StandardMaterial('two-' + (spec.back ? 'back-' : 'front-') + shape.id, this.scene);
     m.specularColor.set(0, 0, 0); m.backFaceCulling = true;
     let gd = null; try { gd = this.geometryData(g); } catch (e) { /* a primitive has no vertex data */ }
@@ -354,24 +354,46 @@ R.bridge.tcg = {
     if (fp && r.meshes && r.meshes.length) this.applyFill(r, fp);
     return r;
   };
+  R.bridge.HATCH = (function () {
+  /* The 19 hatch patterns of FillProperties, 32 x 32 one-bit masks. Derived from the hatching images shipped with X_ITE 16.6.0 (assets/hatching/1.png to 19.png, MIT licence, Holger Seelig), the reference this bridge is compared with. */
+  return [
+  '/////wAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAD/////AAAAAAAAAAAAAAAA/////wAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAD/////AAAAAAAAAAAAAAAA/////wAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAA=',
+  'ERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERE=',
+  'AwMDAwYGBgYMDAwMGBgYGDAwMDBgYGBgwMDAwIGBgYEDAwMDBgYGBgwMDAwYGBgYMDAwMGBgYGDAwMDAgYGBgQMDAwMGBgYGDAwMDBgYGBgwMDAwYGBgYMDAwMCBgYGBAwMDAwYGBgYMDAwMGBgYGDAwMDBgYGBgwMDAwIGBgYE=',
+  'AwMDA4GBgYHAwMDAYGBgYDAwMDAYGBgYDAwMDAYGBgYDAwMDgYGBgcDAwMBgYGBgMDAwMBgYGBgMDAwMBgYGBgMDAwOBgYGBwMDAwGBgYGAwMDAwGBgYGAwMDAwGBgYGAwMDA4GBgYHAwMDAYGBgYDAwMDAYGBgYDAwMDAYGBgY=',
+  '/////xEREREREREREREREf////8RERERERERERERERH/////ERERERERERERERER/////xEREREREREREREREf////8RERERERERERERERH/////ERERERERERERERER/////xEREREREREREREREf////8RERERERERERERERE=',
+  'AwMDA4eHh4fMzMzMeHh4eDAwMDB4eHh4zMzMzIeHh4cDAwMDh4eHh8zMzMx4eHh4MDAwMHh4eHjMzMzMh4eHhwMDAwOHh4eHzMzMzHh4eHgwMDAweHh4eMzMzMyHh4eHAwMDA4eHh4fMzMzMeHh4eDAwMDB4eHh4zMzMzIeHh4c=',
+  'AwADAAGAAYAAwADAAGAAYAAwADAAGAAYAAwADAAGAAYAAwADgAGAAcAAwABgAGAAMAAwABgAGAAMAAwABgAGAAMAAwABgAGAAMAAwABgAGAAMAAwABgAGAAMAAwABgAGAAMAA4ABgAHAAMAAYABgADAAMAAYABgADAAMAAYABgA=',
+  'AwAAAwEAgIEAAMDAAABgYAAAMDAAABgYAAAMDAAABgYAAAMDAICBAQDAwAAAYGAAADAwAAAYGAAADAwAAAYGAAADAwCAgQEAwMAAAGBgAAAwMAAAGBgAAAwMAAAGBgAAAwMAAIEBAIDAAADAYAAAYDAAADAYAAAYDAAADAYAAAY=',
+  'AwMDA4GBgYHAwMDAYGBgYDAwMDAYABgADAAMAAYABgADAAMAAYABgADAAMAAYABgADAAMBgYGBgMDAwMBgYGBgMDAwOBgYGBwMDAwGBgYGAwMDAwGAAYAAwADAAGAAYAAwADAAGAAYAAwADAAGAAYAAwADAYGBgYDAwMDAYGBgY=',
+  'AwADAAeAB4AMwAzAGGAYYDAwMDBgGGAYwAzADIAHgAcAAwADgAeAB8AMwAxgGGAYMDAwMBhgGGAMwAzAB4AHgAMAAwAHgAeADMAMwBhgGGAwMDAwYBhgGMAMwAyAB4AHAAMAA4AHgAfADMAMYBhgGDAwMDAYYBhgDMAMwAeAB4A=',
+  'AAADAACAAYAAwADAAGAAYCAwIDBgGGAYwAzADIAHgAcAAwADgAeAB8AMwAxgGGAYMBAwEBgAGAAMAAwABgAGAAMAAwABgAGAAMAAwABgAGAgMCAwYBhgGMAMwAyAB4AHAAMAA4AHgAfADMAMYBhgGDAQMBAYABgADAAMAAcABgA=',
+  'AAMDA4CBgQHAwMAAYGBgADAwMAAYGBgADAwMAAYGBgADAwMAgYEBgMDAAMBgYABgMDAAMBgYABgMDAAMBgYABgMDAAOBAYCBwADAwGAAYGAwADAwGAAYGAwADAwGAAYGAwADAwGAgYEAwMDAAGBgYAAwMDAAGBgYAAwMDAAGBgY=',
+  '/P8DAAAAAAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAAAA//8AAAAAAAAAAAAAAAAA//8AAAAAAAAAAAAAAAAAAAD8/wMAAAAAAAAAAAAAAAD/AAD/AAAAAAAAAAAAAAAA//8AAAAAAAAAAAAAAAAAAADA/z8AAAAAAAAAAAAAAAA=',
+  'A4ADAAGAAYABwADAAeAAYAGwgP8AmIAYAIyADID/gAaAA4ADgAGAAcAAwADgAOAAsPD/AJgQGACMEAwA/xAG+AMQAwgBkAGIANAAyABwAGgAMAA4ABgAGAAcAAwAFgAOABMAC4ARgAnAEMAIYJD/D/+fMAAZgBgADYAMAAeABgA=',
+  'AAMDA4CBgQHAwMAAYGBgADAwMAAYABgADAAMAAYABgADAAMAAYABgADAAMAAYABgADAAMBgYABgMDAAMBgYABgMDAAOBAYCBwADAwGAAYGAwADAwGAAYAAwADAAGAAYAAwADAAGAAYAAwADAAGAAYAAwMDAAGBgYAAwMDAAGBgY=',
+  'gIEBAMDAAABgYAAAMDAAABgAABgMAAAMBgAABgMAAAMAgIEBAMDAAABgYAAAMDAAGBgAAAwMAAAGBgAAAwMAAAEAgIEAAMDAAABgYAAAMDAAGBgAAAwMAAAGBgAAAwMAgQEAgMAAAMBgAABgMAAAMAAAGBgAAAwMAAAGBgAAAwM=',
+  'AAAAAAAAAAAAwA8AAHj4A4A/MAbgGBh8/wwMzIEHBoYDAwMDhoGBB8zAwAx4YGAYMDAwMBgYeGAMDMzABwaGgQMDAwOBgQeGwMAMzGBgGHgwMDAwGHhgGAzMwAyGh4EH8z8DAx3gh4EHAPzAAAB4eAAAwA8AAAAAAAAAAAAAAAA=',
+  'EKQgBAAAAECAIAgICECAAAAQAAABgAQAQAAgAgAAAEBAAQAABEAKAAAFABAIACQBgAAAAAACAAiAICFACAIAAAAAAAQAEISAQAAIAAAIAAACICgIQAAAAAAkAAAAgIAAESBACAAAAQCEgABBCAgQAAAAAAAAIARKRASAAAAAAAA=',
+  'VVVVVQAAAACqqqqqAAAAAFVVVVUAAAAAqqqqqgAAAABVVVVVAAAAAKqqqqoAAAAAVVVVVQAAAACqqqqqAAAAAFVVVVUAAAAAqqqqqgAAAABVVVVVAAAAAKqqqqoAAAAAVVVVVQAAAACqqqqqAAAAAFVVVVUAAAAAqqqqqgAAAAA='
+]; })();
   Body.prototype.applyFill = function (r, fp) {
     const f = fp.f, extra = [];
     for (const m of r.meshes) {
       if (f.filled === false) m.visibility = 0;          // not drawn but still picked, as X_ITE 16.6.0 does
       if (f.hatched !== false) {
         const SZ = 32, dt = new BABYLON.DynamicTexture('hatch-' + fp.id, { width: SZ, height: SZ }, this.scene, true), c = dt.getContext(), col = f.hatchColor || [1, 1, 1];
-        const style = Math.max(1, Math.min(19, f.hatchStyle | 0)); if (style > 6) this.note('FillProperties hatchStyle ' + style + ' drawn as style 6');
-        c.clearRect(0, 0, SZ, SZ); c.strokeStyle = `rgb(${Math.round(col[0] * 255)},${Math.round(col[1] * 255)},${Math.round(col[2] * 255)})`; c.lineWidth = 3;
-        const line = (x0, y0, x1, y1) => { c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); };
-        const H = style === 1 || style === 5, V = style === 2 || style === 5, U = style === 3 || style >= 6, D = style === 4 || style >= 6;
-        if (H) line(0, SZ / 2, SZ, SZ / 2); if (V) line(SZ / 2, 0, SZ / 2, SZ);
-        if (U) { line(0, SZ, SZ, 0); line(-SZ / 2, SZ / 2, SZ / 2, -SZ / 2); line(SZ / 2, SZ * 1.5, SZ * 1.5, SZ / 2); }
-        if (D) { line(0, 0, SZ, SZ); line(SZ / 2, -SZ / 2, SZ * 1.5, SZ / 2); line(-SZ / 2, SZ / 2, SZ / 2, SZ * 1.5); }
-        dt.hasAlpha = true; dt.update(); dt.wrapU = dt.wrapV = BABYLON.Texture.WRAP_ADDRESSMODE; dt.uScale = dt.vScale = 6;
+        const style = Math.max(1, Math.min(19, f.hatchStyle | 0)), bits = Uint8Array.from(atob(R.bridge.HATCH[style - 1]), (ch) => ch.charCodeAt(0));   // the 19 patterns of 19775-1 FillProperties, 32 x 32, one bit per pixel
+        const id = c.createImageData(SZ, SZ); for (let k = 0; k < SZ * SZ; k++) if (bits[k >> 3] >> (k & 7) & 1) { id.data[k * 4] = Math.round(col[0] * 255); id.data[k * 4 + 1] = Math.round(col[1] * 255); id.data[k * 4 + 2] = Math.round(col[2] * 255); id.data[k * 4 + 3] = 255; }
+        c.putImageData(id, 0, 0); dt.hasAlpha = true; dt.update(); dt.updateSamplingMode(BABYLON.Texture.NEAREST_NEAREST); dt.wrapU = dt.wrapV = BABYLON.Texture.WRAP_ADDRESSMODE;
+        // screen space, one texel per pixel like X_ITE 16.6.0 (Hatch.glsl: texture(hatch, fragCoord / 32 with the row flipped)): a ShaderMaterial that reads the fragment position
+        const ss = BABYLON.ShaderStore.ShadersStoreWGSL;
+        ss['hatchVertexShader'] = 'attribute position: vec3f;\nuniform worldViewProjection: mat4x4f;\n@vertex\nfn main(input: VertexInputs) -> FragmentInputs { vertexOutputs.position = uniforms.worldViewProjection * vec4f(vertexInputs.position, 1.0); }';
+        ss['hatchFragmentShader'] = 'var tex0Sampler: sampler;\nvar tex0: texture_2d<f32>;\n@fragment\nfn main(input: FragmentInputs) -> FragmentOutputs { let t = fragmentInputs.position.xy / 32.0; let c = textureSample(tex0, tex0Sampler, vec2f(t.x, t.y)); fragmentOutputs.color = vec4f(c.rgb, c.a); }';
         const o = m.clone(m.name + '-hatch'); o.parent = m.parent; o.isPickable = false;
-        const hm = new BABYLON.StandardMaterial('hatchmat-' + fp.id, this.scene);
-        hm.diffuseTexture = dt; hm.useAlphaFromDiffuseTexture = true; hm.disableLighting = true; hm.emissiveColor.set(1, 1, 1); hm.backFaceCulling = false; hm.zOffset = -2; hm.transparencyMode = BABYLON.Material.MATERIAL_ALPHABLEND;
-        o.material = hm; o.metadata = { hatch: true }; o.isVisible = true; extra.push(o);
+        const hm = new BABYLON.ShaderMaterial('hatchmat-' + fp.id, this.scene, { vertex: 'hatch', fragment: 'hatch' }, { attributes: ['position'], uniforms: ['worldViewProjection'], samplers: ['tex0'], shaderLanguage: BABYLON.ShaderLanguage.WGSL, needAlphaBlending: true });
+        hm.setTexture('tex0', dt); hm.alphaMode = BABYLON.Engine.ALPHA_COMBINE; hm.backFaceCulling = false; hm.zOffset = -2; hm.disableDepthWrite = true;
+        o.material = hm; o.metadata = { hatch: true }; o.isVisible = true; o.visibility = 1; extra.push(o);
       }
     }
     r.hatch = extra;
@@ -555,6 +577,7 @@ R.bridge.headlight = (body) => {
     const f = mat.f;   // Phong specular (19775-1 17.2.2.4): specularColor * (N . H) ^ (shininess * 128); the stock body drew none
     const sc = f.specularColor, sh = f.shininess;
     if (sc) { m.specularColor.set(sc[0], sc[1], sc[2]); m.specularPower = Math.max(1, (sh === undefined ? 0.2 : sh) * 128); }
+    const ai = f.ambientIntensity === undefined ? 0.2 : f.ambientIntensity, dc = m._vcol ? [1, 1, 1] : f.diffuseColor; m.ambientColor.set(ai * dc[0], ai * dc[1], ai * dc[2]);   // times the scene ambient colour (the lights' ambientIntensity)
     return r;
   };
   const _ch = Body.prototype.changed;
@@ -665,9 +688,11 @@ uniform worldViewProjection: mat4x4f;
 uniform worldView: mat4x4f;
 varying vN: vec3f;
 varying vW: vec4f;
+varying vP: vec3f;
 @vertex
 fn main(input: VertexInputs) -> FragmentInputs {
   vertexOutputs.position = uniforms.worldViewProjection * vec4f(vertexInputs.position, 1.0);
+  vertexOutputs.vP = (uniforms.worldView * vec4f(vertexInputs.position, 1.0)).xyz;
   vertexOutputs.vN = (uniforms.worldView * vec4f(vertexInputs.normal, 0.0)).xyz;
   vertexOutputs.vW = vec4f(vertexInputs.uv, vertexInputs.uv2);
 }`;
@@ -679,9 +704,24 @@ uniform diffuse: vec3f;
 uniform emissive: vec3f;
 uniform alpha: f32;
 uniform headlight: f32;
+uniform head: f32;
+uniform l0: vec4f;
+uniform l1: vec4f;
+uniform l2: vec4f;
+uniform l3: vec4f;
+uniform c0: vec3f;
+uniform c1: vec3f;
+uniform c2: vec3f;
+uniform c3: vec3f;
 uniform flipT: f32;
 varying vN: vec3f;
 varying vW: vec4f;
+varying vP: vec3f;
+fn lightTerm(n: vec3f, p: vec3f, l: vec4f, c: vec3f) -> vec3f {
+  if (l.w < 0.5) { return vec3f(0.0); }
+  let L = select(normalize(l.xyz - p), normalize(l.xyz), l.w < 1.5);
+  return c * max(dot(n, L), 0.0);
+}
 @fragment
 fn main(input: FragmentInputs) -> FragmentOutputs {
   let q = select(1.0, fragmentInputs.vW.w, abs(fragmentInputs.vW.w) > 1e-6);
@@ -689,7 +729,9 @@ fn main(input: FragmentInputs) -> FragmentOutputs {
   let p = (uniforms.texMat * vec4f(fragmentInputs.vW.x / q, tt / q, fragmentInputs.vW.z / q, 1.0)).xyz;
   let t = textureSample(vol, volSampler, p);
   let n = normalize(fragmentInputs.vN);
-  let lit = select(1.0, abs(n.z), uniforms.headlight > 0.5);
+  let nf = select(-n, n, dot(n, -fragmentInputs.vP) >= 0.0);   // the side that faces the viewer lights (one-sided terms, two-sided surface)
+  let sum = vec3f(abs(n.z) * uniforms.head) + lightTerm(nf, fragmentInputs.vP, uniforms.l0, uniforms.c0) + lightTerm(nf, fragmentInputs.vP, uniforms.l1, uniforms.c1) + lightTerm(nf, fragmentInputs.vP, uniforms.l2, uniforms.c2) + lightTerm(nf, fragmentInputs.vP, uniforms.l3, uniforms.c3);
+  let lit = select(vec3f(1.0), sum, uniforms.headlight > 0.5);
   fragmentOutputs.color = vec4f(t.rgb * uniforms.diffuse * lit + uniforms.emissive, t.a * uniforms.alpha);
 }`;
   BABYLON.ShaderStore.ShadersStoreWGSL['vol3dVertexShader'] = VS; BABYLON.ShaderStore.ShadersStoreWGSL['vol3dFragmentShader'] = FS;
@@ -724,7 +766,7 @@ fn main(input: FragmentInputs) -> FragmentOutputs {
   Body.prototype.makeMaterial = function (shape, g, spec, mesh) {
     if (spec.kind !== 'vol') return _mm.call(this, shape, g, spec, mesh);
     const m = new BABYLON.ShaderMaterial('vol-' + shape.id, this.scene, { vertex: 'vol3d', fragment: 'vol3d' },
-      { attributes: ['position', 'normal', 'uv', 'uv2'], uniforms: ['worldViewProjection', 'worldView', 'texMat', 'diffuse', 'emissive', 'alpha', 'headlight', 'flipT'], samplers: ['vol'], shaderLanguage: BABYLON.ShaderLanguage.WGSL, needAlphaBlending: true });
+      { attributes: ['position', 'normal', 'uv', 'uv2'], uniforms: ['worldViewProjection', 'worldView', 'texMat', 'diffuse', 'emissive', 'alpha', 'headlight', 'head', 'l0', 'l1', 'l2', 'l3', 'c0', 'c1', 'c2', 'c3', 'flipT'], samplers: ['vol'], shaderLanguage: BABYLON.ShaderLanguage.WGSL, needAlphaBlending: true });
     const f = spec.mat ? spec.mat.f : null, dc = f ? (f.diffuseColor || f.baseColor || f.unlitColor || [1, 1, 1]) : [1, 1, 1], ec = f && f.emissiveColor && spec.mat.type !== 'PhysicalMaterial' ? f.emissiveColor : [0, 0, 0];
     m.setVector3('diffuse', new BABYLON.Vector3(spec.mat ? dc[0] : 1, spec.mat ? dc[1] : 1, spec.mat ? dc[2] : 1)); m.setVector3('emissive', new BABYLON.Vector3(ec[0], ec[1], ec[2]));
     m.setFloat('alpha', f ? 1 - (f.transparency || 0) : 1); m.setFloat('headlight', spec.mat && spec.mat.type !== 'UnlitMaterial' ? 1 : 0);
@@ -734,6 +776,22 @@ fn main(input: FragmentInputs) -> FragmentOutputs {
     m.alphaMode = BABYLON.Engine.ALPHA_COMBINE; m.backFaceCulling = false; m._vol = true; m._tr = !!f && (f.transparency || 0) > 0; m._blend = m._tr;
     m.needAlphaBlending = () => !!m._blend;     // an opaque volume writes depth (Babylon draws a blended mesh without), so the far faces of a box do not paint over the near one
     this.volTexture(spec.tex, m);
+    if (m._shaded = !!spec.mat && spec.mat.type !== 'UnlitMaterial') {   // the volume is shaded by the headlight and by up to four directional or point lights (spot lights act as point lights: no cone), in view space, refreshed every frame
+      const body = this, sc = this.scene, C = [0, 0, 0, 0].map(() => new BABYLON.Vector3(0, 0, 0)), O = [0, 0, 0, 0].map(() => new BABYLON.Vector4(0, 0, 0, 0));
+      m._lightObs = sc.onBeforeRenderObservable.add(() => {
+        if (m.isDisposed && m.isDisposed()) return;
+        const ni = body.world && body.world.nodes.find((x) => x.type === 'NavigationInfo'), V = sc.activeCamera.getViewMatrix(); m.setFloat('head', !ni || ni.f.headlight !== false ? 1 : 0);
+        const ls = (body._x3dLights || []).filter((l) => l.isEnabled()).slice(0, 4);
+        for (let i = 0; i < 4; i++) {
+          const l = ls[i], v = O[i]; if (!l) { v.set(0, 0, 0, 0); m.setVector4('l' + i, v); m.setVector3('c' + i, C[i]); continue; }
+          const col = l.diffuse, k = l.intensity;
+          if (l.getClassName() === 'DirectionalLight') { const d = BABYLON.Vector3.TransformNormal(l.getShadowDirection().scale(-1), V); d.normalize(); v.set(d.x, d.y, d.z, 1); }
+          else { const p = BABYLON.Vector3.TransformCoordinates(l.getAbsolutePosition(), V); v.set(p.x, p.y, p.z, 2); }
+          m.setVector4('l' + i, v); m.setVector3('c' + i, C[i].set(col.r * k, col.g * k, col.b * k));
+        }
+      });
+      m.onDisposeObservable.add(() => sc.onBeforeRenderObservable.remove(m._lightObs));
+    }
     return m;
   };
   /* texture coordinates: 3D / 4D lists read with their own stride (the stock reader code reads two numbers per coordinate), default box mapping, and a second UV set for r and q */
@@ -771,15 +829,36 @@ fn main(input: FragmentInputs) -> FragmentOutputs {
 /* Unlit textured shapes (a shape with a texture and no Material, 19775-1 17.2.2 table: the texture alone gives the colour). The stock body draws them with backFaceCulling off and depth write off for every
    geometry, so a closed box shows its far faces over its near ones in whatever order they come (blocks of the wrong face in the picture). Now a solid geometry (solid TRUE, the default of the solid
    shapes) culls its back faces, with the X3D winding, and writes depth; solid FALSE and every shape with a see-through image keep the stock look. */
+R.bridge.winding = (mesh) => {   // +1 when the first triangles run counter-clockwise round their vertex normal (seen along it), -1 clockwise, 0 when unknown
+  const P = mesh.getVerticesData('position'), N = mesh.getVerticesData('normal'), I = mesh.getIndices(); if (!P || !N || !I || I.length < 3) return 0;
+  let s = 0; for (let t = 0; t < Math.min(I.length, 90); t += 3) {
+    const a = I[t] * 3, b = I[t + 1] * 3, c = I[t + 2] * 3, u = [P[b] - P[a], P[b + 1] - P[a + 1], P[b + 2] - P[a + 2]], v = [P[c] - P[a], P[c + 1] - P[a + 1], P[c + 2] - P[a + 2]];
+    s += (u[1] * v[2] - u[2] * v[1]) * N[a] + (u[2] * v[0] - u[0] * v[2]) * N[a + 1] + (u[0] * v[1] - u[1] * v[0]) * N[a + 2];
+  }
+  return s > 0 ? 1 : s < 0 ? -1 : 0;
+};
 {
   const _mm = Body.prototype.makeMaterial;
   Body.prototype.makeMaterial = function (shape, g, spec, mesh) {
     const m = _mm.call(this, shape, g, spec, mesh);
     if (m instanceof BABYLON.ShaderMaterial && /^unlit-/.test(m.name) && g.f && g.f.solid === true) {
       const tn = shape.f.appearance && shape.f.appearance.f.texture, alpha = !tn || (tn.type === 'PixelTexture' ? [2, 4].includes((tn.f.image || [0, 0, 0])[2]) : /\.(png|webp|gif|avif)(\?|$)|^data:image\/(png|webp|gif|avif)/i.test((tn.f.url && tn.f.url[0]) || ''));
-      m.backFaceCulling = true; m.sideOrientation = this.opts.ccw === false ? BABYLON.Material.CounterClockWiseSideOrientation : BABYLON.Material.ClockWiseSideOrientation;   // a solid never shows its back, see-through image or not
+      const w = mesh && R.bridge.winding(mesh);   // which way the triangles of this mesh turn round their own normal (Babylon's box, sphere and cylinder against the reader's face sets)
+      if (w) { m.backFaceCulling = true; m.sideOrientation = w > 0 ? BABYLON.Material.CounterClockWiseSideOrientation : BABYLON.Material.ClockWiseSideOrientation; }   // a solid never shows its back, see-through image or not
       if (!alpha) m.disableDepthWrite = false;
     }
     return m;
+  };
+}
+
+/* Background and TextureBackground skies (BR.bg.make) belong to the world that made them: a world that is replaced took its sky meshes with it only for the nodes that were rebuilt, the others stayed
+   in the scene and drew the old sky behind the next world; the clear colour a Background had set stayed as well. Found by the batch runner: the sky of the last TextureBackground fixture showed in every fixture run after it in the same page. */
+{
+  const _cw = Body.prototype.clearWorld;
+  Body.prototype.clearWorld = function () {
+    if (this._bg) { for (const l of this._bg.values()) for (const m of l) { try { m.dispose(false, false); } catch (e) { /* gone with the scene */ } } this._bg.clear(); }
+    this._clear0 ||= this.scene.clearColor.clone();
+    const r = _cw.call(this); this.scene.clearColor.copyFrom(this._clear0);   // the stock Background sets the clear colour and a world without one never reset it
+    return r;
   };
 }

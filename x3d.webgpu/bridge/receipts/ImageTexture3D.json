@@ -63,14 +63,15 @@
   "msg": "",
   "gaps": [
    "the DDS volume (right) is drawn by ours and shown white by X_ITE 16.6.0 on this raster (Suspected: its DDS 3D reader does not take this uncompressed RGBA header); the picture comparison covers the NRRD volume (left)",
-   "ImageTexture3D reads uncompressed DDS volumes and uchar NRRD (raw, gzip, ascii); DICOM and compressed DDS are not read"
+   "ImageTexture3D reads uncompressed DDS volumes and uchar NRRD (raw, gzip, ascii); DICOM and compressed DDS are not read",
+   "the volume shader is shared with PixelTexture3D and ComposedTexture3D: lit by the headlight and up to four lights (checked on PixelTexture3D against X_ITE 16.6.0, mean abs diff 3.0 of 255)"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha fbf130ec58bf",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha c082bfeb8109",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "e6c3f9a"
+ "driver_commit": "d632fb2"
 }

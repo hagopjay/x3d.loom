@@ -3,7 +3,7 @@
  "mode": "scene",
  "note": "A box with a PixelTexture3D (no Material, so the texture colour is the colour). The box has its normal 2D texture coordinates, so the volume is cut at r = 0 in both engines: the first slice, with the first row of the image at the bottom. The probes sit in the middle of the four quarters of the front face (red, green, blue, white), then the image is replaced by a grey one slice deep; the strips beside it are sampled in 3D by TextureCoordinate3D.",
  "gaps": [
-  "Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight only (N dot view axis, two sided); other lights, TextureProperties anisotropy and mipmaps are not applied to volumes"
+  "Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight (when NavigationInfo.headlight is TRUE) and by up to four lights that are on, as one-sided Lambert terms on the viewer-facing side; a spot light acts as a point light (no cone) and no light has attenuation, radius or global scope for a volume; compared with X_ITE 16.6.0 on a lit PixelTexture3D box with a DirectionalLight and a PointLight (silhouette 0.95, mean abs diff 3.0 of 255, Chromium 153 SwiftShader); TextureProperties anisotropy and mipmaps are not applied to volumes"
  ],
  "steps": [
   {
@@ -185,6 +185,9 @@
   },
   {
    "shot": "main"
+  },
+  {
+   "shot": "lit"
   }
  ],
  "tone": "none",
@@ -193,6 +196,17 @@
    "iou": 0.9,
    "mad": 8,
    "fg": 14
+  },
+  "lit": {
+   "iou": 0.9,
+   "mad": 5,
+   "fg": 15,
+   "region": [
+    100,
+    0,
+    120,
+    56
+   ]
   }
  }
 }

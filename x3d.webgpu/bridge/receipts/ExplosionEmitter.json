@@ -16,36 +16,36 @@
   "xiteOk": true,
   "visual": {
    "burst": {
-    "iou": 0.05,
-    "coverOurs": 0.1,
-    "coverXite": 0.1,
+    "iou": 0.07,
+    "coverOurs": 0.14,
+    "coverXite": 0.12,
     "bboxOurs": [
-     54,
-     14,
+     57,
+     15,
      264,
-     224
+     223
     ],
     "bboxXite": [
-     88,
-     51,
+     91,
+     50,
      229,
-     192
+     189
     ],
-    "nOurs": 6425,
-    "nXite": 6630,
+    "nOurs": 6294,
+    "nXite": 6956,
     "fgFracOurs": 0.08,
     "fgFracXite": 0.09,
-    "mad": 23.87,
-    "psnr": 11.73,
+    "mad": 35.31,
+    "psnr": 9.14,
     "fgMeanOurs": [
-     121,
-     73,
-     14
+     255,
+     255,
+     230
     ],
     "fgMeanXite": [
-     215,
-     215,
-     194
+     207,
+     207,
+     187
     ],
     "bgOurs": [
      1,
@@ -62,15 +62,15 @@
   "comparison": "passed",
   "msg": "",
   "gaps": [
-   "particle age at the shot differs between the engines on this CPU raster (ours runs on elapsed time at about 3 frames per second under SwiftShader), so the extent is compared with a wide bound and the speed is checked from the particle list in our body",
-   "X_ITE 16.6.0 draws the particles white on this raster, ours uses the Material emissive colour (colour is not compared); the X_ITE picture also shows a swirl pattern that ours does not reproduce"
+   "colour is compared: a quad particle is lit like a surface (emissive + diffuse x headlight, white for this Material); ours is 255 white, X_ITE 16.6.0's mean over its drawn pixels is about 200 (its edges are blended), fg tolerance 70; no fade at the end of life without a colorRamp (as X_ITE)",
+   "particle age at the shot differs between the engines on this CPU raster (ours runs on elapsed time at about 3 frames per second under SwiftShader), so the extent is compared with a wide bound and the speed is checked from the particle list in our body"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f499223bf445",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha c082bfeb8109",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "8170b11"
+ "driver_commit": "d632fb2"
 }
