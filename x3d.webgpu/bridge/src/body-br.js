@@ -907,3 +907,13 @@ R.bridge.winding = (mesh) => {   // +1 when the first triangles run counter-cloc
     return _cw.call(this);
   };
 }
+
+/* TextureProjector / TextureProjectorParallel (src/nodes/TextureProjector.js): the per frame pass and the list of projectors belong to the world; a world that goes leaves the plugins of its materials with no projector (their defines go off). */
+{
+  const _cw = Body.prototype.clearWorld;
+  Body.prototype.clearWorld = function () {
+    if (this._projObs) { this.scene.onBeforeRenderObservable.remove(this._projObs); this._projObs = null; }
+    this._projectors = []; this._projState = { list: [], key: '' }; this._projKey = '';
+    return _cw.call(this);
+  };
+}
