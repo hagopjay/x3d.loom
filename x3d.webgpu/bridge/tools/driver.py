@@ -250,7 +250,7 @@ def xsd_check(name, xsd):
         if px: xsd = px; note = ' + XSD patched: ' + '; '.join([n + ' added to the Full child content model' for n in allow] + [c + ' children as a choice, not a sequence' for c in choice] + [f + ' added to the containerField values' for f in fields])
     try: p = subprocess.run(['xmllint', '--noout', '--schema', xsd, fx], capture_output=True, text=True)
     except FileNotFoundError: return {'ok': False, 'msg': 'xmllint unavailable: install libxml2-utils (or the platform equivalent)'}
-    return {'ok': p.returncode == 0, 'msg': (p.stderr.strip().splitlines() or [''])[-1][:300], 'validator': 'xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp' + note}
+    return {'ok': p.returncode == 0, 'msg': (p.stderr.strip().splitlines() or [''])[-1].replace(os.path.dirname(os.path.abspath(fx)) + os.sep, 'fixtures/')[:300], 'validator': 'xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp' + note}
 
 
 def run_tests(names, xite=True, babylon=None):
