@@ -1,0 +1,113 @@
+{
+ "node": "DirectionalLight",
+ "mode": "scene",
+ "note": "a world light turned by a Transform above it, and a global FALSE light that lights only its own group",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.scene.lights.filter(l=>l.getClassName()==='DirectionalLight'&&l.name.endsWith('-light')).length",
+    2
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.scene.lights.find(l=>l.name==='DS-light').includedOnlyMeshes.length",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.scene.lights.find(l=>l.name==='D-light').includedOnlyMeshes.length",
+    0
+   ]
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "T",
+    "rotation",
+    [
+     0,
+     1,
+     0,
+     1.2
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const d=__body.scene.lights.find(l=>l.name==='D-light').getShadowDirection();return [d.x,d.y,d.z].map(v=>Math.round(v*100)/100)})()",
+    [
+     -0.93,
+     0,
+     -0.36
+    ]
+   ]
+  },
+  {
+   "shot": "turned"
+  },
+  {
+   "set": [
+    "T",
+    "rotation",
+    [
+     0,
+     1,
+     0,
+     0
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "set": [
+    "D",
+    "on",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "off"
+  }
+ ],
+ "gaps": [
+  "ambientIntensity is not used (no ambient term in the Babylon light); shadows are not made",
+  "global FALSE lights the meshes below the parent group; meshes added later are picked up when the mesh count changes (checked in our body, X_ITE draws the same picture)"
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.98,
+   "mad": 3,
+   "fg": 8
+  },
+  "turned": {
+   "iou": 0.98,
+   "mad": 3,
+   "fg": 8
+  },
+  "off": {
+   "iou": 0.97,
+   "mad": 3,
+   "fg": 8
+  }
+ }
+}

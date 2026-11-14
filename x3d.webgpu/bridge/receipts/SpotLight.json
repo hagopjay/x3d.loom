@@ -1,0 +1,197 @@
+{
+ "node": "SpotLight",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/home/user/x3d.loom/x3d.webgpu/bridge/fixtures/SpotLight.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 17/17",
+  "xite": "pass 13/13",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "visual": {
+   "main": {
+    "iou": 1,
+    "coverOurs": 1,
+    "coverXite": 1,
+    "bboxOurs": [
+     69,
+     29,
+     250,
+     210
+    ],
+    "bboxXite": [
+     69,
+     29,
+     250,
+     210
+    ],
+    "nOurs": 25888,
+    "nXite": 25888,
+    "fgFracOurs": 0.34,
+    "fgFracXite": 0.34,
+    "mad": 0.04,
+    "psnr": 61.79,
+    "fgMeanOurs": [
+     186,
+     186,
+     186
+    ],
+    "fgMeanXite": [
+     186,
+     186,
+     186
+    ],
+    "bgOurs": [
+     0,
+     0,
+     0
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   },
+   "moved": {
+    "iou": 1,
+    "coverOurs": 1,
+    "coverXite": 1,
+    "bboxOurs": [
+     157,
+     29,
+     319,
+     210
+    ],
+    "bboxXite": [
+     157,
+     29,
+     319,
+     210
+    ],
+    "nOurs": 24500,
+    "nXite": 24494,
+    "fgFracOurs": 0.32,
+    "fgFracXite": 0.32,
+    "mad": 0.04,
+    "psnr": 62.47,
+    "fgMeanOurs": [
+     192,
+     192,
+     192
+    ],
+    "fgMeanXite": [
+     193,
+     193,
+     193
+    ],
+    "bgOurs": [
+     0,
+     0,
+     0
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   },
+   "turned": {
+    "iou": 1,
+    "coverOurs": 1,
+    "coverXite": 1,
+    "bboxOurs": [
+     21,
+     26,
+     241,
+     213
+    ],
+    "bboxXite": [
+     21,
+     26,
+     241,
+     213
+    ],
+    "nOurs": 32438,
+    "nXite": 32418,
+    "fgFracOurs": 0.42,
+    "fgFracXite": 0.42,
+    "mad": 0.06,
+    "psnr": 60.64,
+    "fgMeanOurs": [
+     169,
+     169,
+     169
+    ],
+    "fgMeanXite": [
+     169,
+     169,
+     169
+    ],
+    "bgOurs": [
+     0,
+     0,
+     0
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   },
+   "up": {
+    "iou": 1,
+    "coverOurs": 1,
+    "coverXite": 1,
+    "bboxOurs": null,
+    "bboxXite": null,
+    "nOurs": 0,
+    "nXite": 0,
+    "fgFracOurs": 0,
+    "fgFracXite": 0,
+    "mad": 0,
+    "psnr": 99,
+    "fgMeanOurs": [
+     0,
+     0,
+     0
+    ],
+    "fgMeanXite": [
+     0,
+     0,
+     0
+    ],
+    "bgOurs": [
+     0,
+     0,
+     0
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the cone is a projection texture over tan(angle) (a Babylon SpotLight with its own exponent 0), full inside beamWidth and a linear ramp in the angle down to cutOffAngle as 19775-1 gives it; X_ITE and ours agree on the picture; two lights of the same angles share no texture (each light makes its own 256 x 256 table)",
+   "attenuation and radius as on PointLight",
+   "a spot with cutOffAngle above about 88 degrees is held at 88 (a projection texture needs a cone under 180 degrees)",
+   "Babylon only marks the projection of a SpotLight for update when the light's own position or direction changes, not when a parent Transform moves it: the bridge sets the (internal) dirty flag every frame; this is Likely stable on 9.32.0 but not a public API"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 96dc51493fc5",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "b21d180"
+}

@@ -846,10 +846,10 @@
    "inherits": "X3DLightNode",
    "container": "children",
    "nfields": 9,
-   "status": "base",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 27,
+   "receipt": "receipts/DirectionalLight.json",
+   "note": "ambientIntensity is not used (no ambient term in the Babylon light); shadows are not made; global FALSE lights the meshes below the parent group; meshes added later are picked up when the mesh count changes (checked in our body, X_ITE draws the same picture)",
    "rank": 121
   },
   "Disk2D": {
@@ -1811,10 +1811,12 @@
    "container": "texture",
    "nfields": 8,
    "status": "gap",
-   "batch": 10,
+   "batch": 27,
    "receipt": "receipts/MultiTexture.json",
-   "note": "X_ITE is compared on loading and drawing the shapes; the combined colour is checked in our body only (red x green = black for MODULATE, red + green = yellow for ADD); function, source, color and alpha are read and not used; modes other than REPLACE, MODULATE, MODULATE2X, MODULATE4X and ADD are drawn as MODULATE; the combine is made once on a 256 x 256 canvas: it does not follow the lighting or the vertex colour",
-   "rank": 50
+   "note": "compared with X_ITE 16.6.0 in the picture (silhouette 0.97, mean abs diff 1.6 of 255 on SwiftShader) for MODULATE (red x green = black) and ADD (red + green = yellow); function, source, color and alpha are read and not used; modes other than REPLACE, MODULATE, MODULATE2X, MODULATE4X and ADD are drawn as MODULATE; the combine is made once on a 256 x 256 canvas: it does not follow the lighting or the vertex colour; a small image is magnified with hard texels like X_ITE",
+   "rank": 50,
+   "prev_batch": 10,
+   "prev_note": "X_ITE is compared on loading and drawing the shapes; the combined colour is checked in our body only (red x green = black for MODULATE, red + green = yellow for ADD); function, source, color and alpha are read and not used; modes other than REPLACE, MODULATE, MODULATE2X, MODULATE4X and ADD are drawn as MODULATE; the combine is made once on a 256 x 256 canvas: it does not follow the lighting or the vertex colour"
   },
   "MultiTextureCoordinate": {
    "component": "Texturing",
@@ -1837,10 +1839,12 @@
    "container": "textureTransform",
    "nfields": 2,
    "status": "gap",
-   "batch": 11,
+   "batch": 27,
    "receipt": "receipts/MultiTextureTransform.json",
-   "note": "X_ITE is compared on loading and drawing the shapes; the shifted colours are checked in our body only (red|blue image shifted by half a tile swaps the halves); only MultiTexture stages are moved; a plain TextureTransform on a single texture is not applied by the stock body (TextureTransform stays 'base'); edits to the transform after the build are not followed",
-   "rank": 51
+   "note": "compared with X_ITE 16.6.0 in the picture (silhouette 0.97, mean abs diff 3.2 of 255 on SwiftShader): the shifted box swaps the halves in both; only MultiTexture stages are moved; a plain TextureTransform on a single texture is applied by the Material path (bridged), not by the unlit one; edits to the transform after the build are not followed",
+   "rank": 51,
+   "prev_batch": 11,
+   "prev_note": "X_ITE is compared on loading and drawing the shapes; the shifted colours are checked in our body only (red|blue image shifted by half a tile swaps the halves); only MultiTexture stages are moved; a plain TextureTransform on a single texture is not applied by the stock body (TextureTransform stays 'base'); edits to the transform after the build are not followed"
   },
   "NavigationInfo": {
    "component": "Navigation",
@@ -2226,10 +2230,10 @@
    "inherits": "X3DLightNode",
    "container": "children",
    "nfields": 11,
-   "status": "base",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 27,
+   "receipt": "receipts/PointLight.json",
+   "note": "attenuation is a Babylon range cut at 1/32 of the polynomial (a0 1 0 0 means no fall-off), not X_ITE's per pixel polynomial; global=FALSE scope uses includedOnlyMeshes of the parent group; compared in our body only; ambientIntensity is not used; radius is a hard edge in X3D: Babylon has only a smooth range, so the range stays open and a mesh wholly beyond the radius is left out of the light (per mesh); a mesh that straddles the edge, like a big wall, is lit whole where X_ITE cuts a disc; checked by the colour of the spheres beyond it in both engines",
    "rank": 122
   },
   "PointPickSensor": {
@@ -2815,10 +2819,10 @@
    "inherits": "X3DLightNode",
    "container": "children",
    "nfields": 14,
-   "status": "base",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 27,
+   "receipt": "receipts/SpotLight.json",
+   "note": "the cone is a projection texture over tan(angle) (a Babylon SpotLight with its own exponent 0), full inside beamWidth and a linear ramp in the angle down to cutOffAngle as 19775-1 gives it; X_ITE and ours agree on the picture; two lights of the same angles share no texture (each light makes its own 256 x 256 table); attenuation and radius as on PointLight; a spot with cutOffAngle above about 88 degrees is held at 88 (a projection texture needs a cone under 180 degrees); Babylon only marks the projection of a SpotLight for update when the light's own position or direction changes, not when a parent Transform moves it: the bridge sets the (internal) dirty flag every frame; this is Likely stable on 9.32.0 but not a public API",
    "rank": 123
   },
   "SquadOrientationInterpolator": {

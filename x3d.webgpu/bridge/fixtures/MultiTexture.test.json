@@ -73,11 +73,27 @@
      "MODULATE"
     ]
    ]
+  },
+  {
+   "shot": "main"
   }
  ],
  "gaps": [
-  "X_ITE is compared on loading and drawing the shapes; the combined colour is checked in our body only (red x green = black for MODULATE, red + green = yellow for ADD)",
-  "function, source, color and alpha are read and not used; modes other than REPLACE, MODULATE, MODULATE2X, MODULATE4X and ADD are drawn as MODULATE",
-  "the combine is made once on a 256 x 256 canvas: it does not follow the lighting or the vertex colour"
- ]
+  "compared with X_ITE 16.6.0 in the picture (silhouette 0.97, mean abs diff 1.6 of 255 on SwiftShader) for MODULATE (red x green = black) and ADD (red + green = yellow); function, source, color and alpha are read and not used; modes other than REPLACE, MODULATE, MODULATE2X, MODULATE4X and ADD are drawn as MODULATE",
+  "the combine is made once on a 256 x 256 canvas: it does not follow the lighting or the vertex colour; a small image is magnified with hard texels like X_ITE"
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.95,
+   "mad": 3,
+   "fg": 20,
+   "region": [
+    0,
+    60,
+    320,
+    180
+   ]
+  }
+ }
 }
