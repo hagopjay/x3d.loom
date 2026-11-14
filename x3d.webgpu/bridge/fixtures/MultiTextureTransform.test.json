@@ -87,11 +87,28 @@
      255
     ]
    ]
+  },
+  {
+   "shot": "main"
   }
  ],
  "gaps": [
-  "X_ITE is compared on loading and drawing the shapes; the shifted colours are checked in our body only (red|blue image shifted by half a tile swaps the halves)",
-  "only MultiTexture stages are moved; a plain TextureTransform on a single texture is not applied by the stock body (TextureTransform stays 'base')",
+  "compared with X_ITE 16.6.0 in the picture (silhouette 0.97, mean abs diff 3.2 of 255 on SwiftShader): the shifted box swaps the halves in both",
+  "only MultiTexture stages are moved; a plain TextureTransform on a single texture is applied by the Material path (bridged), not by the unlit one",
   "edits to the transform after the build are not followed"
- ]
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.95,
+   "mad": 5,
+   "fg": 20,
+   "region": [
+    0,
+    60,
+    320,
+    180
+   ]
+  }
+ }
 }

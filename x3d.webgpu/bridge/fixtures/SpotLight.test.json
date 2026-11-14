@@ -1,0 +1,147 @@
+{
+ "node": "SpotLight",
+ "mode": "scene",
+ "note": "a spot lights a disc on a wall",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.scene.lights.filter(l=>l.getClassName()==='SpotLight').length",
+    1
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "MOVE",
+    "translation",
+    [
+     3,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const l=__body.scene.lights.find(l=>l.getClassName()==='SpotLight');return Math.round(l.getAbsolutePosition().x*100)/100})()",
+    3
+   ]
+  },
+  {
+   "shot": "moved"
+  },
+  {
+   "set": [
+    "MOVE",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "MOVE",
+    "rotation",
+    [
+     0,
+     1,
+     0,
+     0.5
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const d=__body.scene.lights.find(l=>l.getClassName()==='SpotLight').getShadowDirection();return [d.x,d.y,d.z].map(v=>Math.round(v*100)/100)})()",
+    [
+     -0.48,
+     0,
+     -0.88
+    ]
+   ]
+  },
+  {
+   "shot": "turned"
+  },
+  {
+   "set": [
+    "MOVE",
+    "rotation",
+    [
+     1,
+     0,
+     0,
+     1.5708
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const d=__body.scene.lights.find(l=>l.getClassName()==='SpotLight').getShadowDirection();return [d.x,d.y,d.z].map(v=>Math.round(v*100)/100)})()",
+    [
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  {
+   "shot": "up"
+  }
+ ],
+ "gaps": [
+  "the cone is a projection texture over tan(angle) (a Babylon SpotLight with its own exponent 0), full inside beamWidth and a linear ramp in the angle down to cutOffAngle as 19775-1 gives it; X_ITE and ours agree on the picture; two lights of the same angles share no texture (each light makes its own 256 x 256 table)",
+  "attenuation and radius as on PointLight",
+  "a spot with cutOffAngle above about 88 degrees is held at 88 (a projection texture needs a cone under 180 degrees)",
+  "Babylon only marks the projection of a SpotLight for update when the light's own position or direction changes, not when a parent Transform moves it: the bridge sets the (internal) dirty flag every frame; this is Likely stable on 9.32.0 but not a public API"
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.98,
+   "mad": 1,
+   "fg": 4
+  },
+  "moved": {
+   "iou": 0.98,
+   "mad": 1,
+   "fg": 4
+  },
+  "turned": {
+   "iou": 0.98,
+   "mad": 1,
+   "fg": 4
+  },
+  "up": {
+   "empty": true
+  }
+ }
+}
