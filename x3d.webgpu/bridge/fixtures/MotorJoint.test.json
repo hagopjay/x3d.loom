@@ -1,0 +1,49 @@
+{
+ "node": "MotorJoint",
+ "mode": "scene",
+ "note": "A 1 N m torque about the x axis acts on a sphere (mass 1, radius 0.3, inertia 0.036 kg m2): it gains about 27.8 rad/s every second in the bridge (the test allows 22 to 33 because the wait is wall-clock and the clock of a software-rendered page jitters). X_ITE 16.6.0 keeps the fields and applies no torque.",
+ "gaps": [
+  "the bridge applies axisNTorque about motorNAxis (fixed in body 1) on body 2 and the opposite on body 1 for the first enabledAxes axes; autoCalc and the stop bounce and error correction fields are kept and not used",
+  "motorNAngle is the signed twist of body 2 about each axis; X_ITE 16.6.0 has no motor at all"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "enabledAxes",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoCalc",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "axis1Torque",
+    1
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(async()=>{const v0=__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.angularVelocity[0];await new Promise(r=>setTimeout(r,1000));return Math.abs(__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.angularVelocity[0]-v0-27.8)<5.5})()",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "(async()=>{const v0=X3D.getBrowser('#c').currentScene.getNamedNode('B2').angularVelocity[0];await new Promise(r=>setTimeout(r,1000));return Math.abs(X3D.getBrowser('#c').currentScene.getNamedNode('B2').angularVelocity[0]-v0)<0.01})()",
+    true
+   ]
+  }
+ ]
+}

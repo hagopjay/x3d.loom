@@ -1,0 +1,32 @@
+{
+ "node": "SingleAxisHingeJoint",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/SingleAxisHingeJoint.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 9/9",
+  "xite": "pass 9/9",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "minAngle, maxAngle, stopBounce and stopErrorCorrection are applied by the bridge (one-sided limit rows); X_ITE 16.6.0 makes a btHingeConstraint without limits, so it ignores them (see the limit fixture lines)",
+   "angle is signed in the bridge and unsigned in X_ITE (the angle of the axis-angle rotation)",
+   "angleRate comes from the angle change over the time since the last tick; X_ITE multiplies by the frame rate"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 405205adb314",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "523b353"
+}

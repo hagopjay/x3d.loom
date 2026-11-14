@@ -1,0 +1,68 @@
+{
+ "node": "SliderJoint",
+ "mode": "scene",
+ "note": "A ball hangs 1 m below a fixed body (axis straight down, separation 0 to 2.5 m). Gravity slides it along the axis until it rests against the maxSeparation limit at 2.5 m below, with no sideways drift. Body 1 sits at the origin because X_ITE 16.6.0 builds both slider frames from body 1's position.",
+ "gaps": [
+  "separation is measured along the axis between the two body origins, as in X_ITE's slider",
+  "sliderForce is applied by the bridge as a force along the axis; X_ITE 16.6.0 reads the field and never applies it",
+  "stopBounce is kept and not used by the slider"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "axis",
+    [
+     0,
+     -1,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "maxSeparation",
+    2.5
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "stopErrorCorrection",
+    1
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Math.abs(__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[1]+2.5)<0.15",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "Math.abs(X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[1]+2.5)<0.15",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Math.abs(__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[0])<0.1&&Math.abs(__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[2])<0.1",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "Math.abs(X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[0])<0.1&&Math.abs(X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[2])<0.1",
+    true
+   ]
+  }
+ ]
+}

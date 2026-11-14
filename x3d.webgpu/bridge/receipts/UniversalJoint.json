@@ -1,0 +1,31 @@
+{
+ "node": "UniversalJoint",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/UniversalJoint.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 5/5",
+  "xite": "pass 4/4",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "X_ITE 16.6.0 does not support UniversalJoint or MotorJoint; the bridge solves them (anchors meet, axes at 90 degrees)",
+   "stop1Bounce, stop1ErrorCorrection, stop2Bounce and stop2ErrorCorrection are kept and not used"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 405205adb314",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "523b353"
+}

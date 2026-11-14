@@ -1,0 +1,90 @@
+{
+ "node": "BallJoint",
+ "mode": "scene",
+ "note": "A fixed pivot body and a sphere 2 m away on the horizontal, joined by a BallJoint at the pivot. The sphere swings under gravity and stays 2 m from the pivot, and a sideways kick (3 m/s along z) takes it out of the plane, which a ball joint allows. forceOutput names the anchor outputs raised.",
+ "gaps": [
+  "the bridge solves joints as velocity rows with a 0.2 per step error correction; a long chain of joints needs more iterations",
+  "anchor outputs are local to each body, as in X_ITE; changing anchorPoint after load does not move the joint (it is fixed from the initial poses)",
+  "forceOutput ALL raises every output of the node"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "anchorPoint",
+    [
+     0,
+     5,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "forceOutput",
+    [
+     "body1AnchorPoint",
+     "body2AnchorPoint"
+    ]
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Math.abs(Math.hypot(__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[0]-0,__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[1]-5,__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[2]-0)-2)<0.12",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "Math.abs(Math.hypot(X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[0]-0,X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[1]-5,X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[2]-0)-2)<0.12",
+    true
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "body1AnchorPoint",
+    [
+     0,
+     0,
+     0
+    ],
+    0.05
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Math.abs(__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[2])>0.3",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "Math.abs(X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[2])>0.3",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[1]<4.9",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[1]<4.9",
+    true
+   ]
+  }
+ ]
+}

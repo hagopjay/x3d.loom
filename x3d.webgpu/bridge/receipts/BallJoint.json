@@ -1,0 +1,32 @@
+{
+ "node": "BallJoint",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/BallJoint.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 7/7",
+  "xite": "pass 7/7",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the bridge solves joints as velocity rows with a 0.2 per step error correction; a long chain of joints needs more iterations",
+   "anchor outputs are local to each body, as in X_ITE; changing anchorPoint after load does not move the joint (it is fixed from the initial poses)",
+   "forceOutput ALL raises every output of the node"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 405205adb314",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "523b353"
+}
