@@ -44,14 +44,16 @@ BR.snd.types.SpatialSound = {
   apply(n) {
     const au = n._au, f = n.f, p = au.proc, g = au.in, k = BR.snd.clamp, deg = (r) => r * 180 / Math.PI; if (!p) return;
     BR.snd.types.SpatialSound.pose(n);
-    if (!au._set) { au._set = true; g.channelCount = 2; g.channelCountMode = 'explicit'; g.channelInterpretation = 'speakers'; g.connect(p); p.connect(au.out); au.out.gain.value = 1; }
+    if (!au._set) { au._set = true; g.channelCount = 2; g.channelCountMode = 'explicit'; g.channelInterpretation = 'speakers'; g.connect(p); p.connect(au.out); }
     g.gain.value = k(f.intensity, 0, 1) * f.gain;
     p.coneOuterGain = k(f.coneOuterGain, 0, 1); p.coneInnerAngle = k(deg(f.coneInnerAngle), 0, 360); p.coneOuterAngle = k(deg(f.coneOuterAngle), 0, 360);
     p.distanceModel = BR.snd.types.SpatialSound.dist[f.distanceModel] || 'inverse';
     p.rolloffFactor = p.distanceModel === 'linear' ? Math.min(Math.max(f.rolloffFactor, 0), 1) : Math.max(f.rolloffFactor, 0);
     try { p.maxDistance = Math.max(f.maxDistance, 0); } catch (e) { /* Web Audio wants a maximum above 0: the old one stays */ }
     p.refDistance = Math.max(f.referenceDistance, 0); p.panningModel = f.enableHRTF ? 'HRTF' : 'equalpower';
-    const on = f.enabled !== false; au.out.disconnect(); if (on) au.out.connect(au.c.destination);
-    g.disconnect(); if (f.spatialize === false) { if (on) g.connect(au.c.destination); } else g.connect(p);
+    const on = f.enabled !== false, off = (a, b) => { try { a.disconnect(b); } catch (e) { /* it was not connected */ } };     // only its own routes: whatever else listens to these nodes stays connected
+    au.out.gain.value = on ? 1 : 0;     // a disabled node is silent at its output, not only at the speakers (so a listener on the node, as in X_ITE, hears nothing either)
+    off(au.out, au.c.destination); if (on) au.out.connect(au.c.destination);
+    off(g, au.c.destination); off(g, p); if (f.spatialize === false) { if (on) g.connect(au.c.destination); } else g.connect(p);
   },
 };

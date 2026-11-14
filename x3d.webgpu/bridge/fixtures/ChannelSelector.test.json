@@ -1,10 +1,7 @@
 {
  "node": "ChannelSelector",
- "mode": "events",
- "note": "channelSelection 0..31 (held to that range) makes a splitter with selection + 1 outputs, compared with X_ITE 16.6.0 together with the input stage. The selected sound is not compared.",
- "gaps": [
-  "a disabled selector passes all channels (as in X_ITE); only the splitter size is checked, the routing of the chosen output is not read back"
- ],
+ "mode": "scene",
+ "note": "channelSelection 0..31 (held to that range) makes a splitter with selection + 1 outputs, compared with X_ITE 16.6.0 together with the input stage. Signal compared with X_ITE 16.6.0 on the page's real Web Audio clock: a stereo signal (440 Hz in channel 0, 880 Hz in channel 1) goes through the selector: channelSelection 1 gives a pure 880 Hz (rms 0.7071) in the first channel and nothing in the second, channelSelection 0 a pure 440 Hz without any 880 Hz in it, a disabled selector passes both channels (440 Hz left, 880 Hz right), enabled again with selection 1 it is back to 880 Hz. Switched to scene mode for it.",
  "steps": [
   {
    "expect": [
@@ -461,6 +458,238 @@
     "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().audioDestination.channelInterpretation",
     "discrete"
    ]
+  },
+  {
+   "tap": [
+    "s",
+    "SSel",
+    "out",
+    {
+     "channels": 2
+    }
+   ]
+  },
+  {
+   "set": [
+    "SOA",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "set": [
+    "SOB",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "s",
+    "ch1",
+    {
+     "ch": 0,
+     "f0": 880,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      880,
+      2
+     ],
+     "h1": [
+      1,
+      0.03
+     ]
+    }
+   ]
+  },
+  {
+   "sig": [
+    "s",
+    "ch1b",
+    {
+     "ch": 1,
+     "from": -0.3
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "set": [
+    "SSel",
+    "channelSelection",
+    0
+   ]
+  },
+  {
+   "settle": 0.9
+  },
+  {
+   "sig": [
+    "s",
+    "ch0",
+    {
+     "ch": 0,
+     "f0": 440,
+     "harm": 2,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      440,
+      2
+     ],
+     "h1": [
+      1,
+      0.03
+     ],
+     "h2": [
+      0,
+      0.03
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SSel",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.9
+  },
+  {
+   "sig": [
+    "s",
+    "offL",
+    {
+     "ch": 0,
+     "f0": 440,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      440,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "sig": [
+    "s",
+    "offR",
+    {
+     "ch": 1,
+     "f0": 880,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      880,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SSel",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "set": [
+    "SSel",
+    "channelSelection",
+    1
+   ]
+  },
+  {
+   "settle": 0.9
+  },
+  {
+   "sig": [
+    "s",
+    "back",
+    {
+     "ch": 0,
+     "f0": 880,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      880,
+      2
+     ]
+    }
+   ]
   }
+ ],
+ "agree": [
+  [
+   "ch1.rms",
+   0.02
+  ],
+  [
+   "ch1.f0",
+   0.005
+  ],
+  [
+   "ch1b.rms",
+   0.0001
+  ],
+  [
+   "ch0.rms",
+   0.02
+  ],
+  [
+   "ch0.f0",
+   0.005
+  ],
+  [
+   "offL.rms",
+   0.02
+  ],
+  [
+   "offR.rms",
+   0.02
+  ],
+  [
+   "back.rms",
+   0.02
+  ]
+ ],
+ "scope": [
+  "only two channels are exercised; a selection past the channels of the input gives silence in Web Audio (not tested)"
  ]
 }
