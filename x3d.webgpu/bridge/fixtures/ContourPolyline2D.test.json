@@ -1,0 +1,158 @@
+{
+ "node": "ContourPolyline2D",
+ "mode": "events",
+ "note": "a polyline segment of a trimming contour: the control points are the points, in the three forms the users read (x y, x 0 y, x y 0); a point list set by an event shows at once",
+ "xsdAllow": [
+  "ContourPolyline2D"
+ ],
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('ContourPolyline2D').tessellate(__worlds.at(-1).nodes.find(n=>n.def==='P1'), 0))) : (((()=>{const a=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().tessellate(0, []); return a.flatMap(v=>typeof v==='number'?[v]:[v.x,v.y,v.z])})())))",
+    "P1t0"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('ContourPolyline2D').tessellate(__worlds.at(-1).nodes.find(n=>n.def==='P1'), 1))) : (((()=>{const a=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().tessellate(1, []); return a.flatMap(v=>typeof v==='number'?[v]:[v.x,v.y,v.z])})())))",
+    "P1t1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('ContourPolyline2D').tessellate(__worlds.at(-1).nodes.find(n=>n.def==='P1'), 2))) : (((()=>{const a=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().tessellate(2, []); return a.flatMap(v=>typeof v==='number'?[v]:[v.x,v.y,v.z])})())))",
+    "P1t2"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('ContourPolyline2D').tessellate(__worlds.at(-1).nodes.find(n=>n.def==='P2'), 0))) : (((()=>{const a=X3D.getBrowser('#c').currentScene.getNamedNode('P2').getValue().tessellate(0, []); return a.flatMap(v=>typeof v==='number'?[v]:[v.x,v.y,v.z])})())))",
+    "P2t0"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('ContourPolyline2D').tessellate(__worlds.at(-1).nodes.find(n=>n.def==='P2'), 1))) : (((()=>{const a=X3D.getBrowser('#c').currentScene.getNamedNode('P2').getValue().tessellate(1, []); return a.flatMap(v=>typeof v==='number'?[v]:[v.x,v.y,v.z])})())))",
+    "P2t1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('ContourPolyline2D').tessellate(__worlds.at(-1).nodes.find(n=>n.def==='P2'), 2))) : (((()=>{const a=X3D.getBrowser('#c').currentScene.getNamedNode('P2').getValue().tessellate(2, []); return a.flatMap(v=>typeof v==='number'?[v]:[v.x,v.y,v.z])})())))",
+    "P2t2"
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('ContourPolyline2D').tessellate(__worlds.at(-1).nodes.find(n=>n.def==='P1'), 0))) : (((()=>{const a=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().tessellate(0, []); return a.flatMap(v=>typeof v==='number'?[v]:[v.x,v.y,v.z])})())))",
+    [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1,
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('ContourPolyline2D').tessellate(__worlds.at(-1).nodes.find(n=>n.def==='P1'), 1))) : (((()=>{const a=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().tessellate(1, []); return a.flatMap(v=>typeof v==='number'?[v]:[v.x,v.y,v.z])})())))",
+    [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('ContourPolyline2D').tessellate(__worlds.at(-1).nodes.find(n=>n.def==='P1'), 2))) : (((()=>{const a=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().tessellate(2, []); return a.flatMap(v=>typeof v==='number'?[v]:[v.x,v.y,v.z])})())))",
+    [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     0
+    ]
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('ContourPolyline2D').tessellate(__worlds.at(-1).nodes.find(n=>n.def==='P3'), 0))) : (((()=>{const a=X3D.getBrowser('#c').currentScene.getNamedNode('P3').getValue().tessellate(0, []); return a.flatMap(v=>typeof v==='number'?[v]:[v.x,v.y,v.z])})())))",
+    []
+   ]
+  },
+  {
+   "jsn": [
+    "(async()=>{await eng.apply(()=>{node(\"P3\").controlPoint = eng.name===\"ours\" ? [[2,3],[4,5]] : new X.MFVec2d(new X.SFVec2d(2,3),new X.SFVec2d(4,5))}); return true})()",
+    true
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('ContourPolyline2D').tessellate(__worlds.at(-1).nodes.find(n=>n.def==='P3'), 0))) : (((()=>{const a=X3D.getBrowser('#c').currentScene.getNamedNode('P3').getValue().tessellate(0, []); return a.flatMap(v=>typeof v==='number'?[v]:[v.x,v.y,v.z])})())))",
+    [
+     2,
+     3,
+     4,
+     5
+    ]
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "P1t0",
+   1e-06
+  ],
+  [
+   "P1t1",
+   1e-06
+  ],
+  [
+   "P1t2",
+   1e-06
+  ],
+  [
+   "P2t0",
+   1e-06
+  ],
+  [
+   "P2t1",
+   1e-06
+  ],
+  [
+   "P2t2",
+   1e-06
+  ]
+ ],
+ "gaps": [],
+ "scope": [
+  "the node is data: nothing is drawn where it sits; the point list it gives to a Contour2D, a swung surface or a swept surface is what is compared, in both engines"
+ ]
+}

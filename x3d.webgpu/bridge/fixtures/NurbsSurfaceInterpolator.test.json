@@ -1,0 +1,590 @@
+{
+ "node": "NurbsSurfaceInterpolator",
+ "mode": "events",
+ "note": "point and unit normal of a NURBS surface at (u, v) fractions: a 4 x 3 bicubic-ish bump (orders 3 x 3 and 4 x 2 with explicit knots) at 7 fractions including out of range ones, corner points, a weighted quarter cylinder",
+ "xsdAllow": [],
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "set": [
+    "SA",
+    "set_fraction",
+    [
+     0,
+     0
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SA",
+    "position_changed",
+    "SAp0"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SA').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SAn0"
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "set_fraction",
+    [
+     1,
+     1
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SA",
+    "position_changed",
+    "SAp1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SA').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SAn1"
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "set_fraction",
+    [
+     0.5,
+     0.5
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SA",
+    "position_changed",
+    "SAp2"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SA').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SAn2"
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "set_fraction",
+    [
+     0.25,
+     0.8
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SA",
+    "position_changed",
+    "SAp3"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SA').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SAn3"
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "set_fraction",
+    [
+     1,
+     0
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SA",
+    "position_changed",
+    "SAp4"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SA').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SAn4"
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "set_fraction",
+    [
+     0,
+     1
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SA",
+    "position_changed",
+    "SAp5"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SA').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SAn5"
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "set_fraction",
+    [
+     -1,
+     2
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SA",
+    "position_changed",
+    "SAp6"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SA').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SAn6"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "set_fraction",
+    [
+     0,
+     0
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SB",
+    "position_changed",
+    "SBp0"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SB').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SBn0"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "set_fraction",
+    [
+     1,
+     1
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SB",
+    "position_changed",
+    "SBp1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SB').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SBn1"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "set_fraction",
+    [
+     0.5,
+     0.5
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SB",
+    "position_changed",
+    "SBp2"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SB').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SBn2"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "set_fraction",
+    [
+     0.25,
+     0.8
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SB",
+    "position_changed",
+    "SBp3"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SB').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SBn3"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "set_fraction",
+    [
+     1,
+     0
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SB",
+    "position_changed",
+    "SBp4"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SB').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SBn4"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "set_fraction",
+    [
+     0,
+     1
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SB",
+    "position_changed",
+    "SBp5"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SB').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SBn5"
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "set_fraction",
+    [
+     -1,
+     2
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "record": [
+    "SB",
+    "position_changed",
+    "SBp6"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const v=plain(node('SB').normal_changed);const l=Math.hypot(v[0],v[1],v[2])||1;return v.map(x=>x/l)})()",
+    "SBn6"
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "set_fraction",
+    [
+     0,
+     0
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "nearv": [
+    "SA",
+    "position_changed",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "set_fraction",
+    [
+     1,
+     1
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "nearv": [
+    "SA",
+    "position_changed",
+    [
+     3,
+     2,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "set_fraction",
+    [
+     0.5,
+     0.5
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "only": "ours",
+   "jsn": [
+    "(()=>{const v=plain(node('SA').normal_changed);return Math.round(Math.hypot(v[0],v[1],v[2])*1e6)/1e6})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "jsn": [
+    "(()=>{const v=plain(node('SA').normal_changed);return Math.hypot(v[0],v[1],v[2])>1.5})()",
+    true
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "set_fraction",
+    [
+     0.5,
+     0.25
+    ],
+    "SFVec2f"
+   ]
+  },
+  {
+   "only": "ours",
+   "nearv": [
+    "SW",
+    "position_changed",
+    [
+     0.7071067811865476,
+     0.7071067811865476,
+     0.25
+    ],
+    1e-06
+   ]
+  },
+  {
+   "only": "ours",
+   "nearv": [
+    "SW",
+    "normal_changed",
+    [
+     0.7071067811865476,
+     0.7071067811865476,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "only": "xite",
+   "nearv": [
+    "SW",
+    "position_changed",
+    [
+     0.75,
+     0.75,
+     0.25
+    ],
+    0.0001
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "SAp0",
+   1e-05
+  ],
+  [
+   "SAn0",
+   1e-05
+  ],
+  [
+   "SAp1",
+   1e-05
+  ],
+  [
+   "SAn1",
+   1e-05
+  ],
+  [
+   "SAp2",
+   1e-05
+  ],
+  [
+   "SAn2",
+   1e-05
+  ],
+  [
+   "SAp3",
+   1e-05
+  ],
+  [
+   "SAn3",
+   1e-05
+  ],
+  [
+   "SAp4",
+   1e-05
+  ],
+  [
+   "SAn4",
+   1e-05
+  ],
+  [
+   "SAp5",
+   1e-05
+  ],
+  [
+   "SAn5",
+   1e-05
+  ],
+  [
+   "SAp6",
+   1e-05
+  ],
+  [
+   "SAn6",
+   1e-05
+  ],
+  [
+   "SBp0",
+   1e-05
+  ],
+  [
+   "SBn0",
+   1e-05
+  ],
+  [
+   "SBp1",
+   1e-05
+  ],
+  [
+   "SBn1",
+   1e-05
+  ],
+  [
+   "SBp2",
+   1e-05
+  ],
+  [
+   "SBn2",
+   1e-05
+  ],
+  [
+   "SBp3",
+   1e-05
+  ],
+  [
+   "SBn3",
+   1e-05
+  ],
+  [
+   "SBp4",
+   1e-05
+  ],
+  [
+   "SBn4",
+   1e-05
+  ],
+  [
+   "SBp5",
+   1e-05
+  ],
+  [
+   "SBn5",
+   1e-05
+  ],
+  [
+   "SBp6",
+   1e-05
+  ],
+  [
+   "SBn6",
+   1e-05
+  ]
+ ],
+ "gaps": [
+  "weights: X_ITE 16.6.0 leaves the weights out of position_changed (0.75, 0.75, 0.25 at the middle of the quarter cylinder; the exact value is 0.7071, 0.7071, 0.25); this node follows the standard",
+  "normal_changed is a unit vector here; X_ITE 16.6.0 sends the cross product dS/du x dS/dv (same direction, the length of the cross product); the directions agree to 1e-5 and are what is compared",
+  "the surface is open (no uClosed / vClosed on the node)"
+ ],
+ "scope": [
+  "the point and the normal are read as the output events through the SAI; the normals compare as directions (normalised in the page, since the engines scale them differently)"
+ ]
+}

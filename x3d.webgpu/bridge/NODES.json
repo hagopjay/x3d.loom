@@ -686,10 +686,10 @@
    "inherits": "X3DNode",
    "container": "trimmingContour",
    "nfields": 4,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 44,
+   "receipt": "receipts/Contour2D.json",
+   "note": "a Contour2D draws nothing by itself; what is compared is the run of u-v points a NurbsTrimmedSurface would read (X_ITE addTrimmingContour with no offset and unit scale, ours spec.contour), the list order and the add / remove rules",
    "rank": 204
   },
   "ContourPolyline2D": {
@@ -699,10 +699,10 @@
    "inherits": "X3DNurbsControlCurveNode",
    "container": "children",
    "nfields": 2,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "bridged",
+   "batch": 44,
+   "receipt": "receipts/ContourPolyline2D.json",
+   "note": "the node is data: nothing is drawn where it sits; the point list it gives to a Contour2D, a swung surface or a swept surface is what is compared, in both engines",
    "rank": 200
   },
   "Convolver": {
@@ -1960,10 +1960,10 @@
    "inherits": "X3DParametricGeometryNode",
    "container": "geometry",
    "nfields": 7,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 44,
+   "receipt": "receipts/NurbsCurve.json",
+   "note": "weights: X_ITE 16.6.0 draws a weighted curve with the weights applied wrongly (a quarter circle of radius up to 1.24); this node follows the standard (radius 1 to 1e-5), so a weighted curve is only checked in this engine and X_ITE only records its own measure; line width is one pixel in both engines (the body draws an anti-aliased ribbon of the same width); the control points are Coordinate or CoordinateDouble; GeoCoordinate is not read as a control point",
    "rank": 193
   },
   "NurbsCurve2D": {
@@ -1973,10 +1973,10 @@
    "inherits": "X3DNurbsControlCurveNode",
    "container": "children",
    "nfields": 7,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 44,
+   "receipt": "receipts/NurbsCurve2D.json",
+   "note": "weights: X_ITE 16.6.0 gives a weighted curve the radius 1.24 where a rational B-spline has 1.00 (the weights are not applied as homogeneous coordinates); this node follows the standard, the quarter circle is exact to 1e-5; tessellate(type) is the node's own reading; a trimmed surface (NurbsTrimmedSurface, a later batch) is what draws a contour",
    "rank": 201
   },
   "NurbsOrientationInterpolator": {
@@ -1986,10 +1986,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 7,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 44,
+   "receipt": "receipts/NurbsOrientationInterpolator.json",
+   "note": "weights: the direction of a weighted curve is the derivative of the rational curve here; X_ITE 16.6.0 ignores the weights, so for a weighted curve only this engine is checked (against the exact circle tangent); a curve with zero derivative at the fraction (all control points equal, a stopped point) raises no event here; X_ITE normalises a zero vector (undefined)",
    "rank": 194
   },
   "NurbsPatchSurface": {
@@ -1999,10 +1999,10 @@
    "inherits": "X3DNurbsSurfaceGeometryNode",
    "container": "geometry",
    "nfields": 15,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 44,
+   "receipt": "receipts/NurbsPatchSurface.json",
+   "note": "normals: this node draws the analytic normal dS/du x dS/dv at every grid point; X_ITE 16.6.0 averages face normals inside an 85 degree crease, so at low tessellation its shading is faceted where ours is smooth (measured largest component difference 0.21 at 12 x 12 cells and 0.28 at 8 x 8, compared at 0.3); weights: X_ITE 16.6.0 does not apply them as a rational surface needs (the quarter cylinder reaches radius 1.24); this node follows the standard (radius 1 to 1e-5), checked in this engine only; solid FALSE seen from behind: X_ITE 16.6.0 lights the back face, the Babylon body draws a counter-clockwise face seen from behind black (the same for an IndexedFaceSet with solid FALSE, measured in a two-quad fixture: 9312 against 19012 drawn pixels); the patch P6 is therefore off screen and only its triangles are compared; a closed surface (uClosed): positions, texture coordinates and the triangles agree with X_ITE; the shading is smooth across the seam here, X_ITE leaves a seam in its normals (its own source says \"TODO: handle uClosed\"); NurbsTextureCoordinate as texCoord is a later batch (a TextureCoordinate with one point per control point is supported and compared)",
    "rank": 195
   },
   "NurbsPositionInterpolator": {
@@ -2012,10 +2012,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 7,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 44,
+   "receipt": "receipts/NurbsPositionInterpolator.json",
+   "note": "weights: X_ITE 16.6.0 returns the unweighted B-spline point (0.75, 0.75, 0) where a rational B-spline has (0.7071, 0.7071, 0); this node follows the standard (the weighted quarter circle is exact to 1e-6); the curve is open (the node has no closed field): a closed loop needs its own start point repeated and ends on it; X_ITE 16.6.0 throws TypeError (reading domain of undefined) when set_fraction reaches an interpolator whose curve is invalid (order 4 with three control points) and the page stops answering; the bridge raises no event, so that case is only sent to this engine",
    "rank": 196
   },
   "NurbsSet": {
@@ -2025,10 +2025,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 9,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 44,
+   "receipt": "receipts/NurbsSet.json",
+   "note": "a scale of 0 or below leaves X_ITE 16.6.0 with 0 segments (NaN vertices); here the surface keeps one cell; the set draws nothing itself in either engine: the surfaces are drawn by the Shapes that hold them; bboxSize / bboxCenter / bboxDisplay / visible are kept as field values and do not move anything (X_ITE 16.6.0 uses the bbox of the surfaces for culling only); NurbsTrimmedSurface (a later batch) joins the set the same way (the scale code names it already)",
    "rank": 199
   },
   "NurbsSurfaceInterpolator": {
@@ -2038,10 +2038,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 12,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 44,
+   "receipt": "receipts/NurbsSurfaceInterpolator.json",
+   "note": "weights: X_ITE 16.6.0 leaves the weights out of position_changed (0.75, 0.75, 0.25 at the middle of the quarter cylinder; the exact value is 0.7071, 0.7071, 0.25); this node follows the standard; normal_changed is a unit vector here; X_ITE 16.6.0 sends the cross product dS/du x dS/dv (same direction, the length of the cross product); the directions agree to 1e-5 and are what is compared; the surface is open (no uClosed / vClosed on the node)",
    "rank": 197
   },
   "NurbsSweptSurface": {
@@ -2064,10 +2064,10 @@
    "inherits": "X3DParametricGeometryNode",
    "container": "geometry",
    "nfields": 5,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 44,
+   "receipt": "receipts/NurbsSwungSurface.json",
+   "note": "the frame at an interior spine point: this node (like the Library hall Extrusion) takes the Y axis along the chord spine[i+1] - spine[i-1], which is how the standard words it (Likely: read from memory of 19775-1 13.3.5, the text itself is not in the repository); X_ITE 16.6.0 takes the bisector of the two unit vectors. The two are the same for an evenly spaced spine (octagon trajectory: 1.2e-7) and differ by up to 0.017 in the 2.2 unit vase whose spine points are unevenly spaced (compared at 0.02); solid FALSE seen from behind: X_ITE 16.6.0 lights the back face, the Babylon body draws it black (the same gap as the patch and IndexedFaceSet); the two sided swung surface here is seen from the front; no scale, orientation or caps (the NURBS nodes have none); texture coordinates run 0..1 along the profile (s) and the trajectory (t), the same numbers as X_ITE; the normals are smoothed over every shared vertex (crease angle pi, as X_ITE sets it): the shading agrees in the pictures (mean colour within 10 of 255, picture difference about 3 of 255), not per vertex",
    "rank": 203
   },
   "NurbsTextureCoordinate": {
