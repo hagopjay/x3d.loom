@@ -1,0 +1,58 @@
+{
+ "node": "Transform",
+ "mode": "scene",
+ "note": "a Transform with a scale orientation: a non-uniform scale turned by scaleOrientation shears the box, then the box is moved by an event",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     1,
+     0.5,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T",
+    "translation",
+    [
+     1,
+     0.5,
+     0
+    ]
+   ]
+  },
+  {
+   "shot": "moved"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 3,
+   "fg": 10
+  },
+  "moved": {
+   "iou": 0.97,
+   "mad": 3,
+   "fg": 10
+  }
+ },
+ "scope": [
+  "the Babylon body decomposes a Transform with scaleOrientation to TRS and drops the shear; the three.js body keeps the whole matrix"
+ ]
+}

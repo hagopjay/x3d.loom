@@ -1,0 +1,79 @@
+{
+ "node": "DirectionalLight",
+ "mode": "scene",
+ "note": "a world light turned by a Transform above it, and a light switched off through its on field; the headlight is off",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "T",
+    "rotation",
+    [
+     0,
+     1,
+     0,
+     1.2
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "turned"
+  },
+  {
+   "set": [
+    "T",
+    "rotation",
+    [
+     0,
+     1,
+     0,
+     0
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "set": [
+    "D",
+    "on",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "off"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 3,
+   "fg": 10
+  },
+  "turned": {
+   "iou": 0.97,
+   "mad": 3,
+   "fg": 10
+  },
+  "off": {
+   "empty": true
+  }
+ },
+ "gaps": [
+  "light with global=FALSE lights the whole scene here (X3D: only its parent group); three.js has no per-group light inclusion, a layers mask is the planned route",
+  "material ambientIntensity is a fixed 0.2 in the shared ambient light; per-material values are not read yet"
+ ]
+}

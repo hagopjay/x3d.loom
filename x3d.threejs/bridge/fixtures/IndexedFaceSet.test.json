@@ -1,0 +1,24 @@
+{
+ "node": "IndexedFaceSet",
+ "mode": "scene",
+ "note": "a flat-shaded pyramid from an IndexedFaceSet (quad base, four triangles, ccw), with per-vertex colours on a second copy",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 3,
+   "fg": 10
+  }
+ },
+ "gaps": [
+  "colorPerVertex colours are the vertex colours three.js multiplies into the diffuse colour (the X3D rule replaces diffuseColor; here diffuse is white so the two agree)"
+ ]
+}

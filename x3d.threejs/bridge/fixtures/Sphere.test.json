@@ -1,0 +1,24 @@
+{
+ "node": "Sphere",
+ "mode": "scene",
+ "note": "a lit sphere with a specular highlight, and a second sphere with emissive colour and 50 percent transparency in front of a box",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 3,
+   "fg": 10
+  }
+ },
+ "gaps": [
+  "transparent shapes are drawn in three.js sort order (back to front by object centre); X_ITE sorts the same way, differences show only where shapes interpenetrate"
+ ]
+}
