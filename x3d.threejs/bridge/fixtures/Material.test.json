@@ -1,0 +1,25 @@
+{
+ "node": "Material",
+ "mode": "scene",
+ "note": "specular, emissive and transparency of Material, and a PhysicalMaterial sphere (metallic 1, roughness 0.3, glTF model)",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.85,
+   "mad": 3,
+   "fg": 20
+  }
+ },
+ "gaps": [
+  "PhysicalMaterial without an environment: a fully metallic surface reflects nothing, so it is nearly black in both engines; the three.js body has an environment path (RoomEnvironment or EnvironmentLight) planned"
+ ],
+ "lookNote": "PhysicalMaterial sphere: X_ITE adds a default environment glow that three.js has no counterpart for without an environment map; the bound is wide on purpose and the difference is a quality choice, not a defect"
+}

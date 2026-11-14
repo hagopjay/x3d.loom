@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="DirectionalLight.x3d"/><meta name="description" content="a world light turned by a Transform above it, and a light switched off through its on field; the headlight is off"/></head>
+  <Scene>
+    <NavigationInfo headlight="false"/>
+    <Viewpoint position="0 0 8"/>
+    <Transform DEF="T"><DirectionalLight DEF="D" global="true" direction="0 0 -1" color="1 0.9 0.8" intensity="1" ambientIntensity="0.4"/></Transform>
+    <Transform translation="-2.2 1.2 0"><Shape><Appearance><Material diffuseColor="0.2 0.5 0.9" specularColor="0.6 0.6 0.6" shininess="0.3"/></Appearance><Sphere radius="1.2"/></Shape></Transform>
+    <Transform translation="2.2 1.2 0"><Shape><Appearance><Material diffuseColor="0.9 0.4 0.2" /></Appearance><Sphere radius="1.2"/></Shape></Transform>
+    <Transform translation="0 -1.6 0"><Shape><Appearance><Material diffuseColor="0.8 0.8 0.8" /></Appearance><Box size="2.4 1.2 1.2"/></Shape></Transform>
+  </Scene>
+</X3D>

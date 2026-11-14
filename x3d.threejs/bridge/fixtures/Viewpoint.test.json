@@ -1,0 +1,43 @@
+{
+ "node": "Viewpoint",
+ "mode": "scene",
+ "note": "fieldOfView, position and orientation of a Viewpoint, and a second Viewpoint bound through set_bind",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "V2",
+    "set_bind",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "shot": "second"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 3,
+   "fg": 10
+  },
+  "second": {
+   "iou": 0.97,
+   "mad": 3,
+   "fg": 10
+  }
+ },
+ "gaps": [
+  "the transition to the second Viewpoint runs on the real clock in both engines; the shot waits it out (NavigationInfo transitionTime default 1 s)"
+ ]
+}
