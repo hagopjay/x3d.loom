@@ -1,10 +1,7 @@
 {
  "node": "Gain",
  "mode": "scene",
- "note": "the whole node is its input stage: gain, channelCount held to 1..32, channelCountMode, channelInterpretation, compared with X_ITE 16.6.0; a disabled Gain passes the signal at gain 1. Start and stop on the real clock.",
- "gaps": [
-  "a Gain has no Web Audio node of its own beyond the input stage (as in X_ITE)"
- ],
+ "note": "the whole node is its input stage: gain, channelCount held to 1..32, channelCountMode, channelInterpretation, compared with X_ITE 16.6.0; a disabled Gain passes the signal at gain 1. Start and stop on the real clock. Signal compared with X_ITE 16.6.0 and with the analytic level on the page's real Web Audio clock (one recording with the source and the two Gains as channels, sample aligned): a 1 kHz sine (rms 0.7071) through a Gain of 0.25 comes out at rms 0.1768 and correlates with the source at +1; two Gains of 0.5 in a row give the same 0.25; gain 2 doubles it, gain 0 is silent, gain -1 keeps the level and inverts the phase (correlation -1); enabled = false passes the signal at gain 1, not blocked; set back to enabled the gain applies again (0.5).",
  "steps": [
   {
    "expect": [
@@ -381,6 +378,286 @@
     "isActive",
     false
    ]
+  },
+  {
+   "tap": [
+    "g",
+    [
+     "SO",
+     "SG",
+     "SG2"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "set": [
+    "SO2",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1.2
+  },
+  {
+   "sig": [
+    "g",
+    "so",
+    {
+     "ch": 0
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "sig": [
+    "g",
+    "g25",
+    {
+     "ch": 1,
+     "ref": "g",
+     "refCh": 0
+    },
+    {
+     "rms": [
+      0.1767766952966369,
+      0.01
+     ],
+     "f0": [
+      1000,
+      3
+     ],
+     "corr": [
+      1,
+      0.02
+     ],
+     "lag": [
+      0,
+      0.0003
+     ]
+    }
+   ]
+  },
+  {
+   "sig": [
+    "g",
+    "g25b",
+    {
+     "ch": 2
+    },
+    {
+     "rms": [
+      0.1767766952966369,
+      0.01
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SG",
+    "gain",
+    2
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "g",
+    "g2",
+    {
+     "ch": 1,
+     "ref": "g",
+     "refCh": 0
+    },
+    {
+     "rms": [
+      1.4142135623730951,
+      0.03
+     ],
+     "corr": [
+      1,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SG",
+    "gain",
+    0
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "g",
+    "g0",
+    {
+     "ch": 1
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "set": [
+    "SG",
+    "gain",
+    -1
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "g",
+    "gm1",
+    {
+     "ch": 1,
+     "ref": "g",
+     "refCh": 0
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "corr": [
+      -1,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SG",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "g",
+    "off",
+    {
+     "ch": 1,
+     "ref": "g",
+     "refCh": 0
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "corr": [
+      1,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SG",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "set": [
+    "SG",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "g",
+    "g5",
+    {
+     "ch": 1,
+     "ref": "g",
+     "refCh": 0
+    },
+    {
+     "rms": [
+      0.3535533905932738,
+      0.02
+     ],
+     "corr": [
+      1,
+      0.02
+     ]
+    }
+   ]
   }
+ ],
+ "agree": [
+  [
+   "g25.rms",
+   0.01
+  ],
+  [
+   "g25.corr",
+   0.02
+  ],
+  [
+   "g25b.rms",
+   0.01
+  ],
+  [
+   "g2.rms",
+   0.03
+  ],
+  [
+   "g0.rms",
+   0.0001
+  ],
+  [
+   "gm1.rms",
+   0.02
+  ],
+  [
+   "gm1.corr",
+   0.02
+  ],
+  [
+   "off.rms",
+   0.02
+  ],
+  [
+   "g5.rms",
+   0.02
+  ]
+ ],
+ "scope": [
+  "a Gain has no Web Audio node of its own beyond the input stage (as in X_ITE); channelCount, channelCountMode and channelInterpretation are compared as settings, not as a channel mix with a multichannel signal (the ChannelMerger test does that)"
  ]
 }

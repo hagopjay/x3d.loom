@@ -20,6 +20,9 @@ contract has a stable code (law 19), checked in this order; the first broken one
   PHYS_SCHEMA               not a loom.physics-run/1 record, or a required field is missing or malformed
   PHYS_NO_RUNS              nothing to judge (a pass over nothing is not a pass, law 36)
   PHYS_MODEL_STALE          the model file's sha256 is not the one the run was recorded on (law 17)
+  PHYS_LIMITS_UNPROVEN      a record names a committed limits file (`limits`: path, commit, sha256) that git cannot confirm: the
+                            commit is missing or not an ancestor of HEAD, its bytes are not the sha256 stated, or a declared limit
+                            appears nowhere in that committed file (law 44)
   PHYS_TRACE_TAMPERED       the recorded per-step hashes do not hash to the trace_sha256 the record states
   PHYS_REPLAY_MISSING       a required host has no replay (cross-engine determinism is claimed per host, law 42)
   PHYS_REPLAY_STEPS         a replay ran a different number of steps than the recording
@@ -44,6 +47,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 from .core import GateError, InstrumentError, need
@@ -63,6 +67,58 @@ def _num(x) -> bool:
 
 def _holds(item: dict) -> bool:
     return item["observed"] <= item["limit"] if item.get("rule", "at most") == "at most" else item["observed"] >= item["limit"]
+
+
+def _numbers(x) -> set:
+    """Every number found anywhere in a parsed JSON value."""
+    if isinstance(x, bool):
+        return set()
+    if isinstance(x, (int, float)):
+        return {x}
+    if isinstance(x, dict):
+        return set().union(*[_numbers(v) for v in x.values()]) if x else set()
+    if isinstance(x, list):
+        return set().union(*[_numbers(v) for v in x]) if x else set()
+    return set()
+
+
+def _git(root: Path, *args: str) -> subprocess.CompletedProcess:
+    try:
+        return subprocess.run(["git", "-C", str(root), *args], capture_output=True, check=False)
+    except OSError as e:
+        raise InstrumentError(f"cannot run git to confirm the committed limits: {e}") from None
+
+
+def check_limits(run: dict, root: Path) -> None:
+    """Law 44: limits committed BEFORE the run, provable from history rather than from the record's own say-so.
+
+    A record may carry `limits` = {path, commit, sha256}. Git must show: that commit exists and is an ancestor of HEAD;
+    the file at that commit has the stated sha256; and every reference's or tolerance's declared limit is a number that
+    occurs in that committed file. What this does not prove: that the commit is older than the run (a commit date is
+    editable), nor that history was not rewritten by the repository's owner."""
+    rid = run.get("id")
+    lim = run.get("limits")
+    if lim is None:
+        return
+    need(isinstance(lim, dict) and all(isinstance(lim.get(k), str) and lim.get(k) for k in ("path", "commit", "sha256")),
+         "PHYS_SCHEMA", f"{rid}: limits needs path, commit and sha256")
+    if _git(root, "rev-parse", "--is-inside-work-tree").returncode != 0:
+        raise InstrumentError(f"{rid}: the record names committed limits but {root} is not a git checkout")
+    obj = _git(root, "cat-file", "blob", f"{lim['commit']}:{lim['path']}")
+    need(obj.returncode == 0, "PHYS_LIMITS_UNPROVEN", f"{rid}: git has no {lim['path']} at {lim['commit'][:12]}")
+    need(_git(root, "merge-base", "--is-ancestor", lim["commit"], "HEAD").returncode == 0, "PHYS_LIMITS_UNPROVEN",
+         f"{rid}: {lim['commit'][:12]} is not an ancestor of HEAD")
+    need(hashlib.sha256(obj.stdout).hexdigest() == lim["sha256"], "PHYS_LIMITS_UNPROVEN",
+         f"{rid}: {lim['path']} at {lim['commit'][:12]} is not the file the record names")
+    try:
+        nums = _numbers(json.loads(obj.stdout.decode("utf-8")))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        nums = None
+    if nums is not None:   # a committed limits file that is not JSON is covered by the hash alone
+        for it in (run.get("references") or []) + (run.get("tolerances") or []):
+            if isinstance(it, dict) and _num(it.get("limit")):
+                d = it.get("declared_limit", it["limit"])
+                need(d in nums, "PHYS_LIMITS_UNPROVEN", f"{rid}: {it.get('id')} declares limit {d}, which is not in the committed {lim['path']}")
 
 
 def load(path: Path) -> dict:
@@ -92,6 +148,10 @@ def check_run(run: dict, root: Path | None = None, required_hosts: list[str] | N
         need(p.is_file(), "PHYS_MODEL_STALE", f"{rid}: {model['path']} is missing")
         now = hashlib.sha256(p.read_bytes()).hexdigest()
         need(now == model["sha256"], "PHYS_MODEL_STALE", f"{rid}: recorded on {model['sha256'][:12]}, {model['path']} is now {now[:12]}")
+
+    # 1b. limits committed before the run, if the record says so (law 44)
+    if root is not None:
+        check_limits(run, Path(root))
 
     # 2. the recorded trace is what it says it is
     if "hashes" in rec:

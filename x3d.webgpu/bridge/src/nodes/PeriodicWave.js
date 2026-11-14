@@ -13,7 +13,8 @@ BR.node('PeriodicWave', {
   },
   /* A waveform for an OscillatorSource: type SINE, SQUARE (the default), SAWTOOTH, TRIANGLE or CUSTOM; CUSTOM is built from optionsReal and optionsImag (the cosine and sine terms, at least
      two each). createPeriodicWave() is what the oscillator calls (kept on the node, as in X_ITE 16.6.0); its arrays are real and imag. */
-  init(n) {
+  init(n, w) {
+    n._w = w;                                     // the wave finds the oscillators of its world to tell them about a change
     n.real = new Float32Array(2); n.imag = new Float32Array(2);
     n.createPeriodicWave = () => {
       const c = BR.audio.ctx(), re = n.f.optionsReal || [], im = n.f.optionsImag || [], len = Math.max(re.length, im.length, 2);

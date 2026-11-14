@@ -32,11 +32,13 @@
    "inherits": "X3DSoundProcessingNode",
    "container": "children",
    "nfields": 21,
-   "status": "gap",
-   "batch": 13,
+   "status": "bridged",
+   "batch": 38,
    "receipt": "receipts/Analyser.json",
-   "note": "the data outputs are only fed while the node is active and a Web Audio context exists; nothing is wired into the analyser yet (the Sound children of this node come with the rest of the Sound group); minDecibels, maxDecibels and smoothingTimeConstant go to the audio node when it is made; changing them while it runs is not applied until the next start",
-   "rank": 130
+   "note": "the data outputs are filled once per frame while the node is active (the test rig draws about 3 frames per second in our reader); the window is the last fftSize samples at that moment, so single samples are not compared between the engines, only rms, frequency and the peak bin; smoothingTimeConstant is read back from the audio node, not measured as a time response; the noise floor of the spectrum (bins away from the peak) is not compared",
+   "rank": 130,
+   "prev_batch": 13,
+   "prev_note": "the data outputs are only fed while the node is active and a Web Audio context exists; nothing is wired into the analyser yet (the Sound children of this node come with the rest of the Sound group); minDecibels, maxDecibels and smoothingTimeConstant go to the audio node when it is made; changing them while it runs is not applied until the next start"
   },
   "Anchor": {
    "component": "Networking",
@@ -849,11 +851,13 @@
    "inherits": "X3DSoundProcessingNode",
    "container": "children",
    "nfields": 18,
-   "status": "gap",
-   "batch": 15,
+   "status": "bridged",
+   "batch": 38,
    "receipt": "receipts/Delay.json",
    "note": "Web Audio takes a maximum above 0 and below 180 s; X_ITE throws outside that, the bridge holds maxDelayTime to 0.001..179.999 (not tested, since X_ITE cannot be asked)",
-   "rank": 138
+   "rank": 138,
+   "prev_batch": 15,
+   "prev_note": "Web Audio takes a maximum above 0 and below 180 s; X_ITE throws outside that, the bridge holds maxDelayTime to 0.001..179.999 (not tested, since X_ITE cannot be asked)"
   },
   "DirectionalLight": {
    "component": "Lighting",
@@ -1078,11 +1082,13 @@
    "inherits": "X3DSoundProcessingNode",
    "container": "children",
    "nfields": 16,
-   "status": "gap",
-   "batch": 15,
+   "status": "bridged",
+   "batch": 38,
    "receipt": "receipts/Gain.json",
-   "note": "a Gain has no Web Audio node of its own beyond the input stage (as in X_ITE)",
-   "rank": 140
+   "note": "a Gain has no Web Audio node of its own beyond the input stage (as in X_ITE); channelCount, channelCountMode and channelInterpretation are compared as settings, not as a channel mix with a multichannel signal (the ChannelMerger test does that)",
+   "rank": 140,
+   "prev_batch": 15,
+   "prev_note": "a Gain has no Web Audio node of its own beyond the input stage (as in X_ITE)"
   },
   "GeneratedCubeMapTexture": {
    "component": "CubeMapTexturing",
@@ -2144,11 +2150,13 @@
    "inherits": "X3DSoundSourceNode",
    "container": "children",
    "nfields": 14,
-   "status": "gap",
-   "batch": 16,
+   "status": "bridged",
+   "batch": 38,
    "receipt": "receipts/OscillatorSource.json",
-   "note": "pause stops the tone (30 ms fade) and resume starts a new one, as in X_ITE; the four extra OscillatorSources are only there to hold the waves for the test",
-   "rank": 143
+   "note": "pause stops the tone (30 ms fade) and resume starts a new one, as in X_ITE; the four extra OscillatorSources are only there to hold the waves for the test; the tone is measured by rms, frequency and harmonic amplitude (Hann window, exact frequency), not sample by sample, because the two engines run on separate real time audio clocks; the exact phase and the start instant (which follows the 3 frames per second of the rig in our reader) are not compared",
+   "rank": 143,
+   "prev_batch": 16,
+   "prev_note": "pause stops the tone (30 ms fade) and resume starts a new one, as in X_ITE; the four extra OscillatorSources are only there to hold the waves for the test"
   },
   "PackagedShader": {
    "component": "Shaders",
@@ -2183,11 +2191,13 @@
    "inherits": "X3DSoundNode",
    "container": "periodicWave",
    "nfields": 6,
-   "status": "gap",
-   "batch": 16,
+   "status": "bridged",
+   "batch": 38,
    "receipt": "receipts/PeriodicWave.json",
-   "note": "the waveform is only used through an OscillatorSource; the type to wave-type mapping is tested there",
-   "rank": 144
+   "note": "the wave only sounds through an OscillatorSource; disableNormalization is not a field of this node in X3D 4.0 (Web Audio normalises, as in X_ITE)",
+   "rank": 144,
+   "prev_batch": 16,
+   "prev_note": "the waveform is only used through an OscillatorSource; the type to wave-type mapping is tested there"
   },
   "PhysicalMaterial": {
    "component": "Shape",
