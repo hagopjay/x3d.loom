@@ -3,5 +3,8 @@
   <head><component name="Sound" level="2"/><meta name="title" content="Analyser.x3d"/><meta name="description" content="Bridge fixture for Analyser: field defaults, fftSize to frequencyBinCount, and the start, pause, resume and stop clock"/></head>
   <Scene>
     <Analyser DEF="N"/>
+    <Analyser DEF="SA" fftSize="2048" smoothingTimeConstant="0" minDecibels="-100" maxDecibels="0">
+      <OscillatorSource DEF="SO" frequency="1000"><PeriodicWave type="SINE"/></OscillatorSource>
+    </Analyser>
   </Scene>
 </X3D>

@@ -1,10 +1,7 @@
 {
  "node": "Delay",
  "mode": "scene",
- "note": "delayTime is held to 0..maxDelayTime on the Web Audio delay, a new maxDelayTime builds a new delay line, compared with X_ITE 16.6.0 together with the input stage; start and stop on the real clock. The delayed sound is not compared.",
- "gaps": [
-  "Web Audio takes a maximum above 0 and below 180 s; X_ITE throws outside that, the bridge holds maxDelayTime to 0.001..179.999 (not tested, since X_ITE cannot be asked)"
- ],
+ "note": "delayTime is held to 0..maxDelayTime on the Web Audio delay, a new maxDelayTime builds a new delay line, compared with X_ITE 16.6.0 together with the input stage; start and stop on the real clock. Signal compared with X_ITE 16.6.0 on the page's real Web Audio clock: the start of a 1 kHz sine is recorded before and after the Delay in one two channel recording (so the two are sample aligned) and the lag between the two onsets is the delay: 0.1 s, then 0.25 s, then 0 after delayTime is changed while it runs, and 0.4 s when a delayTime of 0.5 is held to a maxDelayTime of 0.4 (the delay line is rebuilt, as in X_ITE); the delayed tone keeps its level (rms 0.7071).",
  "steps": [
   {
    "expect": [
@@ -495,6 +492,271 @@
     "isActive",
     false
    ]
+  },
+  {
+   "tap": [
+    "d1",
+    [
+     "SO",
+     "SD"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.9
+  },
+  {
+   "sig": [
+    "d1",
+    "d1",
+    {
+     "ch": 1,
+     "ref": "d1",
+     "refCh": 0
+    },
+    {
+     "lag": [
+      0.1,
+      0.004
+     ],
+     "rms": [
+      0.7071067811865476,
+      0.03
+     ]
+    }
+   ]
+  },
+  {
+   "untap": "d1"
+  },
+  {
+   "set": [
+    "SO",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "set": [
+    "SD",
+    "delayTime",
+    0.25
+   ]
+  },
+  {
+   "tap": [
+    "d2",
+    [
+     "SO",
+     "SD"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.9
+  },
+  {
+   "sig": [
+    "d2",
+    "d2",
+    {
+     "ch": 1,
+     "ref": "d2",
+     "refCh": 0
+    },
+    {
+     "lag": [
+      0.25,
+      0.004
+     ],
+     "rms": [
+      0.7071067811865476,
+      0.03
+     ]
+    }
+   ]
+  },
+  {
+   "untap": "d2"
+  },
+  {
+   "set": [
+    "SO",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "set": [
+    "SD",
+    "delayTime",
+    0
+   ]
+  },
+  {
+   "tap": [
+    "d3",
+    [
+     "SO",
+     "SD"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.9
+  },
+  {
+   "sig": [
+    "d3",
+    "d3",
+    {
+     "ch": 1,
+     "ref": "d3",
+     "refCh": 0
+    },
+    {
+     "lag": [
+      0.0,
+      0.004
+     ],
+     "rms": [
+      0.7071067811865476,
+      0.03
+     ]
+    }
+   ]
+  },
+  {
+   "untap": "d3"
+  },
+  {
+   "set": [
+    "SO",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "set": [
+    "SD",
+    "delayTime",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "SD",
+    "maxDelayTime",
+    0.4
+   ]
+  },
+  {
+   "tap": [
+    "d4",
+    [
+     "SO",
+     "SD"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.9
+  },
+  {
+   "sig": [
+    "d4",
+    "d4",
+    {
+     "ch": 1,
+     "ref": "d4",
+     "refCh": 0
+    },
+    {
+     "lag": [
+      0.4,
+      0.004
+     ],
+     "rms": [
+      0.7071067811865476,
+      0.03
+     ]
+    }
+   ]
+  },
+  {
+   "untap": "d4"
+  },
+  {
+   "set": [
+    "SO",
+    "stopTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 0.8
   }
+ ],
+ "agree": [
+  [
+   "d1.lag",
+   0.006
+  ],
+  [
+   "d1.rms",
+   0.03
+  ],
+  [
+   "d2.lag",
+   0.006
+  ],
+  [
+   "d3.lag",
+   0.006
+  ],
+  [
+   "d4.lag",
+   0.006
+  ]
+ ],
+ "scope": [
+  "Web Audio takes a maximum above 0 and below 180 s; X_ITE throws outside that, the bridge holds maxDelayTime to 0.001..179.999 (not tested, since X_ITE cannot be asked)"
  ]
 }
