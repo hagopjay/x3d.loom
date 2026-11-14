@@ -21,7 +21,8 @@ BR.node('Anchor', {
   },
   // Grouping + UrlObject: a click (press and release on the same spot) on anything below it follows url. '#Name' binds the Viewpoint with that DEF; any other url goes to the host
   // (body.opts.onAnchor({ url, target, node })); a page with no handler gets a note and stays where it is. javascript: is never run. load=false switches it off. addChildren and
-  // removeChildren are accepted and not acted on (gap).
+  // removeChildren change the children list (BR.addRemove); a child already in the list is not added twice.
+  receive(n, field, v) { return BR.addRemove(n, field, v); },
   build(body, n, parent, chain) { return body.buildGroup(n, parent, chain); },
   changed(body, n, field) {
     const r = body.rec.get(n.id); if (!r) return;

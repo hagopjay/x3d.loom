@@ -12,6 +12,7 @@
      build(body, n, parent, chain)   Babylon side: make what the node draws; return the record body.rec keeps
      geometry(g, body)        Babylon side: vertex data for a geometry node, same shape Body.geometryData returns
      changed(body, n, field)  Babylon side: a field changed after build
+     fieldSet(n, field)       the page set a field through the SAI (with or without a body); the field already holds the new value
      preparse(text)           the scene text before it is parsed (language features that are rewritten into plain nodes, ProtoInstance)
      postparse(world)         the parsed world, before init (ProtoInstance connects its fields)
    The kit never touches a node type it does not own, so every earlier port parses and runs as before. */
@@ -113,6 +114,12 @@ parseX3D = function (text) {
   return w;
 };
 R.parseX3D = parseX3D;
+
+/* a spec's fieldSet(n, field) hears a field the page set through the SAI (the page-side change hook is installed after the kit, so the accessor wraps whatever is assigned later; it runs with or without a body) */
+{
+  let hook = R.hooks.changed;
+  Object.defineProperty(R.hooks, 'changed', { configurable: true, get: () => hook, set: (fn) => { hook = (node, field) => { const s = BR.specs.get(node.type); if (s && s.fieldSet && !node._disposed) s.fieldSet(node, field); if (fn) fn(node, field); }; } });
+}
 
 const _recv = receive;
 receive = function (node, field, value) {
