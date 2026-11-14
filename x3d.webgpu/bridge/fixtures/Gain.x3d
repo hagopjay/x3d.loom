@@ -5,5 +5,13 @@
     <Gain DEF="N">
       <BufferAudioSource DEF="S"/>
     </Gain>
+    <Gain DEF="SG" gain="0.25">
+      <OscillatorSource DEF="SO" frequency="1000"><PeriodicWave type="SINE"/></OscillatorSource>
+    </Gain>
+    <Gain DEF="SG2" gain="0.5">
+      <Gain DEF="SG3" gain="0.5">
+        <OscillatorSource DEF="SO2" frequency="1000"><PeriodicWave type="SINE"/></OscillatorSource>
+      </Gain>
+    </Gain>
   </Scene>
 </X3D>

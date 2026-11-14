@@ -1,10 +1,7 @@
 {
  "node": "PeriodicWave",
- "mode": "events",
- "note": "type, optionsReal and optionsImag are held; the arrays an oscillator would receive (createPeriodicWave) have the longer of the two lengths, at least two, zero-filled, as in X_ITE 16.6.0. The sound is not compared.",
- "gaps": [
-  "the waveform is only used through an OscillatorSource; the type to wave-type mapping is tested there"
- ],
+ "mode": "scene",
+ "note": "type, optionsReal and optionsImag are held; the arrays an oscillator would receive (createPeriodicWave) have the longer of the two lengths, at least two, zero-filled, as in X_ITE 16.6.0. Switched to scene mode for the signal test: an OscillatorSource at 500 Hz plays the wave of this node and a tap on its output is compared with X_ITE 16.6.0 and with the analytic harmonics: CUSTOM with optionsReal 0 1 = a pure sine, optionsReal 0 0 1 = the second harmonic only (1 kHz), real 0 1 0.5 with imag 0 0 0.25 gives the normalised harmonic amplitudes of the coefficients (changed while the tone runs; the bridge now tells the playing oscillators about a change of the wave node, it did not before), and type SQUARE, SAWTOOTH (against the browser's own band limited waves), TRIANGLE and SINE give the rms and harmonic series of those waves. The rig, bounds and agreement are those of the OscillatorSource test.",
  "steps": [
   {
    "expect": [
@@ -278,6 +275,382 @@
     "type",
     "SQUARE"
    ]
+  },
+  {
+   "tap": [
+    "so",
+    "SO"
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1.2
+  },
+  {
+   "jsmap": [
+    "(()=>{const c=AUD.ctx;const o=c.createOscillator();o.type='square';o.frequency.value=500;const g=c.createGain();g.gain.value=1;o.connect(g);AUD.nodes.r1=g;AUD.nodes.o1=o;o.start();return 0})()",
+    "mk1"
+   ]
+  },
+  {
+   "tap": [
+    "r1",
+    "$r1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{const c=AUD.ctx;const o=c.createOscillator();o.type='sawtooth';o.frequency.value=500;const g=c.createGain();g.gain.value=1;o.connect(g);AUD.nodes.r2=g;AUD.nodes.o2=o;o.start();return 0})()",
+    "mk2"
+   ]
+  },
+  {
+   "tap": [
+    "r2",
+    "$r2"
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "r1",
+    "rsq",
+    {
+     "f0": 500,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "r2",
+    "rsa",
+    {
+     "f0": 500,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "so",
+    "c1",
+    {
+     "f0": 500,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      500,
+      2
+     ],
+     "h1": [
+      1.0,
+      0.03
+     ],
+     "h2": [
+      0,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "optionsReal",
+    [
+     0,
+     0,
+     1
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "sig": [
+    "so",
+    "c2",
+    {
+     "f0": 500,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      1000,
+      3
+     ],
+     "h2": [
+      1.0,
+      0.03
+     ],
+     "h1": [
+      0,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "optionsReal",
+    [
+     0,
+     1,
+     0.5
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "optionsImag",
+    [
+     0,
+     0,
+     0.25
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "sig": [
+    "so",
+    "c3",
+    {
+     "f0": 500,
+     "from": -0.3
+    },
+    {
+     "h1": [
+      0.6491458128419342,
+      0.03
+     ],
+     "h2": [
+      0.3628835412059802,
+      0.03
+     ],
+     "h3": [
+      0,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "type",
+    "SQUARE"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "sig": [
+    "so",
+    "sq",
+    {
+     "f0": 500,
+     "from": -0.3
+    },
+    {}
+   ]
+  },
+  {
+   "close": [
+    "sq.rms",
+    "rsq.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "sq.h1",
+    "rsq.h1",
+    0.03
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "type",
+    "SAWTOOTH"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "sig": [
+    "so",
+    "sa",
+    {
+     "f0": 500,
+     "from": -0.3
+    },
+    {}
+   ]
+  },
+  {
+   "close": [
+    "sa.rms",
+    "rsa.rms",
+    0.02
+   ]
+  },
+  {
+   "close": [
+    "sa.h1",
+    "rsa.h1",
+    0.03
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "type",
+    "TRIANGLE"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "sig": [
+    "so",
+    "tr",
+    {
+     "f0": 500,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.5773502691896257,
+      0.02
+     ],
+     "h1": [
+      0.8105694691387022,
+      0.03
+     ],
+     "h3": [
+      0.09006327434874468,
+      0.03
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SW",
+    "type",
+    "SINE"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "sig": [
+    "so",
+    "si",
+    {
+     "f0": 500,
+     "from": -0.3
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "h1": [
+      1,
+      0.03
+     ],
+     "h2": [
+      0,
+      0.02
+     ]
+    }
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{AUD.nodes.o1.stop();return 0})()",
+    "rs1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(()=>{AUD.nodes.o2.stop();return 0})()",
+    "rs2"
+   ]
   }
+ ],
+ "agree": [
+  [
+   "c1.rms",
+   0.02
+  ],
+  [
+   "c2.f0",
+   0.003
+  ],
+  [
+   "c2.h2",
+   0.03
+  ],
+  [
+   "c3.h1",
+   0.03
+  ],
+  [
+   "c3.h2",
+   0.03
+  ],
+  [
+   "sq.rms",
+   0.03
+  ],
+  [
+   "sa.rms",
+   0.02
+  ],
+  [
+   "tr.rms",
+   0.02
+  ],
+  [
+   "si.rms",
+   0.02
+  ]
+ ],
+ "scope": [
+  "the wave only sounds through an OscillatorSource; disableNormalization is not a field of this node in X3D 4.0 (Web Audio normalises, as in X_ITE)"
  ]
 }

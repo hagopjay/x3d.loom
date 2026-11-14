@@ -1,11 +1,7 @@
 {
  "node": "Analyser",
  "mode": "scene",
- "note": "defaults and the fftSize rule are Web Audio's (power of two, 32 to 32768, bin count half of it); the clock is X3DTimeDependentNode's. The data arrays (byte and float, frequency and time domain) come from the page's audio context and are not compared: silence reads the same everywhere and a headless browser has no audio device, so the test asserts on no array. Runs in scene mode so the clock is the real one ($now), as the MovieTexture test does.",
- "gaps": [
-  "the data outputs are only fed while the node is active and a Web Audio context exists; nothing is wired into the analyser yet (the Sound children of this node come with the rest of the Sound group)",
-  "minDecibels, maxDecibels and smoothingTimeConstant go to the audio node when it is made; changing them while it runs is not applied until the next start"
- ],
+ "note": "Signal compared with X_ITE 16.6.0 on the page's real Web Audio clock (one recording, two channels: the OscillatorSource and the Analyser's output, so the two are sample aligned): a 1 kHz sine (amplitude 1, rms 0.7071) goes through the Analyser and comes out with the same rms, frequency and a correlation of 1 and zero lag with the source (the signal passes unprocessed, also when the node is disabled); the four data outputs are read back through the SAI: floatTimeDomainData and byteTimeDomainData give rms 0.7071 and 1 kHz, floatFrequencyData and byteFrequencyData peak at the bin of 1 kHz (within one bin), the byte data equals the float data mapped through minDecibels..maxDecibels (within 3 steps), also after fftSize, minDecibels, maxDecibels and smoothingTimeConstant are changed while it runs. Ours and X_ITE are compared on rms, frequency and the peak bin with the 'agree' bounds of this file.",
  "steps": [
   {
    "expect": [
@@ -434,6 +430,342 @@
     "isActive",
     false
    ]
+  },
+  {
+   "tap": [
+    "t",
+    [
+     "SO",
+     "SA"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "sig": [
+    "t",
+    "so",
+    {
+     "ch": 0
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      1000,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "sig": [
+    "t",
+    "sa",
+    {
+     "ch": 1,
+     "ref": "t",
+     "refCh": 0
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "f0": [
+      1000,
+      3
+     ],
+     "corr": [
+      1,
+      0.02
+     ],
+     "lag": [
+      0,
+      0.0003
+     ]
+    }
+   ]
+  },
+  {
+   "fsig": [
+    "SA",
+    "floatTimeDomainData",
+    "tf",
+    {
+     "f0": 1000
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.03
+     ],
+     "f0": [
+      1000,
+      6
+     ],
+     "len": [
+      1024,
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "fsig": [
+    "SA",
+    "byteTimeDomainData",
+    "tb",
+    {
+     "byte": true,
+     "f0": 1000
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.03
+     ],
+     "f0": [
+      1000,
+      6
+     ]
+    }
+   ]
+  },
+  {
+   "fsig": [
+    "SA",
+    "floatFrequencyData",
+    "ff",
+    {
+     "freq": true,
+     "freqHz": 1000
+    },
+    {
+     "binErr": [
+      0,
+      1.01
+     ]
+    }
+   ]
+  },
+  {
+   "fsig": [
+    "SA",
+    "byteFrequencyData",
+    "fb",
+    {
+     "freq": true,
+     "freqHz": 1000
+    },
+    {
+     "binErr": [
+      0,
+      1.01
+     ]
+    }
+   ]
+  },
+  {
+   "bytemap": [
+    "SA",
+    "bm",
+    3
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "fftSize",
+    4096
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "expect": [
+    "SA",
+    "frequencyBinCount",
+    2048
+   ]
+  },
+  {
+   "fsig": [
+    "SA",
+    "floatFrequencyData",
+    "ff2",
+    {
+     "freq": true,
+     "freqHz": 1000
+    },
+    {
+     "binErr": [
+      0,
+      1.01
+     ],
+     "len": [
+      2048,
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "minDecibels",
+    -80
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "maxDecibels",
+    -20
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "bytemap": [
+    "SA",
+    "bm2",
+    3
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__worlds[__worlds.length-1].nodes.find(n=>n.def==='SA')._au.proc.maxDecibels",
+    -20
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('SA').getValue().analyserNode.maxDecibels",
+    -20
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "smoothingTimeConstant",
+    0.9
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__worlds[__worlds.length-1].nodes.find(n=>n.def==='SA')._au.proc.smoothingTimeConstant",
+    0.9
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('SA').getValue().analyserNode.smoothingTimeConstant",
+    0.9
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.8
+  },
+  {
+   "sig": [
+    "t",
+    "sa2",
+    {
+     "ch": 1,
+     "ref": "t",
+     "refCh": 0
+    },
+    {
+     "rms": [
+      0.7071067811865476,
+      0.02
+     ],
+     "corr": [
+      1,
+      0.02
+     ]
+    }
+   ]
   }
+ ],
+ "agree": [
+  [
+   "tf.rms",
+   0.03
+  ],
+  [
+   "tf.f0",
+   0.01
+  ],
+  [
+   "tb.rms",
+   0.03
+  ],
+  [
+   "ff.argmax",
+   0.01
+  ],
+  [
+   "fb.argmax",
+   0.01
+  ],
+  [
+   "sa.rms",
+   0.02
+  ],
+  [
+   "sa.f0",
+   0.005
+  ],
+  [
+   "sa.corr",
+   0.02
+  ],
+  [
+   "bm.maxErr",
+   0.02
+  ],
+  [
+   "ff2.len",
+   0.001
+  ]
+ ],
+ "scope": [
+  "the data outputs are filled once per frame while the node is active (the test rig draws about 3 frames per second in our reader); the window is the last fftSize samples at that moment, so single samples are not compared between the engines, only rms, frequency and the peak bin; smoothingTimeConstant is read back from the audio node, not measured as a time response; the noise floor of the spectrum (bins away from the peak) is not compared"
  ]
 }

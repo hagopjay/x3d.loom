@@ -13,6 +13,7 @@ const names = args.filter((a) => !a.startsWith('--'));
 const XITE_DIR = process.env.XITE_DIR || '/tmp/bb/xite/package/dist';
 
 const bundle = require('./bundle.js');
+const AUDIO_JS = fs.readFileSync(path.join(__dirname, 'audio-probe.js'), 'utf8');     // Web Audio signal probes (tap / sig / fsig), see the header of that file
 
 // --shots DIR (or BRIDGE_SHOTS) keeps every named shot of a scene test as NODE.name.ours.png / .xite.png and a side by side NODE.name.png (ours | X_ITE).
 // A spec's "compare": {name: {iou, mad, fg}} turns the two pictures of a named shot into numbers and fails the node when they miss the bounds:
@@ -59,6 +60,7 @@ function verdict(r, spec, skipXite, pageErrors = []) {
 
 // ---- the runner both pages share: it only uses the SAI ---------------------------------------------------------------------------------
 const RUNNER = `
+${AUDIO_JS}
 const plain = (v) => {
   if (v === null || v === undefined) return null;
   if (typeof v !== 'object') return v;
@@ -131,9 +133,11 @@ async function runSpec(eng, spec, xml) {
       else if (s.reset) { for (const k in events) events[k].length = 0; }
       else if (s.atleast) { const [d, f, n] = s.atleast; const l = events[d + '.' + f]; if (l.length < n) fail(d + '.' + f + ' fired ' + l.length + ' times, expected at least ' + n); }
       else if (s.noevent) { const [d, f] = s.noevent; const l = events[d + '.' + f]; if (l.length) fail(d + '.' + f + ' fired ' + show(l) + ', expected nothing'); }
+      else if (s.tap || s.untap || s.sig || s.fsig || s.jsmap || s.close || s.bytemap) await AUD.step(eng, s, out, fail, scene);     // Web Audio signal probes
       else fail('unknown or empty test step');
     } catch (e) { fail('threw ' + String(e).slice(0, 160)); }
   }
+  for (const k of Object.keys(AUD.taps)) await AUD.step(eng, { untap: k }, out, () => {}, scene);
   return out;
 }
 `;
@@ -178,6 +182,8 @@ window.runScene = async (spec, xml) => { await window.sceneReady; if (window.__R
   open: async (x) => { const sc = await X3DSAI.B.createX3DFromString(x); await X3DSAI.B.replaceWorld(sc); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); return sc; },
   apply: async (fn) => { fn(); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); },
   settle: async (dt) => { await sleep((dt || 0.05) * 1000); await X3DSAI.B.nextFrame(); },
+  audioCtx: () => __bridge.audio.ctx(),
+  audioNode: (def, kind) => { const n = __worlds[__worlds.length - 1].nodes.find((q) => q.def === def); const a = n && n._au; return a && (kind === 'in' ? a.in : kind === 'proc' ? a.proc : a.out); },
 }, spec, xml); };
 </script>`;
 const PAGE_XITE_SCENE = `<!doctype html><meta charset=utf-8><link rel=stylesheet href="/x_ite/x_ite.css"><body style="margin:0"><x3d-canvas id=c style="width:320px;height:240px;display:block"></x3d-canvas><script src="/x_ite/x_ite.min.js"></script><script>${RUNNER}
@@ -186,6 +192,8 @@ window.runScene = async (spec, xml) => { const b = X3D.getBrowser('#c'); await b
     open: async (x) => { const sc = await b.createX3DFromString(x); await b.replaceWorld(sc); await b.nextFrame(); await b.nextFrame(); return sc; },
     apply: async (fn) => { fn(); await b.nextFrame(); await b.nextFrame(); },
     settle: async (dt) => { await new Promise((r) => setTimeout(r, (dt || 0.05) * 1000)); await b.nextFrame(); },
+    audioCtx: () => b.getAudioContext(),
+    audioNode: (def, kind, sc) => { const n = sc.getNamedNode(def).getValue(); return kind === 'in' ? n.getAudioDestination() : kind === 'proc' ? (n.getSoundProcessor ? n.getSoundProcessor() : null) : (n.getSoundDestination ? n.getSoundDestination() : n.getAudioSource()); },
   }, spec, xml); };
 window.xiteInfo = () => ({ name: X3D.getBrowser('#c').name, version: X3D.getBrowser('#c').version });
 </script>`;
@@ -197,6 +205,14 @@ const STUB = () => {   // as the earlier port harnesses do: headless WebGPU draw
       getCurrentTexture() { const w = canvas.width, h = canvas.height; if (!this._t || this._t.width !== w || this._t.height !== h) { this._t = this._d.createTexture({ size: [w, h], format: this._f, usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC | GPUTextureUsage.TEXTURE_BINDING }); } return this._t; } };
     return ctx; };
 };
+
+// A deterministic microphone for the headless browser: --use-fake-device-for-media-stream with a 1 kHz sine at amplitude 0.5 (16 bit mono, 48 kHz, 2 s, looped) as the fake capture file.
+function fakeMic() {
+  const sr = 48000, n = sr * 2, b = Buffer.alloc(44 + n * 2);
+  b.write('RIFF', 0); b.writeUInt32LE(36 + n * 2, 4); b.write('WAVEfmt ', 8); b.writeUInt32LE(16, 16); b.writeUInt16LE(1, 20); b.writeUInt16LE(1, 22); b.writeUInt32LE(sr, 24); b.writeUInt32LE(sr * 2, 28); b.writeUInt16LE(2, 32); b.writeUInt16LE(16, 34); b.write('data', 36); b.writeUInt32LE(n * 2, 40);
+  for (let i = 0; i < n; i++) b.writeInt16LE(Math.round(0.5 * 32767 * Math.sin(2 * Math.PI * 1000 * i / sr)), 44 + i * 2);
+  const f = path.join(require('os').tmpdir(), 'bridge-fake-mic-1khz.wav'); fs.writeFileSync(f, b); return f;
+}
 
 function serve(files) {
   const mime = { '.js': 'text/javascript', '.css': 'text/css', '.html': 'text/html', '.json': 'application/json', '.wasm': 'application/wasm', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
@@ -218,7 +234,7 @@ async function main() {
   const server = await serve(files), base = 'http://localhost:' + server.address().port;
   let b;
   try {
-  b = await chromium.launch({ executablePath: process.env.CHROMIUM_EXECUTABLE || undefined, args: ['--autoplay-policy=no-user-gesture-required', '--enable-unsafe-webgpu', '--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--use-webgpu-adapter=swiftshader'] });
+  b = await chromium.launch({ executablePath: process.env.CHROMIUM_EXECUTABLE || undefined, args: ['--autoplay-policy=no-user-gesture-required', '--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream', '--use-file-for-fake-audio-capture=' + fakeMic(), '--enable-unsafe-webgpu', '--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--use-webgpu-adapter=swiftshader'] });
   const env = { chromium: b.version(), ours: 'x3d.webgpu reader + SAI shim, headless, bundle sha ' + require('crypto').createHash('sha256').update(files['/bundle.js']).digest('hex').slice(0, 12) };
   const results = {};
   const po = await b.newPage(), errs = []; po.on('pageerror', (e) => errs.push(e.message.slice(0, 200)));
