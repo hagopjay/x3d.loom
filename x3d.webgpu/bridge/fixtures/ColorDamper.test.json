@@ -48,8 +48,29 @@
     ],
     0.002
    ]
+  },
+  {
+   "curve": [
+    "N",
+    "value_changed",
+    "c"
+   ]
   }
  ],
  "note": "bounds and end state only: time is virtual in ours and real in X_ITE",
- "xiteDisagrees": "X_ITE 16.6.0 ColorDamper never goes inactive when the hue path crosses the 0/1 seam (blue to red): isActive stayed true 7.3 s after the value was within 3e-14 of the destination, because its stop test subtracts unwrapped hues. Ours measures the hue difference on the circle and stops."
+ "xiteDisagrees": "X_ITE 16.6.0 ColorDamper never goes inactive when the hue path crosses the 0/1 seam (blue to red): isActive stayed true 7.3 s after the value was within 3e-14 of the destination, because its stop test subtracts unwrapped hues. Ours measures the hue difference on the circle and stops.",
+ "agree": [
+  [
+   "c",
+   0.03,
+   {
+    "curve": true
+   }
+  ]
+ ],
+ "gaps": [],
+ "scope": [
+  "the intermediate values are pinned against X_ITE 16.6.0 as a curve: ours runs on a virtual clock (0.05 s steps), X_ITE on the real one (frames of about 17 ms), both measured from the isActive true event; every X_ITE sample must match ours interpolated within +-0.05 s of the same elapsed time (bound 0.03)",
+  "X_ITE 16.6.0 never reports isActive false when the hue path crosses the 0/1 seam; the curve itself agrees (documented in xiteDisagrees)"
+ ]
 }

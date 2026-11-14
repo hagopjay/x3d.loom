@@ -1,0 +1,329 @@
+{
+ "node": "PrimitivePickSensor",
+ "mode": "scene",
+ "note": "scene mode: the sensors look at the shapes of the world through the body; X_ITE 16.6.0 evaluates them each frame",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pickedGeometry",
+    [
+     "[node BA]"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "TN",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pickedGeometry",
+    []
+   ]
+  },
+  {
+   "set": [
+    "TN",
+    "translation",
+    [
+     0,
+     3,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pickedGeometry",
+    [
+     "[node BC]"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "TN",
+    "translation",
+    [
+     0,
+     -3,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "TN",
+    "translation",
+    [
+     6,
+     -3,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ],
+   "only": "ours"
+  },
+  {
+   "expect": [
+    "N",
+    "pickedGeometry",
+    []
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "TN",
+    "translation",
+    [
+     2,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "pickedGeometry",
+    [
+     "[node SB]"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "NC",
+    "pickedGeometry",
+    [
+     "[node SB]"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "NA",
+    "pickedGeometry",
+    [
+     "[node BA]",
+     "[node SB]"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "NS",
+    "pickedGeometry",
+    [
+     "[node SB]",
+     "[node BA]"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "NY",
+    "pickedGeometry",
+    [
+     "[node BA]"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "NF",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "NW",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NW",
+    "pickedGeometry",
+    [
+     "[node BC]"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "NB",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NG",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "TNG",
+    "translation",
+    [
+     -3.6,
+     1.5,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "TNB",
+    "translation",
+    [
+     -3.6,
+     1.5,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "NB",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NG",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NG",
+    "pickedGeometry",
+    [
+     "[node BA]"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "set": [
+    "TN",
+    "translation",
+    [
+     -2,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ],
+   "only": "ours"
+  }
+ ],
+ "xsdContainerField": [
+  "pickTarget"
+ ],
+ "gaps": [],
+ "scope": [
+  "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); BOUNDS and GEOMETRY (Sphere against Box where the boxes overlap and the geometries do not), sortOrder CLOSEST / ANY / ALL / ALL_SORTED, objectType filter, pickable false, enabled false",
+  "a shape outside every PickableGroup is not pickable here (as 19775-1 asks); X_ITE 16.6.0 picks it, the fixture checks it in ours only",
+  "disabling a sensor that is active raises isActive false here; X_ITE 16.6.0 keeps it true, checked in ours only",
+  "a Sphere picking geometry is a 162 point hull (0.4 percent inside the true sphere); the target is the convex hull of its mesh, so a concave target counts as its hull, as in X_ITE 16.6.0",
+  "the hull of the pickingGeometry is made when first needed and cached by geometry node, so a pickingGeometry node that is replaced is picked up on the next timestamp; non-uniform scale on the sensor is applied to the hull"
+ ]
+}

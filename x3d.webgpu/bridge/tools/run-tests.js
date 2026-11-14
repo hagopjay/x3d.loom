@@ -121,6 +121,7 @@ async function runSpec(eng, spec, xml) {
       else if (s.px) { const [x, y, v, tol] = s.px; const im = new Image(); im.src = eng.name === 'ours' ? await window.__bodyShot() : 'data:image/png;base64,' + await window.__pxraw(x, y); await im.decode(); const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const g = c.getContext('2d'); g.drawImage(im, 0, 0); const a = Array.from(g.getImageData(eng.name === 'ours' ? x : 0, eng.name === 'ours' ? y : 0, 1, 1).data).slice(0, 3); if (v === '$any') out.recorded.push(a); else if (!(a.every((q, i) => Math.abs(q - v[i]) <= (tol ?? 24)))) fail('px ' + x + ',' + y + ' is ' + show(a) + ', expected ' + show(v) + ' within ' + (tol ?? 24)); }
       else if (s.shot) { const pic = eng.name === 'ours' ? await window.__bodyShot() : 'data:image/png;base64,' + await window.__shotraw(); if (typeof s.shot === 'string') out.shots[s.shot] = pic; else out.recorded.push(pic); }   // a whole 320 x 240 picture; a named shot is kept for --shots and the "compare" metrics, a numbered one goes to recorded (demo pages)
       else if (s.setnode) { const [d, f, d2] = s.setnode; await eng.apply(() => { node(d)[f] = node(d2); }); }
+      else if (s.setnodes) { const [d, f, ds] = s.setnodes; await eng.apply(() => { node(d)[f] = ds.map((x) => node(x)); }); }     // an MFNode input such as addChildren with the nodes of these DEFs
       else if (s.wait) await new Promise((r) => setTimeout(r, s.wait * 1000));
       else if (s.key) { await window.__key(...s.key); await eng.settle(0.1); }
       else if (s.mouse) { await window.__mouse(...s.mouse); await eng.settle(0.15); }
@@ -279,6 +280,7 @@ async function main() {
       const fl = (x) => (Array.isArray(x) ? x.flatMap(fl) : [x]), a = fl(r.map[name]);
       let c = fl(r.mapX[name]);
       if (opt && opt.rot && c.length === 3) { const [ax, ay, az, an] = opt.rot, l = Math.hypot(ax, ay, az) || 1, k = [ax / l, ay / l, az / l], co = Math.cos(an), si = Math.sin(an), d = k[0] * c[0] + k[1] * c[1] + k[2] * c[2], x = [k[1] * c[2] - k[2] * c[1], k[2] * c[0] - k[0] * c[2], k[0] * c[1] - k[1] * c[0]]; c = c.map((v, i) => v * co + x[i] * si + k[i] * d * (1 - co)); }
+      if (opt && opt.sort && a.length % 3 === 0 && c.length % 3 === 0) { const rows = (x) => { const o = []; for (let i = 0; i < x.length; i += 3) o.push(x.slice(i, i + 3)); return o.sort((p, q) => p[0] - q[0] || p[1] - q[1] || p[2] - q[2]).flat(); }; a.splice(0, a.length, ...rows(a)); c = rows(c); }   // opt.sort: lists of points compare as sets (the two engines walk the triangles in their own order)
       let a2 = a;
       if (opt && opt.quat && a.length === 4 && c.length === 4) { const q = (r) => { const l = Math.hypot(r[0], r[1], r[2]) || 1, h = Math.sin(r[3] / 2), w = Math.cos(r[3] / 2), v = [r[0] / l * h, r[1] / l * h, r[2] / l * h, w]; return v[3] < 0 ? v.map((x) => -x) : v; }; a2 = q(a); c = q(c); }   // opt.quat: the same turn may be written with the axis flipped and the angle negated
       const sc = Math.max(1, ...c.map(Math.abs));

@@ -1,0 +1,32 @@
+{
+ "node": "PickableGroup",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/PickableGroup.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp + XSD patched: pickTarget added to the containerField values"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 38/38",
+  "xite": "pass 36/36",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "scope": [
+   "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); pickable, objectType (ALL, NONE, one type), MATCH_ANY, MATCH_EVERY and MATCH_ONLY_ONE with one matching type, visible false",
+   "a sensor of objectType ALL sees through any group; a group of type ALL is seen by every sensor (as X_ITE 16.6.0)",
+   "MATCH_EVERY and MATCH_ONLY_ONE with two matching types follow 19775-1 (every type of the sensor must be in the group, exactly one must be); X_ITE 16.6.0 counts at most one match, so those two steps run in ours only"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 48d8293ca0ad",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "df092f5"
+}

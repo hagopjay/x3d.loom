@@ -1,0 +1,146 @@
+{
+ "node": "LinePickSensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/LinePickSensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp + XSD patched: pickTarget added to the containerField values"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 16/16",
+  "xite": "pass 16/16",
+  "map": {
+   "pp": [
+    [
+     -0.2999999523162842,
+     0.30000001192092896,
+     1
+    ],
+    [
+     -0.2999999523162842,
+     0.30000001192092896,
+     -1
+    ],
+    [
+     0.4000000953674316,
+     0.3000000119209289,
+     -0.8640340676731073
+    ],
+    [
+     0.40000009536743164,
+     0.30000001192092896,
+     0.8640340676731073
+    ]
+   ],
+   "pn": [
+    [
+     0,
+     0,
+     1
+    ],
+    [
+     0,
+     0,
+     -1
+    ],
+    [
+     0.4000000881069105,
+     0.30000000723308445,
+     -0.8640340529803344
+    ],
+    [
+     0.4000000886480845,
+     0.3000000072215809,
+     0.864034052750869
+    ]
+   ],
+   "pp2": [
+    [
+     0.7000000476837158,
+     0.30000001192092896,
+     1
+    ],
+    [
+     0.7000000476837158,
+     0.30000001192092896,
+     -1
+    ]
+   ]
+  },
+  "oursOk": true,
+  "mapX": {
+   "pp": [
+    [
+     -0.2999999523162842,
+     0.30000001192092896,
+     1
+    ],
+    [
+     -0.2999999523162842,
+     0.30000001192092896,
+     -1
+    ],
+    [
+     0.40000009536743164,
+     0.30000001192092896,
+     0.8557385802268982
+    ],
+    [
+     0.40000009536743164,
+     0.30000001192092896,
+     -0.8557385802268982
+    ]
+   ],
+   "pn": [
+    [
+     0,
+     0,
+     1
+    ],
+    [
+     0,
+     0,
+     -1
+    ],
+    [
+     0.3999955654144287,
+     0.30003172159194946,
+     0.8557283878326416
+    ],
+    [
+     0.39999496936798096,
+     0.30003175139427185,
+     -0.8557287454605103
+    ]
+   ],
+   "pp2": [
+    [
+     0.7000000476837158,
+     0.30000001192092896,
+     1
+    ],
+    [
+     0.7000000476837158,
+     0.30000001192092896,
+     -1
+    ]
+   ]
+  },
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "scope": [
+   "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); two segments through a Box and a Sphere: pickedGeometry, pickedPoint and pickedNormal compared as sets, BOUNDS and GEOMETRY",
+   "pickedPoint, pickedNormal agree within 0.02: Babylon's Sphere is tessellated differently from X_ITE's (points on the sphere differ by up to 1 percent); pickedTextureCoordinate is filled from the mesh UVs and not compared (box UV layouts differ between the engines)",
+   "pickedPoint is in the target's own coordinates (as X_ITE 16.6.0)"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 48d8293ca0ad",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "df092f5"
+}

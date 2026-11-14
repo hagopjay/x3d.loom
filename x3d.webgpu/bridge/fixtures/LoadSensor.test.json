@@ -1,7 +1,7 @@
 {
  "node": "LoadSensor",
  "mode": "events",
- "note": "real image loads from the test server in both engines; the timeOut case follows X_ITE: aborted, then isLoaded once the late image arrives",
+ "note": "real image loads from the test server in both engines; the timeOut case follows X_ITE: aborted, then isLoaded once the late image arrives; children and enabled changes restart the count in both engines",
  "steps": [
   {
    "wait": 1
@@ -122,12 +122,137 @@
     "progress",
     1
    ]
+  },
+  {
+   "set": [
+    "Off",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "wait": 1
+  },
+  {
+   "expect": [
+    "Off",
+    "isLoaded",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "Off",
+    "progress",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "Off",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "setnodes": [
+    "Ok",
+    "children",
+    [
+     "ImgB"
+    ]
+   ]
+  },
+  {
+   "wait": 1
+  },
+  {
+   "expect": [
+    "Ok",
+    "isLoaded",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "Ok",
+    "progress",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "Ok",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "setnodes": [
+    "Ok",
+    "children",
+    [
+     "ImgG"
+    ]
+   ]
+  },
+  {
+   "wait": 1
+  },
+  {
+   "expect": [
+    "Ok",
+    "isLoaded",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "Ok",
+    "progress",
+    1
+   ]
+  },
+  {
+   "set": [
+    "Ok",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "wait": 0.3
+  },
+  {
+   "set": [
+    "Ok",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "wait": 0.5
+  },
+  {
+   "expect": [
+    "Ok",
+    "isLoaded",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "Ok",
+    "isActive",
+    false
+   ]
   }
  ],
- "gaps": [
-  "a change of children after load does not restart the count (X_ITE restarts)",
+ "gaps": [],
+ "scope": [
   "Inline, audio and movie children are fetched, not decoded: loaded means the url answered",
   "only the first working url of a child is used",
-  "X_ITE 16.6.0 hands the world over only after every resource has loaded, so the in-flight timeOut state (aborted, not yet loaded) can only be checked in our reader; the end state is compared"
+  "X_ITE 16.6.0 hands the world over only after every resource has loaded, so the in-flight timeOut state (aborted, not yet loaded) can only be checked in our reader; the end state is compared",
+  "a change of children or enabled true restarts the count as in X_ITE 16.6.0; a child that loaded before counts at once"
  ]
 }

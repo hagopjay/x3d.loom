@@ -6,6 +6,9 @@
    "settle": 2
   },
   {
+   "shot": "default"
+  },
+  {
    "expect": [
     "O",
     "isBound",
@@ -102,6 +105,9 @@
   },
   {
    "settle": 0.5
+  },
+  {
+   "shot": "wide"
   },
   {
    "mouse": [
@@ -232,6 +238,9 @@
   },
   {
    "settle": 0.5
+  },
+  {
+   "shot": "shifted"
   },
   {
    "mouse": [
@@ -431,9 +440,29 @@
   }
  ],
  "note": "a 2 x 2 x 2 box seen through an OrthoViewpoint (bound at load), compared with X_ITE by where the pointer is over the box: default view area, a 4 x 4 area, a shifted viewpoint, then a perspective Viewpoint bound and the orthographic one bound again",
- "gaps": [
-  "a bind between an OrthoViewpoint and another viewpoint is a cut: no fly-through is drawn",
-  "the user's mouse wheel scales the area, the drag pans in view units; X_ITE's fieldOfViewOffset / fieldOfViewScale animations and viewAll are not modelled",
+ "gaps": [],
+ "tone": "none",
+ "compare": {
+  "default": {
+   "iou": 0.99,
+   "mad": 3,
+   "fg": 10
+  },
+  "wide": {
+   "iou": 0.99,
+   "mad": 3,
+   "fg": 10
+  },
+  "shifted": {
+   "iou": 0.99,
+   "mad": 3,
+   "fg": 10
+  }
+ },
+ "scope": [
+  "three pictures (default view, a wider fieldOfView, a shifted position) agree with X_ITE 16.6.0: silhouette iou 1.0 and mean difference 0.4 to 1.4 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0; the bound is iou 0.99, mad 3",
+  "a bind between an OrthoViewpoint and another viewpoint is a cut here (the fixture uses transitionType TELEPORT in both engines): no fly-through is drawn between a perspective and an orthographic view",
+  "the user's mouse wheel scales the area and the drag pans in view units; X_ITE's fieldOfViewOffset / fieldOfViewScale animations and viewAll are not modelled",
   "near and far default to 0.1 and 10000 when nearDistance or farDistance is not positive (X_ITE takes the navigation avatar size for near)"
  ]
 }
