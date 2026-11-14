@@ -3,13 +3,13 @@
  "pass": true,
  "xsd": {
   "ok": true,
-  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/TransformSensor.x3d validates",
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/TransformSensor.x3d validates",
   "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
  },
  "test": {
   "ok": true,
-  "ours": "pass 23/23",
-  "xite": "pass 23/23",
+  "ours": "pass 48/48",
+  "xite": "pass 48/48",
   "map": {
    "pos": [
     1,
@@ -21,6 +21,45 @@
     1.0000000003690044,
     0,
     1.1999999882413739
+   ],
+   "pos2": [
+    1.3570080995559692,
+    0.398157000541687,
+    0
+   ],
+   "rot2": [
+    0,
+    0,
+    0.9999998891716982,
+    0.40000003758575386
+   ],
+   "pos3": [
+    0.9210610389709473,
+    -0.5,
+    0.3894183337688446
+   ],
+   "rot3": [
+    -0.18373671666954475,
+    -0.3803639238690048,
+    0.9064017096766449,
+    0.9792975010345448
+   ],
+   "act3": true,
+   "pos4": [
+    0.9210610389709473,
+    -0.5,
+    0.3894183337688446
+   ],
+   "pos5": [
+    1.3570080995559692,
+    0.398157000541687,
+    0
+   ],
+   "rot5": [
+    0,
+    0,
+    0.9999998891716982,
+    0.40000003758575386
    ]
   },
   "oursOk": true,
@@ -35,21 +74,60 @@
     1,
     0,
     1.2000000000000002
+   ],
+   "pos2": [
+    1.3570081004945758,
+    0.39815702328616975,
+    0
+   ],
+   "rot2": [
+    0,
+    0,
+    1.0000000000000002,
+    0.4
+   ],
+   "pos3": [
+    0.9210609940028851,
+    -0.5,
+    0.3894183423086506
+   ],
+   "rot3": [
+    -0.18373672631896223,
+    -0.38036393653058614,
+    0.9064017272647639,
+    0.9792975059130257
+   ],
+   "act3": true,
+   "pos4": [
+    0.9210609940028851,
+    -0.5,
+    0.3894183423086506
+   ],
+   "pos5": [
+    1.3570081004945758,
+    0.39815702328616975,
+    0
+   ],
+   "rot5": [
+    0,
+    0,
+    1.0000000000000002,
+    0.4
    ]
   },
   "xiteOk": true,
+  "comparison": "passed",
   "msg": "",
-  "gaps": [
-   "the sensor frame is its parent's; a parent that itself moves is followed through the world matrix, tested only with the root",
-   "a target that is a Shape uses its group's matrix",
-   "the official x3d-4.0.xsd cannot express TransformSensor.targetObject (containerField is limited to children, proxy, rootNode, shape, skin), so the fixture leaves it out and the test sets it through the SAI"
+  "scope": [
+   "the official x3d-4.0.xsd cannot express TransformSensor.targetObject (containerField is limited to children, proxy, rootNode, shape, skin), so the fixture leaves it out and the test sets it through the SAI",
+   "compared with X_ITE 16.6.0 numerically (position_changed and orientation_changed within 0.001): target at the root, sensor under a translated and rotated Transform that is then moved again, target a Shape (its group's matrix), size 0 0 0 (never active) and -1 -1 -1 (always active); the sensor runs once per timestamp, so a moved target is seen one frame late"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 3b32691c2a96",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 2e2fe8a67f1c",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "2b54cb9"
+ "driver_commit": "17a5582"
 }

@@ -3,21 +3,48 @@
  "pass": true,
  "xsd": {
   "ok": true,
-  "msg": "/tmp/claude-0/wt-bridge/x3d.webgpu/bridge/fixtures/CylinderSensor.x3d validates",
+  "msg": "/tmp/bbl/wt2/x3d.webgpu/bridge/fixtures/CylinderSensor.x3d validates",
   "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
  },
  "test": {
   "ok": true,
-  "ours": "pass 15/15",
-  "xite": "pass 15/15",
+  "ours": "pass 33/33",
+  "xite": "pass 33/33",
   "map": {
    "r1": [
     0,
     1,
     0,
-    0.4917002937890711
+    0.48475488966797475
    ],
-   "o1": 0.4917002937890711,
+   "o1": 0.48475488966797475,
+   "tp1": [
+    0.46599150247565024,
+    0,
+    0.8847891950179354
+   ],
+   "r2": [
+    0,
+    1,
+    0,
+    -0.7326700069560423
+   ],
+   "tp2": [
+    -0.21694168477037723,
+    0.536034152520058,
+    1.1499961085305843
+   ],
+   "r3": [
+    0,
+    2.6794896412773994e-08,
+    0.9999999999999997,
+    -1.2387875515157103
+   ],
+   "tp3": [
+    -0.20405099342124844,
+    -1.0020256423694767,
+    1.00000002663724
+   ],
    "clamped": [
     0,
     1,
@@ -34,6 +61,33 @@
     0.4846898291729655
    ],
    "o1": 0.4846898291729655,
+   "tp1": [
+    0.4659901499892252,
+    0,
+    0.8849262612059936
+   ],
+   "r2": [
+    0,
+    -1.0000000000000002,
+    0,
+    0.7273412035070228
+   ],
+   "tp2": [
+    -0.21432310987977699,
+    0.5360394000430995,
+    1.158693133482664
+   ],
+   "r3": [
+    1.4785402655220216e-14,
+    -2.679489961942719e-08,
+    -0.9999999999999998,
+    1.2381349988293526
+   ],
+   "tp3": [
+    -0.20405910847030162,
+    -1.0020295542351507,
+    1.0000000270573945
+   ],
    "clamped": [
     0,
     1,
@@ -42,17 +96,19 @@
    ]
   },
   "xiteOk": true,
+  "comparison": "passed",
   "msg": "",
-  "gaps": [
-   "disk mode (view along the axis) is implemented but only the cylinder mode is compared with X_ITE",
-   "trackPoint_changed not compared"
+  "scope": [
+   "compared with X_ITE 16.6.0 numerically: trackPoint_changed and rotation_changed in cylinder mode (off-axis press), in disk mode (axisRotation turns the axis to the view direction) and with minAngle/maxAngle; rotations compared as quaternions (X_ITE writes the same turn with the axis flipped and the angle negated)",
+   "unlike X_ITE the angle accumulates past a half turn (X_ITE returns a rotation of at most 180 degrees, so a full drag around the axis jumps back); a deliberate difference, quality over match",
+   "isOver is picked once per animation frame and keeps its value while a drag is active"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 3b32691c2a96",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 2e2fe8a67f1c",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "2b54cb9"
+ "driver_commit": "17a5582"
 }

@@ -186,6 +186,203 @@
     "isActive",
     true
    ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     3,
+     1,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "rotation",
+    [
+     0,
+     0,
+     1,
+     0.9
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "setnode": [
+    "N2",
+    "targetObject",
+    "T"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "N2",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "record": [
+    "N2",
+    "position_changed",
+    "pos2"
+   ]
+  },
+  {
+   "record": [
+    "N2",
+    "orientation_changed",
+    "rot2"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "translation",
+    [
+     2,
+     1.5,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "rotation",
+    [
+     0,
+     1,
+     0,
+     0.4
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "record": [
+    "N2",
+    "position_changed",
+    "pos3"
+   ]
+  },
+  {
+   "record": [
+    "N2",
+    "orientation_changed",
+    "rot3"
+   ]
+  },
+  {
+   "record": [
+    "N2",
+    "isActive",
+    "act3"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "translation",
+    [
+     9,
+     1.5,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "N2",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "record": [
+    "N2",
+    "position_changed",
+    "pos4"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "translation",
+    [
+     2,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "rotation",
+    [
+     0,
+     0,
+     1,
+     0.5
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "setnode": [
+    "N2",
+    "targetObject",
+    "S"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "N2",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "record": [
+    "N2",
+    "position_changed",
+    "pos5"
+   ]
+  },
+  {
+   "record": [
+    "N2",
+    "orientation_changed",
+    "rot5"
+   ]
   }
  ],
  "agree": [
@@ -196,11 +393,48 @@
   [
    "rot",
    0.0001
+  ],
+  [
+   "pos2",
+   0.001
+  ],
+  [
+   "rot2",
+   0.001,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "pos3",
+   0.001
+  ],
+  [
+   "rot3",
+   0.001,
+   {
+    "quat": true
+   }
+  ],
+  [
+   "pos4",
+   0.001
+  ],
+  [
+   "pos5",
+   0.001
+  ],
+  [
+   "rot5",
+   0.001,
+   {
+    "quat": true
+   }
   ]
  ],
- "gaps": [
-  "the sensor frame is its parent's; a parent that itself moves is followed through the world matrix, tested only with the root",
-  "a target that is a Shape uses its group's matrix",
-  "the official x3d-4.0.xsd cannot express TransformSensor.targetObject (containerField is limited to children, proxy, rootNode, shape, skin), so the fixture leaves it out and the test sets it through the SAI"
+ "gaps": [],
+ "scope": [
+  "the official x3d-4.0.xsd cannot express TransformSensor.targetObject (containerField is limited to children, proxy, rootNode, shape, skin), so the fixture leaves it out and the test sets it through the SAI",
+  "compared with X_ITE 16.6.0 numerically (position_changed and orientation_changed within 0.001): target at the root, sensor under a translated and rotated Transform that is then moved again, target a Shape (its group's matrix), size 0 0 0 (never active) and -1 -1 -1 (always active); the sensor runs once per timestamp, so a moved target is seen one frame late"
  ]
 }
