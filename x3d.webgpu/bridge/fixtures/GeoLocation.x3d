@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Geospatial" level="2"/><meta name="title" content="GeoLocation.x3d"/><meta name="description" content="Bridge fixture for GeoLocation: boxes placed on the earth, around a rotateYUp origin (pictures) and on the geocentric axes (placement matrices read from the Babylon node)"/></head>
+  <Scene>
+    <Viewpoint position="1.113195 0 10"/>
+    <GeoLocation DEF="GL" geoCoords="0 0.00001 0"><GeoOrigin DEF="O" geoCoords="0 0 0" rotateYUp="true"/><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="2 2 2"/></Shape></GeoLocation>
+    <GeoLocation DEF="GN" geoCoords="0.00001 0 0"><GeoOrigin USE="O"/><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 1 0"/></Appearance><Box size="2 2 2"/></Shape></GeoLocation>
+    <GeoLocation DEF="G1" geoCoords="0 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="1 1 1"/></Shape></GeoLocation>
+    <GeoLocation DEF="G2" geoCoords="45 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="1 1 1"/></Shape></GeoLocation>
+    <GeoLocation DEF="G3" geoCoords="45 90 1000" visible="true"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="1 1 1"/></Shape></GeoLocation>
+  </Scene>
+</X3D>

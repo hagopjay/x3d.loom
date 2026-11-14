@@ -1,0 +1,358 @@
+{
+ "node": "GeoTransform",
+ "mode": "scene",
+ "note": "GeoTransform is L^-1 M L (L = the placement at geoCenter): with the origin at the geoCenter it is a plain Transform (the box at the scene origin moves to (1, 2, 3)); with geoCenter 111.3 m east of the origin a rotation of 90 degrees about the local up turns a box 10 m east of the geoCenter into a box 10 m north of it. Both engines draw the same pictures; the identity case (no field set) keeps the children where the file puts them.",
+ "gaps": [
+  "a scale under a non-zero scaleOrientation that is not uniform is a shear, which the node cannot hold (dropped, noted by the body)",
+  "the matrix is computed in double precision, drawn through a 32 bit Babylon world matrix"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "GT",
+    "translation",
+    [
+     1,
+     2,
+     3
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "GT",
+    "geoCenter",
+    [
+     0,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "GT",
+    "geoSystem",
+    [
+     "GD",
+     "WE"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "GT",
+    "scale",
+    [
+     1,
+     1,
+     1
+    ]
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    135,
+    100,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    185,
+    140,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    124,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    197,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    84,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    157,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "GT",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    135,
+    165,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    125,
+    185,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    170,
+    165,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "GT",
+    "translation",
+    [
+     1,
+     2,
+     3
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "V2",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    234,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    190,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "GT2",
+    "rotation",
+    [
+     0,
+     1,
+     0,
+     1.570796
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    234,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    172,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "GT2",
+    "rotation",
+    [
+     0,
+     0,
+     1,
+     0
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    234,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  }
+ ],
+ "tone": "none"
+}

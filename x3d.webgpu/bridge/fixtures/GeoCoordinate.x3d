@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Geospatial" level="2"/><meta name="title" content="GeoCoordinate.x3d"/><meta name="description" content="Bridge fixture for GeoCoordinate: three quads whose corners are geographic points, with a rotateYUp origin, without rotation, and with longitude first"/></head>
+  <Scene>
+    <Viewpoint position="0 1 12"/>
+    <Transform translation="-2.5 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><IndexedFaceSet coordIndex="0 1 2 3 -1"><GeoCoordinate DEF="A" point="0 0 0, 0 0.00002 0, 0 0.00002 2, 0 0 2"><GeoOrigin DEF="O1" geoCoords="0 0 0" rotateYUp="true"/></GeoCoordinate></IndexedFaceSet></Shape></Transform>
+    <Transform translation="2.5 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><IndexedFaceSet solid="false" coordIndex="0 1 2 3 -1"><GeoCoordinate DEF="B" point="0 0 0, 0 0.00002 0, 0 0.00002 2, 0 0 2"><GeoOrigin DEF="O2" geoCoords="0 0 0"/></GeoCoordinate></IndexedFaceSet></Shape></Transform>
+    <Transform translation="-2.5 -3 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><IndexedFaceSet coordIndex="0 1 2 3 -1"><GeoCoordinate DEF="C" geoSystem='"GD" "WE" "longitude_first"' point="0 0 0, 0.00002 0 0, 0.00002 0 2, 0 0 2"><GeoOrigin USE="O1"/></GeoCoordinate></IndexedFaceSet></Shape></Transform>
+  </Scene>
+</X3D>

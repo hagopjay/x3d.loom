@@ -434,11 +434,11 @@ BR.pick = (() => {
       case 'Sphere': return { verts: ico.map((p) => p.map((x) => x * f.radius)) };
       case 'Cylinder': { const h = f.height / 2; return { verts: [...circle(f.radius, -h), ...circle(f.radius, h)] }; }
       case 'Cone': { const h = f.height / 2; return { verts: [...circle(f.bottomRadius, -h), [0, h, 0]] }; }
-      case 'PointSet': { const c = f.coord && f.coord.f.point; return c ? { points: flat(c), verts: flat(c) } : null; }
-      case 'IndexedLineSet': { const c = f.coord && f.coord.f.point; if (!c) return null; const P = flat(c), segs = []; let run = [];
+      case 'PointSet': { const c = f.coord && BR.geo.coordOf(f.coord).f.point; return c ? { points: flat(c), verts: flat(c) } : null; }
+      case 'IndexedLineSet': { const c = f.coord && BR.geo.coordOf(f.coord).f.point; if (!c) return null; const P = flat(c), segs = []; let run = [];
         const flush = () => { for (let i = 0; i + 1 < run.length; i++) segs.push([P[run[i]], P[run[i + 1]]]); run = []; };
         for (const i of f.coordIndex) { if (i < 0) flush(); else run.push(i); } flush(); return { segs, verts: P }; }
-      case 'LineSet': { const c = f.coord && f.coord.f.point; if (!c) return null; const P = flat(c), segs = []; let at = 0;
+      case 'LineSet': { const c = f.coord && BR.geo.coordOf(f.coord).f.point; if (!c) return null; const P = flat(c), segs = []; let at = 0;
         for (const n of f.vertexCount) { for (let i = 0; i + 1 < n; i++) segs.push([P[at + i], P[at + i + 1]]); at += n; } return { segs, verts: P }; }
       default: { if (!body || !g.f.coord) return null; try { const d = body.geometryData(g); if (d && d.pos && d.pos.length) return { verts: flat(d.pos) }; } catch (e) { /* not a geometry the body can read */ } return null; }
     }
@@ -598,7 +598,7 @@ BR.resolveUrl = (u) => { const b = R.bridge.body; try { return b && b.resolve ? 
    normalPerVertex, else flat per face. Colours drop alpha (the body draws RGB). */
 BR.tcWidth = (t) => (!t ? 2 : t.type === 'TextureCoordinate4D' ? 4 : t.type === 'TextureCoordinate3D' ? 3 : 2);      // numbers per texture coordinate: 3D and 4D coordinates feed volume textures
 BR.compose = (g, tri, faceOf) => {
-  const f = g.f, P = (f.coord && f.coord.f.point) || [], nc = tri.length, flip = f.ccw === false;
+  const f = g.f, P = (f.coord && BR.geo.coordOf(f.coord).f.point) || [], nc = tri.length, flip = f.ccw === false;
   const pos = new Float32Array(nc * 3), idx = new Uint32Array(nc), nrm = new Float32Array(nc * 3), perV = f.normalPerVertex !== false, cperV = f.colorPerVertex !== false;
   const C = f.color && f.color.f.color, cw = f.color && f.color.type === 'ColorRGBA' ? 4 : 3, N = f.normal && f.normal.f.vector, T = f.texCoord && f.texCoord.f.point, tcw = BR.tcWidth(f.texCoord);
   const col = C ? new Float32Array(nc * 3) : null, uv = T ? new Float32Array(nc * 2) : null, uvw = T && tcw > 2 ? new Float32Array(nc * 4) : null, alpha = C && cw === 4 ? new Float32Array(nc).fill(1) : null;

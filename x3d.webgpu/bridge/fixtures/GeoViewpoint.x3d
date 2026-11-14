@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Geospatial" level="2"/><meta name="title" content="GeoViewpoint.x3d"/><meta name="description" content="Bridge fixture for GeoViewpoint: cameras given as latitude, longitude and height around a rotateYUp origin, looking north, west, down and east, with field of view cases"/></head>
+  <Scene>
+    <Transform translation="0 1000 -100"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="10 10 10"/></Shape></Transform>
+    <Transform translation="-100 1000 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 1 0"/></Appearance><Box size="10 10 10"/></Shape></Transform>
+    <Transform translation="0 900 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 0 1"/></Appearance><Box size="10 10 10"/></Shape></Transform>
+    <Transform translation="100 1000 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 1 0"/></Appearance><Box size="10 10 10"/></Shape></Transform>
+    <Transform translation="111.319491 1000 -100"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 1 1"/></Appearance><Box size="10 10 10"/></Shape></Transform>
+    <GeoViewpoint DEF="V1" position="0 0 1000" ><GeoOrigin DEF="O" geoCoords="0 0 0" rotateYUp="true"/></GeoViewpoint>
+    <GeoViewpoint DEF="V2" position="0 0 1000" orientation="0 1 0 1.5707963"><GeoOrigin USE="O"/></GeoViewpoint>
+    <GeoViewpoint DEF="V3" position="0 0 1000" orientation="1 0 0 -1.5707963"><GeoOrigin USE="O"/></GeoViewpoint>
+    <GeoViewpoint DEF="V4" position="0 0 1000" orientation="0 1 0 -1.5707963"><GeoOrigin USE="O"/></GeoViewpoint>
+    <GeoViewpoint DEF="V5" position="0 0 1000" fieldOfView="0.5"><GeoOrigin USE="O"/></GeoViewpoint>
+    <GeoViewpoint DEF="V6" position="0 0 1000" fieldOfView="3.5"><GeoOrigin USE="O"/></GeoViewpoint>
+    <GeoViewpoint DEF="V7" position="0 0 1000" fieldOfView="0"><GeoOrigin USE="O"/></GeoViewpoint>
+    <GeoViewpoint DEF="VA" position="0 0.001 1000" ><GeoOrigin USE="O"/></GeoViewpoint>
+    <GeoViewpoint DEF="VB" position="0.001 0 1000" geoSystem='"GD" "WE" "longitude_first"'><GeoOrigin USE="O"/></GeoViewpoint>
+    <GeoViewpoint DEF="VD"/>
+    <GeoViewpoint DEF="VS" position="45 30 500" speedFactor="3"/>
+  </Scene>
+</X3D>

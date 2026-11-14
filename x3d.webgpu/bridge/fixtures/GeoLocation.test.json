@@ -1,0 +1,265 @@
+{
+ "node": "GeoLocation",
+ "mode": "scene",
+ "note": "With a rotateYUp origin a GeoLocation at lon 0.00001 degrees puts its box 1.113 m east of the origin (a 2 m box centred at x 1.113: the red square is 64 px wide around the camera axis); the second box 1.106 m north is behind it and shows on its left. The placement of a GeoLocation without an origin is the surface frame in geocentric axes: east = +Y, up = the ellipsoid normal, south = -Z at lat 0, lon 0; the ours-only steps read position, east, up and south of the node (the numbers are X_ITE's getStandardLocationMatrix executed on the same inputs).",
+ "gaps": [
+  "the placement matrices of the geocentric (no origin) cases are checked in our node only: X_ITE has no way to read them back, the picture tests use the rotateYUp origin",
+  "the node drawn is a Babylon TransformNode, whose world matrix is 32 bit: without a GeoOrigin a point 6.4e6 m from the centre of the earth is only good to about half a metre in the picture"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "GL",
+    "geoCoords",
+    [
+     0,
+     1e-05,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "GL",
+    "geoSystem",
+    [
+     "GD",
+     "WE"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "GL",
+    "visible",
+    true
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    135,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    124,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    190,
+    100,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    198,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    110,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    96,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    110,
+    98,
+    [
+     0,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "GL",
+    "geoCoords",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3d"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    175,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    130,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "GL",
+    "geoCoords",
+    [
+     0,
+     1e-05,
+     0
+    ],
+    "SFVec3d"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    175,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const n=__body.world.nodes.find(x=>x.def==='G1');const t=__body.rec.get(n.id).tn,q=t.rotationQuaternion,V=BABYLON.Vector3,e=new V(1,0,0).applyRotationQuaternion(q),u=new V(0,1,0).applyRotationQuaternion(q),s=new V(0,0,1).applyRotationQuaternion(q);return [t.position.x,t.position.y,t.position.z,e.x,e.y,e.z,u.x,u.y,u.z,s.x,s.y,s.z].map(v=>Math.round(v*1e6)/1e6)})()",
+    [
+     6378137,
+     0,
+     0,
+     0,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     -1
+    ]
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const n=__body.world.nodes.find(x=>x.def==='G2');const t=__body.rec.get(n.id).tn,q=t.rotationQuaternion,V=BABYLON.Vector3,e=new V(1,0,0).applyRotationQuaternion(q),u=new V(0,1,0).applyRotationQuaternion(q),s=new V(0,0,1).applyRotationQuaternion(q);return [t.position.x,t.position.y,t.position.z,e.x,e.y,e.z,u.x,u.y,u.z,s.x,s.y,s.z].map(v=>Math.round(v*1e6)/1e6)})()",
+    [
+     4517590.878849,
+     0,
+     4487348.408866,
+     0,
+     1,
+     0,
+     0.707107,
+     0,
+     0.707107,
+     0.707107,
+     0,
+     -0.707107
+    ]
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const n=__body.world.nodes.find(x=>x.def==='G3');const t=__body.rec.get(n.id).tn,q=t.rotationQuaternion,V=BABYLON.Vector3,e=new V(1,0,0).applyRotationQuaternion(q),u=new V(0,1,0).applyRotationQuaternion(q),s=new V(0,0,1).applyRotationQuaternion(q);return [t.position.x,t.position.y,t.position.z,e.x,e.y,e.z,u.x,u.y,u.z,s.x,s.y,s.z].map(v=>Math.round(v*1e6)/1e6)})()",
+    [
+     0,
+     4518297.98563,
+     4488055.515647,
+     -1,
+     0,
+     0,
+     0,
+     0.707107,
+     0.707107,
+     0,
+     0.707107,
+     -0.707107
+    ]
+   ]
+  }
+ ],
+ "tone": "none"
+}

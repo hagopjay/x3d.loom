@@ -77,7 +77,8 @@ const close = (a, b) => {
   if (b === '$any') return true;
   if (b === '$time') return typeof a === 'number' && isFinite(a) && a > 1e9;
   if (typeof b === 'number' && typeof a === 'number') return Math.abs(a - b) <= 1e-5 * Math.max(1, Math.abs(b));
-  if (Array.isArray(b)) return Array.isArray(a) && a.length === b.length && b.every((x, i) => close(a[i], x));
+  if (Array.isArray(b)) { if (Array.isArray(a) && a.length !== b.length) { const fl = (x) => (Array.isArray(x) ? x.flatMap(fl) : [x]), fa = fl(a), fb = fl(b); return fa.length === fb.length && fb.every((x, i) => close(fa[i], x)); }   // a list of points and the same points flat (a double list is flat in the reader) are the same list
+    return Array.isArray(a) && a.length === b.length && b.every((x, i) => close(a[i], x)); }
   return a === b;
 };
 const show = (v) => JSON.stringify(v);
@@ -90,6 +91,7 @@ async function runSpec(eng, spec, xml) {
     if (!t) return v;
     switch (t) {
       case 'SFVec2f': return new X.SFVec2f(...v); case 'SFVec3f': return new X.SFVec3f(...v); case 'SFRotation': return new X.SFRotation(...v); case 'SFColor': return new X.SFColor(...v); case 'SFColorRGBA': return new X.SFColorRGBA(...v); case 'SFVec4f': return new X.SFVec4f(...v);
+      case 'SFVec3d': return X.SFVec3d ? new X.SFVec3d(...v) : v; case 'SFVec2d': return X.SFVec2d ? new X.SFVec2d(...v) : v;   // a double vector must be built for X_ITE (a plain list there becomes NaN and the shape vanishes)
       case 'MFVec3f': return new X.MFVec3f(...v.map((a) => new X.SFVec3f(...a))); case 'MFVec2f': return new X.MFVec2f(...v.map((a) => new X.SFVec2f(...a)));
       case 'MFVec3d': return eng.name === 'ours' ? Float32Array.from(v.flat()) : new X.MFVec3d(...v.map((a) => new X.SFVec3d(...a)));   // the reader keeps double lists flat
       case 'MFFloat': return new X.MFFloat(...v); case 'MFBool': return eng.name === 'ours' ? v : new X.MFBool(...v); case 'MFInt32': return new X.MFInt32(...v); case 'MFString': return new X.MFString(...v);
