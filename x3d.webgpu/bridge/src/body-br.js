@@ -688,9 +688,11 @@ uniform worldViewProjection: mat4x4f;
 uniform worldView: mat4x4f;
 varying vN: vec3f;
 varying vW: vec4f;
+varying vP: vec3f;
 @vertex
 fn main(input: VertexInputs) -> FragmentInputs {
   vertexOutputs.position = uniforms.worldViewProjection * vec4f(vertexInputs.position, 1.0);
+  vertexOutputs.vP = (uniforms.worldView * vec4f(vertexInputs.position, 1.0)).xyz;
   vertexOutputs.vN = (uniforms.worldView * vec4f(vertexInputs.normal, 0.0)).xyz;
   vertexOutputs.vW = vec4f(vertexInputs.uv, vertexInputs.uv2);
 }`;
@@ -702,9 +704,24 @@ uniform diffuse: vec3f;
 uniform emissive: vec3f;
 uniform alpha: f32;
 uniform headlight: f32;
+uniform head: f32;
+uniform l0: vec4f;
+uniform l1: vec4f;
+uniform l2: vec4f;
+uniform l3: vec4f;
+uniform c0: vec3f;
+uniform c1: vec3f;
+uniform c2: vec3f;
+uniform c3: vec3f;
 uniform flipT: f32;
 varying vN: vec3f;
 varying vW: vec4f;
+varying vP: vec3f;
+fn lightTerm(n: vec3f, p: vec3f, l: vec4f, c: vec3f) -> vec3f {
+  if (l.w < 0.5) { return vec3f(0.0); }
+  let L = select(normalize(l.xyz - p), normalize(l.xyz), l.w < 1.5);
+  return c * max(dot(n, L), 0.0);
+}
 @fragment
 fn main(input: FragmentInputs) -> FragmentOutputs {
   let q = select(1.0, fragmentInputs.vW.w, abs(fragmentInputs.vW.w) > 1e-6);
@@ -712,7 +729,9 @@ fn main(input: FragmentInputs) -> FragmentOutputs {
   let p = (uniforms.texMat * vec4f(fragmentInputs.vW.x / q, tt / q, fragmentInputs.vW.z / q, 1.0)).xyz;
   let t = textureSample(vol, volSampler, p);
   let n = normalize(fragmentInputs.vN);
-  let lit = select(1.0, abs(n.z), uniforms.headlight > 0.5);
+  let nf = select(-n, n, dot(n, -fragmentInputs.vP) >= 0.0);   // the side that faces the viewer lights (one-sided terms, two-sided surface)
+  let sum = vec3f(abs(n.z) * uniforms.head) + lightTerm(nf, fragmentInputs.vP, uniforms.l0, uniforms.c0) + lightTerm(nf, fragmentInputs.vP, uniforms.l1, uniforms.c1) + lightTerm(nf, fragmentInputs.vP, uniforms.l2, uniforms.c2) + lightTerm(nf, fragmentInputs.vP, uniforms.l3, uniforms.c3);
+  let lit = select(vec3f(1.0), sum, uniforms.headlight > 0.5);
   fragmentOutputs.color = vec4f(t.rgb * uniforms.diffuse * lit + uniforms.emissive, t.a * uniforms.alpha);
 }`;
   BABYLON.ShaderStore.ShadersStoreWGSL['vol3dVertexShader'] = VS; BABYLON.ShaderStore.ShadersStoreWGSL['vol3dFragmentShader'] = FS;
@@ -747,7 +766,7 @@ fn main(input: FragmentInputs) -> FragmentOutputs {
   Body.prototype.makeMaterial = function (shape, g, spec, mesh) {
     if (spec.kind !== 'vol') return _mm.call(this, shape, g, spec, mesh);
     const m = new BABYLON.ShaderMaterial('vol-' + shape.id, this.scene, { vertex: 'vol3d', fragment: 'vol3d' },
-      { attributes: ['position', 'normal', 'uv', 'uv2'], uniforms: ['worldViewProjection', 'worldView', 'texMat', 'diffuse', 'emissive', 'alpha', 'headlight', 'flipT'], samplers: ['vol'], shaderLanguage: BABYLON.ShaderLanguage.WGSL, needAlphaBlending: true });
+      { attributes: ['position', 'normal', 'uv', 'uv2'], uniforms: ['worldViewProjection', 'worldView', 'texMat', 'diffuse', 'emissive', 'alpha', 'headlight', 'head', 'l0', 'l1', 'l2', 'l3', 'c0', 'c1', 'c2', 'c3', 'flipT'], samplers: ['vol'], shaderLanguage: BABYLON.ShaderLanguage.WGSL, needAlphaBlending: true });
     const f = spec.mat ? spec.mat.f : null, dc = f ? (f.diffuseColor || f.baseColor || f.unlitColor || [1, 1, 1]) : [1, 1, 1], ec = f && f.emissiveColor && spec.mat.type !== 'PhysicalMaterial' ? f.emissiveColor : [0, 0, 0];
     m.setVector3('diffuse', new BABYLON.Vector3(spec.mat ? dc[0] : 1, spec.mat ? dc[1] : 1, spec.mat ? dc[2] : 1)); m.setVector3('emissive', new BABYLON.Vector3(ec[0], ec[1], ec[2]));
     m.setFloat('alpha', f ? 1 - (f.transparency || 0) : 1); m.setFloat('headlight', spec.mat && spec.mat.type !== 'UnlitMaterial' ? 1 : 0);
@@ -757,6 +776,22 @@ fn main(input: FragmentInputs) -> FragmentOutputs {
     m.alphaMode = BABYLON.Engine.ALPHA_COMBINE; m.backFaceCulling = false; m._vol = true; m._tr = !!f && (f.transparency || 0) > 0; m._blend = m._tr;
     m.needAlphaBlending = () => !!m._blend;     // an opaque volume writes depth (Babylon draws a blended mesh without), so the far faces of a box do not paint over the near one
     this.volTexture(spec.tex, m);
+    if (m._shaded = !!spec.mat && spec.mat.type !== 'UnlitMaterial') {   // the volume is shaded by the headlight and by up to four directional or point lights (spot lights act as point lights: no cone), in view space, refreshed every frame
+      const body = this, sc = this.scene, C = [0, 0, 0, 0].map(() => new BABYLON.Vector3(0, 0, 0)), O = [0, 0, 0, 0].map(() => new BABYLON.Vector4(0, 0, 0, 0));
+      m._lightObs = sc.onBeforeRenderObservable.add(() => {
+        if (m.isDisposed && m.isDisposed()) return;
+        const ni = body.world && body.world.nodes.find((x) => x.type === 'NavigationInfo'), V = sc.activeCamera.getViewMatrix(); m.setFloat('head', !ni || ni.f.headlight !== false ? 1 : 0);
+        const ls = (body._x3dLights || []).filter((l) => l.isEnabled()).slice(0, 4);
+        for (let i = 0; i < 4; i++) {
+          const l = ls[i], v = O[i]; if (!l) { v.set(0, 0, 0, 0); m.setVector4('l' + i, v); m.setVector3('c' + i, C[i]); continue; }
+          const col = l.diffuse, k = l.intensity;
+          if (l.getClassName() === 'DirectionalLight') { const d = BABYLON.Vector3.TransformNormal(l.getShadowDirection().scale(-1), V); d.normalize(); v.set(d.x, d.y, d.z, 1); }
+          else { const p = BABYLON.Vector3.TransformCoordinates(l.getAbsolutePosition(), V); v.set(p.x, p.y, p.z, 2); }
+          m.setVector4('l' + i, v); m.setVector3('c' + i, C[i].set(col.r * k, col.g * k, col.b * k));
+        }
+      });
+      m.onDisposeObservable.add(() => sc.onBeforeRenderObservable.remove(m._lightObs));
+    }
     return m;
   };
   /* texture coordinates: 3D / 4D lists read with their own stride (the stock reader code reads two numbers per coordinate), default box mapping, and a second UV set for r and q */

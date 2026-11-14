@@ -8,8 +8,8 @@
  },
  "test": {
   "ok": true,
-  "ours": "pass 19/19",
-  "xite": "pass 19/19",
+  "ours": "pass 20/20",
+  "xite": "pass 20/20",
   "map": {},
   "oursOk": true,
   "mapX": {},
@@ -21,31 +21,74 @@
     "coverXite": 0.99,
     "bboxOurs": [
      9,
-     48,
+     0,
      310,
      191
     ],
     "bboxXite": [
      9,
-     47,
+     0,
      310,
      192
     ],
-    "nOurs": 25640,
-    "nXite": 25986,
-    "fgFracOurs": 0.33,
-    "fgFracXite": 0.34,
-    "mad": 1.64,
-    "psnr": 30.21,
+    "nOurs": 27109,
+    "nXite": 27460,
+    "fgFracOurs": 0.35,
+    "fgFracXite": 0.36,
+    "mad": 1.61,
+    "psnr": 30.12,
     "fgMeanOurs": [
      153,
      153,
-     145
+     138
     ],
     "fgMeanXite": [
-     152,
-     152,
-     144
+     151,
+     151,
+     137
+    ],
+    "bgOurs": [
+     1,
+     1,
+     3
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   },
+   "lit": {
+    "iou": 0.95,
+    "coverOurs": 1,
+    "coverXite": 0.95,
+    "bboxOurs": [
+     100,
+     0,
+     219,
+     55
+    ],
+    "bboxXite": [
+     100,
+     0,
+     219,
+     55
+    ],
+    "nOurs": 2429,
+    "nXite": 2554,
+    "fgFracOurs": 0.36,
+    "fgFracXite": 0.38,
+    "mad": 2.96,
+    "psnr": 24.66,
+    "fgMeanOurs": [
+     168,
+     172,
+     84
+    ],
+    "fgMeanXite": [
+     164,
+     168,
+     85
     ],
     "bgOurs": [
      1,
@@ -62,14 +105,14 @@
   "comparison": "passed",
   "msg": "",
   "gaps": [
-   "Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight only (N dot view axis, two sided); other lights, TextureProperties anisotropy and mipmaps are not applied to volumes"
+   "Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight (when NavigationInfo.headlight is TRUE) and by up to four lights that are on, as one-sided Lambert terms on the viewer-facing side; a spot light acts as a point light (no cone) and no light has attenuation, radius or global scope for a volume; compared with X_ITE 16.6.0 on a lit PixelTexture3D box with a DirectionalLight and a PointLight (silhouette 0.95, mean abs diff 3.0 of 255, Chromium 153 SwiftShader); TextureProperties anisotropy and mipmaps are not applied to volumes"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha a1adb764a1bc",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha c082bfeb8109",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "15277a6"
+ "driver_commit": "d632fb2"
 }

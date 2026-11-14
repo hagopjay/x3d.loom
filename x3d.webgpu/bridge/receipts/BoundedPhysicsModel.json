@@ -16,36 +16,36 @@
   "xiteOk": true,
   "visual": {
    "boxed": {
-    "iou": 0.32,
-    "coverOurs": 0.5,
-    "coverXite": 0.46,
+    "iou": 0.31,
+    "coverOurs": 0.44,
+    "coverXite": 0.52,
     "bboxOurs": [
-     111,
+     110,
      86,
-     208,
+     209,
      153
     ],
     "bboxXite": [
      113,
-     86,
-     207,
-     154
+     85,
+     206,
+     152
     ],
-    "nOurs": 2833,
-    "nXite": 3043,
+    "nOurs": 3197,
+    "nXite": 2747,
     "fgFracOurs": 0.04,
     "fgFracXite": 0.04,
-    "mad": 9.82,
-    "psnr": 16.14,
+    "mad": 11.8,
+    "psnr": 14.29,
     "fgMeanOurs": [
-     145,
-     145,
-     33
+     255,
+     255,
+     255
     ],
     "fgMeanXite": [
-     207,
-     207,
-     207
+     204,
+     204,
+     204
     ],
     "bgOurs": [
      1,
@@ -62,15 +62,15 @@
   "comparison": "passed",
   "msg": "",
   "gaps": [
-   "X_ITE 16.6.0 draws the particles white on this raster, ours uses the Material emissive colour (colour is not compared)",
+   "colour is compared: a quad particle is lit like a surface (emissive + diffuse x headlight, white for this Material); ours is 255 white, X_ITE 16.6.0's mean over its drawn pixels is about 200 (its edges are blended), fg tolerance 70; no fade at the end of life without a colorRamp (as X_ITE)",
    "the bounds are tested in ours from the particle list (a box of 3 x 2 x 2 holds every particle, which reflect at the faces); X_ITE's particle positions are not read, its picture is compared by extent"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f499223bf445",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha c082bfeb8109",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "8170b11"
+ "driver_commit": "d632fb2"
 }

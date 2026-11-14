@@ -4,7 +4,7 @@
  "note": "A box with a ComposedTexture3D of an ImageTexture and a PixelTexture (2 by 2 pictures), the first slice red green on the bottom row, blue white above. Cut at r = 0 in both engines, the first slice shows. The comparison box leaves out the top strip: X_ITE shows its own 'Loading done' badge there while an ImageTexture is loading.",
  "gaps": [
   "XSD finding: x3d-4.0.xsd writes the texture field of a ComposedTexture3D as an xs:sequence of ImageTexture, PixelTexture, MovieTexture, ProtoInstance repeated, not an xs:choice, so the slices must come in fours in that order and two ImageTextures do not validate; the fixture is checked against the XSD with that sequence made a choice (the receipt says so); the image field of a PixelTexture3D takes decimal numbers only in the XSD (no 0x hex)",
-  "Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight only (N dot view axis, two sided); other lights, TextureProperties anisotropy and mipmaps are not applied to volumes"
+  "Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight (when NavigationInfo.headlight is TRUE) and by up to four lights that are on, as one-sided Lambert terms on the viewer-facing side; a spot light acts as a point light (no cone) and no light has attenuation, radius or global scope for a volume; the same shader as PixelTexture3D, compared there with X_ITE 16.6.0 on a lit box with a DirectionalLight and a PointLight (silhouette 0.95, mean abs diff 3.0 of 255, Chromium 153 SwiftShader); TextureProperties anisotropy and mipmaps are not applied to volumes"
  ],
  "xsdChoice": [
   "ComposedTexture3D"

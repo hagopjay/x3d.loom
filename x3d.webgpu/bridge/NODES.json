@@ -260,10 +260,12 @@
    "container": "physics",
    "nfields": 3,
    "status": "gap",
-   "batch": 23,
+   "batch": 33,
    "receipt": "receipts/BoundedPhysicsModel.json",
-   "note": "X_ITE 16.6.0 draws the particles white on this raster, ours uses the Material emissive colour (colour is not compared); the bounds are tested in ours from the particle list (a box of 3 x 2 x 2 holds every particle, which reflect at the faces); X_ITE's particle positions are not read, its picture is compared by extent",
-   "rank": 184
+   "note": "colour is compared: a quad particle is lit like a surface (emissive + diffuse x headlight, white for this Material); ours is 255 white, X_ITE 16.6.0's mean over its drawn pixels is about 200 (its edges are blended), fg tolerance 70; no fade at the end of life without a colorRamp (as X_ITE); the bounds are tested in ours from the particle list (a box of 3 x 2 x 2 holds every particle, which reflect at the faces); X_ITE's particle positions are not read, its picture is compared by extent",
+   "rank": 184,
+   "prev_batch": 23,
+   "prev_note": "X_ITE 16.6.0 draws the particles white on this raster, ours uses the Material emissive colour (colour is not compared); the bounds are tested in ours from the particle list (a box of 3 x 2 x 2 holds every particle, which reflect at the faces); X_ITE's particle positions are not read, its picture is compared by extent"
   },
   "Box": {
    "component": "Geometry3D",
@@ -604,10 +606,12 @@
    "container": "texture",
    "nfields": 7,
    "status": "gap",
-   "batch": 24,
+   "batch": 33,
    "receipt": "receipts/ComposedTexture3D.json",
-   "note": "XSD finding: x3d-4.0.xsd writes the texture field of a ComposedTexture3D as an xs:sequence of ImageTexture, PixelTexture, MovieTexture, ProtoInstance repeated, not an xs:choice, so the slices must come in fours in that order and two ImageTextures do not validate; the fixture is checked against the XSD with that sequence made a choice (the receipt says so); the image field of a PixelTexture3D takes decimal numbers only in the XSD (no 0x hex); Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight only (N dot view axis, two sided); other lights, TextureProperties anisotropy and mipmaps are not applied to volumes",
-   "rank": 171
+   "note": "XSD finding: x3d-4.0.xsd writes the texture field of a ComposedTexture3D as an xs:sequence of ImageTexture, PixelTexture, MovieTexture, ProtoInstance repeated, not an xs:choice, so the slices must come in fours in that order and two ImageTextures do not validate; the fixture is checked against the XSD with that sequence made a choice (the receipt says so); the image field of a PixelTexture3D takes decimal numbers only in the XSD (no 0x hex); Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight (when NavigationInfo.headlight is TRUE) and by up to four lights that are on, as one-sided Lambert terms on the viewer-facing side; a spot light acts as a point light (no cone) and no light has attenuation, radius or global scope for a volume; the same shader as PixelTexture3D, compared there with X_ITE 16.6.0 on a lit box with a DirectionalLight and a PointLight (silhouette 0.95, mean abs diff 3.0 of 255, Chromium 153 SwiftShader); TextureProperties anisotropy and mipmaps are not applied to volumes",
+   "rank": 171,
+   "prev_batch": 24,
+   "prev_note": "XSD finding: x3d-4.0.xsd writes the texture field of a ComposedTexture3D as an xs:sequence of ImageTexture, PixelTexture, MovieTexture, ProtoInstance repeated, not an xs:choice, so the slices must come in fours in that order and two ImageTextures do not validate; the fixture is checked against the XSD with that sequence made a choice (the receipt says so); the image field of a PixelTexture3D takes decimal numbers only in the XSD (no 0x hex); Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight only (N dot view axis, two sided); other lights, TextureProperties anisotropy and mipmaps are not applied to volumes"
   },
   "ComposedVolumeStyle": {
    "component": "VolumeRendering",
@@ -965,10 +969,12 @@
    "container": "emitter",
    "nfields": 7,
    "status": "gap",
-   "batch": 23,
+   "batch": 33,
    "receipt": "receipts/ExplosionEmitter.json",
-   "note": "particle age at the shot differs between the engines on this CPU raster (ours runs on elapsed time at about 3 frames per second under SwiftShader), so the extent is compared with a wide bound and the speed is checked from the particle list in our body; X_ITE 16.6.0 draws the particles white on this raster, ours uses the Material emissive colour (colour is not compared); the X_ITE picture also shows a swirl pattern that ours does not reproduce",
-   "rank": 179
+   "note": "colour is compared: a quad particle is lit like a surface (emissive + diffuse x headlight, white for this Material); ours is 255 white, X_ITE 16.6.0's mean over its drawn pixels is about 200 (its edges are blended), fg tolerance 70; no fade at the end of life without a colorRamp (as X_ITE); particle age at the shot differs between the engines on this CPU raster (ours runs on elapsed time at about 3 frames per second under SwiftShader), so the extent is compared with a wide bound and the speed is checked from the particle list in our body",
+   "rank": 179,
+   "prev_batch": 23,
+   "prev_note": "particle age at the shot differs between the engines on this CPU raster (ours runs on elapsed time at about 3 frames per second under SwiftShader), so the extent is compared with a wide bound and the speed is checked from the particle list in our body; X_ITE 16.6.0 draws the particles white on this raster, ours uses the Material emissive colour (colour is not compared); the X_ITE picture also shows a swirl pattern that ours does not reproduce"
   },
   "Extrusion": {
    "component": "Geometry3D",
@@ -1359,10 +1365,12 @@
    "container": "texture",
    "nfields": 10,
    "status": "gap",
-   "batch": 22,
+   "batch": 33,
    "receipt": "receipts/ImageTexture3D.json",
-   "note": "the DDS volume (right) is drawn by ours and shown white by X_ITE 16.6.0 on this raster (Suspected: its DDS 3D reader does not take this uncompressed RGBA header); the picture comparison covers the NRRD volume (left); ImageTexture3D reads uncompressed DDS volumes and uchar NRRD (raw, gzip, ascii); DICOM and compressed DDS are not read",
-   "rank": 177
+   "note": "the DDS volume (right) is drawn by ours and shown white by X_ITE 16.6.0 on this raster (Suspected: its DDS 3D reader does not take this uncompressed RGBA header); the picture comparison covers the NRRD volume (left); ImageTexture3D reads uncompressed DDS volumes and uchar NRRD (raw, gzip, ascii); DICOM and compressed DDS are not read; the volume shader is shared with PixelTexture3D and ComposedTexture3D: lit by the headlight and up to four lights (checked on PixelTexture3D against X_ITE 16.6.0, mean abs diff 3.0 of 255)",
+   "rank": 177,
+   "prev_batch": 22,
+   "prev_note": "the DDS volume (right) is drawn by ours and shown white by X_ITE 16.6.0 on this raster (Suspected: its DDS 3D reader does not take this uncompressed RGBA header); the picture comparison covers the NRRD volume (left); ImageTexture3D reads uncompressed DDS volumes and uchar NRRD (raw, gzip, ascii); DICOM and compressed DDS are not read"
   },
   "IndexedFaceSet": {
    "component": "Geometry3D",
@@ -2216,10 +2224,12 @@
    "container": "texture",
    "nfields": 7,
    "status": "gap",
-   "batch": 24,
+   "batch": 33,
    "receipt": "receipts/PixelTexture3D.json",
-   "note": "Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight only (N dot view axis, two sided); other lights, TextureProperties anisotropy and mipmaps are not applied to volumes",
-   "rank": 172
+   "note": "Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight (when NavigationInfo.headlight is TRUE) and by up to four lights that are on, as one-sided Lambert terms on the viewer-facing side; a spot light acts as a point light (no cone) and no light has attenuation, radius or global scope for a volume; compared with X_ITE 16.6.0 on a lit PixelTexture3D box with a DirectionalLight and a PointLight (silhouette 0.95, mean abs diff 3.0 of 255, Chromium 153 SwiftShader); TextureProperties anisotropy and mipmaps are not applied to volumes",
+   "rank": 172,
+   "prev_batch": 24,
+   "prev_note": "Babylon side: a WGSL ShaderMaterial over a RawTexture3D, shaded by the headlight only (N dot view axis, two sided); other lights, TextureProperties anisotropy and mipmaps are not applied to volumes"
   },
   "PlaneSensor": {
    "component": "PointingDeviceSensor",
@@ -2928,10 +2938,12 @@
    "container": "emitter",
    "nfields": 7,
    "status": "gap",
-   "batch": 23,
+   "batch": 33,
    "receipt": "receipts/SurfaceEmitter.json",
-   "note": "particle age at the shot differs between the engines on this CPU raster (ours runs on elapsed time at about 3 frames per second under SwiftShader), so the extent is compared with a wide bound; X_ITE 16.6.0 draws the particles white on this raster, ours uses the Material emissive colour (colour is not compared); the emission point is a random point of the surface triangles, area weighted, along the face normal (a Sphere is cut into 16 x 12 facets for this)",
-   "rank": 186
+   "note": "colour is compared: a quad particle is lit like a surface (emissive + diffuse x headlight, white for this Material); ours is 255 white, X_ITE 16.6.0's mean over its drawn pixels is about 200 (its edges are blended), fg tolerance 70; no fade at the end of life without a colorRamp (as X_ITE); particle age at the shot differs between the engines on this CPU raster (ours runs on elapsed time at about 3 frames per second under SwiftShader), so the extent is compared with a wide bound; the emission point is a random point of the surface triangles, area weighted, along the face normal (a Sphere is cut into 16 x 12 facets for this)",
+   "rank": 186,
+   "prev_batch": 23,
+   "prev_note": "particle age at the shot differs between the engines on this CPU raster (ours runs on elapsed time at about 3 frames per second under SwiftShader), so the extent is compared with a wide bound; X_ITE 16.6.0 draws the particles white on this raster, ours uses the Material emissive colour (colour is not compared); the emission point is a random point of the surface triangles, area weighted, along the face normal (a Sphere is cut into 16 x 12 facets for this)"
   },
   "Switch": {
    "component": "Grouping",

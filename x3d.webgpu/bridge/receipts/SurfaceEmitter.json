@@ -16,36 +16,36 @@
   "xiteOk": true,
   "visual": {
    "shell": {
-    "iou": 0.12,
-    "coverOurs": 0.21,
-    "coverXite": 0.21,
+    "iou": 0.13,
+    "coverOurs": 0.23,
+    "coverXite": 0.23,
     "bboxOurs": [
-     74,
-     41,
-     244,
-     206
+     82,
+     37,
+     236,
+     205
     ],
     "bboxXite": [
-     91,
-     52,
-     232,
-     193
+     84,
+     55,
+     234,
+     195
     ],
-    "nOurs": 3718,
-    "nXite": 3730,
+    "nOurs": 3829,
+    "nXite": 3855,
     "fgFracOurs": 0.05,
     "fgFracXite": 0.05,
-    "mad": 14.21,
-    "psnr": 14.28,
+    "mad": 19.56,
+    "psnr": 11.81,
     "fgMeanOurs": [
-     34,
-     155,
-     155
+     255,
+     255,
+     255
     ],
     "fgMeanXite": [
-     194,
-     194,
-     194
+     198,
+     198,
+     198
     ],
     "bgOurs": [
      1,
@@ -62,16 +62,16 @@
   "comparison": "passed",
   "msg": "",
   "gaps": [
+   "colour is compared: a quad particle is lit like a surface (emissive + diffuse x headlight, white for this Material); ours is 255 white, X_ITE 16.6.0's mean over its drawn pixels is about 200 (its edges are blended), fg tolerance 70; no fade at the end of life without a colorRamp (as X_ITE)",
    "particle age at the shot differs between the engines on this CPU raster (ours runs on elapsed time at about 3 frames per second under SwiftShader), so the extent is compared with a wide bound",
-   "X_ITE 16.6.0 draws the particles white on this raster, ours uses the Material emissive colour (colour is not compared)",
    "the emission point is a random point of the surface triangles, area weighted, along the face normal (a Sphere is cut into 16 x 12 facets for this)"
   ]
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha f499223bf445",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha c082bfeb8109",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "8170b11"
+ "driver_commit": "d632fb2"
 }
