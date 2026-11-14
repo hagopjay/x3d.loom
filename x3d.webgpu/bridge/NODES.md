@@ -43,7 +43,7 @@ Statuses: base (reader already knew it), bridged (new: fixture validates against
 | Geospatial | 11 | 0 | 0 | 0 | 0 | 0 | 11 |
 | VolumeRendering | 13 | 0 | 0 | 0 | 0 | 0 | 13 |
 | DIS | 6 | 0 | 0 | 0 | 0 | 0 | 6 |
-| TextureProjection | 2 | 0 | 0 | 0 | 0 | 0 | 2 |
+| TextureProjection | 2 | 0 | 0 | 2 | 0 | 0 | 0 |
 
 ## Every node, in rank order
 
@@ -307,5 +307,5 @@ Statuses: base (reader already knew it), bridged (new: fixture validates against
 | 256 | TransmitterPdu | DIS | 1 | network | todo |  |  |
 | 257 | DISEntityManager | DIS | 2 | network | todo |  |  |
 | 258 | DISEntityTypeMapping | DIS | 2 | network | todo |  |  |
-| 259 | TextureProjector | TextureProjection | 2 | texture | todo |  |  |
-| 260 | TextureProjectorParallel | TextureProjection | 2 | texture | todo |  |  |
+| 259 | TextureProjector | TextureProjection | 2 | texture | gap | 39 | WebGPU only: the projection is WGSL code added by a Babylon MaterialPluginBase to the Standard and PBR materials of the world; a WebGL engine draws the scene without it; a shape drawn by a ShaderMaterial (a textured UnlitMaterial, points, lines, volumes) is not tinted; X_ITE 16.6.0 tints those too; the PBR path (PhysicalMaterial: surfaceAlbedo is tinted before the lights) compiles but was not compared by picture: PhysicalMaterial draws black in the body on this rig with or without a projector, so no tint can show; upVector default: X3DUOM 4.0 says 0 1 0 (used here); X_ITE 16.6.0 reads 0 0 1 for a scene whose version is 4.0 or lower, so a tilted projector with no upVector written is rolled differently there; at most four projectors at a time (X_ITE's maxTextures), the first four that are on; the picture is read nearest-texel, mip levels and TextureProperties filters are not applied (X_ITE's default look is nearest as well); a face of an unlit shape that turns away from the projector: X_ITE 16.6.0 still tints a thin visible side strip of an unlit slab, the bridge does not (compare 'back', fg tolerance 20) |
+| 260 | TextureProjectorParallel | TextureProjection | 2 | texture | gap | 39 | WebGPU only: the projection is WGSL code added by a Babylon MaterialPluginBase to the Standard and PBR materials of the world; a WebGL engine draws the scene without it; a shape drawn by a ShaderMaterial (a textured UnlitMaterial, points, lines, volumes) is not tinted; X_ITE 16.6.0 tints those too; the PBR path (PhysicalMaterial: surfaceAlbedo is tinted before the lights) compiles but was not compared by picture: PhysicalMaterial draws black in the body on this rig with or without a projector, so no tint can show; upVector default: X3DUOM 4.0 says 0 1 0 (used here); X_ITE 16.6.0 reads 0 0 1 for a scene whose version is 4.0 or lower, so a tilted projector with no upVector written is rolled differently there; at most four projectors at a time (X_ITE's maxTextures), the first four that are on; the picture is read nearest-texel, mip levels and TextureProperties filters are not applied (X_ITE's default look is nearest as well); shadows, shadowColor, shadowIntensity and shadowMapSize are stored and do nothing (X_ITE 16.6.0 does not shadow a projector either) |
