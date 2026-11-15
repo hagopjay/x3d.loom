@@ -1,0 +1,48 @@
+{
+ "node": "SpotLight",
+ "mode": "scene",
+ "note": "a spot light: full intensity inside beamWidth, a linear ramp to nothing at cutOffAngle, then the cone is widened through the SAI",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1.2
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "SP",
+    "cutOffAngle",
+    0.8,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "SP",
+    "beamWidth",
+    0.5,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "wide"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 1,
+   "fg": 4
+  },
+  "wide": {
+   "iou": 0.97,
+   "mad": 1,
+   "fg": 4
+  }
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "node": "TextureTransform",
+ "mode": "scene",
+ "note": "TextureTransform on a box: scale 2 2, rotation, translation and a centre; then the transform is changed by event",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1.2
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "TT",
+    "rotation",
+    1.2,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "turned"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 1.5,
+   "fg": 8
+  },
+  "turned": {
+   "iou": 0.97,
+   "mad": 1.5,
+   "fg": 8
+  }
+ }
+}

@@ -1,0 +1,24 @@
+{
+ "node": "IndexedQuadSet",
+ "mode": "scene",
+ "note": "an indexed quad set: a cube side strip from 8 shared vertices, with a flipped (ccw=false) copy",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.94,
+   "mad": 3,
+   "fg": 4
+  }
+ },
+ "gaps": [
+  "two cubes with generated smooth normals on shared corner vertices: foreground count is within 0.2 percent (15405 against 15372) but the dim, barely lit edge of the faces turns on at a slightly different grey in ours (IoU 0.95, mad 2.65, PSNR 31 dB); the cause is not isolated"
+ ]
+}

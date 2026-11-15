@@ -1,0 +1,64 @@
+{
+ "node": "Switch",
+ "mode": "scene",
+ "note": "a Switch with three children: whichChoice picks one, set through the SAI, -1 hides all",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "S",
+    "whichChoice",
+    1,
+    "SFInt32"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "S",
+    "whichChoice",
+    1
+   ]
+  },
+  {
+   "shot": "sphere"
+  },
+  {
+   "set": [
+    "S",
+    "whichChoice",
+    -1,
+    "SFInt32"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "shot": "none"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 3,
+   "fg": 10
+  },
+  "sphere": {
+   "iou": 0.97,
+   "mad": 3,
+   "fg": 10
+  },
+  "none": {
+   "empty": true
+  }
+ }
+}

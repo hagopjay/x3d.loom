@@ -1,0 +1,144 @@
+{
+ "node": "DirectionalLight",
+ "date": "2026-11-14",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha d744bd6ba410",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 9/9",
+ "xite": "pass 9/9",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "main": {
+   "iou": 0.99,
+   "coverOurs": 0.99,
+   "coverXite": 1,
+   "bboxOurs": [
+    33,
+    31,
+    286,
+    206
+   ],
+   "bboxXite": [
+    33,
+    31,
+    286,
+    206
+   ],
+   "nOurs": 17165,
+   "nXite": 17067,
+   "fgFracOurs": 0.22,
+   "fgFracXite": 0.22,
+   "mad": 0.53,
+   "psnr": 35.67,
+   "fgMeanOurs": [
+    143,
+    114,
+    112
+   ],
+   "fgMeanXite": [
+    142,
+    114,
+    113
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  },
+  "turned": {
+   "iou": 0.99,
+   "coverOurs": 0.99,
+   "coverXite": 1,
+   "bboxOurs": [
+    51,
+    31,
+    286,
+    205
+   ],
+   "bboxXite": [
+    51,
+    31,
+    286,
+    205
+   ],
+   "nOurs": 13144,
+   "nXite": 13066,
+   "fgFracOurs": 0.17,
+   "fgFracXite": 0.17,
+   "mad": 0.39,
+   "psnr": 35.93,
+   "fgMeanOurs": [
+    79,
+    72,
+    77
+   ],
+   "fgMeanXite": [
+    79,
+    72,
+    78
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  },
+  "off": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": null,
+   "bboxXite": null,
+   "nOurs": 0,
+   "nXite": 0,
+   "fgFracOurs": 0,
+   "fgFracXite": 0,
+   "mad": 0,
+   "psnr": 99,
+   "fgMeanOurs": [
+    0,
+    0,
+    0
+   ],
+   "fgMeanXite": [
+    0,
+    0,
+    0
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "light with global=FALSE lights the whole scene here (X3D: only its parent group); three.js has no per-group light inclusion, a layers mask is the planned route",
+  "material ambientIntensity is a fixed 0.2 in the shared ambient light; per-material values are not read yet"
+ ]
+}

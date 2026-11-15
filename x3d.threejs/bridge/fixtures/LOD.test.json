@@ -1,0 +1,67 @@
+{
+ "node": "LOD",
+ "mode": "scene",
+ "note": "a LOD with range 4 9: a sphere (near), a box (middle), a cone (far); the Viewpoint is moved through the three distances",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "near"
+  },
+  {
+   "set": [
+    "V",
+    "position",
+    [
+     0,
+     0,
+     6.5
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "mid"
+  },
+  {
+   "set": [
+    "V",
+    "position",
+    [
+     0,
+     0,
+     12
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "far"
+  }
+ ],
+ "compare": {
+  "near": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "mid": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "far": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  }
+ }
+}

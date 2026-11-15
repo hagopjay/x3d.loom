@@ -1,0 +1,23 @@
+{
+ "node": "LoadSensor",
+ "date": "2026-11-14",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 3dcafb34a346",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 38/38",
+ "xite": "pass 36/36",
+ "mode": "events (hard)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "scope": [
+  "Inline, audio and movie children are fetched, not decoded: loaded means the url answered",
+  "only the first working url of a child is used",
+  "X_ITE 16.6.0 hands the world over only after every resource has loaded, so the in-flight timeOut state (aborted, not yet loaded) can only be checked in our reader; the end state is compared",
+  "a change of children or enabled true restarts the count as in X_ITE 16.6.0; a child that loaded before counts at once"
+ ]
+}

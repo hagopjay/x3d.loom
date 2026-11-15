@@ -1,0 +1,59 @@
+{
+ "node": "Fog",
+ "mode": "scene",
+ "note": "a row of spheres going away from the viewer in LINEAR fog, then EXPONENTIAL, then the fog is removed (visibilityRange 0)",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1.2
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "F",
+    "fogType",
+    "EXPONENTIAL",
+    "SFString"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "exp"
+  },
+  {
+   "set": [
+    "F",
+    "visibilityRange",
+    0,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "none"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 1,
+   "fg": 4
+  },
+  "exp": {
+   "iou": 0.97,
+   "mad": 1,
+   "fg": 4
+  },
+  "none": {
+   "iou": 0.97,
+   "mad": 1,
+   "fg": 4
+  }
+ }
+}

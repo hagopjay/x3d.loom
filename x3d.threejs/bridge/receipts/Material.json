@@ -1,0 +1,68 @@
+{
+ "node": "Material",
+ "date": "2026-11-14",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha d744bd6ba410",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 2/2",
+ "xite": "pass 2/2",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "main": {
+   "iou": 0.9,
+   "coverOurs": 0.99,
+   "coverXite": 0.91,
+   "bboxOurs": [
+    29,
+    79,
+    290,
+    160
+   ],
+   "bboxXite": [
+    29,
+    80,
+    289,
+    159
+   ],
+   "nOurs": 11347,
+   "nXite": 12344,
+   "fgFracOurs": 0.15,
+   "fgFracXite": 0.16,
+   "mad": 1.34,
+   "psnr": 32.38,
+   "fgMeanOurs": [
+    141,
+    94,
+    85
+   ],
+   "fgMeanXite": [
+    130,
+    88,
+    80
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "PhysicalMaterial without an environment: a fully metallic surface reflects nothing, so it is nearly black in both engines; the three.js body has an environment path (RoomEnvironment or EnvironmentLight) planned"
+ ],
+ "lookNote": "PhysicalMaterial sphere: X_ITE adds a default environment glow that three.js has no counterpart for without an environment map; the bound is wide on purpose and the difference is a quality choice, not a defect"
+}

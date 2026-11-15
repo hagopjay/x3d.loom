@@ -1,0 +1,79 @@
+{
+ "node": "PointLight",
+ "mode": "scene",
+ "note": "a point light (colour, radius, a Transform above it moves it) lights a wall and three spheres; a second light with a short radius shows the hard edge; the first is switched off",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1.2
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "MOVE",
+    "translation",
+    [
+     4,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "moved"
+  },
+  {
+   "set": [
+    "MOVE",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "L",
+    "on",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "off"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 1,
+   "fg": 4
+  },
+  "moved": {
+   "iou": 0.97,
+   "mad": 1,
+   "fg": 4
+  },
+  "off": {
+   "iou": 0.97,
+   "mad": 1,
+   "fg": 4
+  }
+ },
+ "gaps": [
+  "global=FALSE is not scoped to the parent group: three.js has no per-light mesh list (the Babylon body uses includedOnlyMeshes)",
+  "material ambientIntensity is a fixed 0.2 in the shared ambient light"
+ ]
+}

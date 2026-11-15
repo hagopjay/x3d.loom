@@ -1,0 +1,24 @@
+{
+ "node": "IndexedTriangleSet",
+ "mode": "scene",
+ "note": "a shared-vertex tetrahedron as an IndexedTriangleSet (generated normals on shared vertices) and the same with per-vertex Color and a ccw=false flip",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.94,
+   "mad": 1,
+   "fg": 4
+  }
+ },
+ "gaps": [
+  "ours covers 4662 foreground pixels against X_ITE's 4450 (IoU 0.95, mad 0.41, PSNR 42 dB): a thin dim rim on the tetrahedron edge; the cause is not isolated (generated smooth normals on shared vertices are the same rule in both)"
+ ]
+}
