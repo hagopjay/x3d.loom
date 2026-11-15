@@ -1,0 +1,64 @@
+{
+ "node": "Viewpoint",
+ "mode": "scene",
+ "tone": "none",
+ "note": "a bound Viewpoint under a Transform that moves at run time: the camera follows (13456 cube pixels at 6 m, 2912 at 12 m, 13456 again)",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "static"
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "shot": "moved"
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "shot": "back"
+  }
+ ],
+ "compare": {
+  "static": {
+   "mad": 3,
+   "fg": 8
+  },
+  "moved": {
+   "mad": 3,
+   "fg": 8
+  },
+  "back": {
+   "mad": 3,
+   "fg": 8
+  }
+ }
+}

@@ -37,15 +37,19 @@ R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
       const lib = typeof window !== 'undefined' && window.MeshBVHLib, st = (body.pickStats ||= { calls: 0, ms: 0, trees: 0, buildMs: 0, treeMeshes: 0 });
       if (lib && !P._bvhPatched) { P._bvhPatched = THREE.Mesh.prototype.raycast; THREE.Mesh.prototype.raycast = lib.acceleratedRaycast; }
       const use = !!lib && body.bvhOn !== false, minT = body.bvhMinTriangles || 2000;
+      if (!use) for (const o of list) { const g = o.geometry; if (g && g.boundsTree) { g.userData.bvhHold = g.boundsTree; g.boundsTree = undefined; } }   // acceleratedRaycast uses a tree whenever the geometry has one: put it aside for a plain cast
       if (use) for (const o of list) {
         const g = o.geometry, pa = g && g.attributes && g.attributes.position; if (!pa || g.userData.hanimRest) continue;   // a skinned or deforming skin changes every frame: plain raycast
+        if (!g.boundsTree && g.userData.bvhHold) { g.boundsTree = g.userData.bvhHold; g.userData.bvhHold = null; }
         const tri = (g.index ? g.index.count : pa.count) / 3; if (tri < minT) continue;
         const key = pa.version + ':' + (g.index ? g.index.version : 0) + ':' + pa.count;
         if (!g.boundsTree || g.userData.bvhKey !== key) { const t0 = performance.now(); g.boundsTree = new lib.MeshBVH(g); g.userData.bvhKey = key; st.trees++; st.buildMs += performance.now() - t0; }
       }
       st.treeMeshes = use ? list.filter((o) => o.geometry && o.geometry.boundsTree).length : 0;
       rc.firstHitOnly = use && !(body.clips && body.clips.length);
-      const t0 = performance.now(), out = rc.intersectObjects(list, false); st.calls++; st.ms += performance.now() - t0; return out;
+      const t0 = performance.now(), out = rc.intersectObjects(list, false); st.calls++; st.ms += performance.now() - t0;
+      if (!use) for (const o of list) { const g = o.geometry; if (g && g.userData.bvhHold && !g.boundsTree) { g.boundsTree = g.userData.bvhHold; g.userData.bvhHold = null; } }   // the tree comes back at once: other callers (a scan with its own Raycaster) use it
+      return out;
     },
     pickThrough(body, fx, fy, cam, v, bit, layered) {
       const rc = (body.raycaster ||= new THREE.Raycaster());

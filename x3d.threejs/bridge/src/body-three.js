@@ -630,7 +630,7 @@ class Body {
   bindViewpoint(vp, on) {
     if (!on) { vp.f.isBound = false; return; }
     const prev = this.bound; if (prev && prev !== vp) { prev.f.isBound = false; R.events.emit(prev, 'isBound', false); }
-    this.bound = vp; vp.f.isBound = true; R.events.emit(vp, 'isBound', true); vp.f.bindTime = (performance.timeOrigin + performance.now()) / 1000;
+    this.vpKey = null; this.bound = vp; vp.f.isBound = true; R.events.emit(vp, 'isBound', true); vp.f.bindTime = (performance.timeOrigin + performance.now()) / 1000;
     const nav = this.world && this.world.nodes.find((n) => n.type === 'NavigationInfo');
     const tt = nav ? String(nav.f.transitionType[0] || 'LINEAR').toUpperCase() : 'LINEAR', dur = nav ? Math.max(nav.f.transitionTime || 1, 0.05) : 1, to = this.vpPose(vp);
     if (!prev || tt === 'TELEPORT' || !this.started || to.ortho || this.pose.ortho || to.geo || this.pose.geo) {   // a move into or out of an orthographic view is a cut
@@ -724,6 +724,8 @@ class Body {
     }
     if (this.cubeMats) for (const m of this.cubeMats) m.userData.cubeU.cubeRot.value.setFromMatrix4(this.cam.matrixWorld);   // view space -> world space for the cube maps that hold pictures of the world
     R.bridge.three.cube.takePictures(this);
+    { const vp = this.bound, par = vp && vp.type !== 'GeoViewpoint' && this.vpParent && this.vpParent.get(vp);   // a bound Viewpoint inside a Transform that moves after load: the camera follows its parent (X_ITE does)
+      if (par && par !== this.root) { const key = par.matrixWorld.elements.join(','); if (this.vpKey && this.vpKey !== key) { const to = this.vpPose(vp); if (to.ortho) to.ortho.scale = (this.pose.ortho && this.pose.ortho.scale) || 1; if (this.tr) this.tr.to = to; else { this.pose = to; this.applyCamera(); } } this.vpKey = key; } else this.vpKey = null; }
     R.bridge.three.hanim.update(this);   // the skins of the humanoids (CPU skinning, after the joints' matrices)
     R.bridge.three.proj.update(this);   // the projectors' matrices and scope masks
     if (R.bridge.three.particles) R.bridge.three.particles.update(this);   // the CPU particle systems
