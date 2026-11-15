@@ -58,7 +58,7 @@ BR.phys = (() => {
     if (!node || node.f.enabled === false) return out;
     const p = add(lp, mv(toM(lq), node.f.translation || [0, 0, 0])), q = qmul(lq, fromAA(node.f.rotation || [0, 0, 1, 0]));
     if (node.type === 'CollidableOffset') return shapesOf(node.f.collidable, p, q, out);
-    const sh = node.f.shape, g = sh && ([sh.f.geometry].concat(sh.f.children || []).find((k) => k && k.f && ('size' in k.f || 'radius' in k.f)));
+    const sh = node.f.shape, g = sh && ([sh.f.geometry].concat(sh.f.children || []).find((k) => k && k.f && ('size' in k.f || 'radius' in k.f || 'bottomRadius' in k.f)));
     if (!g) return out;
     if (g.type === 'Box') out.push({ kind: 'box', half: mul(g.f.size, 0.5), lp: p, lq: q });
     else if (g.type === 'Sphere') out.push({ kind: 'sphere', r: g.f.radius, lp: p, lq: q });
@@ -298,7 +298,7 @@ BR.phys = (() => {
     }
     if (st.t === null) { st.t = now; return; }
     st.acc += Math.min(0.5, Math.max(0, now - st.t)); st.t = now;
-    const dtT = now - (st.lastOut ?? now); let ran = false; while (st.acc >= H) { step(st, H); st.acc -= H; ran = true; }
+    const dtT = now - (st.lastOut ?? now); let ran = false; while (st.acc >= H) { (st.engine?.step || step)(st, H); st.acc -= H; ran = true; }
     if (!ran) return;
     st.lastOut = now; jointOutputs(st, dtT);
     for (const B of st.bodies) {
