@@ -43,7 +43,7 @@ for (const eng of ['builtin', 'rapier', 'cannon']) {
   });
 }
 
-test('cannon-raw sticks: unpatched cannon-es friction holds the box on the ramp (the bug the adapter patch fixes)', async () => {
+test('cannon-raw holds the unit cube on the 25.6 degree ramp (the friction unit bug the adapter patch fixes)', async () => {
   const [, acc] = await M('slope-mu0.2', 'cannon-raw'); assert.ok(acc < 0.1, 'acceleration ' + acc);
 });
 

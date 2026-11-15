@@ -76,10 +76,10 @@ function gate() {
   joints.push({ type: 'SingleAxisHingeJoint', attrs: 'anchorPoint="-3.35 2.1 0" axis="0 1 0" minAngle="-1.1" maxAngle="1.1" stopBounce="0"', b1: 'post', b2: 'door' });
   bodies.push({ id: 'rail', geom: { kind: 'box', size: [0.4, 0.4, 0.4] }, pos: [0.5, 0.9, 2.2], fixed: true, color: [0.5, 0.52, 0.6] });
   bodies.push({ id: 'stopL', geom: { kind: 'box', size: [0.15, 0.7, 0.7] }, pos: [0.15, 0.9, 2.2], fixed: true, color: [0.95, 0.4, 0.4], hidden: false });
-  bodies.push({ id: 'stopR', geom: { kind: 'box', size: [0.15, 0.7, 0.7] }, pos: [4.6, 0.9, 2.2], fixed: true, color: [0.95, 0.4, 0.4] });
+  bodies.push({ id: 'stopR', geom: { kind: 'box', size: [0.15, 0.7, 0.7] }, pos: [4.78, 0.9, 2.2], fixed: true, color: [0.95, 0.4, 0.4] });   // face at 4.705: the cart's face at the slider limit is 0.5 + 3.7 + 0.4 = 4.6, so the JOINT stops the cart, not this block
   bodies.push({ id: 'cart', geom: { kind: 'box', size: [0.8, 0.6, 0.6] }, pos: [1.4, 0.9, 2.2], vel: [3, 0, 0], color: [0.25, 0.8, 0.95] });
   joints.push({ type: 'SliderJoint', attrs: 'axis="1 0 0" minSeparation="0.9" maxSeparation="3.7" stopBounce="0"', b1: 'rail', b2: 'cart' });
   bodies.push({ id: 'ball', geom: { kind: 'sphere', r: 0.45 }, pos: [3, 6, -1.8], color: [0.6, 0.95, 0.4] });
-  return { id: 'gate', title: 'Gate, cart and ball', T: 6, bounce: 0.8, mu: 0.4, bodies, joints, camera: { pos: [0, 4.2, 12.5], rot: [1, 0, 0, -0.2] }, note: 'door: hinge limit +-1.1 rad, spun at 3.2 rad/s; cart: slider stops at 0.9 and 3.7 m, thrown at 3 m/s; ball: bounce 0.8' };
+  return { id: 'gate', title: 'Gate, cart and ball', T: 6, bounce: 0.8, mu: 0.4, bodies, joints, camera: { pos: [0, 4.2, 12.5], rot: [1, 0, 0, -0.2] }, note: 'door: hinge limit +-1.1 rad, spun at 3.2 rad/s; cart: slider limit 3.7 m (it starts at 0.9 m and is thrown to the right at 3 m/s; the red block is a visual stop 0.1 m beyond the cart face at the limit); ball: bounce 0.8' };
 }
 module.exports = { avalanche, cradle, gate, sceneXml };

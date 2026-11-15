@@ -19,7 +19,8 @@
     return {
       name: 'cannon', version: C.version || 'cannon-es',
       create(ctx) {
-        const world = new C.World({ gravity: new C.Vec3(...ctx.gravity) });   // native gravity: cannon limits friction by |gravity| (FrictionEquation), so it must not be 0 world.allowSleep = false; world.quatNormalizeFast = false; world.quatNormalizeSkip = 0;
+        const world = new C.World({ gravity: new C.Vec3(...ctx.gravity) });   // native gravity: cannon limits friction by |gravity| (FrictionEquation), so it must not be 0
+        world.allowSleep = false; world.quatNormalizeFast = false; world.quatNormalizeSkip = 0;
         if (ctx.bodies.length > 24) world.broadphase = new C.SAPBroadphase(world);     // NaiveBroadphase is O(n^2) pairs; SAP is cannon's own answer for piles
         world.solver.iterations = Math.max(1, ctx.iterations); world.solver.tolerance = 1e-7;
         const mat = new C.Material('x3d'); world.defaultMaterial = mat; world.defaultContactMaterial = new C.ContactMaterial(mat, mat, { friction: ctx.mu, restitution: ctx.bounce });
@@ -41,8 +42,8 @@
           world.addBody(body); eb.set(B, { body, b, fixed });
         }
         if (perPair) {                                           /* cannon-es bounds a friction equation's multiplier lambda by mu * reducedMass * |g|, and the solver's lambda is an IMPULSE (it is added to the
-                                                    velocity through the inverse mass with no dt): the cap is a force of mu m |g| / dt, 240x too large at 1/240 s (raw cannon-es: a box on a slope slides
-                                                    only above 45 degrees for mu 0.2 and for mu 0.5, N-ENG-04). Before each solve the bound is replaced by mu * m_red * |g . n| * dt / (points of the pair):
+                                                    velocity through the inverse mass with no dt): the cap is a force of mu m |g| / dt, 240x too large at 1/240 s (raw cannon-es: a unit cube on a slope is only moving
+                                                    above 45 degrees (it topples) for mu 0.2 and for mu 0.5, N-ENG-5). Before each solve the bound is replaced by mu * m_red * |g . n| * dt / (points of the pair):
                                                     Coulomb with the load of a body resting on its partner (a stack's lower boxes are under-loaded in this model) */
           const solve = world.solver.solve.bind(world.solver);
           world.solver.solve = (dt, w) => {
@@ -67,6 +68,7 @@
           } else if (t === 'SliderJoint' || t === 'UniversalJoint' || t === 'DoubleAxisHingeJoint') joints.push({ J, t, A, B });
           else if (t === 'MotorJoint') joints.push({ J, t, A, B });
           else { notes.push(t + ': not mapped to cannon-es, left out'); }
+          if (t === 'UniversalJoint') notes.push(t + ': mapped with anchors met and axes kept at 90 degrees; not exercised by the test suite');
           if (t === 'DoubleAxisHingeJoint') notes.push(t + ': mapped as a universal joint (anchors meet, axes at 90 degrees); angle limits and motors of the node are not mapped');
         }
         const fixedSolverRows = [];

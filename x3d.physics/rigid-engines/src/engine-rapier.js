@@ -91,8 +91,9 @@
               const m1 = colMap.get(c1.handle), m2 = colMap.get(c2.handle); if (!m1 || !m2 || m1.B === m2.B) return;
               if (!m1.B.invMass && !m2.B.invMass) return;
               world.contactPair(c1, c2, (m, flipped) => {
-                /* Rapier's contacts are speculative: a fast body is stopped at the surface by a contact that was still `dist` away at the start of the step, so no sub-step ever has dist <= 0 at an impact. A manifold counts when a point
-                   is touching (dist <= 0) or the solver pushed on it in this step (contactImpulse > 0): "a contact the solver acted on". depth is the penetration, 0 when only speculative. */
+                /* Rapier's contacts are speculative: a fast body is stopped at the surface by a contact that was still `dist` away at the start of the step, so some impact steps have dist > 0 (measured: +0.011 and +0.009 m in 2 of 4 drops; in the other 2 the ball already penetrated by 4 to 6 mm). A manifold counts when a point
+                   is touching (dist <= 0) or the solver pushed on it in this step (contactImpulse > 0): "a contact the solver acted on". depth is the penetration, 0 when only speculative. A manifold also lingers for a few steps after the ball has left with its last distance, so a 'last' mode read can see a stale contact: the Rapier
+                   'last' count in results/sensor-impact.json is not comparable with the others; 'frame' mode is not affected by this (it asks only whether a contact happened in the tick). */
                 let active = false; for (let k = 0, nc = m.numContacts(); k < nc; k++) if (m.contactImpulse(k) > 0) active = true;
                 const nS = m.numSolverContacts(), nrm = m.normal(), n = flipped ? [-nrm.x, -nrm.y, -nrm.z] : [nrm.x, nrm.y, nrm.z];      // from c1 to c2
                 for (let i = 0; i < nS; i++) {
