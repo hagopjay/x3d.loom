@@ -1,0 +1,26 @@
+{
+  "name": "x3d-loom-zod",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "description": "Zod 4 schemas and TypeScript types generated from the Web3D X3D 4.0 JSON Schema, for checkable LLM output",
+  "scripts": {
+    "gen": "node tools/gen.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.ts",
+    "bundle": "node tools/bundle.mjs dist/x3d-zod.bundle.js",
+    "fuzz": "node tools/fuzz.mjs"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.1",
+    "ajv": "8.20.0",
+    "esbuild": "^0.25.12",
+    "typescript": "7.0.2"
+  }
+}
