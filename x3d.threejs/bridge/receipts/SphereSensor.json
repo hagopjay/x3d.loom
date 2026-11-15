@@ -1,0 +1,24 @@
+{
+ "node": "SphereSensor",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 8275b3484149",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 33/33",
+ "xite": "pass 33/33",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "scope": [
+  "compared with X_ITE 16.6.0 numerically: trackPoint_changed agrees within 0.01 inside the sphere, within 0.02 where the pointer leaves the sphere (tangent plane rule) and for a press on the far half (sensor origin in front of the shape)",
+  "rotation_changed: the angle agrees within 0.015 rad; after two drags the axis differs by up to 0.2 in one component: X_ITE's press hit lies about half a pixel off the pointer ray ((0.016, 0.016, 1) at the box centre, seen in its first trackPoint_changed) where ours is the pick at the pointer ((0, 0, 1)), and the composition offset * rotation amplifies it; the test bounds it at 0.25",
+  "isOver is picked once per animation frame and keeps its value while a drag is active"
+ ]
+}

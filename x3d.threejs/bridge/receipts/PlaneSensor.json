@@ -1,0 +1,24 @@
+{
+ "node": "PlaneSensor",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 8275b3484149",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 57/57",
+ "xite": "pass 57/57",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "scope": [
+  "compared with X_ITE 16.6.0 numerically (translation_changed, trackPoint_changed, offset, the routed box): plane drag, axisRotation 0 0 1 0.5, line mode (minPosition.x = maxPosition.x), clamp, disabled; agree within 0.1 relative on a 2 unit drag (the engines pick the press half a pixel apart)",
+  "isOver is picked once per animation frame and keeps its value while a drag is active (the press owns the pointer); X_ITE does the same",
+  "line mode with both minPosition components equal turns the line along the sensor's y axis (X_ITE's first branch); translation_changed is in the sensor's own frame, as X_ITE reports it"
+ ]
+}

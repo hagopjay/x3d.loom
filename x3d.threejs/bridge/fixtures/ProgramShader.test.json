@@ -1,0 +1,80 @@
+{
+ "node": "ProgramShader",
+ "mode": "scene",
+ "note": "A ProgramShader without ShaderProgram nodes (those come in a later batch). X_ITE 16.6.0: 'not supported', never valid, never selected. The bridge does the same.",
+ "gaps": [
+  "no shader language runs: the node is only a holder",
+  "ShaderProgram parts of programs are checked with the ShaderProgram node"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "language",
+    "GLSL"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "programs",
+    []
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isValid",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isSelected",
+    false
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "N",
+    "isValid",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isSelected",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "activate",
+    true
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "expect": [
+    "N",
+    "isValid",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isSelected",
+    false
+   ]
+  }
+ ]
+}

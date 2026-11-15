@@ -72,7 +72,7 @@ class Body {
 
   /* ----------------------------------------------------------------- world */
   setWorld(world, baseUrl, resolve) {
-    this.clearWorld(); R.bridge.body = this;   // the shared bridge nodes reach the body through this (receive hooks call body.regeo)
+    this.clearWorld(); R.bridge.three.pointer.reset(); R.bridge.body = this;   // the shared bridge nodes reach the body through this (receive hooks call body.regeo)
     this.world = world; this.baseUrl = baseUrl; this.resolve = resolve || ((u) => u);
     this.root = new THREE.Group(); this.root.name = 'x3d-root'; this.scene.add(this.root);
     for (const n of world.children) this.build(n, this.root, []);
@@ -156,9 +156,9 @@ class Body {
     }
     for (const m of all) if (m.material.userData && m.material.userData.cubeU) m.material.userData.cubeU.meshes = all;
     if (!pl && app && app.f.fillProperties) this.applyFill(r, app.f.fillProperties, o);
-    for (const m of all) this.hookFog(m);
+    for (const m of all) { this.hookFog(m); if (m.material.userData && m.material.userData.x3dShader) { R.bridge.three.shader.alias(geo); m.onBeforeRender = (r, sc, cam) => R.bridge.three.shader.beforeRender(m, cam); } }
     for (const m of all) if (geo.userData.tcg) (this.tcgMeshes ||= []).push(m);
-    for (const dep of [app && app.f.material, app && app.f.texture, app && app.f.textureTransform, app && app.f.lineProperties, app && app.f.fillProperties, g, g.f.texCoord]) if (dep) for (const m of all) (this.meshesOf.get(dep.id) || this.meshesOf.set(dep.id, []).get(dep.id)).push(m);
+    for (const dep of [...((app && app.f.shaders) || []), app && app.f.material, app && app.f.texture, app && app.f.textureTransform, app && app.f.lineProperties, app && app.f.fillProperties, g, g.f.texCoord]) if (dep) for (const m of all) (this.meshesOf.get(dep.id) || this.meshesOf.set(dep.id, []).get(dep.id)).push(m);
     if (f.visible === false) o.visible = false;
     return r;
   }
@@ -291,7 +291,7 @@ class Body {
       if (pl && !!pl.wide !== !!m.userData.wide) { this.rebuildShape(m.userData.shape); return; }   // thin <-> wide: a different kind of mesh
       const g = (pl ? pl.geo : this.threeGeometry(n)) || this.emptyGeometry();
       if (n.type === 'Text' && !pl && m.material && !m.material.isShaderMaterial) { const tc = this.textCache.get(n.id); if (tc) { m.material.map = tc.map; m.material.needsUpdate = true; } }
-      m.geometry.dispose(); m.geometry = g; if (m.userData.hatch) m.userData.hatch.geometry = g; if (pl) { m.material.dispose(); m.material = pl.mat; }
+      m.geometry.dispose(); m.geometry = g; if (m.material.userData && m.material.userData.x3dShader) R.bridge.three.shader.alias(g); if (m.userData.hatch) m.userData.hatch.geometry = g; if (pl) { m.material.dispose(); m.material = pl.mat; }
       if (g.userData.tcg && !(this.tcgMeshes || []).includes(m)) (this.tcgMeshes ||= []).push(m);
       this.clipDirty = true;
     }
@@ -388,7 +388,8 @@ class Body {
   /* Material -> MeshPhongMaterial (the Phong model X3D and X_ITE share); PhysicalMaterial -> MeshPhysicalMaterial (the glTF model, linear colours) */
   makeMaterial(shape, g, app, back) {
     const T = THREE, mat = app && app.f.material, texN = app && app.f.texture, side = back ? T.BackSide : g.f.solid === true || (mat && mat.type === 'TwoSidedMaterial') ? T.FrontSide : T.DoubleSide;
-    let m;
+    let m; const cs = app && (app.f.shaders || []).find((x) => x.type === 'ComposedShader');
+    if (cs) { const sm = R.bridge.three.shader.make(this, cs, side); R.bridge.three.shader.announce(cs, !!sm); if (sm) return sm; }   // a shader that compiles takes the place of the Material; one that does not leaves the Material
     if (mat && mat.type === 'TwoSidedMaterial') { m = new T.MeshPhongMaterial({ side, specular: 0 }); this.refreshPhong(m, this.twoSrc(mat, !!back)); m.map = this.texFor(texN, app && app.f.textureTransform); return m; } const vc = !!g.f.color;   // a Color node replaces diffuseColor (19775-1 12.2.2): the material colour is white so the vertex colour is not multiplied by it
     if (mat && mat.type === 'PhysicalMaterial') { m = new T.MeshPhysicalMaterial({ side }); this.refreshPBR(m, mat); m.map = this.texFor(mat.f.baseTexture, app && app.f.textureTransform); }
     else if (mat && mat.type === 'Material') { m = new T.MeshPhongMaterial({ side, specular: 0 }); this.refreshPhong(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }
@@ -589,13 +590,7 @@ class Body {
   }
   userPosition() { const p = this.pose.pos; return { x: p[0], y: p[1], z: p[2] }; }
   /* EXAMINE: drag orbits about the centre of rotation, the wheel dollies. Pointer sensors, picking and the other navigation types are not ported yet (NODES.md). */
-  setupInput() {
-    const cv = this.canvas; let drag = null;
-    cv.addEventListener('pointerdown', (e) => { drag = [e.clientX, e.clientY]; cv.setPointerCapture(e.pointerId); });
-    cv.addEventListener('pointerup', () => { drag = null; });
-    cv.addEventListener('pointermove', (e) => { if (!drag) return; const dx = e.clientX - drag[0], dy = e.clientY - drag[1]; drag = [e.clientX, e.clientY]; this.orbit(dx, dy); });
-    cv.addEventListener('wheel', (e) => { e.preventDefault(); this.zoom(Math.exp(e.deltaY * 0.001)); }, { passive: false });
-  }
+  setupInput() { R.bridge.three.pointer.init(this); }
   orbit(dx, dy) {
     this.tr = null; const p = this.pose, c = new THREE.Vector3(...p.center), off = new THREE.Vector3(...p.pos).sub(c), up = new THREE.Vector3(0, 1, 0);
     off.applyAxisAngle(up, -dx * 0.008); const right = new THREE.Vector3().crossVectors(up, off).normalize(); off.applyAxisAngle(right, -dy * 0.008);
