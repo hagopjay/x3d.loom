@@ -1,0 +1,45 @@
+/* ReceiverPdu (DIS level 1): ReceiverPdu is a networked Protocol Data Unit (PDU) information node that transmits the state of radio frequency (RF) receivers modeled in a simulation.
+   Field table generated from X3DUOM 4.0 by driver.py scaffold; the behaviour below is hand written. */
+BR.node('ReceiverPdu', {
+  component: 'DIS', level: 1,
+  container: 'children',
+  defs: {
+    address: ['SFString', IO, "localhost"],
+    applicationID: ['SFInt32', IO, 0],
+    bboxCenter: ['SFVec3f', INIT, [0, 0, 0]],
+    bboxDisplay: ['SFBool', IO, false],
+    bboxSize: ['SFVec3f', INIT, [-1, -1, -1]],
+    description: ['SFString', IO, ""],
+    enabled: ['SFBool', IO, true],
+    entityID: ['SFInt32', IO, 0],
+    geoCoords: ['SFVec3d', IO, [0, 0, 0]],
+    geoSystem: ['MFString', INIT, []],
+    isActive: ['SFBool', OUT, false],
+    isNetworkReader: ['SFBool', OUT, false],
+    isNetworkWriter: ['SFBool', OUT, false],
+    isRtpHeaderHeard: ['SFBool', OUT, false],
+    isStandAlone: ['SFBool', OUT, false],
+    metadata: ['SFNode', IO, null],
+    multicastRelayHost: ['SFString', IO, ""],
+    multicastRelayPort: ['SFInt32', IO, 0],
+    networkMode: ['SFString', IO, "standAlone"],
+    port: ['SFInt32', IO, 0],
+    radioID: ['SFInt32', IO, 0],
+    readInterval: ['SFTime', IO, 0.1],
+    receivedPower: ['SFFloat', IO, 0.0],
+    receiverState: ['SFInt32', IO, 0],
+    rtpHeaderExpected: ['SFBool', IO, false],
+    siteID: ['SFInt32', IO, 0],
+    timestamp: ['SFTime', OUT, 0],
+    transmitterApplicationID: ['SFInt32', IO, 0],
+    transmitterEntityID: ['SFInt32', IO, 0],
+    transmitterRadioID: ['SFInt32', IO, 0],
+    transmitterSiteID: ['SFInt32', IO, 0],
+    visible: ['SFBool', IO, true],
+    whichGeometry: ['SFInt32', IO, 1],
+    writeInterval: ['SFTime', IO, 1.0],
+  },
+  // receive(n, field, value): return true when the event is handled here
+  // tick(n, now): once per timestamp, before the event queue drains
+  // build(body, n, parent, chain): a drawn node
+});

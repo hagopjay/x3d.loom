@@ -1,0 +1,45 @@
+/* SignalPdu (DIS level 1): SignalPdu is a networked Protocol Data Unit (PDU) information node that communicates the transmission of voice, audio or other data modeled in a simulation.
+   Field table generated from X3DUOM 4.0 by driver.py scaffold; the behaviour below is hand written. */
+BR.node('SignalPdu', {
+  component: 'DIS', level: 1,
+  container: 'children',
+  defs: {
+    address: ['SFString', IO, "localhost"],
+    applicationID: ['SFInt32', IO, 0],
+    bboxCenter: ['SFVec3f', INIT, [0, 0, 0]],
+    bboxDisplay: ['SFBool', IO, false],
+    bboxSize: ['SFVec3f', INIT, [-1, -1, -1]],
+    data: ['MFInt32', IO, []],
+    dataLength: ['SFInt32', IO, 0],
+    description: ['SFString', IO, ""],
+    enabled: ['SFBool', IO, true],
+    encodingScheme: ['SFInt32', IO, 0],
+    entityID: ['SFInt32', IO, 0],
+    geoCoords: ['SFVec3d', IO, [0, 0, 0]],
+    geoSystem: ['MFString', INIT, []],
+    isActive: ['SFBool', OUT, false],
+    isNetworkReader: ['SFBool', OUT, false],
+    isNetworkWriter: ['SFBool', OUT, false],
+    isRtpHeaderHeard: ['SFBool', OUT, false],
+    isStandAlone: ['SFBool', OUT, false],
+    metadata: ['SFNode', IO, null],
+    multicastRelayHost: ['SFString', IO, ""],
+    multicastRelayPort: ['SFInt32', IO, 0],
+    networkMode: ['SFString', IO, "standAlone"],
+    port: ['SFInt32', IO, 0],
+    radioID: ['SFInt32', IO, 0],
+    readInterval: ['SFTime', IO, 0.1],
+    rtpHeaderExpected: ['SFBool', IO, false],
+    sampleRate: ['SFInt32', IO, 0],
+    samples: ['SFInt32', IO, 0],
+    siteID: ['SFInt32', IO, 0],
+    tdlType: ['SFInt32', IO, 0],
+    timestamp: ['SFTime', OUT, 0],
+    visible: ['SFBool', IO, true],
+    whichGeometry: ['SFInt32', IO, 1],
+    writeInterval: ['SFTime', IO, 1.0],
+  },
+  // receive(n, field, value): return true when the event is handled here
+  // tick(n, now): once per timestamp, before the event queue drains
+  // build(body, n, parent, chain): a drawn node
+});
