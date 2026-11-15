@@ -16,6 +16,10 @@ test('HSV colour lerp: endpoints exact, red to green goes through yellow-ish hue
   const m = lerpHsv([1, 0, 0], [0, 1, 0], 0.5); assert.ok(Math.abs(m[0] - 1) < 1e-9 && Math.abs(m[1] - 1) < 1e-9 && m[2] < 1e-9);   // hue 60 deg, full s,v = (1,1,0)
   const rgb = lerpHsv([1, 0, 0], [0, 0, 1], 0.5); assert.ok(Math.abs(rgb[0] - 1) < 1e-9 && Math.abs(rgb[2] - 1) < 1e-9);          // red to blue the short way: magenta, RGB lerp would give 0.5 0 0.5
 });
+test('HSV lerp: an achromatic end borrows the other end\'s hue (X_ITE 16.6.0 Color3.lerp), white to red stays red-hued', () => {
+  const m = lerpHsv([1, 1, 1], [1, 0, 0], 0.5); assert.ok(Math.abs(m[0] - 1) < 1e-9 && Math.abs(m[1] - 0.5) < 1e-9 && Math.abs(m[2] - 0.5) < 1e-9);   // hue 0 s 0.5 v 1 = (1, .5, .5)
+  const g = lerpHsv([0.3, 0.3, 0.3], [0, 0.6, 0], 0.5); assert.ok(g[1] > g[0] && g[1] > g[2]);   // stays green-hued, not pulled through red
+});
 for (const c of CASES) {
   test(`${c.id}: bake error is within what the bake reports, keys keep authored instants`, async () => {
     const made = await c.make(); assert.ok(made.timeline.channels.length >= 4);
@@ -23,7 +27,7 @@ for (const c of CASES) {
     for (const ch of made.timeline.channels) { assert.equal(ch.keys[0].t, 0); assert.ok(Math.abs(ch.keys.at(-1).t - made.timeline.duration) < 1e-9); }
   });
   test(`${c.id}: X3D text reads back to the same timeline`, async () => {
-    const tl = (await c.make()).timeline, back = readTimelines(embed(stage(), tl))[0];
+    const tl = (await c.make()).timeline, back = readTimelines(embed(c.scene ? c.scene() : stage(), tl))[0];
     assert.equal(back.channels.length, tl.channels.length); assert.ok(Math.abs(back.duration - tl.duration) < 1e-9);
     tl.channels.forEach((ch, i) => { const b = back.channels[i]; assert.equal(b.def + b.field, ch.def + ch.field); assert.equal(b.keys.length, ch.keys.length);
       for (let k = 0; k < ch.keys.length; k++) { assert.ok(Math.abs(b.keys[k].t - ch.keys[k].t) < 1e-6); assert.ok(distValue(ch.type, b.keys[k].v, ch.keys[k].v) < 1e-6); } });

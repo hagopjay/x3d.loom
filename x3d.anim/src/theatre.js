@@ -27,8 +27,8 @@ export async function fromTheatre(projectState, { sheet = 'Sheet1', name, fps = 
   for (const [d, fs] of Object.entries(defaults)) for (const [f, v] of Object.entries(fs)) if (rest[d] && rest[d][f] !== undefined) rest[d][f] = typeof v === 'number' ? v : { ...rest[d][f], ...v };
   const proj = getProject('x3d-anim-' + (++counter), { state: projectState }); await proj.ready;
   const sh = proj.sheet(sheet), objs = Object.fromEntries(Object.entries(rest).map(([d, p]) => [d, sh.object(d, typesTree(p))]));
-  const must = []; for (const o of Object.values(st.sequence.tracksByObject)) for (const t of Object.values(o.trackData)) for (const k of t.keyframes) must.push(k.position);
+  const must = [], mustBy = new Map(); for (const [obj, o] of Object.entries(st.sequence.tracksByObject)) for (const [pp, tid] of Object.entries(o.trackIdByPropPath)) { const key = obj + '.' + JSON.parse(pp)[0]; if (!mustBy.has(key)) mustBy.set(key, new Set()); for (const k of o.trackData[tid].keyframes) { must.push(k.position); mustBy.get(key).add(k.position); } }   // authored keyframe instants, per channel
   const evalAt = (t) => { sh.sequence.position = t; return Object.fromEntries(Object.entries(objs).map(([d, o]) => [d, clone(o.value)])); };
-  const duration = st.sequence.length, res = bake(name || sheet, evalAt, rest, { duration, fps, must: [...new Set(must)].sort((a, b) => a - b), tol });
+  const duration = st.sequence.length, res = bake(name || sheet, evalAt, rest, { duration, fps, must: mustBy, tol });
   return { ...res, source: { tool: 'Theatre.js', core: '@theatre/core', sheet, theatreKeyframes: new Set(must).size, tracks: Object.values(st.sequence.tracksByObject).reduce((n, o) => n + Object.keys(o.trackData).length, 0) }, oracle: evalAt };
 }

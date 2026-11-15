@@ -1,6 +1,6 @@
 // The cases the verifier and tests run. Each: { id, tool, make() -> {timeline, oracle, source}, scene } ; scene = base X3D file under fixtures/.
 import fs from 'node:fs'; import path from 'node:path'; import { fileURLToPath } from 'node:url';
-import { fromTheatre } from '../src/theatre.js'; import { fromGsap } from '../src/gsap.js';
+import { fromTheatre } from '../src/theatre.js'; import { fromGsap } from '../src/gsap.js'; import * as ORRERY from '../src/orrery.js';
 const HERE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'), fx = (f) => path.join(HERE, 'fixtures', f);
 export const stage = () => fs.readFileSync(fx('stage.x3d'), 'utf8');
 
@@ -19,4 +19,5 @@ export const CASES = [
       return tl;
     }, { Box: { translation: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } }, BoxMat: { diffuseColor: { r: 0.9, g: 0.3, b: 0.1 }, transparency: 0 },
          Ball: { translation: { x: -3, y: 0, z: 0 }, scale: { x: 1, y: 1, z: 1 } } }, { name: 'gsap_orbit' }) },
+  { id: 'gsap-orrery', tool: 'GSAP', scene: () => ORRERY.sceneX3d(), make: () => fromGsap(ORRERY.build, ORRERY.rest(), { name: 'orrery', fps: 30 }) },
 ];

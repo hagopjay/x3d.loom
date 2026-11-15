@@ -25,11 +25,13 @@ export function reduceKeys(type, keys, tol, mustT) {
 }
 
 // evalAt(t) -> state tree; rest = the state tree at rest (names which def/field pairs are animated); must = times that must stay keys.
-// opts: duration (s), fps (sample rate, default 60), tol (multiplier of DEFAULT_TOL), only (def/field filter fn), constants (keep never-changing channels, default false)
+// opts: duration (s), fps (sample rate, default 60), tol (multiplier of DEFAULT_TOL), only (def/field filter fn), constants (keep never-changing channels, default false),
+//   must: times that stay keys. An array applies to every channel; a Map from 'def.field' to a Set or array of times applies per channel (the right choice: a staggered timeline has hundreds of instants, each belongs to one channel)
 export function bake(name, evalAt, rest, { duration, fps = 60, must = [], tol = 1, only = null, constants = false } = {}) {
   if (!(duration > 0)) throw new Error('bake: duration must be > 0');
   const n = Math.max(2, Math.ceil(duration * fps)), grid = new Set(); for (let i = 0; i <= n; i++) grid.add(+(duration * i / n).toFixed(9));
-  const mustT = [0, duration, ...must.filter((t) => t >= 0 && t <= duration)].map((t) => +t.toFixed(9)); for (const t of mustT) grid.add(t);
+  const mustMap = must instanceof Map, mustAll = mustMap ? [...must.values()].flatMap((v) => [...v]) : must, clampT = (a) => [...a].filter((t) => t >= 0 && t <= duration).map((t) => +t.toFixed(9));
+  for (const t of [0, duration, ...clampT(mustAll)]) grid.add(+t.toFixed(9));
   const times = [...grid].sort((a, b) => a - b), states = times.map((t) => evalAt(t));
   const channels = [], report = [];
   for (const def of Object.keys(rest)) for (const field of Object.keys(rest[def])) {
@@ -37,8 +39,8 @@ export function bake(name, evalAt, rest, { duration, fps = 60, must = [], tol = 
     const raw = times.map((t, i) => ({ t, v: toChannelValue(type, states[i][def][field]) }));
     if (type === 'SFRotation') for (let i = 1; i < raw.length; i++) { const a = raw[i - 1].v, b = raw[i].v; /* same rotation, either sign of axis: keep the axis continuous */ if (a[0] * b[0] + a[1] * b[1] + a[2] * b[2] < 0 && b[3] > 1e-9) raw[i].v = [-b[0], -b[1], -b[2], -b[3]]; }
     const moving = raw.some((k) => distValue(type, k.v, raw[0].v) > 1e-9); if (!moving && !constants) continue;
-    const tl = tolFor(type, raw.map((k) => k.v), tol);
-    const keys = moving ? reduceKeys(type, raw, tl, mustT.filter((t) => t > 0 && t < duration)) : [raw[0], raw[raw.length - 1]];
+    const tl = tolFor(type, raw.map((k) => k.v), tol), mine = mustMap ? clampT(must.get(def + '.' + field) || []) : clampT(must);
+    const keys = moving ? reduceKeys(type, raw, tl, mine.filter((t) => t > 0 && t < duration)) : [raw[0], raw[raw.length - 1]];
     channels.push({ def, field, type, keys }); report.push({ def, field, type, samples: raw.length, keys: keys.length, tol: tl });
   }
   // independent check: 4x the grid, offset by a third of a step, against the oracle itself

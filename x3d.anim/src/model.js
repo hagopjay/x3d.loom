@@ -33,7 +33,7 @@ export function toStateValue(type, v) {
 export function rgbToHsv([r, g, b]) { const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn; let h = 0; if (d > 0) { if (mx === r) h = ((g - b) / d) % 6; else if (mx === g) h = (b - r) / d + 2; else h = (r - g) / d + 4; h *= 60; if (h < 0) h += 360; } return [h, mx > 0 ? d / mx : 0, mx]; }
 export function hsvToRgb([h, s, v]) { const c = v * s, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m = v - c, k = Math.floor(((h % 360) + 360) % 360 / 60); const t = [[c, x, 0], [x, c, 0], [0, c, x], [0, x, c], [x, 0, c], [c, 0, x]][k]; return [t[0] + m, t[1] + m, t[2] + m]; }
 export function lerpHsv(a, b, t) {
-  const A = rgbToHsv(a), B = rgbToHsv(b); let dh = B[0] - A[0]; if (dh > 180) dh -= 360; else if (dh < -180) dh += 360;
+  const A = rgbToHsv(a), B = rgbToHsv(b); if (A[1] === 0) A[0] = B[0]; if (B[1] === 0) B[0] = A[0];   /* X_ITE 16.6.0 Color3.lerp: an achromatic end borrows the other end's hue */ let dh = B[0] - A[0]; if (dh > 180) dh -= 360; else if (dh < -180) dh += 360;
   return hsvToRgb([((A[0] + dh * t) % 360 + 360) % 360, A[1] + (B[1] - A[1]) * t, A[2] + (B[2] - A[2]) * t]);
 }
 export function lerpValue(type, a, b, t) {

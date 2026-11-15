@@ -24,7 +24,7 @@ await withXite(async (px, envX) => withBridge(async (pb, envB) => {
   envAll = { ...envX, bridge: envB }; const mp = await px.context().browser().newPage(); await mp.setContent('<canvas></canvas>');
   for (const pg of [px, pb]) await pg.addScriptTag({ content: browserJs });
   for (const c of CASES) {
-    const made = await c.make(), tl = made.timeline, x3d = embed(stage(), tl); fs.writeFileSync(path.join(HERE, 'fixtures', c.id + '.x3d'), x3d);
+    const made = await c.make(), tl = made.timeline, x3d = embed(c.scene ? c.scene() : stage(), tl); fs.writeFileSync(path.join(HERE, 'fixtures', c.id + '.x3d'), x3d);
     await loadScene(px, x3d); await loadScene(pb, x3d); const gx = await sweep(px, tl, fractions), gb = await sweep(pb, tl, fractions);
     const per = tl.channels.map((ch, ci) => { let eo = 0, eu = 0, eb = 0; fractions.forEach((f, i) => { const t = f * tl.duration, X = gx[i][ci], O = toChannelValue(ch.type, made.oracle(t)[ch.def][ch.field]); eo = Math.max(eo, distValue(ch.type, X, O)); eu = Math.max(eu, distValue(ch.type, X, sampleChannel(ch, t))); eb = Math.max(eb, distValue(ch.type, gb[i][ci], X)); });
       const r = made.report.find((q) => q.def === ch.def && q.field === ch.field), g = (v) => +v.toPrecision(3); return { channel: ch.def + '.' + ch.field, type: ch.type, keys: ch.keys.length, samples: r.samples, bakeErr: g(r.maxErr), xiteVsOracle: g(eo), xiteVsOurs: g(eu), bridgeVsXite: g(eb), unit: ch.type === 'SFRotation' ? 'rad' : 'value' }; });
