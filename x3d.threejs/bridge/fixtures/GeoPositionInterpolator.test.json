@@ -1,0 +1,526 @@
+{
+ "node": "GeoPositionInterpolator",
+ "mode": "events",
+ "note": "X_ITE 16.6.0 interpolates along a great circle about the earth's centre (the GeoOrigin point when there is one) with the radius changed linearly: the middle of (0, 0, 0) to (0, 90, 0) is (0, 45, 0); the middle of latitude 0 to latitude 60 is latitude 30.0833 and 2.66 km BELOW the ellipsoid; a key equal to the previous key makes a step (the later value wins at the key); a fraction outside the keys clamps; a short keyValue list is padded with its last value; before any input both outputs hold the first key value. value_changed is SFVec3f (32 bit), so it is compared to 1 m at 6.4e6; geovalue_changed is double.",
+ "gaps": [
+  "when a key sits on the GeoOrigin its local vector is zero and both engines give the same odd point (lon 7.04, 88.5 km below the ellipsoid at the middle of 0 to 20 degrees): the case is kept because the two agree",
+  "the great-circle path pivoting on the GeoOrigin is X_ITE's own choice (a defect against any sane reading); the bridge copies it so the numbers agree",
+  "the interpolation is not linear in latitude, longitude and height, which a reader of the specification may expect",
+  "UTM keys are not tested here: the unit maths of the bridge covers UTM, the interpolator uses the same conversion"
+ ],
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "nearv": [
+    "I",
+    "geovalue_changed",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "I",
+    "value_changed",
+    [
+     6378137,
+     0,
+     0
+    ],
+    1.0
+   ]
+  },
+  {
+   "expect": [
+    "J",
+    "geoSystem",
+    [
+     "GD",
+     "WE"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "I",
+    "set_fraction",
+    0.25
+   ]
+  },
+  {
+   "nearv": [
+    "I",
+    "geovalue_changed",
+    [
+     0,
+     22.5,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "I",
+    "value_changed",
+    [
+     5892630.22985,
+     2440807.35925,
+     0
+    ],
+    1.0
+   ]
+  },
+  {
+   "record": [
+    "I",
+    "geovalue_changed",
+    "i25"
+   ]
+  },
+  {
+   "record": [
+    "I",
+    "value_changed",
+    "v25"
+   ]
+  },
+  {
+   "set": [
+    "I",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "nearv": [
+    "I",
+    "geovalue_changed",
+    [
+     0,
+     45,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "I",
+    "value_changed",
+    [
+     4510023.92404,
+     4510023.92404,
+     0
+    ],
+    1.0
+   ]
+  },
+  {
+   "set": [
+    "I",
+    "set_fraction",
+    1
+   ]
+  },
+  {
+   "nearv": [
+    "I",
+    "geovalue_changed",
+    [
+     0,
+     90,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "set": [
+    "I",
+    "set_fraction",
+    2
+   ]
+  },
+  {
+   "nearv": [
+    "I",
+    "geovalue_changed",
+    [
+     0,
+     90,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "set": [
+    "I",
+    "set_fraction",
+    -1
+   ]
+  },
+  {
+   "nearv": [
+    "I",
+    "geovalue_changed",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "I",
+    "value_changed",
+    [
+     6378137,
+     0,
+     0
+    ],
+    1.0
+   ]
+  },
+  {
+   "set": [
+    "J",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "nearv": [
+    "J",
+    "geovalue_changed",
+    [
+     30.0832517586,
+     0,
+     -2663.00031
+    ],
+    0.0001
+   ]
+  },
+  {
+   "nearv": [
+    "J",
+    "value_changed",
+    [
+     5521332.18602,
+     0,
+     3177027.83575
+    ],
+    1.0
+   ]
+  },
+  {
+   "record": [
+    "J",
+    "geovalue_changed",
+    "j5"
+   ]
+  },
+  {
+   "set": [
+    "K",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "nearv": [
+    "K",
+    "geovalue_changed",
+    [
+     30.083244924,
+     0,
+     47336.9985865
+    ],
+    0.001
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "set_fraction",
+    0.25
+   ]
+  },
+  {
+   "nearv": [
+    "M",
+    "geovalue_changed",
+    [
+     0,
+     45,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "nearv": [
+    "M",
+    "geovalue_changed",
+    [
+     0,
+     90,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "set_fraction",
+    0.75
+   ]
+  },
+  {
+   "nearv": [
+    "M",
+    "geovalue_changed",
+    [
+     45.1924224021,
+     90,
+     26.9320050636
+    ],
+    0.001
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "set_fraction",
+    1
+   ]
+  },
+  {
+   "nearv": [
+    "M",
+    "geovalue_changed",
+    [
+     90,
+     90,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "set": [
+    "S",
+    "set_fraction",
+    0.4999
+   ]
+  },
+  {
+   "nearv": [
+    "S",
+    "geovalue_changed",
+    [
+     0,
+     9.998,
+     0
+    ],
+    0.001
+   ]
+  },
+  {
+   "set": [
+    "S",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "nearv": [
+    "S",
+    "geovalue_changed",
+    [
+     0,
+     20,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "set": [
+    "S",
+    "set_fraction",
+    0.75
+   ]
+  },
+  {
+   "nearv": [
+    "S",
+    "geovalue_changed",
+    [
+     0,
+     25,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "keyValue",
+    [
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      90,
+      0
+     ]
+    ],
+    "MFVec3d"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "set_fraction",
+    0.75
+   ]
+  },
+  {
+   "nearv": [
+    "P",
+    "geovalue_changed",
+    [
+     0,
+     90,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "set": [
+    "L",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "nearv": [
+    "L",
+    "geovalue_changed",
+    [
+     45,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "set": [
+    "C",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "nearv": [
+    "C",
+    "geovalue_changed",
+    [
+     4510023.92404,
+     4510023.92404,
+     0
+    ],
+    1.0
+   ]
+  },
+  {
+   "set": [
+    "E",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "nearv": [
+    "E",
+    "geovalue_changed",
+    [
+     0,
+     7.043587372715335,
+     -88527.13929864671
+    ],
+    0.0001
+   ]
+  },
+  {
+   "nearv": [
+    "E",
+    "value_changed",
+    [
+     -135993.86152575712,
+     771259.5144506344,
+     0
+    ],
+    1.0
+   ]
+  },
+  {
+   "set": [
+    "Z",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "nearv": [
+    "Z",
+    "geovalue_changed",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-09
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "i25",
+   1e-06
+  ],
+  [
+   "v25",
+   1.0
+  ],
+  [
+   "j5",
+   0.0001
+  ]
+ ],
+ "xsdAllow": []
+}

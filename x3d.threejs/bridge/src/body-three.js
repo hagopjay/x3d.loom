@@ -77,7 +77,7 @@ class Body {
     this.root = new THREE.Group(); this.root.name = 'x3d-root'; this.scene.add(this.root);
     for (const n of world.children) this.build(n, this.root, []);
     this.applyBackground(); this.applyNavigation(); this.applyFog();
-    const first = world.nodes.find((n) => n.type === 'Viewpoint' || n.type === 'OrthoViewpoint');   // 19775-1 23.4.1: the first Viewpoint in the file is bound at load (the Babylon stock body does this in body-br.js)
+    const first = world.nodes.find((n) => n.type === 'Viewpoint' || n.type === 'OrthoViewpoint' || n.type === 'GeoViewpoint');   // 19775-1 23.4.1: the first Viewpoint in the file is bound at load (the Babylon stock body does this in body-br.js)
     if (first) { this.started = false; this.bindViewpoint(first, true); }
   }
   clearWorld() {
@@ -199,7 +199,7 @@ class Body {
     for (const v of cap) { const top = pos.getY(v) > 0; uv.setXY(v, 0.5 + pos.getX(v) / (2 * R), 0.5 + (top ? -1 : 1) * pos.getZ(v) / (2 * R)); }
     return geo;
   }
-  geometryData(g) { return Geo.geometryData.call(this, g); }
+  geometryData(g) { return Geo.geometryData.call(this, T3.geo.sub(g)); }   // a GeoCoordinate is read as local metres (nodes/Geo.js)
   /* IndexedLineSet, LineSet (spec.lines) and Polyline2D draw as LineSegments, PointSet (and spec.points) as Points. 19775-1 12.2.2: with no Material they are white and unlit; with one, emissiveColor
      is the colour, and a Color node replaces it. X_ITE draws both one pixel wide (line width and point size are not exposed in WebGL2 beyond that: LineProperties is a gap, see README). */
   pointLine(g, app) {
@@ -539,7 +539,9 @@ class Body {
   }
 
   /* ---------------------------------------------------------------- camera */
+  viewpointList() { return this.world ? R.bridge.viewpoints(this.world, this.pose ? this.pose.pos : null) : []; }   // the page's viewpoint list with the ViewpointGroup rules (nodes/Geo.js)
   vpPose(vp) {
+    if (vp.type === 'GeoViewpoint') return T3.geo.pose(this, vp);
     const f = vp.f, par = (this.vpParent && this.vpParent.get(vp)) || null;
     let pos = f.position.slice(), q = R.quat.fromAxisAngle(f.orientation, f.orientation[3]), center = f.centerOfRotation.slice();
     if (par && par !== this.root) {
@@ -563,7 +565,7 @@ class Body {
     }
     c.fov = THREE.MathUtils.radToDeg(aspect >= 1 ? p.fov : 2 * Math.atan(Math.tan(p.fov / 2) / aspect));   // X3D fieldOfView is the angle across the smaller side of the view
     c.aspect = aspect; const d = Math.hypot(p.pos[0] - p.center[0], p.pos[1] - p.center[1], p.pos[2] - p.center[2]);
-    c.near = Math.max(0.3, Math.min(2, d * 0.004)); c.far = Math.max(2000, d * 12); c.updateProjectionMatrix();
+    c.near = Math.max(0.3, Math.min(2, d * 0.004)); c.far = Math.max(2000, d * 12); if (p.geo) { c.near = p.geo.near; c.far = p.geo.far; } c.updateProjectionMatrix();
   }
   bindViewpoint(vp, on) {
     if (!on) { vp.f.isBound = false; return; }
@@ -571,7 +573,7 @@ class Body {
     this.bound = vp; vp.f.isBound = true; R.events.emit(vp, 'isBound', true); vp.f.bindTime = (performance.timeOrigin + performance.now()) / 1000;
     const nav = this.world && this.world.nodes.find((n) => n.type === 'NavigationInfo');
     const tt = nav ? String(nav.f.transitionType[0] || 'LINEAR').toUpperCase() : 'LINEAR', dur = nav ? Math.max(nav.f.transitionTime || 1, 0.05) : 1, to = this.vpPose(vp);
-    if (!prev || tt === 'TELEPORT' || !this.started || to.ortho || this.pose.ortho) {   // a move into or out of an orthographic view is a cut
+    if (!prev || tt === 'TELEPORT' || !this.started || to.ortho || this.pose.ortho || to.geo || this.pose.geo) {   // a move into or out of an orthographic view is a cut
       this.pose = to; this.tr = null; this.started = true; this.applyCamera(); return; }
     this.tr = { from: { pos: this.pose.pos.slice(), q: this.pose.q.slice(), center: this.pose.center.slice(), fov: this.pose.fov }, to, t0: performance.now(), dur: dur * 1000 };
   }

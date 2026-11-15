@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Geospatial" level="2"/><meta name="title" content="GeoTransform.x3d"/><meta name="description" content="Bridge fixture for GeoTransform: a translation along the local axes and a rotation about the geoCenter, around a rotateYUp origin"/></head>
+  <Scene>
+    <Viewpoint DEF="V1" position="1 2 13"/>
+    <Viewpoint DEF="V2" position="111.319491 0 40"/>
+    <GeoTransform DEF="GT" translation="1 2 3"><GeoOrigin DEF="O" geoCoords="0 0 0" rotateYUp="true"/><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="2 2 2"/></Shape></GeoTransform>
+    <GeoTransform DEF="GT2" geoCenter="0 0.001 0"><GeoOrigin USE="O"/><Transform translation="121.319491 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="2 2 2"/></Shape></Transform></GeoTransform>
+  </Scene>
+</X3D>
