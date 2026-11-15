@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Geospatial" level="2"/><meta name="title" content="GeoProximitySensor.x3d"/><meta name="description" content="Bridge fixture for GeoProximitySensor: a box around center in the sensor frame, the viewer's position as geoCoord_changed, position, orientation and centerOfRotation"/></head>
+  <Scene>
+    <Viewpoint DEF="V" position="0 0 12"/>
+    <TimeSensor DEF="TS" loop="true" cycleInterval="4"/>
+    <OrientationInterpolator DEF="OI" key="0 0.5 1" keyValue="0 1 0 0 0 1 0 3.14159 0 1 0 6.28318"/>
+    <Transform DEF="SPIN" translation="0 -3 -30"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 1 1"/></Appearance><Box size="0.2 0.2 0.2"/></Shape></Transform>
+    <ROUTE fromNode="TS" fromField="fraction_changed" toNode="OI" toField="set_fraction"/>
+    <ROUTE fromNode="OI" fromField="value_changed" toNode="SPIN" toField="set_rotation"/>
+    <GeoProximitySensor DEF="P" size="100 100 100"><GeoOrigin DEF="O" geoCoords="0 0 0" rotateYUp="true"/></GeoProximitySensor>
+    <GeoProximitySensor DEF="P0"><GeoOrigin USE="O"/></GeoProximitySensor>
+    <GeoProximitySensor DEF="PC" size="20 20 20" center="0 0 10"><GeoOrigin USE="O"/></GeoProximitySensor>
+    <GeoProximitySensor DEF="PG" size="20 20 20" geoCenter="0 0 10"><GeoOrigin USE="O"/></GeoProximitySensor>
+    <GeoProximitySensor DEF="PR" size="20 20 20"><GeoOrigin USE="O"/></GeoProximitySensor>
+    <GeoProximitySensor DEF="PU" size="100 100 100"><GeoOrigin DEF="O2" geoCoords="0 0 0" rotateYUp="false"/></GeoProximitySensor>
+    <GeoProximitySensor DEF="PA" size="-1 -1 -1"><GeoOrigin USE="O"/></GeoProximitySensor>
+    <Transform translation="10 0 0" rotation="0 1 0 1.5707963"><GeoProximitySensor DEF="PN" size="100 100 100"><GeoOrigin USE="O"/></GeoProximitySensor></Transform>
+  </Scene>
+</X3D>

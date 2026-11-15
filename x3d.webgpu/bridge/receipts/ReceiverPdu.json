@@ -1,0 +1,31 @@
+{
+ "node": "ReceiverPdu",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/ReceiverPdu.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 69/69",
+  "xite": "pass 69/69",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "bboxDisplay draws a wire cube in X_ITE (even with visible false) and does not in the bridge; bboxSize of a PDU does not reach the parent bounding box in X_ITE",
+   "a PDU accepts no children (the reader warns and drops them), as in X_ITE"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 5e13cb162b9c",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "465c5ab"
+}

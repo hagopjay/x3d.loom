@@ -1,0 +1,31 @@
+{
+ "node": "GeoMetadata",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/GeoMetadata.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 30/30",
+  "xite": "pass 30/30",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the url is held, never fetched (X_ITE requests nothing either); summary keywords are not interpreted",
+   "nothing here can show that no request left the page: the bridge has no fetch in the node, checked by reading the code"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 5e13cb162b9c",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "465c5ab"
+}

@@ -1,0 +1,32 @@
+{
+ "node": "GeoTouchSensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/GeoTouchSensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 51/51",
+  "xite": "pass 51/51",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "hitGeoCoord under a Transform or GeoLocation is wrong on purpose (X_ITE converts the local point as if it were in the GeoOrigin frame); the specification wants the true position of the hit",
+   "the bridge reports a click as one press and release (isActive true then false, touchTime); the hit outputs are sent again after it, X_ITE sends them after press and release too; hitPoint repeats with every pointer move in X_ITE, once per move here",
+   "hover events repeat on every pointer move in both engines; the fixture checks values, not counts"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 5e13cb162b9c",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "465c5ab"
+}

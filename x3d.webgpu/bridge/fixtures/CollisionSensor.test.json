@@ -1,0 +1,234 @@
+{
+ "node": "CollisionSensor",
+ "mode": "events",
+ "note": "X_ITE 16.6.0 reads the contacts Bullet leaves after each step: a contact counts when it touches or penetrates (distance <= 0) and at least one of its two bodies owns a collidable that the sensor's own collider lists (flattened through CollisionSpace). Only resting contacts are asserted (a ball exactly touching a fixed ground, a unit cube on it): impacts last one sub-step and are a lottery. CS1 lists ground and ball, so the ground's contact with the cube counts too: 1 contact of the ball and 2 to 4 corners of the cube (Bullet keeps the points of the face that are within its margin: it gave 2 here, the bridge 4), and the intersections are the two listed shapes, BS and GS. CS2 lists only the ball (1 contact, intersections BS); CS3 lists a shape no body owns (never active); CS5 lists the cube (2 to 4 contacts at its lower corners, x 2.5 or 3.5, z -0.5 or 0.5, y 0). isActive is sent on change only, contacts and intersections on every frame while a contact exists and are never cleared (after the ball leaves, isActive is false and the lists keep their last length). enabled=\"false\" in the file switches the node off for good: setting enabled true does nothing until the collider is written again; the sensor's collider is its own, separate from the world's.",
+ "gaps": [
+  "isActive, intersections and contacts of an impact are not asserted: X_ITE sees an impact for one sub-step, the bridge for one of its 1/240 s steps; both are noisy",
+  "the events of one frame come in the order isActive, intersections, contacts (X_ITE: the same timestamp); the fixture reads values, not order",
+  "enabled is read only at load and when collider is written, as X_ITE 16.6.0 does; the specification says enabled switches the node"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "CS1",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 2.5
+  },
+  {
+   "expect": [
+    "CS1",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const n=node('CS1').contacts.length;return n>=3&&n<=5})()",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=node('CS1').intersections;return [...Array(a.length).keys()].map((i)=>a[i].getNodeName()).sort().join(',')})()==='BS,GS'",
+    true
+   ]
+  },
+  {
+   "atleast": [
+    "CS1",
+    "contacts",
+    20
+   ]
+  },
+  {
+   "expect": [
+    "CS2",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('CS2').contacts.length===1",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=node('CS2').intersections;return [...Array(a.length).keys()].map((i)=>a[i].getNodeName()).sort().join(',')})()==='BS'",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "CS3",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "jsn": [
+    "node('CS3').contacts.length===0",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('CS3').intersections.length===0",
+    true
+   ]
+  },
+  {
+   "noevent": [
+    "CS3",
+    "contacts"
+   ]
+  },
+  {
+   "noevent": [
+    "CS3",
+    "isActive"
+   ]
+  },
+  {
+   "expect": [
+    "CS5",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const n=node('CS5').contacts.length;return n>=2&&n<=4})()",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=node('CS5').intersections;return [...Array(a.length).keys()].map((i)=>a[i].getNodeName()).sort().join(',')})()==='QS'",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=node('CS5').contacts;return [...Array(a.length).keys()].every((i)=>{const p=plain(a[i].position);return Math.abs(Math.abs(p[0]-3)-0.5)<0.03&&Math.abs(p[1])<0.03&&Math.abs(Math.abs(p[2])-0.5)<0.03})})()",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "CS4",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "noevent": [
+    "CS4",
+    "contacts"
+   ]
+  },
+  {
+   "set": [
+    "CS4",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "CS4",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "noevent": [
+    "CS4",
+    "contacts"
+   ]
+  },
+  {
+   "setnode": [
+    "CS4",
+    "collider",
+    "C4"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "CS4",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "atleast": [
+    "CS4",
+    "contacts",
+    10
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "linearVelocity",
+    [
+     0,
+     4,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.4
+  },
+  {
+   "expect": [
+    "CS2",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "jsn": [
+    "node('CS2').contacts.length===1",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('CS2').intersections.length===1",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "CS5",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "settle": 2.5
+  },
+  {
+   "expect": [
+    "CS2",
+    "isActive",
+    true
+   ]
+  }
+ ]
+}

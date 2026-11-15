@@ -69,7 +69,7 @@ BR.phys = (() => {
   const volume = (s) => (s.kind === 'box' ? 8 * s.half[0] * s.half[1] * s.half[2] : (4 / 3) * Math.PI * s.r ** 3);
   const buildBody = (rb) => {
     const f = rb.f, shapes = [], geo = f.geometry || [];
-    for (const g of geo) shapesOf(g, [0, 0, 0], [0, 0, 0, 1], shapes);
+    for (const g of geo) { const k0 = shapes.length; shapesOf(g, [0, 0, 0], [0, 0, 0, 1], shapes); for (let i = k0; i < shapes.length; i++) shapes[i].root = g; }     // root: the top-level collidable of the body (a CollisionSensor names those)
     return makeBody(rb, shapes, !!f.fixed || !(f.mass > 0));
   };
   const makeBody = (rb, shapes, fixed) => {
@@ -245,9 +245,11 @@ BR.phys = (() => {
         const A = L[i], B = L[j]; if (!A.invMass && !B.invMass) continue; if (A.node && A.node.f.enabled === false && B.node && B.node.f.enabled === false) continue;
         for (const sa of A.shapes) for (const sb of B.shapes) {
           if (len(sub(sa.wp, sb.wp)) > sa.rad + sb.rad) continue;
+          const k0 = cs.length;
           if (sa.kind === 'sphere' && sb.kind === 'sphere') sphereSphere(A, sa, B, sb, cs);
           else if (sa.kind === 'sphere') sphereBox(A, sa, B, sb, cs, false); else if (sb.kind === 'sphere') sphereBox(B, sb, A, sa, cs, true);
           else boxBox(A, sa, B, sb, cs);
+          for (let k = k0; k < cs.length; k++) { cs[k].ga = sa.root; cs[k].gb = sb.root; cs[k].ba = A; cs[k].bb = B; }     // the pair of top-level collidables and bodies of this contact (a, b may be swapped, these follow sa, sb)
         }
       }
     }
@@ -270,7 +272,7 @@ BR.phys = (() => {
       }
     } }
     for (const B of st.bodies) if (B.invMass && B.node.f.enabled !== false) { B.x = add(B.x, mul(B.v, h)); const dq = qmul([B.w[0] * h * 0.5, B.w[1] * h * 0.5, B.w[2] * h * 0.5, 0], B.q); B.q = qnorm([B.q[0] + dq[0], B.q[1] + dq[1], B.q[2] + dq[2], B.q[3] + dq[3]]); }
-    st.contacts = cs.length;
+    st.contacts = cs.length; st.last = cs;      // the contacts of the last sub-step: what a CollisionSensor reads
   };
   const build = (n) => {
     const st = { node: n, bodies: [], all: [], t: null, acc: 0, contacts: 0 };
@@ -309,5 +311,13 @@ BR.phys = (() => {
       B.out = { position: f.position, orientation: f.orientation, linearVelocity: f.linearVelocity, angularVelocity: f.angularVelocity };
     }
   };
-  return { tick, build, step, toAA, fromAA };
+  /* the collidables a collider lists, nested CollisionSpaces flattened (anything else is skipped, a space met twice is walked once) */
+  const flatten = (list, out = [], seen = new Set()) => {
+    for (const c of list || []) {
+      if (!c || seen.has(c)) continue; seen.add(c);
+      if (c.type === 'CollisionSpace') flatten(c.f.collidables, out, seen); else if (c.type === 'CollidableShape' || c.type === 'CollidableOffset') out.push(c);
+    }
+    return out;
+  };
+  return { tick, build, step, toAA, fromAA, flatten };
 })();

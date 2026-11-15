@@ -1,0 +1,335 @@
+{
+ "node": "DISEntityTypeMapping",
+ "mode": "scene",
+ "note": "X_ITE 16.6.0 marks the DIS component as not supported: DISEntityTypeMapping keeps the type fields (read at parse, initializeOnly) and the url, and never loads it or matches an entity (no loadState or loadCount field exists to read). It draws nothing inside its DISEntityManager (the schema allows it nowhere else).",
+ "gaps": [
+  "the url is held and never fetched (X_ITE measured 0 requests; the bridge issues none either); a mapping can never be resolved because no entity is ever received",
+  "autoRefresh never fires"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "load",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "url",
+    []
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefresh",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefreshTimeLimit",
+    3600
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "category",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "country",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "domain",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "extra",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "kind",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "specific",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "subcategory",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "category",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "country",
+    225
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "domain",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "kind",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "extra",
+    4
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "specific",
+    5
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "subcategory",
+    6
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "description",
+    "a tank"
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "url",
+    [
+     "tank.x3d",
+     "tank.glb"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "load",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "autoRefresh",
+    30
+   ]
+  },
+  {
+   "expect": [
+    "T2",
+    "autoRefreshTimeLimit",
+    600
+   ]
+  },
+  {
+   "expect": [
+    "T3",
+    "category",
+    2
+   ]
+  },
+  {
+   "expect": [
+    "T3",
+    "country",
+    3
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    100,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    218,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "url",
+    [
+     "a.x3d"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "url",
+    [
+     "a.x3d"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "url",
+    [
+     "a.x3d"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "load",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "load",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "load",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "load",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "description",
+    "x"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    "x"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "autoRefresh",
+    5
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefresh",
+    5
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  }
+ ],
+ "tone": "none"
+}

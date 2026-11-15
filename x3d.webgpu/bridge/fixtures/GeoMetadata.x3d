@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Geospatial" level="2"/><meta name="title" content="GeoMetadata.x3d"/><meta name="description" content="Bridge fixture for GeoMetadata: stores its fields, never loads its url, parses its data nodes without drawing them"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+    <GeoMetadata DEF="M0"/>
+    <GeoMetadata DEF="M" description="a survey" url='"meta.xml" "meta2.xml"' summary='"title" "Test area" "coordinateSystem" "GD" "horizontalDatum" "WE"' load="true" autoRefresh="0" autoRefreshTimeLimit="3600">
+      <GeoLocation containerField="data" geoCoords="0 0 0"><Shape DEF="DS"><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="4 4 4"/></Shape></GeoLocation>
+    </GeoMetadata>
+    <Transform translation="3 0 0"><Shape USE="DS"/></Transform>
+  </Scene>
+</X3D>

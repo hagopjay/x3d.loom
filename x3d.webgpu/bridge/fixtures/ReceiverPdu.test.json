@@ -1,0 +1,512 @@
+{
+ "node": "ReceiverPdu",
+ "mode": "scene",
+ "note": "X_ITE 16.6.0 marks the DIS component as not supported: ReceiverPdu stores its fields and does nothing else. networkMode networkReader / networkWriter opens no connection, so isNetworkReader, isNetworkWriter, isStandAlone, isActive and timestamp never fire (timestamp stays -1); visible false and enabled false change nothing visible because the node draws nothing, and the red sibling box keeps its pixels.",
+ "gaps": [
+  "bboxDisplay draws a wire cube in X_ITE (even with visible false) and does not in the bridge; bboxSize of a PDU does not reach the parent bounding box in X_ITE",
+  "a PDU accepts no children (the reader warns and drops them), as in X_ITE"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "address",
+    "localhost"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "port",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "siteID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "applicationID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "entityID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "radioID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "multicastRelayHost",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "multicastRelayPort",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "networkMode",
+    "standAlone"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "readInterval",
+    0.1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "writeInterval",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "whichGeometry",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "visible",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "bboxDisplay",
+    false
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "bboxSize",
+    [
+     -1,
+     -1,
+     -1
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "bboxCenter",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "geoCoords",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "geoSystem",
+    [
+     "GD",
+     "WE"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "rtpHeaderExpected",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isStandAlone",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isNetworkReader",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isNetworkWriter",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isRtpHeaderHeard",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "timestamp",
+    -1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "receivedPower",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "receiverState",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "transmitterApplicationID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "transmitterEntityID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "transmitterRadioID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "transmitterSiteID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "transmitterApplicationID",
+    7
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "transmitterEntityID",
+    8
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "transmitterRadioID",
+    9
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "transmitterSiteID",
+    10
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "receivedPower",
+    2.5
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "receiverState",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "networkMode",
+    "networkReader"
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "address",
+    "127.0.0.1"
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "port",
+    3000
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "visible",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "isNetworkReader",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "receivedPower",
+    4.5
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "receivedPower",
+    4.5
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "receivedPower",
+    4.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "receiverState",
+    2
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "receiverState",
+    2
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "networkMode",
+    "networkWriter"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "networkMode",
+    "networkWriter"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "noevent": [
+    "N",
+    "isActive"
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "isStandAlone"
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "isNetworkReader"
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "isNetworkWriter"
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "isRtpHeaderHeard"
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "timestamp"
+   ]
+  },
+  {
+   "noevent": [
+    "R2",
+    "isActive"
+   ]
+  },
+  {
+   "noevent": [
+    "R2",
+    "isStandAlone"
+   ]
+  },
+  {
+   "noevent": [
+    "R2",
+    "isNetworkReader"
+   ]
+  },
+  {
+   "noevent": [
+    "R2",
+    "isNetworkWriter"
+   ]
+  },
+  {
+   "noevent": [
+    "R2",
+    "isRtpHeaderHeard"
+   ]
+  },
+  {
+   "noevent": [
+    "R2",
+    "timestamp"
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    100,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    218,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  }
+ ],
+ "tone": "none"
+}

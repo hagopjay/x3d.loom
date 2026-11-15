@@ -347,6 +347,14 @@ for (const t of Object.keys(DEFS)) if (!DEFS[t].metadata) DEFS[t].metadata = ['S
    arrives in that group's local frame as it was at the press (the group may move while it is dragged, the frame does not). The sensor does the geometry and raises its outputs
    through BR.fire. Tests call the same three methods through BR.drag with synthetic rays. */
 BR.fire = (n, f, v) => { if (!n._disposed) return R.hooks && R.hooks.fire ? R.hooks.fire(n, f, v) : (n.f[f] = v, events.emit(n, f, v)); };
+/* fetch and parse an X3D file for node n (relative urls resolve against the node's own base, data: urls work), gzip detected by its magic; resolves with the parsed world (its roots are world.children).
+   The roots are built by the caller (body.build under a group of its own). Used by GeoLOD; rejects on a failed request. */
+BR.loadWorld = async (n, url) => {
+  const abs = new URL(url, n.base || location.href).href, res = await fetch(abs); if (!res.ok) throw new Error(res.status + ' for ' + abs);
+  const u = new Uint8Array(await res.arrayBuffer());
+  const text = u[0] === 0x1f && u[1] === 0x8b ? await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text() : new TextDecoder().decode(u);
+  return (await X3DSAI.B.createX3DFromString(text, abs))._world;
+};
 BR.drag = {
   start(n, c) { const s = BR.specs.get(n.type); if (n.f.enabled === false) return; n._dragging = true; s.dragStart(n, c); },
   move(n, c) { if (n._dragging) BR.specs.get(n.type).dragMove(n, c); },

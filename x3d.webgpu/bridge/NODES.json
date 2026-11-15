@@ -498,10 +498,10 @@
    "inherits": "X3DSensorNode",
    "container": "children",
    "nfields": 7,
-   "status": "blocked",
-   "batch": null,
-   "receipt": null,
-   "note": "needs the RigidBodyPhysics nodes it reads (CollisionCollection, CollidableShape, CollidableOffset, RigidBody, RigidBodyCollection, Contact; ranks 227 to 239) and a contact solver; a sensor with no collidables can never fire. Build them as one physics group. Scaffold kept in bridge/_deferred/",
+   "status": "gap",
+   "batch": 47,
+   "receipt": "receipts/CollisionSensor.json",
+   "note": "isActive, intersections and contacts of an impact are not asserted: X_ITE sees an impact for one sub-step, the bridge for one of its 1/240 s steps; both are noisy; the events of one frame come in the order isActive, intersections, contacts (X_ITE: the same timestamp); the fixture reads values, not order; enabled is read only at load and when collider is written, as X_ITE 16.6.0 does; the specification says enabled switches the node",
    "rank": 59
   },
   "CollisionSpace": {
@@ -511,10 +511,10 @@
    "inherits": "X3DNBodyCollisionSpaceNode",
    "container": "children",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 47,
+   "receipt": "receipts/CollisionSpace.json",
+   "note": "enabled and useGeometry are not read (X_ITE 16.6.0 does the same); the specification says they switch the space and select the geometry; the bounding box fields are kept and never used",
    "rank": 230
   },
   "Color": {
@@ -673,10 +673,10 @@
    "inherits": "X3DNode",
    "container": "contacts",
    "nfields": 17,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 47,
+   "receipt": "receipts/Contact.json",
+   "note": "body1, body2, geometry1, geometry2: the bridge fills them, X_ITE leaves them null (checked on each side); the sign of contactNormal depends on the order of the pair and flips with nested shapes: only its length and axis are asserted; a Contact routed to set_contacts is held and does nothing, as in X_ITE",
    "rank": 232
   },
   "Contour2D": {
@@ -839,10 +839,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 46,
+   "receipt": "receipts/DISEntityManager.json",
+   "note": "no entity is ever added or removed: the manager does not listen for ESPDUs, and nothing here can be tested without a network; the mapping children are held and never drawn",
    "rank": 257
   },
   "DISEntityTypeMapping": {
@@ -852,10 +852,10 @@
    "inherits": "X3DInfoNode",
    "container": "children",
    "nfields": 13,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 46,
+   "receipt": "receipts/DISEntityTypeMapping.json",
+   "note": "the url is held and never fetched (X_ITE measured 0 requests; the bridge issues none either); a mapping can never be resolved because no entity is ever received; autoRefresh never fires",
    "rank": 258
   },
   "Delay": {
@@ -975,10 +975,10 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 94,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 46,
+   "receipt": "receipts/EspduTransform.json",
+   "note": "the bridge copies X_ITE: translation, rotation, scale, center, scaleOrientation of an EspduTransform are not applied (the specification says they place the entity like a Transform); no dead reckoning, no network (isStandAlone never fires), no articulation parameters; the DIS traffic cannot be tested from a scene file; bboxDisplay draws no wire cube in the bridge (no shared bbox helper yet); X_ITE draws one",
    "rank": 253
   },
   "ExplosionEmitter": {
@@ -1154,10 +1154,10 @@
    "inherits": "X3DChildNode",
    "container": "children",
    "nfields": 17,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 46,
+   "receipt": "receipts/GeoLOD.json",
+   "note": "children are fetched at first entry to level 1 and never unloaded: the \"fetched once\" rule is not counted in the fixture; level_changed before children is the order in X_ITE and in the bridge; the fixture does not assert event order (the runner reads values); the root is kept on screen until all four children are finished, so a slow child delays the picture, not level_changed (not tested: data: urls arrive at once); bboxDisplay and the bounding box of a GeoLOD are not implemented",
    "rank": 218
   },
   "GeoLocation": {
@@ -1180,10 +1180,10 @@
    "inherits": "X3DInfoNode",
    "container": "children",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 46,
+   "receipt": "receipts/GeoMetadata.json",
+   "note": "the url is held, never fetched (X_ITE requests nothing either); summary keywords are not interpreted; nothing here can show that no request left the page: the bridge has no fetch in the node, checked by reading the code",
    "rank": 220
   },
   "GeoOrigin": {
@@ -1219,10 +1219,10 @@
    "inherits": "X3DEnvironmentalSensorNode",
    "container": "children",
    "nfields": 15,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 46,
+   "receipt": "receipts/GeoProximitySensor.json",
+   "note": "a sensor inside a Transform reports geoCoord_changed of the local position (X_ITE's shortcut), not the viewer's geographic position; X_ITE sends isActive false and exitTime twice when the sensor is disabled while active: the bridge sends them once (the fixture asserts at least one); the viewer's own navigation (mouse, keys) is not simulated: the camera is moved by writing the Viewpoint position; events carry the pose of the camera in the same frame (no frame of lag as in X_ITE)",
    "rank": 225
   },
   "GeoTouchSensor": {
@@ -1232,10 +1232,10 @@
    "inherits": "X3DTouchSensorNode",
    "container": "children",
    "nfields": 12,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 46,
+   "receipt": "receipts/GeoTouchSensor.json",
+   "note": "hitGeoCoord under a Transform or GeoLocation is wrong on purpose (X_ITE converts the local point as if it were in the GeoOrigin frame); the specification wants the true position of the hit; the bridge reports a click as one press and release (isActive true then false, touchTime); the hit outputs are sent again after it, X_ITE sends them after press and release too; hitPoint repeats with every pointer move in X_ITE, once per move here; hover events repeat on every pointer move in both engines; the fixture checks values, not counts",
    "rank": 223
   },
   "GeoTransform": {
@@ -2559,10 +2559,10 @@
    "inherits": "X3DNetworkSensorNode",
    "container": "children",
    "nfields": 34,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 46,
+   "receipt": "receipts/ReceiverPdu.json",
+   "note": "bboxDisplay draws a wire cube in X_ITE (even with visible false) and does not in the bridge; bboxSize of a PDU does not reach the parent bounding box in X_ITE; a PDU accepts no children (the reader warns and drops them), as in X_ITE",
    "rank": 254
   },
   "Rectangle2D": {
@@ -2756,10 +2756,10 @@
    "inherits": "X3DNetworkSensorNode",
    "container": "children",
    "nfields": 34,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 46,
+   "receipt": "receipts/SignalPdu.json",
+   "note": "the sample data is held and never played; no AudioContext is created; bboxDisplay: see ReceiverPdu",
    "rank": 255
   },
   "SilhouetteEnhancementVolumeStyle": {
@@ -3283,10 +3283,10 @@
    "inherits": "X3DNetworkSensorNode",
    "container": "children",
    "nfields": 50,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 46,
+   "receipt": "receipts/TransmitterPdu.json",
+   "note": "bboxDisplay: see ReceiverPdu; radio transmission is not simulated",
    "rank": 256
   },
   "TriangleFanSet": {

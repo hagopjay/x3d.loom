@@ -1,0 +1,534 @@
+{
+ "node": "SignalPdu",
+ "mode": "scene",
+ "note": "X_ITE 16.6.0 marks the DIS component as not supported: SignalPdu stores its fields, data included, and derives nothing (dataLength stays 0 when data is set). No audio is created and no connection opened; isRtpHeaderHeard, isNetworkWriter and timestamp never fire, even with rtpHeaderExpected true and networkMode networkWriter.",
+ "gaps": [
+  "the sample data is held and never played; no AudioContext is created",
+  "bboxDisplay: see ReceiverPdu"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "address",
+    "localhost"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "port",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "siteID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "applicationID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "entityID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "radioID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "multicastRelayHost",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "multicastRelayPort",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "networkMode",
+    "standAlone"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "readInterval",
+    0.1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "writeInterval",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "whichGeometry",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "visible",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "bboxDisplay",
+    false
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "bboxSize",
+    [
+     -1,
+     -1,
+     -1
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "bboxCenter",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "geoCoords",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "geoSystem",
+    [
+     "GD",
+     "WE"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "rtpHeaderExpected",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isStandAlone",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isNetworkReader",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isNetworkWriter",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isRtpHeaderHeard",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "timestamp",
+    -1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "data",
+    []
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "dataLength",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "encodingScheme",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "sampleRate",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "samples",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "tdlType",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "data",
+    [
+     1,
+     2,
+     3
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "dataLength",
+    3
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "encodingScheme",
+    4
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "sampleRate",
+    8000
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "samples",
+    3
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "tdlType",
+    9
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "radioID",
+    2
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "siteID",
+    3
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "applicationID",
+    4
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "entityID",
+    5
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "whichGeometry",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "rtpHeaderExpected",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "data",
+    [
+     1,
+     2,
+     3,
+     4
+    ],
+    "MFInt32"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "data",
+    [
+     1,
+     2,
+     3,
+     4
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "dataLength",
+    0
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "whichGeometry",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "whichGeometry",
+    0
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "rtpHeaderExpected",
+    true
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "networkMode",
+    "networkWriter"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "noevent": [
+    "N",
+    "isActive"
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "isStandAlone"
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "isNetworkReader"
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "isNetworkWriter"
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "isRtpHeaderHeard"
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "timestamp"
+   ]
+  },
+  {
+   "noevent": [
+    "R2",
+    "isActive"
+   ]
+  },
+  {
+   "noevent": [
+    "R2",
+    "isStandAlone"
+   ]
+  },
+  {
+   "noevent": [
+    "R2",
+    "isNetworkReader"
+   ]
+  },
+  {
+   "noevent": [
+    "R2",
+    "isNetworkWriter"
+   ]
+  },
+  {
+   "noevent": [
+    "R2",
+    "isRtpHeaderHeard"
+   ]
+  },
+  {
+   "noevent": [
+    "R2",
+    "timestamp"
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    100,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    218,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  }
+ ],
+ "tone": "none"
+}

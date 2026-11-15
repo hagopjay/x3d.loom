@@ -1,0 +1,33 @@
+{
+ "node": "GeoProximitySensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/GeoProximitySensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 64/64",
+  "xite": "pass 64/64",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "a sensor inside a Transform reports geoCoord_changed of the local position (X_ITE's shortcut), not the viewer's geographic position",
+   "X_ITE sends isActive false and exitTime twice when the sensor is disabled while active: the bridge sends them once (the fixture asserts at least one)",
+   "the viewer's own navigation (mouse, keys) is not simulated: the camera is moved by writing the Viewpoint position",
+   "events carry the pose of the camera in the same frame (no frame of lag as in X_ITE)"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 5e13cb162b9c",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "465c5ab"
+}

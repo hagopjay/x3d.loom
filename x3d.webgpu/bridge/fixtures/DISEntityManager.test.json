@@ -1,0 +1,238 @@
+{
+ "node": "DISEntityManager",
+ "mode": "scene",
+ "note": "X_ITE 16.6.0 marks the DIS component as not supported: DISEntityManager keeps its fields and its children, opens no socket and never raises addedEntities or removedEntities even with an EspduTransform in networkReader mode in the scene. It draws nothing and hides no sibling (the red and green boxes keep their pixels).",
+ "gaps": [
+  "no entity is ever added or removed: the manager does not listen for ESPDUs, and nothing here can be tested without a network",
+  "the mapping children are held and never drawn"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "M",
+    "address",
+    "localhost"
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "port",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "siteID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "applicationID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "addedEntities",
+    []
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "removedEntities",
+    []
+   ]
+  },
+  {
+   "jsn": [
+    "node('M').children.length",
+    1
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "noevent": [
+    "M",
+    "addedEntities"
+   ]
+  },
+  {
+   "noevent": [
+    "M",
+    "removedEntities"
+   ]
+  },
+  {
+   "jsn": [
+    "node('M').children.length",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "addedEntities",
+    []
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    64,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    218,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    60,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "port",
+    3001
+   ]
+  },
+  {
+   "event": [
+    "M",
+    "port",
+    3001
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "port",
+    3001
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "siteID",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "siteID",
+    1
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "applicationID",
+    2
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "applicationID",
+    2
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "address",
+    "10.0.0.1"
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "address",
+    "10.0.0.1"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "noevent": [
+    "M",
+    "addedEntities"
+   ]
+  },
+  {
+   "noevent": [
+    "M",
+    "removedEntities"
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    64,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    12
+   ]
+  }
+ ],
+ "tone": "none"
+}

@@ -1,0 +1,264 @@
+{
+ "node": "GeoMetadata",
+ "mode": "scene",
+ "note": "X_ITE 16.6.0: GeoMetadata keeps url, summary, description, load, autoRefresh and the nodes in `data`, and does nothing with them: the url is never requested (requestImmediateLoad is empty), the summary is never read, and the red box in `data` is not drawn at the origin. A node DEFined in `data` is still a node of the scene: USE of it elsewhere draws it (the red box at x 3, spanning x 1..5, shows at px 250 and 300 at a camera distance of 8 to its front face).",
+ "gaps": [
+  "the url is held, never fetched (X_ITE requests nothing either); summary keywords are not interpreted",
+  "nothing here can show that no request left the page: the bridge has no fetch in the node, checked by reading the code"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "M0",
+    "load",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "M0",
+    "autoRefresh",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "M0",
+    "autoRefreshTimeLimit",
+    3600
+   ]
+  },
+  {
+   "expect": [
+    "M0",
+    "url",
+    []
+   ]
+  },
+  {
+   "expect": [
+    "M0",
+    "summary",
+    []
+   ]
+  },
+  {
+   "expect": [
+    "M0",
+    "description",
+    ""
+   ]
+  },
+  {
+   "jsn": [
+    "node('M0').data.length",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "description",
+    "a survey"
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "url",
+    [
+     "meta.xml",
+     "meta2.xml"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "summary",
+    [
+     "title",
+     "Test area",
+     "coordinateSystem",
+     "GD",
+     "horizontalDatum",
+     "WE"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "load",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('M').data.length",
+    1
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    120,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    250,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    300,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "summary",
+    [
+     "keywords",
+     "a b"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "summary",
+    [
+     "keywords",
+     "a b"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "url",
+    [
+     "gone.xml"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "url",
+    [
+     "gone.xml"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "load",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "load",
+    false
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "load",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "load",
+    true
+   ]
+  },
+  {
+   "set": [
+    "M",
+    "description",
+    "changed"
+   ]
+  },
+  {
+   "expect": [
+    "M",
+    "description",
+    "changed"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    250,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  }
+ ],
+ "tone": "none"
+}

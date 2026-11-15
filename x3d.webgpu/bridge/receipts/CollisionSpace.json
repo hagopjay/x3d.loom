@@ -1,0 +1,30 @@
+{
+ "node": "CollisionSpace",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/CollisionSpace.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 34/34",
+  "xite": "pass 34/34",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "enabled and useGeometry are not read (X_ITE 16.6.0 does the same); the specification says they switch the space and select the geometry",
+   "the bounding box fields are kept and never used"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 5e21f3655bd6",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)"
+ },
+ "driver_commit": "c80cecd"
+}

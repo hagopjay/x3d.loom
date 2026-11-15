@@ -1,0 +1,31 @@
+{
+ "node": "CollisionSensor",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/CollisionSensor.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 36/36",
+  "xite": "pass 36/36",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "isActive, intersections and contacts of an impact are not asserted: X_ITE sees an impact for one sub-step, the bridge for one of its 1/240 s steps; both are noisy",
+   "the events of one frame come in the order isActive, intersections, contacts (X_ITE: the same timestamp); the fixture reads values, not order",
+   "enabled is read only at load and when collider is written, as X_ITE 16.6.0 does; the specification says enabled switches the node"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 5e21f3655bd6",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)"
+ },
+ "driver_commit": "c80cecd"
+}
