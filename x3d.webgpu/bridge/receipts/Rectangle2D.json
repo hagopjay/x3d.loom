@@ -1,0 +1,75 @@
+{
+ "node": "Rectangle2D",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/Rectangle2D.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 31/31",
+  "xite": "pass 31/31",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "visual": {
+   "main": {
+    "iou": 0.97,
+    "coverOurs": 1,
+    "coverXite": 1,
+    "bboxOurs": [
+     24,
+     91,
+     286,
+     148
+    ],
+    "bboxXite": [
+     23,
+     91,
+     286,
+     148
+    ],
+    "nOurs": 7822,
+    "nXite": 8119,
+    "fgFracOurs": 0.1,
+    "fgFracXite": 0.11,
+    "mad": 1.84,
+    "psnr": 33.09,
+    "fgMeanOurs": [
+     255,
+     255,
+     249
+    ],
+    "fgMeanXite": [
+     248,
+     248,
+     242
+    ],
+    "bgOurs": [
+     1,
+     1,
+     3
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the texture coordinates are the unit square; they are not compared with X_ITE"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 02fd14a586b5",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "e092307"
+}

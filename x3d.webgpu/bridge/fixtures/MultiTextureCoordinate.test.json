@@ -1,0 +1,88 @@
+{
+ "node": "MultiTextureCoordinate",
+ "mode": "scene",
+ "note": "a red|green texture modulated by a white|blue one: channel 1 flipped (left quad) or not (right quad); the coordinates of each channel pick the texels",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "jsn": [
+    "node('MT1').texCoord.length===2",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('MT2').texCoord.length===2",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    67,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    114,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const t=__body.texCache.get(__body.world.nodes.find(n=>n.def==='M1').id);return t?1:0})()",
+    1
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    3,
+    3
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "gaps": [
+  "the picture is made once, in the first channel's coordinates; channel i is carried as the affine map that takes channel 0 to channel i (least squares over the vertices): exact for a quad or any planar mapping, the nearest affine map otherwise (noted on the page)",
+  "the X3D 4.0 use of a MultiTextureCoordinate, where a material names a channel by its `mapping`, is the Library hall port's (hall/body-hl.js) and is not part of the bridge body"
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.93,
+   "mad": 6,
+   "fg": 20
+  }
+ }
+}

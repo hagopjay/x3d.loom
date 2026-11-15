@@ -471,7 +471,7 @@ class Body {
     else if (t === 'PhysicalMaterial') { for (const m of this.meshesOf.get(node.id) || []) if (m.material instanceof BABYLON.PBRMaterial) this.refreshPBR(m.material, node); }
     else if (t === 'Material') { for (const m of this.meshesOf.get(node.id) || []) { if (m.material instanceof BABYLON.StandardMaterial) { if (m.metadata && m.metadata.text) { const e = node.f.emissiveColor; m.material.emissiveColor.set(e[0], e[1], e[2]); } else this.refreshPhong(m.material, node); } else if (m.metadata && m.metadata.ribbon) this.refreshRibbonFromMat(m, node); } }
     else if (t === 'LineProperties') { for (const m of this.meshesOf.get(node.id) || []) this.refreshRibbonFromLp(m, node); }
-    else if (t === 'Color' || t === 'Coordinate' || t === 'Normal') this.geometryChanged(node);
+    else if (t === 'Color' || t === 'Coordinate' || t === 'Normal' || t === 'TextureCoordinate') this.geometryChanged(node);
     else if (t === 'DirectionalLight') { const l = this.lights.find((x) => x.node === node); if (l) this.refreshLight(l); }
     else if (t === 'EnvironmentLight') { if (field === 'intensity') this.scene.environmentIntensity = node.f.intensity * (this.opts.envScale ?? 1); }
     else if (t === 'Background') this.applyBackground();
@@ -483,7 +483,7 @@ class Body {
   geometryChanged(n) {
     // Color or Coordinate inside a geometry: refresh every geometry that holds it
     for (const x of this.world.nodes) {
-      if ((x.type === 'IndexedTriangleSet' || x.type === 'IndexedFaceSet' || x.type === 'IndexedLineSet') && (x.f.color === n || x.f.coord === n || x.f.normal === n)) {
+      if ((x.type === 'IndexedTriangleSet' || x.type === 'IndexedFaceSet' || x.type === 'IndexedLineSet') && (x.f.color === n || x.f.coord === n || x.f.normal === n || x.f.texCoord === n)) {
         this.geoCache.delete(x.id);
         for (const key of [x.id, x.id + 'c', x.id + 'n']) { const c = this.geoCache.get(key); if (c) { c.geo.dispose(); this.geoCache.delete(key); } }
         for (const r of this.rec.values()) if (r.node && r.node.type === 'Shape' && r.node.f.geometry === x) { if (r.tn) { this.rebuildShapeIn(r); } }

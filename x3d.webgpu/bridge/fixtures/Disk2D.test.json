@@ -1,0 +1,240 @@
+{
+ "node": "Disk2D",
+ "mode": "scene",
+ "note": "a full disk of radius 1.5, a ring 0.7 to 1.5 and the default unit disk; the hole of the ring cannot be picked",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "D1",
+    "outerRadius",
+    1.5
+   ]
+  },
+  {
+   "expect": [
+    "D1",
+    "innerRadius",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "D1",
+    "solid",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "D2",
+    "innerRadius",
+    0.7
+   ]
+  },
+  {
+   "expect": [
+    "D3",
+    "outerRadius",
+    1
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    58,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    99,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    108,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    192,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    174,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    128,
+    111
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    262,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T3",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    288,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T3",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    296,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T3",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    3,
+    3
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "gaps": [
+  "the circle is a 96 segment polygon (X_ITE 16.6.0 uses its own polygon): silhouettes agree to about a pixel in the picture, not vertex for vertex",
+  "the texture coordinates are planar (the disk mapped on the unit square); they are not compared with X_ITE"
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "dilate": 2,
+   "cover": 0.9,
+   "iou": 0.93
+  }
+ }
+}

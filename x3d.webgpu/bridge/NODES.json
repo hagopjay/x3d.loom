@@ -472,10 +472,10 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 13,
-   "status": "claimed",
-   "batch": null,
-   "receipt": null,
-   "note": "Library hall port (parallel port thread), 8 Nov 2026",
+   "status": "gap",
+   "batch": 48,
+   "receipt": "receipts/Collision.json",
+   "note": "the group does nothing about collision: navigation never collides in the bridge, so isActive and collideTime never fire (X_ITE 16.6.0 fires them only when the navigation collides with the group); the proxy is held and not drawn",
    "rank": 58
   },
   "CollisionCollection": {
@@ -785,10 +785,10 @@
    "inherits": "X3DInterpolatorNode",
    "container": "children",
    "nfields": 5,
-   "status": "claimed",
-   "batch": null,
-   "receipt": null,
-   "note": "Library hall port (parallel port thread), 8 Nov 2026",
+   "status": "bridged",
+   "batch": 48,
+   "receipt": "receipts/CoordinateInterpolator.json",
+   "note": "",
    "rank": 60
   },
   "CoordinateInterpolator2D": {
@@ -798,10 +798,10 @@
    "inherits": "X3DInterpolatorNode",
    "container": "children",
    "nfields": 5,
-   "status": "claimed",
-   "batch": null,
-   "receipt": null,
-   "note": "Library hall port (parallel port thread), 8 Nov 2026",
+   "status": "bridged",
+   "batch": 48,
+   "receipt": "receipts/CoordinateInterpolator2D.json",
+   "note": "",
    "rank": 65
   },
   "Cylinder": {
@@ -895,10 +895,10 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 4,
-   "status": "claimed",
-   "batch": null,
-   "receipt": null,
-   "note": "Library hall port (parallel port thread), 8 Nov 2026",
+   "status": "gap",
+   "batch": 48,
+   "receipt": "receipts/Disk2D.json",
+   "note": "the circle is a 96 segment polygon (X_ITE 16.6.0 uses its own polygon): silhouettes agree to about a pixel in the picture, not vertex for vertex; the texture coordinates are planar (the disk mapped on the unit square); they are not compared with X_ITE",
    "rank": 95
   },
   "DoubleAxisHingeJoint": {
@@ -1003,10 +1003,10 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 15,
-   "status": "claimed",
-   "batch": null,
-   "receipt": null,
-   "note": "Library hall port (parallel port thread), 8 Nov 2026",
+   "status": "gap",
+   "batch": 48,
+   "receipt": "receipts/Extrusion.json",
+   "note": "compared in the picture by silhouette and mean colour (SwiftShader CPU raster); creaseAngle smoothing, texture coordinates of the caps and degenerate frames (a spine that doubles back, collinear spine points) are not compared with X_ITE",
    "rank": 93
   },
   "FillProperties": {
@@ -1893,10 +1893,10 @@
    "inherits": "X3DTextureCoordinateNode",
    "container": "texCoord",
    "nfields": 2,
-   "status": "claimed",
-   "batch": null,
-   "receipt": null,
-   "note": "Library hall port (parallel port thread), 8 Nov 2026",
+   "status": "gap",
+   "batch": 48,
+   "receipt": "receipts/MultiTextureCoordinate.json",
+   "note": "the picture is made once, in the first channel's coordinates; channel i is carried as the affine map that takes channel 0 to channel i (least squares over the vertices): exact for a quad or any planar mapping, the nearest affine map otherwise (noted on the page); the X3D 4.0 use of a MultiTextureCoordinate, where a material names a channel by its `mapping`, is the Library hall port's (hall/body-hl.js) and is not part of the bridge body",
    "rank": 111
   },
   "MultiTextureTransform": {
@@ -2051,10 +2051,10 @@
    "inherits": "X3DParametricGeometryNode",
    "container": "geometry",
    "nfields": 5,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 49,
+   "receipt": "receipts/NurbsSweptSurface.json",
+   "note": "the frame at an interior spine point: this node (like the swung surface and the Library hall Extrusion) takes the Y axis along the chord spine[i+1] - spine[i-1]; X_ITE 16.6.0 takes the bisector of the two unit vectors; they agree for an evenly spaced spine and differ slightly (compared at 0.02) for a bent one; solid FALSE seen from behind: X_ITE 16.6.0 lights the back face, the Babylon body draws it black (the same gap as the patch and the swung surface); the two sided surface here is seen from the front; no scale, orientation or caps (an Extrusion's, not this node's); texture coordinates run 0..1 along the cross-section (s) and the trajectory (t)",
    "rank": 202
   },
   "NurbsSwungSurface": {
@@ -2077,10 +2077,10 @@
    "inherits": "X3DNode",
    "container": "texCoord",
    "nfields": 9,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 49,
+   "receipt": "receipts/NurbsTextureCoordinate.json",
+   "note": "X_ITE 16.6.0 samples the texture surface with haveWeights false, so the weight field of a NurbsTextureCoordinate does nothing (the texture coordinates are the plain B-spline of the control points); the standard calls it rational; the bridge does what X_ITE does and the fixture asserts X_ITE's numbers; the tessellation of the texture surface is the surface's own (one grid): a texture surface is sampled at the same fractions of its own domain as the patch",
    "rank": 198
   },
   "NurbsTrimmedSurface": {
@@ -2090,10 +2090,10 @@
    "inherits": "X3DNurbsSurfaceGeometryNode",
    "container": "geometry",
    "nfields": 18,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 49,
+   "receipt": "receipts/NurbsTrimmedSurface.json",
+   "note": "the trimmed surface is compared by the area and the bounding box of the triangles that are kept (the two engines cut the grid into different triangles at the contour, so triangle corners are not compared); the picture is compared by silhouette and mean colour; a contour that crosses itself, or two contours that cross each other, is cut by parity in both engines but the bridge was only tested with contours that do not cross; the new corners take position, normal and texture coordinate from the grid triangle they fall in, as X_ITE does, so the cut edge is a polyline of the contour lying on the grid's flat triangles",
    "rank": 205
   },
   "OpacityMapVolumeStyle": {
@@ -2334,10 +2334,10 @@
    "inherits": "X3DAppearanceChildNode",
    "container": "pointProperties",
    "nfields": 5,
-   "status": "claimed",
-   "batch": null,
-   "receipt": null,
-   "note": "Library hall port (parallel port thread), 8 Nov 2026",
+   "status": "gap",
+   "batch": 48,
+   "receipt": "receipts/PointProperties.json",
+   "note": "WebGPU has no point size: a PointSet with PointProperties is drawn as camera-facing squares whose size is clamp(pointSizeScaleFactor / (a + b d + c d^2), min, max) pixels (d = distance from the eye); X_ITE draws its points through its own point shader and much dimmer on this CPU raster, so size is not compared in the picture",
    "rank": 86
   },
   "PointSet": {
@@ -2572,10 +2572,10 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 3,
-   "status": "claimed",
-   "batch": null,
-   "receipt": null,
-   "note": "Library hall port (parallel port thread), 8 Nov 2026",
+   "status": "gap",
+   "batch": 48,
+   "receipt": "receipts/Rectangle2D.json",
+   "note": "the texture coordinates are the unit square; they are not compared with X_ITE",
    "rank": 94
   },
   "RigidBody": {

@@ -1,0 +1,231 @@
+{
+ "node": "PointProperties",
+ "mode": "scene",
+ "note": "fields only: the bridge keeps the point size fields and draws a point as a small camera-facing square",
+ "steps": [
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "P1",
+    "pointSizeScaleFactor",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "P1",
+    "pointSizeMinValue",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "P1",
+    "pointSizeMaxValue",
+    1
+   ]
+  },
+  {
+   "nearv": [
+    "P1",
+    "attenuation",
+    [
+     1,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "expect": [
+    "P2",
+    "pointSizeScaleFactor",
+    2
+   ]
+  },
+  {
+   "expect": [
+    "P2",
+    "pointSizeMinValue",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "P2",
+    "pointSizeMaxValue",
+    8
+   ]
+  },
+  {
+   "nearv": [
+    "P2",
+    "attenuation",
+    [
+     1,
+     0.1,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "set": [
+    "P1",
+    "pointSizeScaleFactor",
+    3
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "P1",
+    "pointSizeScaleFactor",
+    3
+   ]
+  },
+  {
+   "set": [
+    "P1",
+    "pointSizeMinValue",
+    2
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "P1",
+    "pointSizeMinValue",
+    2
+   ]
+  },
+  {
+   "set": [
+    "P1",
+    "pointSizeMaxValue",
+    16
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "P1",
+    "pointSizeMaxValue",
+    16
+   ]
+  },
+  {
+   "set": [
+    "P1",
+    "attenuation",
+    [
+     1,
+     0.5,
+     0.25
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "nearv": [
+    "P1",
+    "attenuation",
+    [
+     1,
+     0.5,
+     0.25
+    ],
+    1e-06
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const sh=__body.world.nodes.find(n=>n.def==='S1');return __body.rec.get(sh.id).meshes[0].getTotalVertices()})()",
+    12
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('PS').getValue().getVertices().length/4",
+    3
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const sh=__body.world.nodes.find(n=>n.def==='S3');const c=__body.rec.get(sh.id).meshes[0].getVerticesData('color');return c[0]+c[2]*10+c[16]*100+c[18]*1000})()",
+    1001
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const sh=__body.world.nodes.find(n=>n.def==='S4');return !!__body.rec.get(sh.id)})()",
+    true
+   ]
+  },
+  {
+   "set": [
+    "C3",
+    "point",
+    [
+     [
+      -1,
+      -2,
+      0
+     ],
+     [
+      0,
+      -2,
+      0
+     ],
+     [
+      1,
+      -2,
+      0
+     ]
+    ],
+    "MFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const sh=__body.world.nodes.find(n=>n.def==='S3');return __body.rec.get(sh.id).meshes[0].getTotalVertices()})()",
+    12
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('PS3').getValue().getVertices().length/4",
+    3
+   ]
+  }
+ ],
+ "gaps": [
+  "WebGPU has no point size: a PointSet with PointProperties is drawn as camera-facing squares whose size is clamp(pointSizeScaleFactor / (a + b d + c d^2), min, max) pixels (d = distance from the eye); X_ITE draws its points through its own point shader and much dimmer on this CPU raster, so size is not compared in the picture"
+ ],
+ "tone": "none",
+ "compare": {},
+ "scope": [
+  "the point count is compared between the engines (ours: 4 corners of a camera-facing quad per point = 12 vertices for 3 points; X_ITE: one vertex per point); size, attenuation and the limits are field checks (and the shader formula in the gap text)"
+ ]
+}

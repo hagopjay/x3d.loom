@@ -448,7 +448,7 @@ BR.pick = (() => {
         for (const i of f.coordIndex) { if (i < 0) flush(); else run.push(i); } flush(); return { segs, verts: P }; }
       case 'LineSet': { const c = f.coord && BR.geo.coordOf(f.coord).f.point; if (!c) return null; const P = flat(c), segs = []; let at = 0;
         for (const n of f.vertexCount) { for (let i = 0; i + 1 < n; i++) segs.push([P[at + i], P[at + i + 1]]); at += n; } return { segs, verts: P }; }
-      default: { if (!body || !g.f.coord) return null; try { const d = body.geometryData(g); if (d && d.pos && d.pos.length) return { verts: flat(d.pos) }; } catch (e) { /* not a geometry the body can read */ } return null; }
+      default: { if (!body || (!g.f.coord && !(R.bridge.specs.get(g.type) || {}).geometry)) return null; try { const d = body.geometryData(g); if (d && d.pos && d.pos.length) return { verts: flat(d.pos) }; } catch (e) { /* not a geometry the body can read */ } return null; }
     }
   }
   const boundsOf = (verts) => { const mn = [Infinity, Infinity, Infinity], mx = [-Infinity, -Infinity, -Infinity]; for (const p of verts) for (let k = 0; k < 3; k++) { if (p[k] < mn[k]) mn[k] = p[k]; if (p[k] > mx[k]) mx[k] = p[k]; } return { mn, mx }; };
@@ -608,7 +608,7 @@ BR.tcWidth = (t) => (!t ? 2 : t.type === 'TextureCoordinate4D' ? 4 : t.type === 
 BR.compose = (g, tri, faceOf) => {
   const f = g.f, P = (f.coord && BR.geo.coordOf(f.coord).f.point) || [], nc = tri.length, flip = f.ccw === false;
   const pos = new Float32Array(nc * 3), idx = new Uint32Array(nc), nrm = new Float32Array(nc * 3), perV = f.normalPerVertex !== false, cperV = f.colorPerVertex !== false;
-  const C = f.color && f.color.f.color, cw = f.color && f.color.type === 'ColorRGBA' ? 4 : 3, N = f.normal && f.normal.f.vector, T = f.texCoord && f.texCoord.f.point, tcw = BR.tcWidth(f.texCoord);
+  const C = f.color && f.color.f.color, cw = f.color && f.color.type === 'ColorRGBA' ? 4 : 3, N = f.normal && f.normal.f.vector, tcn = f.texCoord && f.texCoord.type === 'MultiTextureCoordinate' ? (f.texCoord.f.texCoord || [])[0] : f.texCoord, T = tcn && tcn.f.point, tcw = BR.tcWidth(tcn);
   const col = C ? new Float32Array(nc * 3) : null, uv = T ? new Float32Array(nc * 2) : null, uvw = T && tcw > 2 ? new Float32Array(nc * 4) : null, alpha = C && cw === 4 ? new Float32Array(nc).fill(1) : null;
   for (let c = 0; c < nc; c++) {
     const v = tri[c], face = faceOf[(c / 3) | 0];
@@ -652,5 +652,13 @@ BR.fill2D = (xy, uvOf) => {
   const n = xy.length / 2, pos = new Float32Array(n * 3), nrm = new Float32Array(n * 3), idx = new Uint32Array(n), uv = uvOf ? new Float32Array(n * 2) : null;
   for (let i = 0; i < n; i++) { pos[i * 3] = xy[i * 2]; pos[i * 3 + 1] = xy[i * 2 + 1]; nrm[i * 3 + 2] = 1; idx[i] = i; if (uv) { const u = uvOf(xy[i * 2], xy[i * 2 + 1]); uv[i * 2] = u[0]; uv[i * 2 + 1] = u[1]; } }
   return { pos, nrm, col: null, uv, idx };
+};
+/* the faces of a hall node (Disk2D, Rectangle2D, Extrusion) as vertex data: the hall's converter makes an IndexedFaceSet worth of points and indices, and the body's own IndexedFaceSet code turns it into
+   positions, normals (creaseAngle), texture coordinates and triangles. h = { P, UV, ci, ti, crease, ccw, solid } */
+BR.hallFaces = (g, h, body) => {
+  const pt = (type, flat) => ({ id: g.id + type, type, version: g.version || 0, def: null, f: { point: Float32Array.from(flat), mapping: '' } });
+  const f = { coord: pt('Coordinate', h.P), normal: null, color: null, texCoord: pt('TextureCoordinate', h.UV), attrib: [], ccw: h.ccw, colorPerVertex: true, normalPerVertex: true, solid: h.solid,
+              coordIndex: Int32Array.from(h.ci), normalIndex: new Int32Array(0), colorIndex: [], texCoordIndex: Array.from(h.ti), convex: true, creaseAngle: h.crease, set_coordIndex: [], visible: true };
+  return body.geometryData(Object.create(g, { type: { value: 'IndexedFaceSet' }, f: { value: f } }));
 };
 BR.pt3 = (p) => { const o = new Float32Array(p.length / 2 * 3); for (let i = 0; i < p.length / 2; i++) { o[i * 3] = p[i * 2]; o[i * 3 + 1] = p[i * 2 + 1]; } return o; };   // flat xy -> flat xyz at z = 0

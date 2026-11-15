@@ -1,0 +1,75 @@
+{
+ "node": "Extrusion",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/Extrusion.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 45/45",
+  "xite": "pass 45/45",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "visual": {
+   "main": {
+    "iou": 0.93,
+    "coverOurs": 1,
+    "coverXite": 0.96,
+    "bboxOurs": [
+     25,
+     74,
+     283,
+     167
+    ],
+    "bboxXite": [
+     25,
+     74,
+     284,
+     168
+    ],
+    "nOurs": 12670,
+    "nXite": 13749,
+    "fgFracOurs": 0.16,
+    "fgFracXite": 0.18,
+    "mad": 3.48,
+    "psnr": 25.64,
+    "fgMeanOurs": [
+     127,
+     139,
+     114
+    ],
+    "fgMeanXite": [
+     124,
+     138,
+     110
+    ],
+    "bgOurs": [
+     1,
+     1,
+     3
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "compared in the picture by silhouette and mean colour (SwiftShader CPU raster); creaseAngle smoothing, texture coordinates of the caps and degenerate frames (a spine that doubles back, collinear spine points) are not compared with X_ITE"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 02fd14a586b5",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "e092307"
+}

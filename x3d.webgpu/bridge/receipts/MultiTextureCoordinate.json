@@ -1,0 +1,76 @@
+{
+ "node": "MultiTextureCoordinate",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/MultiTextureCoordinate.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 13/13",
+  "xite": "pass 12/12",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "visual": {
+   "main": {
+    "iou": 1,
+    "coverOurs": 1,
+    "coverXite": 1,
+    "bboxOurs": [
+     90,
+     91,
+     229,
+     148
+    ],
+    "bboxXite": [
+     90,
+     91,
+     229,
+     148
+    ],
+    "nOurs": 5104,
+    "nXite": 5104,
+    "fgFracOurs": 0.07,
+    "fgFracXite": 0.07,
+    "mad": 1.5,
+    "psnr": 38.77,
+    "fgMeanOurs": [
+     126,
+     126,
+     0
+    ],
+    "fgMeanXite": [
+     128,
+     128,
+     0
+    ],
+    "bgOurs": [
+     1,
+     1,
+     3
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the picture is made once, in the first channel's coordinates; channel i is carried as the affine map that takes channel 0 to channel i (least squares over the vertices): exact for a quad or any planar mapping, the nearest affine map otherwise (noted on the page)",
+   "the X3D 4.0 use of a MultiTextureCoordinate, where a material names a channel by its `mapping`, is the Library hall port's (hall/body-hl.js) and is not part of the bridge body"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 02fd14a586b5",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "e092307"
+}

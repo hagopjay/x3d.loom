@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="Disk2D.x3d"/><meta name="description" content="Bridge fixture for Disk2D: a full disk, a ring (hole is not pickable) and the default disk"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+    <Transform translation="-3.5 0 0"><Shape DEF="S1"><Appearance><Material emissiveColor="1 0.8 0.2"/></Appearance><Disk2D DEF="D1" outerRadius="1.5"/></Shape><TouchSensor DEF="T1"/></Transform>
+    <Transform translation="0 0 0"><Shape DEF="S2"><Appearance><Material emissiveColor="1 0.8 0.2"/></Appearance><Disk2D DEF="D2" innerRadius="0.7" outerRadius="1.5"/></Shape><TouchSensor DEF="T2"/></Transform>
+    <Transform translation="3.5 0 0"><Shape DEF="S3"><Appearance><Material emissiveColor="1 0.8 0.2"/></Appearance><Disk2D DEF="D3"/></Shape><TouchSensor DEF="T3"/></Transform>
+  </Scene>
+</X3D>

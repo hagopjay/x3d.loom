@@ -32,7 +32,7 @@ BR.node('NurbsPatchSurface', {
   },
   // A geometry node drawn through the triangle path: a (nu + 1) x (nv + 1) grid of the rational surface, two triangles a cell, counter-clockwise round the normal dS/du x dS/dv; the normals are the
   // analytic ones (smooth, not the face normals X_ITE averages); texture coordinates run 0..1 over the grid, or come from a TextureCoordinate node with one coordinate per control point (it is
-  // evaluated over the same knots, the way the standard says). NurbsTextureCoordinate is a later batch. The grid is drawn again when a tessellation, the weights, the control points or the
+  // evaluated over the same knots, the way the standard says), or a NurbsTextureCoordinate (a surface of its own, BR.nurbsTexSurface). The grid is drawn again when a tessellation, the weights, the control points or the
   // texture coordinates change, and when a NurbsSet changes its tessellationScale.
   refs: ['controlPoint'],
   geometry(g) {
@@ -40,7 +40,7 @@ BR.node('NurbsPatchSurface', {
     if (!s) return { pos: new Float32Array(0), nrm: new Float32Array(0), uv: null, idx: new Uint32Array(0), col: null };
     const [nu, nv] = BR.nurbsGrid(g), t = g.f.texCoord, tp = t && ['TextureCoordinate', 'TextureCoordinate3D', 'TextureCoordinate4D'].includes(t.type) ? t.f.point : null;
     const w = t && t.type === 'TextureCoordinate4D' ? 4 : t && t.type === 'TextureCoordinate3D' ? 3 : 2, tpts = tp ? N.points(tp, w).map((p) => p.slice(0, 2)) : [];
-    return N.mesh(s, nu, nv, tpts.length >= s.uDim * s.vDim ? s.sibling(tpts) : null);
+    return N.mesh(s, nu, nv, tpts.length >= s.uDim * s.vDim ? s.sibling(tpts) : t && t.type === 'NurbsTextureCoordinate' ? BR.nurbsTexSurface(t) : null);
   },
   changed(body, n, field) { if (field === 'uTessellation' || field === 'vTessellation' || field === 'weight' || field === 'controlPoint' || field === 'texCoord') body.regeo(n); },
 });

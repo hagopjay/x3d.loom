@@ -16,15 +16,15 @@
   const FLATF = Float32Array;
   Object.assign(DEFS, {
     Collision: { ...GROUP, enabled: ['SFBool', IO, true], proxy: ['SFNode', INIT, null] },
-    CoordinateInterpolator: { key: ['MFFloat', IO, []], keyValue: ['MFVec3f', IO, []], set_fraction: ['SFFloat', IN, 0], value_changed: ['MFVec3f', OUT, null] },
-    CoordinateInterpolator2D: { key: ['MFFloat', IO, []], keyValue: ['MFVec2f', IO, []], set_fraction: ['SFFloat', IN, 0], value_changed: ['MFVec2f', OUT, null] },
+    CoordinateInterpolator: { key: ['MFFloat', IO, []], keyValue: ['MFVec3f', IO, []], set_fraction: ['SFFloat', IN, 0], value_changed: ['MFVec3f', OUT, []] },
+    CoordinateInterpolator2D: { key: ['MFFloat', IO, []], keyValue: ['MFVec2f', IO, []], set_fraction: ['SFFloat', IN, 0], value_changed: ['MFVec2f', OUT, []] },
     MultiTextureCoordinate: { texCoord: ['MFNode', IO, []] },
-    PointProperties: { pointSizeScaleFactor: ['SFFloat', IO, 1], pointSizeMinValue: ['SFFloat', IO, 0], pointSizeMaxValue: ['SFFloat', IO, 1], attenuation: ['SFVec3f', IO, [1, 0, 0]] },
+    PointProperties: { pointSizeScaleFactor: ['SFFloat', IO, 1], pointSizeMinValue: ['SFFloat', IO, 1], pointSizeMaxValue: ['SFFloat', IO, 1], attenuation: ['SFVec3f', IO, [1, 0, 0]] },
     Disk2D: { innerRadius: ['SFFloat', INIT, 0], outerRadius: ['SFFloat', INIT, 1], ...{ solid: ['SFBool', INIT, false] } },
     Rectangle2D: { size: ['SFVec2f', INIT, [2, 2]], solid: ['SFBool', INIT, false] },
     Extrusion: { beginCap: ['SFBool', INIT, true], endCap: ['SFBool', INIT, true], ccw: ['SFBool', INIT, true], convex: ['SFBool', INIT, true], creaseAngle: ['SFFloat', INIT, 0],
-                 crossSection: ['MFVec2f', INIT, [[1, 1], [1, -1], [-1, -1], [-1, 1], [1, 1]]], orientation: ['MFRotation', INIT, [[0, 0, 1, 0]]], scale: ['MFVec2f', INIT, [[1, 1]]],
-                 spine: ['MFVec3f', INIT, [[0, 0, 0], [0, 1, 0]]], solid: ['SFBool', INIT, true] },
+                 crossSection: ['MFVec2f', IO, [[1, 1], [1, -1], [-1, -1], [-1, 1], [1, 1]]], orientation: ['MFRotation', IO, [[0, 0, 1, 0]]], scale: ['MFVec2f', IO, [[1, 1]]],
+                 spine: ['MFVec3f', IO, [[0, 0, 0], [0, 1, 0]]], solid: ['SFBool', INIT, true] },    // the four set_ inputs of the standard map to these (a route into set_spine reaches spine); X_ITE accepts them as inputs too
   });
   DEFS.Collision.metadata = ['SFNode', IO, null];
   Object.assign(DEFS.TextureCoordinate, { mapping: ['SFString', IO, ''] });
@@ -56,6 +56,7 @@
   /* ---------------------------------------------------------------- geometry */
   const mkNode = (w, type, f) => { const n = { type, def: null, f, id: R.allocNodeId(), out: null }; w.nodes.push(n); return n; };
   const ifs = (w, n, P, UV, ci, ti, crease, ccw, solid) => {
+    if (!w) return { P, UV, ci, ti, crease, ccw, solid };          // w === null: the geometry data only (the bridge draws the node as it is, with its fields intact)
     n.type = 'IndexedFaceSet';
     n.f = { coord: mkNode(w, 'Coordinate', { point: Float32Array.from(P) }), normal: null, color: null, texCoord: mkNode(w, 'TextureCoordinate', { point: Float32Array.from(UV), mapping: '' }), attrib: [],
             ccw, colorPerVertex: true, normalPerVertex: true, solid, coordIndex: Int32Array.from(ci), normalIndex: new Int32Array(0), colorIndex: [], texCoordIndex: Array.from(ti),
@@ -70,17 +71,17 @@
       ring(R1); ring(R0);
       for (let i = 0; i < S; i++) { const j = (i + 1) % S; ci.push(i, S + i, S + j, j, -1); ti.push(i, S + i, S + j, j, -1); }
     }
-    ifs(w, n, P, UV, ci, ti, 0, true, f.solid);
+    return ifs(w, n, P, UV, ci, ti, 0, true, f.solid);
   }
   function rect(w, n) {
     const sx = n.f.size[0] / 2, sy = n.f.size[1] / 2;
-    ifs(w, n, [-sx, -sy, 0, sx, -sy, 0, sx, sy, 0, -sx, sy, 0], [0, 0, 1, 0, 1, 1, 0, 1], [0, 1, 2, 3, -1], [0, 1, 2, 3, -1], 0, true, n.f.solid);
+    return ifs(w, n, [-sx, -sy, 0, sx, -sy, 0, sx, sy, 0, -sx, sy, 0], [0, 0, 1, 0, 1, 1, 0, 1], [0, 1, 2, 3, -1], [0, 1, 2, 3, -1], 0, true, n.f.solid);
   }
 
   /* Extrusion (19775-1 13.3.5): the spine-aligned cross-section plane at every spine point, scaled by `scale`, turned by `orientation`, placed on the spine */
   function extrusion(w, n) {
     const f = n.f, sp = f.spine, cs = f.crossSection, N = sp.length, M = cs.length;
-    if (N < 2 || M < 2) { ifs(w, n, [0, 0, 0], [0, 0], [], [], 0, true, f.solid); return; }
+    if (N < 2 || M < 2) { return ifs(w, n, [0, 0, 0], [0, 0], [], [], 0, true, f.solid); }
     const v = R.v3, eq = (a, b) => Math.abs(a[0] - b[0]) < 1e-6 && Math.abs(a[1] - b[1]) < 1e-6 && (a.length < 3 || Math.abs(a[2] - b[2]) < 1e-6);
     const closedSpine = N > 2 && eq(sp[0], sp[N - 1]), closedCS = M > 2 && eq(cs[0], cs[M - 1]);
     const P3 = (i) => sp[closedSpine ? ((i % (N - 1)) + (N - 1)) % (N - 1) : i];
@@ -136,14 +137,17 @@
     };
     if (f.beginCap) cap(0, true);
     if (f.endCap) cap(N - 1, false);
-    ifs(w, n, P, UV, ci, ti, f.creaseAngle, f.ccw, f.solid);
+    return ifs(w, n, P, UV, ci, ti, f.creaseAngle, f.ccw, f.solid);
   }
   const parse0 = R.parseX3D;
   R.parseX3D = function (text) {
     const w = parse0(text);
-    for (const n of w.nodes) { if (n.type === 'Disk2D') disk(w, n); else if (n.type === 'Rectangle2D') rect(w, n); else if (n.type === 'Extrusion') extrusion(w, n); }
+    // a node the bridge kit owns (spec.geometry) stays a Disk2D, Rectangle2D or Extrusion: its fields stay readable and a field change redraws it
+    const kept = (n) => R.bridge && R.bridge.specs.has(n.type) && R.bridge.specs.get(n.type).geometry;
+    for (const n of w.nodes) { if (kept(n)) continue; if (n.type === 'Disk2D') disk(w, n); else if (n.type === 'Rectangle2D') rect(w, n); else if (n.type === 'Extrusion') extrusion(w, n); }
     return w;
   };
+  R.hallGeom = { disk: (n) => disk(null, n), rect: (n) => rect(null, n), extrusion: (n) => extrusion(null, n) };
   /* A disabled TimeSensor forgets its pause (19775-1 8.4.2: disabling stops it and resets its state); the demiurge pause kept st.paused and st.shift across a disable, so a
    seek (disable, set the times, enable) of a paused film stayed frozen at the old time. The page seeks that way in both engines. */
 const _tickHL = tickTimeSensor;

@@ -146,7 +146,7 @@ BR.nurbs = (() => {
       pos[i * 3] = e.p[0]; pos[i * 3 + 1] = e.p[1]; pos[i * 3 + 2] = e.p[2];
       const x = a[1] * b[2] - a[2] * b[1], y = a[2] * b[0] - a[0] * b[2], z = a[0] * b[1] - a[1] * b[0], l = Math.hypot(x, y, z);
       if (l > 1e-12 * (1 + Math.hypot(a[0], a[1], a[2]) * Math.hypot(b[0], b[1], b[2]))) { nrm[i * 3] = x / l; nrm[i * 3 + 1] = y / l; nrm[i * 3 + 2] = z / l; } else bad.push(i);
-      if (tc) { const t = tc.at(u, v); uv[i * 2] = t[0]; uv[i * 2 + 1] = t[1]; } else { uv[i * 2] = iu / nu; uv[i * 2 + 1] = iv / nv; }
+      if (tc) { const t = tc.uParam ? tc.at(tc.uParam(iu / nu), tc.vParam(iv / nv)) : tc.at(u, v); uv[i * 2] = t[0]; uv[i * 2 + 1] = t[1]; } else { uv[i * 2] = iu / nu; uv[i * 2 + 1] = iv / nv; }   // a texture surface with its own knots is read over its own domain, on the same grid
     }
     let k = 0;
     for (let iv = 0; iv < nv; iv++) for (let iu = 0; iu < nu; iu++) { const p0 = iv * W + iu, p1 = p0 + 1, p2 = p1 + W, p3 = p0 + W; idx[k++] = p0; idx[k++] = p1; idx[k++] = p2; idx[k++] = p0; idx[k++] = p2; idx[k++] = p3; }
@@ -255,7 +255,80 @@ BR.nurbs = (() => {
   T.contour = (n) => { const out = []; for (const c of n.f.children || []) if (T.isControl2D(c)) out.push(...T.control2D(c, 2)); return out; };
 
   /* a swung surface that has `n` as its profile or trajectory draws again when `n` changes */
-  T.redrawUsers = (body, n) => { if (body.world) for (const x of body.world.nodes) if (x.type === 'NurbsSwungSurface' && (x.f.profileCurve === n || x.f.trajectoryCurve === n)) body.regeo(x); };
+  T.redrawUsers = (body, n) => {
+    if (!body.world) return;
+    for (const x of body.world.nodes) {
+      if (x.type === 'NurbsSwungSurface' && (x.f.profileCurve === n || x.f.trajectoryCurve === n)) body.regeo(x);
+      else if (x.type === 'NurbsSweptSurface' && (x.f.crossSectionCurve === n || x.f.trajectoryCurve === n)) body.regeo(x);
+      else if (x.type === 'NurbsTrimmedSurface' && (x.f.trimmingContour || []).some((c) => c === n || (c && c.type === 'Contour2D' && (c.f.children || []).includes(n)))) body.regeo(x);
+    }
+  };
+
+  /* ---- trimming (NurbsTrimmedSurface) ---------------------------------------------------------------------------------------------------------------
+     X_ITE 16.6.0 cuts the default grid of the patch with the trimming contours as 2D polygons: the unit square (the surface's u-v domain) and every Contour2D (one closed run of u-v points,
+     scaled to the unit square) go to a tessellator with the ODD winding rule, so what is kept is the part of the square that lies inside an ODD number of contours; the new corners take their
+     position, normal and texture coordinate from the grid triangle they fall in. No contour with points: the surface is not trimmed.
+     Here: every grid triangle (in the unit square of parameters) is cut against the same region. The region inside a triangle is a union of trapezoids (the triangle split into vertical slabs at
+     every contour vertex, each slab cut by the contour edges that cross it, odd intervals kept), each trapezoid is clipped to the triangle (Sutherland and Hodgman) and the pieces are fans of triangles. */
+  T.trimRegion = (tri, polys) => {
+    // tri: three [x, y] counter-clockwise; polys: closed polylines [[x, y], ...]. Returns convex pieces (lists of [x, y]) covering the triangle where an odd number of polys contain the point.
+    const xs = tri.map((p) => p[0]), lo = Math.min(...xs), hi = Math.max(...xs);
+    const edges = [];
+    for (const P of polys) for (let i = 0; i < P.length; i++) {
+      const a = P[i], b = P[(i + 1) % P.length]; if (a[0] === b[0]) continue;
+      const e = a[0] < b[0] ? [a, b] : [b, a];
+      if (e[1][0] <= lo || e[0][0] >= hi) continue;
+      edges.push(e);
+    }
+    const cuts = new Set([lo, hi]); for (const [a, b] of edges) { if (a[0] > lo && a[0] < hi) cuts.add(a[0]); if (b[0] > lo && b[0] < hi) cuts.add(b[0]); }
+    const X = [...cuts].sort((p, q) => p - q), out = [];
+    const yAt = (e, x) => e[0][1] + (e[1][1] - e[0][1]) * (x - e[0][0]) / (e[1][0] - e[0][0]);
+    const clip = (poly) => {                                    // convex polygon (counter-clockwise) against the triangle (counter-clockwise)
+      let P = poly;
+      for (let i = 0; i < 3 && P.length; i++) {
+        const a = tri[i], b = tri[(i + 1) % 3], side = (p) => (b[0] - a[0]) * (p[1] - a[1]) - (b[1] - a[1]) * (p[0] - a[0]), R2 = [];
+        for (let j = 0; j < P.length; j++) {
+          const p = P[j], q = P[(j + 1) % P.length], sp = side(p), sq = side(q);
+          if (sp >= 0) R2.push(p);
+          if ((sp > 0 && sq < 0) || (sp < 0 && sq > 0)) { const t = sp / (sp - sq); R2.push([p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t]); }
+        }
+        P = R2;
+      }
+      return P;
+    };
+    for (let k = 0; k + 1 < X.length; k++) {
+      const x0 = X[k], x1 = X[k + 1]; if (x1 - x0 < 1e-12) continue;
+      const mid = (x0 + x1) / 2, cross = edges.filter((e) => e[0][0] <= mid && e[1][0] >= mid).sort((p, q) => yAt(p, mid) - yAt(q, mid));
+      for (let j = 0; j + 1 < cross.length; j += 2) {            // parity: between the 1st and 2nd edge, 3rd and 4th, ... the point is inside an odd number of polygons
+        const a = cross[j], b = cross[j + 1];
+        const piece = clip([[x0, yAt(a, x0)], [x1, yAt(a, x1)], [x1, yAt(b, x1)], [x0, yAt(b, x0)]]);
+        if (piece.length >= 3) out.push(piece);
+      }
+    }
+    return out;
+  };
+  /* trim a grid mesh {pos, nrm, uv, idx} over nu x nv cells: the contours are polylines in the surface's u-v domain; returns the trimmed mesh (triangles in the order of the grid, pieces as fans) */
+  T.trim = (m, nu, nv, contours, uDomain, vDomain) => {
+    const polys = []; for (const c of contours) { const P = []; for (let i = 0; i + 2 < c.length; i += 3) P.push([(c[i] - uDomain[0]) / (uDomain[1] - uDomain[0]), (c[i + 1] - vDomain[0]) / (vDomain[1] - vDomain[0])]); if (P.length >= 3) polys.push(P); }
+    if (!polys.length) return m;
+    const W = nu + 1, pos = [], nrm = [], uv = [], idx = [], par = (v) => [(v % W) / nu, Math.floor(v / W) / nv];
+    const put = (b, t3, A) => {                                   // a corner at barycentric b in the grid triangle with vertex indices t3
+      const q = [0, 0, 0], n = [0, 0, 0], t = [0, 0];
+      for (let i = 0; i < 3; i++) for (let c = 0; c < 3; c++) { q[c] += b[i] * m.pos[t3[i] * 3 + c]; n[c] += b[i] * m.nrm[t3[i] * 3 + c]; }
+      for (let i = 0; i < 3; i++) { t[0] += b[i] * m.uv[t3[i] * 2]; t[1] += b[i] * m.uv[t3[i] * 2 + 1]; }
+      const l = Math.hypot(n[0], n[1], n[2]) || 1; pos.push(q[0], q[1], q[2]); nrm.push(n[0] / l, n[1] / l, n[2] / l); uv.push(t[0], t[1]); return pos.length / 3 - 1;
+    };
+    for (let t = 0; t < m.idx.length; t += 3) {
+      const t3 = [m.idx[t], m.idx[t + 1], m.idx[t + 2]], tri = t3.map(par), area = (tri[1][0] - tri[0][0]) * (tri[2][1] - tri[0][1]) - (tri[1][1] - tri[0][1]) * (tri[2][0] - tri[0][0]);
+      const ccw = area >= 0, T3 = ccw ? tri : [tri[0], tri[2], tri[1]], ids = ccw ? t3 : [t3[0], t3[2], t3[1]];
+      for (const piece of T.trimRegion(T3, polys)) {
+        const bary = (p) => { const [a, b, c] = T3, d = (b[1] - c[1]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[1] - c[1]), l1 = ((b[1] - c[1]) * (p[0] - c[0]) + (c[0] - b[0]) * (p[1] - c[1])) / d, l2 = ((c[1] - a[1]) * (p[0] - c[0]) + (a[0] - c[0]) * (p[1] - c[1])) / d; return [l1, l2, 1 - l1 - l2]; };
+        const v = piece.map((p) => put(bary(p), ids));
+        for (let i = 1; i + 1 < v.length; i++) { const a = piece[0], b = piece[i], c = piece[i + 1]; if (Math.abs((b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])) / 2 < 1e-6 / (nu * nv)) continue; if (ccw) idx.push(v[0], v[i], v[i + 1]); else idx.push(v[0], v[i + 1], v[i]); }
+      }
+    }
+    return { pos: Float32Array.from(pos), nrm: Float32Array.from(nrm), uv: Float32Array.from(uv), idx: Uint32Array.from(idx), col: null };
+  };
 
   return T;
 })();

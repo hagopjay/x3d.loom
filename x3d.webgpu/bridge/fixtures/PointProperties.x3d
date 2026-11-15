@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="PointProperties.x3d"/><meta name="description" content="Bridge fixture for PointProperties: size scale, limits and attenuation of a PointSet"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+    <Shape DEF="S1"><Appearance DEF="A1"><Material emissiveColor="1 1 1"/><PointProperties DEF="P1"/></Appearance><PointSet DEF="PS"><Coordinate point="-2 -1 0, 0 1 0, 2 -1 0"/></PointSet></Shape>
+    <Shape DEF="S2"><Appearance><Material emissiveColor="1 1 1"/><PointProperties DEF="P2" pointSizeScaleFactor="2" pointSizeMinValue="1" pointSizeMaxValue="8" attenuation="1 0.1 0"/></Appearance><PointSet><Coordinate point="-2 2 0, 2 2 0"/></PointSet></Shape>
+    <Shape DEF="S3"><Appearance><Material emissiveColor="1 1 1"/><PointProperties/></Appearance><PointSet DEF="PS3"><Coordinate DEF="C3" point="-1 -2 0, 1 -2 0"/><Color color="1 0 0, 0 0 1"/></PointSet></Shape>
+    <Shape DEF="S4"><Appearance><PointProperties/></Appearance><PointSet DEF="PS4"/></Shape>
+  </Scene>
+</X3D>

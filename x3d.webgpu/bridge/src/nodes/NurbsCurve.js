@@ -21,5 +21,5 @@ BR.node('NurbsCurve', {
     const p = N.sample(c, f.tessellation), n = p.length / 3, ci = new Int32Array(n + 1); for (let i = 0; i < n; i++) ci[i] = i; ci[n] = -1;
     return { coord: p, coordIndex: ci };
   },
-  changed(body, n, field) { if (field === 'tessellation' || field === 'weight' || field === 'controlPoint') body.regeo(n); },
+  changed(body, n, field) { if (field === 'tessellation' || field === 'weight' || field === 'controlPoint') { body.regeo(n); BR.nurbs.redrawUsers(body, n); } },   // a swept surface that sweeps along this curve draws again
 });

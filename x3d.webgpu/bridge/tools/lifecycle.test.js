@@ -36,8 +36,23 @@ test('separate scenes emit independently within one timestamp', async () => {
   assert.equal(new Set([rawA.id, rawB.id, X3DSAI.unwrap(created).id]).size, 3);
 });
 
-test('generated hall geometry shares the execution-context node allocator', () => {
+test('hall geometry nodes the bridge owns stay nodes, with unique ids per execution context', () => {
   const { R } = loadReader();
+  const scene = xml('<Shape><Disk2D DEF="D" outerRadius="2"/></Shape><Shape><Rectangle2D DEF="R" size="3 1"/></Shape><Shape><Extrusion DEF="E" spine="0 0 0, 0 1 0"/></Shape>');
+  const worlds = [R.parseX3D(scene), R.parseX3D(scene)];
+  for (const w of worlds) {
+    for (const t of ['Disk2D', 'Rectangle2D', 'Extrusion']) assert.equal(w.nodes.filter((n) => n.type === t).length, 1, t + ' is kept as written');
+    assert.equal(w.nodes.find((n) => n.type === 'Disk2D').f.outerRadius, 2);
+    assert.deepEqual(Array.from(w.nodes.find((n) => n.type === 'Rectangle2D').f.size), [3, 1]);
+  }
+  const ids = worlds.flatMap((w) => Array.from(w.nodes, (n) => n.id));
+  assert.equal(new Set(ids).size, ids.length);
+});
+
+test('generated hall geometry (no bridge kit) shares the execution-context node allocator', () => {
+  const fs = require('node:fs'), path = require('node:path'), SRC = path.resolve(__dirname, '..', '..', 'demo', 'src');
+  const code = '(function () {\n"use strict";\n' + ['brain/reader.js', 'gobbler/reader-ext.js', 'demiurge/reader-ext-dm.js', 'dynasty/reader-ext-dl.js', 'hall/reader-ext-hl.js', 'brain/sai.js'].map((p) => fs.readFileSync(path.join(SRC, p), 'utf8')).join('\n') + '\nwindow.__R = R;\n})();\n';
+  const { R } = loadReader(code);
   const scene = xml('<Shape><Disk2D/></Shape><Shape><Rectangle2D/></Shape>');
   const worlds = [R.parseX3D(scene), R.parseX3D(scene)];
   const ids = worlds.flatMap((w) => Array.from(w.nodes, (n) => n.id));
@@ -123,4 +138,24 @@ test('a failed cleanup hook does not retain other nodes or rerun cleanup', async
   assert.equal(R.bridge.tickers.size, 0);
   assert.equal(scene.dispose(), false);
   assert.equal(calls, 2);
+});
+
+test('the set_ inputs of an Extrusion take a route, and an interpolator output reads as an empty list before any event', async () => {
+  const { X3DSAI } = loadReader();
+  const scene = await open(X3DSAI, '<Shape><Extrusion DEF="E" crossSection="0 0, 1 0, 1 1, 0 0"/></Shape><CoordinateInterpolator DEF="C3" key="0 1" keyValue="0 0 0, 1 1 1"/><CoordinateInterpolator2D DEF="C2" key="0 1" keyValue="0 0, 1 1"/>'
+    + '<ROUTE fromNode="C2" fromField="value_changed" toNode="E" toField="set_crossSection"/><ROUTE fromNode="C3" fromField="value_changed" toNode="E" toField="set_spine"/>');
+  assert.equal(scene._world.warnings.filter((w) => /ROUTE/.test(w)).length, 0);
+  assert.equal(scene.getNamedNode('C3').value_changed.length, 0);
+  assert.equal(scene.getNamedNode('C2').value_changed.length, 0);
+});
+
+test('a typed array of numbers is a list of 2D vectors in both directions of the SAI', async () => {
+  const { X3DSAI } = loadReader();
+  const scene = await open(X3DSAI, '<Shape><IndexedFaceSet coordIndex="0 1 2"><Coordinate point="0 0 0, 1 0 0, 0 1 0"/><TextureCoordinate DEF="TC" point="0 0, 1 0, 0 1"/></IndexedFaceSet></Shape>');
+  const tc = scene.getNamedNode('TC');
+  tc.point = new Float32Array([0, 0, 2, 2]);
+  const raw = X3DSAI.unwrap(tc);
+  assert.equal(Array.from(raw.f.point).join(','), '0,0,2,2');
+  assert.equal(tc.point.length, 2);
+  assert.equal(tc.point[1].x + ',' + tc.point[1].y, '2,2');
 });

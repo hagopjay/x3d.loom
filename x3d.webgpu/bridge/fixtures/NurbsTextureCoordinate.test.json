@@ -1,0 +1,239 @@
+{
+ "node": "NurbsTextureCoordinate",
+ "mode": "scene",
+ "note": "a patch textured by a quadratic NurbsTextureCoordinate (two on screen: order 3 with a skewed grid, order 2 flipped) and five off screen (a weighted one, an invalid one, orders 4 x 3 with explicit knots, a weight list of the wrong length, too high an order); every texture coordinate at every triangle corner agrees with X_ITE 16.6.0, then the control points and the weights are changed by events",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    3,
+    3
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P1'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvP1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P2'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('P2').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvP2"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P3'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('P3').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvP3"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P4'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('P4').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvP4"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P5'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('P5').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvP5"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P6'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('P6').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvP6"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P7'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('P7').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvP7"
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P1')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().getVertices().length/12)))",
+    200
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P2')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('P2').getValue().getVertices().length/12)))",
+    200
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P3')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('P3').getValue().getVertices().length/12)))",
+    128
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P4')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('P4').getValue().getVertices().length/12)))",
+    128
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P5')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('P5').getValue().getVertices().length/12)))",
+    128
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P1'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())))",
+    "posP1"
+   ]
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "N1",
+    "controlPoint",
+    [
+     [
+      0,
+      0
+     ],
+     [
+      0.5,
+      0
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      0,
+      0.5
+     ],
+     [
+      0.5,
+      0.5
+     ],
+     [
+      1,
+      0.5
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      0.5,
+      1
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "MFVec2f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P1'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('P1').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvP1b"
+   ]
+  },
+  {
+   "set": [
+    "N3",
+    "weight",
+    [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "MFDouble"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsPatchSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='P3'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('P3').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvP3b"
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "uvP1",
+   1e-05
+  ],
+  [
+   "uvP2",
+   1e-05
+  ],
+  [
+   "uvP3",
+   1e-05
+  ],
+  [
+   "uvP4",
+   1e-05
+  ],
+  [
+   "uvP5",
+   1e-05
+  ],
+  [
+   "uvP6",
+   1e-05
+  ],
+  [
+   "uvP7",
+   1e-05
+  ],
+  [
+   "posP1",
+   1e-05
+  ],
+  [
+   "uvP1b",
+   1e-05
+  ],
+  [
+   "uvP3b",
+   1e-05
+  ]
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.9,
+   "mad": 12,
+   "cover": 0.9
+  }
+ },
+ "gaps": [
+  "X_ITE 16.6.0 samples the texture surface with haveWeights false, so the weight field of a NurbsTextureCoordinate does nothing (the texture coordinates are the plain B-spline of the control points); the standard calls it rational; the bridge does what X_ITE does and the fixture asserts X_ITE's numbers",
+  "the tessellation of the texture surface is the surface's own (one grid): a texture surface is sampled at the same fractions of its own domain as the patch"
+ ],
+ "scope": [
+  "the 4 numbers X_ITE keeps per texture coordinate (x, y, 0, w) are compared by their first two; only the picture of the two patches on screen is compared as a picture (silhouette overlap, mean colour)"
+ ]
+}

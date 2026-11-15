@@ -45,8 +45,7 @@ KIND = {'Interpolation': 'event', 'EventUtilities': 'event', 'Followers': 'event
         'TextureProjection': 'texture', 'Geometry3D': 'geometry', 'Geometry2D': 'geometry', 'Rendering': 'geometry', 'NURBS': 'geometry', 'CADGeometry': 'geometry',
         'Geospatial': 'geometry', 'HAnim': 'geometry', 'Lighting': 'light', 'EnvironmentalEffects': 'env', 'Sound': 'sound', 'Text': 'text', 'Shaders': 'shader',
         'ParticleSystems': 'particles', 'RigidBodyPhysics': 'physics', 'VolumeRendering': 'volume', 'DIS': 'network'}
-CLAIMED = {n: 'Library hall port (parallel port thread), 8 Nov 2026' for n in
-           'Collision CoordinateInterpolator CoordinateInterpolator2D Disk2D Extrusion MultiTextureCoordinate PointProperties Rectangle2D'.split()}
+CLAIMED = {}   # the Library hall port is finished and merged; batch 48 checks its eight nodes here
 # nodes that exist only in X_ITE / 4.1, so the reader census may list them but they are not part of the 260
 NOT_4_0 = {'GaussianSplats', 'EnvironmentLight', 'BlendMode', 'DepthMode'}
 
