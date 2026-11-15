@@ -1,0 +1,112 @@
+{
+ "node": "ImageCubeMapTexture",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 55659ded1574",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 5/5",
+ "xite": "pass 5/5",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "main": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    27,
+    61,
+    292,
+    178
+   ],
+   "bboxXite": [
+    27,
+    61,
+    292,
+    178
+   ],
+   "nOurs": 22492,
+   "nXite": 22470,
+   "fgFracOurs": 0.29,
+   "fgFracXite": 0.29,
+   "mad": 0.99,
+   "psnr": 31.45,
+   "fgMeanOurs": [
+    121,
+    128,
+    136
+   ],
+   "fgMeanXite": [
+    119,
+    127,
+    134
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  },
+  "turned": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    51,
+    52,
+    301,
+    187
+   ],
+   "bboxXite": [
+    51,
+    52,
+    301,
+    187
+   ],
+   "nOurs": 23472,
+   "nXite": 23456,
+   "fgFracOurs": 0.31,
+   "fgFracXite": 0.31,
+   "mad": 1.01,
+   "psnr": 31.98,
+   "fgMeanOurs": [
+    119,
+    129,
+    137
+   ],
+   "fgMeanXite": [
+    117,
+    128,
+    135
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "three.js r187 and X_ITE 16.6.0 on Chromium 153 SwiftShader agree on the orientation of all six cross faces and of the panorama with no turn of any face (the markers land at the same places, 29 to 31 dB on the balls); the face borders are a little softer here (mipmapped cube, X_ITE samples without)",
+  "a cube map on a Shape with no TextureCoordinateGenerator is drawn here as the camera-space mirror; X_ITE 16.6.0 draws something else there (the geometry's own 2D coordinates read as a direction: a magenta over blue split on a Sphere), which is not reproduced",
+  "the cube map multiplies the lit colour like any texture; KTX2 and DDS are not read; a panorama is resampled to six faces of up to 256 pixels"
+ ]
+}

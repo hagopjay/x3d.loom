@@ -1,0 +1,622 @@
+{
+ "node": "GeoElevationGrid",
+ "mode": "scene",
+ "note": "The grid point (x, z) is (zSpacing z, xSpacing x, height yScale) in latitude, longitude, height order, so x runs east and z north (spacing in degrees: 0.001 = 111.32 m east, 110.57 m north). Each cell is two triangles (SW, NE, NW) and (SW, SE, NE) seen counter-clockwise from above. G1 shows the vertex colours with the diagonal from SW to NE; G3 and G4 are a ridge lit by the headlight: facets give 233 (cos of the slope 0.912), creaseAngle 1.0 smooths the ridge to 255; G6 (ccw false, solid) is culled from above, G7 (solid false) is not; G8 (height 125, yScale 2) and G9 (geoGridOrigin elevation 250) sit at the same 250 m. A grid with fewer than 2 x 2 points draws nothing.",
+ "gaps": [
+  "the grid is drawn per triangle with the unweighted normals of X_ITE (the average depends on the triangulation); only the facets and the smooth ridge pixels are tested",
+  "set_height is checked in the interpolation fixture style (an event) and not drawn here",
+  "tangent is not made (X_ITE builds it for normal maps; the bridge draws no normal maps from it)"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "G1",
+    "xDimension",
+    2
+   ]
+  },
+  {
+   "expect": [
+    "G1",
+    "xSpacing",
+    0.001
+   ]
+  },
+  {
+   "expect": [
+    "G1",
+    "yScale",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "G1",
+    "geoSystem",
+    [
+     "GD",
+     "WE"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "G1",
+    "ccw",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "G10",
+    "height",
+    [
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    84,
+    196,
+    [
+     253,
+     8,
+     6
+    ],
+    30
+   ]
+  },
+  {
+   "px": [
+    236,
+    196,
+    [
+     12,
+     248,
+     6
+    ],
+    30
+   ]
+  },
+  {
+   "px": [
+    84,
+    44,
+    [
+     15,
+     8,
+     248
+    ],
+    30
+   ]
+  },
+  {
+   "px": [
+    236,
+    44,
+    [
+     255,
+     248,
+     248
+    ],
+    30
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     253,
+     128,
+     127
+    ],
+    30
+   ]
+  },
+  {
+   "px": [
+    60,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    260,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    20,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    220,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "V2",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    90,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    230,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "V3",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    120,
+    120,
+    [
+     233,
+     233,
+     233
+    ],
+    10
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     233,
+     233,
+     233
+    ],
+    10
+   ]
+  },
+  {
+   "px": [
+    200,
+    120,
+    [
+     233,
+     233,
+     233
+    ],
+    10
+   ]
+  },
+  {
+   "set": [
+    "V4",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    10
+   ]
+  },
+  {
+   "px": [
+    100,
+    120,
+    [
+     251,
+     251,
+     251
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "V5",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    120,
+    160,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    200,
+    160,
+    [
+     0,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    120,
+    80,
+    [
+     0,
+     0,
+     255
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    200,
+    80,
+    [
+     255,
+     255,
+     255
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "V6",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "V7",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "V8",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    96,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    222,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    59,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    181,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    93,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    227,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    53,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    187,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "V9",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    96,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    222,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    59,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    181,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    93,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    227,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    53,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    187,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "V10",
+    "set_bind",
+    true
+   ]
+  },
+  {
+   "settle": 3
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  }
+ ],
+ "tone": "none"
+}

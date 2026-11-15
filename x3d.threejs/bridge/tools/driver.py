@@ -21,7 +21,7 @@ CORE_DRAW = {'Group', 'Switch', 'Transform', 'Shape', 'Appearance', 'Viewpoint',
              'ImageTexture', 'TextureTransform', 'TextureCoordinate', 'Coordinate', 'Color', 'Normal', 'Background', 'Fog', 'NavigationInfo', 'TouchSensor', 'ClipPlane', 'Billboard', 'EnvironmentLight', 'Sound',
              'LineProperties', 'ComposedShader', 'ShaderPart', 'PointLight', 'SpotLight', 'DirectionalLight', 'Cone', 'ElevationGrid', 'Extrusion', 'PointSet', 'Inline', 'LOD', 'Anchor', 'Collision', 'Rectangle2D', 'Disk2D', 'PixelTexture', 'SpotLight'}
 # what a three.js fixture exercises besides its own node (the fixture name is the node it is about)
-COVERS = {'Box': ['Shape', 'Appearance', 'Material', 'NavigationInfo', 'Viewpoint'], 'IndexedFaceSet': ['Coordinate', 'Color'], 'DirectionalLight': ['NavigationInfo'], 'ImageTexture': ['TextureCoordinate'], 'Fog': ['Background'], 'PointLightAttenuation': ['PointLight'], 'TexturedPrimitives': ['PixelTexture'], 'IndexedLineSet': ['Coordinate', 'Color'], 'TriangleSet': ['Coordinate', 'Color'], 'ElevationGrid': ['Color'], 'Anchor': ['Collision', 'StaticGroup'], 'ClipPlane': ['Group'], 'IndexedFaceSetNormals': ['Normal']}
+COVERS = {'Box': ['Shape', 'Appearance', 'Material', 'NavigationInfo', 'Viewpoint'], 'IndexedFaceSet': ['Coordinate', 'Color'], 'DirectionalLight': ['NavigationInfo'], 'ImageTexture': ['TextureCoordinate'], 'Fog': ['Background'], 'PointLightAttenuation': ['PointLight'], 'TexturedPrimitives': ['PixelTexture'], 'IndexedLineSet': ['Coordinate', 'Color'], 'TriangleSet': ['Coordinate', 'Color'], 'ElevationGrid': ['Color'], 'Anchor': ['Collision', 'StaticGroup'], 'ClipPlane': ['Group'], 'IndexedFaceSetNormals': ['Normal'], 'ComposedShader': ['ShaderPart']}
 
 def load(p): return json.load(open(p))
 def hooks(name):
@@ -64,7 +64,7 @@ def check(names):
         rec = {'node': n, 'date': today, 'env': res['env'], **v}
         json.dump(rec, open(os.path.join(HERE, 'receipts', n + '.json'), 'w'), indent=1)
         for t in [n] + (COVERS.get(n, []) if v['ok'] else []):
-            if t in d['nodes'] and v['ok']: d['nodes'][t]['three'] = 'drawn' if scene else 'reader-checked'; d['nodes'][t]['receipt'] = f'receipts/{n}.json'
+            if t in d['nodes'] and v['ok']: d['nodes'][t]['three'] = 'drawn' if scene else 'reader-checked'; d['nodes'][t]['receipt'] = f'receipts/{n}.json' if t == n or not os.path.exists(os.path.join(HERE, 'receipts', t + '.json')) else f'receipts/{t}.json'   # a node with a receipt of its own keeps it when another node's run covers it
         print(('PASS ' if v['ok'] else 'FAIL ') + n + '  ours: ' + v['ours'][:90] + '  xite: ' + str(v['xite'])[:60])
     json.dump(d, open(TRK, 'w'), indent=1); md(); sys.exit(0 if res['ok'] else 1)
 def nxt(k=10):

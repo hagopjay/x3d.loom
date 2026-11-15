@@ -1,0 +1,44 @@
+{
+ "node": "TwoSidedMaterial",
+ "mode": "scene",
+ "note": "an open cylinder (no caps, solid FALSE) seen from above: the outside is red-orange and the inside blue (TwoSidedMaterial with separateBackColor), next to one with the same colour on both sides; then the back colour is set to yellow",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "TS",
+    "backDiffuseColor",
+    [
+     1,
+     0.9,
+     0.1
+    ],
+    "SFColor"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "back"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "back": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  }
+ }
+}

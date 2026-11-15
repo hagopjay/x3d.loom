@@ -1,0 +1,57 @@
+{
+ "node": "InlineUse",
+ "mode": "scene",
+ "note": "one Inline used twice: the review of batch 4 found that only the last use of a DEF'd Inline was kept",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "shot": "both"
+  },
+  {
+   "set": [
+    "IN",
+    "load",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "none"
+  },
+  {
+   "set": [
+    "IN",
+    "load",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "shot": "again"
+  }
+ ],
+ "compare": {
+  "both": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "none": {
+   "empty": true
+  },
+  "again": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  }
+ }
+}

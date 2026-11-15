@@ -1,0 +1,141 @@
+{
+ "node": "TextureBackground",
+ "mode": "scene",
+ "note": "the six faces of a TextureBackground (3 x 3 PixelTextures with a white bottom-left pixel and a black top-right one, so the turn of every image shows), seen in the six directions",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "front"
+  },
+  {
+   "set": [
+    "VP",
+    "orientation",
+    [
+     0,
+     1,
+     0,
+     3.14159
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "back"
+  },
+  {
+   "set": [
+    "VP",
+    "orientation",
+    [
+     0,
+     1,
+     0,
+     1.5708
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "left"
+  },
+  {
+   "set": [
+    "VP",
+    "orientation",
+    [
+     0,
+     1,
+     0,
+     -1.5708
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "right"
+  },
+  {
+   "set": [
+    "VP",
+    "orientation",
+    [
+     1,
+     0,
+     0,
+     1.5708
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "top"
+  },
+  {
+   "set": [
+    "VP",
+    "orientation",
+    [
+     1,
+     0,
+     0,
+     -1.5708
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "bottom"
+  }
+ ],
+ "compare": {
+  "front": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "back": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "left": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "right": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "top": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "bottom": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  }
+ }
+}

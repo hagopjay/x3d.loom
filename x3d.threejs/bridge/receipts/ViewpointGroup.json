@@ -1,0 +1,24 @@
+{
+ "node": "ViewpointGroup",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 55659ded1574",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 34/34",
+ "xite": "pass 29/29",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "scope": [
+  "the proximity box is tested in the frame of the group's parent (a Transform above moves it); the test moves a group with a Transform and compares the list with X_ITE 16.6.0",
+  "retainUserOffsets is held; X_ITE 16.6.0 reads it only on the viewpoint nodes, never on a ViewpointGroup",
+  "the page decides how to show the list; the stock pages have none, so Body.viewpointList() is the only way to read it (X_ITE: getUserViewpoints)"
+ ]
+}

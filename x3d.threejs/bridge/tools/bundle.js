@@ -11,6 +11,12 @@ function geometryData() {
   if (a < 0 || b < 0) throw new Error('bundle: geometryData markers not found in demo/src/brain/body.js; update tools/bundle.js');
   return 'const Geo = {\n' + s.slice(a, b).replace(/\n\s*$/, '') + '\n};';
 }
+// the 19 FillProperties hatch masks (R.bridge.HATCH), cut from the Babylon body (bridge/src/body-br.js), where they were derived from X_ITE's hatching images: one table for both bridges
+function hatchTable() {
+  const s = own('src/body-br.js'), a = s.indexOf('R.bridge.HATCH = (function () {'), b = s.indexOf('; })();', a);
+  if (a < 0 || b < 0) throw new Error('bundle: R.bridge.HATCH markers not found in bridge/src/body-br.js; update tools/bundle.js');
+  return s.slice(a, b + '; })();'.length);
+}
 // three.js-side node files of this tree (src/nodes/*.js), concatenated after the kit and before the body; they register into R.bridge.three (see the head of src/body-three.js)
 const threeNodes = () => { const d = path.join(HERE, 'src', 'nodes'); return fs.existsSync(d) ? fs.readdirSync(d).filter((f) => f.endsWith('.js')).sort().map((f) => fs.readFileSync(path.join(d, f), 'utf8')) : []; };
 module.exports = function bundle(kind) {
@@ -19,7 +25,7 @@ module.exports = function bundle(kind) {
   const reader = READER.filter((p) => fs.existsSync(path.join(SRC, p)) && (kind === 'body' || p !== 'shared/adapter.js')).map(rd);
   const catalog = Object.fromEntries(Object.entries(JSON.parse(own('NODES.json')).nodes).map(([name, n]) => [name, { status: n.status, note: n.note || '' }]));
   const parts = [...reader, own('src/kit.js'), own('src/nurbs.js'), ...nodes, own('src/fidelity.js'), 'R.bridge.fidelityCatalog = ' + JSON.stringify(catalog) + ';',
-    ...(kind === 'body' ? [geometryData(), ...threeNodes(), fs.readFileSync(path.join(HERE, 'src', 'body-three.js'), 'utf8')] : []), rd('brain/sai.js'),
+    ...(kind === 'body' ? [geometryData(), hatchTable(), ...threeNodes(), fs.readFileSync(path.join(HERE, 'src', 'body-three.js'), 'utf8')] : []), rd('brain/sai.js'),
     'window.__R = R; window.__events = events; window.__bridge = R.bridge; window.__worlds = R.bridge.worlds;' + (kind === 'body' ? ' window.Body = Body;' : '')];
   return '(function () {\n"use strict";\n' + parts.join('\n') + '\n})();\n';
 };

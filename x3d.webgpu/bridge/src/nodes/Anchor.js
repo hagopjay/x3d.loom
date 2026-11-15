@@ -31,7 +31,7 @@ BR.node('Anchor', {
   activate(body, n) {
     const target = ((n.f.parameter || []).map((p) => /^\s*target\s*=\s*(.*)$/i.exec(p)).find(Boolean) || [])[1];
     for (const u of n.f.url || []) {
-      if (/^\s*javascript:/i.test(u)) { body.note('Anchor: javascript: url not run'); continue; }
+      if (/^(?:javascript|vbscript):/i.test(String(u).replace(/[\u0000-\u0020\u00a0\u2028\u2029\ufeff]/g, ''))) { body.note('Anchor: javascript: url not run'); continue; }   // a URL parser drops tabs, line breaks and leading control characters, so the test does too
       if (u[0] === '#') {
         const vp = body.world && body.world.nodes.find((x) => x.type === 'Viewpoint' && x.def === u.slice(1));
         if (vp) { R.hooks.bind(vp, true); return true; }

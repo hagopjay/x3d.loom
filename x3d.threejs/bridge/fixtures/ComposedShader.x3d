@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Shaders" level="1"/><meta name="title" content="ComposedShader.x3d"/><meta name="description" content="A sphere and a box drawn by one banded-normal GLSL ES 3.00 shader (built-in x3d_ModelViewMatrix, x3d_ProjectionMatrix, x3d_NormalMatrix, x3d_Vertex, x3d_Normal and the fields tint, bands and level as uniforms); the fields change through events"/></head>
+  <Scene>
+    <NavigationInfo type='"EXAMINE" "ANY"' headlight="false"/>
+    <Viewpoint position="0 0 10"/>
+    <Transform translation="-2.2 0 0"><Shape><Appearance><Material diffuseColor="0.3 0.3 0.3"/>
+      <ComposedShader DEF="N" language="GLSL">
+        <field name="tint" type="SFColor" accessType="inputOutput" value="1 0.5 0.2"/>
+        <field name="bands" type="SFInt32" accessType="inputOutput" value="4"/>
+        <field name="level" type="SFFloat" accessType="inputOutput" value="1"/>
+        <ShaderPart type="VERTEX" url='"data:x-shader/x-vertex,%23version%20300%20es%0Aprecision%20highp%20float%3B%0Auniform%20mat4%20x3d_ProjectionMatrix%3B%0Auniform%20mat4%20x3d_ModelViewMatrix%3B%0Auniform%20mat3%20x3d_NormalMatrix%3B%0Ain%20vec4%20x3d_Vertex%3B%0Ain%20vec3%20x3d_Normal%3B%0Aout%20vec3%20vN%3B%0Avoid%20main%28%29%20%7B%0A%20%20vN%20%3D%20x3d_NormalMatrix%20%2A%20x3d_Normal%3B%0A%20%20gl_Position%20%3D%20x3d_ProjectionMatrix%20%2A%20x3d_ModelViewMatrix%20%2A%20x3d_Vertex%3B%0A%7D"'/>
+        <ShaderPart type="FRAGMENT" url='"data:x-shader/x-fragment,%23version%20300%20es%0Aprecision%20highp%20float%3B%0Auniform%20vec3%20tint%3B%0Auniform%20int%20bands%3B%0Auniform%20float%20level%3B%0Ain%20vec3%20vN%3B%0Aout%20vec4%20fragColor%3B%0Avoid%20main%28%29%20%7B%0A%20%20float%20d%20%3D%200.5%20%2B%200.5%20%2A%20dot%28normalize%28vN%29%2C%20normalize%28vec3%280.5%2C%200.7%2C%201.0%29%29%29%3B%0A%20%20d%20%3D%20floor%28d%20%2A%20float%28bands%29%29%20%2F%20float%28bands%20-%201%29%3B%0A%20%20fragColor%20%3D%20vec4%28tint%20%2A%20d%20%2A%20level%2C%201.0%29%3B%0A%7D"'/>
+      </ComposedShader></Appearance><Sphere radius="1.6"/></Shape></Transform>
+    <Transform translation="2.2 0 0" rotation="1 1 0 0.7"><Shape><Appearance><Material diffuseColor="0.3 0.3 0.3"/>
+      <ComposedShader DEF="N2" language="GLSL">
+        <field name="tint" type="SFColor" accessType="inputOutput" value="0.3 0.9 0.4"/>
+        <field name="bands" type="SFInt32" accessType="inputOutput" value="3"/>
+        <field name="level" type="SFFloat" accessType="inputOutput" value="1"/>
+        <ShaderPart type="VERTEX" url='"data:x-shader/x-vertex,%23version%20300%20es%0Aprecision%20highp%20float%3B%0Auniform%20mat4%20x3d_ProjectionMatrix%3B%0Auniform%20mat4%20x3d_ModelViewMatrix%3B%0Auniform%20mat3%20x3d_NormalMatrix%3B%0Ain%20vec4%20x3d_Vertex%3B%0Ain%20vec3%20x3d_Normal%3B%0Aout%20vec3%20vN%3B%0Avoid%20main%28%29%20%7B%0A%20%20vN%20%3D%20x3d_NormalMatrix%20%2A%20x3d_Normal%3B%0A%20%20gl_Position%20%3D%20x3d_ProjectionMatrix%20%2A%20x3d_ModelViewMatrix%20%2A%20x3d_Vertex%3B%0A%7D"'/>
+        <ShaderPart type="FRAGMENT" url='"data:x-shader/x-fragment,%23version%20300%20es%0Aprecision%20highp%20float%3B%0Auniform%20vec3%20tint%3B%0Auniform%20int%20bands%3B%0Auniform%20float%20level%3B%0Ain%20vec3%20vN%3B%0Aout%20vec4%20fragColor%3B%0Avoid%20main%28%29%20%7B%0A%20%20float%20d%20%3D%200.5%20%2B%200.5%20%2A%20dot%28normalize%28vN%29%2C%20normalize%28vec3%280.5%2C%200.7%2C%201.0%29%29%29%3B%0A%20%20d%20%3D%20floor%28d%20%2A%20float%28bands%29%29%20%2F%20float%28bands%20-%201%29%3B%0A%20%20fragColor%20%3D%20vec4%28tint%20%2A%20d%20%2A%20level%2C%201.0%29%3B%0A%7D"'/>
+      </ComposedShader></Appearance><Box size="2.2 2.2 2.2"/></Shape></Transform>
+  </Scene>
+</X3D>

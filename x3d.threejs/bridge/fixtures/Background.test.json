@@ -1,0 +1,117 @@
+{
+ "node": "Background",
+ "mode": "scene",
+ "note": "the sky and ground gradients: skyColor 3 stops with skyAngle, groundColor 3 stops with groundAngle; looked at level (horizon in the middle), then tilted up and down",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "level"
+  },
+  {
+   "set": [
+    "VP",
+    "orientation",
+    [
+     1,
+     0,
+     0,
+     0.6
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "up"
+  },
+  {
+   "set": [
+    "VP",
+    "orientation",
+    [
+     1,
+     0,
+     0,
+     -0.6
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "down"
+  },
+  {
+   "set": [
+    "B",
+    "skyColor",
+    [
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0,
+      1,
+      0
+     ],
+     [
+      0,
+      0,
+      1
+     ]
+    ],
+    "MFColor"
+   ]
+  },
+  {
+   "set": [
+    "VP",
+    "orientation",
+    [
+     1,
+     0,
+     0,
+     0.6
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "recolour"
+  }
+ ],
+ "compare": {
+  "level": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "up": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "down": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "recolour": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  }
+ }
+}

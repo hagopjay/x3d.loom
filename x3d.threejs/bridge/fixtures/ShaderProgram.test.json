@@ -1,0 +1,147 @@
+{
+ "node": "ShaderProgram",
+ "mode": "scene",
+ "note": "A ShaderProgram inside a ProgramShader. X_ITE 16.6.0 marks it 'not supported': the fields are kept and the ProgramShader stays invalid and unselected, in the bridge too.",
+ "gaps": [
+  "no shader language runs: the program is a holder",
+  "the 4.0 UOM lists a sourceCode field that X_ITE 16.6.0 does not have and the XSD cannot write; it is not offered"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "type",
+    "FRAGMENT"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "load",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefresh",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefreshTimeLimit",
+    3600
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "url",
+    [
+     "data:x-shader/x-fragment,void main() { }"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "P",
+    "isValid",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "P",
+    "isSelected",
+    false
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "P",
+    "isValid",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "P",
+    "isSelected",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "description",
+    "a program"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    "a program"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "load",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "load",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "url",
+    [
+     "a.glsl"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "url",
+    [
+     "a.glsl"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "autoRefresh",
+    5
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefresh",
+    5
+   ]
+  }
+ ]
+}
