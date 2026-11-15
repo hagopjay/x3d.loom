@@ -1,0 +1,157 @@
+{
+ "node": "HAnimHumanoid",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 8f93bd6b3684",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+ },
+ "ok": true,
+ "ours": "pass 17/17",
+ "xite": "pass 17/17",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "rest": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    146,
+    36,
+    173,
+    199
+   ],
+   "bboxXite": [
+    146,
+    36,
+    173,
+    199
+   ],
+   "nOurs": 4512,
+   "nXite": 4512,
+   "fgFracOurs": 0.06,
+   "fgFracXite": 0.06,
+   "mad": 0.06,
+   "psnr": 60.56,
+   "fgMeanOurs": [
+    73,
+    193,
+    98
+   ],
+   "fgMeanXite": [
+    72,
+    192,
+    98
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  },
+  "bent": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    65,
+    95,
+    173,
+    199
+   ],
+   "bboxXite": [
+    65,
+    95,
+    173,
+    199
+   ],
+   "nOurs": 3984,
+   "nXite": 3984,
+   "fgFracOurs": 0.05,
+   "fgFracXite": 0.05,
+   "mad": 0.05,
+   "psnr": 61.01,
+   "fgMeanOurs": [
+    75,
+    198,
+    101
+   ],
+   "fgMeanXite": [
+    74,
+    197,
+    100
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  },
+  "moved": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    104,
+    32,
+    194,
+    189
+   ],
+   "bboxXite": [
+    104,
+    32,
+    194,
+    189
+   ],
+   "nOurs": 6072,
+   "nXite": 6100,
+   "fgFracOurs": 0.08,
+   "fgFracXite": 0.08,
+   "mad": 0.96,
+   "psnr": 34.12,
+   "fgMeanOurs": [
+    59,
+    156,
+    79
+   ],
+   "fgMeanXite": [
+    65,
+    174,
+    88
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "three.js body: the skin is skinned on the CPU with X_ITE's own formula (no influence limit, a joint's displacers rotated by the joint matrix as X_ITE does); it is redone every frame a joint, weight or displacer changes, so a very large humanoid costs CPU time that GPU skinning would not. Skinned normals blend the joint rotations by the same weights"
+ ],
+ "scope": [
+  "skinNormal, skinBindingCoords and skinBindingNormals are stored; neither engine uses them (X_ITE 16.6.0 reads skinCoord only): the skin normals follow the bone matrices in the shader (X_ITE blends the inverse transpose per joint, the same for rotations, different under non-uniform joint scale)",
+  "only IndexedFaceSet and IndexedTriangleSet skin shapes are skinned (a vertex's coordinate index is known); a vertex with more than 8 joint influences keeps the 8 largest, X_ITE has no limit; the viewpoints, joints, segments and sites lists are references (not drawn twice)"
+ ]
+}

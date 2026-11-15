@@ -29,7 +29,7 @@ let ts = performance.timeOrigin / 1000 + performance.now() / 1000;
 window.runOurs = async (spec, xml) => (window.__R && (__R.bridge.allowScripts = spec.scripts !== false), runSpec({ name: 'ours',
   open: async (x) => X3DSAI.B.createX3DFromString(x), now: () => ts,
   apply: async (fn) => { __events.begin(ts += 0.05); fn(); __events.drain(); },
-  settle: async (dt) => { const steps = Math.max(1, Math.round((dt || 0.05) / 0.05)); for (let i = 0; i < steps; i++) { __events.begin(ts += 0.05); for (const n of (window.__worlds || [])) for (const t of n.nodes) if (t.type === 'TimeSensor') __R.tickTimeSensor(t, ts); __events.drain(); },
+  settle: async (dt) => { const steps = Math.max(1, Math.round((dt || 0.05) / 0.05)); for (let i = 0; i < steps; i++) { __events.begin(ts += 0.05); for (const n of (window.__worlds || [])) for (const t of n.nodes) if (t.type === 'TimeSensor') __R.tickTimeSensor(t, ts); __events.drain(); } },
   audioCtx: () => __bridge.audio.ctx(), audioNode: (def, kind) => { const n = __worlds[__worlds.length - 1].nodes.find((q) => q.def === def); const a = n && n._au; return a && (kind === 'in' ? a.in : kind === 'proc' ? a.proc : a.out); },
 }, spec, xml));</script>`;
 const PAGE_XITE = (w, h) => `<!doctype html><meta charset=utf-8><link rel=stylesheet href="/x_ite/x_ite.css"><body style="margin:0"><x3d-canvas id=c style="width:${w}px;height:${h}px;display:block"></x3d-canvas><script src="/x_ite/x_ite.min.js"></script><script>${RUNNER}
@@ -77,7 +77,7 @@ async function main() {
   try {
     b = await chromium.launch({ executablePath: process.env.CHROMIUM_EXECUTABLE || undefined, args: ['--autoplay-policy=no-user-gesture-required', '--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream', '--use-file-for-fake-audio-capture=' + fakeMic(), '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
     const env = { chromium: b.version(), ours: 'x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha ' + crypto.createHash('sha256').update(files['/bundle-body.js']).digest('hex').slice(0, 12) };
-    const errs = [], results = {}, newPage = async () => { const pg = await b.newPage(); await pg.addInitScript(MICFIX); pg.on('pageerror', (e) => errs.push(e.message.slice(0, 200))); return pg; };
+    const errs = [], results = {}, newPage = async () => { const pg = await b.newPage(); await pg.addInitScript(MICFIX); pg.on('pageerror', (e) => errs.push((e.message + ' @ ' + String(e.stack).split('\n').slice(1,3).join(' ')).slice(0, 400))); return pg; };
     const haveX = !noXite && XITE_DIR && fs.existsSync(path.join(XITE_DIR, 'x_ite.min.js'));
     if (!haveX) env.xite = noXite ? 'skipped (--no-xite)' : 'not found (set XITE_DIR)';
     let po = null, px = null, pos = null, pxs = null, mp = null;

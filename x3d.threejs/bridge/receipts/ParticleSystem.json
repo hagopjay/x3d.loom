@@ -1,0 +1,68 @@
+{
+ "node": "ParticleSystem",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 8f93bd6b3684",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 7/7",
+ "xite": "pass 4/4",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "cloud": {
+   "iou": 0.61,
+   "coverOurs": 0.76,
+   "coverXite": 0.75,
+   "bboxOurs": [
+    132,
+    97,
+    188,
+    212
+   ],
+   "bboxXite": [
+    130,
+    103,
+    186,
+    212
+   ],
+   "nOurs": 2662,
+   "nXite": 2727,
+   "fgFracOurs": 0.03,
+   "fgFracXite": 0.04,
+   "mad": 4.84,
+   "psnr": 18.24,
+   "fgMeanOurs": [
+    214,
+    214,
+    214
+   ],
+   "fgMeanXite": [
+    215,
+    215,
+    215
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "the particle age at the shot differs between the engines (ours runs on elapsed time, about 3 frames per second under SwiftShader), so the extent and the count are compared with wide bounds and the shape is checked from the particle list in our body",
+  "ForcePhysicsModel: X_ITE 16.6.0 lifts a cloud much higher than a force of 0 -2 0 on a 3 m/s cone should (not reproduced here, measured in the first run of this fixture: the top of the cloud was at the top of the picture against 128 px in ours); a colorRamp without colorKey is drawn white by X_ITE where the Babylon bridge and this body spread the colours evenly over the life"
+ ]
+}

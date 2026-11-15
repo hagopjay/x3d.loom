@@ -1,0 +1,68 @@
+{
+ "node": "BoundedPhysicsModel",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 8f93bd6b3684",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 5/5",
+ "xite": "pass 4/4",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "boxed": {
+   "iou": 0.35,
+   "coverOurs": 0.47,
+   "coverXite": 0.58,
+   "bboxOurs": [
+    114,
+    88,
+    209,
+    153
+   ],
+   "bboxXite": [
+    114,
+    87,
+    209,
+    152
+   ],
+   "nOurs": 3279,
+   "nXite": 2653,
+   "fgFracOurs": 0.04,
+   "fgFracXite": 0.03,
+   "mad": 8.86,
+   "psnr": 15.32,
+   "fgMeanOurs": [
+    210,
+    210,
+    210
+   ],
+   "fgMeanXite": [
+    203,
+    203,
+    203
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "colour is compared: a quad particle is lit like a surface (emissive + diffuse x headlight, white for this Material); ours is 255 white, X_ITE 16.6.0's mean over its drawn pixels is about 200 (its edges are blended), fg tolerance 70; no fade at the end of life without a colorRamp (as X_ITE)",
+  "the bounds are tested in ours from the particle list (a box of 3 x 2 x 2 holds every particle, which reflect at the faces); X_ITE's particle positions are not read, its picture is compared by extent"
+ ]
+}
