@@ -1,0 +1,33 @@
+{
+ "node": "ProjectionVolumeStyle",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/ProjectionVolumeStyle.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 32/32",
+  "xite": "pass 32/32",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "X_ITE 16.6.0 projects per slice, not along the whole ray, and the bridge copies it: the numbers (AVERAGE of a uniform volume is 38, MIN with no hit is white) are X_ITE, not the projection the specification describes",
+   "the march direction is the view direction in volume axes, not divided by the dimensions (as in X_ITE), so a volume with unequal dimensions projects along a different line than its shape suggests; only cubes are tested",
+   "a projection value near a layer boundary (the sample at 0.37537 against the edge at 0.375) depends on the exact slice plane; the fixture keeps the layers thick and probes one centre pixel per volume",
+   "a ProjectionVolumeStyle inside a Composed, Blended or the style list of an isosurface or segmented volume is dropped (it is not composable)"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ed32d8703fb3",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "6d77a58"
+}

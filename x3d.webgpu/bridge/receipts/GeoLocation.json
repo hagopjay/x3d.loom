@@ -1,0 +1,31 @@
+{
+ "node": "GeoLocation",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/GeoLocation.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 22/22",
+  "xite": "pass 19/19",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the placement matrices of the geocentric (no origin) cases are checked in our node only: X_ITE has no way to read them back, the picture tests use the rotateYUp origin",
+   "the node drawn is a Babylon TransformNode, whose world matrix is 32 bit: without a GeoOrigin a point 6.4e6 m from the centre of the earth is only good to about half a metre in the picture"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ed32d8703fb3",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "6d77a58"
+}

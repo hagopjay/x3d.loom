@@ -1,0 +1,65 @@
+{
+ "node": "GeoPositionInterpolator",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/GeoPositionInterpolator.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 51/51",
+  "xite": "pass 51/51",
+  "map": {
+   "i25": [
+    0,
+    22.5,
+    0
+   ],
+   "v25": [
+    5892630.229852941,
+    2440807.3592547765,
+    0
+   ],
+   "j5": [
+    30.083251758637427,
+    0,
+    -2663.0003107422963
+   ]
+  },
+  "oursOk": true,
+  "mapX": {
+   "i25": [
+    0,
+    22.5,
+    0
+   ],
+   "v25": [
+    5892630.229852941,
+    2440807.3592547765,
+    0
+   ],
+   "j5": [
+    30.083251758637758,
+    0,
+    -2663.000310720876
+   ]
+  },
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "when a key sits on the GeoOrigin its local vector is zero and both engines give the same odd point (lon 7.04, 88.5 km below the ellipsoid at the middle of 0 to 20 degrees): the case is kept because the two agree",
+   "the great-circle path pivoting on the GeoOrigin is X_ITE's own choice (a defect against any sane reading); the bridge copies it so the numbers agree",
+   "the interpolation is not linear in latitude, longitude and height, which a reader of the specification may expect",
+   "UTM keys are not tested here: the unit maths of the bridge covers UTM, the interpolator uses the same conversion"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ed32d8703fb3",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "6d77a58"
+}

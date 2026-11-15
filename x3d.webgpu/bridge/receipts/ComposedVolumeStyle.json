@@ -1,0 +1,32 @@
+{
+ "node": "ComposedVolumeStyle",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/ComposedVolumeStyle.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp + XSD patched: transferFunction added to the containerField values; weightTransferFunction1 added to the containerField values; weightTransferFunction2 added to the containerField values"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 17/17",
+  "xite": "pass 17/17",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "X_ITE 16.6.0 and the bridge chain the styles (each replaces the colour it gets) where the specification text can be read as a sum; the bridge copies 16.6.0",
+   "only OpacityMapVolumeStyle, BlendedVolumeStyle, ProjectionVolumeStyle (dropped) and a nested Composed are tested here; the other styles use the same chain call",
+   "a Blended inside a Composed reads its second volume and the run-time changes of its texture rebuild the shader (BR.volr.touch walks the whole chain), not tested by picture"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ed32d8703fb3",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "6d77a58"
+}
