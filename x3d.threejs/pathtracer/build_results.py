@@ -24,13 +24,13 @@ for n, sky in SCENES.items():
     if DEMO: os.makedirs(f"{DEMO}/img", exist_ok=True); shutil.copy(f"{OUT}/results/strips/{n}.webp", f"{DEMO}/img/{n}.webp")
 out = {"scenes": res, "metric": "object-pixel FLIP (flip-evaluator 1.7, LDR), mean over pixels where X_ITE or the test picture differs from the sky colour; 320x240", "bound": "max(PT-X, PT-C) <= X-C + 0.05"}
 out["note"] = ("Rig: Chromium 153.0.8010.12 on SwiftShader (software Vulkan, no real GPU), three r187, three-gpu-pathtracer 0.0.28, three-mesh-bvh 0.9.18, X_ITE 16.6.0; Cycles from bpy 5.3.0 on CPU through the x3d.lab Blender worker (256 spp, OpenImageDenoise, film transparent, composited on the sky colour). "
-  "Path tracer 96 spp; two 96 spp runs of the Cornell box differ from each other by 0.055 (noise floor). Pass bound: max(PT-X, PT-C) <= X-C + 0.05, the Unreal lane's tier-1 bound. Cycles frames the first Viewpoint smaller than X_ITE does in these scenes, which inflates every number that involves it.")
+  "Path tracer 96 spp; two 96 spp runs of the Cornell box differ from each other by 0.055 (noise floor). Pass bound: max(PT-X, PT-C) <= X-C + 0.05, the Unreal lane's tier-1 bound. Cycles camera matched to X_ITE: sensor fit vertical, angle = the Viewpoint fieldOfView (cycles_job.py); before that patch Cycles drew a wider view and every Cycles number was inflated (e2 X-C 0.418 -> see table).")
 out["limits"] = [
   "No real-GPU timing: every number here comes from software Vulkan (SwiftShader), about one sample per second at 320 x 240. The samples per second this page shows are your own device's.",
   "The path tracer is a reference for light transport, not for X3D semantics: it has no ambient term, ignores the X3D radius cut-off, and turns every emissive surface into a lamp. X_ITE does none of that, so the two are expected to disagree there.",
   "Classic Material (Phong) surfaces are converted to rough dielectrics with diffuse x pi so they land on rho x I under pbr lights; that is a fit, and the indirect light they return is exaggerated by the same factor.",
   "FLIP here is object-pixel LDR FLIP on 8-bit pictures with no tone mapping, the same recipe as the Unreal lane's cell 10c; it says how far two pictures are, not which is right.",
-  "Cycles framing differs from X_ITE's, so the spread X-C is wider than the lighting alone would make it and the pass bound is looser than it looks. A Cycles run with an exact camera match is not done.",
+  "The Cycles camera is matched to X_ITE's vertical field of view (cycles_job.py patches one line of the Blender worker in memory); Cycles still goes through Blender's default view transform, which the X_ITE and path-traced pictures do not have, and that offset is not isolated.",
   "One camera per scene, one run per cell except the noise-floor pair; no confidence intervals."]
 json.dump(out, open(f"{OUT}/results/results.json", "w"), indent=1); shutil.rmtree(tmp); print(json.dumps(res, indent=1))
 
