@@ -1,5 +1,5 @@
 // Runs the harness in headless Chromium (SwiftShader WebGPU by default) and writes receipts/<name>.json.
-//   node tools/run.js [--quick] [--mutate='kernel|old text|new text'] [--only=particles,volume] [--name=receipt-name] [--gpu]   (--gpu: use the machine's real adapter, no SwiftShader flags)
+//   node tools/run.js [--quick] [--mutate='kernel|old text|new text'] [--only=particles,volume] [--nobench] [--name=receipt-name] [--gpu]   (--gpu: use the machine's real adapter, no SwiftShader flags)
 // Needs playwright (NODE_PATH or local install). CHROMIUM_EXECUTABLE overrides the browser.
 const http = require('http'), fs = require('fs'), path = require('path');
 const root = path.join(__dirname, '..'), args = process.argv.slice(2), flag = (n) => args.includes('--' + n), val = (n) => { const a = args.find((x) => x.startsWith('--' + n + '=')); return a ? a.slice(n.length + 3) : ''; };
@@ -14,7 +14,7 @@ const srv = http.createServer((q, r) => { const p = path.join(root, decodeURICom
   const mut = val('mutate') ? Buffer.from(JSON.stringify([val('mutate').split('|')])).toString('base64') : '';
   await p.goto(`http://127.0.0.1:${port}/bench/index.html?mut=${encodeURIComponent(mut)}`);
   const only = val('only') ? val('only').split(',') : undefined;
-  const res = await p.evaluate((o) => window.X3DGPU.runAll(o), { quick: flag('quick'), only });
+  const res = await p.evaluate((o) => window.X3DGPU.runAll(o), { quick: flag('quick'), only, noBench: flag('nobench') });
   res.rig.mutation = val('mutate') || null; res.rig.chromium = b.version(); res.rig.flags = launch; res.rig.node = process.version; res.rig.cpus = require('os').cpus().length + 'x ' + require('os').cpus()[0].model; res.rig.when = new Date().toISOString();
   const name = val('name') || (flag('quick') ? 'quick' : 'full') + (flag('gpu') ? '-gpu' : '-swiftshader');
   fs.mkdirSync(path.join(root, 'receipts'), { recursive: true }); fs.writeFileSync(path.join(root, 'receipts', name + '.json'), JSON.stringify(res, null, 1));
