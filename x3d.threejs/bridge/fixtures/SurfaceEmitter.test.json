@@ -1,0 +1,51 @@
+{
+ "node": "SurfaceEmitter",
+ "mode": "scene",
+ "tone": "none",
+ "note": "emission from a sphere surface",
+ "steps": [
+  {
+   "expect": [
+    "E",
+    "speed",
+    0.5
+   ]
+  },
+  {
+   "expect": [
+    "E",
+    "surface",
+    "[node SRF]"
+   ]
+  },
+  {
+   "settle": 3.0
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const p=__body.psys[0].parts;return p.every(q=>Math.hypot(q.p[0],q.p[1],q.p[2])>0.9)})()",
+    true
+   ]
+  },
+  {
+   "shot": "shell"
+  }
+ ],
+ "compare": {
+  "shell": {
+   "iou": 0.0,
+   "bbox": 60,
+   "count": [
+    0.5,
+    2.0
+   ],
+   "fg": 70
+  }
+ },
+ "gaps": [
+  "colour is compared: a quad particle is lit like a surface (emissive + diffuse x headlight, white for this Material); ours is 255 white, X_ITE 16.6.0's mean over its drawn pixels is about 200 (its edges are blended), fg tolerance 70; no fade at the end of life without a colorRamp (as X_ITE)",
+  "particle age at the shot differs between the engines on this CPU raster (ours runs on elapsed time at about 3 frames per second under SwiftShader), so the extent is compared with a wide bound",
+  "the emission point is a random point of the surface triangles, area weighted, along the face normal (a Sphere is cut into 16 x 12 facets for this)"
+ ]
+}

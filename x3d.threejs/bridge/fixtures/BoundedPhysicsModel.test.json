@@ -1,0 +1,53 @@
+{
+ "node": "BoundedPhysicsModel",
+ "mode": "scene",
+ "tone": "none",
+ "note": "a 3 x 2 x 2 box keeps the particles in",
+ "steps": [
+  {
+   "expect": [
+    "B",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "B",
+    "geometry",
+    "[node BX]"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const p=__body.psys[0].parts;return p.length>0&&p.every(q=>Math.abs(q.p[0])<=1.51&&Math.abs(q.p[1])<=1.01&&Math.abs(q.p[2])<=1.01)})()",
+    true
+   ]
+  },
+  {
+   "settle": 4.0
+  },
+  {
+   "shot": "boxed"
+  }
+ ],
+ "compare": {
+  "boxed": {
+   "iou": 0.0,
+   "bbox": 30,
+   "count": [
+    0.5,
+    2.0
+   ],
+   "fg": 70
+  }
+ },
+ "gaps": [
+  "colour is compared: a quad particle is lit like a surface (emissive + diffuse x headlight, white for this Material); ours is 255 white, X_ITE 16.6.0's mean over its drawn pixels is about 200 (its edges are blended), fg tolerance 70; no fade at the end of life without a colorRamp (as X_ITE)",
+  "the bounds are tested in ours from the particle list (a box of 3 x 2 x 2 holds every particle, which reflect at the faces); X_ITE's particle positions are not read, its picture is compared by extent"
+ ],
+ "xsdChoice": [
+  "ParticleSystem"
+ ]
+}

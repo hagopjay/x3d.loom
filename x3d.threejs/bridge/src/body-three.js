@@ -83,7 +83,7 @@ class Body {
   clearWorld() {
     if (!this.root) return;
     this.root.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) [].concat(o.material).forEach((m) => { if (m.map) m.map.dispose(); m.dispose(); }); });
-    R.bridge.three.layers.clear(this); this.scene.remove(this.root); this.scene.fog = this.worldFog = null; this.fogHooks = false; this.fogScopes = new WeakMap(); this.localFogs = new Map(); this.tcgMeshes = [];
+    this.psys = []; R.bridge.three.layers.clear(this); this.scene.remove(this.root); this.scene.fog = this.worldFog = null; this.fogHooks = false; this.fogScopes = new WeakMap(); this.localFogs = new Map(); this.tcgMeshes = [];
     for (const r of this.inlines || []) { r.dead = true; r.gen++; r.world = null; } this.inlines = new Set(); this.inlineLoads = 0;
     if (this.cubeGen) for (const e of this.cubeGen) if (e.target) e.target.dispose(); this.cubeGen = new Set(); this.cubeMats = new Set(); if (this.cubeEmpty) { this.cubeEmpty.dispose(); this.cubeEmpty = null; }
     for (const tc of this.textCache.values()) if (tc && tc.map && tc.map.dispose) tc.map.dispose();
@@ -723,6 +723,7 @@ class Body {
     }
     if (this.cubeMats) for (const m of this.cubeMats) m.userData.cubeU.cubeRot.value.setFromMatrix4(this.cam.matrixWorld);   // view space -> world space for the cube maps that hold pictures of the world
     R.bridge.three.cube.takePictures(this);
+    if (R.bridge.three.particles) R.bridge.three.particles.update(this);   // the CPU particle systems
     if (R.bridge.three.sound) R.bridge.three.sound.update(this);   // the audio listener and spatial sources, in the view space of the camera
     R.bridge.three.layers.update(this);   // the cameras, bits, rectangles of the layers and viewports, then the layouts
   }
