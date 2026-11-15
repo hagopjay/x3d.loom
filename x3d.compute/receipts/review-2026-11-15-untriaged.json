@@ -49,7 +49,7 @@
   {
    "dim": "skinning",
    "severity": "vacuous-check",
-   "file": "/home/user/w/x3d.loom/x3d.compute/bench/page.js",
+   "file": "bench/page.js",
    "line": 62,
    "title": "Rest-pose identity gate is CPU-only and cannot fail on any forward-kinematics bug; FK has no independent check",
    "claim": "The rest-pose identity test is meant to show that skinning at rest reproduces the rest mesh. It runs only SK.skinCPU on SK.skinMatrices(joints, {}), and the GPU kernel is never run on it. In skinMatrices, wp[i] and wr[i] are built by the same function (local) from the same inputs when pose={}. So M[i] = wp*inverse(wr) is the identity for any consistent mistake in local() or in the parent composition order. The gate therefore tests only influences() plus the blend. The joint-order claim in the ref comment (T*C*R*(-C)) has no gate behind it. Every fixture and the tube have center = 0 0 0, and the posed GPU-vs-CPU comparison feeds the same CPU-built M to both sides.",
@@ -58,7 +58,7 @@
   {
    "dim": "skinning",
    "severity": "vacuous-check",
-   "file": "/home/user/w/x3d.loom/x3d.compute/bench/page.js",
+   "file": "bench/page.js",
    "line": 71,
    "title": "Influence slots 2 and 3, top-4 truncation and weight renormalisation are never exercised; the only mutant covers slot 1 position",
    "claim": "The README and kernel advertise 4-influence skinning. In both test meshes no vertex has more than 2 non-zero weights, so w.z and w.w are 0 everywhere. The kernel terms m2*p*w.z and m3*p*w.w, and the matching normal terms (wgsl lines 20-22), are multiplied by 0, so any bug in them passes. vertices_dropped_over_4_influences is 0, so the truncation branch in influences() never runs. Every test vertex's weights already sum to exactly 1, so the s division in influences() (renormalisation) is a no-op. Dropping it would pass. mutation-check.sh plants a single skinning mutant, 'm1 * p * w.y' to 'm1 * p * w.x', which touches only the slot-1 position term. The gate's tolerance, 1e-4*(1+|b|), is also 25 to 600 times the observed error (fixture position 4.8e-7, tube position 3.8e-6, normal 1.2e-7).",
@@ -67,7 +67,7 @@
   {
    "dim": "skinning",
    "severity": "wrong-result",
-   "file": "/home/user/w/x3d.loom/x3d.compute/src/ref/skinning.js",
+   "file": "src/ref/skinning.js",
    "line": 34,
    "title": "Vertices with no positive joint weight collapse to the origin on both GPU and CPU, and the gate does not require unweighted == 0",
    "claim": "influences() leaves idx/w = 0 for a vertex that no HAnimJoint lists, or that has only weights <= 0. The kernel then computes q = 0 and writes outP = (0,0,0,1) and a zero normal. skinCPU does the same, because it skips wt = 0 and leaves P = 0. The CPU and GPU agree on a wrong result. A skin vertex that no joint influences should stay at its skinCoord position (the same applies to a NaN or negative weight, which is silently dropped by 'weight > 0'). The harness only reports vertices_unweighted and never gates on it. correctness.pass in page.js line 71 ignores both unweighted and dropped.",
@@ -76,7 +76,7 @@
   {
    "dim": "skinning",
    "severity": "vacuous-check",
-   "file": "/home/user/w/x3d.loom/x3d.compute/tools/mutation-check.sh",
+   "file": "tools/mutation-check.sh",
    "line": 5,
    "title": "mutation-check.sh counts a harness error, a crash or a missing mutation target as 'caught'",
    "claim": "The script reports a mutant as caught unless the output contains '\"skinning\": true'. stderr goes to /dev/null and the exit code is ignored. In page.js, kern() throws 'mutation target not found' when the pattern is absent from the kernel text, and runAll() turns any suite exception into {error}, which run.js prints as \"skinning\": \"ERROR\". A WGSL compile error does the same. run.js dies with exit 2 and empty stdout on any launch failure. All three cases print 'caught'. If skinning.wgsl is reformatted so 'm1 * p * w.y' no longer matches, the skinning mutant still reports 'caught'. The script also never checks that the unmutated baseline is green, so a broken baseline makes every mutant 'caught'.",
@@ -85,7 +85,7 @@
   {
    "dim": "skinning",
    "severity": "misleading-claim",
-   "file": "/home/user/w/x3d.loom/x3d.compute/bench/page.js",
+   "file": "bench/page.js",
    "line": 76,
    "title": "bytes_per_vertex = 160 matches neither the streamed traffic nor the matrix traffic; the comment points to a count that does not exist",
    "claim": "The expression is 16+16+16+16+16+16 + 16*4 with the comment 'cache-resident matrices counted once below'. Nothing below counts matrices. Per vertex the kernel streams rest, restN, jidx and jw (64 B in) and outP and outN (32 B out), which is 96 B. The extra 16*4 = 64 B is not a mat4 (64 B each), not 4 matrices (256 B, from cache) and not an amortised share of the 24 matrices (about 0 B). Any bandwidth figure derived from the receipt (vertices_per_s * 160) overstates DRAM traffic by about 67 percent.",
@@ -94,7 +94,7 @@
   {
    "dim": "skinning",
    "severity": "misleading-claim",
-   "file": "/home/user/w/x3d.loom/x3d.compute/README.md",
+   "file": "README.md",
    "line": 3,
    "title": "README presents the skinning reference as independent and says FK is matched, but the GPU never runs FK and the blend is the same formula on the same inputs",
    "claim": "The README says 'an independent CPU reference' and lists the skinning reference as 'forward kinematics + CPU blend'. The kernel receives M and the idx/w table from that same reference code (skinMatrices and influences), so FK and the influence table are shared inputs, not something the kernel is compared against. The remaining comparison is the same 4-term mat4*vec4 plus mat3*vec3 blend in f32 on the GPU against f64 accumulation on the CPU. Shared conventions (column-major M, normals via the upper 3x3, weighted sum then normalise, zero for unweighted) cannot be disproved by it. Compare nurbs, which is described as a different algorithm.",
@@ -103,7 +103,7 @@
   {
    "dim": "skinning",
    "severity": "robustness",
-   "file": "/home/user/w/x3d.loom/x3d.compute/src/ref/skinning.js",
+   "file": "src/ref/skinning.js",
    "line": 9,
    "title": "HAnimJoint scale and scaleOrientation (and humanoid joint-binding fields) are silently ignored by the reference",
    "claim": "local() and fromX3D() implement only T, C and R. HAnimJoint inherits scale and scaleOrientation from the Transform pattern, and ISO 19775-1 Transform order is T*C*R*SR*S*-SR*-C. The kernel comment (wgsl line 3) describes only the normal path as wrong for non-uniform scale. In fact the reference cannot build a scaled M at all, and positions are unscaled too. A fixture with scale yields a plausible-looking but wrong M with no error, while a non-zero rest rotation throws. HAnimHumanoid jointBindingPositions/Rotations/Scales and skinBinding* (HAnim 2.0 bind-pose fields) are likewise not read, and the bind pose is assumed to be the authored joint values with zero rotation.",
@@ -265,7 +265,7 @@
   {
    "dim": "splats",
    "severity": "vacuous-check",
-   "file": "/home/user/w/x3d.loom/x3d.compute/bench/page.js",
+   "file": "bench/page.js",
    "line": 148,
    "title": "Culling gate only exercises 1.x of 5 cull tests; the 5-splat tolerance hides the rest",
    "claim": "The splats gate (visibility_mismatches <= ceil(0.002*2048) = 5) cannot detect bugs in the left-edge, top-edge or near-plane cull (wgsl lines 26 and 53), and cannot detect a broken right-edge cull. The receipt reports visibility_mismatches 0, but that number cannot show these branches work.",
@@ -274,7 +274,7 @@
   {
    "dim": "splats",
    "severity": "vacuous-check",
-   "file": "/home/user/w/x3d.loom/x3d.compute/src/ref/splats.js",
+   "file": "src/ref/splats.js",
    "line": 42,
    "title": "Fixture quaternions are pure yaw, so half the quaternion-to-matrix terms are never tested",
    "claim": "cloud() builds every orientation as (0, sin(yaw/2), 0, cos(yaw/2)), so qx = qz = 0 for all 2048 splats. R[0][1], R[1][0], R[1][2], R[2][1] (and every x*x and z*z term in the diagonal) are multiplied by zero in both the kernel and the reference. The camera is also a pure pitch about X, so view[0].xyz = (1,0,0). A sign or term error in those matrix entries passes the projection gate.",
@@ -283,7 +283,7 @@
   {
    "dim": "splats",
    "severity": "vacuous-check",
-   "file": "/home/user/w/x3d.loom/x3d.compute/bench/page.js",
+   "file": "bench/page.js",
    "line": 151,
    "title": "Sort-key construction and padding keys are never compared with anything but themselves",
    "claim": "The sort checks compare the GPU result with a CPU sort of the GPU's own keys (`want = SP.sortPairs(k0, v0)`). The only property of k0 that is checked is `k0[i] !== 0xFFFFFFFF` against the reference's visibility flag (line 143), and only for i < n. Nothing checks that visible keys equal the f32 bits of the depth z (wgsl line 58). Nothing checks that padding entries i >= n get key 0xFFFFFFFF and val i (wgsl line 22).",
@@ -292,7 +292,7 @@
   {
    "dim": "splats",
    "severity": "misleading-claim",
-   "file": "/home/user/w/x3d.loom/x3d.compute/fixtures/splats-disc.x3d",
+   "file": "fixtures/splats-disc.x3d",
    "line": 2,
    "title": "splats-disc.x3d declares X3D 4.0 / Immersive with a 4.1-only node; orientations comment contradicts the repo's own spec notes",
    "claim": "The fixture is `<X3D profile=\"Immersive\" version=\"4.0\" ... x3d-4.0.xsd>` with no `<component name=\"GaussianSplats\" level=\"1\"/>`, yet its only content is a `<GaussianSplats>` node. By the repo's own STATE.md line 114, GaussianSplats is a 4.1 addition (component GaussianSplats 1) and not part of the Immersive profile. A validator against the 4.0 schema would reject the file. src/ref/splats.js line 46 says `orientations (MFRotation read as quaternion x y z w ...)`. The repo's checked notes (BABYLON.md line 218, HYPER.md line 13, from X3DUOM 4.1) type the field MFQuaternion. As an MFRotation (axis-angle, per ISO 19775-1) the fixture's `0 sin(yaw/2) 0 cos(yaw/2)` would read as axis (0,s,0) with angle cos(yaw/2) rad.",
@@ -301,7 +301,7 @@
   {
    "dim": "harness",
    "severity": "vacuous-check",
-   "file": "/home/user/w/x3d.loom/x3d.compute/tools/mutation-check.sh",
+   "file": "tools/mutation-check.sh",
    "line": 5,
    "title": "mutation-check counts any crash, ERROR or stale mutation as 'caught'",
    "claim": "The script says every mutant turns its suite red. Its only test is `grep -q \"\\\"$suite\\\": true\"`, so anything that is not a printed `true` is reported as 'caught': a missing playwright, a Chromium launch failure, a timeout, a WGSL compile error, or a mutation target that no longer exists in the kernel.",
@@ -310,7 +310,7 @@
   {
    "dim": "harness",
    "severity": "misleading-claim",
-   "file": "/home/user/w/x3d.loom/x3d.compute/src/gpu.js",
+   "file": "src/gpu.js",
    "line": 61,
    "title": "README says p95 of 12-15 runs; the code takes as few as 3 samples, p95 is the max, and the count is not recorded",
    "claim": "README:28 says GPU ms is the 'median and p95 of 12-15 runs after warm-up'. Line 61 cuts `iters` to `max(3, floor(budgetMs/first))`, and `pct()` (line 45) returns the sample maximum for any n <= 20.",
@@ -319,7 +319,7 @@
   {
    "dim": "harness",
    "severity": "wrong-result",
-   "file": "/home/user/w/x3d.loom/x3d.compute/src/gpu.js",
+   "file": "src/gpu.js",
    "line": 88,
    "title": "sustained_ms_per_frame divides N-1 frame intervals by N, so vsync-bound rows read faster than the display",
    "claim": "README:30 calls `sustained_ms_per_frame` (first frame to last completed frame) 'the honest figure'. It is `(tEnd - tStart)/frames`, where tStart is the first rAF callback and tEnd is completion of the last frame. For a workload shorter than a vsync interval that span holds only frames-1 intervals plus the last workload, so the figure is biased low and fps_sustained high.",
@@ -328,7 +328,7 @@
   {
    "dim": "harness",
    "severity": "robustness",
-   "file": "/home/user/w/x3d.loom/x3d.compute/tools/run.js",
+   "file": "tools/run.js",
    "line": 19,
    "title": "Default receipt name ignores --only and --mutate, so the README's own subset command overwrites the full receipt",
    "claim": "The name defaults to `full-swiftshader` or `full-gpu` unless --quick is given, whatever --only or --mutate says. README:21 shows `node tools/run.js --only=splats,volume` with no --name.",
@@ -337,7 +337,7 @@
   {
    "dim": "harness",
    "severity": "misleading-claim",
-   "file": "/home/user/w/x3d.loom/x3d.compute/README.md",
+   "file": "README.md",
    "line": 18,
    "title": "README '--quick about 35 s' is stale, and noBench is unreachable so mutation-check pays the bench time 8 times",
    "claim": "README:18 says `--quick` takes about 35 s on 4 cores. The current receipt implies roughly twice that for benching alone.",
@@ -346,7 +346,7 @@
   {
    "dim": "harness",
    "severity": "vacuous-check",
-   "file": "/home/user/w/x3d.loom/x3d.compute/src/gpu.js",
+   "file": "src/gpu.js",
    "line": 93,
    "title": "compare/compareRel pass for empty or short inputs, and the splats gate has no non-vacuity guard",
    "claim": "compare() and compareRel() iterate over a.length only and report outside_tol=0 for n=0 or when the GPU array is shorter than the reference. The splats gate (bench/page.js:148) does not require any visible splat, while the volume gate does (`covered_pixels > 0`, page.js:96).",
@@ -355,7 +355,7 @@
   {
    "dim": "harness",
    "severity": "misleading-claim",
-   "file": "/home/user/w/x3d.loom/x3d.compute/README.md",
+   "file": "README.md",
    "line": 46,
    "title": "README points to an x3d.docs chapter that does not exist",
    "claim": "README:46 says the measurements, heuristics and honest limits are written up in the x3d.docs chapter 'WebGPU compute for X3D'.",
@@ -364,7 +364,7 @@
   {
    "dim": "harness",
    "severity": "nit",
-   "file": "/home/user/w/x3d.loom/x3d.compute/src/gpu.js",
+   "file": "src/gpu.js",
    "line": 47,
    "title": "Doc comments and rig metadata do not match what the code returns or records",
    "claim": "The bench() header comment (lines 47-50) names an option `passes` and return fields `fps, frame_ms_median, frame_ms_p95, workload_ms_in_frame`. None exist. The real options include `budgetMs`, and the real fields are rAF_dt_ms_median, rAF_dt_ms_p95, fps_raf, sustained_ms_per_frame, fps_sustained and submit_to_done_ms_median. Three smaller mismatches follow.",
