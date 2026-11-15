@@ -1,0 +1,238 @@
+{
+ "drop-bounce": {
+  "file": "drop-bounce.x3d",
+  "T": 3,
+  "probes": [
+   "S"
+  ],
+  "expected": {
+   "builtin": {
+    "apex above contact (m), analytic 1.125": 1.125,
+    "final centre height (m), analytic 0.5": 0.5,
+    "first contact (s), analytic 0.958": 0.983
+   },
+   "rapier": {
+    "apex above contact (m), analytic 1.125": 1.121,
+    "final centre height (m), analytic 0.5": 0.5,
+    "first contact (s), analytic 0.958": 0.983
+   },
+   "cannon": {
+    "apex above contact (m), analytic 1.125": 1.235,
+    "final centre height (m), analytic 0.5": 0.5,
+    "first contact (s), analytic 0.958": 0.983
+   },
+   "cannon-raw": {
+    "apex above contact (m), analytic 1.125": 1.235,
+    "final centre height (m), analytic 0.5": 0.5,
+    "first contact (s), analytic 0.958": 0.983
+   }
+  }
+ },
+ "stack3": {
+  "file": "stack3.x3d",
+  "T": 6,
+  "probes": [
+   "B1",
+   "B2",
+   "B3"
+  ],
+  "expected": {
+   "builtin": {
+    "B1 height (m), ideal 0.5": 0.4964,
+    "B2 height (m), ideal 1.5": 1.4913,
+    "B3 height (m), ideal 2.5": 2.4899,
+    "sideways drift of top box (m)": 0.00976
+   },
+   "rapier": {
+    "B1 height (m), ideal 0.5": 0.4998,
+    "B2 height (m), ideal 1.5": 1.4987,
+    "B3 height (m), ideal 2.5": 2.4982,
+    "sideways drift of top box (m)": 0.00044
+   },
+   "cannon": {
+    "B1 height (m), ideal 0.5": 0.5,
+    "B2 height (m), ideal 1.5": 1.5,
+    "B3 height (m), ideal 2.5": 2.5,
+    "sideways drift of top box (m)": 0.01893
+   },
+   "cannon-raw": {
+    "B1 height (m), ideal 0.5": 0.5,
+    "B2 height (m), ideal 1.5": 1.4999,
+    "B3 height (m), ideal 2.5": 2.4999,
+    "sideways drift of top box (m)": 0.01272
+   }
+  }
+ },
+ "slope-mu0.2": {
+  "file": "slope-mu0.2.x3d",
+  "T": 2,
+  "probes": [
+   "C"
+  ],
+  "expected": {
+   "builtin": {
+    "downhill distance, 0.5 s to 1.5 s (m)": 3.141,
+    "acceleration (m/s2), analytic 3.19": 3.2
+   },
+   "rapier": {
+    "downhill distance, 0.5 s to 1.5 s (m)": 3.139,
+    "acceleration (m/s2), analytic 3.19": 3.2
+   },
+   "cannon": {
+    "downhill distance, 0.5 s to 1.5 s (m)": 3.395,
+    "acceleration (m/s2), analytic 3.19": 3.43
+   },
+   "cannon-raw": {
+    "downhill distance, 0.5 s to 1.5 s (m)": 0,
+    "acceleration (m/s2), analytic 3.19": 0
+   }
+  }
+ },
+ "pendulum-ball": {
+  "file": "pendulum-ball.x3d",
+  "T": 15,
+  "probes": [
+   "Bob"
+  ],
+  "expected": {
+   "builtin": {
+    "period (s), analytic 2.8473": 2.8549,
+    "period error (%)": 0.27,
+    "max drift of arm length (m), ideal 0": 0.0001,
+    "amplitude in the last 3 s (m), start 0.347": 0.345
+   },
+   "rapier": {
+    "period (s), analytic 2.8473": 2.8527,
+    "period error (%)": 0.19,
+    "max drift of arm length (m), ideal 0": 0,
+    "amplitude in the last 3 s (m), start 0.347": 0.345
+   },
+   "cannon": {
+    "period (s), analytic 2.8473": 2.8599,
+    "period error (%)": 0.44,
+    "max drift of arm length (m), ideal 0": 0.0004,
+    "amplitude in the last 3 s (m), start 0.347": 0.342
+   },
+   "cannon-raw": {
+    "period (s), analytic 2.8473": 2.8599,
+    "period error (%)": 0.44,
+    "max drift of arm length (m), ideal 0": 0.0004,
+    "amplitude in the last 3 s (m), start 0.347": 0.342
+   }
+  }
+ },
+ "hinge-limit": {
+  "file": "hinge-limit.x3d",
+  "T": 3,
+  "probes": [
+   "Door"
+  ],
+  "expected": {
+   "builtin": {
+    "max angle (rad), limit 1.0": 1,
+    "angle at 3 s (rad)": 0.714,
+    "door centre off its 0.5 m circle (m), ideal 0": 0.0004
+   },
+   "rapier": {
+    "max angle (rad), limit 1.0": 1,
+    "angle at 3 s (rad)": 1,
+    "door centre off its 0.5 m circle (m), ideal 0": 0
+   },
+   "cannon": {
+    "max angle (rad), limit 1.0": 1.008,
+    "angle at 3 s (rad)": 0.445,
+    "door centre off its 0.5 m circle (m), ideal 0": 0.0008
+   },
+   "cannon-raw": {
+    "max angle (rad), limit 1.0": 1.008,
+    "angle at 3 s (rad)": 0.445,
+    "door centre off its 0.5 m circle (m), ideal 0": 0.0008
+   }
+  }
+ },
+ "slider-limit": {
+  "file": "slider-limit.x3d",
+  "T": 3,
+  "probes": [
+   "Car"
+  ],
+  "expected": {
+   "builtin": {
+    "max separation (m), limit 1.5": 1.5,
+    "x at 3 s (m)": 1.424,
+    "sag (m), ideal 0": 0,
+    "z drift (m)": 0
+   },
+   "rapier": {
+    "max separation (m), limit 1.5": 1.5,
+    "x at 3 s (m)": 1.5,
+    "sag (m), ideal 0": 0,
+    "z drift (m)": 0
+   },
+   "cannon": {
+    "max separation (m), limit 1.5": 1.505,
+    "x at 3 s (m)": 0.502,
+    "sag (m), ideal 0": 0,
+    "z drift (m)": 0
+   },
+   "cannon-raw": {
+    "max separation (m), limit 1.5": 1.505,
+    "x at 3 s (m)": 0.502,
+    "sag (m), ideal 0": 0,
+    "z drift (m)": 0
+   }
+  }
+ },
+ "billiards-head-on": {
+  "file": "billiards-head-on.x3d",
+  "T": 2,
+  "probes": [
+   "A",
+   "B"
+  ],
+  "expected": {
+   "builtin": {
+    "A speed after (m/s), analytic 0": 0,
+    "B speed after (m/s), analytic 3": 2.994,
+    "momentum error (%)": 0.19,
+    "energy error (%)": 0.39
+   },
+   "rapier": {
+    "A speed after (m/s), analytic 0": 0,
+    "B speed after (m/s), analytic 3": 2.994,
+    "momentum error (%)": 0.19,
+    "energy error (%)": 0.38
+   },
+   "cannon": {
+    "A speed after (m/s), analytic 0": -0.203,
+    "B speed after (m/s), analytic 3": 3.197,
+    "momentum error (%)": 0.19,
+    "energy error (%)": 14.02
+   },
+   "cannon-raw": {
+    "A speed after (m/s), analytic 0": -0.203,
+    "B speed after (m/s), analytic 3": 3.197,
+    "momentum error (%)": 0.19,
+    "energy error (%)": 14.02
+   }
+  }
+ },
+ "demo-avalanche": {
+  "file": "demo-avalanche.x3d",
+  "T": 5,
+  "note": "40 bodies (10 each of sphere, box, cylinder, cone) into a funnel; cone and cylinder are real shapes in Rapier and cannon-es, bounding spheres in the built-in engine"
+ },
+ "demo-cradle": {
+  "file": "demo-cradle.x3d",
+  "T": 8,
+  "note": "five 0.5 m spheres, 1 kg, BallJoint strings 3 m, bounce 1, left ball lifted 0.7 rad; the strings are not drawn",
+  "rapierOpts": {
+   "sub": 4
+  }
+ },
+ "demo-gate": {
+  "file": "demo-gate.x3d",
+  "T": 6,
+  "note": "door: hinge limit +-1.1 rad, spun at 3.2 rad/s; cart: slider stops at 0.9 and 3.7 m, thrown at 3 m/s; ball: bounce 0.8"
+ }
+}
