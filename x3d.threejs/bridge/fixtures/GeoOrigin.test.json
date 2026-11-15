@@ -1,0 +1,240 @@
+{
+ "node": "GeoOrigin",
+ "mode": "scene",
+ "note": "GeoOrigin with rotateYUp turns the geographic points into metres around the origin: lon 0.00002 degrees = 2.22639 m east, height 2 m = 2 m up, so the quad is 2.226 wide and 2 tall (x 0 to 2.226 in the picture around a camera at x 1.113). Moving geoCoords by 0.00001 degrees (1.113 m east) slides the quad 1.113 m back in the same timestamp; setting it back restores the picture.",
+ "gaps": [
+  "only GD and UTM and GC geoSystems with the WE and IN style ellipsoids are exercised in the unit checks of BR.geo; the picture tests use GD WE",
+  "a plain list handed to a double field of X_ITE 16.6.0 (a harness slip, now converted to SFVec3d) turns the picture to nothing and a second set kills the page",
+  "the origin is read at use: a change of geoSystem of an existing GeoOrigin at run time is not tested (the field is initializeOnly)"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "O",
+    "geoCoords",
+    [
+     0,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "O",
+    "geoSystem",
+    [
+     "GD",
+     "WE"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "O",
+    "rotateYUp",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "GC",
+    "geoSystem",
+    [
+     "GD",
+     "WE"
+    ]
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    133,
+    95,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    187,
+    145,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    124,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    196,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    86,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    154,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "O",
+    "geoCoords",
+    [
+     0,
+     1e-05,
+     0
+    ],
+    "SFVec3d"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    110,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    150,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    180,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    90,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "O",
+    "geoCoords",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3d"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    180,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    110,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  }
+ ],
+ "tone": "none"
+}

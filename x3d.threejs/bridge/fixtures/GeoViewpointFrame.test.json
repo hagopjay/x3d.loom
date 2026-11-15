@@ -1,0 +1,21 @@
+{
+ "node": "GeoViewpointFrame",
+ "mode": "scene",
+ "tone": "none",
+ "note": "no GeoOrigin, so the frame at the camera is a quarter turn from the world axes; the default orientation looks north: the red box (north) is ahead, the blue one (up, 50 m above the camera) is over it. Added by the three.js bridge after a drill showed that the batch-46 GeoViewpoint fixture, which sits on a rotateYUp origin, cannot tell the frame's basis from a wrong one",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "shot": "north"
+  }
+ ],
+ "compare": {
+  "north": {
+   "iou": 0.9,
+   "mad": 8,
+   "fg": 12
+  }
+ }
+}

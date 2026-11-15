@@ -64,7 +64,7 @@ def check(names):
         rec = {'node': n, 'date': today, 'env': res['env'], **v}
         json.dump(rec, open(os.path.join(HERE, 'receipts', n + '.json'), 'w'), indent=1)
         for t in [n] + (COVERS.get(n, []) if v['ok'] else []):
-            if t in d['nodes'] and v['ok']: d['nodes'][t]['three'] = 'drawn' if scene else 'reader-checked'; d['nodes'][t]['receipt'] = f'receipts/{n}.json'
+            if t in d['nodes'] and v['ok']: d['nodes'][t]['three'] = 'drawn' if scene else 'reader-checked'; d['nodes'][t]['receipt'] = f'receipts/{n}.json' if t == n or not os.path.exists(os.path.join(HERE, 'receipts', t + '.json')) else f'receipts/{t}.json'   # a node with a receipt of its own keeps it when another node's run covers it
         print(('PASS ' if v['ok'] else 'FAIL ') + n + '  ours: ' + v['ours'][:90] + '  xite: ' + str(v['xite'])[:60])
     json.dump(d, open(TRK, 'w'), indent=1); md(); sys.exit(0 if res['ok'] else 1)
 def nxt(k=10):

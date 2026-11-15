@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Geospatial" level="2"/><meta name="title" content="GeoTouchSensor.x3d"/><meta name="description" content="Bridge fixture for GeoTouchSensor: hover outputs hitTexCoord, hitNormal, hitPoint in the sensor frame and hitGeoCoord as the geographic reading of the local hitPoint"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+    <Group>
+      <Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="2 2 2"/></Shape>
+      <GeoTouchSensor DEF="GT"><GeoOrigin DEF="O" geoCoords="0 0 0" rotateYUp="true"/></GeoTouchSensor>
+      <GeoTouchSensor DEF="GC" geoSystem='"GC"'><GeoOrigin USE="O"/></GeoTouchSensor>
+      <GeoTouchSensor DEF="GN"><GeoOrigin DEF="O2" geoCoords="0 0 0" rotateYUp="false"/></GeoTouchSensor>
+      <GeoTouchSensor DEF="GOFF" enabled="false"><GeoOrigin USE="O"/></GeoTouchSensor>
+    </Group>
+    <GeoLocation DEF="GLOC" geoCoords="0 0.00003 0"><GeoOrigin USE="O"/>
+      <Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 1 0"/></Appearance><Box size="2 2 2"/></Shape>
+      <GeoTouchSensor DEF="GTL"><GeoOrigin USE="O"/></GeoTouchSensor>
+    </GeoLocation>
+  </Scene>
+</X3D>
