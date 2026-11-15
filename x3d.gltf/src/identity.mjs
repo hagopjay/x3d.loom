@@ -34,7 +34,8 @@ export function snapshot(doc) {
   // x3d_def_path claims a chain of DEF'd ancestors. Count how many claims still match the real hierarchy.
   let claims = 0, holds = 0;
   for (const n of R.listNodes()) {
-    const path = n.getExtras()?.x3d_def_path; if (!Array.isArray(path) || !path.length) continue;
+    const raw = n.getExtras()?.x3d_def_path;   // the add-on writes a '/'-joined string ('A/B/C'); the fixtures write an array
+    const path = Array.isArray(raw) ? raw : (typeof raw === 'string' && raw ? raw.split('/') : null); if (!path || !path.length) continue;
     claims++;
     const chain = []; for (let p = n.getParentNode(); p; p = p.getParentNode()) { const d = p.getExtras()?.x3d_def; if (d) chain.unshift(d); }
     const own = n.getExtras()?.x3d_def; const want = own && path[path.length - 1] === own ? path.slice(0, -1) : path;

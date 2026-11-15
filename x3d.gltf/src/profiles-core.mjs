@@ -36,7 +36,7 @@ export function portableProfiles(encoder) {
       identity: 'exact', geometry: 'bits:14', writes: ['KHR_mesh_quantization', 'EXT_meshopt_compression'], steps: () => [...BASE_STEPS(), reorderStep(), quant(), ['meshopt-ext', enableMeshopt(M.QUANTIZE)]],
     },
     'web-filter': {
-      summary: 'web with meshopt vertex filters (gltfpack -cc equivalent): smaller after brotli, larger before',
+      summary: 'web with meshopt vertex filters (gltfpack -cc equivalent): smaller than web on the four showpieces and in the corpus totals (raw and brotli); needs a decoder with the filters, see the support matrix',
       identity: 'exact', geometry: 'bits:14', writes: ['KHR_mesh_quantization', 'EXT_meshopt_compression'], steps: () => [...BASE_STEPS(), reorderStep(), quant(), ['meshopt-ext', enableMeshopt(M.FILTER)]],
     },
     instanced: {

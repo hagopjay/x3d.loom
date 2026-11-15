@@ -167,7 +167,7 @@ export function compareGeometry(a, b) {
   const diag = a.diagonal || 1;
   const rel = (v) => v / diag;
   const out = {
-    sourceTriangles: a.triangles, outputTriangles: b.triangles, triangleDelta: b.triangles - a.triangles, sourceSolid: a.solidTriangles, outputSolid: b.solidTriangles, solidDelta: b.solidTriangles - a.solidTriangles, degenerateDropped: a.degenerate - b.degenerate,
+    sourceTriangles: a.triangles, outputTriangles: b.triangles, triangleDelta: b.triangles - a.triangles, sourceSolid: a.solidTriangles, outputSolid: b.solidTriangles, solidDelta: b.solidTriangles - a.solidTriangles, degenerateDropped: Math.max(0, a.degenerate - b.degenerate), degenerateAdded: Math.max(0, b.degenerate - a.degenerate),
     areaRelDelta: a.area ? (b.area - a.area) / a.area : 0,
     boundsMaxCornerDelta: a.triangles ? Math.max(...[0, 1, 2].flatMap((k) => [Math.abs(a.bounds.min[k] - b.bounds.min[k]), Math.abs(a.bounds.max[k] - b.bounds.max[k])])) : 0,
     diagonal: a.diagonal,

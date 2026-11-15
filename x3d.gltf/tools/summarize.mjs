@@ -22,7 +22,7 @@ for (const f of files) {
   out.push(`| ${f} | ${kb(src.bytes.source)} | ${kb(src.gzip.source)} | ${kb(src.brotli.source)} | ${raw.profile} | ${kb(raw.bytes.output)} | ${pct(raw.bytes.ratio)} | ${br.profile} | ${kb(br.brotli.output)} | ${pct(br.brotli.output / src.brotli.source)} | ${inst ? `${inst.drawCalls[0]} -> ${inst.drawCalls[1]}` : ''} | ${src.identity.preserved + src.identity.lost} |`);
 }
 out.push('\n## The traps: what the two identity-destroying profiles cost\n');
-out.push('| glb | profile | draw calls | nodes | triangles (non-degenerate delta in notes) | identity tokens lost of source | KiB source -> out | gates |');
+out.push('| glb | profile | draw calls | nodes | triangles (source -> out) | identity tokens lost of source | KiB source -> out | gates |');
 out.push('|---|---|---|---|---|---:|---|---|');
 for (const f of files) for (const p of ['stock-instance', 'static-joined']) {
   const r = rows.find((x) => x.file === f && x.profile === p); if (!r) continue;

@@ -13,6 +13,8 @@ export async function compareDocs({ srcDoc, outDoc, srcBytes, outBytes, io, cont
   const anim = compareAnimation(animationSummary(srcDoc), animationSummary(outDoc));
   const bound = boundsForGeometry(contract.geometry), failures = [], notes = [];
   if (contract.identity === 'exact' && !id.exact) failures.push(`identity: exact profile lost ${id.lost.length} and added ${id.added.length} tokens`);
+  // the add-on's x3d_def_path claims ('A/B/C'): an exact profile may neither add nor drop claims, nor leave fewer of them true than the source had
+  if (contract.identity === 'exact' && (id.defPath.outputClaims !== id.defPath.sourceClaims || id.defPath.outputHolds < id.defPath.sourceHolds)) failures.push(`identity: x3d_def_path claims ${id.defPath.sourceHolds}/${id.defPath.sourceClaims} held in the source, ${id.defPath.outputHolds}/${id.defPath.outputClaims} in the output`);
   if (contract.identity === 'mapped' && id.lost.length) failures.push(`identity: mapped profile lost ${id.lost.length} tokens`);
   // Exact profiles may not change a single triangle. Quantizing profiles may collapse triangles smaller than the grid step (lumen.glb: 8 of 93k at 14 bits)
   // or, with Draco, drop the zero-area ones; that is reported, bounded (0.1% of the triangles, at least 16) and backed by the area and centroid gates below.

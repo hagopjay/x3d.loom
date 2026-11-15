@@ -33,7 +33,7 @@
 
 ## The traps: what the two identity-destroying profiles cost
 
-| glb | profile | draw calls | nodes | triangles (non-degenerate delta in notes) | identity tokens lost of source | KiB source -> out | gates |
+| glb | profile | draw calls | nodes | triangles (source -> out) | identity tokens lost of source | KiB source -> out | gates |
 |---|---|---|---|---|---:|---|---|
 | asterion.glb | stock-instance | 284 -> 284 | 288 -> 288 | 93682 -> 93682 | 0 of 587 | 4404.4 -> 4851.9 | pass (loss is allowed and counted) |
 | asterion.glb | static-joined | 284 -> 10 | 288 -> 14 | 93682 -> 93682 | 548 of 587 | 4404.4 -> 1026.9 | pass (loss is allowed and counted) |
