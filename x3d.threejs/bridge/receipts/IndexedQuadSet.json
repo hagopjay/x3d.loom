@@ -1,0 +1,67 @@
+{
+ "node": "IndexedQuadSet",
+ "date": "2026-11-14",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha d744bd6ba410",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 2/2",
+ "xite": "pass 2/2",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "main": {
+   "iou": 0.95,
+   "coverOurs": 0.97,
+   "coverXite": 0.98,
+   "bboxOurs": [
+    26,
+    76,
+    317,
+    176
+   ],
+   "bboxXite": [
+    26,
+    78,
+    317,
+    176
+   ],
+   "nOurs": 15405,
+   "nXite": 15372,
+   "fgFracOurs": 0.2,
+   "fgFracXite": 0.2,
+   "mad": 2.65,
+   "psnr": 30.96,
+   "fgMeanOurs": [
+    100,
+    117,
+    100
+   ],
+   "fgMeanXite": [
+    100,
+    117,
+    101
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "two cubes with generated smooth normals on shared corner vertices: foreground count is within 0.2 percent (15405 against 15372) but the dim, barely lit edge of the faces turns on at a slightly different grey in ours (IoU 0.95, mad 2.65, PSNR 31 dB); the cause is not isolated"
+ ]
+}
