@@ -498,10 +498,10 @@
    "inherits": "X3DSensorNode",
    "container": "children",
    "nfields": 7,
-   "status": "blocked",
-   "batch": null,
-   "receipt": null,
-   "note": "needs the RigidBodyPhysics nodes it reads (CollisionCollection, CollidableShape, CollidableOffset, RigidBody, RigidBodyCollection, Contact; ranks 227 to 239) and a contact solver; a sensor with no collidables can never fire. Build them as one physics group. Scaffold kept in bridge/_deferred/",
+   "status": "gap",
+   "batch": 47,
+   "receipt": "receipts/CollisionSensor.json",
+   "note": "isActive, intersections and contacts of an impact are not asserted: X_ITE sees an impact for one sub-step, the bridge for one of its 1/240 s steps; both are noisy; the events of one frame come in the order isActive, intersections, contacts (X_ITE: the same timestamp); the fixture reads values, not order; enabled is read only at load and when collider is written, as X_ITE 16.6.0 does; the specification says enabled switches the node",
    "rank": 59
   },
   "CollisionSpace": {
@@ -511,10 +511,10 @@
    "inherits": "X3DNBodyCollisionSpaceNode",
    "container": "children",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 47,
+   "receipt": "receipts/CollisionSpace.json",
+   "note": "enabled and useGeometry are not read (X_ITE 16.6.0 does the same); the specification says they switch the space and select the geometry; the bounding box fields are kept and never used",
    "rank": 230
   },
   "Color": {
@@ -673,10 +673,10 @@
    "inherits": "X3DNode",
    "container": "contacts",
    "nfields": 17,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 47,
+   "receipt": "receipts/Contact.json",
+   "note": "body1, body2, geometry1, geometry2: the bridge fills them, X_ITE leaves them null (checked on each side); the sign of contactNormal depends on the order of the pair and flips with nested shapes: only its length and axis are asserted; a Contact routed to set_contacts is held and does nothing, as in X_ITE",
    "rank": 232
   },
   "Contour2D": {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="RigidBodyPhysics" level="2"/><meta name="title" content="Contact.x3d"/><meta name="description" content="Bridge fixture for Contact: the record a CollisionSensor fills for each touching pair (position, normal, depth and the collider's material)"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+    <CollisionSensor DEF="CS"><CollisionCollection containerField="collider" DEF="C" bounce="0.7" minBounceSpeed="0.3" frictionCoefficients="0.3 0.4" surfaceSpeed="1 2" slipFactors="3 4" softnessConstantForceMix="0.5" softnessErrorCorrection="0.6" appliedParameters='"BOUNCE" "FRICTION_COEFFICIENT_2" "SLIP_1"'><CollidableShape DEF="GS" containerField="collidables"><Shape containerField="shape"><Box size="20 1 20"/></Shape></CollidableShape><CollidableShape DEF="BS" containerField="collidables"><Shape containerField="shape"><Sphere radius="0.5"/></Shape></CollidableShape></CollisionCollection></CollisionSensor>
+    <RigidBodyCollection DEF="W">
+      <RigidBody DEF="G" position="0 -0.5 0" mass="1" fixed="true"><CollidableShape USE="GS" containerField="geometry"/></RigidBody>
+      <RigidBody DEF="B" position="0 0.5 0" mass="1"><CollidableShape USE="BS" containerField="geometry"/></RigidBody>
+    </RigidBodyCollection>
+    <Contact DEF="K0"/>
+  </Scene>
+</X3D>

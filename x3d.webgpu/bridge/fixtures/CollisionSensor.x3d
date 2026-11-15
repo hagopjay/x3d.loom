@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="RigidBodyPhysics" level="2"/><meta name="title" content="CollisionSensor.x3d"/><meta name="description" content="Bridge fixture for CollisionSensor: contacts of the bodies whose collidables its collider lists, read from the physics world"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+    <CollisionSensor DEF="CS1"><CollisionCollection containerField="collider" DEF="C1" bounce="0" minBounceSpeed="0"><CollidableShape DEF="GS" containerField="collidables"><Shape containerField="shape"><Box size="20 1 20"/></Shape></CollidableShape><CollidableShape DEF="BS" containerField="collidables"><Shape containerField="shape"><Sphere radius="0.5"/></Shape></CollidableShape></CollisionCollection></CollisionSensor>
+    <CollisionSensor DEF="CS2"><CollisionCollection containerField="collider" DEF="C2" bounce="0" minBounceSpeed="0"><CollidableShape USE="BS" containerField="collidables"/></CollisionCollection></CollisionSensor>
+    <CollisionSensor DEF="CS3"><CollisionCollection containerField="collider" DEF="C3" bounce="0" minBounceSpeed="0"><CollidableShape DEF="XS" containerField="collidables"><Shape containerField="shape"><Box size="1 1 1"/></Shape></CollidableShape></CollisionCollection></CollisionSensor>
+    <CollisionSensor DEF="CS4" enabled="false"><CollisionCollection containerField="collider" DEF="C4" bounce="0" minBounceSpeed="0"><CollidableShape USE="GS" containerField="collidables"/><CollidableShape USE="BS" containerField="collidables"/></CollisionCollection></CollisionSensor>
+    <CollisionSensor DEF="CS5"><CollisionCollection containerField="collider" DEF="C5" bounce="0" minBounceSpeed="0"><CollidableShape DEF="QS" containerField="collidables"><Shape containerField="shape"><Box size="1 1 1"/></Shape></CollidableShape></CollisionCollection></CollisionSensor>
+    <RigidBodyCollection DEF="W">
+      <CollisionCollection containerField="collider" DEF="CW" bounce="0" minBounceSpeed="0"/>
+      <RigidBody DEF="G" position="0 -0.5 0" mass="1" fixed="true"><CollidableShape USE="GS" containerField="geometry"/></RigidBody>
+      <RigidBody DEF="B" position="0 0.5 0" mass="1"><CollidableShape USE="BS" containerField="geometry"/></RigidBody>
+      <RigidBody DEF="Q" position="3 0.5 0" mass="1"><CollidableShape USE="QS" containerField="geometry"/></RigidBody>
+    </RigidBodyCollection>
+  </Scene>
+</X3D>

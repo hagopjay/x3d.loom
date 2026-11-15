@@ -1,0 +1,205 @@
+{
+ "node": "Contact",
+ "mode": "events",
+ "note": "X_ITE 16.6.0: a Contact is a plain data node: the sensor creates a pool of them (the same objects are overwritten every frame) and copies appliedParameters, bounce, minBounceSpeed, frictionCoefficients, surfaceSpeed, softnessConstantForceMix, softnessErrorCorrection from its own collider and slipFactors into slipCoefficients; position (a point on the first body's surface), contactNormal (unit) and depth (>= 0) come from the physics world; frictionDirection is never set (0 1 0). A Contact written into the scene (the schema allows it only among the scene's own nodes, not inside a RigidBodyCollection) or routed to the world's set_contacts changes nothing in the simulation (the handler is empty). Defaults of a bare Contact: minBounceSpeed 0 (the collider's is 0.1), softnessConstantForceMix 0.0001, softnessErrorCorrection 0.8, appliedParameters BOUNCE. body1, body2, geometry1 and geometry2 stay null in X_ITE (a typo: it writes a property with a trailing underscore); the bridge fills them with the two bodies and top-level collidables of the pair, as the specification says.",
+ "gaps": [
+  "body1, body2, geometry1, geometry2: the bridge fills them, X_ITE leaves them null (checked on each side)",
+  "the sign of contactNormal depends on the order of the pair and flips with nested shapes: only its length and axis are asserted",
+  "a Contact routed to set_contacts is held and does nothing, as in X_ITE"
+ ],
+ "steps": [
+  {
+   "jsn": [
+    "node('K0').appliedParameters.join()",
+    "BOUNCE"
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('K0').position).join()",
+    "0,0,0"
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('K0').contactNormal).join()",
+    "0,1,0"
+   ]
+  },
+  {
+   "expect": [
+    "K0",
+    "depth",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "K0",
+    "bounce",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "K0",
+    "minBounceSpeed",
+    0
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('K0').frictionDirection).join()",
+    "0,1,0"
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('K0').frictionCoefficients).join()",
+    "0,0"
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('K0').surfaceSpeed).join()",
+    "0,0"
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('K0').slipCoefficients).join()",
+    "0,0"
+   ]
+  },
+  {
+   "near": [
+    "K0",
+    "softnessConstantForceMix",
+    0.0001,
+    1e-09
+   ]
+  },
+  {
+   "near": [
+    "K0",
+    "softnessErrorCorrection",
+    0.8,
+    1e-06
+   ]
+  },
+  {
+   "jsn": [
+    "node('K0').geometry1===null&&node('K0').body1===null&&node('K0').geometry2===null&&node('K0').body2===null",
+    true
+   ]
+  },
+  {
+   "settle": 2.5
+  },
+  {
+   "expect": [
+    "CS",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('CS').contacts.length===1",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('CS').contacts[0].appliedParameters.join()",
+    "BOUNCE,FRICTION_COEFFICIENT_2,SLIP_1"
+   ]
+  },
+  {
+   "jsn": [
+    "Math.abs((plain(node('CS').contacts[0].bounce))-(0.7))<=1e-06",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "Math.abs((plain(node('CS').contacts[0].minBounceSpeed))-(0.3))<=1e-06",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('CS').contacts[0].frictionCoefficients).map((x)=>+x.toFixed(6)).join()",
+    "0.3,0.4"
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('CS').contacts[0].surfaceSpeed).join()",
+    "1,2"
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('CS').contacts[0].slipCoefficients).join()",
+    "3,4"
+   ]
+  },
+  {
+   "jsn": [
+    "Math.abs((plain(node('CS').contacts[0].softnessConstantForceMix))-(0.5))<=1e-06",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "Math.abs((plain(node('CS').contacts[0].softnessErrorCorrection))-(0.6))<=1e-06",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('CS').contacts[0].frictionDirection).join()",
+    "0,1,0"
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const c=node('CS').contacts[0],p=plain(c.position),n=plain(c.contactNormal),d=plain(c.depth);return Math.abs(p[0])<0.05&&Math.abs(p[1])<0.05&&Math.abs(p[2])<0.05&&Math.abs(Math.abs(n[1])-1)<1e-3&&Math.abs(Math.hypot(n[0],n[1],n[2])-1)<1e-3&&d>=0&&d<0.01})()",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{window.__k=node('CS').contacts[0];return true})()",
+    true
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "jsn": [
+    "node('CS').contacts[0]===window.__k",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "jsn": [
+    "node('CS').contacts[0].body1===null&&node('CS').contacts[0].body2===null&&node('CS').contacts[0].geometry1===null&&node('CS').contacts[0].geometry2===null",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "jsn": [
+    "(()=>{const c=node('CS').contacts[0],a=[c.body1.getNodeName(),c.body2.getNodeName()].sort().join(),g=[c.geometry1.getNodeName(),c.geometry2.getNodeName()].sort().join();return a==='B,G'&&g==='BS,GS'})()",
+    true
+   ]
+  }
+ ],
+ "xsdAllow": [
+  "Contact"
+ ]
+}

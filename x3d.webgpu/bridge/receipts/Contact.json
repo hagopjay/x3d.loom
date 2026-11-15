@@ -1,0 +1,31 @@
+{
+ "node": "Contact",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/Contact.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp + XSD patched: Contact added to the Full child content model"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 30/30",
+  "xite": "pass 30/30",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "body1, body2, geometry1, geometry2: the bridge fills them, X_ITE leaves them null (checked on each side)",
+   "the sign of contactNormal depends on the order of the pair and flips with nested shapes: only its length and axis are asserted",
+   "a Contact routed to set_contacts is held and does nothing, as in X_ITE"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 5e21f3655bd6",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)"
+ },
+ "driver_commit": "c80cecd"
+}

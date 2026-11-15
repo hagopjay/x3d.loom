@@ -1,0 +1,237 @@
+{
+ "node": "CollisionSpace",
+ "mode": "events",
+ "note": "X_ITE 16.6.0: a CollisionSpace is only a list of collidables, flattened through nested spaces (and re-flattened live when a nested list changes). `enabled` and `useGeometry` are never read: CS2 holds the same two nested spaces switched off and with useGeometry true and reports exactly what CS1 reports (1 contact, intersections BS and GS). A space inside the world's own collider changes nothing in the physics; it matters only through a CollisionSensor.collider. Emptying SA at run time ends the contact of CS1 within a frame (isActive false) and leaves its stale contacts list.",
+ "gaps": [
+  "enabled and useGeometry are not read (X_ITE 16.6.0 does the same); the specification says they switch the space and select the geometry",
+  "the bounding box fields are kept and never used"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "SP0",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "SP0",
+    "useGeometry",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "SP0",
+    "visible",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "SP0",
+    "bboxDisplay",
+    false
+   ]
+  },
+  {
+   "nearv": [
+    "SP0",
+    "bboxSize",
+    [
+     -1,
+     -1,
+     -1
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "SP0",
+    "bboxCenter",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "jsn": [
+    "node('SP0').collidables.length===0",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "SA",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "SA",
+    "useGeometry",
+    false
+   ]
+  },
+  {
+   "jsn": [
+    "node('SA').collidables.length===2",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('SB').collidables.length===1",
+    true
+   ]
+  },
+  {
+   "settle": 2.5
+  },
+  {
+   "expect": [
+    "CS1",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('CS1').contacts.length===1",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=node('CS1').intersections;return [...Array(a.length).keys()].map((i)=>a[i].getNodeName()).sort().join(',')})()==='BS,GS'",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "CS2",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('CS2').contacts.length===1",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=node('CS2').intersections;return [...Array(a.length).keys()].map((i)=>a[i].getNodeName()).sort().join(',')})()==='BS,GS'",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "SA2",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "SA2",
+    "useGeometry",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "CS3",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('CS3').contacts.length===1",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=node('CS3').intersections;return [...Array(a.length).keys()].map((i)=>a[i].getNodeName()).sort().join(',')})()==='GS'",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "CS4",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "noevent": [
+    "CS4",
+    "contacts"
+   ]
+  },
+  {
+   "set": [
+    "SA",
+    "collidables",
+    [],
+    "MFNode"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "CS1",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "jsn": [
+    "node('CS1').contacts.length===1",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "CS2",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "SB",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "SB",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "CS1",
+    "isActive",
+    false
+   ]
+  }
+ ]
+}
