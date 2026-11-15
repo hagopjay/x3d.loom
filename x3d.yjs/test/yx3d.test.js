@@ -141,3 +141,32 @@ test('regression: remove() on a node whose kids hint array forms a cycle does no
   a.remove(t1); sync(a, b)
   assert.equal(a.toXML(), b.toXML())
 })
+
+// ---- the incremental structure index must equal the O(n) rebuild after every transaction, and emit the same events
+for (const seed of [11, 12, 13, 14, 15, 16, 17, 18]) test(`incremental index == full rebuild, seed ${seed} (3 peers, 250 ops, events compared)`, () => {
+  const r = rng(seed), P = [new X3DDoc(), new X3DDoc(), new X3DDoc()]
+  P[0].loadXML(SRC); for (const p of P.slice(1)) Y.applyUpdate(p.doc, Y.encodeStateAsUpdate(P[0].doc))
+  const inc = [], fullEv = []
+  const offs = P.map((p, i) => { inc[i] = []; fullEv[i] = []; p.observe(e => inc[i].push(...e)); p.observe(e => fullEv[i].push(...e), { full: true }); return p.observe(() => {}) })
+  const norm = es => es.filter(e => e.kind !== 'field').map(e => `${e.kind}:${e.uid}:${e.kind === 'removed' ? '' : JSON.stringify(e.kind === 'moved' ? [e.to.parent, e.to.slot] : [e.parent, e.slot])}`).sort()
+  const pick = a => a[Math.floor(r() * a.length)]
+  const check = (p, i) => {
+    const want = [...p.index()].map(([u, c]) => `${u}:${c.parent}:${c.slot}`).sort()
+    const got = [...offs[i].index()].map(([u, c]) => `${u}:${c.parent}:${c.slot}`).sort()
+    assert.deepEqual(got, want)
+  }
+  for (let i = 0; i < 250; i++) {
+    const pi = Math.floor(r() * 3), p = P[pi], u = [...p.nodes.keys()], k = r()
+    if (!u.length) continue
+    if (k < 0.3) p.setField(pick(u), 'translation', `${r()} 1 2`)
+    else if (k < 0.45) p.addXML(`<Transform><Shape><Box/></Shape></Transform>`, r() < 0.5 ? ROOT : pick(u))
+    else if (k < 0.57) p.remove(pick(u))
+    else if (k < 0.75) { const a = pick(u), b = pick(u); if (a !== b) p.move(a, r() < 0.2 ? ROOT : b) }
+    else if (k < 0.8) p.addXML(`<Appearance/>`, pick(u), 'appearance')
+    else { const q = Math.floor(r() * 3); if (q !== pi) { Y.applyUpdate(P[q].doc, Y.encodeStateAsUpdate(p.doc, Y.encodeStateVector(P[q].doc))); check(P[q], q) } }
+    check(p, pi)
+  }
+  sync(...P); P.forEach((p, i) => check(p, i))
+  // the two observers saw the same structural story (order of independent events may differ)
+  for (let i = 0; i < 3; i++) assert.deepEqual(norm(inc[i]).length, norm(fullEv[i]).length)
+})

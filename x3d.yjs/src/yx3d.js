@@ -224,8 +224,89 @@ export class X3DDoc {
   findByDef(def) { const t = this.tree(); for (const [d, us] of t.defs) if (d === def) return us[0] }
   /** subscribe to resolved changes. cb(events, origin) where events are
    *  {kind:'field', uid, field, value, type} | {kind:'added', uid, ...index} | {kind:'removed', uid} | {kind:'moved', uid, from, to} */
-  observe(cb) {
-    let prev = this.index()
+  /** one parent's resolved child list from its order-hint array: only children whose register agrees, deduped, SFNode slots keep the first */
+  _resolveKids(parent) {
+    const arr = parent === ROOT ? this.roots : this.nodes.get(parent)?.get('kids')
+    const out = [], seen = new Set(), slotTaken = new Set(), cnt = {}
+    if (!arr) return out
+    for (const uid of arr.toArray()) {
+      const n = this.nodes.get(uid); if (!n) continue
+      const [p, slot] = split(n.get('at'))
+      if (p !== parent || seen.has(uid)) continue
+      if (SFNODE_SLOTS.has(slot) && slotTaken.has(slot)) continue
+      seen.add(uid); slotTaken.add(slot)
+      out.push({ uid, slot, index: (cnt[slot] = (cnt[slot] ?? -1) + 1), type: n.get('type') })
+    }
+    return out
+  }
+  /** subscribe to resolved changes. cb(events, origin, tr) where events are
+   *  {kind:'field', uid, field, value, type} | {kind:'added', uid, parent, slot, index, type} | {kind:'removed', uid, from} | {kind:'moved', uid, from, to}
+   *  Field edits cost O(changed). Structural edits cost O(dirty parents' kids + moved subtrees), not O(scene):
+   *  an incremental resolved index (opts.full = true switches to the O(n) rebuild, kept as the test oracle). */
+  observe(cb, opts = {}) {
+    const full = !!opts.full
+    let prev = full ? this.index() : null
+    // incremental state: res parent -> resolved child list; par uid -> parent (resolved); loc uid -> {parent, slot, index, type} for REACHABLE nodes
+    let res = new Map(), par = new Map(), loc = new Map()
+    if (!full) {
+      res.set(ROOT, this._resolveKids(ROOT))
+      for (const [uid] of this.nodes) res.set(uid, this._resolveKids(uid))
+      for (const [pp, list] of res) for (const e of list) par.set(e.uid, pp)
+      for (const [uid, c] of this.index()) loc.set(uid, c)
+    }
+    const reachable = (u, cache) => {
+      const chain = []; let cur = u, r
+      for (;;) {
+        if (cache.has(cur)) { r = cache.get(cur); break }
+        chain.push(cur)
+        const p = par.get(cur)
+        if (p === undefined) { r = false; break }
+        if (p === ROOT) { r = true; break }
+        if (chain.length > 100000 || chain.includes(p)) { r = false; break } // cycle
+        cur = p
+      }
+      for (const c of chain) cache.set(c, r)
+      return r
+    }
+    const incremental = (tr, ev) => {
+      const dirty = new Set(), gone = new Set(), uidOfNode = m => m._item?.parentSub
+      const dirtyAt = uid => { const n = this.nodes.get(uid); if (n) { const at = n.get('at'); if (at) dirty.add(split(at)[0]) } const o = loc.get(uid) || (par.has(uid) ? { parent: par.get(uid) } : null); if (o) dirty.add(o.parent) }
+      tr.changed.forEach((keys, t) => {
+        if (t === this.roots) dirty.add(ROOT)
+        else if (t === this.nodes) for (const uid of keys) { dirtyAt(uid); if (this.nodes.has(uid)) { if (!res.has(uid)) res.set(uid, []) } else gone.add(uid) }
+        else if (t._item?.parentSub === 'kids' && t._item.parent?._item?.parent === this.nodes) dirty.add(uidOfNode(t._item.parent))
+        if (t._item?.parent === this.nodes && keys.has('at')) dirtyAt(uidOfNode(t))
+      })
+      const touched = new Set(gone)
+      for (const P of dirty) {
+        const list = (P === ROOT || this.nodes.has(P)) ? this._resolveKids(P) : []
+        const old = res.get(P) || []
+        for (const e of old) { touched.add(e.uid); if (par.get(e.uid) === P) par.delete(e.uid) }
+        for (const e of list) { touched.add(e.uid); par.set(e.uid, P) }
+        res.set(P, list)
+        for (const e of list) { const l = loc.get(e.uid); if (l) { l.index = e.index } } // sibling indexes move silently
+      }
+      for (const uid of gone) par.delete(uid)
+      // affected = touched nodes and everything below them (reachability can flip a whole subtree); ancestors first
+      const depthOf = u => { let d = 0, c = u; const seen = new Set(); while (par.has(c) && !seen.has(c)) { seen.add(c); c = par.get(c); d++ } return d }
+      const tops = [...touched].sort((a, b) => depthOf(a) - depthOf(b))
+      const visited = new Set(), order = []
+      const dfs = u => { if (visited.has(u)) return; visited.add(u); order.push(u); for (const e of (res.get(u) || [])) dfs(e.uid) }
+      for (const u of tops) dfs(u)
+      const cache = new Map(), meta = new Map()
+      for (const u of order) {
+        const was = loc.get(u)
+        const now = this.nodes.has(u) && reachable(u, cache)
+        if (!now) { if (was) { ev.push({ kind: 'removed', uid: u, from: { ...was } }); loc.delete(u) } continue }
+        const pp = par.get(u), e = (res.get(pp) || []).find(x => x.uid === u)
+        if (!e) continue
+        const c = { parent: pp, slot: e.slot, index: e.index, type: e.type }
+        if (!was) ev.push({ kind: 'added', uid: u, ...c })
+        else if (was.parent !== c.parent || was.slot !== c.slot) ev.push({ kind: 'moved', uid: u, from: { ...was }, to: c })
+        loc.set(u, c)
+      }
+      for (const uid of gone) res.delete(uid)
+    }
     const h = (tr) => {
       const ev = []
       tr.changed.forEach((keys, type) => {
@@ -235,22 +316,27 @@ export class X3DDoc {
           for (const k of keys) ev.push({ kind: 'field', uid, field: k, value: type.get(k), type: nm.get('type') })
         }
       })
-      // field-only transactions (the hot path: dragging a node) skip the O(n) structure diff
+      // field-only transactions (the hot path: dragging a node) skip the structure work
       let structural = false
       for (const t of tr.changed.keys()) if (t === this.nodes || t === this.roots || t._item?.parentSub === 'kids' || t._item?.parent === this.nodes) { structural = true; break }
       if (!structural) { if (ev.length) cb(ev, tr.origin, tr); return }
-      const cur = this.index()
-      for (const [uid, c] of cur) {
-        const p = prev.get(uid)
-        if (!p) ev.push({ kind: 'added', uid, ...c })
-        else if (p.parent !== c.parent || p.slot !== c.slot) ev.push({ kind: 'moved', uid, from: p, to: c })
-      }
-      for (const uid of prev.keys()) if (!cur.has(uid)) ev.push({ kind: 'removed', uid, from: prev.get(uid) })
-      prev = cur
+      if (full) {
+        const cur = this.index()
+        for (const [uid, c] of cur) {
+          const p = prev.get(uid)
+          if (!p) ev.push({ kind: 'added', uid, ...c })
+          else if (p.parent !== c.parent || p.slot !== c.slot) ev.push({ kind: 'moved', uid, from: p, to: c })
+        }
+        for (const uid of prev.keys()) if (!cur.has(uid)) ev.push({ kind: 'removed', uid, from: prev.get(uid) })
+        prev = cur
+      } else incremental(tr, ev)
       if (ev.length) cb(ev, tr.origin, tr)
     }
     this.doc.on('afterTransaction', h)
-    return () => this.doc.off('afterTransaction', h)
+    h.state = () => loc
+    const off = () => this.doc.off('afterTransaction', h)
+    off.index = () => new Map(full ? prev : loc)
+    return off
   }
 }
 

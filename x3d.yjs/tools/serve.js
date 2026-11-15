@@ -1,7 +1,8 @@
 import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path'
-const root = path.resolve(import.meta.dirname, '..')
+const defaultRoot = path.resolve(import.meta.dirname, '..')
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.woff2': 'font/woff2', '.woff': 'font/woff' }
-export function serve(port = 0) {
+export function serve(port = 0, root = process.env.SERVE_ROOT || defaultRoot) {
+  root = path.resolve(root)
   const srv = http.createServer((req, res) => {
     let p = decodeURIComponent(req.url.split('?')[0])
     if (p.startsWith('/xite/')) p = '/node_modules/x_ite/dist/' + p.slice(6)

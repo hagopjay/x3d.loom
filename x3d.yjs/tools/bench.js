@@ -14,7 +14,7 @@ for (const n of [100, 1000, 10000]) {
   docs[n] = d
   console.log(`| ${n} Transform+Shape+Appearance+Material+Box | ${nodes} | ${l.toFixed(1)} | ${x.toFixed(1)} | ${tr.toFixed(1)} | ${st} | ${(st / nodes).toFixed(1)} |`)
 }
-console.log('\n| nodes | local setField ops/s (no observer) | with observer (field-only fast path) | with 1 add+remove per op (structure diff) | bytes per setField update | remote apply ops/s |\n|---|---|---|---|---|---|')
+console.log('\n| nodes | local setField ops/s (no observer) | with observer (field-only fast path) | add+remove pairs/s, incremental index | add+remove pairs/s, full rebuild (old path) | bytes per setField update | remote apply ops/s |\n|---|---|---|---|---|---|')
 for (const n of [100, 1000, 10000]) {
   const d = docs[n], uid = d.findByDef('T' + (n >> 1)), N = 4000
   const a = t(i => d.setField(uid, 'translation', i + ' 0 0'), N)
@@ -27,16 +27,27 @@ for (const n of [100, 1000, 10000]) {
   const p3 = new X3DDoc(); const base = Y.encodeStateAsUpdate(d.doc); Y.applyUpdate(p3.doc, base)
   const more = []; d.doc.on('update', u => more.push(u)); for (let i = 0; i < 2000; i++) d.setField(uid, 'translation', i + ' 3 0')
   const r0 = performance.now(); for (const u of more) Y.applyUpdate(p3.doc, u); const rops = more.length / ((performance.now() - r0) / 1000)
-  const off2 = d.observe(() => {}); const e = t(i => { const u = d.addXML('<Box/>'); d.remove(u) }, 200); off2()
-  console.log(`| ${d.nodes.size} | ${(1000 / a).toFixed(0)} | ${(1000 / b).toFixed(0)} | ${(1000 / e).toFixed(0)} | ${Math.round(ups.reduce((s, u) => s + u.length, 0) / ups.length)} | ${rops.toFixed(0)} |`)
+  const off2 = d.observe(() => {}); const e = t(i => { const u = d.addXML('<Box/>'); d.remove(u) }, 400); off2()
+  const off3 = d.observe(() => {}, { full: true }); const e2 = t(i => { const u = d.addXML('<Box/>'); d.remove(u) }, n > 2000 ? 3 : 100); off3()
+  console.log(`| ${d.nodes.size} | ${(1000 / a).toFixed(0)} | ${(1000 / b).toFixed(0)} | ${(1000 / e).toFixed(0)} | ${(1000 / e2).toFixed(1)} | ${Math.round(ups.reduce((s, u) => s + u.length, 0) / ups.length)} | ${rops.toFixed(0)} |`)
+}
+// the same structural edit when the scene has bounded fan-out (groups of 10): cost should not follow the scene size
+console.log('\nStructural edit with fan-out 10 (balanced scene; add one Box under a leaf group, then remove it):\n\n| nodes | depth | pairs/s incremental | pairs/s full rebuild |\n|---|---|---|---|')
+const tree10 = d => { const g = (lvl, id) => lvl === d ? `<Transform DEF="L${id}"><Shape><Appearance><Material diffuseColor="1 0 0"/></Appearance><Box/></Shape></Transform>` : `<Group DEF="G${id}">${Array.from({ length: 10 }, (_, i) => g(lvl + 1, id + i)).join('')}</Group>`; return `<X3D profile="Full" version="4.0"><Scene>${g(0, '')}</Scene></X3D>` }
+for (const d of [2, 3, 4]) {
+  const x = new X3DDoc().loadXML(tree10(d)); const leaf = x.findByDef('G' + '9'.repeat(d - 1))
+  const o1 = x.observe(() => {}); const a = t(() => { const u = x.addXML('<Box/>', leaf); x.remove(u) }, 300); o1()
+  const o2 = x.observe(() => {}, { full: true }); const b = t(() => { const u = x.addXML('<Box/>', leaf); x.remove(u) }, x.nodes.size > 2000 ? 3 : 60); o2()
+  console.log(`| ${x.nodes.size} | ${d} | ${(1000 / a).toFixed(0)} | ${(1000 / b).toFixed(1)} |`)
 }
 // convergence fuzz at scale: 200 seeds x 3 peers x 300 ops
 function rng(seed) { return () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 2 ** 32 }
-let ok = 0; const kinds = {}
+let ok = 0, idxOk = 0; const kinds = {}
 const t0 = performance.now()
 for (let seed = 1; seed <= 200; seed++) {
   const r = rng(seed), P = [new X3DDoc(), new X3DDoc(), new X3DDoc()]
   P[0].loadXML(scene(6)); for (const p of P.slice(1)) Y.applyUpdate(p.doc, Y.encodeStateAsUpdate(P[0].doc))
+  const offs = P.map(p => p.observe(() => {}))
   const pick = a => a[Math.floor(r() * a.length)]
   for (let i = 0; i < 300; i++) {
     const p = pick(P), u = [...p.nodes.keys()]; if (!u.length) continue; const k = r()
@@ -49,7 +60,8 @@ for (let seed = 1; seed <= 200; seed++) {
   }
   for (let k = 0; k < 2; k++) for (const x of P) for (const y of P) if (x !== y) Y.applyUpdate(y.doc, Y.encodeStateAsUpdate(x.doc, Y.encodeStateVector(y.doc)))
   const x = P.map(p => p.toXML()); if (x[0] === x[1] && x[1] === x[2]) ok++
+  P.forEach((p, i) => { const got = [...offs[i].index()].map(([u, c]) => u + c.parent + c.slot).sort().join(), want = [...p.index()].map(([u, c]) => u + c.parent + c.slot).sort().join(); if (got === want) idxOk++ })
   for (const c of P[0].tree().conflicts) kinds[c.kind] = (kinds[c.kind] || 0) + 1
   kinds.orphans = (kinds.orphans || 0) + P[0].tree().orphans.length
 }
-console.log(`\nfuzz: ${ok}/200 seeds converged (3 peers, 300 random ops each: setField, add, remove, move, SFNode-slot add, partial syncs), ${((performance.now() - t0) / 1000).toFixed(1)} s; reported by tree() across all seeds: ${JSON.stringify(kinds)}`)
+console.log(`\nfuzz: ${ok}/200 seeds converged, incremental index equals the full rebuild on ${idxOk}/600 peer copies (3 peers, 300 random ops each: setField, add, remove, move, SFNode-slot add, partial syncs), ${((performance.now() - t0) / 1000).toFixed(1)} s; reported by tree() across all seeds: ${JSON.stringify(kinds)}`)

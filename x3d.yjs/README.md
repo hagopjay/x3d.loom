@@ -46,7 +46,7 @@ Tree structure is the pair (`at` register, `kids` order hints). `at = "parentUid
 
 ```sh
 npm ci
-npm test                                   # 22 tests: unit, 12 fuzz seeds, pycrdt peer (pip install pycrdt)
+npm test                                   # 30 tests: unit, 12 fuzz seeds, 8 incremental-index differential seeds, pycrdt peer (pip install pycrdt)
 node tools/bench.js                        # tables, 200-seed convergence fuzz
 NODE_PATH=<dir holding playwright> node tools/e2e.js          # two X_ITE 16.6.0 browsers
 NODE_PATH=<dir holding playwright> node tools/bridge-e2e.js   # three.js bridge r187
@@ -58,7 +58,7 @@ Numbers and their rig: `receipts/` and chapter 15 of x3d.docs.
 ## Known limits
 
 * Fields are whole strings: no per-component merge of a `translation` (two peers dragging one axis each: one wins). A per-vector-component register is the obvious next step.
-* The structure diff (`observe`) is O(n) per structural transaction: 280 / 24 / 2 add+remove pairs per second at 500 / 5,000 / 50,000 nodes. Field edits skip it. An incremental diff from the Yjs events is the fix.
+* Structural edits cost O(fan-out of the touched parents), not O(scene): with groups of 10 an add+remove pair runs at about 6,700 per second from 511 to 51,111 nodes (was 305 to 1.5). A flat scene with 10,000 children under one parent is still O(10,000) per edit (844 / 44 / 1 pairs per second at 500 / 5,000 / 50,000 nodes). The O(n) rebuild stays as `observe(cb, {full:true})`, the oracle the tests compare against.
 * Deleted-subtree and cycle orphans stay in the document (Yjs GC reclaims only deleted content); `tree().orphans` counts them.
 * Scripts (`<Script>` CDATA) are stored as one string per node: LWW, not a text CRDT.
 * The in-process link has no network: latency numbers are apply cost, not wire time. A real relay adds its round trip on top.

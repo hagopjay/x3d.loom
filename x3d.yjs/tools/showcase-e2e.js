@@ -7,7 +7,7 @@ const srv = await serve(); const port = srv.address().port
 const br = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--no-sandbox'] })
 const page = await br.newPage({ viewport: { width: 1280, height: 1500 } })
 const errs = []; page.on('pageerror', e => errs.push(e.message)); page.on('console', m => { if (m.type() === 'error') errs.push('console: ' + m.text()) })
-await page.goto(`http://127.0.0.1:${port}/demo/showcase/index.html?xite=/xite/x_ite.min.js`)
+await page.goto(process.env.SHOWCASE_URL ? `http://127.0.0.1:${port}${process.env.SHOWCASE_URL}` : `http://127.0.0.1:${port}/demo/showcase/index.html?xite=/xite/x_ite.min.js`)
 await page.waitForFunction(() => window.showReady, null, { timeout: 90000 })
 const out = process.env.OUT || 'demo/showcase'; const res = { shots: [] }
 const cap = async n => { await page.screenshot({ path: `${out}/${n}.png` }); res.shots.push(n) }
