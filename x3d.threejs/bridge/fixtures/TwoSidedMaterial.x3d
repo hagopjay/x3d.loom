@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="TwoSidedMaterial.x3d"/><meta name="description" content="an open cylinder (no caps, solid FALSE) seen from above: the outside is red-orange and the inside blue (TwoSidedMaterial with separateBackColor), next to one with the same colour on both sides; then the back colour is set to yellow"/></head>
+  <Scene>
+    <Viewpoint position="0 4 7" orientation="1 0 0 -0.5"/>
+    <Transform translation="-2 0 0"><Shape><Appearance><TwoSidedMaterial DEF="TS" diffuseColor="0.9 0.4 0.2" backDiffuseColor="0.2 0.4 0.9" separateBackColor="true"/></Appearance><Cylinder radius="1.2" height="2" top="false" bottom="false" solid="false"/></Shape></Transform>
+    <Transform translation="2.4 0 0"><Shape><Appearance><TwoSidedMaterial diffuseColor="0.5 0.8 0.4" backDiffuseColor="0.9 0.2 0.2" separateBackColor="false"/></Appearance><Cylinder radius="1.2" height="2" top="false" bottom="false" solid="false"/></Shape></Transform>
+  </Scene>
+</X3D>

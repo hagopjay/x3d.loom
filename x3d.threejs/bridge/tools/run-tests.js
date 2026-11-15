@@ -8,7 +8,9 @@
 //   written reason ("lookNote"), and a quality choice that moves away from X_ITE is logged, not failed.
 const fs = require('fs'), path = require('path'), http = require('http'), crypto = require('crypto');
 const BAB = path.resolve(__dirname, '..', '..', '..', 'x3d.webgpu', 'bridge'), HERE = path.resolve(__dirname, '..');
-const { RUNNER, verdict, judgeVisual } = require(path.join(BAB, 'tools', 'run-tests.js'));
+const BABYLON_RUNNER = require(path.join(BAB, 'tools', 'run-tests.js')), { verdict, judgeVisual } = BABYLON_RUNNER;
+// the Babylon runner's value converter has no MFColor (X_ITE needs SFColor objects, the reader keeps a list of triples); added here, at read time, so the Babylon file stays the Babylon thread's
+const RUNNER = BABYLON_RUNNER.RUNNER.replace("case 'MFFloat':", "case 'MFColor': return eng.name === 'ours' ? v : new X.MFColor(...v.map((a) => new X.SFColor(...a))); case 'MFFloat':");
 const bundle = require('./bundle.js');
 const args = process.argv.slice(2), noXite = args.includes('--no-xite');
 const si = args.indexOf('--shots'); const shotsDir = si >= 0 ? args.splice(si, 2)[1] : process.env.BRIDGE_SHOTS || null;

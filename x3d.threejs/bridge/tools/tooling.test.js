@@ -56,3 +56,28 @@ test('IndexedFaceSet creaseAngle counts each face once at a vertex (a quad weigh
   const n0 = Array.from(x.nrm.slice(0, 3)), n1 = Array.from(x.nrm.slice(3, 6));   // the two ends of the shared edge
   for (let i = 0; i < 3; i++) assert.ok(Math.abs(n0[i] - n1[i]) < 1e-6, 'both ends of the shared edge agree: ' + n0 + ' / ' + n1);
 });
+
+// Batch 3: texture, hatch and backdrop data code that needs no GPU.
+function loadR() {
+  const win = {}, ctx = vm.createContext({ window: win, console, performance, setTimeout, clearTimeout, requestAnimationFrame: () => 0, document: {}, navigator: {}, location: { href: '' }, URL, fetch: () => {}, TextDecoder, TextEncoder });
+  vm.runInContext(bundle('body'), ctx); return win.__R;
+}
+test('the 19 hatch masks of the Babylon body are lifted into the body bundle, 32 x 32 bits each', () => {
+  const H = loadR().bridge.HATCH; assert.equal(H.length, 19); for (const h of H) assert.equal(Buffer.from(h, 'base64').length, 128);
+});
+test('TextureProperties is defined here (the Babylon bundle gets it from the Drift extension) and hangs off the texture nodes', () => {
+  const R = loadR(); assert.ok(R.DEFS.TextureProperties.boundaryModeS && R.DEFS.TextureProperties.magnificationFilter && R.DEFS.TextureProperties.generateMipMaps);
+  for (const t of ['ImageTexture', 'PixelTexture', 'MovieTexture']) assert.ok(R.DEFS[t].textureProperties, t); assert.equal(R.CONTAINER.TextureProperties, 'textureProperties');
+});
+test('TextureCoordinateGenerator formulas: COORD takes x y, SPHERE the normal mapped to 0..1, a camera-space normal pointing at the viewer is the middle of the sphere map', () => {
+  const tcg = loadR().bridge.three.tcg, uv = new Float32Array(2);
+  tcg.fill('COORD', [], uv, 0, [0.25, 0.5, 9], [0, 0, 1]); assert.deepEqual(Array.from(uv), [0.25, 0.5]);
+  tcg.fill('SPHERE', [], uv, 0, [0, 0, -5], [0, 0, 1]); assert.deepEqual(Array.from(uv), [0.5, 0.5]);
+  tcg.fill('SPHERE', [], uv, 0, [0, 0, -5], [1, 0, 0]); assert.deepEqual(Array.from(uv), [1, 0.5]);
+  assert.ok(tcg.CAM.test('SPHERE') && !tcg.CAM.test('COORD') && tcg.LOCAL.test('COORD'));
+});
+test('Background faces: each (right, up, toward-the-viewer) triple is orthonormal and right-handed, and the viewer looks along d', () => {
+  const F = loadR().bridge.three.backdrop.FACES, cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  for (const [name, [d, x, y]] of Object.entries(F)) { const z = cross(x, y); assert.deepEqual(z.map((v) => v + 0), d.map((v) => -v + 0), name); }
+  assert.deepEqual(F.front[0], [0, 0, -1]); assert.deepEqual(F.top[2], [0, 0, 1]);
+});
