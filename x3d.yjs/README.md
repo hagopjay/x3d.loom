@@ -12,6 +12,8 @@ Track prefix `YJS-`. A scene graph held as a Yjs document so any number of peers
 | `src/link.js` | in-process transport with a latency knob and an offline switch |
 | `python/yx3d_py.py` | a Python peer on pycrdt for the x3d_mcp side (same document layout) |
 | `demo/index.html` | two X_ITE canvases, two Yjs docs, a link, an agent peer. `node tools/serve.js` then open the printed URL |
+| `demo/showcase/index.html` | the story demo: Alice, Bob and an agent; concurrent edits, a network split with four kinds of clash, the rule that settled each, a rescue button, a history scrubber. `node tools/serve.js` then `/demo/showcase/index.html?xite=/xite/x_ite.min.js` (default loads X_ITE from jsdelivr) |
+| `tools/showcase-e2e.js` | plays the story headlessly: hashes differ during the split, match after; X_ITE node sets equal the document on all three peers; screenshots |
 | `tools/e2e.js`, `tools/bridge-e2e.js`, `tools/bench.js` | the rig runs; their output is kept in `receipts/` |
 
 ## The model in one table
