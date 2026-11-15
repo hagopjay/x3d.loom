@@ -27,7 +27,7 @@ R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
       (set.f.layers || []).forEach((layer, i) => {
         if (!layer || (layer.type !== 'Layer' && layer.type !== 'LayoutLayer')) { st.items.push(null); return; }
         const bit = i + 1; if (bit >= WV0) { body.note('LayerSet: more than 19 layers, layer ' + bit + ' is not drawn'); st.items.push(null); return; }
-        const lt = new THREE.Group(); lt.name = layer.def || 'Layer' + bit; lt.userData.layerBit = bit; tn.add(lt);
+        const lt = new THREE.Group(); lt.name = layer.def || 'Layer' + bit; lt.userData.layerBit = bit; lt.userData.layerNode = layer; tn.add(lt);
         const saved = body.viewpoints; body.viewpoints = [];   // a Viewpoint of the layer belongs to the layer, not to the world
         const isLay = layer.type === 'LayoutLayer', host = isLay ? new THREE.Group() : lt; if (isLay) { host.name = lt.name + '-layout'; lt.add(host); }   // a LayoutLayer lays its children out with its Layout
         const ch2 = [layer, ...chain], kids = (layer.f.children || []).map((c) => body.build(c, host, ch2));

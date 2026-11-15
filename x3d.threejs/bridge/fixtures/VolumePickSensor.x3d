@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Picking" level="3"/><meta name="title" content="VolumePickSensor.x3d"/><meta name="description" content="Bridge fixture for VolumePickSensor: a Cylinder and an IndexedFaceSet tetrahedron as picking geometry, BOUNDS and GEOMETRY"/></head>
+  <Scene>
+    <Viewpoint position="0 0 14"/>
+    <Group DEF="WORLD">
+      <PickableGroup DEF="PG">
+        <Transform translation="-2 0 0"><Shape><Appearance><Material diffuseColor="0.9 0.3 0.2"/></Appearance><Box DEF="BA" size="2 2 2"/></Shape></Transform>
+        <Transform translation="2 0 0"><Shape><Appearance><Material diffuseColor="0.2 0.5 0.9"/></Appearance><Sphere DEF="SB" radius="1"/></Shape></Transform>
+      </PickableGroup>
+      <PickableGroup DEF="PGW" objectType='"WALL"'>
+        <Transform translation="0 3 0"><Shape><Appearance><Material diffuseColor="0.3 0.8 0.3"/></Appearance><Box DEF="BC" size="2 1 2"/></Shape></Transform>
+      </PickableGroup>
+      <PickableGroup DEF="PGOFF" pickable="false">
+        <Transform translation="0 -3 0"><Shape><Appearance><Material diffuseColor="0.8 0.8 0.2"/></Appearance><Box DEF="BD" size="2 1 2"/></Shape></Transform>
+      </PickableGroup>
+      <Transform translation="6 -3 0"><Shape><Appearance><Material diffuseColor="0.6 0.3 0.8"/></Appearance><Box DEF="BE" size="1 1 1"/></Shape></Transform>
+    </Group>
+    <Transform DEF="TN" translation="-2 0 0">
+      <Shape><Box size="0.02 0.02 0.02"/></Shape>
+      <VolumePickSensor DEF="N" >
+        <Cylinder DEF="PV" radius="0.5" height="2" containerField="pickingGeometry"/>
+        <Group USE="WORLD" containerField="pickTarget"/>
+      </VolumePickSensor>
+    </Transform>
+    <Transform DEF="TNG" translation="-2 0 0">
+      <Shape><Box size="0.02 0.02 0.02"/></Shape>
+      <VolumePickSensor DEF="NG" intersectionType="GEOMETRY">
+        <Cylinder USE="PV" containerField="pickingGeometry"/>
+        <Group USE="WORLD" containerField="pickTarget"/>
+      </VolumePickSensor>
+    </Transform>
+    <Transform DEF="TNH" translation="2.9 0.7 0">
+      <Shape><Box size="0.02 0.02 0.02"/></Shape>
+      <VolumePickSensor DEF="NH" intersectionType="GEOMETRY">
+        <IndexedFaceSet DEF="PF" coordIndex="0 2 1 -1 0 1 3 -1 1 2 3 -1 2 0 3 -1" solid="false" containerField="pickingGeometry"><Coordinate point="0 0 0 1.2 0 0 0 1.2 0 0 0 1.2"/></IndexedFaceSet>
+        <Group USE="WORLD" containerField="pickTarget"/>
+      </VolumePickSensor>
+    </Transform>
+    <Transform DEF="TNI" translation="2.9 0.7 0">
+      <Shape><Box size="0.02 0.02 0.02"/></Shape>
+      <VolumePickSensor DEF="NI" intersectionType="BOUNDS">
+        <IndexedFaceSet USE="PF" containerField="pickingGeometry"/>
+        <Group USE="WORLD" containerField="pickTarget"/>
+      </VolumePickSensor>
+    </Transform>
+  </Scene>
+</X3D>

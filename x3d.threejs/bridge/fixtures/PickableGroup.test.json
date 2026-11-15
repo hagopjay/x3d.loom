@@ -1,0 +1,275 @@
+{
+ "node": "PickableGroup",
+ "mode": "scene",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "NA",
+    "pickedGeometry",
+    [
+     "[node BA]"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pickedGeometry",
+    [
+     "[node BA]"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "NE",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "PG",
+    "objectType",
+    [
+     "WALL"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "pickedGeometry",
+    [
+     "[node BA]"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "NA",
+    "pickedGeometry",
+    [
+     "[node BA]"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "NE",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NO",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NM",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "PG",
+    "objectType",
+    [
+     "FLOOR"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "NE",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "NO",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NA",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "PG",
+    "objectType",
+    [
+     "NONE"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "NA",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "PG",
+    "objectType",
+    [
+     "ALL"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "PG",
+    "pickable",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "NA",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "PG",
+    "pickable",
+    true
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "NA",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "PG",
+    "objectType",
+    [
+     "WALL",
+     "FLOOR"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NE",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NA",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NO",
+    "isActive",
+    false
+   ],
+   "only": "ours"
+  },
+  {
+   "expect": [
+    "NM",
+    "isActive",
+    true
+   ],
+   "only": "ours"
+  },
+  {
+   "set": [
+    "PG",
+    "visible",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "NA",
+    "isActive",
+    false
+   ]
+  }
+ ],
+ "xsdContainerField": [
+  "pickTarget"
+ ],
+ "gaps": [],
+ "scope": [
+  "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); pickable, objectType (ALL, NONE, one type), MATCH_ANY, MATCH_EVERY and MATCH_ONLY_ONE with one matching type, visible false",
+  "a sensor of objectType ALL sees through any group; a group of type ALL is seen by every sensor (as X_ITE 16.6.0)",
+  "MATCH_EVERY and MATCH_ONLY_ONE with two matching types follow 19775-1 (every type of the sensor must be in the group, exactly one must be); X_ITE 16.6.0 counts at most one match, so those two steps run in ours only"
+ ]
+}

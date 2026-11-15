@@ -1,0 +1,26 @@
+{
+ "node": "PrimitivePickSensor",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 39494f00a8a7",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 40/40",
+ "xite": "pass 37/37",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "scope": [
+  "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); BOUNDS and GEOMETRY (Sphere against Box where the boxes overlap and the geometries do not), sortOrder CLOSEST / ANY / ALL / ALL_SORTED, objectType filter, pickable false, enabled false",
+  "a shape outside every PickableGroup is not pickable here (as 19775-1 asks); X_ITE 16.6.0 picks it, the fixture checks it in ours only",
+  "disabling a sensor that is active raises isActive false here; X_ITE 16.6.0 keeps it true, checked in ours only",
+  "a Sphere picking geometry is a 162 point hull (0.4 percent inside the true sphere); the target is the convex hull of its mesh, so a concave target counts as its hull, as in X_ITE 16.6.0",
+  "the hull of the pickingGeometry is made when first needed and cached by geometry node, so a pickingGeometry node that is replaced is picked up on the next timestamp; non-uniform scale on the sensor is applied to the hull"
+ ]
+}

@@ -1,0 +1,239 @@
+{
+ "node": "VolumePickSensor",
+ "mode": "scene",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "pickedGeometry",
+    [
+     "[node BA]"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "NG",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NG",
+    "pickedGeometry",
+    [
+     "[node BA]"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "TN",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "TNG",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "NG",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "TN",
+    "translation",
+    [
+     -0.3,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "TNG",
+    "translation",
+    [
+     -0.3,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "NG",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "TN",
+    "translation",
+    [
+     -0.6,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "TNG",
+    "translation",
+    [
+     -0.6,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NG",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NI",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NH",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "TNH",
+    "translation",
+    [
+     2.0,
+     0.6,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "TNI",
+    "translation",
+    [
+     2.0,
+     0.6,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "NH",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "NH",
+    "pickedGeometry",
+    [
+     "[node SB]"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "NI",
+    "pickedGeometry",
+    [
+     "[node SB]"
+    ]
+   ]
+  }
+ ],
+ "xsdContainerField": [
+  "pickTarget"
+ ],
+ "gaps": [],
+ "scope": [
+  "compared with X_ITE 16.6.0 in scene mode: sensors in a Transform with a Shape sibling (X_ITE 16.6.0 does not traverse a group that holds only a pick sensor, so the fixtures add a 0.02 unit Box beside each sensor); Cylinder and IndexedFaceSet tetrahedron as picking geometry, BOUNDS and GEOMETRY against a Box and a Sphere",
+  "picking geometries the body cannot read as vertices (anything beyond the primitives, IndexedFaceSet, IndexedTriangleSet, PointSet, line sets) never pick; the sensor stays inactive",
+  "GEOMETRY is a convex hull test (GJK); a concave picking geometry counts as its hull"
+ ]
+}
