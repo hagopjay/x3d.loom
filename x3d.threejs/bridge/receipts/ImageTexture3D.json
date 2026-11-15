@@ -1,0 +1,69 @@
+{
+ "node": "ImageTexture3D",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 6103c55d550b",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 5/5",
+ "xite": "pass 5/5",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "main": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    55,
+    88,
+    142,
+    151
+   ],
+   "bboxXite": [
+    55,
+    88,
+    142,
+    151
+   ],
+   "nOurs": 5608,
+   "nXite": 5608,
+   "fgFracOurs": 0.19,
+   "fgFracXite": 0.19,
+   "mad": 0,
+   "psnr": 99,
+   "fgMeanOurs": [
+    126,
+    125,
+    72
+   ],
+   "fgMeanXite": [
+    126,
+    125,
+    72
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "the DDS volume (right) is drawn by ours and shown white by X_ITE 16.6.0 on this raster (Suspected: its DDS 3D reader does not take this uncompressed RGBA header); the picture comparison covers the NRRD volume (left)",
+  "ImageTexture3D reads uncompressed DDS volumes and uchar NRRD (raw, gzip, ascii); DICOM and compressed DDS are not read",
+  "the volume shader is shared with PixelTexture3D and ComposedTexture3D: lit by the headlight and up to four lights (checked on PixelTexture3D against X_ITE 16.6.0, mean abs diff 3.0 of 255)"
+ ]
+}

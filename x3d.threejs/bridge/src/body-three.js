@@ -179,6 +179,7 @@ class Body {
 
   /* ---------------------------------------------------------------- shapes */
   buildShape(n, parent, chain) {
+    const body = this;
     const f = n.f, g = f.geometry, app = f.appearance, r = { node: n, meshes: [], chain: [n, ...chain] }; this.rec.set(n.id, r);
     const o = new THREE.Group(); o.name = 'shape-' + (n.def || n.id); parent.add(o); r.tn = o;
     if (!g) return r;
@@ -193,13 +194,14 @@ class Body {
     }
     for (const m of all) if (m.material.userData && m.material.userData.cubeU) m.material.userData.cubeU.meshes = all;
     if (!pl && app && app.f.fillProperties) this.applyFill(r, app.f.fillProperties, o);
-    for (const m of all) { this.hookFog(m); if (m.material.userData && m.material.userData.x3dShader) { R.bridge.three.shader.alias(geo); m.onBeforeRender = (r, sc, cam) => R.bridge.three.shader.beforeRender(m, cam); } }
+    for (const m of all) { this.hookFog(m); if (m.material.userData && m.material.userData.vol3) { const hf = m.onBeforeRender; m.onBeforeRender = function (rd, sc, cam, ...a) { hf.call(this, rd, sc, cam, ...a); R.bridge.three.vol3.before(body, this, cam); }; } if (m.material.userData && m.material.userData.x3dShader) { R.bridge.three.shader.alias(geo); m.onBeforeRender = (r, sc, cam) => R.bridge.three.shader.beforeRender(m, cam); } }
     for (const m of all) if (geo.userData.tcg) (this.tcgMeshes ||= []).push(m);
     for (const dep of [...((app && app.f.shaders) || []), app && app.f.material, app && app.f.texture, app && app.f.textureTransform, app && app.f.lineProperties, app && app.f.fillProperties, g, g.f.texCoord]) if (dep) for (const m of all) (this.meshesOf.get(dep.id) || this.meshesOf.set(dep.id, []).get(dep.id)).push(m);
     if (f.visible === false) o.visible = false;
     return r;
   }
-  threeGeometry(g) {
+  threeGeometry(g) { const geo = this.threeGeometry0(g); return geo && R.bridge.three.vol3 ? R.bridge.three.vol3.geometry(this, g, geo) : geo; }   // + the (s, t, r, q) of a volume texture (nodes/Texturing3D.js)
+  threeGeometry0(g) {
     const f = g.f, T = THREE;
     switch (g.type) {
       case 'Box': return new T.BoxGeometry(f.size[0], f.size[1], f.size[2]);
@@ -236,7 +238,7 @@ class Body {
     for (const v of cap) { const top = pos.getY(v) > 0; uv.setXY(v, 0.5 + pos.getX(v) / (2 * R), 0.5 + (top ? -1 : 1) * pos.getZ(v) / (2 * R)); }
     return geo;
   }
-  geometryData(g) { return Geo.geometryData.call(this, T3.geo.sub(g)); }   // a GeoCoordinate is read as local metres (nodes/Geo.js)
+  geometryData(g) { const d = Geo.geometryData.call(this, T3.geo.sub(g)); return R.bridge.three.vol3 ? R.bridge.three.vol3.augment(this, g, d) : d; }   // a GeoCoordinate is read as local metres (nodes/Geo.js)
   /* IndexedLineSet, LineSet (spec.lines) and Polyline2D draw as LineSegments, PointSet (and spec.points) as Points. 19775-1 12.2.2: with no Material they are white and unlit; with one, emissiveColor
      is the colour, and a Color node replaces it. X_ITE draws both one pixel wide (line width and point size are not exposed in WebGL2 beyond that: LineProperties is a gap, see README). */
   pointLine(g, app) {
@@ -303,7 +305,7 @@ class Body {
     const ov = new T.Mesh(r.meshes[0].geometry, mat); ov.userData = { hatchOf: r.meshes[0] }; o.add(ov); r.meshes[0].userData.hatch = ov;
   }
   mapMeshes(node) { return this.matMeshes(node).filter((m) => !(m.userData.shape.f.geometry && m.userData.shape.f.geometry.type === 'Text')); }   // a Text's map is its glyph atlas, a shader's material has none: a texture change leaves both alone
-  matMeshes(node) { return [...(this.meshesOf.get(node.id) || [])].filter((m) => !(m.material && m.material.userData && m.material.userData.x3dShader)); }   // a ComposedShader mesh has no colour fields to refresh
+  matMeshes(node) { return [...(this.meshesOf.get(node.id) || [])].filter((m) => !(m.material && m.material.userData && (m.material.userData.x3dShader || m.material.userData.vol3))); }   // a ComposedShader mesh has no colour fields to refresh
   isPlain(m) { return m.isLineSegments || m.isPoints || !!m.userData.wide; }   // a line, a point cloud, or a line drawn as screen-space quads
   emptyGeometry() { const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(0), 3)); return geo; }
   dataGeometry(d, g) {
@@ -311,6 +313,7 @@ class Body {
     geo.setAttribute('position', new T.BufferAttribute(Float32Array.from(d.pos), 3)); geo.setIndex(new T.BufferAttribute(Uint32Array.from(d.idx), 1));
     if (d.nrm) geo.setAttribute('normal', new T.BufferAttribute(Float32Array.from(d.nrm), 3)); else geo.computeVertexNormals();
     if (d.uv) geo.setAttribute('uv', new T.BufferAttribute(Float32Array.from(d.uv), 2));
+    if (d.uvw) geo.setAttribute('uvw', new T.BufferAttribute(Float32Array.from(d.uvw), 4));
     if (d.col) geo.setAttribute('color', new T.BufferAttribute(Float32Array.from(d.col), 3));
     const fc = g && g.f && g.f.fogCoord;   // FogCoordinate: the fog amount of each vertex (0 clear, 1 fully fogged), read by the material patch of makeMaterial; vertices past the end of depth are 0
     if (fc) { const dp = fc.f.depth || [], n = d.pos.length / 3, a = new Float32Array(n); for (let i = 0; i < n; i++) a[i] = Math.min(1, Math.max(0, dp[i] || 0)); geo.setAttribute('fogCoord', new T.BufferAttribute(a, 1)); }
@@ -426,6 +429,7 @@ class Body {
   }
   /* Material -> MeshPhongMaterial (the Phong model X3D and X_ITE share); PhysicalMaterial -> MeshPhysicalMaterial (the glTF model, linear colours) */
   makeMaterial(shape, g, app, back) {
+    if (!back && app && R.bridge.three.vol3 && R.bridge.vol.is3D(app.f.texture) && !['Text'].includes(g.type)) return R.bridge.three.vol3.material(this, shape, g, app);
     const T = THREE, mat = app && app.f.material, texN = app && app.f.texture, side = back ? T.BackSide : g.f.solid === true || (mat && mat.type === 'TwoSidedMaterial') ? T.FrontSide : T.DoubleSide;
     let m;
     for (const cs of app ? (app.f.shaders || []) : []) { if (!cs || cs.type !== 'ComposedShader') continue; const sm = R.bridge.three.shader.make(this, cs, side); R.bridge.three.shader.announce(cs, !!sm); if (sm) return sm; }   // the first shader that compiles takes the place of the Material (19775-1 31.4.1: the browser uses the first it supports)   // a shader that compiles takes the place of the Material; one that does not leaves the Material
@@ -521,6 +525,7 @@ class Body {
   /* --------------------------------------------------------------- changes */
   changed(node, field) {
     const t = node.type;
+    if ((t === 'Material' || t === 'PhysicalMaterial' || t === 'UnlitMaterial') && R.bridge.three.vol3) R.bridge.three.vol3.changedMaterial(this, node);   // a volume mesh keeps its colours in uniforms
     if (t === 'Inline') {
       for (const r of this.inlines || []) {   // every use of the node (DEF and USE) answers
         if (r.node !== node || r.dead) continue;
