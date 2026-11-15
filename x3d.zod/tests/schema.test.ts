@@ -115,3 +115,19 @@ test('zod-010 a failed union points at the arm the document meant (not at the US
   assert.equal(rad.issues[0].path, 'X3D/Scene/-children/0/Transform/-children/0/Shape/-geometry/Sphere/@radius');
   assert.match(rad.issues[0].message, /expected number, received string/);
 });
+
+test('zod-011 restrictSchema refuses unknown node names (same rule as x3d_mcp llm_schema.py)', () => {
+  assert.throws(() => restrictSchema(schema, { nodes: ['Box', 'Teapot'] }), /Teapot/);
+  assert.throws(() => restrictSchema(schema, { nodes: ['X3D'] }), /X3D/);
+});
+
+// Parity guard with x3d_mcp tests/test_llm_schema.py: both sides hash the same four restricted schemas.
+test('zod-012 restricted schemas hash to the values x3d_mcp pins', async () => {
+  const { createHash } = await import('node:crypto');
+  const canon = (o: any): any => Array.isArray(o) ? o.map(canon) : o && typeof o === 'object' ? Object.fromEntries(Object.keys(o).sort().map((k) => [k, canon(o[k])])) : o;
+  const sha = (nodes: string[], lean: boolean) => createHash('sha1').update(JSON.stringify(canon(restrictSchema(schema, { nodes, lean })))).digest('hex').slice(0, 12);
+  const STARTER = ['Transform', 'Group', 'Shape', 'Appearance', 'Material', 'Box', 'Sphere', 'Cone', 'Cylinder', 'Viewpoint', 'NavigationInfo', 'WorldInfo'];
+  const got = { starterFull: sha(STARTER, false), starterLean: sha(STARTER, true) };
+  assert.deepEqual(got, PINNED, JSON.stringify(got));
+});
+const PINNED = { starterFull: '339dee2fc602', starterLean: '2e7ef1bfc403' };

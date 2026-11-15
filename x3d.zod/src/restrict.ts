@@ -17,10 +17,19 @@ export interface RestrictOptions {
 
 const LEAN_KEYS = new Set(['@class', '@id', '@style', 'IS', '-metadata', '#comment']);
 
+/**
+ * Pass the schema with the NavigationInfo.@type correction already applied (loadFixedSchema does): lean mode
+ * deletes the $comment the correction keys on, so correcting after restricting does nothing.
+ * Lean mode also drops -metadata, @style, IS and #comment: documents using them are rejected, and ProtoDeclare
+ * bodies that wire fields with IS cannot be expressed. Use lean=false when a model must write those.
+ */
 export function restrictSchema(schema: J, opt: RestrictOptions): J {
   const out = structuredClone(schema) as J;
   const allowed = new Set(opt.nodes);
   const nodeNames = new Set(nodeDefNames(out));
+  // same rule as x3d_mcp llm_schema.py: a typo must not silently shrink the vocabulary
+  const unknown = [...allowed].filter((n) => !nodeNames.has(n)).sort();
+  if (unknown.length) throw new Error(`not X3D 4.0 scene nodes: ${unknown.join(', ')}`);
   const walk = (n: any): void => {
     if (Array.isArray(n)) { n.forEach(walk); return; }
     if (n === null || typeof n !== 'object') return;

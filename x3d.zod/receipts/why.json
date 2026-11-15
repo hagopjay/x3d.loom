@@ -13,9 +13,9 @@
   "src": "x3d-blender-io/docs/showcase/scenes/ellipsoid-moon.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/2/Shape/-geometry/GeoElevationGrid",
-    "code": "invalid_union",
-    "message": "Invalid input"
+    "path": "X3D/Scene/-children/2/Shape/-geometry/GeoElevationGrid/@geoSystem/1",
+    "code": "invalid_value",
+    "message": "Invalid input: expected \"WGS84\""
    }
   ]
  },
@@ -93,9 +93,9 @@
   "src": "x3d.demo/docs/demos/blender-x3d-io/v1/scenes/ellipsoid-moon.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/2/Shape/-geometry/GeoElevationGrid",
-    "code": "invalid_union",
-    "message": "Invalid input"
+    "path": "X3D/Scene/-children/2/Shape/-geometry/GeoElevationGrid/@geoSystem/1",
+    "code": "invalid_value",
+    "message": "Invalid input: expected \"WGS84\""
    }
   ]
  },
@@ -289,16 +289,6 @@
    }
   ]
  },
- "00121.json": {
-  "src": "x3d.demo/docs/demos/gobbler-gyroscope-webgpu/v1/gobbler3.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/21/Transform/-children/0/Transform",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
  "00129.json": {
   "src": "x3d.demo/docs/demos/gobbler-worlds-within/v1/data/worlds/giza/giza-nest.x3d",
   "issues": [
@@ -309,16 +299,6 @@
    }
   ]
  },
- "00134.json": {
-  "src": "x3d.demo/docs/demos/gobbler-worlds-within/v1/source/bird.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/24/Transform/-children/0/Transform",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
  "00135.json": {
   "src": "x3d.demo/docs/demos/gobbler-worlds-within/v1/source/giza-nest.x3d",
   "issues": [
@@ -326,16 +306,6 @@
     "path": "X3D/@version",
     "code": "invalid_value",
     "message": "Invalid option: expected one of \"3.0\"|\"3.1\"|\"3.2\"|\"3.3\"|\"4.0\""
-   }
-  ]
- },
- "00136.json": {
-  "src": "x3d.demo/docs/demos/gobbler3-webgpu/v1/gobbler3.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/21/Transform/-children/0/Transform",
-    "code": "invalid_union",
-    "message": "Invalid input"
    }
   ]
  },
@@ -553,19 +523,19 @@
   "src": "x3d.loom/x3d.physics/physx-bridge/scenes/experiments/machine-with-sound.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/8/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
     "path": "X3D/Scene/-children/104/CollisionSensor",
     "code": "unrecognized_keys",
     "message": "Unrecognized key: \"@description\""
    },
    {
-    "path": "X3D/Scene/-children/238/Group/-children/0/SpatialSound",
-    "code": "invalid_union",
-    "message": "Invalid input"
+    "path": "X3D/Scene/-children/238/Group/-children/0/SpatialSound/@distanceModel",
+    "code": "invalid_value",
+    "message": "Invalid option: expected one of \"linear\"|\"inverse\"|\"exponential\""
+   },
+   {
+    "path": "X3D/Scene/-children/238/Group/-children/1/SpatialSound/@distanceModel",
+    "code": "invalid_value",
+    "message": "Invalid option: expected one of \"linear\"|\"inverse\"|\"exponential\""
    }
   ]
  },
@@ -573,35 +543,15 @@
   "src": "x3d.loom/x3d.physics/physx-bridge/scenes/experiments/race-main.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/8/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
     "path": "X3D/Scene/-children/104/CollisionSensor",
     "code": "unrecognized_keys",
     "message": "Unrecognized key: \"@description\""
    }
   ]
  },
- "00251.json": {
-  "src": "x3d.loom/x3d.physics/physx-bridge/scenes/marble-machine-build.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/6/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
  "00252.json": {
   "src": "x3d.loom/x3d.physics/physx-bridge/scenes/marble-machine.x3d",
   "issues": [
-   {
-    "path": "X3D/Scene/-children/9/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
    {
     "path": "X3D/Scene/-children/106/CollisionSensor",
     "code": "unrecognized_keys",
@@ -643,19 +593,9 @@
   "src": "x3d.loom/x3d.threejs/bridge/fixtures/GeoCoordinate.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/3/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "00303.json": {
-  "src": "x3d.loom/x3d.threejs/bridge/fixtures/GeoElevationGrid.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/9/Shape/-appearance/Appearance",
-    "code": "invalid_union",
-    "message": "Invalid input"
+    "path": "X3D/Scene/-children/3/Transform/-children/0/Shape/-geometry/IndexedFaceSet/-coord/GeoCoordinate/@geoSystem/2",
+    "code": "invalid_value",
+    "message": "Invalid input: expected \"WGS84\""
    }
   ]
  },
@@ -663,14 +603,9 @@
   "src": "x3d.loom/x3d.threejs/bridge/fixtures/GeoPositionInterpolator.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/6/GeoPositionInterpolator/@USE",
-    "code": "invalid_type",
-    "message": "Invalid input: expected string, received undefined"
-   },
-   {
-    "path": "X3D/Scene/-children/6/GeoPositionInterpolator",
-    "code": "unrecognized_keys",
-    "message": "Unrecognized keys: \"@DEF\", \"@key\", \"@geoSystem\", \"@keyValue\""
+    "path": "X3D/Scene/-children/6/GeoPositionInterpolator/@geoSystem/2",
+    "code": "invalid_value",
+    "message": "Invalid input: expected \"WGS84\""
    }
   ]
  },
@@ -698,14 +633,9 @@
   "src": "x3d.loom/x3d.threejs/bridge/fixtures/GeoViewpoint.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/13/GeoViewpoint/@USE",
-    "code": "invalid_type",
-    "message": "Invalid input: expected string, received undefined"
-   },
-   {
-    "path": "X3D/Scene/-children/13/GeoViewpoint",
-    "code": "unrecognized_keys",
-    "message": "Unrecognized keys: \"@DEF\", \"@position\", \"@geoSystem\", \"-geoOrigin\""
+    "path": "X3D/Scene/-children/13/GeoViewpoint/@geoSystem/2",
+    "code": "invalid_value",
+    "message": "Invalid input: expected \"WGS84\""
    }
   ]
  },
@@ -713,9 +643,19 @@
   "src": "x3d.loom/x3d.threejs/bridge/fixtures/Layout.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/2/LayerSet/-layers/0/LayoutLayer",
-    "code": "invalid_union",
-    "message": "Invalid input"
+    "path": "X3D/Scene/-children/2/LayerSet/-layers/0/LayoutLayer/-layout/Layout/@align/0",
+    "code": "invalid_value",
+    "message": "Invalid option: expected one of \"\"LEFT\" \"BOTTOM\"\"|\"\"LEFT\" \"CENTER\"\"|\"\"LEFT\" \"TOP\"\"|\"\"CENTER\" \"BOTTOM\"\"|\"\"CENTER\" \"CENTER\"\"|\"\"CENTER\" \"TOP\"\"|\"\"RIGHT\" \"BOTTOM\"\"|\"\"RIGHT\" \"CENTER\"\"|\"\"RIGHT\" \"TOP\"\""
+   },
+   {
+    "path": "X3D/Scene/-children/2/LayerSet/-layers/0/LayoutLayer/-layout/Layout/@align/1",
+    "code": "invalid_value",
+    "message": "Invalid option: expected one of \"\"LEFT\" \"BOTTOM\"\"|\"\"LEFT\" \"CENTER\"\"|\"\"LEFT\" \"TOP\"\"|\"\"CENTER\" \"BOTTOM\"\"|\"\"CENTER\" \"CENTER\"\"|\"\"CENTER\" \"TOP\"\"|\"\"RIGHT\" \"BOTTOM\"\"|\"\"RIGHT\" \"CENTER\"\"|\"\"RIGHT\" \"TOP\"\""
+   },
+   {
+    "path": "X3D/Scene/-children/2/LayerSet/-layers/0/LayoutLayer/-layout/Layout/@offsetUnits/0",
+    "code": "invalid_value",
+    "message": "Invalid option: expected one of \"\"WORLD\" \"WORLD\"\"|\"\"WORLD\" \"FRACTION\"\"|\"\"WORLD\" \"PIXEL\"\"|\"\"FRACTION\" \"WORLD\"\"|\"\"FRACTION\" \"FRACTION\"\"|\"\"FRACTION\" \"PIXEL\"\"|\"\"PIXEL\" \"WORLD\"\"|\"\"PIXEL\" \"FRACTION\"\"|\"\"PIXEL\" \"PIXEL\"\""
    }
   ]
  },
@@ -729,26 +669,6 @@
    }
   ]
  },
- "00349.json": {
-  "src": "x3d.loom/x3d.threejs/bridge/fixtures/PixelTexture.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/1/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
-    "path": "X3D/Scene/-children/2/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
-    "path": "X3D/Scene/-children/3/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
  "00365.json": {
   "src": "x3d.loom/x3d.threejs/bridge/fixtures/SpatialSound.x3d",
   "issues": [
@@ -759,26 +679,6 @@
    }
   ]
  },
- "00373.json": {
-  "src": "x3d.loom/x3d.threejs/bridge/fixtures/TextureBackground.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/0/TextureBackground/-backTexture/PixelTexture",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
-    "path": "X3D/Scene/-children/0/TextureBackground/-bottomTexture/PixelTexture",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
-    "path": "X3D/Scene/-children/0/TextureBackground/-frontTexture/PixelTexture",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
  "00376.json": {
   "src": "x3d.loom/x3d.threejs/bridge/fixtures/TextureProjector.x3d",
   "issues": [
@@ -786,16 +686,6 @@
     "path": "X3D/head/component/0/@name",
     "code": "invalid_value",
     "message": "Invalid option: expected one of \"Core\"|\"CADGeometry\"|\"CubeMapTexturing\"|\"DIS\"|\"EnvironmentalEffects\"|\"EnvironmentalSensor\"|\"EventUtilities\"|\"Followers\"|\"Geometry2D\"|\"Geometry3D\"|\"Geospatial\"|\"Grouping\"|\"HAnim\"|\"H-Anim\"|\"Interpolation\"|\"KeyDeviceSensor\"|\"Layering\"|\"Layout\"|\"Lighting\"|\"Navigation\"|\"Networking\"|\"NURBS\"|\"ParticleSystems\"|\"Picking\"|\"PointingDeviceSensor\"|\"TextureProjector\"|\"Rendering\"|\"RigidBodyPhysics\"|\"Scripting\"|\"Shaders\"|\"Shape\"|\"Sound\"|\"Text\"|\"Texturing\"|\"Texturing3D\"|\"Time\"|\"VolumeRendering\""
-   },
-   {
-    "path": "X3D/Scene/-children/3/Transform/-children/0/TextureProjector",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
-    "path": "X3D/Scene/-children/4/TextureProjector/-texture/PixelTexture",
-    "code": "invalid_union",
-    "message": "Invalid input"
    }
   ]
  },
@@ -809,43 +699,13 @@
    },
    {
     "path": "X3D/Scene/-children/3/Transform/-children/0/TextureProjectorParallel",
-    "code": "invalid_union",
-    "message": "Invalid input"
+    "code": "unrecognized_keys",
+    "message": "Unrecognized key: \"@upVector\""
    },
    {
-    "path": "X3D/Scene/-children/4/TextureProjectorParallel/-texture/PixelTexture",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "00379.json": {
-  "src": "x3d.loom/x3d.threejs/bridge/fixtures/TextureTransform.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/1/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "00382.json": {
-  "src": "x3d.loom/x3d.threejs/bridge/fixtures/TexturedPrimitives.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/1/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
-    "path": "X3D/Scene/-children/2/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
-    "path": "X3D/Scene/-children/3/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
+    "path": "X3D/Scene/-children/4/TextureProjectorParallel",
+    "code": "unrecognized_keys",
+    "message": "Unrecognized key: \"@upVector\""
    }
   ]
  },
@@ -1003,19 +863,9 @@
   "src": "x3d.loom/x3d.webgpu/bridge/fixtures/GeoCoordinate.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/3/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "00461.json": {
-  "src": "x3d.loom/x3d.webgpu/bridge/fixtures/GeoElevationGrid.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/9/Shape/-appearance/Appearance",
-    "code": "invalid_union",
-    "message": "Invalid input"
+    "path": "X3D/Scene/-children/3/Transform/-children/0/Shape/-geometry/IndexedFaceSet/-coord/GeoCoordinate/@geoSystem/2",
+    "code": "invalid_value",
+    "message": "Invalid input: expected \"WGS84\""
    }
   ]
  },
@@ -1023,14 +873,9 @@
   "src": "x3d.loom/x3d.webgpu/bridge/fixtures/GeoPositionInterpolator.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/6/GeoPositionInterpolator/@USE",
-    "code": "invalid_type",
-    "message": "Invalid input: expected string, received undefined"
-   },
-   {
-    "path": "X3D/Scene/-children/6/GeoPositionInterpolator",
-    "code": "unrecognized_keys",
-    "message": "Unrecognized keys: \"@DEF\", \"@key\", \"@geoSystem\", \"@keyValue\""
+    "path": "X3D/Scene/-children/6/GeoPositionInterpolator/@geoSystem/2",
+    "code": "invalid_value",
+    "message": "Invalid input: expected \"WGS84\""
    }
   ]
  },
@@ -1058,14 +903,9 @@
   "src": "x3d.loom/x3d.webgpu/bridge/fixtures/GeoViewpoint.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/13/GeoViewpoint/@USE",
-    "code": "invalid_type",
-    "message": "Invalid input: expected string, received undefined"
-   },
-   {
-    "path": "X3D/Scene/-children/13/GeoViewpoint",
-    "code": "unrecognized_keys",
-    "message": "Unrecognized keys: \"@DEF\", \"@position\", \"@geoSystem\", \"-geoOrigin\""
+    "path": "X3D/Scene/-children/13/GeoViewpoint/@geoSystem/2",
+    "code": "invalid_value",
+    "message": "Invalid input: expected \"WGS84\""
    }
   ]
  },
@@ -1089,43 +929,23 @@
    }
   ]
  },
- "00479.json": {
-  "src": "x3d.loom/x3d.webgpu/bridge/fixtures/IndexedQuadSet.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/2/Group/-children/2/Transform",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "00480.json": {
-  "src": "x3d.loom/x3d.webgpu/bridge/fixtures/IndexedTriangleFanSet.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/2/Group/-children/2/Transform",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "00481.json": {
-  "src": "x3d.loom/x3d.webgpu/bridge/fixtures/IndexedTriangleStripSet.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/2/Group/-children/2/Transform",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
  "00487.json": {
   "src": "x3d.loom/x3d.webgpu/bridge/fixtures/Layout.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/2/LayerSet/-layers/0/LayoutLayer",
-    "code": "invalid_union",
-    "message": "Invalid input"
+    "path": "X3D/Scene/-children/2/LayerSet/-layers/0/LayoutLayer/-layout/Layout/@align/0",
+    "code": "invalid_value",
+    "message": "Invalid option: expected one of \"\"LEFT\" \"BOTTOM\"\"|\"\"LEFT\" \"CENTER\"\"|\"\"LEFT\" \"TOP\"\"|\"\"CENTER\" \"BOTTOM\"\"|\"\"CENTER\" \"CENTER\"\"|\"\"CENTER\" \"TOP\"\"|\"\"RIGHT\" \"BOTTOM\"\"|\"\"RIGHT\" \"CENTER\"\"|\"\"RIGHT\" \"TOP\"\""
+   },
+   {
+    "path": "X3D/Scene/-children/2/LayerSet/-layers/0/LayoutLayer/-layout/Layout/@align/1",
+    "code": "invalid_value",
+    "message": "Invalid option: expected one of \"\"LEFT\" \"BOTTOM\"\"|\"\"LEFT\" \"CENTER\"\"|\"\"LEFT\" \"TOP\"\"|\"\"CENTER\" \"BOTTOM\"\"|\"\"CENTER\" \"CENTER\"\"|\"\"CENTER\" \"TOP\"\"|\"\"RIGHT\" \"BOTTOM\"\"|\"\"RIGHT\" \"CENTER\"\"|\"\"RIGHT\" \"TOP\"\""
+   },
+   {
+    "path": "X3D/Scene/-children/2/LayerSet/-layers/0/LayoutLayer/-layout/Layout/@offsetUnits/0",
+    "code": "invalid_value",
+    "message": "Invalid option: expected one of \"\"WORLD\" \"WORLD\"\"|\"\"WORLD\" \"FRACTION\"\"|\"\"WORLD\" \"PIXEL\"\"|\"\"FRACTION\" \"WORLD\"\"|\"\"FRACTION\" \"FRACTION\"\"|\"\"FRACTION\" \"PIXEL\"\"|\"\"PIXEL\" \"WORLD\"\"|\"\"PIXEL\" \"FRACTION\"\"|\"\"PIXEL\" \"PIXEL\"\""
    }
   ]
  },
@@ -1139,21 +959,6 @@
    }
   ]
  },
- "00503.json": {
-  "src": "x3d.loom/x3d.webgpu/bridge/fixtures/MultiTextureCoordinate.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/1/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
-    "path": "X3D/Scene/-children/2/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
  "00504.json": {
   "src": "x3d.loom/x3d.webgpu/bridge/fixtures/MultiTextureTransform.x3d",
   "issues": [
@@ -1164,16 +969,6 @@
    }
   ]
  },
- "00509.json": {
-  "src": "x3d.loom/x3d.webgpu/bridge/fixtures/NurbsPatchSurface.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/2/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
  "00513.json": {
   "src": "x3d.loom/x3d.webgpu/bridge/fixtures/NurbsSweptSurface.x3d",
   "issues": [
@@ -1181,36 +976,6 @@
     "path": "X3D/Scene/-children/5/Transform/-children/0/Shape/-geometry/NurbsSweptSurface/-trajectoryCurve",
     "code": "unrecognized_keys",
     "message": "Unrecognized key: \"NurbsCurve2D\""
-   }
-  ]
- },
- "00515.json": {
-  "src": "x3d.loom/x3d.webgpu/bridge/fixtures/NurbsTextureCoordinate.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/1/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
-    "path": "X3D/Scene/-children/2/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
-    "path": "X3D/Scene/-children/3/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "00516.json": {
-  "src": "x3d.loom/x3d.webgpu/bridge/fixtures/NurbsTrimmedSurface.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/2/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
    }
   ]
  },
@@ -1249,16 +1014,6 @@
    }
   ]
  },
- "00541.json": {
-  "src": "x3d.loom/x3d.webgpu/bridge/fixtures/QuadSet.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/2/Group/-children/2/Transform",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
  "00558.json": {
   "src": "x3d.loom/x3d.webgpu/bridge/fixtures/SpatialSound.x3d",
   "issues": [
@@ -1289,21 +1044,6 @@
    }
   ]
  },
- "00572.json": {
-  "src": "x3d.loom/x3d.webgpu/bridge/fixtures/TextureBackground.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/8/TextureBackground/-bottomTexture/PixelTexture",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
-    "path": "X3D/Scene/-children/8/TextureBackground/-rightTexture/PixelTexture",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
  "00575.json": {
   "src": "x3d.loom/x3d.webgpu/bridge/fixtures/TextureProjector.x3d",
   "issues": [
@@ -1311,16 +1051,6 @@
     "path": "X3D/head/component/0/@name",
     "code": "invalid_value",
     "message": "Invalid option: expected one of \"Core\"|\"CADGeometry\"|\"CubeMapTexturing\"|\"DIS\"|\"EnvironmentalEffects\"|\"EnvironmentalSensor\"|\"EventUtilities\"|\"Followers\"|\"Geometry2D\"|\"Geometry3D\"|\"Geospatial\"|\"Grouping\"|\"HAnim\"|\"H-Anim\"|\"Interpolation\"|\"KeyDeviceSensor\"|\"Layering\"|\"Layout\"|\"Lighting\"|\"Navigation\"|\"Networking\"|\"NURBS\"|\"ParticleSystems\"|\"Picking\"|\"PointingDeviceSensor\"|\"TextureProjector\"|\"Rendering\"|\"RigidBodyPhysics\"|\"Scripting\"|\"Shaders\"|\"Shape\"|\"Sound\"|\"Text\"|\"Texturing\"|\"Texturing3D\"|\"Time\"|\"VolumeRendering\""
-   },
-   {
-    "path": "X3D/Scene/-children/3/Transform/-children/0/TextureProjector",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   },
-   {
-    "path": "X3D/Scene/-children/4/TextureProjector/-texture/PixelTexture",
-    "code": "invalid_union",
-    "message": "Invalid input"
    }
   ]
  },
@@ -1334,27 +1064,13 @@
    },
    {
     "path": "X3D/Scene/-children/3/Transform/-children/0/TextureProjectorParallel",
-    "code": "invalid_union",
-    "message": "Invalid input"
+    "code": "unrecognized_keys",
+    "message": "Unrecognized key: \"@upVector\""
    },
    {
-    "path": "X3D/Scene/-children/4/TextureProjectorParallel/-texture/PixelTexture",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "00582.json": {
-  "src": "x3d.loom/x3d.webgpu/bridge/fixtures/TransmitterPdu.x3d",
-  "issues": []
- },
- "00583.json": {
-  "src": "x3d.loom/x3d.webgpu/bridge/fixtures/TriangleFanSet.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/2/Group/-children/2/Transform",
-    "code": "invalid_union",
-    "message": "Invalid input"
+    "path": "X3D/Scene/-children/4/TextureProjectorParallel",
+    "code": "unrecognized_keys",
+    "message": "Unrecognized key: \"@upVector\""
    }
   ]
  },
@@ -1413,13 +1129,58 @@
    }
   ]
  },
- "00677.json": {
-  "src": "x3d.ml/demo/jsval/harness/probes/B field-route-typing (src/51_checksB.js): check_containerfield, check_route_validity, check_dead_boolean_routes (+ exports X3DVAL._m.routeHelpers: scriptFields, protoInterfaces, endpointFields, resolveRouteField, fieldAccepts, nodeFieldMap/typeAncestry wrappers)/dr_05_version_padded.x3d",
+ "00659.json": {
+  "src": "x3d.ml/demo/jsval/harness/probes/B field-route-typing (src/51_checksB.js): check_containerfield, check_route_validity, check_dead_boolean_routes (+ exports X3DVAL._m.routeHelpers: scriptFields, protoInterfaces, endpointFields, resolveRouteField, fieldAccepts, nodeFieldMap/typeAncestry wrappers)/cf_02_explicit_unknown_no_hint.x3d",
   "issues": [
    {
-    "path": "X3D/@version",
-    "code": "invalid_value",
-    "message": "Invalid option: expected one of \"3.0\"|\"3.1\"|\"3.2\"|\"3.3\"|\"4.0\""
+    "path": "X3D/Scene/-children/0/Shape/-appearance/Appearance",
+    "code": "unrecognized_keys",
+    "message": "Unrecognized key: \"-foo\""
+   }
+  ]
+ },
+ "00660.json": {
+  "src": "x3d.ml/demo/jsval/harness/probes/B field-route-typing (src/51_checksB.js): check_containerfield, check_route_validity, check_dead_boolean_routes (+ exports X3DVAL._m.routeHelpers: scriptFields, protoInterfaces, endpointFields, resolveRouteField, fieldAccepts, nodeFieldMap/typeAncestry wrappers)/cf_03_not_node.x3d",
+  "issues": [
+   {
+    "path": "X3D/Scene/-children/0/Shape/-appearance/Appearance",
+    "code": "unrecognized_keys",
+    "message": "Unrecognized key: \"-alphaMode\""
+   },
+   {
+    "path": "X3D/Scene/-children/0/Shape",
+    "code": "unrecognized_keys",
+    "message": "Unrecognized key: \"-bboxSize\""
+   }
+  ]
+ },
+ "00662.json": {
+  "src": "x3d.ml/demo/jsval/harness/probes/B field-route-typing (src/51_checksB.js): check_containerfield, check_route_validity, check_dead_boolean_routes (+ exports X3DVAL._m.routeHelpers: scriptFields, protoInterfaces, endpointFields, resolveRouteField, fieldAccepts, nodeFieldMap/typeAncestry wrappers)/cf_05_valid_and_protoinstance.x3d",
+  "issues": [
+   {
+    "path": "X3D/Scene/-children/1/Transform",
+    "code": "unrecognized_keys",
+    "message": "Unrecognized key: \"-bogus\""
+   }
+  ]
+ },
+ "00669.json": {
+  "src": "x3d.ml/demo/jsval/harness/probes/B field-route-typing (src/51_checksB.js): check_containerfield, check_route_validity, check_dead_boolean_routes (+ exports X3DVAL._m.routeHelpers: scriptFields, protoInterfaces, endpointFields, resolveRouteField, fieldAccepts, nodeFieldMap/typeAncestry wrappers)/cf_12_whitespace_and_case.x3d",
+  "issues": [
+   {
+    "path": "X3D/Scene/-children/0/Shape/-appearance/Appearance",
+    "code": "unrecognized_keys",
+    "message": "Unrecognized keys: \"- material \", \"-Material\""
+   },
+   {
+    "path": "X3D/Scene/-children/0/Shape",
+    "code": "unrecognized_keys",
+    "message": "Unrecognized key: \"-Geometry\""
+   },
+   {
+    "path": "X3D/Scene/-children/1/Switch",
+    "code": "unrecognized_keys",
+    "message": "Unrecognized key: \"-proxy\""
    }
   ]
  },
@@ -1578,18 +1339,8 @@
   "issues": [
    {
     "path": "X3D/Scene/-children/3/Transform/-children/0/Shape",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "00755.json": {
-  "src": "x3d.ml/demo/jsval/harness/probes/V adversarial-verify-round0/v09g_version_ws.x3d",
-  "issues": [
-   {
-    "path": "X3D/@version",
-    "code": "invalid_value",
-    "message": "Invalid option: expected one of \"3.0\"|\"3.1\"|\"3.2\"|\"3.3\"|\"4.0\""
+    "code": "unrecognized_keys",
+    "message": "Unrecognized keys: \"@DEF\", \"-geometry\""
    }
   ]
  },
@@ -1597,14 +1348,19 @@
   "src": "x3d.ml/demo/jsval/harness/probes/V adversarial-verify-round0/v26_scene_root.x3d",
   "issues": [
    {
+    "path": "X3D/@profile",
+    "code": "invalid_value",
+    "message": "Invalid option: expected one of \"Core\"|\"Interchange\"|\"CADInterchange\"|\"Interactive\"|\"Immersive\"|\"MedicalInterchange\"|\"MPEG4Interactive\"|\"Full\""
+   },
+   {
     "path": "X3D/Scene",
     "code": "invalid_type",
     "message": "Invalid input: expected object, received undefined"
    },
    {
-    "path": "X3D",
-    "code": "unrecognized_keys",
-    "message": "Unrecognized keys: \"Shape\", \"Group\""
+    "path": "X3D/@version",
+    "code": "invalid_value",
+    "message": "Invalid option: expected one of \"3.0\"|\"3.1\"|\"3.2\"|\"3.3\"|\"4.0\""
    }
   ]
  },
@@ -1968,73 +1724,18 @@
    }
   ]
  },
- "00953.json": {
-  "src": "x3d.ml/gobbler-v3/build-private/gobbler3.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/21/Transform/-children/0/Transform",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "00954.json": {
-  "src": "x3d.ml/gobbler-v3/build-public-candidate/gobbler3.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/21/Transform/-children/0/Transform",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "00955.json": {
-  "src": "x3d.ml/gobbler-v3/deep/build-private/gobbler3.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/21/Transform/-children/0/Transform",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "00956.json": {
-  "src": "x3d.ml/gobbler-v3/deep/build-public-candidate/gobbler3.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/21/Transform/-children/0/Transform",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
  "01036.json": {
   "src": "x3d.ml/runs/gpu-phase/qwen2.5-coder-14b-awq/grounded/hanim-04.x3d",
   "issues": [
    {
-    "path": "X3D/Scene/-children/3/Transform/-children/0/HAnimHumanoid",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "01147.json": {
-  "src": "x3d.ml/runs/live-2026-10-17/x3d/gemini-3.1-pro-preview/geo-03_a1.x3d",
-  "issues": [
+    "path": "X3D/Scene/-children/3/Transform/-children/0/HAnimHumanoid/-joints/0/HAnimJoint/-children/0/HAnimSegment/-children/0",
+    "code": "unrecognized_keys",
+    "message": "Unrecognized key: \"Shape\""
+   },
    {
-    "path": "X3D/Scene/-children/3/Shape/-appearance/Appearance",
-    "code": "invalid_union",
-    "message": "Invalid input"
-   }
-  ]
- },
- "01232.json": {
-  "src": "x3d.ml/runs/live-2026-10-17/x3d/gemini-3.8-flash/geo-03_a2.x3d",
-  "issues": [
-   {
-    "path": "X3D/Scene/-children/4/Shape/-appearance/Appearance",
-    "code": "invalid_union",
-    "message": "Invalid input"
+    "path": "X3D/Scene/-children/3/Transform/-children/0/HAnimHumanoid/-joints/0/HAnimJoint/-children/1/HAnimJoint/-children/0/HAnimSegment/-children/0",
+    "code": "unrecognized_keys",
+    "message": "Unrecognized key: \"Shape\""
    }
   ]
  },

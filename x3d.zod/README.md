@@ -12,7 +12,7 @@
         |                      +--> src/index.ts      validateX3DJson, parseLlmX3D (fenced JSON), repairPrompt, issue paths
         |                                              in the x3d_mcp format ("X3D/Scene/-children/0/Shape/...")
         +--> src/restrict.ts     restrictSchema(schema, {nodes, lean}) -> a JSON Schema for a chosen vocabulary
-                                 (same transform as x3d_mcp src/validation/llm_schema.py and its x3d_json_schema tool)
+                                 (same transform as x3d_mcp src/validation/llm_schema.py and its x3d_json_schema tool; both test suites pin the same digests)
 ```
 
 ## Run
@@ -41,6 +41,8 @@ if (!r.ok) retry(repairPrompt(r.issues));         // paths and messages the mode
 
 ```ts
 import { restrictSchema } from './src/restrict.ts';
+// fullSchema must already carry the NavigationInfo correction (loadFixedSchema() in tools/gen.mjs applies it);
+// lean also drops -metadata, @style and IS, so scenes using them are rejected (110 of 966 repo scenes): use lean:false then.
 const schema = restrictSchema(fullSchema, { nodes: ['Transform', 'Shape', 'Box', 'Material', 'Appearance'], lean: true });
 // hand `schema` to a structured-output / constrained-decoding API, then check the result with parseLlmX3D
 ```
@@ -51,3 +53,15 @@ Test ids use the prefix `zod-` (`zod-g01` accepted documents, `zod-b01` rejected
 
 It checks the JSON encoding against the Web3D schema. It does not check ROUTE targets, DEF/USE order, containerField sense or profile
 declarations (the x3d_mcp semantic rules and the XSD still own those), and it never calls a model.
+
+## Receipts (this folder, `receipts/`)
+
+| file | what | instrument |
+|---|---|---|
+| `gen.json` | schema sha1, fixes applied, counts emitted | `tools/gen.mjs` |
+| `corpus.json`, `corpus-summary.json` | 1,533 repo `.x3d` files: XSD, jsonschema, ajv, Zod verdicts and timings (1,432 checked, 1,432 agree) | x3d_mcp fork fbe165f, jsonschema 4.26.0, ajv 8.20.0, zod 4.6.7, Node 22.23.4 |
+| `fuzz.json` | 7,728 mutants of 966 valid scenes, seed 1, Zod vs ajv: 0 disagreements | `tools/fuzz.mjs` |
+| `why.json`, `lenient.json` | first issues of the 128 XSD-valid scenes the schema rejects; XSD errors on the 62 it accepts | `tools/why.mjs` |
+| `rootcause-v1.json` | root-cause pass over the first run (converter v1): schema bugs, 4.1 gaps, converter faults | five independent reviewers, each finding graded |
+
+The demo lives in x3d.demo (`docs/demos/typed-x3d/v1/`); `npm run bundle` builds its Zod bundle.

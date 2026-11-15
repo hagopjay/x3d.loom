@@ -87,16 +87,36 @@ def coerce(schema, text):
             found = STR.findall(text)
             return [x.replace('\\"', '"').replace("\\\\", "\\") for x in found] if found else ([text] if text.strip() else [])
         parts = text.replace(",", " ").split()
-        if it_t == "boolean": return [p.lower() == "true" for p in parts]
-        if it_t == "integer": return [int(float(p)) for p in parts]
+        if it_t == "boolean": return [boolean(p) for p in parts]
+        if it_t == "integer": return [integer(p) for p in parts]
         return [num(p) for p in parts]
-    if t == "boolean": return text.strip().lower() == "true"
-    if t == "integer": return int(float(text))
-    if t == "number": return num(text)
+    if t == "boolean": return boolean(text.strip())
+    if t == "integer": return integer(text.strip())
+    if t == "number": return num(text.strip())
     return text
 
 
+# Lexical strictness: a value the XSD would reject must stay a string so the JSON schema sees it as wrong,
+# instead of the converter repairing it (case-folded booleans, '-08', hex in float fields were all hidden once).
+DEC = re.compile(r"^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$")
+HEX = re.compile(r"^[+-]?0[xX][0-9a-fA-F]+$")
+
+
+def boolean(p):
+    if p == "true": return True
+    if p == "false": return False
+    raise ValueError(p)
+
+
+def integer(p):
+    if HEX.match(p): return int(p, 16)
+    if re.match(r"^[+-]?\d+$", p) and not re.match(r"^[+-]?0\d", p): return int(p)
+    raise ValueError(p)
+
+
 def num(p):
+    if HEX.match(p): return int(p, 16)              # SFImage pixels are written in hex
+    if not DEC.match(p) or re.match(r"^[+-]?0\d", p): raise ValueError(p)
     f = float(p)
     return int(f) if f.is_integer() and abs(f) < 1e15 and "." not in p and "e" not in p.lower() else f
 
@@ -127,8 +147,10 @@ def convert_node(el, parent_def, unplaced):
         cf = c.get("containerField")
         if cn in props and not cn.startswith(("-", "@")):
             place(body, cn, props[cn], cb, wrap=None)
-        elif cf and ("-" + cf) in props:
+        elif cf is not None and ("-" + cf) in props:
             place(body, "-" + cf, props["-" + cf], cb, wrap=cn)
+        elif cf is not None:                                 # an invalid containerField stays visible: the schema rejects the key
+            body.setdefault("-" + cf, []).append({cn: cb}); unplaced.append(f"{name}>{cn}@containerField={cf}")
         else:
             tgt = next((p for p in props if p.startswith("-") and p != "-children" and accepts(props[p], cn)), None)
             if tgt: place(body, tgt, props[tgt], cb, wrap=cn)
@@ -148,7 +170,9 @@ def place(body, key, schema, cb, wrap, force_array=False):
 def xml_to_json(xml_bytes):
     root = etree.fromstring(xml_bytes, etree.XMLParser(huge_tree=True, remove_blank_text=True, resolve_entities=False, no_network=True))
     unplaced = []
-    x = {"encoding": "UTF-8", "@profile": root.get("profile", "Full"), "@version": root.get("version", "4.0")}
+    x = {"encoding": "UTF-8"}
+    if root.get("profile") is not None: x["@profile"] = root.get("profile").strip()     # xs:NMTOKEN collapses whitespace
+    if root.get("version") is not None: x["@version"] = root.get("version").strip()      # a missing one is not invented
     for c in root:
         if not isinstance(c.tag, str): continue
         cn = etree.QName(c).localname
