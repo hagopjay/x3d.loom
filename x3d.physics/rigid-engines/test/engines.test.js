@@ -1,6 +1,6 @@
 // node --test test/engines.test.js     (NODE_PATH must reach rapier3d-compat and cannon-es: `npm install` in this folder)
 // The thresholds are the measured values of results/fidelity-node.json with a small margin. Where an engine departs from the analytic answer, the test pins the departure (a documented deviation) so a
-// library update that changes it shows up as a failing test, not as a silent change of every number in docs chapter 13 section 10.
+// library update that changes it shows up as a failing test, not as a silent change of every number in docs chapter 16.
 const test = require('node:test'), assert = require('node:assert/strict');
 const { scenes } = require('../lib/scenes'), { record } = require('../lib/record'), hash = require('../lib/hash'), { openScene, load } = require('../lib/harness');
 const { cradle, sceneXml } = require('../lib/demo-scenes');

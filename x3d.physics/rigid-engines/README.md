@@ -2,7 +2,7 @@
 
 Two JavaScript physics engines, **Rapier 0.21.0** (WASM, `@dimforge/rapier3d-compat`) and **cannon-es 0.20.0**, plugged into the `RigidBodyCollection` of the x3d.loom bridges (Babylon `x3d.webgpu/bridge`, three.js `x3d.threejs/bridge`) through one adapter that works with the built-in engine unchanged. Every number below is tied to its rig; none is a claim about other hardware.
 
-Rig for every number: Chromium 153.0.8010.12 (SwiftShader), Node v22.23.4, X_ITE 16.6.0 (Ammo/Bullet), three r187, Rapier 0.21.0, cannon-es 0.20.0. Raw results: `results/*.json`. Id prefix for this work: **ENG** (docs ch. 13 section 10: H-ENG hypotheses, N-ENG numbers, D-ENG decisions).
+Rig for every number: Chromium 153.0.8010.12 (SwiftShader), Node v22.23.4, X_ITE 16.6.0 (Ammo/Bullet), three r187, Rapier 0.21.0, cannon-es 0.20.0. Raw results: `results/*.json`. Id prefix for this work: **ENG** (docs chapter 16: H-ENG hypotheses, N-ENG numbers, D-ENG decisions).
 
 ## Wire it in (no edit to a bridge file)
 
