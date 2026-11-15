@@ -52,7 +52,7 @@ function avalanche(opt = {}) {
     const ax = [rnd() - 0.5, rnd() - 0.5, rnd() - 0.5], l = Math.hypot(...ax) || 1;
     bodies.push({ id: 'p' + i, geom, pos: [x, y, z].map((v) => +v.toFixed(3)), rot: [ax[0] / l, ax[1] / l, ax[2] / l, +(rnd() * 3).toFixed(3)].map((v) => +v.toFixed(3)), color: ps[i % 5], mass: 1 });
   }
-  return { id: 'avalanche', title: 'Avalanche', T: 5, bounce: 0.15, mu: 0.5, bodies, camera: { pos: [0, 5.2, 9.4], rot: [1, 0, 0, -0.42] }, note: '40 bodies (10 each of sphere, box, cylinder, cone) into a funnel; cone and cylinder are real shapes in Rapier and cannon-es, bounding spheres in the built-in engine' };
+  return { id: 'avalanche', title: 'Avalanche', T: 5, bounce: 0.15, mu: 0.5, bodies, camera: { pos: [0, 7.8, 6.9], rot: [1, 0, 0, -0.86] }, note: '40 bodies (10 each of sphere, box, cylinder, cone) into a funnel; cone and cylinder are real shapes in Rapier and cannon-es; the built-in engine takes a cylinder as a bounding sphere and has no collider for a cone (its finder does not read bottomRadius)' };
 }
 // ---- 2. CRADLE: five 0.5 m balls on BallJoint strings; the left one is lifted. Elastic (bounce 1). A good cradle passes the impulse through and swings the last ball. ----------------------------------------------
 function cradle() {
