@@ -1,0 +1,275 @@
+{
+ "node": "Extrusion",
+ "mode": "scene",
+ "note": "a tapered box (scale), an open arch of an octagon section (spine bend, solid false) and a twisted spindle (orientation and scale per spine point)",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "E1",
+    "beginCap",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "E1",
+    "ccw",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "E1",
+    "convex",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "E1",
+    "creaseAngle",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "E2",
+    "solid",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    67,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    93,
+    161
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    93,
+    79
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    102,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    119,
+    137
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    111
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    94
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    143
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    201,
+    169
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    253,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T3",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    253,
+    85
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T3",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    293,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T3",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    3,
+    3
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "gaps": [
+  "compared in the picture by silhouette and mean colour (SwiftShader CPU raster); creaseAngle smoothing, texture coordinates of the caps and degenerate frames (a spine that doubles back, collinear spine points) are not compared with X_ITE"
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "dilate": 2,
+   "cover": 0.88,
+   "iou": 0.9,
+   "mad": 8,
+   "fg": 24
+  }
+ }
+}

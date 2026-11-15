@@ -1,0 +1,199 @@
+{
+ "node": "Rectangle2D",
+ "mode": "scene",
+ "note": "three rectangles, one turned 0.6 rad about Y; picked at their corners and just outside them",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "nearv": [
+    "R1",
+    "size",
+    [
+     2.4,
+     1.6
+    ],
+    1e-05
+   ]
+  },
+  {
+   "nearv": [
+    "R2",
+    "size",
+    [
+     2,
+     2
+    ],
+    1e-05
+   ]
+  },
+  {
+   "expect": [
+    "R2",
+    "solid",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    90,
+    100
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    96,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    58,
+    94
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    186,
+    94
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    192,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    262,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T3",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    282,
+    114
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T3",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    262,
+    103
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T3",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    3,
+    3
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "gaps": [
+  "the texture coordinates are the unit square; they are not compared with X_ITE"
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "dilate": 2,
+   "cover": 0.9,
+   "iou": 0.93
+  }
+ }
+}

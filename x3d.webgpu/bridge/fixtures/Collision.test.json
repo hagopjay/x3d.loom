@@ -1,0 +1,214 @@
+{
+ "node": "Collision",
+ "mode": "scene",
+ "note": "three groups: enabled false, a proxy sphere that is never drawn, a bbox group; children are drawn and pickable, the proxy is not drawn",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "C1",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "C2",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "C3",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('C2').proxy!==null&&node('C2').proxy!==undefined",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "node('C1').children.length===1",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    73,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T1",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    204,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    247,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T3",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "set": [
+    "C1",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "C1",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "set": [
+    "C1",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "C1",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "noevent": [
+    "C1",
+    "isActive"
+   ]
+  },
+  {
+   "noevent": [
+    "C1",
+    "collideTime"
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    3,
+    3
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "setnodes": [
+    "C2",
+    "children",
+    []
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "jsn": [
+    "node('C2').children.length===0",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "T2",
+    "isOver",
+    false
+   ]
+  }
+ ],
+ "gaps": [
+  "the group does nothing about collision: navigation never collides in the bridge, so isActive and collideTime never fire (X_ITE 16.6.0 fires them only when the navigation collides with the group); the proxy is held and not drawn"
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.93,
+   "mad": 6,
+   "fg": 20
+  }
+ }
+}

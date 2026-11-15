@@ -29,7 +29,7 @@
     switch (type) {
       case 'SFColor': return new SFColor(v[0], v[1], v[2]);
       case 'SFVec2f': return new SFVec2f(v[0], v[1]);
-      case 'MFVec2f': return mf('MFVec2f', Array.from(v, (c) => new SFVec2f(c[0], c[1])));
+      case 'MFVec2f': { const o = []; if (isTyped(v)) for (let i = 0; i + 1 < v.length; i += 2) o.push(new SFVec2f(v[i], v[i + 1])); else for (const c of v) o.push(new SFVec2f(c[0], c[1])); return mf('MFVec2f', o); }   // a flat typed list is read two numbers at a time, as MFVec3f is
       case 'SFVec3f': return new SFVec3f(v[0], v[1], v[2]);
       case 'SFVec4f': return new SFVec4f(v[0], v[1], v[2], v[3]);
       case 'SFRotation': return new SFRotation(v[0], v[1], v[2], v[3]);
@@ -53,7 +53,7 @@
       case 'SFVec4f': return [v.x, v.y, v.z, v.w];
       case 'SFColorRGBA': return Array.isArray(v) ? v : [v.r, v.g, v.b, v.a];
       case 'MFColorRGBA': return Array.from(v, (c) => [c.r, c.g, c.b, c.a]);
-      case 'MFVec2f': return Array.from(v, (c) => [c.x, c.y]);
+      case 'MFVec2f': if (isTyped(v)) { const o = []; for (let i = 0; i + 1 < v.length; i += 2) o.push([v[i], v[i + 1]]); return o; } return Array.from(v, (c) => [c.x, c.y]);
       case 'SFRotation': return Array.isArray(v) ? v : [v.x, v.y, v.z, v.angle];
       case 'MFColor': case 'MFVec3f': { const f = isTyped(v) ? v : flat3(v); if (isTyped(cur)) return Float32Array.from(f); const o = []; for (let i = 0; i + 2 < f.length; i += 3) o.push([f[i], f[i + 1], f[i + 2]]); return o; }
       case 'MFString': return Array.from(v, String);

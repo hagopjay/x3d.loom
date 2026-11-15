@@ -1,0 +1,75 @@
+{
+ "node": "Collision",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/Collision.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 35/35",
+  "xite": "pass 35/35",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "visual": {
+   "main": {
+    "iou": 0.97,
+    "coverOurs": 1,
+    "coverXite": 0.98,
+    "bboxOurs": [
+     40,
+     94,
+     274,
+     148
+    ],
+    "bboxXite": [
+     40,
+     94,
+     274,
+     148
+    ],
+    "nOurs": 6170,
+    "nXite": 6278,
+    "fgFracOurs": 0.08,
+    "fgFracXite": 0.08,
+    "mad": 1.7,
+    "psnr": 38.41,
+    "fgMeanOurs": [
+     127,
+     114,
+     102
+    ],
+    "fgMeanXite": [
+     125,
+     112,
+     100
+    ],
+    "bgOurs": [
+     1,
+     1,
+     3
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the group does nothing about collision: navigation never collides in the bridge, so isActive and collideTime never fire (X_ITE 16.6.0 fires them only when the navigation collides with the group); the proxy is held and not drawn"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ee714dcc2276",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "e092307"
+}

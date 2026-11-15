@@ -1,0 +1,224 @@
+{
+ "node": "NurbsTrimmedSurface",
+ "mode": "scene",
+ "note": "four trimmed patches on screen (a polygon contour, an outer square with a hole, an L shaped contour, a NurbsCurve2D circle) and four off screen (no contour, a contour outside the surface, a contour that covers the whole domain = untrimmed, the same square twice = nothing left (odd rule)); the area and the bounding box of what is kept agree with X_ITE 16.6.0, an untrimmed one agrees triangle for triangle, then the tessellation is changed and a contour removed and added again by events",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    3,
+    3
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T1'));let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]];for(let t=0;t<m.idx.length;t+=3){const p=P(m.idx[t]),q=P(m.idx[t+1]),r=P(m.idx[t+2]),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()) : ((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('T1').getValue().getVertices();let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[v[i*4],v[i*4+1],v[i*4+2]];for(let t=0;t+2<v.length/4;t+=3){const p=P(t),q=P(t+1),r=P(t+2),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()))",
+    "extT1"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T2'));let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]];for(let t=0;t<m.idx.length;t+=3){const p=P(m.idx[t]),q=P(m.idx[t+1]),r=P(m.idx[t+2]),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()) : ((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('T2').getValue().getVertices();let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[v[i*4],v[i*4+1],v[i*4+2]];for(let t=0;t+2<v.length/4;t+=3){const p=P(t),q=P(t+1),r=P(t+2),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()))",
+    "extT2"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T3'));let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]];for(let t=0;t<m.idx.length;t+=3){const p=P(m.idx[t]),q=P(m.idx[t+1]),r=P(m.idx[t+2]),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()) : ((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('T3').getValue().getVertices();let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[v[i*4],v[i*4+1],v[i*4+2]];for(let t=0;t+2<v.length/4;t+=3){const p=P(t),q=P(t+1),r=P(t+2),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()))",
+    "extT3"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T4'));let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]];for(let t=0;t<m.idx.length;t+=3){const p=P(m.idx[t]),q=P(m.idx[t+1]),r=P(m.idx[t+2]),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()) : ((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('T4').getValue().getVertices();let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[v[i*4],v[i*4+1],v[i*4+2]];for(let t=0;t+2<v.length/4;t+=3){const p=P(t),q=P(t+1),r=P(t+2),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()))",
+    "extT4"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T5'));let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]];for(let t=0;t<m.idx.length;t+=3){const p=P(m.idx[t]),q=P(m.idx[t+1]),r=P(m.idx[t+2]),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()) : ((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('T5').getValue().getVertices();let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[v[i*4],v[i*4+1],v[i*4+2]];for(let t=0;t+2<v.length/4;t+=3){const p=P(t),q=P(t+1),r=P(t+2),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()))",
+    "extT5"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T6'));let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]];for(let t=0;t<m.idx.length;t+=3){const p=P(m.idx[t]),q=P(m.idx[t+1]),r=P(m.idx[t+2]),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()) : ((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('T6').getValue().getVertices();let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[v[i*4],v[i*4+1],v[i*4+2]];for(let t=0;t+2<v.length/4;t+=3){const p=P(t),q=P(t+1),r=P(t+2),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()))",
+    "extT6"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T7'));let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]];for(let t=0;t<m.idx.length;t+=3){const p=P(m.idx[t]),q=P(m.idx[t+1]),r=P(m.idx[t+2]),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()) : ((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('T7').getValue().getVertices();let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[v[i*4],v[i*4+1],v[i*4+2]];for(let t=0;t+2<v.length/4;t+=3){const p=P(t),q=P(t+1),r=P(t+2),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()))",
+    "extT7"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T8'));let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]];for(let t=0;t<m.idx.length;t+=3){const p=P(m.idx[t]),q=P(m.idx[t+1]),r=P(m.idx[t+2]),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()) : ((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('T8').getValue().getVertices();let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[v[i*4],v[i*4+1],v[i*4+2]];for(let t=0;t+2<v.length/4;t+=3){const p=P(t),q=P(t+1),r=P(t+2),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()))",
+    "extT8"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T5'));const o=[];for(const i of m.idx)o.push(m.uv[i*2],m.uv[i*2+1]);return o})())) : (((()=>{const t=X3D.getBrowser('#c').currentScene.getNamedNode('T5').getValue().getMultiTexCoords()[0];const o=[];for(let i=0;i<t.length;i+=4)o.push(t[i],t[i+1]);return o})())))",
+    "uvT5"
+   ]
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? (((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T5'));const o=[];for(const i of m.idx)o.push(m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]);return o})())) : (((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('T5').getValue().getVertices();const o=[];for(let i=0;i<v.length;i+=4)o.push(v[i],v[i+1],v[i+2]);return o})())))",
+    "posT5"
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T5')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('T5').getValue().getVertices().length/12)))",
+    128
+   ]
+  },
+  {
+   "jsn": [
+    "(eng.name==='ours' ? ((__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T6')).idx.length/3)) : ((X3D.getBrowser('#c').currentScene.getNamedNode('T6').getValue().getVertices().length/12)))",
+    0
+   ]
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "T1",
+    "uTessellation",
+    6
+   ]
+  },
+  {
+   "set": [
+    "T1",
+    "vTessellation",
+    6
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T1'));let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]];for(let t=0;t<m.idx.length;t+=3){const p=P(m.idx[t]),q=P(m.idx[t+1]),r=P(m.idx[t+2]),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()) : ((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('T1').getValue().getVertices();let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[v[i*4],v[i*4+1],v[i*4+2]];for(let t=0;t+2<v.length/4;t+=3){const p=P(t),q=P(t+1),r=P(t+2),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()))",
+    "extT1b"
+   ]
+  },
+  {
+   "setnodes": [
+    "T3",
+    "removeTrimmingContour",
+    [
+     "C3"
+    ]
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T3'));let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]];for(let t=0;t<m.idx.length;t+=3){const p=P(m.idx[t]),q=P(m.idx[t+1]),r=P(m.idx[t+2]),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()) : ((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('T3').getValue().getVertices();let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[v[i*4],v[i*4+1],v[i*4+2]];for(let t=0;t+2<v.length/4;t+=3){const p=P(t),q=P(t+1),r=P(t+2),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()))",
+    "extT3b"
+   ]
+  },
+  {
+   "setnodes": [
+    "T3",
+    "addTrimmingContour",
+    [
+     "C3"
+    ]
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "jsmap": [
+    "(eng.name==='ours' ? ((()=>{const m=__R.bridge.specs.get('NurbsTrimmedSurface').geometry(__worlds.at(-1).nodes.find(n=>n.def==='T3'));let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[m.pos[i*3],m.pos[i*3+1],m.pos[i*3+2]];for(let t=0;t<m.idx.length;t+=3){const p=P(m.idx[t]),q=P(m.idx[t+1]),r=P(m.idx[t+2]),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()) : ((()=>{const v=X3D.getBrowser('#c').currentScene.getNamedNode('T3').getValue().getVertices();let a=0,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const P=(i)=>[v[i*4],v[i*4+1],v[i*4+2]];for(let t=0;t+2<v.length/4;t+=3){const p=P(t),q=P(t+1),r=P(t+2),u=[q[0]-p[0],q[1]-p[1],q[2]-p[2]],w=[r[0]-p[0],r[1]-p[1],r[2]-p[2]];a+=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0])/2;for(const s of [p,q,r]){x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1])}}return [a,x0,x1,y0,y1]})()))",
+    "extT3c"
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "extT1",
+   0.05
+  ],
+  [
+   "extT2",
+   0.05
+  ],
+  [
+   "extT3",
+   0.05
+  ],
+  [
+   "extT4",
+   0.05
+  ],
+  [
+   "extT5",
+   0.05
+  ],
+  [
+   "extT6",
+   0.05
+  ],
+  [
+   "extT7",
+   0.05
+  ],
+  [
+   "extT8",
+   0.05
+  ],
+  [
+   "uvT5",
+   1e-05
+  ],
+  [
+   "posT5",
+   1e-05
+  ],
+  [
+   "extT1b",
+   0.05
+  ],
+  [
+   "extT3b",
+   0.05
+  ],
+  [
+   "extT3c",
+   0.05
+  ]
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.9,
+   "mad": 12,
+   "cover": 0.9
+  }
+ },
+ "gaps": [
+  "the trimmed surface is compared by the area and the bounding box of the triangles that are kept (the two engines cut the grid into different triangles at the contour, so triangle corners are not compared); the picture is compared by silhouette and mean colour",
+  "a contour that crosses itself, or two contours that cross each other, is cut by parity in both engines but the bridge was only tested with contours that do not cross",
+  "the new corners take position, normal and texture coordinate from the grid triangle they fall in, as X_ITE does, so the cut edge is a polyline of the contour lying on the grid's flat triangles"
+ ],
+ "scope": [
+  "the contour is the tessellation of its curves (NurbsCurve2D at its own tessellation, ContourPolyline2D as written), scaled by the knot range; the kept part is where an odd number of contours contain the point, which makes a contour inside another a hole whichever way it runs (the standard asks for opposite directions)"
+ ]
+}

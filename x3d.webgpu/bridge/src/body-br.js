@@ -174,26 +174,41 @@
   const pointsSpec = (g) => { const s = R.bridge.specs.get(g.type); return s && s.points ? s : null; };
   const _mats = Body.prototype.materialsFor;
   Body.prototype.materialsFor = function (shape, g, app) {
-    if (!pointsSpec(g)) return _mats.call(this, shape, g, app);
-    const mat = app && app.f.material; return [{ kind: 'points', mat, deps: [g, mat].filter(Boolean) }];
+    const pp = g.type === 'PointSet' && app && app.f.pointProperties;       // a PointSet with PointProperties is drawn here, sized by them; a plain PointSet is left to the body that draws it
+    if (!pointsSpec(g) && !pp) return _mats.call(this, shape, g, app);
+    const mat = app && app.f.material; return [{ kind: 'points', mat, pp: pp || null, deps: [g, mat, pp].filter(Boolean) }];
   };
+  // a PointSet drawn here bakes its points, colours and sizes into the mesh, so a change of its Coordinate, Color, PointProperties or Material builds it again
+  const _gcp = Body.prototype.geometryChanged;
+  Body.prototype.geometryChanged = function (n) { _gcp.call(this, n); for (const x of this.world.nodes) if (x.type === 'PointSet' && (x.f.coord === n || x.f.color === n)) this.regeo(x); };
+  Body.prototype.regeoPointSets = function (n) {
+    for (const x of this.world.nodes) if (x.type === 'Shape' && x.f.geometry && x.f.geometry.type === 'PointSet' && x.f.appearance && (x.f.appearance.f.pointProperties === n || x.f.appearance.f.material === n)) this.regeo(x.f.geometry);
+  };
+  const _chp = Body.prototype.changed;
+  Body.prototype.changed = function (node, field) { _chp.call(this, node, field); if (node.type === 'Material' || node.type === 'PointProperties') this.regeoPointSets(node); };
   const _make = Body.prototype.makeMesh;
   Body.prototype.makeMesh = function (shape, g, spec, pass) {
-    const s = pointsSpec(g); if (!s) return _make.call(this, shape, g, spec, pass);
+    const s = pointsSpec(g) || (g.type === 'PointSet' && spec.kind === 'points' ? { points: (x) => { const c = x.f.coord && BR.geo.coordOf(x.f.coord); return c ? c.f.point : []; } } : null); if (!s) return _make.call(this, shape, g, spec, pass);
     const P = s.points(g), n = P.length / 3, mesh = new BABYLON.Mesh((shape.def || 'points') + '-pts', this.scene), vd = new BABYLON.VertexData();
+    if (!n) return mesh;                                             // a PointSet with no coordinates draws nothing
+    // a Color (or ColorRGBA) of the PointSet replaces the emissive colour, one colour per point (19775-1 12.4.2); with none the Material's emissive colour tints every point
+    const cn = g.f.color, cv = cn && cn.f.color ? Array.from(cn.f.color) : null, cF = cv && cv.length && typeof cv[0] === 'object' ? cv.flat() : cv, cw = cn && cn.type === 'ColorRGBA' ? 4 : 3, hasCol = !!cF && cF.length >= n * cw, col = new Float32Array(n * 16).fill(1);
+    if (hasCol) for (let i = 0; i < n; i++) for (let k = 0; k < 4; k++) col.set([cF[i * cw], cF[i * cw + 1], cF[i * cw + 2], cw === 4 ? cF[i * cw + 3] : 1], (i * 4 + k) * 4);
     // one camera-facing quad per point (WebGPU has no point size): 4 corners that share the point's position and differ in uv (+-1), sized in pixels in the vertex shader like the line ribbons
     const pos = new Float32Array(n * 12), uv = new Float32Array(n * 8), idx = new Uint32Array(n * 6);
     for (let i = 0; i < n; i++) for (let k = 0; k < 4; k++) {
       const o = i * 4 + k; pos.set([P[i * 3], P[i * 3 + 1], P[i * 3 + 2]], o * 3); uv[o * 2] = k & 1 ? 1 : -1; uv[o * 2 + 1] = k & 2 ? 1 : -1;
     }
     for (let i = 0; i < n; i++) idx.set([i * 4, i * 4 + 1, i * 4 + 3, i * 4, i * 4 + 3, i * 4 + 2], i * 6);
-    vd.positions = pos; vd.indices = idx; vd.uvs = uv; vd.applyToMesh(mesh, false);
+    vd.positions = pos; vd.indices = idx; vd.uvs = uv; vd.colors = col; vd.applyToMesh(mesh, false);
     BABYLON.ShaderStore.ShadersStoreWGSL['ptquadVertexShader'] = PT_VS; BABYLON.ShaderStore.ShadersStoreWGSL['ptquadFragmentShader'] = PT_FS;
     const m = new BABYLON.ShaderMaterial('pts-' + shape.id, this.scene, { vertex: 'ptquad', fragment: 'ptquad' },
-      { attributes: ['position', 'uv'], uniforms: ['worldViewProjection', 'viewport', 'widthPx', 'tint', 'alpha'], shaderLanguage: BABYLON.ShaderLanguage.WGSL, needAlphaBlending: true });
-    const c = spec.mat ? (spec.mat.f.emissiveColor || [1, 1, 1]) : [1, 1, 1];
+      { attributes: ['position', 'uv', 'color'], uniforms: ['worldViewProjection', 'worldView', 'viewport', 'widthPx', 'tint', 'alpha', 'pp', 'att', 'lw'], shaderLanguage: BABYLON.ShaderLanguage.WGSL, needAlphaBlending: true });
+    const c = hasCol ? [1, 1, 1] : spec.mat ? (spec.mat.f.emissiveColor || [1, 1, 1]) : [1, 1, 1];
     m.setVector3('tint', new BABYLON.Vector3(c[0], c[1], c[2])); m.setFloat('alpha', spec.mat ? 1 - spec.mat.f.transparency : 1); m.setVector2('viewport', new BABYLON.Vector2(320, 240));
-    m.alphaMode = BABYLON.Engine.ALPHA_COMBINE; m.backFaceCulling = false; m.disableDepthWrite = true; m._lw = R.bridge.pointSize || 2; m.setFloat('widthPx', m._lw);
+    m.alphaMode = BABYLON.Engine.ALPHA_COMBINE; m.backFaceCulling = false; m.disableDepthWrite = true; m._lw = R.bridge.pointSize || 2; m.setFloat('widthPx', m._lw); m.setFloat('lw', m._lw);
+    const pp = spec.pp, pf = pp ? pp.f : null, at = pf ? pf.attenuation || [1, 0, 0] : [1, 0, 0];
+    m.setVector4('pp', pf ? new BABYLON.Vector4(pf.pointSizeScaleFactor, pf.pointSizeMinValue, pf.pointSizeMaxValue, 1) : new BABYLON.Vector4(1, 1, 1, 0)); m.setVector3('att', new BABYLON.Vector3(at[0], at[1], at[2]));
     mesh.material = m; mesh.alphaIndex = 5; (this.ribbons ||= []).push(m);           // the frame loop sets viewport and widthPx of every ribbon material (widthPx = _lw times the pixel ratio)
     return mesh;
   };
@@ -201,28 +216,40 @@
 const PT_VS = `
 attribute position: vec3f;
 attribute uv: vec2f;
+attribute color: vec4f;
 uniform worldViewProjection: mat4x4f;
 uniform viewport: vec2f;
 uniform widthPx: f32;
+uniform worldView: mat4x4f;
+uniform pp: vec4f;
+uniform att: vec3f;
+uniform lw: f32;
 varying vUV: vec2f;
 varying vD: f32;
+varying vC: vec4f;
 @vertex
 fn main(input: VertexInputs) -> FragmentInputs {
   let c = uniforms.worldViewProjection * vec4f(vertexInputs.position, 1.0);
-  let reach = uniforms.widthPx * 0.5 + 1.0;
+  // PointProperties (pp.w > 0.5): size = clamp(scale / (a + b d + c d^2), min, max) pixels, d the distance from the eye (19775-1 12.4.3); otherwise the plain point width
+  let d = length((uniforms.worldView * vec4f(vertexInputs.position, 1.0)).xyz);
+  let sz = clamp(uniforms.pp.x / max(1e-6, uniforms.att.x + uniforms.att.y * d + uniforms.att.z * d * d), uniforms.pp.y, uniforms.pp.z) * uniforms.widthPx / max(uniforms.lw, 1e-6);
+  let w = select(uniforms.widthPx, sz, uniforms.pp.w > 0.5);
+  let reach = w * 0.5 + 1.0;
   vertexOutputs.position = vec4f(c.xy + vertexInputs.uv * reach * 2.0 / uniforms.viewport * c.w, c.z, c.w);
   vertexOutputs.vUV = vertexInputs.uv * reach;
-  vertexOutputs.vD = uniforms.widthPx * 0.5;
+  vertexOutputs.vD = w * 0.5;
+  vertexOutputs.vC = vertexInputs.color;
 }`;
 const PT_FS = `
 uniform tint: vec3f;
 uniform alpha: f32;
 varying vUV: vec2f;
 varying vD: f32;
+varying vC: vec4f;
 @fragment
 fn main(input: FragmentInputs) -> FragmentOutputs {
   let cover = clamp(fragmentInputs.vD + 0.5 - length(fragmentInputs.vUV), 0.0, 1.0);
-  fragmentOutputs.color = vec4f(uniforms.tint, uniforms.alpha * cover);
+  fragmentOutputs.color = vec4f(uniforms.tint * fragmentInputs.vC.rgb, uniforms.alpha * fragmentInputs.vC.a * cover);
 }`;
 
 /* TextureCoordinateGenerator (19775-1 18.4.7): coordinates made from the geometry. The object-space modes (COORD, SPHERE-LOCAL, SPHERE-REFLECT-LOCAL) are computed once when the geometry is built. The
@@ -320,19 +347,47 @@ R.bridge.tcg = {
     const imgs = [], ctx = dt.getContext();
     const app = this.world.nodes.find((x) => x.type === 'Appearance' && x.f.texture === node), tt = app && app.f.textureTransform;
     const stageTT = (i) => !tt ? null : tt.type === 'MultiTextureTransform' ? (tt.f.textureTransform || [])[i] || null : tt;
+    // MultiTextureCoordinate: stage i reads texture channel i. The textures are combined once, in the first channel's coordinates, so channel i is carried as the affine map that takes channel 0 to
+    // channel i (a least-squares fit over the vertices; exact for a quad or any planar mapping, the nearest affine map otherwise, with a note)
+    const flat = (P) => { const a = Array.from(P || []); return a.length && typeof a[0] === 'object' ? a.flat() : a; };
+    const solve3 = (N, r) => { const d = (a) => a[0] * (a[4] * a[8] - a[5] * a[7]) - a[1] * (a[3] * a[8] - a[5] * a[6]) + a[2] * (a[3] * a[7] - a[4] * a[6]), D = d(N); if (Math.abs(D) < 1e-9) return null;
+      return [0, 1, 2].map((c) => { const M = N.slice(); for (let k = 0; k < 3; k++) M[k * 3 + c] = r[k]; return d(M) / D; }); };
+    const channelMap = (i) => {
+      const shp = body.world.nodes.find((x) => x.type === 'Shape' && x.f.appearance === app), tc = shp && shp.f.geometry && shp.f.geometry.f.texCoord;
+      if (!tc || tc.type !== 'MultiTextureCoordinate') return null;
+      const kids = tc.f.texCoord || [], k0 = kids[0], ki = kids[i]; if (!k0 || !ki || k0 === ki) return null;
+      const P0 = flat(k0.f.point), PK = flat(ki.f.point), n = Math.min(P0.length, PK.length) >> 1; if (n < 3) return null;
+      const N = [0, 0, 0, 0, 0, 0, 0, 0, 0], rx = [0, 0, 0], ry = [0, 0, 0];
+      for (let j = 0; j < n; j++) { const x = P0[j * 2], y = P0[j * 2 + 1], w = [x, y, 1];
+        for (let a = 0; a < 3; a++) { for (let b = 0; b < 3; b++) N[a * 3 + b] += w[a] * w[b]; rx[a] += w[a] * PK[j * 2]; ry[a] += w[a] * PK[j * 2 + 1]; } }
+      const sx = solve3(N, rx), sy = solve3(N, ry); if (!sx || !sy) return null;
+      const m = [sx[0], sy[0], sx[1], sy[1], sx[2], sy[2]]; let worst = 0;
+      for (let j = 0; j < n; j++) { const x = P0[j * 2], y = P0[j * 2 + 1]; worst = Math.max(worst, Math.abs(m[0] * x + m[2] * y + m[4] - PK[j * 2]), Math.abs(m[1] * x + m[3] * y + m[5] - PK[j * 2 + 1])); }
+      if (worst > 1e-3 && !body._mtcNote) { body._mtcNote = 1; body.note('MultiTextureCoordinate channel ' + i + ' is not an affine map of channel 0: drawn with the nearest affine map'); }
+      return m;
+    };
+    // a PixelTexture stage becomes a small canvas (first row = bottom row), drawn with hard texels like any small picture
+    const pixelImage = (t) => { const px = BR.tex3 && BR.tex3.decode(t); if (!px) return null; const cv = document.createElement('canvas'); cv.width = px.w; cv.height = px.h;
+      const img = new ImageData(px.w, px.h); for (let y = 0; y < px.h; y++) img.data.set(px.data.subarray((px.h - 1 - y) * px.w * 4, (px.h - y) * px.w * 4), y * px.w * 4);
+      cv.getContext('2d').putImageData(img, 0, 0); cv.complete = true; cv.naturalWidth = px.w; cv.naturalHeight = px.h; return cv; };
     const OPS = { REPLACE: 'source-over', MODULATE: 'multiply', MODULATE2X: 'multiply', MODULATE4X: 'multiply', ADD: 'lighter' };
     const P = [SZ, 0, 0, -SZ, 0, SZ];                                   // uv -> canvas pixels (v up)
     dt.redraw = () => {
       ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#fff'; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillRect(0, 0, SZ, SZ);
       imgs.forEach((im, i) => {
-        if (!im.complete || !im.naturalWidth) return;
+        if (!im || !im.complete || !im.naturalWidth) return;
         const mode = String((node.f.mode || [])[i] || 'MODULATE').toUpperCase(), op = OPS[mode];
         if (!op && i) body.note('MultiTexture mode ' + mode + ' drawn as MODULATE');
         ctx.globalCompositeOperation = i === 0 ? 'source-over' : op || 'multiply';
         ctx.imageSmoothingEnabled = im.naturalWidth >= SZ && im.naturalHeight >= SZ;   // a small image is magnified with hard texels, as X_ITE 16.6.0 does (a 2 x 1 image is two flat halves)
-        const t = stageTT(i);
-        if (t) {                                                        // canvas(px) = image(Q px) with Q = P M P^-1; the image is placed by Q^-1 and tiled
-          const Q = mul(mul(P, ttMatrix(t)), inv(P)), D = inv(Q), pat = ctx.createPattern(im, 'repeat');
+        const t = stageTT(i), ch = i ? channelMap(i) : null;
+        if (t || ch) {                                                  // canvas(px) = image(Q px) with Q = P M P^-1; the image is placed by Q^-1 and tiled
+          const M = mul(t ? ttMatrix(t) : [1, 0, 0, 1, 0, 0], ch || [1, 0, 0, 1, 0, 0]), Q = mul(mul(P, M), inv(P)), D = inv(Q);
+          if (!D.every(Number.isFinite)) {                              // every vertex reads one texel (a collapsed channel): the whole stage is that texel, as X_ITE samples it
+            const tx = M[4] - Math.floor(M[4]), ty = M[5] - Math.floor(M[5]), c1 = document.createElement('canvas'); c1.width = im.naturalWidth; c1.height = im.naturalHeight; const x1 = c1.getContext('2d'); x1.drawImage(im, 0, 0);
+            const px = x1.getImageData(Math.min(c1.width - 1, Math.floor(tx * c1.width)), Math.min(c1.height - 1, Math.floor((1 - ty) * c1.height)), 1, 1).data; ctx.fillStyle = `rgba(${px[0]},${px[1]},${px[2]},${px[3] / 255})`; ctx.fillRect(0, 0, SZ, SZ); return;
+          }
+          const pat = ctx.createPattern(im, 'repeat');
           pat.setTransform(new DOMMatrix([D[0] * SZ / im.naturalWidth, D[1] * SZ / im.naturalWidth, D[2] * SZ / im.naturalHeight, D[3] * SZ / im.naturalHeight, D[4], D[5]]));
           ctx.fillStyle = pat; ctx.fillRect(0, 0, SZ, SZ);
         } else ctx.drawImage(im, 0, 0, SZ, SZ);
@@ -342,7 +397,8 @@ R.bridge.tcg = {
       ctx.globalCompositeOperation = 'source-over'; dt.update();
     };
     for (const t of node.f.texture || []) {
-      const u = t.f.url && t.f.url[0]; if (!u) continue;
+      if (t.type === 'PixelTexture') { imgs.push(pixelImage(t)); continue; }                 // a stage that cannot be drawn keeps its place (null), so the modes, transforms and channels of the later stages still line up
+      const u = t.f.url && t.f.url[0]; if (!u) { imgs.push(null); continue; }
       const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = dt.redraw; im.src = this.resolve(u, this.baseUrl); imgs.push(im);
     }
     dt.redraw(); this.texCache.set(node.id, dt); return dt;
@@ -975,4 +1031,21 @@ R.bridge.winding = (mesh) => {   // +1 when the first triangles run counter-cloc
     if (GV(first) && !first.f.isBound) { this.started = false; this.bindViewpoint(first, true); }
     return r;
   };
+}
+
+/* MultiTextureCoordinate: a geometry's coordinates for its texture channels. The picture is made in the first channel's coordinates (a MultiTexture is combined on one canvas, the other channels
+   are carried as affine maps in its combine step), so the vertex data reads channel 0. Outermost geometryData wrapper: everything below sees a plain TextureCoordinate. */
+{
+  const _d = Body.prototype.geometryData;
+  Body.prototype.geometryData = function (g) {
+    const T = g.f && g.f.texCoord;
+    if (T && T.type === 'MultiTextureCoordinate') return _d.call(this, Object.create(g, { f: { value: Object.assign({}, g.f, { texCoord: (T.f.texCoord || [])[0] || null }) } }));
+    return _d.call(this, g);
+  };
+}
+
+/* a Coordinate that is the control point list of a NurbsCurve: moving a point draws the curve again, and every surface that is swung or swept along (or cut by) that curve */
+{
+  const _gcn = Body.prototype.geometryChanged;
+  Body.prototype.geometryChanged = function (n) { _gcn.call(this, n); if (n.type === 'Coordinate') for (const c of this.world.nodes) if (c.type === 'NurbsCurve' && c.f.controlPoint === n) { this.regeo(c); BR.nurbs.redrawUsers(this, c); } };
 }

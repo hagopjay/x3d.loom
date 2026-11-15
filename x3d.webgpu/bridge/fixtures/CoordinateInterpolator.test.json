@@ -1,0 +1,201 @@
+{
+ "node": "CoordinateInterpolator",
+ "mode": "events",
+ "note": "three key frames of two points each: before the first key, between keys, on a key, after the last; an empty interpolator sends nothing",
+ "gaps": [],
+ "steps": [
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    -0.5
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     0,
+     0,
+     0,
+     2,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    0
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     0,
+     0,
+     0,
+     2,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    0.25
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     0.5,
+     0.5,
+     0.0,
+     2.5,
+     0.5,
+     0.0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     1,
+     1,
+     0,
+     3,
+     1,
+     0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    0.75
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     1.5,
+     2.5,
+     0.0,
+     3.5,
+     2.5,
+     0.0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    1
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     2,
+     4,
+     0,
+     4,
+     4,
+     0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_fraction",
+    2
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "value_changed",
+    [
+     2,
+     4,
+     0,
+     4,
+     4,
+     0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N3",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "event": [
+    "N3",
+    "value_changed",
+    [
+     2,
+     0,
+     0,
+     4,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N2",
+    "set_fraction",
+    0.5
+   ]
+  },
+  {
+   "noevent": [
+    "N2",
+    "value_changed"
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('N').keyValue).flat().length===18",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('N').key).length===3",
+    true
+   ]
+  }
+ ]
+}
