@@ -1,0 +1,45 @@
+# x3d.loom/.github/workflows/gltf-lane.yml
+# The glTF tooling lane (x3d.gltf): optimiser profiles, the X3D identity gate, the Khronos validator wrapper, and the browser bundle's byte parity with the Node CLI.
+# Scope: structure, identity, geometry, materials, animation and the KTX2 container. It renders nothing (the render oracle in x3d.gltf/render is run by hand and its
+# receipts are committed); it measures no GPU time.
+name: gltf-lane
+
+on:
+  push:
+    paths: ['x3d.gltf/**', '.github/workflows/gltf-lane.yml']
+  pull_request:
+    paths: ['x3d.gltf/**', '.github/workflows/gltf-lane.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gltf-lane-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+    working-directory: x3d.gltf
+
+jobs:
+  lane:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: x3d.gltf/package-lock.json
+      - run: npm ci
+      - name: Chromium for the browser-parity test (the test skips, not fails, if it cannot launch)
+        run: npx --yes playwright@1.63.0 install --with-deps chromium && npm install --no-save playwright@1.63.0
+      - name: Lane tests (fixtures built on the fly, no Blender)
+        run: npm test
+      - name: Bundle builds and stays small
+        run: |
+          node tools/build-web.mjs --out /tmp/forge
+          test "$(stat -c %s /tmp/forge/forge.bundle.js)" -lt 600000
