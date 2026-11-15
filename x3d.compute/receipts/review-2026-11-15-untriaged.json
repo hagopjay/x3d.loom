@@ -1,0 +1,374 @@
+{
+ "note": "Independent read-only review, 2026-11-15, 6 reviewers + 2 skeptics per finding (92 agents). 43 findings, 41 survived. NOT yet triaged or fixed.",
+ "survivors": [
+  {
+   "dim": "particles",
+   "severity": "misleading-claim",
+   "file": "src/ref/particles.js",
+   "line": 38,
+   "title": "Fixture sets mass, surfaceArea and lifetimeVariation, but the reader and kernel ignore them and use invented drag and restitution constants",
+   "claim": "The README says the fixtures use the field names the reader parses, and the WGSL header maps WindPhysicsModel to wind with drag. fromX3D never reads mass, surfaceArea or lifetimeVariation, and drag and restitution are hard-coded constants with no X3D source. The fixture gives these three fields values that are not neutral.",
+   "fix": "Either implement the ISO terms (a = F/m, wind force from pressure and surfaceArea, normalised wind direction, per-particle lifetime from lifetimeVariation), or state in README, the WGSL header and fromX3D that mass, surfaceArea and lifetimeVariation are deliberately ignored and that drag and restitution are harness constants. Better still, make the fixture's neutral-looking values (mass, surfaceArea, lifetimeVariation) consistent with what the kernel does, so another X3D engine renders the same motion."
+  },
+  {
+   "dim": "particles",
+   "severity": "misleading-claim",
+   "file": "src/kernels/particles.wgsl",
+   "line": 29,
+   "title": "ConeEmitter variation is applied one-sided, so emitted mean speed is 3.5 for speed=4",
+   "claim": "`sp = P.speed * (1.0 - P.variation * u)` draws speeds from [speed*(1-variation), speed]. The ISO text defines variation as a percentage of the speed field. The natural reading, and as I recall the X_ITE reference implementation, is +/- that percentage around speed, with speed as the nominal value. The ISO wording is not explicit about sidedness, so this is a defensible reading, not a certainty.",
+   "fix": "Use sp = speed * (1 + variation * (2u - 1)) in both the kernel and the ref, or document the one-sided choice in the header comment and README."
+  },
+  {
+   "dim": "particles",
+   "severity": "robustness",
+   "file": "bench/page.js",
+   "line": 33,
+   "title": "Pass/fail of the 120-step gate depends on GPU trig accuracy through bounce-timing flips, and a WGSL-conformant device can fail it",
+   "claim": "The kernel calls `cos(P.cone)` on the GPU at every respawn (wgsl line 26). The ref uses the f64 `Math.cos` rounded to f32. WGSL only guarantees an absolute error of at most 2^-11 (4.9e-4) for sin and cos on [-pi, pi]. A systematic error in cos(cone) changes every particle's vy. That shifts the step at which the floor reflection fires, and a one-step shift in bounce timing moves the final state by 0.2 to 5.0. The gate allows at most 58 bad elements and 21 bad particles.",
+   "fix": "Compute cos(cone) in f64 on the CPU and pass it (rounded to f32) in the uniform, so the kernel and ref share the same z base. Only phi's sin and cos then remain, and they affect x and z only, with no discontinuity. Alternatively, compare after fewer steps, or treat bounce and respawn flips as an expected-discontinuity class instead of a fixed particle budget."
+  },
+  {
+   "dim": "particles",
+   "severity": "vacuous-check",
+   "file": "bench/page.js",
+   "line": 33,
+   "title": "The gate cannot see bugs in zero-valued fields or in a handful of particles, and nothing checks independent invariants",
+   "claim": "The fixture gives gx, gz, wy, ex and ez as exactly 0. Any swap or omission among those fields leaves the output unchanged: `vec3(P.gz,P.gy,P.gx)`, `S[b]=P.ez`, or dropping wy. I checked that pack() currently matches the WGSL struct order, so there is no bug today. The gate would not catch a future one. The gate also tolerates up to 58 bad elements. A kernel that never updates the last particle gives bad=7, badP=1 and passes, so a bug confined to the last ~8 particles passes. n=4096 is a multiple of 64, so the `i >= P.n` guard never fires in the correctness run, and the bench sizes are all multiples of 64 as well.",
+   "fix": "Add a second parameter set to the correctness run with every uniform field non-zero (gx, gz, wy, ex, ez), and an n that is not a multiple of 64 (for example 4093). Add invariant checks on the GPU readback: angle to +Y at most cone, speed range, pos.y at least floorY. Shrink the allowance to the observed count, which is 0."
+  },
+  {
+   "dim": "particles",
+   "severity": "robustness",
+   "file": "src/ref/particles.js",
+   "line": 35,
+   "title": "fromX3D defaults and wind handling differ from ISO, so other fixtures give wrong physics",
+   "claim": "Several defaults differ from the ISO field defaults, and wind is handled so that a wind of zero still acts as drag. The fixture sets all of its fields explicitly, so it does not trigger any of these.",
+   "fix": "Use the ISO defaults, scale drag by the wind speed or the surfaceArea term so a zero wind is a no-op, honour `enabled`, sum multiple physics models, and throw like the +Y cone check does when a BoundedPhysicsModel has no Box."
+  },
+  {
+   "dim": "skinning",
+   "severity": "vacuous-check",
+   "file": "/home/user/w/x3d.loom/x3d.compute/bench/page.js",
+   "line": 62,
+   "title": "Rest-pose identity gate is CPU-only and cannot fail on any forward-kinematics bug; FK has no independent check",
+   "claim": "The rest-pose identity test is meant to show that skinning at rest reproduces the rest mesh. It runs only SK.skinCPU on SK.skinMatrices(joints, {}), and the GPU kernel is never run on it. In skinMatrices, wp[i] and wr[i] are built by the same function (local) from the same inputs when pose={}. So M[i] = wp*inverse(wr) is the identity for any consistent mistake in local() or in the parent composition order. The gate therefore tests only influences() plus the blend. The joint-order claim in the ref comment (T*C*R*(-C)) has no gate behind it. Every fixture and the tube have center = 0 0 0, and the posed GPU-vs-CPU comparison feeds the same CPU-built M to both sides.",
+   "fix": "Add at least one closed-form posed check with a non-zero center, for example a joint with translation and center rotated 90 degrees about z, whose expected world position is written out by hand. Run an identity-M dispatch on the GPU as well. Rename or document rest_pose_max_err as a CPU-table check. Add one FK mutant (center sign, parent order) to the mutation script."
+  },
+  {
+   "dim": "skinning",
+   "severity": "vacuous-check",
+   "file": "/home/user/w/x3d.loom/x3d.compute/bench/page.js",
+   "line": 71,
+   "title": "Influence slots 2 and 3, top-4 truncation and weight renormalisation are never exercised; the only mutant covers slot 1 position",
+   "claim": "The README and kernel advertise 4-influence skinning. In both test meshes no vertex has more than 2 non-zero weights, so w.z and w.w are 0 everywhere. The kernel terms m2*p*w.z and m3*p*w.w, and the matching normal terms (wgsl lines 20-22), are multiplied by 0, so any bug in them passes. vertices_dropped_over_4_influences is 0, so the truncation branch in influences() never runs. Every test vertex's weights already sum to exactly 1, so the s division in influences() (renormalisation) is a no-op. Dropping it would pass. mutation-check.sh plants a single skinning mutant, 'm1 * p * w.y' to 'm1 * p * w.x', which touches only the slot-1 position term. The gate's tolerance, 1e-4*(1+|b|), is also 25 to 600 times the observed error (fixture position 4.8e-7, tube position 3.8e-6, normal 1.2e-7).",
+   "fix": "Add a vertex block with 3 to 6 influences in the tube or in a second fixture, with weights that do not sum to 1. Add mutants for the m2/m3 position and normal terms and for the renormalisation line."
+  },
+  {
+   "dim": "skinning",
+   "severity": "wrong-result",
+   "file": "/home/user/w/x3d.loom/x3d.compute/src/ref/skinning.js",
+   "line": 34,
+   "title": "Vertices with no positive joint weight collapse to the origin on both GPU and CPU, and the gate does not require unweighted == 0",
+   "claim": "influences() leaves idx/w = 0 for a vertex that no HAnimJoint lists, or that has only weights <= 0. The kernel then computes q = 0 and writes outP = (0,0,0,1) and a zero normal. skinCPU does the same, because it skips wt = 0 and leaves P = 0. The CPU and GPU agree on a wrong result. A skin vertex that no joint influences should stay at its skinCoord position (the same applies to a NaN or negative weight, which is silently dropped by 'weight > 0'). The harness only reports vertices_unweighted and never gates on it. correctness.pass in page.js line 71 ignores both unweighted and dropped.",
+   "fix": "In influences(), give an unweighted vertex idx = 0 and w = (1,0,0,0) with a per-vertex flag or an identity matrix slot (for example a spare M[nj] = I), so the vertex stays at rest. Or fail the correctness gate when unweighted > 0."
+  },
+  {
+   "dim": "skinning",
+   "severity": "vacuous-check",
+   "file": "/home/user/w/x3d.loom/x3d.compute/tools/mutation-check.sh",
+   "line": 5,
+   "title": "mutation-check.sh counts a harness error, a crash or a missing mutation target as 'caught'",
+   "claim": "The script reports a mutant as caught unless the output contains '\"skinning\": true'. stderr goes to /dev/null and the exit code is ignored. In page.js, kern() throws 'mutation target not found' when the pattern is absent from the kernel text, and runAll() turns any suite exception into {error}, which run.js prints as \"skinning\": \"ERROR\". A WGSL compile error does the same. run.js dies with exit 2 and empty stdout on any launch failure. All three cases print 'caught'. If skinning.wgsl is reformatted so 'm1 * p * w.y' no longer matches, the skinning mutant still reports 'caught'. The script also never checks that the unmutated baseline is green, so a broken baseline makes every mutant 'caught'.",
+   "fix": "Treat only '\"skinning\": false' as caught. Treat ERROR or an empty output as a script failure. Run the baseline first and require true. Print the mismatching mutation text."
+  },
+  {
+   "dim": "skinning",
+   "severity": "misleading-claim",
+   "file": "/home/user/w/x3d.loom/x3d.compute/bench/page.js",
+   "line": 76,
+   "title": "bytes_per_vertex = 160 matches neither the streamed traffic nor the matrix traffic; the comment points to a count that does not exist",
+   "claim": "The expression is 16+16+16+16+16+16 + 16*4 with the comment 'cache-resident matrices counted once below'. Nothing below counts matrices. Per vertex the kernel streams rest, restN, jidx and jw (64 B in) and outP and outN (32 B out), which is 96 B. The extra 16*4 = 64 B is not a mat4 (64 B each), not 4 matrices (256 B, from cache) and not an amortised share of the 24 matrices (about 0 B). Any bandwidth figure derived from the receipt (vertices_per_s * 160) overstates DRAM traffic by about 67 percent.",
+   "fix": "Report 96 B streamed, and give matrix reads separately if wanted (up to 256 B per vertex from L1/L2). Or drop the field."
+  },
+  {
+   "dim": "skinning",
+   "severity": "misleading-claim",
+   "file": "/home/user/w/x3d.loom/x3d.compute/README.md",
+   "line": 3,
+   "title": "README presents the skinning reference as independent and says FK is matched, but the GPU never runs FK and the blend is the same formula on the same inputs",
+   "claim": "The README says 'an independent CPU reference' and lists the skinning reference as 'forward kinematics + CPU blend'. The kernel receives M and the idx/w table from that same reference code (skinMatrices and influences), so FK and the influence table are shared inputs, not something the kernel is compared against. The remaining comparison is the same 4-term mat4*vec4 plus mat3*vec3 blend in f32 on the GPU against f64 accumulation on the CPU. Shared conventions (column-major M, normals via the upper 3x3, weighted sum then normalise, zero for unweighted) cannot be disproved by it. Compare nurbs, which is described as a different algorithm.",
+   "fix": "Reword to 'f64 CPU blend of the same linear-blend formula; FK and the influence table are shared'. Or add a genuinely independent FK check (finding 1)."
+  },
+  {
+   "dim": "skinning",
+   "severity": "robustness",
+   "file": "/home/user/w/x3d.loom/x3d.compute/src/ref/skinning.js",
+   "line": 9,
+   "title": "HAnimJoint scale and scaleOrientation (and humanoid joint-binding fields) are silently ignored by the reference",
+   "claim": "local() and fromX3D() implement only T, C and R. HAnimJoint inherits scale and scaleOrientation from the Transform pattern, and ISO 19775-1 Transform order is T*C*R*SR*S*-SR*-C. The kernel comment (wgsl line 3) describes only the normal path as wrong for non-uniform scale. In fact the reference cannot build a scaled M at all, and positions are unscaled too. A fixture with scale yields a plausible-looking but wrong M with no error, while a non-zero rest rotation throws. HAnimHumanoid jointBindingPositions/Rotations/Scales and skinBinding* (HAnim 2.0 bind-pose fields) are likewise not read, and the bind pose is assumed to be the authored joint values with zero rotation.",
+   "fix": "Throw in fromX3D when scale != 1 1 1, scaleOrientation or jointBinding* are present, as skinMatrices already does for rest rotation. Or implement them and use the inverse-transpose for normals. Document the limit in the README."
+  },
+  {
+   "dim": "volume",
+   "severity": "wrong-result",
+   "file": "fixtures/volume-mip.x3d",
+   "line": 7,
+   "title": "PixelTexture3D image header is written as `w h d comp`; the X3D layout (and the shared reader) is `comp w h d`",
+   "claim": "The fixtures (generated at tools/make-fixtures.mjs:40, parsed at src/ref/volume.js:46 as [w,h,d,comp]) put the component count last. The x3d.webgpu bridge reader (src/nodes/ImageTexture3D.js:30: c=im[0], w=im[1], h=im[2], d=im[3]) and all of that bridge's PixelTexture3D fixtures use `1 w h d`. The README says the fixtures 'use the same node and field names the reader parses', but the layout of `image` differs. The fixtures also say profile=Immersive with no <component> statements, while the bridge's volume fixtures declare VolumeRendering and Texturing3D.",
+   "fix": "Emit and parse `comp w h d` (read a=[comp,w,h,d,...] in fromX3D, write `1 ${d} ${d} ${d}` in make-fixtures). Add `<component name=\"VolumeRendering\" level=\"2\"/>` and `<component name=\"Texturing3D\" level=\"1\"/>` to the head. Run fromX3D over the bridge's cubic 1-component fixture (CartoonVolumeStyle.x3d) in the suite so the two readers cannot drift apart."
+  },
+  {
+   "dim": "volume",
+   "severity": "vacuous-check",
+   "file": "bench/page.js",
+   "line": 90,
+   "title": "Correctness suite runs one yaw (0.6, both direction components positive), so the slab min/max ordering and the zero-component path are never exercised",
+   "claim": "volume.wgsl:31-32 (and volume.js:15) take min/max of (t0,t1) per axis so that a negative direction component works, and the comment at wgsl:28 says an axis with a zero component gives +-inf that min/max absorb. base.yaw=0.6 is the only yaw ever rendered, so inv.x>0 and inv.z>0 and t0<=t1 on both axes. The ordering, the negative-direction case and the yaw=0 (1/0) case are all unexercised. The CPU reference has the same structure, so they are not independently checked either.",
+   "fix": "Run the correctness cases at several yaws, including 0, pi/2, pi and a negative angle, since the slab code branches on the sign and zero of sin/cos. Add a mutation-check entry for the slab (for example `min(t0.x, t1.x)` to `t0.x`)."
+  },
+  {
+   "dim": "volume",
+   "severity": "vacuous-check",
+   "file": "src/ref/volume.js",
+   "line": 34,
+   "title": "Test volumes are zero near every face, so sample-loop fencepost and index-clamp errors are invisible to the gate",
+   "claim": "makeVolume is a shell of radius 0.32 plus a lobe, so the outermost layer of the 8^3 fixture and the outer 4 layers of the 64^3 volume are exactly 0. The first and last samples of every ray sit in those layers, and positions clamped from outside the box land there too. Errors in the loop bounds or the clamp therefore change nothing the gate can see.",
+   "fix": "Add a case with a volume that is non-zero up to the faces (a constant plus a ramp, or a checker) and run the same comparison. A ramp along the ray axis makes first/last-sample and clamp errors change the output."
+  },
+  {
+   "dim": "volume",
+   "severity": "misleading-claim",
+   "file": "bench/page.js",
+   "line": 96,
+   "title": "Pass thresholds absorb a structural tie problem, are calibrated to one rounding behaviour, and fail a correct kernel at another size",
+   "claim": "The CPU reference is said to use 'same step positions, same f32 inputs', so the residual looks like rounding noise. In the 64^3 cases it is not noise. Every harness config except the 8^3 fixtures has steps = 1.5 x dim. For a ray that spans the whole z (or x) range, sample k sits at z=(k+0.5)/steps, which equals a voxel plane j/dim whenever 2k+1=3j. nearest-voxel floor() is then decided by sub-ulp rounding. The gate (mean<0.5 over all bytes including the empty ones, and <=0.5% of bytes off by more than 2) is calibrated to the single SwiftShader rounding.",
+   "fix": "Make step positions non-degenerate in the correctness cases (for example steps = 1.5 x dim + 1, or jitter t by an irrational offset) so the comparison measures real arithmetic error. Set the threshold from the covered pixels, not all bytes. Record a --gpu receipt before claiming the gate is portable."
+  },
+  {
+   "dim": "volume",
+   "severity": "misleading-claim",
+   "file": "src/kernels/volume.wgsl",
+   "line": 23,
+   "title": "Screen basis is left-handed: the rendered image is a horizontal mirror of a right-handed X3D camera, shared by kernel and CPU ref",
+   "claim": "The header calls this an 'orthographic camera orbiting the unit cube'. The ray origin uses right=(c,0,-s) with fwd=(s,0,c) and up=+y. fwd x up = (-c,0,s) = -right, so the screen is mirrored relative to a right-handed (X3D) camera. src/ref/volume.js:13 copies the same formulas, so the gate cannot see it.",
+   "fix": "Use right=(-c,0,s) (o.x = 0.5 - c*u*0.9 - s*2, o.z = 0.5 + s*u*0.9 - c*2), or state in the header and README that the image is mirrored. Add one asymmetric-voxel test whose expected column is derived by hand, not from the same formula."
+  },
+  {
+   "dim": "volume",
+   "severity": "misleading-claim",
+   "file": "src/kernels/volume.wgsl",
+   "line": 44,
+   "title": "'OpacityMapVolumeStyle' and 'ProjectionVolumeStyle MAX' labels do not match what the kernel draws or what the fixture can set",
+   "claim": "volume-opacity.x3d is a bare <OpacityMapVolumeStyle/> with no transferFunction. The kernel colours with (s, 0.6s, 1-s) and alpha=clamp((s-thr)*gain)*stepAlpha, and thr/gain/stepAlpha/yaw come from page.js `base`, not from the fixture. The X3D default transfer function is a grey ramp. The sibling bridge documents this as 'a 256x1 grey ramp: a voxel (r,g,b,a) becomes (r,r,r,r)' (WHY-volume-batch.md section 3), as X_ITE does. The README table entry for `OpacityMapVolumeStyle` therefore names a node whose semantics the kernel does not implement. For ProjectionVolumeStyle the kernel writes alpha=1 over the whole box silhouette, so empty rays become opaque black. In the bridge the MIP alpha follows the voxel ramp and empty rays are transparent.",
+   "fix": "Either read the transfer function (and default to the grey ramp) from the fixture, or rename the claim to 'opacity-style ray cast with a fixed ramp (not the X3D default)'. For MIP, state that alpha=1 over the box is a choice, or take alpha from the voxel as X_ITE does."
+  },
+  {
+   "dim": "volume",
+   "severity": "misleading-claim",
+   "file": "bench/page.js",
+   "line": 100,
+   "title": "Bench `rays_per_s` and `samples_per_s_upper` count pixels that never march, and the note blames only early-out",
+   "claim": "rays_per_s = w*w/ms treats every pixel as a ray. The note says samples_per_s_upper 'counts every step, early-out at alpha 0.99 skips some'. The dominant skip is rays that miss the box or the y-slab, and MIP has no early-out at all.",
+   "fix": "Count marched pixels and executed steps (an atomic counter in a debug build, or compute them with the CPU ref) and report rays_per_s over marched rays. Say in the note that misses and the y-slab skip most pixels, and that early-out applies to opacity only."
+  },
+  {
+   "dim": "volume",
+   "severity": "robustness",
+   "file": "src/ref/volume.js",
+   "line": 44,
+   "title": "volume.js fromX3D rejects valid input and silently accepts unsupported input",
+   "claim": "fromX3D throws 'type other than MAX is a gap' when a <ProjectionVolumeStyle/> has no `type` attribute, although the X3D default is MAX. It does not guard the other fields and nodes it ignores: any other style node (ToneMapped, Isosurface, Composed and so on) becomes style 0 (opacity), and `enabled`, `dimensions`, `transferFunction` and `intensityThreshold` are not read. Voxel values above 255 wrap modulo 256 in Uint8Array.from.",
+   "fix": "Treat a missing `type` as MAX. Throw on any renderStyle that is not OpacityMapVolumeStyle or ProjectionVolumeStyle, on enabled=false, on a transferFunction child, on intensityThreshold>0 and on dimensions other than 1 1 1. Validate voxel values to 0..255."
+  },
+  {
+   "dim": "volume",
+   "severity": "robustness",
+   "file": "src/kernels/volume.wgsl",
+   "line": 28,
+   "title": "The yaw=0 'inf' handling relies on f32 division by zero, which WGSL does not guarantee, and is never run",
+   "claim": "The comment says an axis with a zero component gives +-inf, which min/max absorb. WGSL only specifies f32 division accuracy for |y| in [2^-126, 2^126], and implementations may treat infinities as unavailable. `1.0 / fwd.x` with fwd.x = sin(0) = 0 therefore documents driver behaviour, not language behaviour. The harness only renders yaw=0.6, so the claim is never checked on the GPU.",
+   "fix": "Branch explicitly: `if (abs(fwd.x) < 1e-6) { slab by range check on o.x } else { division }` (likewise z), or clamp the inverse to a large finite value. Add a yaw=0 correctness case."
+  },
+  {
+   "dim": "nurbs",
+   "severity": "vacuous-check",
+   "file": "fixtures/nurbs-patches.x3d",
+   "line": 7,
+   "title": "The 'custom knots' fixture contains no usable custom knots; no fixture has a non-default knot vector",
+   "claim": "P_knots (meta line 3: 'custom knots') gives vKnot=\"0 0 0.5 1 1\" for vDimension=4, vOrder=2. That is 5 values where 6 are needed. knotsFor() discards the vector and substitutes the pinned uniform one. The uKnot \"0 0 0 0 1 1 1 1\" is exactly the generated default for dim 4 / order 4. The same holds for the other four fixtures: P_quarter_cylinder's knots (\"0 0 0 1 1 1\", \"0 0 1 1\") equal the defaults, and the rest give no knots. So no case in the gate uses a knot vector that differs from the generated one.",
+   "fix": "Give vKnot 6 values (for example \"0 0 0.3 0.7 1 1\"; avoid values the k/8 grid lands on exactly, because degree 1 has a normal jump there). Add a patch with non-uniform interior knots at order 4, a patch with interior multiplicity, and an unclamped one. Make the harness assert that ku/kv equal the fixture's given vector whenever one is given, so that a silently replaced vector turns the suite red."
+  },
+  {
+   "dim": "nurbs",
+   "severity": "wrong-result",
+   "file": "src/ref/nurbs.js",
+   "line": 5,
+   "title": "knotsFor() throws a TypeError on decreasing or over-repeated knot vectors instead of falling back to the uniform vector",
+   "claim": "The header (lines 1-2) and the README say a vector that is the wrong length, decreases, or repeats too much is replaced by the pinned uniform one, the bridge rule. The code sets k = null inside the loops (lines 5 and 6) without leaving them. The next iteration then reads k[i-1] on null. So any decrease or over-repeat that is not in the last position throws. fromX3D() does not catch it, so the whole nurbs suite ends as ERROR and the run exits non-zero. Only the wrong-length path and a violation at the very last index fall back.",
+   "fix": "Use 'for (...) if (k && k[i-1] > k[i]) k = null;' and 'if (k) ... break' in the second loop, or return null at once. Add a fixture with a decreasing vector and one with order+1 repeated knots, and assert the fallback."
+  },
+  {
+   "dim": "nurbs",
+   "severity": "vacuous-check",
+   "file": "src/kernels/nurbs.wgsl",
+   "line": 45,
+   "title": "A wrong derivative scale (the factor p in eq. 2.7) cannot be detected: only normalize(cross(Su,Sv)) is ever output or compared",
+   "claim": "The kernel header advertises 'analytic first derivatives', but nothing observable depends on their magnitude. A constant factor on dNu scales Au and Wu together, so Su = (Au - S*Wu)/W scales uniformly. The same holds in v. cross() then scales by a constant and the normalisation removes it. outN.w is 0 and no tangent or length is written. The ref has the same blind spot, so the comparison cannot see it. The mutation check plants only 'a - b' -> 'a + b' (tools/mutation-check.sh line 9), which is not a uniform scale, so the 'caught' receipt says nothing about scale.",
+   "fix": "Output the unnormalised length |Su x Sv| (in outN.w, say) or Su/Sv, and compare it with the reference. Or add a finite-difference check of the GPU positions against the analytic derivative. Add the 'drop f32(p)' mutant to mutation-check.sh."
+  },
+  {
+   "dim": "nurbs",
+   "severity": "vacuous-check",
+   "file": "src/kernels/nurbs.wgsl",
+   "line": 73,
+   "title": "The rational quotient rule in v (Wv term) is never exercised: the only rational fixture has weights that vary along u only",
+   "claim": "P_quarter_cylinder weights are '1 .7071 1 1 .7071 1' for a 3x2 net, i.e. w(i,j) = w(i). Then Wv = sum w_i N_i * sum dNv_b = 0 (the derivatives of a partition of unity sum to 0). The term '- S * Wv' in Sv therefore contributes nothing in any of the five cases, and 'Sv = Av / W' passes. The bench patch (8x8, weights 1 + 0.3 sin(i+j)) is rational in both directions, but bench() never compares its output.",
+   "fix": "Add a rational fixture whose weights vary along v, and preferably along both axes (e.g. a sphere/torus patch or random weights on a 4x4 net), and assert the test patch has Wu and Wv nonzero. Add the 'drop Wv' mutant to the mutation check."
+  },
+  {
+   "dim": "nurbs",
+   "severity": "wrong-result",
+   "file": "src/kernels/nurbs.wgsl",
+   "line": 14,
+   "title": "span() returns an empty span at u = last knot when knots[dim-1] == knots[dim], giving NaN for the last row/column",
+   "claim": "The comment (line 13) says the clamp makes 'u = last knot land in the last non-empty span', but the code returns dim - 1 unconditionally. For a legal unclamped vector with a repeated knot at the domain end, span [dim-1, dim) has zero width. basis() then divides 0/0 (left[1] = right[1] = 0) and the whole last u (or v) line is NaN. knotsFor accepts such vectors (repeat count <= order). The x3d.webgpu bridge's span() has the needed 'while (s > p && U[s] >= U[s+1]) s--'. The CPU ref evaluates at u1 - 1e-9 and stays finite, so no fixture touches this and the suite would only catch it if one did.",
+   "fix": "In span(): on u >= knots[k0+dim], start at s = dim-1 and decrement while s > p && knots[k0+s] >= knots[k0+s+1]. Add an unclamped fixture with a repeated knot at the domain end."
+  },
+  {
+   "dim": "nurbs",
+   "severity": "robustness",
+   "file": "src/kernels/nurbs.wgsl",
+   "line": 77,
+   "title": "Degenerate normals: a pole gives a zero normal on the GPU, the ref gives a limit normal, and the 1e-12 threshold is absolute",
+   "claim": "The kernel writes (select(vec3(0), n/l, l > 1e-12), 0) with l = |Su x Sv| in f32. At a collapsed edge or pole (cone, sphere cap, a row of identical control points) Su is zero or pure rounding noise. The result is then either a zero normal, which gives black or NaN lighting downstream with no fallback (the bridge falls back to a face-normal average), or noise normalised to unit length when the residual is above 1e-12 (likely with FMA). The ref comment (line 17) says the u1 - 1e-9 offset is 'like the shader's clamped span', but at a pole the ref's Su is ~1e-9, above the threshold, so it normalises a legitimate limit direction. The two disagree exactly at degenerate vertices. The threshold is also a fixed 1e-12 on |Su x Sv| rather than relative to |Su||Sv|, and the ref shares it.",
+   "fix": "Use a relative test (l > 1e-6 * |Su| * |Sv|) and a pole fallback in the kernel (re-evaluate from a nudged parameter, as the ref effectively does). Make the ref use the same rule rather than the 1e-9 offset. Add a cone or sphere-cap fixture. Reject weights <= 0 in fromX3D."
+  },
+  {
+   "dim": "nurbs",
+   "severity": "vacuous-check",
+   "file": "tools/mutation-check.sh",
+   "line": 5,
+   "title": "mutation-check.sh reports 'caught' when the run crashed, errored or the mutation target text is stale",
+   "claim": "The helper treats a mutant as caught unless the output contains '\"<suite>\": true'. A suite that ends as ERROR (page.js kern() throws 'mutation target not found', shader compile failure) prints '\"nurbs\": \"ERROR\"', which does not match, so it is 'caught'. If run.js dies before printing (playwright or Chromium missing, exit 2, stderr sent to /dev/null), the output is empty and every mutant is 'caught' with exit 0. The nurbs line has exactly one mutant.",
+   "fix": "Require '\"<suite>\": false' (strict) and fail on ERROR or empty output; check that the mutation was applied (the page throws, so run.js should exit with a distinct code). Add more nurbs mutants (drop f32(p), drop Wv, domain from knots[0]), which as shown above currently survive."
+  },
+  {
+   "dim": "nurbs",
+   "severity": "nit",
+   "file": "src/kernels/nurbs.wgsl",
+   "line": 4,
+   "title": "MAXO is declared but unused, and the order limit is enforced only in fromX3D; the tessellation clause is cited wrongly",
+   "claim": "'MAXO: u32 = 6u' is never referenced; the arrays are hard-coded array<f32, 6> in basis(), dbasis() and tess(), so changing MAXO does nothing. The header says 'the CPU side checks that', but only fromX3D checks it (ou > 6); pack() and bench() accept any order, and order > 6 would index past the function arrays in WGSL (clamped, silently wrong). The comment at ref/nurbs.js line 31 cites 19775-1 '27.3.1' for the tessellation rule; as far as I could read it, the rule is in 27.3.2 (X3DNurbsSurfaceGeometryNode), and the bridge copies the same citation.",
+   "fix": "Delete the constant or use it in pack() as an assert, and correct the clause number."
+  },
+  {
+   "dim": "splats",
+   "severity": "vacuous-check",
+   "file": "/home/user/w/x3d.loom/x3d.compute/bench/page.js",
+   "line": 148,
+   "title": "Culling gate only exercises 1.x of 5 cull tests; the 5-splat tolerance hides the rest",
+   "claim": "The splats gate (visibility_mismatches <= ceil(0.002*2048) = 5) cannot detect bugs in the left-edge, top-edge or near-plane cull (wgsl lines 26 and 53), and cannot detect a broken right-edge cull. The receipt reports visibility_mismatches 0, but that number cannot show these branches work.",
+   "fix": "Add a second camera pose or a splat set that crosses each of the four screen edges and the near plane, and one splat behind the camera. Have the CPU reference tally cull reasons and require each count to be at least 1. Make the visibility mismatch tolerance 0, or at most 1, for splats whose margin to the boundary is more than a few pixels."
+  },
+  {
+   "dim": "splats",
+   "severity": "vacuous-check",
+   "file": "/home/user/w/x3d.loom/x3d.compute/src/ref/splats.js",
+   "line": 42,
+   "title": "Fixture quaternions are pure yaw, so half the quaternion-to-matrix terms are never tested",
+   "claim": "cloud() builds every orientation as (0, sin(yaw/2), 0, cos(yaw/2)), so qx = qz = 0 for all 2048 splats. R[0][1], R[1][0], R[1][2], R[2][1] (and every x*x and z*z term in the diagonal) are multiplied by zero in both the kernel and the reference. The camera is also a pure pitch about X, so view[0].xyz = (1,0,0). A sign or term error in those matrix entries passes the projection gate.",
+   "fix": "Draw the fixture or a second case from uniformly random unit quaternions, and use a camera with yaw and roll (eye off the YZ plane, non-trivial up). Optionally add an independent check of the 2D covariance (numeric Jacobian of the true perspective projection, as above)."
+  },
+  {
+   "dim": "splats",
+   "severity": "vacuous-check",
+   "file": "/home/user/w/x3d.loom/x3d.compute/bench/page.js",
+   "line": 151,
+   "title": "Sort-key construction and padding keys are never compared with anything but themselves",
+   "claim": "The sort checks compare the GPU result with a CPU sort of the GPU's own keys (`want = SP.sortPairs(k0, v0)`). The only property of k0 that is checked is `k0[i] !== 0xFFFFFFFF` against the reference's visibility flag (line 143), and only for i < n. Nothing checks that visible keys equal the f32 bits of the depth z (wgsl line 58). Nothing checks that padding entries i >= n get key 0xFFFFFFFF and val i (wgsl line 22).",
+   "fix": "After projection, assert for i < n: k0[i] === (ref.vis[i] ? f32bits(ref z[i]) : 0xFFFFFFFF). Assert for i >= n: k0[i] === 0xFFFFFFFF and v0[i] === i. Make the main fixture non-power-of-two (for example 2000 splats), or assert on the padded 40000 case, that the last np - visible sorted entries all have key 0xFFFFFFFF."
+  },
+  {
+   "dim": "splats",
+   "severity": "misleading-claim",
+   "file": "/home/user/w/x3d.loom/x3d.compute/fixtures/splats-disc.x3d",
+   "line": 2,
+   "title": "splats-disc.x3d declares X3D 4.0 / Immersive with a 4.1-only node; orientations comment contradicts the repo's own spec notes",
+   "claim": "The fixture is `<X3D profile=\"Immersive\" version=\"4.0\" ... x3d-4.0.xsd>` with no `<component name=\"GaussianSplats\" level=\"1\"/>`, yet its only content is a `<GaussianSplats>` node. By the repo's own STATE.md line 114, GaussianSplats is a 4.1 addition (component GaussianSplats 1) and not part of the Immersive profile. A validator against the 4.0 schema would reject the file. src/ref/splats.js line 46 says `orientations (MFRotation read as quaternion x y z w ...)`. The repo's checked notes (BABYLON.md line 218, HYPER.md line 13, from X3DUOM 4.1) type the field MFQuaternion. As an MFRotation (axis-angle, per ISO 19775-1) the fixture's `0 sin(yaw/2) 0 cos(yaw/2)` would read as axis (0,s,0) with angle cos(yaw/2) rad.",
+   "fix": "For the splats fixture, emit version=\"4.1\", the 4.1 DOCTYPE/XSD and `<component name=\"GaussianSplats\" level=\"1\"/>` as gen-splat-test.py does. Correct the comment to say orientations is MFQuaternion (x y z w) in 4.1, not MFRotation."
+  },
+  {
+   "dim": "harness",
+   "severity": "vacuous-check",
+   "file": "/home/user/w/x3d.loom/x3d.compute/tools/mutation-check.sh",
+   "line": 5,
+   "title": "mutation-check counts any crash, ERROR or stale mutation as 'caught'",
+   "claim": "The script says every mutant turns its suite red. Its only test is `grep -q \"\\\"$suite\\\": true\"`, so anything that is not a printed `true` is reported as 'caught': a missing playwright, a Chromium launch failure, a timeout, a WGSL compile error, or a mutation target that no longer exists in the kernel.",
+   "fix": "Count a mutant as caught only when the output contains `\"$suite\": false`. Treat ERROR, empty output or a non-1 exit code as a harness error (rc=2). Run each suite once without --mutate first and require `true`. Have run.js or page.js report that the mutation was applied (mutation_applied:true), and keep stderr in a log."
+  },
+  {
+   "dim": "harness",
+   "severity": "misleading-claim",
+   "file": "/home/user/w/x3d.loom/x3d.compute/src/gpu.js",
+   "line": 61,
+   "title": "README says p95 of 12-15 runs; the code takes as few as 3 samples, p95 is the max, and the count is not recorded",
+   "claim": "README:28 says GPU ms is the 'median and p95 of 12-15 runs after warm-up'. Line 61 cuts `iters` to `max(3, floor(budgetMs/first))`, and `pct()` (line 45) returns the sample maximum for any n <= 20.",
+   "fix": "Return `samples` (count) with gpu_ms and wall_ms. Report `max` instead of `p95` when n < 20, or rename it. Use the mean of the two middle values for even n. Reword README:28 to say 3-15 runs. Document the real time cost, or enforce the budget."
+  },
+  {
+   "dim": "harness",
+   "severity": "wrong-result",
+   "file": "/home/user/w/x3d.loom/x3d.compute/src/gpu.js",
+   "line": 88,
+   "title": "sustained_ms_per_frame divides N-1 frame intervals by N, so vsync-bound rows read faster than the display",
+   "claim": "README:30 calls `sustained_ms_per_frame` (first frame to last completed frame) 'the honest figure'. It is `(tEnd - tStart)/frames`, where tStart is the first rAF callback and tEnd is completion of the last frame. For a workload shorter than a vsync interval that span holds only frames-1 intervals plus the last workload, so the figure is biased low and fps_sustained high.",
+   "fix": "Record `performance.now()` in each frame's onSubmittedWorkDone callback (instead of only a duration) and use (done[N-1] - done[0])/(N-1). Also pair the two onSubmittedWorkDone calls on the last frame, or reuse one."
+  },
+  {
+   "dim": "harness",
+   "severity": "robustness",
+   "file": "/home/user/w/x3d.loom/x3d.compute/tools/run.js",
+   "line": 19,
+   "title": "Default receipt name ignores --only and --mutate, so the README's own subset command overwrites the full receipt",
+   "claim": "The name defaults to `full-swiftshader` or `full-gpu` unless --quick is given, whatever --only or --mutate says. README:21 shows `node tools/run.js --only=splats,volume` with no --name.",
+   "fix": "Derive the default name from the options (e.g. `partial-<suites>` or `mutant-...`) and refuse to overwrite full-*.json unless all five suites ran unmutated. Or require --name for --only and --mutate."
+  },
+  {
+   "dim": "harness",
+   "severity": "misleading-claim",
+   "file": "/home/user/w/x3d.loom/x3d.compute/README.md",
+   "line": 18,
+   "title": "README '--quick about 35 s' is stale, and noBench is unreachable so mutation-check pays the bench time 8 times",
+   "claim": "README:18 says `--quick` takes about 35 s on 4 cores. The current receipt implies roughly twice that for benching alone.",
+   "fix": "Re-measure and update the README number. Add a `--no-bench` flag in run.js that passes noBench:true, and use it in mutation-check.sh."
+  },
+  {
+   "dim": "harness",
+   "severity": "vacuous-check",
+   "file": "/home/user/w/x3d.loom/x3d.compute/src/gpu.js",
+   "line": 93,
+   "title": "compare/compareRel pass for empty or short inputs, and the splats gate has no non-vacuity guard",
+   "claim": "compare() and compareRel() iterate over a.length only and report outside_tol=0 for n=0 or when the GPU array is shorter than the reference. The splats gate (bench/page.js:148) does not require any visible splat, while the volume gate does (`covered_pixels > 0`, page.js:96).",
+   "fix": "Assert a.length === b.length and n > 0 inside compare and compareRel. Add `visible_gpu > 0 && visible_cpu > 0` (and a lower bound relative to n) to the splats pass. Add similar non-vacuity guards for particles (a respawn and a floor bounce actually occurred)."
+  },
+  {
+   "dim": "harness",
+   "severity": "misleading-claim",
+   "file": "/home/user/w/x3d.loom/x3d.compute/README.md",
+   "line": 46,
+   "title": "README points to an x3d.docs chapter that does not exist",
+   "claim": "README:46 says the measurements, heuristics and honest limits are written up in the x3d.docs chapter 'WebGPU compute for X3D'.",
+   "fix": "Write the chapter, or reword to say it is pending. Do not cite it as the home of the honest limits until it exists."
+  },
+  {
+   "dim": "harness",
+   "severity": "nit",
+   "file": "/home/user/w/x3d.loom/x3d.compute/src/gpu.js",
+   "line": 47,
+   "title": "Doc comments and rig metadata do not match what the code returns or records",
+   "claim": "The bench() header comment (lines 47-50) names an option `passes` and return fields `fps, frame_ms_median, frame_ms_p95, workload_ms_in_frame`. None exist. The real options include `budgetMs`, and the real fields are rAF_dt_ms_median, rAF_dt_ms_p95, fps_raf, sustained_ms_per_frame, fps_sustained and submit_to_done_ms_median. Three smaller mismatches follow.",
+   "fix": "Rewrite the header comment from the returned object. Report device.limits. Drop or fill rAF_hz_hint. Fix the bytes_per_vertex expression or its comment."
+  }
+ ]
+}

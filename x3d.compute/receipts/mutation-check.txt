@@ -1,0 +1,8 @@
+caught    particles  [particles|vel + (g + (wind - vel) * P.drag) * P.dt|vel + (g * 0.9 + (wind - vel) * P.drag) * P.dt]
+caught    skinning  [skinning|m1 * p * w.y|m1 * p * w.x]
+caught    volume  [volume|acc + (1.0 - a) * al * col|acc + (0.9 - a) * al * col]
+caught    nurbs  [nurbs|(*d)[r] = f32(p) * (a - b);|(*d)[r] = f32(p) * (a + b);]
+caught    splats  [splats|a = cyy / det;|a = cxx / det;]
+caught    splats  [splats|let up = (i & B.k) == 0u;|let up = (i & B.k) != 0u;]
+caught    splats  [splats|let up = ((base + lo) & k) == 0u;|let up = ((base + lo) & k) != 0u;]
+caught    splats  [splats|for (var j = 256u; j > 0u; j = j >> 1u) {|for (var j = 128u; j > 0u; j = j >> 1u) {]
