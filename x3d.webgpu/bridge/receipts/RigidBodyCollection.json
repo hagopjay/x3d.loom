@@ -8,8 +8,8 @@
  },
  "test": {
   "ok": true,
-  "ours": "pass 17/17",
-  "xite": "pass 17/17",
+  "ours": "pass 18/18",
+  "xite": "pass 18/18",
   "map": {},
   "oursOk": true,
   "mapX": {},
@@ -17,7 +17,7 @@
   "comparison": "passed",
   "msg": "",
   "gaps": [
-   "the bridge engine is its own: sequential impulses at 240 Hz, spheres and boxes (cylinder and cone stand in as bounding spheres), one friction and bounce for the whole collection",
+   "the bridge engine is its own: sequential impulses at 240 Hz, spheres and boxes (cylinder and cone stand in as bounding spheres), one friction and bounce for the whole collection; a Cone is found by its bottomRadius (it fell through the ground before the fix) and rests at the height of its bounding sphere, 1.41 against 1.39 in X_ITE 16.6.0 (the fixture asserts 0.8 to 2.0)",
    "autoDisable, disableTime and the disable speeds are kept but never put a body to sleep",
    "centerOfMass is kept and not used; joints come in their own batch",
    "contactSurfaceThickness, preferAccuracy and set_contacts are kept; CollisionSensor/Contact nodes come later"
@@ -25,9 +25,9 @@
  },
  "env": {
   "chromium": "153.0.8010.12",
-  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 405205adb314",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha d82f1ed5ac13",
   "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
   "babylon": "9.32.0"
  },
- "driver_commit": "523b353"
+ "driver_commit": "1e884b6"
 }
