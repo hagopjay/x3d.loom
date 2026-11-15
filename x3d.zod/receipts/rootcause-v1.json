@@ -1,0 +1,437 @@
+{
+ "note": "Root-cause pass over the first corpus run (converter v1, 1,428 checked scenes); counts of the converter-fault findings are superseded by receipts/corpus-summary.json (converter v2). Grades are the agents' own: C = reproduced on a minimal document.",
+ "buckets": [
+  {
+   "bucket": "too_big/too_small first issue (15) + missing-@USE (4) + code none (1) + missing Scene (1) = 21 docs, all assigned",
+   "summary": "All 21 docs are XSD-valid (x3d_mcp fork validate_xml; XSD 4.0 for 20, default 4.1 for the version-less v26 probe) and rejected by jsonschema 4.26.0, ajv and Zod, except 00582, where Zod now accepts. None is a 4.1 gap: every doc declares version 4.0 and the schema is the 4.0 one (sha1 c6765a4).\n\nSeven root causes:\n- F1 ClipPlane plane (9 docs): schema_bug.\n- F2 Background groundAngle (2 docs): schema_stricter.\n- F3 GeoProximitySensor size (2 docs): fixture_intentionally_invalid.\n- F4 empty MF arrays (2 docs): schema_bug.\n- F5 geoSystem 'longitude_first' (4 docs): schema_bug.\n- F6 TransmitterPdu 00582 (1 doc): other, a stale Zod verdict.\n- F7 bare Scene root (1 doc): fixture_intentionally_invalid.\n\nIn every case I patched only the named defect (or wrapped the Scene in X3D) and re-ran jsonschema, ajv and Zod on the patched JSON; all three accepted all 21 patched docs. Each cause was also reproduced on minimal documents. The JSON in /tmp/zt/corpus matches the XML source for every attribute I checked, so there is no converter fault in this bucket apart from the weak root handling noted in F7.\n\nWhether each schema constraint matches the spec text:\n- ClipPlane: matches the literal table ([-1,1] on the whole field) but is semantically wrong for component 4.\n- groundAngle and the sensor size: match the spec.\n- Empty MF arrays: contradicts the spec.\n- geoSystem: omits spec-defined values.\n\nCorrections to the brief:\n- 'GeoPositionInterpolator x4' is really 2 GeoPositionInterpolator docs (00308, 00466) plus 2 GeoViewpoint docs (00312, 00470). All 4 share one cause.\n- The 'missing @USE' first issue is a misleading report, not the cause. toIssues in src/index.ts breaks the depth tie between the two oneOf arms by picking the USE arm, so the real @geoSystem failure in the non-USE arm is hidden.\n- Six pairs of docs are byte-identical sources: 00089/00102, 00090/00103, 00096/00109, 00309/00467, 00308/00466, 00312/00470. The bucket has 15 distinct sources.\n- /tmp/zt/corpus was being rebuilt by corpus.py while I worked, so I copied the 21 docs to /tmp/zt/work-toobig/raw first. Keys are old-run NNNNN names, so confirm them against the new row.src values.\n\nRelated docs outside this bucket (not assigned here):\n- 00302 and 00460 (GeoCoordinate.x3d, XSD-valid, first Zod issue invalid_union on Shape) carry the same longitude_first defect as F5. Patching it makes both pass in Zod and ajv.\n- Nine XSD-invalid pythia/exact-zmumu docs (00184-00194) also have groundAngle above 1.5708. They agree with the XSD, so they are not a discrepancy.\n\nNo other XSD-valid doc in why.json has empty first issues, so 00582 is the only stale row there.",
+   "findings": [
+    {
+     "id": "F1-clipplane-plane-distance-bound",
+     "root_cause": "schema_bug",
+     "files": 9,
+     "what": "ClipPlane @plane: the Web3D schema bounds all four SFVec4f components to [-1,1]. Components 0-2 are the normalized plane normal, so [-1,1] is right for them. Component 3 is d, the distance from the local origin, which is unbounded. All 9 docs use a unit normal and a large d: dynasty-loom/dynasty-loom-webgpu v1 darwin_wedgwood plane 0 -1 0 27.55 and 0 1 0 -27.55 (00089, 00102); habsburg 72.55 (00090, 00103); rothschild 30.15 (00096, 00109); stem electron-cloud -1 0 0 82, living-heart 10, turing-garden 66 (00141, 00142, 00143). So @plane/3 fails with too_big (<=1) or too_small (>=-1). Against the spec: the constraint matches the literal field table in ISO/IEC 19775-1 v4 IS 11.4.1 (`SFVec4f [in,out] plane 0 1 0 0 [-1,1]`; the 3.2 and 3.3 pages print `[0,1]`). The X3DUOM 4.0 and 4.1 carry it as `minInclusive=-1 maxInclusive=1` on the whole field. The same clause says the first three components are the normalized normal and the fourth 'is distance from local origin', and the X3DUOM description repeats that. A single range on the whole field cannot be right for d. The defect is upstream (spec table plus X3DUOM) and the JSON schema copies it per item. ClipPlane @plane is the only SFVec4f in the schema with per-item bounds. The XSD stores the range only inside xs:appinfo (xs:minInclusive/maxInclusive), not as a facet, so it accepts. Rotation-style or normal-plus-scalar bounds belong on indices 0-2 only.",
+     "grade": "C",
+     "action": "Report upstream to Web3D (spec table 11.4.1 and X3DUOM ClipPlane.plane). In the meantime add an in-memory fix next to the NavigationInfo.@type one in tools/gen.mjs and xml2json.py: drop minimum/maximum from ClipPlane.@plane.prefixItems[3] and keep [-1,1] on indices 0-2. Documents with real ClipPlane distances then stop failing."
+    },
+    {
+     "id": "F2-background-groundAngle-1.571",
+     "root_cause": "schema_stricter",
+     "files": 2,
+     "what": "Background @groundAngle: 00229 x3d.drift practice-pad.x3d and 00230 salt-ring.x3d author groundAngle='1.4 1.571', rounding pi/2 up to 1.571. The schema bound is maximum 1.5708, so @groundAngle/1 fails with too_big. The constraint matches the spec: ISO/IEC 19775-1 v4 24.4.1 says groundAngle is 'restricted to non-decreasing values in the range [0.0, pi/2]'. The X3DUOM 4.0 has minInclusive 0, maxInclusive 1.5708, i.e. pi/2 rounded up at the 4th decimal; pi/2 is 1.5707963. 1.571 exceeds pi/2 by 2e-4, so the docs are spec-invalid by an authoring rounding slip, and the schema is right. The XSD declares groundAngle as a plain MFFloat list and does not enforce the range, which is why it is XSD-valid. The same docs' skyAngle 1.571 is fine, since the sky range is [0, pi] (schema max 3.1416).",
+     "grade": "C",
+     "action": "Schema is right; no change. Fix the authoring in x3d.drift (build/build_world.py emits 1.571): write 1.5707963 or clamp. The corpus verdict for these 2 should read 'XSD lenient, spec-invalid input'."
+    },
+    {
+     "id": "F3-geoproximitysensor-negative-size",
+     "root_cause": "fixture_intentionally_invalid",
+     "files": 2,
+     "what": "GeoProximitySensor @size: 00309 (x3d.threejs bridge fixture) and 00467 (x3d.webgpu bridge fixture) are the same file (sha1 2ca25b85). Sensor 'PA' has size='-1 -1 -1' on purpose, as an edge case of the bridge test. The schema bound is minimum 0 per component, so @size/0, /1 and /2 fail with too_small (>=0). The constraint matches the spec: GeoProximitySensor `SFVec3f [in,out] size 0 0 0 [0,inf)` (19775-1 v4 25.3.8), and the ProximitySensor clause it defers to says 'The components of the size field shall be greater than or equal to zero'. The schema is correct and the XSD is lenient, because the minInclusive=0 range is only appinfo/annotation in the XSD and not a facet. The doc is spec-invalid by construction.",
+     "grade": "C",
+     "action": "No schema change. Mark these two docs expected-invalid per spec, or drop the PA sensor from the schema-conformance corpus run."
+    },
+    {
+     "id": "F4-mf-empty-array-minItems",
+     "root_cause": "schema_bug",
+     "files": 2,
+     "what": "CoordinateInterpolator and CoordinateInterpolator2D: 00438 and 00439 (x3d.webgpu bridge fixtures) have a deliberate empty interpolator N2 with key='' keyValue=''. The schema gives keyValue minItems = the tuple width (3 for MFVec3f, 2 for MFVec2f), so the empty list fails with too_small (>=3 items / >=2 items). Against the spec this is a schema bug. MF fields are 'zero or more' values with an empty list as default (19775-1 5.3.19; text retrieved from the V3.3 Part01 fieldsDef page, the v4 page returned 404). The v4 interpolators clause explicitly covers the empty case: 'If keyValue is empty (i.e., [ ]), the initial value ... is returned' and 'an empty key shall not produce any events'. The XSD patterns allow zero repetitions, so it is XSD-valid. The bound is generic: the schema puts minItems=N on 51 MF properties (MFColor 6, MFColorRGBA 1, MFRotation 4, MFVec2d 2, MFVec2f 16, MFVec3d 3, MFVec3f 18, MFVec4f 1), including Coordinate.@point, PositionInterpolator, OrientationInterpolator and ColorInterpolator keyValue. It is also loose in the other direction: minItems 3 accepts 4 values, which the XSD rejects.",
+     "grade": "C",
+     "action": "Remove minItems from MF properties (51 sites; select by $comment starting with MF and array type with minItems) or set 0. A multiple-of-N rule cannot be expressed in JSON Schema without multipleOf-on-length tricks. Apply as an in-memory fix in gen.mjs/xml2json.py, like NavigationInfo, and report upstream."
+    },
+    {
+     "id": "F5-geoSystem-axis-order-values-missing",
+     "root_cause": "schema_bug",
+     "files": 4,
+     "what": "geoSystem: 00308 and 00466 (GeoPositionInterpolator fixtures, element 'L') and 00312 and 00470 (GeoViewpoint fixtures, element 'VB') use geoSystem=\"GD\" \"WE\" \"longitude_first\". The schema's shared #/$defs/@geoSystem has no arm that allows it, so the non-USE oneOf arm fails at @geoSystem. The reported first issue, missing @USE, is a misleading report: it comes from the USE arm. ISO/IEC 19775-1 v4 25.2.3 and 25.2.4 define optional 'latitude_first'/'longitude_first' for GD and 'northing_first'/'easting_first' for UTM, with optional arguments in any order. They give the example [\"UTM\",\"Z10\",\"S\",\"easting_first\"], the new frame 'WM' (Web Mercator, Table 25.2) and ellipsoid 'AA' (Table 25.3). The schema accepts none of these, while it accepts 'N' for UTM, which the spec does not define (only 'S'). The XSD types geoSystem as a free MFString, so it accepts. 14 node defs reference this one def: EspduTransform, GeoCoordinate, GeoElevationGrid, GeoLOD, GeoLocation, GeoOrigin, GeoPositionInterpolator, GeoProximitySensor, GeoTouchSensor, GeoTransform, GeoViewpoint, ReceiverPdu, SignalPdu, TransmitterPdu. The words longitude_first, latitude_first, easting_first, northing_first, WM and AA do not occur anywhere in the schema, the X3DUOM or the XSDs.",
+     "grade": "C",
+     "action": "Replace the 9 positional arms with a per-position model that matches the spec: first item in {GD,GDC,UTM,GC,GCC,WM}; remaining items from the ellipsoid, WGS84, S, Zn, and latitude_first/longitude_first/northing_first/easting_first sets, any order. Or accept any string array like the XSD, with only the first item checked. Add as an in-memory fix and report upstream. Improve toIssues to break depth ties by preferring the non-USE arm."
+    },
+    {
+     "id": "F6-transmitterpdu-stale-zod-receipt",
+     "root_cause": "other",
+     "files": 1,
+     "what": "00582 x3d.webgpu bridge fixture TransmitterPdu.x3d: receipts/corpus.json records zod=false, jsonschema=true, ajv=true, xsd=true. It is the only 3-way disagreement in corpus-summary.json. receipts/why.json lists it with an empty issues array because why.mjs re-ran validateX3DJson with the current code. The current Zod accepts the document, so the receipt is stale, not a schema or converter fault. Cause: an earlier version of tools/gen.mjs emitted z.tuple with every prefixItems slot required, so an array shorter than the tuple but at least minItems failed. The element 'R2' has geoSystem [\"UTM\",\"Z3\",\"N\"], which only the jsonschema @geoSystem arm #7 (minItems 2, maxItems 5, prefix [UTM, Z, S|N, ellipsoid], items WGS84) accepts with 3 of 4 slots. The current gen.mjs line 73 marks slots at or past minItems as .optional(). The Zod verdict in node-out.json dates from 08:33, and gen.mjs/src/generated were rewritten at 08:34:55-56.",
+     "grade": "C",
+     "action": "No schema change. Refresh receipts: the orchestrator's corpus re-run (corpus.py started 08:47) should show zod=true for this row and drop it from corpus-summary 'disagreements'. Also re-run why.mjs; rows with issues:[] are the stale-receipt marker."
+    },
+    {
+     "id": "F7-scene-as-document-root",
+     "root_cause": "fixture_intentionally_invalid",
+     "files": 1,
+     "what": "00774 x3d.ml/demo/jsval/harness/probes/V adversarial-verify-round0/v26_scene_root.x3d is `<Scene><Shape><Box/></Shape><Group/></Scene>`, a document whose root element is Scene, not X3D. It is an adversarial probe, generated by gen_probes_V.py as 'Scene as root'. The XSD accepts it because it declares Scene (and Shape, and so on) as global elements and validate_xml does not check the root name; with no version attribute it validated against the default 4.1 XSD. Our xml2json.py then builds {\"X3D\":{...}} without checking that the root is X3D. Lines 148-156 treat the root's attributes (profile default Full, version default 4.0) and its children as the X3D object's members, so Shape and Group land directly under X3D and Scene is absent. The JSON schema correctly requires X3D.Scene and forbids extra keys. So the JSON rejection is right: the input is not an X3D document, and the XSD verdict is the lenient one. The converter should have refused the input.",
+     "grade": "C",
+     "action": "Make xml_to_json raise or record convert_error when localname(root) != 'X3D', so this doc leaves the 'XSD-valid but JSON-rejected' count and is listed as XSD lenient (any global element accepted as document root). Report the XSD leniency separately."
+    }
+   ]
+  },
+  {
+   "bucket": "why.json first-issue = unrecognized_keys (36) + invalid_value on X3D/@version (32) + invalid_value on head/component/@name (27) = 95 docs. All 95 are XSD-valid (fork validate_xml) and rejected by jsonschema 4.26.0, ajv and Zod; every Zod first issue was re-reproduced from freshly converted JSON (0 mismatches).",
+   "summary": "All 95 files are assigned: F1..F11 partition them (30+2+23+4+7+20+3+2+2+1+1 = 95; unassigned 0). Only 2 of 95 are converter faults. Four are fixture intent and the rest are schema gaps or bugs.\n\nCounts by root cause:\n- schema_gap_x3d41: 60 files. F1 30, F3 23, F5 7. All declare version 4.1 and need the 4.1 XSD.\n- schema_bug against the 4.0 XSD/UOM: 30 files. F4 4, F6 20, F7 3, F8 2, F10 1.\n- converter_fault: 2 files (F2), both whitespace-padded @version.\n- fixture_intentionally_invalid: 3 files. F9 2 and F11 1.\n\nThe two files that need the most care are as follows.\n- Transform @DEF (00650, 00819): this is not a missing field. Each element carries both DEF and USE, which the JSON oneOf rejects. XSD 1.0 cannot express that, and the XSD's own USE annotation says USE excludes all other attributes. Zod's \"Unrecognized key @DEF\" is an artifact of the USE-branch union.\n- HAnimMotion @name (00473, 00474): a true schema_bug. The XSD 4.0 and the UOM define the field and the JSON schema omits it. It is not a converter fault.\n\nL1..L7 are latent second issues hidden behind the first one. Their file counts overlap the primary findings and must not be summed. The most important are as follows.\n- Sound enumerations are lower-cased in the JSON schema, while the XSD and UOM use upper case. That would block all 20 PeriodicWave docs even after F6 is fixed (L1).\n- The converter emits an untyped raw string for any attribute the schema lacks. A schema fix alone would still reject 33 docs: 00377, 00576, 00592 and all 30 GaussianSplats docs (L5).\n\nSide notes:\n- corpus.json `unplaced` counts every `.@USE`, which is benign. For example, 00242 reports 1483. Real gaps are the non-USE entries.\n- 00582 (TransmitterPdu) has an empty why.json issue list and is not in this bucket. Its corpus.json zod flag flipped false to true in the 08:48 receipts rerun, so it looks like a stale or flaky row.\n- /tmp/zt/corpus was being rewritten by other processes while I worked. I regenerated my 95 JSONs into /tmp/zt/work-bucket1/cj and they are byte-identical to the originals where both existed.\n- Minimal repros are in /tmp/zt/work-bucket1/min.",
+   "findings": [
+    {
+     "id": "F1",
+     "root_cause": "schema_gap_x3d41",
+     "files": 30,
+     "what": "X3D/@version enum in the Web3D 4.0 JSON schema is [3.0,3.1,3.2,3.3,4.0]; XSD 4.1 adds \"4.1\". 30 docs declare version='4.1' (profiles Immersive/Interchange/Full). The label is the only JSON failure for all 30: patching @version to 4.0 gives jsonschema 0 errors on every one. 16 are plain 4.0 content. The 4.0 XSD accepts them once relabelled 4.0. 14 (00210-00223, zinc-scenes-v2 candidate scenes) also use EnvironmentLight, which XSD 4.1 has and XSD 4.0 lacks (see L7).",
+     "grade": "C",
+     "action": "Expected for a 4.0 schema. A 4.1 schema/Zod variant needs @version to include \"4.1\" and the 4.1-only nodes and components (F3, F5). Until then report these as schema_gap_x3d41, not defects."
+    },
+    {
+     "id": "F2",
+     "root_cause": "converter_fault",
+     "files": 2,
+     "what": "Whitespace-padded version attributes (' 3.0 ' in dr_05_version_padded.x3d, ' 4.0 ' in v09g_version_ws.x3d) were copied verbatim into @version. The XSD types the attribute xs:NMTOKEN (x3dVersionChoices), whose whiteSpace facet is collapse, so XSD validation accepts it; the JSON enum cannot. The rule at fault is tools/xml2json.py line 151: \"@version\": root.get(\"version\", \"4.0\"), with no NMTOKEN whitespace collapse. @profile on the same line has the same flaw.",
+     "grade": "C (mechanism); L (intent from fixture names)",
+     "action": "xml2json.py: collapse whitespace (' '.join(v.split())) for NMTOKEN-typed attributes (@version, @profile, enum SFStrings). Also reported: validate_xml treats a padded version as an unknown version and silently falls back to the 4.1 XSD."
+    },
+    {
+     "id": "F3",
+     "root_cause": "schema_gap_x3d41",
+     "files": 23,
+     "what": "head/component/@name enum lacks \"GaussianSplats\", a component name that exists only in XSD 4.1 (componentNameChoices 38 values vs 37 in 4.0). All 23 docs are version 4.1 and also contain a GaussianSplats node, so they fail three independent ways: the component name, @version, and the node (F5).",
+     "grade": "C",
+     "action": "Needs a 4.1 schema (component enum, @version, GaussianSplats node). Not fixable in the 4.0 schema without breaking 4.0 conformance."
+    },
+    {
+     "id": "F4",
+     "root_cause": "schema_bug",
+     "files": 4,
+     "what": "The JSON schema's head/component/@name enum spells the component \"TextureProjector\"; XSD 4.0, XSD 4.1 and X3DUOM 4.0/4.1 all name it \"TextureProjection\". The enum difference to the XSD is exactly this one value. The 4 docs are version 4.0 (x3d.threejs and x3d.webgpu TextureProjector and TextureProjectorParallel fixtures), so this is a 4.0 bug, not a 4.1 gap. The inverse also holds: the JSON schema accepts \"TextureProjector\" and the XSD rejects it.",
+     "grade": "C (XSD vs schema); L for the spec-text naming, which I did not fetch",
+     "action": "Fix the schema enum to 'TextureProjection' (keep 'TextureProjector' only if the spec is shown to use it, which the XSD and UOM contradict)."
+    },
+    {
+     "id": "F5",
+     "root_cause": "schema_gap_x3d41",
+     "files": 7,
+     "what": "GaussianSplats is an X3D 4.1 node (X3DUOM 4.1: component GaussianSplats level 1, fields positions, scales, orientations, opacities, sphericalHarmonicsDegree0..3Coef*, etc.). The 4.0 XSD has no such element; the Web3D 4.0 JSON schema $defs has no GaussianSplats. The 7 docs are x3d.ml jsval harness probes (gs_01, 03, 04, 07, 08, 09, 12), version 4.1, with no head or component statement. They fail on the unknown node (Zod first issue) and on @version.",
+     "grade": "C",
+     "action": "Provide a 4.1 JSON schema and a 4.1-UOM-driven converter typing; until then these docs cannot pass any 4.0-schema validator."
+    },
+    {
+     "id": "F6",
+     "root_cause": "schema_bug",
+     "files": 20,
+     "what": "OscillatorSource has no slot for its PeriodicWave child in the JSON schema, so it cannot be expressed at all. XSD 4.0 and 4.1 give OscillatorSource an optional <PeriodicWave> child (containerField default 'periodicWave'); X3DUOM 4.0 has OscillatorSource.periodicWave SFNode (acceptable node PeriodicWave). The JSON OscillatorSource.properties lack '-periodicWave', and its '-children' (the shared sound-graph MFNode) rejects PeriodicWave. All 20 docs are version 4.0, Sound component, from the x3d.threejs/webgpu bridge fixtures (Analyser, ListenerPointSource, SpatialSound, Gain, BiquadFilter, WaveShaper, Channel*, PeriodicWave, OscillatorSource, etc.). Each fails with 'Unrecognized key: PeriodicWave' at .../OscillatorSource/-children/0.",
+     "grade": "C",
+     "action": "Add '-periodicWave' (SFNode, PeriodicWave) to OscillatorSource in the schema; same generator-drop class as F7, F8, F10."
+    },
+    {
+     "id": "F7",
+     "root_cause": "schema_bug",
+     "files": 3,
+     "what": "CollisionSensor.@description is missing from the JSON schema. X3DUOM 4.0 and 4.1 define CollisionSensor.description (SFString inputOutput) and both XSDs accept the attribute. The 3 docs are x3d.physics physx-bridge scenes (galton-board, bell, xylophone), version 4.0, with one description='...' on a CollisionSensor each.",
+     "grade": "C for CollisionSensor; L for the wider list",
+     "action": "Add @description to CollisionSensor (and the sibling nodes in the diff after XSD-checking each)."
+    },
+    {
+     "id": "F8",
+     "root_cause": "schema_bug",
+     "files": 2,
+     "what": "HAnimMotion.@name is missing from the JSON schema. XSD 4.0 declares <xs:attribute name='name' type='xs:NMTOKEN'/> on HAnimMotion; X3DUOM 4.0 and 4.1 define it as SFString. The 2 docs (webgpu fixtures HAnimMotion.x3d and HAnimJoint.x3d, version 4.0) use name='bend'. This is not a converter misplacement and not HAnimHumanoid/HAnimJoint.name leaking: the attribute really is a field of HAnimMotion, and the converter put it where the XML had it.",
+     "grade": "C for @name; C for the joints/channels type mismatch (read from XSD, UOM and schema), L for its consequences",
+     "action": "Add @name (string) to HAnimMotion; revisit @joints/@channels as SFString."
+    },
+    {
+     "id": "F9",
+     "root_cause": "fixture_intentionally_invalid",
+     "files": 2,
+     "what": "Both docs are adversarial probes from the x3d.ml jsval harness (ub_03_same_element.x3d, v49_route_use_name.x3d) that put DEF and USE on the same element (<Transform DEF='A' USE='A'/>, <Transform USE='T' DEF='U'/>). The XSD accepts it: DEF is xs:ID and USE is xs:IDREF with no co-occurrence constraint, and XSD 1.0 has no asserts. The JSON schema rejects it because each node is oneOf[USE-only variant, full variant], with no @USE in the full variant and no @DEF in the USE variant. That matches the spec text quoted in the XSD's own appinfo: 'USE means reuse an already DEF-ed node ID, excluding all child nodes and all other attributes (except containerField)'. Zod's 'Unrecognized key @DEF' is just the closest-branch message of that union and is misleading. The schema is spec-faithful and the XSD lenient. This also qualifies as schema_stricter, but the cause is an intentionally invalid fixture, not a defect.",
+     "grade": "C (validator behaviour); L (intent)",
+     "action": "None for the schema. Treat DEF+USE as a semantic check outside the XSD; keep these as negative fixtures."
+    },
+    {
+     "id": "F10",
+     "root_cause": "schema_bug",
+     "files": 1,
+     "what": "MultiTextureTransform.-textureTransform is typed by the def -X3DSingleTextureTransformNodeMFNode, whose items allow only #comment and ProtoInstance. TextureTransform, TextureTransform3D and TextureTransformMatrix3D (all X3DSingleTextureTransformNode in X3DUOM 4.0) are missing, so a MultiTextureTransform can never hold a real transform in JSON. The XSD content model allows a choice of those three plus ProtoInstance. This is the only def of this shape in the schema (all other -...Node union defs have members). The doc is webgpu fixture MultiTextureTransform.x3d, version 4.0.",
+     "grade": "C",
+     "action": "Expand X3DSingleTextureTransformNode to its three concrete nodes in the schema generator."
+    },
+    {
+     "id": "F11",
+     "root_cause": "fixture_intentionally_invalid",
+     "files": 1,
+     "what": "webgpu fixture NurbsSweptSurface.x3d SS5 puts <NurbsCurve2D containerField='trajectoryCurve'> in a NurbsSweptSurface. X3DUOM 4.0/4.1 say trajectoryCurve accepts only NurbsCurve (crossSectionCurve takes X3DNurbsControlCurveNode); the JSON schema follows that (-trajectoryCurve is -NurbsCurveSFNode). The XSD content model is a flat choice of ContourPolyline2D, NurbsCurve2D, NurbsCurve, ProtoInstance (maxOccurs 2) not tied to containerField, so it accepts the doc. The XSD is lenient and the JSON schema spec-correct. The bridge source documents the case as a deliberate edge: 'A trajectory that is not a NurbsCurve, or either curve missing or with fewer than two points, draws nothing'; SS5, SS6 and SS7 are those probes.",
+     "grade": "C (validator behaviour); L (intent from bridge/src/nodes/NurbsSweptSurface.js comment)",
+     "action": "None for the schema; keep as a negative fixture."
+    },
+    {
+     "id": "L1",
+     "root_cause": "schema_bug",
+     "files": 22,
+     "what": "LATENT second issue (files already assigned to F6; overlaps, do not sum). Sound-component enumerations are spelled in lower case in the JSON schema (the Web Audio alias), while XSD and X3DUOM values are upper case. PeriodicWave.type: JSON [sine,square,sawtooth,triangle,custom], XSD [SINE,SQUARE,SAWTOOTH,TRIANGLE,CUSTOM]. Blocks all 20 F6 docs once F6 is fixed (19 use type=SINE/TRIANGLE/SAWTOOTH/CUSTOM, 00523 uses CUSTOM plus a default). Also BiquadFilter.type 'LOWPASS' (00405) and WaveShaper.oversample 'NONE' (00592). A UOM-vs-schema enum diff shows 37 (node, field) pairs differ, about 32 of them Sound (channelCountMode and channelInterpretation on 14 nodes, SpatialSound.distanceModel, BiquadFilter.type, PeriodicWave.type, WaveShaper.oversample).",
+     "grade": "C",
+     "action": "Regenerate Sound enum values from the UOM value, not alias. Other buckets will see the same failure on channelCountMode/channelInterpretation."
+    },
+    {
+     "id": "L2",
+     "root_cause": "converter_fault",
+     "files": 4,
+     "what": "LATENT second issue (files already assigned to F4; overlaps). PixelTexture @image written with hex pixel values (image='4 4 3 0xff0000 ...') is emitted as a raw string. In tools/xml2json.py the integer branches (line 91 `[int(float(p)) for p in parts]` and line 94) fail with ValueError on '0x...', the except at line 116 falls back to body[key] = v (the raw string), and nothing is added to `unplaced`. The XSD accepts hex in MFInt32; the JSON schema wants an array of integers.",
+     "grade": "C",
+     "action": "Parse int(p, 0) for hex tokens in xml2json.py and report unconvertible values as unplaced."
+    },
+    {
+     "id": "L3",
+     "root_cause": "schema_bug",
+     "files": 2,
+     "what": "LATENT second issue (files already assigned to F4; overlaps). TextureProjectorParallel.@upVector is missing from the JSON schema. X3DUOM 4.0 defines upVector (SFVec3f) on TextureProjectorParallel and XSD 4.0 accepts it. TextureProjector has it in the schema; the Parallel variant does not. Affects 00377 and 00576 (3 elements each).",
+     "grade": "C",
+     "action": "Add @upVector (SFVec3f) to TextureProjectorParallel in the schema."
+    },
+    {
+     "id": "L4",
+     "root_cause": "schema_bug",
+     "files": 1,
+     "what": "LATENT second issue (file already assigned to F6; overlaps). WaveShaper.@curve is missing from the JSON schema. X3DUOM 4.0 has curve (MFFloat), XSD 4.0 accepts it. 00592 (WaveShaper.x3d) uses curve='-1 1'.",
+     "grade": "C",
+     "action": "Add @curve (MFFloat) to WaveShaper."
+    },
+    {
+     "id": "L5",
+     "root_cause": "converter_fault",
+     "files": 33,
+     "what": "LATENT limitation (overlaps F5, F3, F4, F6). tools/xml2json.py line 118 emits any attribute the schema has no property for as a raw string (body[key] = v; unplaced.append). That is right for SFString fields (CollisionSensor.@description, HAnimMotion.@name), but wrong for numeric or vector fields. Affected: the 30 GaussianSplats docs (MFVec3f, MFFloat, MFQuaternion fields; need X3DUOM 4.1 typing), 00377 and 00576 (@upVector SFVec3f) and 00592 (@curve MFFloat). Fixing the schema alone would not make these pass.",
+     "grade": "C",
+     "action": "Type unknown attributes from the matching X3DUOM (4.0 or 4.1 by document version) instead of the JSON schema; keep `unplaced` for genuinely unknown names."
+    },
+    {
+     "id": "L6",
+     "root_cause": "converter_fault",
+     "files": 21,
+     "what": "LATENT reporting fault (overlaps F6, F10). The `-children` fallback at tools/xml2json.py line 135 (elif \"-children\" in props: place(body, \"-children\", ...)) fires for any child with no matching slot without checking accepts(props['-children'], cn). The child lands in a place the schema rejects, and `unplaced` stays empty, against the module docstring ('anything the converter cannot place is reported as unplaced'). Hit by PeriodicWave in OscillatorSource (20 docs) and TextureTransform in MultiTextureTransform (00504). It is not the root cause there, since the schema offers no valid slot.",
+     "grade": "C",
+     "action": "Add the accepts() check and append to `unplaced` when the fallback target would not accept the node."
+    },
+    {
+     "id": "L7",
+     "root_cause": "schema_lenient",
+     "files": 14,
+     "what": "LATENT observation, not a failure cause (the 14 docs 00210-00223 are assigned to F1). The Web3D 4.0 JSON schema accepts EnvironmentLight in X3DChildNode and in the MFNode/SFNode unions. The 4.0 XSD in the x3d_mcp fork defines the element but comments it out of the Full-profile child choice (x3d-4.0.xsd line 7509: <!--xs:element ref=\"EnvironmentLight\"/ -->), and X3DUOM 4.0 has no EnvironmentLight. XSD 4.1 and UOM 4.1 include it. So the JSON schema is ahead of its own 4.0 XSD here.",
+     "grade": "C",
+     "action": "Decide whether EnvironmentLight belongs in the 4.0 schema; if not, remove it from the 4.0 JSON unions or document it as 4.1 content."
+    }
+   ]
+  },
+  {
+   "bucket": "why.json docs whose FIRST Zod issue is invalid_union (37 docs: Shape 14, Transform 12, Appearance 4, GeoElevationGrid 2, LayoutLayer 2, PixelTexture 2, HAnimHumanoid 1). All 37 are XSD-valid (x3d_mcp fork validate_xml, XSD 4.0, X3D@version 4.0), and rejected by jsonschema 4.26.0 Draft202012Validator (schema sha1 c6765a4), ajv 2020 and Zod. Scratch work in /tmp/zt/work-union/.",
+   "summary": "37 of 37 docs assigned (unassigned_files = 0), by primary (first-reached) root cause: F1 converter_fault 29, F2 schema_bug 2, F3 schema_bug 2, F4 schema_stricter 2, F5 schema_stricter 1, F6 fixture_intentionally_invalid 1. X1 and X2 are latent second causes inside files already counted under F1 (00245, 00249, 00252); they are not additional files. There are no schema_gap_x3d41 cases (all 37 are 4.0).\n\nWhy Zod says invalid_union: every X3D node def in the Web3D schema is a oneOf of [USE-only branch, full branch], both additionalProperties:false. Any leaf error inside a node's full branch surfaces as invalid_union at the nearest enclosing node (Shape, Transform, Appearance, LayoutLayer, GeoElevationGrid, HAnimHumanoid). The ajv/jsonschema context trees also list 'required @USE' / additionalProperties errors from the USE branch at each ancestor, which are noise. The real reason is the deepest non-USE leaf. I took it from jsonschema error.context leaves (dropping required-@USE) and confirmed it with ajv allErrors. After removing those leaves, every document reduces to one of: PixelTexture.@image type (29 docs), Layout enums (2), geoSystem enum/arity (4), or a USE-branch violation (2).\n\nHex fix check: I patched a scratch copy of tools/xml2json.py (num() parses 0x literals). 26 of the 29 F1 docs then pass jsonschema, ajv and Zod. The remaining 3 are 00245, 00249 and 00252, which fall to X1/X2. I also checked that patching the schema (Layout per-keyword enums, open geoSystem, uppercase distanceModel, CollisionSensor @description) makes the F2, F3, F4 and X1/X2 docs pass.\n\nNet for the schema: 3 real Web3D JSON Schema bugs (Layout MFString enums, geoSystem optional keywords, plus latent SpatialSound distanceModel case and CollisionSensor/other sensors missing @description), 2 deliberate stricter-than-XSD behaviours (closed ellipsoid enum, USE-only branch), and 1 converter bug that is by far the largest cause (78% of this bucket).",
+   "findings": [
+    {
+     "id": "F1",
+     "root_cause": "converter_fault",
+     "files": 29,
+     "what": "SFImage pixel values written in hex (PixelTexture image='2 2 3 0xFF0000 0x00FF00 ...') are left as the raw attribute STRING in the JSON, but the schema requires @image to be an array of numbers. Rule: tools/xml2json.py coerce() (line 92, 'return [num(p) for p in parts]') calls num() (line 99-100, 'f = float(p)'). float('0xFF0000') raises ValueError, and convert_node() (line 116, 'except ValueError: body[key] = v') swallows it and stores the unparsed string. The converter reports nothing (unplaced=0), so the fault is silent. The fix is to parse 0x literals as int(p,16) in num(), because the JSON encoding of SFImage is an array of decimal integers. The 29 docs split by enclosing node of the first Zod issue as Transform 12, Shape 11, Appearance 4, PixelTexture 2 (the invalid_union simply sits at the nearest oneOf node above the PixelTexture). Doc keys: 00121 00134 00136 00245 00249 00251 00252 00303 00349 00373 00379 00382 00461 00479 00480 00481 00503 00509 00515 00516 00541 00572 00583 00953 00954 00955 00956 01147 01232 (.json). Sources: gobbler3.x3d x4 plus bird.x3d (x3d.demo, x3d.ml/gobbler-v3), physx-bridge scenes x4, threejs/webgpu bridge fixtures x16, two gemini geo-03 runs. Same fault exists outside this bucket: 40 corpus docs have a string @image, 11 of them outside these 29 (00288 00376 00377 00406 00429 00430 00517 00551 00575 00576 01231), which is worth re-checking after the converter fix.",
+     "grade": "C",
+     "action": "Fix xml2json.py num(): accept 0x/0X (and signed) hex tokens via int(p,16); stop swallowing ValueError into a raw string (log it as unplaced/mistyped). Re-run the corpus, then re-triage the 11 other docs with string @image listed above."
+    },
+    {
+     "id": "F2",
+     "root_cause": "schema_bug",
+     "files": 2,
+     "what": "Layout.@align, @offsetUnits, @scaleMode and @sizeUnits are typed as arrays whose items are enum values of the whole XSD attribute text, e.g. items enum ['\"LEFT\" \"BOTTOM\"', '\"CENTER\" \"CENTER\"', ...]. The XSD enumerates the entire MFString attribute value (layoutAlignChoices, layoutUnitsChoices, layoutScaleModeChoices), and the JSON schema copied that per array item. The spec encodes MFString align as two separate strings, [\"CENTER\",\"CENTER\"], each from LEFT|CENTER|RIGHT then BOTTOM|CENTER|TOP, so a correct JSON value is rejected and only a double-encoded single string with embedded quotes passes. The schema's own default for the items is 'CENTER', which is not in its enum. Docs: 00332 (x3d.threejs Layout.x3d), 00487 (x3d.webgpu Layout.x3d), first issue invalid_union at LayoutLayer. Each has 8 Zod issues (2 per field).",
+     "grade": "C",
+     "action": "Report upstream to Web3D. Items should be a per-keyword enum (LEFT|CENTER|RIGHT then BOTTOM|CENTER|TOP, via prefixItems) with maxItems 2, not the XSD's whole-attribute strings. The converter is not at fault."
+    },
+    {
+     "id": "F3",
+     "root_cause": "schema_bug",
+     "files": 2,
+     "what": "GeoCoordinate.@geoSystem = ['GD','WE','longitude_first'] is rejected. The schema's $defs/@geoSystem is a oneOf of fixed-order tuples (GD|GDC, then ellipsoid or WGS84, then at most the other one), and the optional order keywords longitude_first / latitude_first (and UTM easting_first / northing_first) appear nowhere in the schema (0 occurrences). The spec (ISO/IEC 19775-1:2023, 25 Geospatial) defines them: 'Optional arguments may appear in any order ... If \"longitude_first\" is specified, the order is longitude then latitude', so the schema is wrong for 4.0 content. Docs: 00302 (threejs GeoCoordinate.x3d), 00460 (webgpu GeoCoordinate.x3d); first Zod issue invalid_union at .../Transform/-children/0/Shape, the real leaf is .../GeoCoordinate/@geoSystem/2.",
+     "grade": "C",
+     "action": "Report upstream to Web3D. The schema needs the optional order keywords, any-order optional args and the 'WM' frame. Not a converter issue."
+    },
+    {
+     "id": "F4",
+     "root_cause": "schema_stricter",
+     "files": 2,
+     "what": "GeoElevationGrid geoSystem='\"GD\" \"MOON\"' (a non-Earth ellipsoid) is rejected because the JSON schema closes the ellipsoid slot to the 22 Earth codes (+ WGS84). The XSD geoSystemType is a bare MFString restriction with no enumeration ('This list is unbounded, additional enumeration values are allowed'). The spec's Table 25.3 is only 'Supported earth ellipsoids', so the schema is consistent with the spec text and merely stricter than the XSD. The doc is a deliberate extension probe (meta title 'R3 GeoElevationGrid with geoSystem GD MOON', x3d.io planet-scale thread). Docs: 00009 (x3d-blender-io showcase), 00052 (x3d.demo copy of the same ellipsoid-moon.x3d); first Zod issue invalid_union at Shape/-geometry/GeoElevationGrid, the leaf is @geoSystem/1.",
+     "grade": "C",
+     "action": "Treat as a documented XSD-vs-JSON strictness gap (planetary ellipsoids), not a Zod bug. Not fixable by the converter."
+    },
+    {
+     "id": "F5",
+     "root_cause": "schema_stricter",
+     "files": 1,
+     "what": "A USE reference that also carries child content: <HAnimSegment USE='RootSegment'><Shape>...</Shape></HAnimSegment> (an LLM-written HAnim doc, qwen2.5-coder-14b). The schema's USE-only branch allows @USE, @class and -children containing only #comment objects, so a USE node with real children fails (HAnimSegment/-children/0 'Shape' unexpected). The XSD cannot forbid this and accepts it. The schema matches the XML-encoding rule (ISO/IEC 19776-1 s4.3.4: 'Nodes containing a USE attribute can include no other attributes except containerField and class'), so the document is wrong. The x3d_mcp semantic layer does not report it either (it reports only profile-component and containerfield-type-mismatch). Doc: 01036 (x3d.ml runs/gpu-phase hanim-04.x3d); the deepest cause is hidden by invalid_union at HAnimHumanoid.",
+     "grade": "C",
+     "action": "No schema change needed. Keep as a true positive of the JSON schema over the XSD (a USE node must be empty)."
+    },
+    {
+     "id": "F6",
+     "root_cause": "fixture_intentionally_invalid",
+     "files": 1,
+     "what": "Adversarial probe 'v02_use_before_def.x3d': <Shape DEF='B' USE='B'><Box/></Shape> has DEF and USE on one node plus child content, and is placed among USE-before-DEF references. The schema's USE-only branch has no @DEF and no real children, so the node fails and Zod reports invalid_union at the enclosing Transform (children/3). The XSD accepts it (DEF and USE are independent optional attributes). The x3d_mcp semantic checker reports the 4 use-before-def errors that the probe was written to trigger, but not the DEF+USE conflict. Doc: 00742 (x3d.ml demo/jsval/harness/probes/V adversarial-verify-round0). Same mechanism as F5, kept separate because the intent of the fixture is to be invalid.",
+     "grade": "C",
+     "action": "Expected rejection. Count as fixture_intentionally_invalid, schema correct per ISO 19776-1 s4.3.4."
+    },
+    {
+     "id": "X1",
+     "root_cause": "schema_bug",
+     "files": 1,
+     "what": "LATENT second cause inside an F1 file (not extra files): SpatialSound.@distanceModel enum in the JSON schema is lowercase ['linear','inverse','exponential'] (default 'inverse'), while XSD distanceModelChoices and the X3D 4.0 sound spec use uppercase LINEAR|INVERSE|EXPONENTIAL (default INVERSE). Valid content distanceModel='INVERSE' is rejected. Doc 00245 (physx-bridge machine-with-sound.x3d) has 24 SpatialSound nodes with INVERSE; once the hex image is fixed, these 24 issues are all that remain besides X2. The mirror image also holds: lowercase 'inverse' is accepted by the JSON schema but rejected by the XSD (schema_lenient).",
+     "grade": "C",
+     "action": "Report upstream to Web3D: the enum case should be uppercase to match XSD and spec."
+    },
+    {
+     "id": "X2",
+     "root_cause": "schema_bug",
+     "files": 3,
+     "what": "LATENT second cause inside F1 files 00245, 00249 and 00252 (physx-bridge machine-with-sound, race-main, marble-machine): CollisionSensor description='...' is rejected (Unrecognized key @description). XSD X3DSensorNode defines description (SFString) for every sensor, and the X3D 4.0 spec lists 'SFString [in,out] description \"\"' under CollisionSensor : X3DSensorNode, but the JSON schema's CollisionSensor has only @enabled. Scope: 12 sensor defs in the JSON schema lack @description (CollisionSensor, GeoProximitySensor, KeySensor, LinePickSensor, LoadSensor, PointPickSensor, PrimitivePickSensor, ProximitySensor, StringSensor, TransformSensor, VisibilitySensor, VolumePickSensor), while only CylinderSensor, GeoTouchSensor, PlaneSensor, SphereSensor, TimeSensor and TouchSensor have it. After the F1 hex fix, 00249 and 00252 fail only on this issue.",
+     "grade": "C",
+     "action": "Report upstream to Web3D: add @description to every X3DSensorNode descendant."
+    }
+   ]
+  },
+  {
+   "bucket": "lenient: 72 docs the XSD rejects but the JSON Schema accepts (receipts/lenient.json); all 72 assigned, 0 unassigned",
+   "summary": "All 72 docs are accepted by jsonschema 4.26.0, ajv 8.20.0 and Zod 4.6.7 and rejected by the x3d_mcp fork validate_xml (libxml2 2.14.6; XSD 4.0 for 70 docs, 4.1 for 00679 and 00752, which declare no version). I checked every file against its full XSD error list, not the first two errors that receipts/lenient.json keeps (00358 has 9, 00622 has 9, 00646 has 10). Each file was then repaired or re-validated until the XSD accepted it, so each assignment explains all of that file's XSD errors.\n\nRoot-cause split (72 = 31 + 16 + 25):\n- other, 31 files:\n  - XSD defects, 26 files, where the JSON Schema is right.\n  - Constraints JSON cannot express, 5 files: sibling order 2, duplicate DEF 3.\n- schema_lenient, 16 files: 11 identifier strings, 2 MFVec3f lengths, 1 ProtoInstance @name, 1 HAnimSite under HAnimJoint, 1 EnvironmentLight.\n- converter_fault, 25 files, where tools/xml2json.py hid the problem:\n  - 5 text/entity content dropped.\n  - 6 namespaces stripped.\n  - 5 SFBool 'TRUE' folded to true.\n  - 1 numeric lexical form normalised ('-08' to -8).\n  - 3 missing version/profile defaulted.\n  - 5 bogus containerField re-placed.\n- fixture_intentionally_invalid: 34 files are x3d.ml/demo/jsval/harness/probes adversarial fixtures (gen_probes_V.py says \"Each scene targets a place where a JS port is likely to drift\"). I assigned them by mechanism, not to that label. They are the 11 identifier, 3 duplicate-DEF, 5 text, 6 namespace, 3 missing-attribute, 5 bogus-containerField, 1 ProtoInstance and 2 MFVec3f/numeric files, plus 00611.\n\nCounts by what the XSD objected to:\n- containerField enumeration/atomic: 19. 14 are the XSD pickTarget defect and 5 are converter re-placement.\n- xs:ID / xs:IDREF / xs:NMTOKEN: 14. 11 are lexical (schema_lenient) and 3 are duplicates (inexpressible). A further 2 files (00786, 00682) also carry ID errors but are assigned to converter findings.\n- SFBool atomic type: 5.\n- Numeric pattern facets: 3.\n- Unexpected or missing elements (content model, order, namespace): 22.\n  - 3 GeoLOD\n  - 4 sequence-instead-of-choice\n  - 4 Viewport/LayoutGroup\n  - 1 HAnimSegment coord\n  - 1 HAnimSite\n  - 1 EnvironmentLight\n  - 2 order\n  - 6 namespaced elements or root\n- Required attribute missing: 4 (version, version, profile, ProtoInstance name).\n- Character content in element-only elements: 5.\n\nVerification:\n- Patching a scratch copy of the XSD (x3d-4.0.xsd, pickTarget enum added, sequence-to-choice, GeoLOD, HAnimJoint/HAnimSegment) makes 23 of the XSD-defect docs fully valid.\n- 00394, 00395, 00588 and 00611 become XSD-valid once the Viewport/LayoutGroup elements are removed. A UPA conflict stopped me patching the XSD for these.\n- A scratch strict copy of xml2json.py makes 24 of the 25 converter docs rejected by jsonschema; 00682 is rejected because of its namespaced ROUTE.\n- A scratch copy of the JSON Schema with DEF/USE/ROUTE pattern and minLength rules rejects all 11 identifier docs.\n- Requiring ProtoInstance @name rejects 00794.\n\nCaveats:\n- The XSD stops after the first content-model error in an element, so second errors are hidden. 00682 has a third error (ROUTE containerField 'not allowed') that only appears after the namespace is fixed.\n- The converter's `unplaced` metric counts every USE node (props_of() skips the USE variant), so 387 of 585 rows with unplaced>0 show only '.@USE' examples. 'converter_unplaced_files' is therefore noise, and none of the 72 docs lost an attribute through unplaced.\n- Genuine JSON-Schema leniency is 16 of 72 (22%). The XSD is the stricter side in 26 files (36%) and the converter hid the problem in 25 (35%).",
+   "findings": [
+    {
+     "id": "F1_pickTarget_containerField",
+     "root_cause": "other",
+     "files": 14,
+     "what": "[xsd_defect, XSD stricter than UOM/spec; JSON Schema correct] containerField='pickTarget' on Group/Transform (Shape/Inline too) under a PickSensor or Layer pick sensor is rejected by the XSD containerField enumeration {children,proxy,rootNode,shape,skin}. 00328 00334 00335 00348 00354 00358 00397 (x3d.threejs bridge fixtures) and 00485 00489 00490 00524 00528 00537 00591 (x3d.webgpu copies). Receipts show 2 errors; the files have up to 9.",
+     "grade": "C",
+     "action": "Do not count as JSON-schema leniency. Report to Web3D XSD maintainers: add pickTarget to the containerField choices of X3DGroupingNode/X3DShapeNode/Inline types."
+    },
+    {
+     "id": "F2_geolod_requires_geoorigin",
+     "root_cause": "other",
+     "files": 3,
+     "what": "[xsd_defect, XSD stricter than UOM] GeoLOD with inline rootNode children and no GeoOrigin: XSD says \"Missing child element(s). Expected is one of ( Background, ColorInterpolator, ... )\". 00010 and 00053 are the blender-io showcase 'geolod-no-origin' fixture, whose own meta text says 'Repro for a spec question'. 00972 is LLM output (gpt-oss-20b); its Group has no containerField and the converter placed it in -rootNode.",
+     "grade": "C",
+     "action": "XSD false negative; JSON schema is right. Keep out of the leniency count."
+    },
+    {
+     "id": "F3_xsd_sequence_instead_of_choice",
+     "root_cause": "other",
+     "files": 4,
+     "what": "[xsd_defect, XSD stricter than UOM] MFNode fields encoded as xs:sequence(unbounded) of all alternatives in fixed order, so a legal subset is rejected. ParticleSystem.physics (BoundedPhysicsModel, ForcePhysicsModel, WindPhysicsModel, ProtoInstance) hits 00278, 00410 (BoundedPhysicsModel alone) and 00599 (Force+Wind without Bounded). NurbsSet.geometry (NurbsPatchSurface, NurbsSweptSurface, NurbsSwungSurface, NurbsTrimmedSurface, ProtoInstance) hits 00511 (two NurbsPatchSurface USE).",
+     "grade": "C",
+     "action": "XSD false negative; report upstream. JSON schema correct."
+    },
+    {
+     "id": "F4a_xsd_childmodel_omits_Viewport_LayoutGroup",
+     "root_cause": "other",
+     "files": 4,
+     "what": "[xsd_defect, XSD stricter than UOM] Viewport (as a grouping child, containerField='children') and LayoutGroup are not in any ChildContentModel* group of the XSD, so they are rejected under Scene, Group and even LayoutLayer. 00394 00395 00588 (Viewport fixtures) and 00611 (jsval probe eg_01_all_empty, an empty node of every grouping type; XSD stops at the first, LayoutGroup).",
+     "grade": "C",
+     "action": "Treat as XSD content-model omission. Re-check once the 4.1 XSD is final (it still rejects them)."
+    },
+    {
+     "id": "F4b_xsd_hanimsegment_lacks_coord",
+     "root_cause": "other",
+     "files": 1,
+     "what": "[xsd_defect] HAnimSegment content model has no coord (Coordinate/CoordinateDouble) child at all, so '<Coordinate containerField=\"coord\"/>' inside HAnimSegment is rejected in any position. 00471 (HAnimDisplacer bridge fixture, webgpu).",
+     "grade": "C",
+     "action": "XSD omission acknowledged in its own TODO; JSON schema correct."
+    },
+    {
+     "id": "F5_hanimjoint_children_allows_hanimsite",
+     "root_cause": "schema_lenient",
+     "files": 1,
+     "what": "JSON Schema HAnimJoint.-children allows HAnimSite ($defs/-HAnimJoint-HAnimSegment-HAnimSiteMFNode); the XSD and UOM allow only HAnimJoint|HAnimSegment (plus displacers). 01314 (LLM output gpt-6.1-sol, hanim-03_a1) puts <HAnimSite> directly in an HAnimJoint.",
+     "grade": "C",
+     "action": "Genuine JSON-vs-XSD/UOM disagreement; decide which to follow, then tighten -HAnimJoint-HAnimSegment-HAnimSiteMFNode or relax the XSD."
+    },
+    {
+     "id": "F6_environmentlight_in_40_json_schema",
+     "root_cause": "schema_lenient",
+     "files": 1,
+     "what": "The '4.0' JSON Schema defines EnvironmentLight, a node that exists only in the X3D 4.1 XSD/UOM. 00037 (x3d.castle environment.x3d) declares version='4.0' and uses EnvironmentLight.",
+     "grade": "C",
+     "action": "Note that the Web3D 4.0 JSON schema leaks one 4.1 node; any 4.0-vs-4.1 comparison must exclude EnvironmentLight. Fixture could declare version 4.1."
+    },
+    {
+     "id": "F7_xml_sibling_order_not_expressible",
+     "root_cause": "other",
+     "files": 2,
+     "what": "XSD enforces an XML sibling order that the JSON encoding cannot carry, because JSON puts distinct fields under distinct keys. 00920: <MetadataString containerField='metadata'> after <Material> inside <Appearance> (metadata must come first). 01480: <component> after <meta> in <head> (head is (component*, unit*, meta*)).",
+     "grade": "C",
+     "action": "Not fixable in the JSON Schema; exclude 'sibling order' as an XSD-only constraint from leniency counts, or add an order lint to the converter."
+    },
+    {
+     "id": "F8_identifier_strings_untyped",
+     "root_cause": "schema_lenient",
+     "files": 11,
+     "what": "JSON Schema types @DEF, @USE, ROUTE @fromNode/@toNode/@fromField/@toField and field @name as bare {\"type\":\"string\"} with no pattern or minLength, while the XSD uses xs:ID / xs:IDREF / xs:NMTOKEN. Rejected values: empty DEF, leading digit, spaces, quotes, '&', backslash, tab/newline/CR, unicode spaces, emoji, empty ROUTE fields. 00603 00618 00619 00620 00621 00622 00641 00646 00792 00826 and 00743 (ROUTE fromField='' toField=''). All 11 are x3d.ml jsval adversarial probes (intentionally odd names).",
+     "grade": "C",
+     "action": "Genuine schema leniency (patternable). Add pattern/minLength to the identifier-typed string properties (the schema has 526 of them), or accept that these are only checkable by a semantic layer."
+    },
+    {
+     "id": "F9_duplicate_def_uniqueness",
+     "root_cause": "other",
+     "files": 3,
+     "what": "xs:ID document-wide uniqueness of DEF (duplicate DEF 'A', 'B', 'X', 'a', 'Dup'). JSON Schema has no keyword for cross-subtree uniqueness. 00601 (dd_01_dup), 00693 (rt_09_last_def_wins), 00771 (v23_duplicate_defs): jsval probes that test duplicate-DEF handling on purpose.",
+     "grade": "C",
+     "action": "Inexpressible in JSON Schema; classify as semantic (DEF/USE) check, not schema leniency."
+    },
+    {
+     "id": "F10_protoinstance_name_not_required",
+     "root_cause": "schema_lenient",
+     "files": 1,
+     "what": "ProtoInstance without @name: XSD says \"The attribute 'name' is required but missing\"; the JSON Schema ProtoInstance non-USE variant lists @name but has no `required`. 00794 (jsval probe v39_route_undeclared_proto, '<ProtoInstance DEF=\"PI2\"/>').",
+     "grade": "C",
+     "action": "Add required [\"@name\"] to the non-USE ProtoInstance variant."
+    },
+    {
+     "id": "F11_mfvec3f_length_not_multiple_of_3",
+     "root_cause": "schema_lenient",
+     "files": 2,
+     "what": "MFVec3f/point flat arrays whose length is not a multiple of 3. 01046 (LLM output qwen2.5-coder, 40 numbers) and 00762 (jsval probe v14_large_attribute, 45002 numbers). The JSON schema says {type:array, minItems:3, items:number}, which cannot express divisibility by 3.",
+     "grade": "C",
+     "action": "Inherent limit of the flat-array JSON encoding; record as 'lenient, not fixable by schema'."
+    },
+    {
+     "id": "F12_converter_drops_text_and_entities",
+     "root_cause": "converter_fault",
+     "files": 5,
+     "what": "xml2json.py silently discards non-whitespace character content (text, CDATA, text entities, tails) on element-only nodes, and with resolve_entities=False drops entity-reference children (so '&frag;' expanding to <Box/> inside Group vanishes). The XSD (default lxml parse, entities resolved) objects. 00613, 00616, 00645, 00757, 00786 (jsval probes; 00786 and 00616 also have other XSD errors, all explained).",
+     "grade": "C",
+     "action": "Converter: record dropped text/entities in `unplaced` (or fail the doc) instead of silently dropping."
+    },
+    {
+     "id": "F13_converter_strips_namespaces",
+     "root_cause": "converter_fault",
+     "files": 6,
+     "what": "xml2json.py takes etree.QName(...).localname for every element and attribute, so foreign-namespace elements (<x:Viewpoint xmlns:x='urn:x'>, <y:Shape>, <x:Box>, <x:ROUTE>) and an X3D root in the x3d-namespace become plain X3D nodes. The XSD rejects them. 00628, 00647, 00760, 00791, 00684 (default namespace on X3D root: 'No matching global declaration') and 00682 (namespaced ROUTE; it also has duplicate DEFs and a ROUTE containerField='children' the XSD rejects, the latter hidden by the converter's containerField skip, :112).",
+     "grade": "C",
+     "action": "Converter: do not strip namespaces; treat foreign-namespace elements as unplaced/invalid (and keep ROUTE containerField)."
+    },
+    {
+     "id": "F14_converter_folds_bool_case",
+     "root_cause": "converter_fault",
+     "files": 5,
+     "what": "SFBool attribute 'TRUE'/'FALSE' (VRML-classic spelling) in LLM output is rejected by the XSD (xs:boolean is case-sensitive) but the converter turns it into JSON true/false. 01102, 01104, 01106 (3 TimeSensors), 01112, 01121 (qwen3-8b one-shot outputs).",
+     "grade": "C",
+     "action": "Converter: reject or keep the raw string for non-lexical booleans so the receipt shows the invalid literal."
+    },
+    {
+     "id": "F15_converter_numeric_lexical_normalised",
+     "root_cause": "converter_fault",
+     "files": 1,
+     "what": "SFVec3f '-08 2.3 0.4' (leading zero) violates the XSD number pattern; the converter parses with Python float() and emits -8, hiding the lexical error. 00997 (gpt-oss-20b one-shot asm-05).",
+     "grade": "C",
+     "action": "Converter: validate the lexical form before float(); inherently inexpressible in JSON numbers."
+    },
+    {
+     "id": "F16_converter_injects_version_profile_defaults",
+     "root_cause": "converter_fault",
+     "files": 3,
+     "what": "<X3D> without version (00679 dr_07_no_version, 00752 v09d_version_missing) or without profile (00778 v28c_profile_missing): the XSD says 'The attribute ... is required but missing'; the converter fills in @version '4.0' / @profile 'Full'. Both are required in the JSON schema, so faithful output is rejected.",
+     "grade": "C",
+     "action": "Converter: do not default required root attributes."
+    },
+    {
+     "id": "F17_converter_replaces_invalid_containerField",
+     "root_cause": "converter_fault",
+     "files": 5,
+     "what": "Invalid containerField values (XSD: not in the enumeration or empty) are discarded by the converter and the child is placed by heuristic, producing valid JSON. 00663 (containerField='' on ImageTexture), 00671 (Shape cf='translation', Group cf='bboxCenter'), 00672 (ImageTexture cf='alphaMode'/'baseColor'/'metallic', Coordinate cf='coordIndex'; two textures collapse onto -baseTexture, last wins), 01390 and 01391 (nemotron HAnim output: HAnimSegment cf='segment', HAnimJoint cf='joint', which should be 'segments'/'joints'/'children').",
+     "grade": "C",
+     "action": "Converter: treat an unknown containerField as unplaced/invalid instead of re-placing the node; JSON has no containerField, so only the converter can surface it."
+    }
+   ]
+  }
+ ]
+}
