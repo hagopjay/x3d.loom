@@ -1,19 +1,299 @@
 {
  "node": "ProjectionVolumeStyle",
- "mode": "events",
+ "mode": "scene",
+ "tone": "none",
+ "note": "X_ITE draws a projection per slice: each of the ~230 slices a pixel crosses marches 16 steps of 0.0884 along the viewing direction from 0.707 behind a point that is the slice position with its own offset DOUBLED (a sign slip), skips the steps outside the cube, and returns the grey of the projection with the alpha of its own voxel; the slices then blend as usual. So the front slice sees only 3 samples (the layers 6, 7 and 7 of 8) and a uniform 204 volume under AVERAGE (always divided by 16) shows 38, not 204. MAX of the ramp 32..255 is 255, MIN 224, AVERAGE 46; the layer set 255, 200, 150, 100, 100, 150, 200, 255 gives MIN 200 and AVERAGE 44. With a threshold MAX stops at the first local maximum at or above it (one qualifying sample late): the layers 0, 0, 180, 90 stop at 180, 0, 80, 0, 200 with the threshold 0.3 stops at 80 (blended to 86) and with 0.6 skips it (200); MIN with 0.2 over 0, 0, 180, 90 gives 104. Events: the type MIN, AVERAGE and an unknown word (MAX) give 224, 46, 255, MIN with a threshold of 0.9 finds nothing and stays white (255), and enabled false leaves the plain ramp.",
+ "gaps": [
+  "X_ITE 16.6.0 projects per slice, not along the whole ray, and the bridge copies it: the numbers (AVERAGE of a uniform volume is 38, MIN with no hit is white) are X_ITE, not the projection the specification describes",
+  "the march direction is the view direction in volume axes, not divided by the dimensions (as in X_ITE), so a volume with unequal dimensions projects along a different line than its shape suggests; only cubes are tested",
+  "a projection value near a layer boundary (the sample at 0.37537 against the edge at 0.375) depends on the exact slice plane; the fixture keeps the layers thick and probes one centre pixel per volume",
+  "a ProjectionVolumeStyle inside a Composed, Blended or the style list of an isosurface or segmented volume is dropped (it is not composable)"
+ ],
  "steps": [
   {
-   "set": [
-    "N",
-    "FIELD",
-    null
+   "expect": [
+    "P3a",
+    "type",
+    "MAX"
    ]
   },
   {
    "expect": [
-    "N",
-    "FIELD",
-    null
+    "P3a",
+    "intensityThreshold",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "P3a",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 4
+  },
+  {
+   "px": [
+    59,
+    52,
+    [
+     204,
+     204,
+     204
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    126,
+    52,
+    [
+     38,
+     38,
+     38
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    194,
+    52,
+    [
+     255,
+     255,
+     255
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    261,
+    52,
+    [
+     224,
+     224,
+     224
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    59,
+    120,
+    [
+     46,
+     46,
+     46
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    126,
+    120,
+    [
+     25,
+     25,
+     25
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    194,
+    120,
+    [
+     180,
+     180,
+     180
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    261,
+    120,
+    [
+     104,
+     104,
+     104
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    59,
+    188,
+    [
+     86,
+     86,
+     86
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    126,
+    188,
+    [
+     200,
+     200,
+     200
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    194,
+    188,
+    [
+     200,
+     200,
+     200
+    ],
+    4
+   ]
+  },
+  {
+   "px": [
+    261,
+    188,
+    [
+     44,
+     44,
+     44
+    ],
+    4
+   ]
+  },
+  {
+   "set": [
+    "P3a",
+    "type",
+    "MIN"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    194,
+    52,
+    [
+     224,
+     224,
+     224
+    ],
+    4
+   ]
+  },
+  {
+   "set": [
+    "P3a",
+    "type",
+    "AVERAGE"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    194,
+    52,
+    [
+     46,
+     46,
+     46
+    ],
+    4
+   ]
+  },
+  {
+   "set": [
+    "P3a",
+    "type",
+    "average2"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    194,
+    52,
+    [
+     255,
+     255,
+     255
+    ],
+    4
+   ]
+  },
+  {
+   "set": [
+    "P3a",
+    "type",
+    "MIN"
+   ]
+  },
+  {
+   "set": [
+    "P3a",
+    "intensityThreshold",
+    0.9
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    194,
+    52,
+    [
+     255,
+     255,
+     255
+    ],
+    4
+   ]
+  },
+  {
+   "set": [
+    "P3a",
+    "enabled",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    194,
+    52,
+    [
+     255,
+     255,
+     255
+    ],
+    4
    ]
   }
  ]

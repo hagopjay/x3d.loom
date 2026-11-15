@@ -19,8 +19,8 @@ BR.node('BoundaryEnhancementVolumeStyle', {
   if (n.f.enabled === false) return null;
   const id = C.id;
   return { name: 'st_' + id, fn: `fn st_${id}(c: vec4f, tc: vec3f, vp: vec3f) -> vec4f {
-  let o = 1.0 / f32(textureDimensions(vol, 0).z);
-  let f = abs(vox(tc).r - vox(tc + vec3f(0.0, 0.0, o)).r);
+  let o = 1.0 / f32(textureDimensions(${C.vol}, 0).z);
+  let f = abs(${C.vox}(tc).r - ${C.vox}(tc + vec3f(0.0, 0.0, o)).r);
   return vec4f(c.rgb, c.a * (${C.fl(n.f.retainedOpacity)} + ${C.fl(n.f.boundaryOpacity)} * pow(f, ${C.fl(n.f.opacityFactor)})));
 }` };
 };

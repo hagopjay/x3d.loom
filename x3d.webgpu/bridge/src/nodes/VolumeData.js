@@ -30,10 +30,10 @@ uniform c3: vec3f;
 fn lightAt(i: u32) -> vec4f { if (i == 0u) { return uniforms.l0; } if (i == 1u) { return uniforms.l1; } if (i == 2u) { return uniforms.l2; } return uniforms.l3; }
 fn lightCol(i: u32) -> vec3f { if (i == 0u) { return uniforms.c0; } if (i == 1u) { return uniforms.c1; } if (i == 2u) { return uniforms.c2; } return uniforms.c3; }
 `;
-V.normalFn = (id, sn) => `fn nrm_${id}(tc: vec3f) -> vec4f {
+V.normalFn = (id, sn, vx = 'vox', vl = 'vol') => `fn nrm_${id}(tc: vec3f) -> vec4f {
   var n: vec3f;
-  ${sn ? `n = textureSampleLevel(${sn}, ${sn}Sampler, tc, 0.0).xyz * 2.0 - vec3f(1.0);` : `let o = vec3f(1.0) / vec3f(textureDimensions(vol, 0));
-  n = vec3f(vox(tc - vec3f(o.x, 0.0, 0.0)).r - vox(tc + vec3f(o.x, 0.0, 0.0)).r, vox(tc - vec3f(0.0, o.y, 0.0)).r - vox(tc + vec3f(0.0, o.y, 0.0)).r, vox(tc - vec3f(0.0, 0.0, o.z)).r - vox(tc + vec3f(0.0, 0.0, o.z)).r);`}
+  ${sn ? `n = textureSampleLevel(${sn}, ${sn}Sampler, tc, 0.0).xyz * 2.0 - vec3f(1.0);` : `let o = vec3f(1.0) / vec3f(textureDimensions(${vl}, 0));
+  n = vec3f(${vx}(tc - vec3f(o.x, 0.0, 0.0)).r - ${vx}(tc + vec3f(o.x, 0.0, 0.0)).r, ${vx}(tc - vec3f(0.0, o.y, 0.0)).r - ${vx}(tc + vec3f(0.0, o.y, 0.0)).r, ${vx}(tc - vec3f(0.0, 0.0, o.z)).r - ${vx}(tc + vec3f(0.0, 0.0, o.z)).r);`}
   let l = length(n);
   if (l == 0.0) { return vec4f(0.0); }
   return vec4f(normalize((uniforms.worldView * vec4f(n / uniforms.dims, 0.0)).xyz), l);
@@ -49,16 +49,27 @@ fn main(input: VertexInputs) -> FragmentInputs {
 }`;
 
 /* the styles of a volume node: VolumeData has one (SFNode), IsoSurfaceVolumeData and SegmentedVolumeData a list (MFNode); a node whose type has no generator is ignored (X3DCast failing) */
-V.styleNodes = (n) => { const r = n.f.renderStyle; return (Array.isArray(r) ? r : r ? [r] : []).filter((s) => s && V.styles[s.type]); };
+V.composable = new Set(['OpacityMapVolumeStyle', 'BoundaryEnhancementVolumeStyle', 'CartoonVolumeStyle', 'EdgeEnhancementVolumeStyle', 'ShadedVolumeStyle', 'SilhouetteEnhancementVolumeStyle', 'ToneMappedVolumeStyle', 'BlendedVolumeStyle', 'ComposedVolumeStyle']);   // X3DComposableVolumeRenderStyleNode: the only styles a list (Isosurface, Segmented), a Composed and a Blended take; ProjectionVolumeStyle is a plain X3DVolumeRenderStyleNode, so only VolumeData.renderStyle takes it
+V.styleNodes = (n) => { const r = n.f.renderStyle, ok = n.type === 'VolumeData' ? (s) => V.styles[s.type] : (s) => V.styles[s.type] && V.composable.has(s.type); return (Array.isArray(r) ? r : r ? [r] : []).filter((s) => s && ok(s)); };
 
 /* the shader: { fs, texs, lights } for a volume node. The node type picks the part that decides what a sample becomes. */
 V.compile = (n) => {
   const texs = [], libs = new Set(), fns = [], seen = new Set();
   let lights = false;
-  const C = (node) => ({
-    id: V.idOf(node), fl, v3: V.v3, v4: V.v4, normalFn: V.normalFn,
-    tex(name, tn, dim) { if (!seen.has(name)) { seen.add(name); texs.push({ name, node: tn, dim }); } return name; },
-  });
+  /* the context a style generator gets. vox / vol name the voxel sampler and its texture (a Blended style hands its nested style the second volume), sub(node) makes the descriptor of a child style
+     (Composed, Blended) with the same collections, so its function, libraries and lights land in the one shader. */
+  const C = (node, o = {}) => {
+    const vx = o.vox || 'vox', vl = o.vol || 'vol';
+    return {
+      id: V.idOf(node), fl, v3: V.v3, v4: V.v4, vox: vx, vol: vl, normalFn: (id, sn) => V.normalFn(id, sn, vx, vl),
+      tex(name, tn, dim) { if (!seen.has(name)) { seen.add(name); texs.push({ name, node: tn, dim }); } return name; },
+      sub(child) {
+        if (!child || !V.styles[child.type] || !V.composable.has(child.type)) return null;
+        const d = V.styles[child.type](child, C(child, o)); if (!d) return null;
+        (d.lib || []).forEach((l) => libs.add(l)); fns.push(d.fn); lights = lights || !!d.lights; return d;
+      },
+    };
+  };
   const descs = V.styleNodes(n).map((s) => { const d = V.styles[s.type](s, C(s)); if (!d) return null; (d.lib || []).forEach((l) => libs.add(l)); fns.push(d.fn); lights = lights || !!d.lights; return d; });
   const call = (k, col) => (descs[k] ? `${col} = ${descs[k].name}(${col}, tc, vp);` : '');
   const f = n.f, type = n.type; let sample;
@@ -84,6 +95,7 @@ var vol: texture_3d<f32>;
 ${decl}
 uniform camLocal: vec3f;
 uniform fwdLocal: vec3f;
+uniform viewTex: vec3f;
 uniform dims: vec3f;
 uniform worldView: mat4x4f;
 uniform inside: f32;
@@ -172,7 +184,7 @@ V.build = (body, n, parent, chain) => {
   const key = 'vol' + (V.nextKey = (V.nextKey || 0) + 1), SS = BABYLON.ShaderStore.ShadersStoreWGSL;
   SS[key + 'VertexShader'] = VS; SS[key + 'FragmentShader'] = cp.fs;
   const mat = new BABYLON.ShaderMaterial('vol-' + n.id, body.scene, { vertex: key, fragment: key },
-    { attributes: ['position'], uniforms: ['worldViewProjection', 'worldView', 'camLocal', 'fwdLocal', 'dims', 'inside', 'l0', 'l1', 'l2', 'l3', 'c0', 'c1', 'c2', 'c3'], samplers: ['vol', ...cp.texs.map((t) => t.name)], shaderLanguage: BABYLON.ShaderLanguage.WGSL, needAlphaBlending: true });
+    { attributes: ['position'], uniforms: ['worldViewProjection', 'worldView', 'camLocal', 'fwdLocal', 'viewTex', 'dims', 'inside', 'l0', 'l1', 'l2', 'l3', 'c0', 'c1', 'c2', 'c3'], samplers: ['vol', ...cp.texs.map((t) => t.name)], shaderLanguage: BABYLON.ShaderLanguage.WGSL, needAlphaBlending: true });
   mat.alphaMode = BABYLON.Constants.ALPHA_PREMULTIPLIED; mat.backFaceCulling = false; mat.disableDepthWrite = true; mat.needAlphaBlending = () => true; r.mat = mat;
   const mesh = BABYLON.MeshBuilder.CreateBox('volbox-' + n.id, { width: dims[0], height: dims[1], depth: dims[2] }, body.scene);
   mesh.parent = tn; mesh.material = mat; mesh.isPickable = false; mesh.alwaysSelectAsActiveMesh = true; r.mesh = mesh;
@@ -186,7 +198,7 @@ V.build = (body, n, parent, chain) => {
     for (const s of srcs) if (!same(s.sig, sigOf(s.node))) load(body, r, s);
     const iw = mesh.getWorldMatrix().clone().invert(), iv = c.getViewMatrix().clone().invert();
     const pw = c.globalPosition || c.position, cl = BABYLON.Vector3.TransformCoordinates(pw, iw), fwdW = BABYLON.Vector3.TransformNormal(new BABYLON.Vector3(0, 0, -1), iv), fl2 = BABYLON.Vector3.TransformNormal(fwdW, iw).normalize();
-    mat.setVector3('camLocal', cl); mat.setVector3('fwdLocal', fl2);
+    mat.setVector3('camLocal', cl); mat.setVector3('fwdLocal', fl2); mat.setVector3('viewTex', fl2.scale(-1));   // viewTex: the slice normal (towards the viewer) in volume axes, what X_ITE's ProjectionVolumeStyle marches along
     mat.setFloat('inside', Math.abs(cl.x) < dims[0] / 2 && Math.abs(cl.y) < dims[1] / 2 && Math.abs(cl.z) < dims[2] / 2 ? 1 : 0);
     if (cp.lights) {
       const V4 = c.getViewMatrix(), ni = body.world && body.world.nodes.find((x) => x.type === 'NavigationInfo'), list = [];
@@ -214,7 +226,7 @@ V.touch = (body, node) => {
   for (const r of [...body.rec.values()]) {
     if (!r.vol) continue; const f = r.node.f;
     const used = [].concat(f.renderStyle || [], f.voxels || [], f.gradients || [], f.segmentIdentifiers || []);
-    const deep = (x) => x === node || (x && x.f && Object.values(x.f).some((v) => (Array.isArray(v) ? v : [v]).some((y) => y === node || (y && y.f && Object.values(y.f).some((z) => z === node)))));
+    const deep = (x, d = 0) => x === node || (d < 8 && x && x.f && Object.values(x.f).some((v) => (Array.isArray(v) ? v : [v]).some((y) => y && typeof y === 'object' && y.f && deep(y, d + 1))));   // a texture under a Blended under a Composed is four levels down
     if (used.some(deep)) V.rebuild(body, r.node);
   }
 };

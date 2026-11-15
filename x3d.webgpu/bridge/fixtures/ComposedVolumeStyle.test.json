@@ -1,20 +1,182 @@
 {
  "node": "ComposedVolumeStyle",
- "mode": "events",
+ "mode": "scene",
+ "tone": "none",
+ "note": "Each volume is 2 x 2 x 2 voxels of grey 204 (the default ramp makes 0.8012). The styles of a Composed form a CHAIN, not a sum: each takes what the one before returned and replaces it, so the list [red table, blue table] gives blue and [blue, red] gives red. A style that reads the colour shows the chain: the 2 x 1 table [red, blue] read after a table that returns grey 0.25 (0x404040) picks its first texel (red) while it alone picks its second (blue), because the lookup is at the incoming colour. An empty list and enabled false pass the colour through (204). A ProjectionVolumeStyle child is not composable and is dropped (204). A Composed inside a Composed works, and a Blended child gives the Blended own own number (153).",
+ "gaps": [
+  "X_ITE 16.6.0 and the bridge chain the styles (each replaces the colour it gets) where the specification text can be read as a sum; the bridge copies 16.6.0",
+  "only OpacityMapVolumeStyle, BlendedVolumeStyle, ProjectionVolumeStyle (dropped) and a nested Composed are tested here; the other styles use the same chain call",
+  "a Blended inside a Composed reads its second volume and the run-time changes of its texture rebuild the shader (BR.volr.touch walks the whole chain), not tested by picture"
+ ],
  "steps": [
   {
-   "set": [
-    "N",
-    "FIELD",
-    null
+   "expect": [
+    "C1",
+    "enabled",
+    true
    ]
   },
   {
-   "expect": [
-    "N",
-    "FIELD",
-    null
+   "settle": 4
+  },
+  {
+   "px": [
+    92,
+    52,
+    [
+     204,
+     204,
+     204
+    ],
+    3
+   ]
+  },
+  {
+   "px": [
+    160,
+    52,
+    [
+     0,
+     0,
+     255
+    ],
+    3
+   ]
+  },
+  {
+   "px": [
+    228,
+    52,
+    [
+     255,
+     0,
+     0
+    ],
+    3
+   ]
+  },
+  {
+   "px": [
+    92,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    3
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    3
+   ]
+  },
+  {
+   "px": [
+    228,
+    120,
+    [
+     204,
+     204,
+     204
+    ],
+    3
+   ]
+  },
+  {
+   "px": [
+    92,
+    188,
+    [
+     204,
+     204,
+     204
+    ],
+    3
+   ]
+  },
+  {
+   "px": [
+    160,
+    188,
+    [
+     0,
+     0,
+     255
+    ],
+    3
+   ]
+  },
+  {
+   "px": [
+    228,
+    188,
+    [
+     153,
+     153,
+     153
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "C2",
+    "enabled",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    52,
+    [
+     204,
+     204,
+     204
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "C2",
+    "enabled",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    52,
+    [
+     0,
+     0,
+     255
+    ],
+    3
    ]
   }
+ ],
+ "xsdContainerField": [
+  "transferFunction",
+  "weightTransferFunction1",
+  "weightTransferFunction2"
  ]
 }
