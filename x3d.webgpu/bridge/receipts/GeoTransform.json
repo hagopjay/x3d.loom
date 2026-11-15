@@ -1,0 +1,31 @@
+{
+ "node": "GeoTransform",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/GeoTransform.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 34/34",
+  "xite": "pass 34/34",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "a scale under a non-zero scaleOrientation that is not uniform is a shear, which the node cannot hold (dropped, noted by the body)",
+   "the matrix is computed in double precision, drawn through a 32 bit Babylon world matrix"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ed32d8703fb3",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "6d77a58"
+}

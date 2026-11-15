@@ -187,10 +187,10 @@
    "inherits": "X3DComposableVolumeRenderStyleNode",
    "container": "renderStyle",
    "nfields": 10,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 45,
+   "receipt": "receipts/BlendedVolumeStyle.json",
+   "note": "X_ITE 16.6.0 names the weight functions ALPHA0 / ALPHA1 (first and second volume) while the schema says ALPHA1 / ALPHA2: its ALPHA1 and ONE_MINUS_ALPHA1 write a stray space into the shader (blendColor_ 12 .a) so the whole volume vanishes, and ALPHA2 / ONE_MINUS_ALPHA2 fall back to CONSTANT; the bridge reads the schema names and keeps ALPHA0 as an alias of ALPHA1; two BlendedVolumeStyle nodes in one X_ITE volume (two in a Composed, one inside another) are a GLSL redefinition and draw nothing; the bridge draws any number; the second volume is read through the default ramp (red channel only) as in X_ITE, so its green, blue and alpha never matter; a nested style reads the second volume (its gradient and its alpha), X_ITE rewrite of x3d_Texture3D[0]; only an OpacityMapVolumeStyle is tested nested here; the weight transfer function is read from a PixelTexture only (nearest below 16 texels, first channel)",
    "rank": 249
   },
   "BooleanFilter": {
@@ -634,10 +634,10 @@
    "inherits": "X3DComposableVolumeRenderStyleNode",
    "container": "renderStyle",
    "nfields": 3,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 45,
+   "receipt": "receipts/ComposedVolumeStyle.json",
+   "note": "X_ITE 16.6.0 and the bridge chain the styles (each replaces the colour it gets) where the specification text can be read as a sum; the bridge copies 16.6.0; only OpacityMapVolumeStyle, BlendedVolumeStyle, ProjectionVolumeStyle (dropped) and a nested Composed are tested here; the other styles use the same chain call; a Blended inside a Composed reads its second volume and the run-time changes of its texture rebuild the shader (BR.volr.touch walks the whole chain), not tested by picture",
    "rank": 251
   },
   "Cone": {
@@ -1128,10 +1128,10 @@
    "inherits": "X3DCoordinateNode",
    "container": "coord",
    "nfields": 4,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 45,
+   "receipt": "receipts/GeoCoordinate.json",
+   "note": "the geometry reads the converted points; set1Point and the inverse of the conversion are not reachable from a scene file; UTM and GC are checked in the unit maths of the bridge (BR.geo, numbers from X_ITE) not by picture",
    "rank": 216
   },
   "GeoElevationGrid": {
@@ -1141,10 +1141,10 @@
    "inherits": "X3DGeometryNode",
    "container": "geometry",
    "nfields": 19,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 45,
+   "receipt": "receipts/GeoElevationGrid.json",
+   "note": "the grid is drawn per triangle with the unweighted normals of X_ITE (the average depends on the triangulation); only the facets and the smooth ridge pixels are tested; set_height is checked in the interpolation fixture style (an event) and not drawn here; tangent is not made (X_ITE builds it for normal maps; the bridge draws no normal maps from it)",
    "rank": 217
   },
   "GeoLOD": {
@@ -1167,10 +1167,10 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 11,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 45,
+   "receipt": "receipts/GeoLocation.json",
+   "note": "the placement matrices of the geocentric (no origin) cases are checked in our node only: X_ITE has no way to read them back, the picture tests use the rotateYUp origin; the node drawn is a Babylon TransformNode, whose world matrix is 32 bit: without a GeoOrigin a point 6.4e6 m from the centre of the earth is only good to about half a metre in the picture",
    "rank": 219
   },
   "GeoMetadata": {
@@ -1193,10 +1193,10 @@
    "inherits": "X3DNode",
    "container": "geoOrigin",
    "nfields": 4,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 45,
+   "receipt": "receipts/GeoOrigin.json",
+   "note": "only GD and UTM and GC geoSystems with the WE and IN style ellipsoids are exercised in the unit checks of BR.geo; the picture tests use GD WE; a plain list handed to a double field of X_ITE 16.6.0 (a harness slip, now converted to SFVec3d) turns the picture to nothing and a second set kills the page; the origin is read at use: a change of geoSystem of an existing GeoOrigin at run time is not tested (the field is initializeOnly)",
    "rank": 221
   },
   "GeoPositionInterpolator": {
@@ -1206,10 +1206,10 @@
    "inherits": "X3DInterpolatorNode",
    "container": "children",
    "nfields": 8,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 45,
+   "receipt": "receipts/GeoPositionInterpolator.json",
+   "note": "when a key sits on the GeoOrigin its local vector is zero and both engines give the same odd point (lon 7.04, 88.5 km below the ellipsoid at the middle of 0 to 20 degrees): the case is kept because the two agree; the great-circle path pivoting on the GeoOrigin is X_ITE's own choice (a defect against any sane reading); the bridge copies it so the numbers agree; the interpolation is not linear in latitude, longitude and height, which a reader of the specification may expect; UTM keys are not tested here: the unit maths of the bridge covers UTM, the interpolator uses the same conversion",
    "rank": 222
   },
   "GeoProximitySensor": {
@@ -1245,10 +1245,10 @@
    "inherits": "X3DGroupingNode",
    "container": "children",
    "nfields": 15,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 45,
+   "receipt": "receipts/GeoTransform.json",
+   "note": "a scale under a non-zero scaleOrientation that is not uniform is a shear, which the node cannot hold (dropped, noted by the body); the matrix is computed in double precision, drawn through a 32 bit Babylon world matrix",
    "rank": 226
   },
   "GeoViewpoint": {
@@ -1258,10 +1258,10 @@
    "inherits": "X3DViewpointNode",
    "container": "children",
    "nfields": 18,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 45,
+   "receipt": "receipts/GeoViewpoint.json",
+   "note": "X_ITE 16.6.0 and the 4.0 schema have no set_position, set_orientation, position_changed, geoCoord, elevationScale or navType on GeoViewpoint: none is implemented; navigation does not write `position`; the speed is computed, not used by a navigation mode in this bridge; near 0.125 and far 1e9 as in X_ITE: with Babylon's depth buffer the far range costs precision at long distances (X_ITE draws the GeoViewpoint with a logarithmic depth buffer)",
    "rank": 224
   },
   "Group": {
@@ -2507,10 +2507,10 @@
    "inherits": "X3DVolumeRenderStyleNode",
    "container": "renderStyle",
    "nfields": 4,
-   "status": "todo",
-   "batch": null,
-   "receipt": null,
-   "note": "",
+   "status": "gap",
+   "batch": 45,
+   "receipt": "receipts/ProjectionVolumeStyle.json",
+   "note": "X_ITE 16.6.0 projects per slice, not along the whole ray, and the bridge copies it: the numbers (AVERAGE of a uniform volume is 38, MIN with no hit is white) are X_ITE, not the projection the specification describes; the march direction is the view direction in volume axes, not divided by the dimensions (as in X_ITE), so a volume with unequal dimensions projects along a different line than its shape suggests; only cubes are tested; a projection value near a layer boundary (the sample at 0.37537 against the edge at 0.375) depends on the exact slice plane; the fixture keeps the layers thick and probes one centre pixel per volume; a ProjectionVolumeStyle inside a Composed, Blended or the style list of an isosurface or segmented volume is dropped (it is not composable)",
    "rank": 245
   },
   "ProtoInstance": {

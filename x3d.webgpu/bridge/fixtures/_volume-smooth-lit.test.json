@@ -1,0 +1,127 @@
+{
+ "node": "_volume-smooth-lit",
+ "mode": "scene",
+ "tone": "none",
+ "note": "Smooth data: a Gaussian ball of 16 x 16 x 16 voxels (linear filtering) with a directional light along (-1, -1, -1) and no headlight. Shaded unrotated: both engines light the ball the same way within about 6 levels (the lit side 158 to 162, the shadow side 50). The middle volume is the same ball turned by 0.9 rad about (1, 1, 0): a sphere looks the same in any orientation, so the bridge draws the same five numbers as the unrotated one; X_ITE 16.6.0 does not (measured on the rig: 0, 0, 37, 0, 37 with the headlight; the light seems to be applied in the volume axes turned the wrong way, Suspected, cause not isolated), so that volume is checked in the bridge only. ToneMapped (right) agrees within 6.",
+ "gaps": [
+  "X_ITE 16.6.0 lights a ROTATED volume wrongly (its picture changes with the rotation of the Transform above the volume, a ball does not): measured with rotations about X, Y, Z and a mixed axis, and unchanged only for a half turn; a rotation of the volume node itself is not what the specification allows to change a ball, so the bridge draws the rotation-independent picture (quality over the match) and the middle volume has no X_ITE check",
+  "dim shells: with smooth data the opacity of a slice follows the voxel value and there is no spacing correction, so a Gaussian ball whose core is 243 shows as a dim disc (about 18 for the plain ball) in BOTH engines; the transition layer is already opaque before the core is reached",
+  "a smooth volume needs 16 or more texels along its widest side to be filtered linearly in X_ITE (below that it is nearest), the fixture uses exactly 16"
+ ],
+ "steps": [
+  {
+   "settle": 4
+  },
+  {
+   "px": [
+    84,
+    120,
+    [
+     78,
+     78,
+     78
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    92,
+    120,
+    [
+     137,
+     137,
+     137
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    100,
+    120,
+    [
+     160,
+     160,
+     160
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    152,
+    120,
+    [
+     46,
+     46,
+     46
+    ],
+    12
+   ],
+   "only": "ours"
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     118,
+     118,
+     118
+    ],
+    12
+   ],
+   "only": "ours"
+  },
+  {
+   "px": [
+    168,
+    120,
+    [
+     154,
+     154,
+     154
+    ],
+    12
+   ],
+   "only": "ours"
+  },
+  {
+   "px": [
+    220,
+    120,
+    [
+     118,
+     118,
+     137
+    ],
+    14
+   ]
+  },
+  {
+   "px": [
+    228,
+    120,
+    [
+     70,
+     70,
+     185
+    ],
+    14
+   ]
+  },
+  {
+   "px": [
+    236,
+    120,
+    [
+     34,
+     34,
+     221
+    ],
+    14
+   ]
+  }
+ ]
+}

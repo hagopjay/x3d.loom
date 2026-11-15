@@ -1,0 +1,527 @@
+{
+ "node": "BlendedVolumeStyle",
+ "mode": "scene",
+ "tone": "none",
+ "note": "Every sample becomes clamp(c * w1 + b * w2) over all four channels: c is the first volume through the default grey ramp (0.8012 for voxel 204), b the second volume through the same ramp (0.3996 for 102). Defaults 0.5 and 0.5 give 0.6004 = 153. ALPHA0 weights with the alpha of the first volume (0.8012 x 0.8012 + 0.5 x 0.3996 = 0.8417 = 215), ONE_MINUS_ALPHA0 with the rest (0.1988 x 0.8012 + 0.1998 = 0.3591 = 91), constants 1 and 0.25 make 230, 2 and 2 clamp to 255, -1 and 1 clamp to 0 (nothing drawn). TABLE reads weightTransferFunction at (alpha of the first, alpha of the second): the 2 x 2 picture 0, 51, 255, 128 gives the texel 51 = 0.2 at (0.80, 0.40), so w1 = 0.2 (92) and as w2 (122). The middle volume has an OpacityMapVolumeStyle with a one texel red table as the nested style, which sees the SECOND volume: 0.5 x 0.8012 + 0.5 x red = (230, 102, 102). The right volume has no second volume: pass-through, 204, and the nested style is ignored. The schema names ALPHA1, ONE_MINUS_ALPHA1 (alpha of the first volume) and ALPHA2, ONE_MINUS_ALPHA2 (alpha of the second: 0.5 x 0.8012 + 0.3996 x 0.3996 = 143, 0.5 x 0.8012 + 0.6004 x 0.3996 = 163) are the bridge own reading; X_ITE 16.6.0 cannot draw them (ALPHA1 and ONE_MINUS_ALPHA1 write a shader that does not compile: the volume vanishes; ALPHA2 is silently CONSTANT: 153), so those steps run in each engine on its own.",
+ "gaps": [
+  "X_ITE 16.6.0 names the weight functions ALPHA0 / ALPHA1 (first and second volume) while the schema says ALPHA1 / ALPHA2: its ALPHA1 and ONE_MINUS_ALPHA1 write a stray space into the shader (blendColor_ 12 .a) so the whole volume vanishes, and ALPHA2 / ONE_MINUS_ALPHA2 fall back to CONSTANT; the bridge reads the schema names and keeps ALPHA0 as an alias of ALPHA1",
+  "two BlendedVolumeStyle nodes in one X_ITE volume (two in a Composed, one inside another) are a GLSL redefinition and draw nothing; the bridge draws any number",
+  "the second volume is read through the default ramp (red channel only) as in X_ITE, so its green, blue and alpha never matter",
+  "a nested style reads the second volume (its gradient and its alpha), X_ITE rewrite of x3d_Texture3D[0]; only an OpacityMapVolumeStyle is tested nested here",
+  "the weight transfer function is read from a PixelTexture only (nearest below 16 texels, first channel)"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "B",
+    "weightConstant1",
+    0.5
+   ]
+  },
+  {
+   "expect": [
+    "B",
+    "weightConstant2",
+    0.5
+   ]
+  },
+  {
+   "expect": [
+    "B",
+    "weightFunction1",
+    "CONSTANT"
+   ]
+  },
+  {
+   "expect": [
+    "B",
+    "weightFunction2",
+    "CONSTANT"
+   ]
+  },
+  {
+   "expect": [
+    "B",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 4
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     153,
+     153,
+     153
+    ],
+    3
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     230,
+     102,
+     102
+    ],
+    3
+   ]
+  },
+  {
+   "px": [
+    237,
+    120,
+    [
+     204,
+     204,
+     204
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightFunction1",
+    "ALPHA0"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     215,
+     215,
+     215
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightFunction1",
+    "ONE_MINUS_ALPHA0"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     91,
+     91,
+     91
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightFunction1",
+    "CONSTANT"
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightConstant1",
+    1
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightConstant2",
+    0.25
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     230,
+     230,
+     230
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightConstant1",
+    2
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightConstant2",
+    2
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     255,
+     255,
+     255
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightConstant1",
+    -1
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightConstant2",
+    1
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightConstant1",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightConstant2",
+    0.5
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     153,
+     153,
+     153
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightFunction1",
+    "TABLE"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     92,
+     92,
+     92
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightFunction1",
+    "CONSTANT"
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightFunction2",
+    "TABLE"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     122,
+     122,
+     122
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightFunction2",
+    "CONSTANT"
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightFunction1",
+    "alpha0"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     153,
+     153,
+     153
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "weightFunction1",
+    "CONSTANT"
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "enabled",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     204,
+     204,
+     204
+    ],
+    3
+   ]
+  },
+  {
+   "set": [
+    "B",
+    "enabled",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     153,
+     153,
+     153
+    ],
+    3
+   ]
+  },
+  {
+   "only": "ours",
+   "set": [
+    "B",
+    "weightFunction1",
+    "ALPHA1"
+   ]
+  },
+  {
+   "only": "ours",
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     215,
+     215,
+     215
+    ],
+    3
+   ],
+   "only": "ours"
+  },
+  {
+   "only": "ours",
+   "set": [
+    "B",
+    "weightFunction1",
+    "ONE_MINUS_ALPHA1"
+   ]
+  },
+  {
+   "only": "ours",
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     91,
+     91,
+     91
+    ],
+    3
+   ],
+   "only": "ours"
+  },
+  {
+   "only": "ours",
+   "set": [
+    "B",
+    "weightFunction1",
+    "CONSTANT"
+   ]
+  },
+  {
+   "only": "ours",
+   "set": [
+    "B",
+    "weightFunction2",
+    "ALPHA2"
+   ]
+  },
+  {
+   "only": "ours",
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     143,
+     143,
+     143
+    ],
+    3
+   ],
+   "only": "ours"
+  },
+  {
+   "only": "ours",
+   "set": [
+    "B",
+    "weightFunction2",
+    "ONE_MINUS_ALPHA2"
+   ]
+  },
+  {
+   "only": "ours",
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     163,
+     163,
+     163
+    ],
+    3
+   ],
+   "only": "ours"
+  },
+  {
+   "only": "xite",
+   "set": [
+    "B",
+    "weightFunction2",
+    "ALPHA2"
+   ]
+  },
+  {
+   "only": "xite",
+   "settle": 2
+  },
+  {
+   "px": [
+    83,
+    120,
+    [
+     153,
+     153,
+     153
+    ],
+    3
+   ],
+   "only": "xite"
+  }
+ ],
+ "xsdContainerField": [
+  "transferFunction",
+  "weightTransferFunction1",
+  "weightTransferFunction2"
+ ]
+}

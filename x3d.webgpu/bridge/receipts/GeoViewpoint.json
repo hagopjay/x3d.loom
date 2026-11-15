@@ -1,0 +1,32 @@
+{
+ "node": "GeoViewpoint",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/GeoViewpoint.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 98/98",
+  "xite": "pass 96/96",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "X_ITE 16.6.0 and the 4.0 schema have no set_position, set_orientation, position_changed, geoCoord, elevationScale or navType on GeoViewpoint: none is implemented",
+   "navigation does not write `position`; the speed is computed, not used by a navigation mode in this bridge",
+   "near 0.125 and far 1e9 as in X_ITE: with Babylon's depth buffer the far range costs precision at long distances (X_ITE draws the GeoViewpoint with a logarithmic depth buffer)"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ed32d8703fb3",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "6d77a58"
+}

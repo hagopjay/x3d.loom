@@ -1,0 +1,32 @@
+{
+ "node": "GeoOrigin",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/GeoOrigin.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 22/22",
+  "xite": "pass 22/22",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "only GD and UTM and GC geoSystems with the WE and IN style ellipsoids are exercised in the unit checks of BR.geo; the picture tests use GD WE",
+   "a plain list handed to a double field of X_ITE 16.6.0 (a harness slip, now converted to SFVec3d) turns the picture to nothing and a second set kills the page",
+   "the origin is read at use: a change of geoSystem of an existing GeoOrigin at run time is not tested (the field is initializeOnly)"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ed32d8703fb3",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "6d77a58"
+}

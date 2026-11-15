@@ -917,3 +917,49 @@ R.bridge.winding = (mesh) => {   // +1 when the first triangles run counter-cloc
     return _cw.call(this);
   };
 }
+
+/* Geospatial: GeoCoordinate points are geographic, so every reader of coord.f.point must see local metres (R.bridge.geo.coordOf: geocentric minus the GeoOrigin, or in its east / up / south frame
+   with rotateYUp). The stock geometry code reads f.coord, so for a geometry that holds a GeoCoordinate it is handed a stand-in whose `f` has the converted coordinate in its place (same id, so the
+   geometry cache keys on the node's own version plus the GeoOrigin context). A bridge geometry (spec.geometry, __src) reads the real node and calls BR.compose, which converts itself.
+   GeoViewpoint: the pose comes from R.bridge.geo (position and centerOfRotation in local metres, orientation composed with the frame at `position`), near 0.125 and far 1e9 as in X_ITE. */
+{
+  const B = Body.prototype, GV = (v) => v && v.type === 'GeoViewpoint';
+  const sub = (g) => {
+    const c = g && g.f && g.f.coord;
+    return c && c.type === 'GeoCoordinate' && !g.__src ? Object.create(g, { f: { value: Object.assign({}, g.f, { coord: R.bridge.geo.view(c) }) } }) : g;
+  };
+  const _data = B.geometryData;
+  B.geometryData = function (g) { return _data.call(this, sub(g)); };
+  const _rib = B.makeRibbon;
+  if (_rib) B.makeRibbon = function (shape, g, spec, name) { return _rib.call(this, shape, sub(g), spec, name); };
+  const _pose = B.vpPose;
+  B.vpPose = function (vp) {
+    if (!GV(vp)) return _pose.call(this, vp);
+    const G = R.bridge.geo, f = vp.f, par = (this.vpParent && this.vpParent.get(vp)) || null;
+    let pos = G.local(vp, f.position), center = G.local(vp, f.centerOfRotation);
+    const m = G.locationMatrix(vp, f.position);
+    const fq = BABYLON.Quaternion.FromRotationMatrix(BABYLON.Matrix.FromValues(m[0], m[1], m[2], 0, m[4], m[5], m[6], 0, m[8], m[9], m[10], 0, 0, 0, 0, 1));
+    let q = R.quat.mul([fq.x, fq.y, fq.z, fq.w], R.quat.fromAxisAngle(f.orientation, f.orientation[3]));
+    if (par && par.computeWorldMatrix) {
+      const M = par.computeWorldMatrix(true);
+      const P = BABYLON.Vector3.TransformCoordinates(new BABYLON.Vector3(...pos), M), C = BABYLON.Vector3.TransformCoordinates(new BABYLON.Vector3(...center), M);
+      const sc = new BABYLON.Vector3(), rq = new BABYLON.Quaternion(), tr = new BABYLON.Vector3(); M.decompose(sc, rq, tr);
+      pos = [P.x, P.y, P.z]; center = [C.x, C.y, C.z]; q = R.quat.mul([rq.x, rq.y, rq.z, rq.w], q);
+    }
+    const fov = f.fieldOfView > 0 && f.fieldOfView < Math.PI ? f.fieldOfView : Math.PI / 4;
+    return { pos, q: R.quat.norm(q), center, fov, geo: { near: f.nearDistance > 0 ? f.nearDistance : 0.125, far: f.farDistance > 0 ? f.farDistance : 1e9 } };
+  };
+  const _apply = B.applyCamera;
+  B.applyCamera = function () { _apply.call(this); const g = this.pose && this.pose.geo; if (g) { this.cam.minZ = g.near; this.cam.maxZ = g.far; } };
+  const _bind = B.bindViewpoint;
+  B.bindViewpoint = function (vp, on) {
+    const prev = this.bound; _bind.call(this, vp, on);
+    if (on && (GV(vp) || GV(prev))) { this.tr = null; this.pose = this.vpPose(vp); this.started = true; this.applyCamera(); }      // a GeoViewpoint is reached by a cut (X_ITE teleports between it and a plain Viewpoint)
+  };
+  const _sw = B.setWorld;
+  B.setWorld = function (...a) {              // a GeoViewpoint that comes first in the file is bound at load, like the first Viewpoint
+    const r = _sw.apply(this, a), w = this.world, first = w && w.nodes.find((n) => n.type === 'Viewpoint' || n.type === 'OrthoViewpoint' || n.type === 'GeoViewpoint');
+    if (GV(first) && !first.f.isBound) { this.started = false; this.bindViewpoint(first, true); }
+    return r;
+  };
+}

@@ -1,0 +1,34 @@
+{
+ "node": "BlendedVolumeStyle",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/BlendedVolumeStyle.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp + XSD patched: transferFunction added to the containerField values; weightTransferFunction1 added to the containerField values; weightTransferFunction2 added to the containerField values"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 63/63",
+  "xite": "pass 53/53",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "X_ITE 16.6.0 names the weight functions ALPHA0 / ALPHA1 (first and second volume) while the schema says ALPHA1 / ALPHA2: its ALPHA1 and ONE_MINUS_ALPHA1 write a stray space into the shader (blendColor_ 12 .a) so the whole volume vanishes, and ALPHA2 / ONE_MINUS_ALPHA2 fall back to CONSTANT; the bridge reads the schema names and keeps ALPHA0 as an alias of ALPHA1",
+   "two BlendedVolumeStyle nodes in one X_ITE volume (two in a Composed, one inside another) are a GLSL redefinition and draw nothing; the bridge draws any number",
+   "the second volume is read through the default ramp (red channel only) as in X_ITE, so its green, blue and alpha never matter",
+   "a nested style reads the second volume (its gradient and its alpha), X_ITE rewrite of x3d_Texture3D[0]; only an OpacityMapVolumeStyle is tested nested here",
+   "the weight transfer function is read from a PixelTexture only (nearest below 16 texels, first channel)"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ed32d8703fb3",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "6d77a58"
+}

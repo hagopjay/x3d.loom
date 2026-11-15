@@ -1,0 +1,31 @@
+{
+ "node": "GeoCoordinate",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/GeoCoordinate.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 16/16",
+  "xite": "pass 16/16",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the geometry reads the converted points; set1Point and the inverse of the conversion are not reachable from a scene file",
+   "UTM and GC are checked in the unit maths of the bridge (BR.geo, numbers from X_ITE) not by picture"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha ed32d8703fb3",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "6d77a58"
+}
