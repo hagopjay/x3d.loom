@@ -26,11 +26,11 @@ BR.node('EspduTransform', {
     bboxSize: ['SFVec3f', INIT, [-1, -1, -1]],
     center: ['SFVec3f', IO, [0, 0, 0]],
     children: ['MFNode', IO, []],
-    collideTime: ['SFTime', OUT, 0],
+    collideTime: ['SFTime', OUT, -1],
     collisionType: ['SFInt32', IO, 0],
     deadReckoning: ['SFInt32', IO, 0],
     description: ['SFString', IO, ""],
-    detonateTime: ['SFTime', OUT, 0],
+    detonateTime: ['SFTime', OUT, -1],
     detonationLocation: ['SFVec3f', IO, [0, 0, 0]],
     detonationRelativeLocation: ['SFVec3f', IO, [0, 0, 0]],
     detonationResult: ['SFInt32', IO, 0],
@@ -49,14 +49,14 @@ BR.node('EspduTransform', {
     eventSiteID: ['SFInt32', IO, 0],
     fired1: ['SFBool', IO, false],
     fired2: ['SFBool', IO, false],
-    firedTime: ['SFTime', OUT, 0],
+    firedTime: ['SFTime', OUT, -1],
     fireMissionIndex: ['SFInt32', IO, 0],
     firingRange: ['SFFloat', IO, 0],
     firingRate: ['SFInt32', IO, 0],
     forceID: ['SFInt32', IO, 0],
     fuse: ['SFInt32', IO, 0],
     geoCoords: ['SFVec3d', IO, [0, 0, 0]],
-    geoSystem: ['MFString', INIT, []],
+    geoSystem: ['MFString', INIT, ['GD', 'WE']],
     isActive: ['SFBool', OUT, false],
     isCollided: ['SFBool', OUT, false],
     isDetonated: ['SFBool', OUT, false],
@@ -93,13 +93,16 @@ BR.node('EspduTransform', {
     set_articulationParameterValue6: ['SFFloat', IN, 0],
     set_articulationParameterValue7: ['SFFloat', IN, 0],
     siteID: ['SFInt32', IO, 0],
-    timestamp: ['SFTime', OUT, 0],
+    timestamp: ['SFTime', OUT, -1],
     translation: ['SFVec3f', IO, [0, 0, 0]],
     visible: ['SFBool', IO, true],
     warhead: ['SFInt32', IO, 0],
     writeInterval: ['SFTime', IO, 1.0],
   },
-  // receive(n, field, value): return true when the event is handled here
-  // tick(n, now): once per timestamp, before the event queue drains
-  // build(body, n, parent, chain): a drawn node
+  // X_ITE 16.6.0 marks the DIS component as not supported: EspduTransform is a plain Group whose translation, rotation, scale, center and scaleOrientation are stored and never applied. No socket is
+  // opened, no dead reckoning runs, and none of the outputs (isActive, isStandAlone, isNetworkReader, isNetworkWriter, timestamp, firedTime, detonateTime, collideTime, articulationParameterValueN_changed)
+  // ever fires. The bridge copies that. `visible` hides the subtree; addChildren / removeChildren as on Group.
+  receive(n, field, v) { return BR.addRemove(n, field, v); },
+  build(body, n, parent, chain) { return body.buildGroup(n, parent, chain); },
+  changed(body, n, field) { const r = body.rec.get(n.id); if (!r) return; if (field === 'children') body.rebuildGroup(n); else if (field === 'visible') r.tn.setEnabled(n.f.visible !== false); },
 });

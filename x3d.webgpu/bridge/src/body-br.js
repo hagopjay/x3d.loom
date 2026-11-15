@@ -43,6 +43,7 @@
   Body.prototype.click = function (x, y) {          // a click under an Anchor follows it, the nearest Anchor wins
     _click.call(this, x, y);
     const hit = this.pickMesh(x, y); if (!hit || !hit.hit) return;
+    for (const t of this.sensorsFor(hit.pickedMesh)) if (t.node.type === 'GeoTouchSensor') this.geoHit(t, hit);
     for (const g of (hit.pickedMesh.metadata && hit.pickedMesh.metadata.chain) || []) if (g.type === 'Anchor') { if (g.f.load !== false) R.bridge.specs.get('Anchor').activate(this, g); break; }
   };
   const _init = Body.prototype.init;
@@ -59,7 +60,7 @@
   Body.prototype.sensorsFor = function (mesh) {
     const chain = (mesh.metadata && mesh.metadata.chain) || [];
     for (const g of chain) {
-      const ts = (g.f.children || []).filter((c) => c.f.enabled && (c.type === 'TouchSensor' || (R.bridge.specs.get(c.type) || {}).dragStart));
+      const ts = (g.f.children || []).filter((c) => c.f.enabled && (c.type === 'TouchSensor' || c.type === 'GeoTouchSensor' || (R.bridge.specs.get(c.type) || {}).dragStart));
       if (ts.length) return ts.map((t) => ({ node: t, group: g }));
     }
     return [];
@@ -70,9 +71,21 @@
     for (const s of sens) {
       if (!old.includes(s.node)) R.hooks.fire(s.node, 'isOver', true);
       if (hit && s.node.type === 'TouchSensor') R.hooks.fire(s.node, 'hitPoint_changed', this.localPoint(s.group, hit.pickedPoint));
+      else if (hit && s.node.type === 'GeoTouchSensor') this.geoHit(s, hit);
     }
     this.ptr.over = now;
     this.canvas.classList.toggle('is-over-sensor', now.length > 0);
+  };
+  /* GeoTouchSensor hit outputs, in X_ITE's order: hitTexCoord_changed, hitNormal_changed, hitPoint_changed (all in the sensor's group frame), then hitGeoCoord_changed = the geographic reading of that
+     LOCAL hitPoint through the sensor's own geoSystem and GeoOrigin. X_ITE 16.6.0 does exactly that, so under a Transform or a GeoLocation it is not the true position of the hit: followed on purpose. */
+  Body.prototype.geoHit = function (s, hit) {
+    const rec = this.rec.get(s.group.id), M = rec && rec.tn ? rec.tn.computeWorldMatrix(true) : BABYLON.Matrix.Identity(), inv = M.clone().invert(), V = BABYLON.Vector3;
+    const uv = hit.getTextureCoordinates && hit.getTextureCoordinates(), nw = hit.getNormal && hit.getNormal(true, true), n = nw && V.TransformNormal(nw, inv).normalize();
+    const p = this.localPoint(s.group, hit.pickedPoint), id = s.node;
+    if (uv) R.hooks.fire(id, 'hitTexCoord_changed', [uv.x, 1 - uv.y]);     // the body's meshes carry v flipped (images are not turned over)
+    if (n) R.hooks.fire(id, 'hitNormal_changed', [n.x, n.y, n.z]);
+    R.hooks.fire(id, 'hitPoint_changed', p);
+    R.hooks.fire(id, 'hitGeoCoord_changed', Array.from(BR.geo.geoOf(id, p)));
   };
   R.bridge.pointerInit = (body) => {
     const cv = body.canvas, V = BABYLON.Vector3; let drag = null;

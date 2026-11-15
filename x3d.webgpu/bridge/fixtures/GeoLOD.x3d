@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
-  <head><meta name="title" content="GeoLOD.x3d"/><meta name="description" content="Bridge fixture for GeoLOD"/></head>
+  <head><component name="Geospatial" level="2"/><meta name="title" content="GeoLOD.x3d"/><meta name="description" content="Bridge fixture for GeoLOD: two levels by eye-space distance of center against range, root or four children (data: urls), level_changed before children"/></head>
   <Scene>
-    <GeoLOD DEF="N"/>
+    <Viewpoint position="0 0 200"/>
+    <Transform DEF="T">
+      <GeoLOD DEF="GL" center="0 0 0" range="100" rootUrl='"data:model/x3d+xml,%3CX3D%20profile%3D%27Interchange%27%20version%3D%274.0%27%3E%3CScene%3E%3CTransform%20translation%3D%270%200%200%27%3E%3CShape%3E%3CAppearance%3E%3CMaterial%20diffuseColor%3D%270%200%200%27%20emissiveColor%3D%271%200%200%27%2F%3E%3C%2FAppearance%3E%3CBox%20size%3D%2720%2020%2020%27%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E"' child1Url='"data:model/x3d+xml,%3CX3D%20profile%3D%27Interchange%27%20version%3D%274.0%27%3E%3CScene%3E%3CTransform%20translation%3D%27-10%2010%200%27%3E%3CShape%3E%3CAppearance%3E%3CMaterial%20diffuseColor%3D%270%200%200%27%20emissiveColor%3D%270%201%200%27%2F%3E%3C%2FAppearance%3E%3CBox%20size%3D%2710%2010%2010%27%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E"' child2Url='"data:model/x3d+xml,%3CX3D%20profile%3D%27Interchange%27%20version%3D%274.0%27%3E%3CScene%3E%3CTransform%20translation%3D%2710%2010%200%27%3E%3CShape%3E%3CAppearance%3E%3CMaterial%20diffuseColor%3D%270%200%200%27%20emissiveColor%3D%270%200%201%27%2F%3E%3C%2FAppearance%3E%3CBox%20size%3D%2710%2010%2010%27%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E"' child3Url='"data:model/x3d+xml,%3CX3D%20profile%3D%27Interchange%27%20version%3D%274.0%27%3E%3CScene%3E%3CTransform%20translation%3D%27-10%20-10%200%27%3E%3CShape%3E%3CAppearance%3E%3CMaterial%20diffuseColor%3D%270%200%200%27%20emissiveColor%3D%271%201%200%27%2F%3E%3C%2FAppearance%3E%3CBox%20size%3D%2710%2010%2010%27%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E"' child4Url='"data:model/x3d+xml,%3CX3D%20profile%3D%27Interchange%27%20version%3D%274.0%27%3E%3CScene%3E%3CTransform%20translation%3D%2710%20-10%200%27%3E%3CShape%3E%3CAppearance%3E%3CMaterial%20diffuseColor%3D%270%200%200%27%20emissiveColor%3D%270%201%201%27%2F%3E%3C%2FAppearance%3E%3CBox%20size%3D%2710%2010%2010%27%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E"'>
+        <GeoOrigin DEF="O" geoCoords="0 0 0" rotateYUp="true"/>
+      </GeoLOD>
+    </Transform>
+    <Transform DEF="T2" translation="0 0 200"><Transform DEF="S"><GeoLOD DEF="GL2" center="0 0 50" range="100"><GeoOrigin USE="O"/></GeoLOD></Transform></Transform>
+    <Transform DEF="T3" translation="0 0 200"><GeoLOD DEF="GL3" center="0 0.00045 0" range="50"><GeoOrigin USE="O"/></GeoLOD></Transform>
+    <Transform DEF="T4" translation="0 0 200"><GeoLOD DEF="GL4" center="0 0.00045 0" range="50"><GeoOrigin DEF="O2" geoCoords="0 0 0" rotateYUp="false"/></GeoLOD></Transform>
+    <Transform DEF="T5" translation="60 0 0">
+      <GeoLOD DEF="GL5" center="0 0 0" range="100" rootUrl='"data:model/x3d+xml,%3CX3D%20profile%3D%27Interchange%27%20version%3D%274.0%27%3E%3CScene%3E%3CTransform%20translation%3D%270%200%200%27%3E%3CShape%3E%3CAppearance%3E%3CMaterial%20diffuseColor%3D%270%200%200%27%20emissiveColor%3D%270%201%201%27%2F%3E%3C%2FAppearance%3E%3CBox%20size%3D%2720%2020%2020%27%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E"'><GeoOrigin USE="O"/><Group DEF="RN" containerField="rootNode"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 0 1"/></Appearance><Box size="20 20 20"/></Shape></Group></GeoLOD>
+    </Transform>
+    <Transform DEF="T6" translation="-60 0 0">
+      <GeoLOD DEF="GL6" center="0 0 0" range="100"><GeoOrigin USE="O"/><Group containerField="rootNode"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 1 0"/></Appearance><Box size="20 20 20"/></Shape></Group></GeoLOD>
+    </Transform>
   </Scene>
 </X3D>

@@ -1,20 +1,1187 @@
 {
  "node": "EspduTransform",
- "mode": "events",
+ "mode": "scene",
+ "note": "X_ITE 16.6.0 marks the DIS component as not supported. EspduTransform draws its children as a Group: the red box of E1 sits at the origin (not at translation 2 0 0, not scaled to a half), the 2 x 2 box spans x 128..191, y 88..151 at a camera distance of 9 to its front face. No dead reckoning runs (translation stays 2 0 0 with linearVelocity 1 0 0 and deadReckoning 2), no output fires, and `enabled` false does not hide anything (E3 draws). `visible` hides the subtree; addChildren and removeChildren act as on Group. The SFTime outputs default to -1 and geoSystem to GD WE. The fixture head names the DIS component because X_ITE drops the node otherwise.",
+ "gaps": [
+  "the bridge copies X_ITE: translation, rotation, scale, center, scaleOrientation of an EspduTransform are not applied (the specification says they place the entity like a Transform)",
+  "no dead reckoning, no network (isStandAlone never fires), no articulation parameters; the DIS traffic cannot be tested from a scene file",
+  "bboxDisplay draws no wire cube in the bridge (no shared bbox helper yet); X_ITE draws one"
+ ],
  "steps": [
   {
-   "set": [
-    "N",
-    "FIELD",
-    null
+   "settle": 2
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    128,
+    100,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    190,
+    140,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    218,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    100,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    86,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    64,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    46,
+    [
+     0,
+     0,
+     255
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    70,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "expect": [
+    "E1",
+    "translation",
+    [
+     2,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "E1",
+    "rotation",
+    [
+     0,
+     0,
+     1,
+     1.5708
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "E1",
+    "scale",
+    [
+     0.5,
+     0.5,
+     0.5
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "E1",
+    "deadReckoning",
+    2
+   ]
+  },
+  {
+   "expect": [
+    "E1",
+    "linearVelocity",
+    [
+     1,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "E1",
+    "visible",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "E2",
+    "visible",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "E3",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "E3",
+    "networkMode",
+    "networkReader"
+   ]
+  },
+  {
+   "expect": [
+    "E3",
+    "address",
+    "127.0.0.1"
+   ]
+  },
+  {
+   "expect": [
+    "E3",
+    "port",
+    3000
+   ]
+  },
+  {
+   "expect": [
+    "E3",
+    "readInterval",
+    0.2
+   ]
+  },
+  {
+   "noevent": [
+    "E1",
+    "translation"
+   ]
+  },
+  {
+   "noevent": [
+    "E1",
+    "isActive"
+   ]
+  },
+  {
+   "noevent": [
+    "E1",
+    "isStandAlone"
+   ]
+  },
+  {
+   "noevent": [
+    "E1",
+    "isNetworkReader"
+   ]
+  },
+  {
+   "noevent": [
+    "E1",
+    "isNetworkWriter"
+   ]
+  },
+  {
+   "noevent": [
+    "E1",
+    "isRtpHeaderHeard"
+   ]
+  },
+  {
+   "noevent": [
+    "E1",
+    "timestamp"
+   ]
+  },
+  {
+   "noevent": [
+    "E3",
+    "isActive"
+   ]
+  },
+  {
+   "noevent": [
+    "E3",
+    "isStandAlone"
+   ]
+  },
+  {
+   "noevent": [
+    "E3",
+    "isNetworkReader"
+   ]
+  },
+  {
+   "noevent": [
+    "E3",
+    "isNetworkWriter"
+   ]
+  },
+  {
+   "noevent": [
+    "E3",
+    "isRtpHeaderHeard"
+   ]
+  },
+  {
+   "noevent": [
+    "E3",
+    "timestamp"
+   ]
+  },
+  {
+   "noevent": [
+    "E1",
+    "firedTime"
    ]
   },
   {
    "expect": [
     "N",
-    "FIELD",
-    null
+    "address",
+    "localhost"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "networkMode",
+    "standAlone"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "readInterval",
+    0.1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "writeInterval",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "visible",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "bboxDisplay",
+    false
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "scale",
+    [
+     1,
+     1,
+     1
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "rotation",
+    [
+     0,
+     0,
+     1,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "scaleOrientation",
+    [
+     0,
+     0,
+     1,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "center",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "bboxSize",
+    [
+     -1,
+     -1,
+     -1
+    ],
+    1e-06
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "geoSystem",
+    [
+     "GD",
+     "WE"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "marking",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "firingRange",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "fired1",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "fired2",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "rtpHeaderExpected",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isDetonated",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isCollided",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "timestamp",
+    -1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "firedTime",
+    -1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "detonateTime",
+    -1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "collideTime",
+    -1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "applicationID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "articulationParameterCount",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "collisionType",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "deadReckoning",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "detonationResult",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "entityCategory",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "entityCountry",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "entityDomain",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "entityExtra",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "entityID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "entityKind",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "entitySpecific",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "entitySubcategory",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "eventApplicationID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "eventEntityID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "eventNumber",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "eventSiteID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "fireMissionIndex",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "firingRate",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "forceID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "fuse",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "multicastRelayPort",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "munitionApplicationID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "munitionEntityID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "munitionQuantity",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "munitionSiteID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "port",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "siteID",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "warhead",
+    0
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "linearVelocity",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "linearAcceleration",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "detonationLocation",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "detonationRelativeLocation",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "munitionStartPoint",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "munitionEndPoint",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "geoCoords",
+    [
+     0,
+     0,
+     0
+    ],
+    1e-06
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "articulationParameterArray",
+    []
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "articulationParameterCount",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "articulationParameterValue0_changed",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "articulationParameterValue7_changed",
+    0
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "translation",
+    [
+     1,
+     2,
+     3
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "translation",
+    [
+     1,
+     2,
+     3
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "translation",
+    [
+     1,
+     2,
+     3
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "linearVelocity",
+    [
+     5,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "linearVelocity",
+    [
+     5,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "entityID",
+    5
+   ]
+  },
+  {
+   "event": [
+    "N",
+    "entityID",
+    5
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "entityID",
+    5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "marking",
+    "ABC"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "marking",
+    "ABC"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "articulationParameterArray",
+    [
+     1.5,
+     2.5
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "articulationParameterArray",
+    [
+     1.5,
+     2.5
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "geoCoords",
+    [
+     1.5,
+     2.5,
+     3.5
+    ],
+    "SFVec3d"
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "geoCoords",
+    [
+     1.5,
+     2.5,
+     3.5
+    ],
+    1e-09
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "noevent": [
+    "N",
+    "isActive"
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "timestamp"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "fired1",
+    true
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "noevent": [
+    "N",
+    "firedTime"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isDetonated",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isCollided",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "firedTime",
+    -1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "set_articulationParameterValue0",
+    3.5
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "N",
+    "articulationParameterValue0_changed",
+    0
+   ]
+  },
+  {
+   "noevent": [
+    "N",
+    "articulationParameterValue0_changed"
+   ]
+  },
+  {
+   "set": [
+    "E2",
+    "visible",
+    true
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "px": [
+    64,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "E2",
+    "visible",
+    false
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "px": [
+    64,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "jsn": [
+    "node('E1').children.length",
+    1
+   ]
+  },
+  {
+   "setnodes": [
+    "E1",
+    "removeChildren",
+    [
+     "RB"
+    ]
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "jsn": [
+    "node('E1').children.length",
+    0
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "setnodes": [
+    "E1",
+    "addChildren",
+    [
+     "RB"
+    ]
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "jsn": [
+    "node('E1').children.length",
+    1
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    218,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
    ]
   }
- ]
+ ],
+ "tone": "none"
 }

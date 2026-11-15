@@ -1,20 +1,316 @@
 {
  "node": "GeoTouchSensor",
- "mode": "events",
+ "mode": "scene",
+ "note": "X_ITE 16.6.0: the output is `hitGeoCoord_changed` (there is no geoCoords_changed). Hovering the front face of a 2 m box at distance 9 (32.19 px/m; X_ITE picks (160,120) half a pixel off the axis, so hitPoint is (0.0155, 0.0155, 1), the bridge at (0, 0, 1): tolerance 0.05) gives isOver, hitTexCoord (0.5078), hitNormal (0,0,1), hitPoint and hitGeoCoord = the geographic reading of the local hitPoint through the sensor's geoSystem and GeoOrigin: lat -9.04e-6 (1 m south), lon 1.4e-7, height 0.0155 (GC: x 6378137.0155 y 0.0155 z -1). Without rotation of the origin (O2) north is +Z, so the latitude is positive. Under a GeoLocation the hitPoint is local to it and the conversion ignores the placement (lon 8.4e-7, not 3.0e-5): X_ITE's choice, copied. Leaving the shape sends isOver false and nothing else. A press and release give isActive true then false and touchTime.",
+ "gaps": [
+  "hitGeoCoord under a Transform or GeoLocation is wrong on purpose (X_ITE converts the local point as if it were in the GeoOrigin frame); the specification wants the true position of the hit",
+  "the bridge reports a click as one press and release (isActive true then false, touchTime); the hit outputs are sent again after it, X_ITE sends them after press and release too; hitPoint repeats with every pointer move in X_ITE, once per move here",
+  "hover events repeat on every pointer move in both engines; the fixture checks values, not counts"
+ ],
  "steps": [
   {
-   "set": [
-    "N",
-    "FIELD",
-    null
+   "expect": [
+    "GT",
+    "enabled",
+    true
    ]
   },
   {
    "expect": [
-    "N",
-    "FIELD",
-    null
+    "GT",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "GT",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "GT",
+    "geoSystem",
+    [
+     "GD",
+     "WE"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "GC",
+    "geoSystem",
+    [
+     "GC"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "GOFF",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "GOFF",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    300,
+    20
+   ]
+  },
+  {
+   "reset": 1
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "GT",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('GT').hitNormal_changed),e=[0, 0, 1],t=[0.02, 0.02, 0.02];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('GT').hitTexCoord_changed),e=[0.50777, 0.50777],t=[0.02, 0.02];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('GT').hitPoint_changed),e=[0.015534, 0.015534, 1],t=[0.05, 0.05, 0.05];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('GT').hitGeoCoord_changed),e=[-9.04369e-06, 1.3955e-07, 0.0155342],t=[5e-07, 5e-07, 0.05];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('GC').hitGeoCoord_changed),e=[6378137.0155341, 0.0155341, -1.0],t=[0.05, 0.05, 0.05];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('GN').hitGeoCoord_changed),e=[9.04369e-06, 1.3955e-07, 0.0155342],t=[5e-07, 5e-07, 0.05];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "GOFF",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    190,
+    100
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('GT').hitPoint_changed),e=[0.947573, 0.605825, 1],t=[0.05, 0.05, 0.05];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('GT').hitTexCoord_changed),e=[0.973787, 0.802913],t=[0.02, 0.02];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('GT').hitGeoCoord_changed),e=[-9.04369e-06, 8.5122e-06, 0.605825],t=[5e-07, 5e-07, 0.05];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    270,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "GTL",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('GTL').hitPoint_changed),e=[0.0932041, 0.015534, 1],t=[0.05, 0.05, 0.05];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('GTL').hitGeoCoord_changed),e=[-9.04369e-06, 8.37e-07, 0.0155342],t=[5e-07, 5e-07, 0.05];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "GT",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "reset": 1
+  },
+  {
+   "mouse": [
+    "down",
+    160,
+    120
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "atleast": [
+    "GT",
+    "isActive",
+    2
+   ]
+  },
+  {
+   "expect": [
+    "GT",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "atleast": [
+    "GT",
+    "touchTime",
+    1
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('GT').touchTime)>1e9",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "GT",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('GT').hitGeoCoord_changed),e=[-9.04369e-06, 1.3955e-07, 0.0155342],t=[5e-07, 5e-07, 0.05];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    300,
+    20
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "reset": 1
+  },
+  {
+   "mouse": [
+    "move",
+    310,
+    30
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "expect": [
+    "GT",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "noevent": [
+    "GT",
+    "hitGeoCoord_changed"
+   ]
+  },
+  {
+   "noevent": [
+    "GT",
+    "hitPoint_changed"
    ]
   }
- ]
+ ],
+ "tone": "none"
 }

@@ -13,7 +13,7 @@ BR.node('ReceiverPdu', {
     enabled: ['SFBool', IO, true],
     entityID: ['SFInt32', IO, 0],
     geoCoords: ['SFVec3d', IO, [0, 0, 0]],
-    geoSystem: ['MFString', INIT, []],
+    geoSystem: ['MFString', INIT, ['GD', 'WE']],
     isActive: ['SFBool', OUT, false],
     isNetworkReader: ['SFBool', OUT, false],
     isNetworkWriter: ['SFBool', OUT, false],
@@ -30,7 +30,7 @@ BR.node('ReceiverPdu', {
     receiverState: ['SFInt32', IO, 0],
     rtpHeaderExpected: ['SFBool', IO, false],
     siteID: ['SFInt32', IO, 0],
-    timestamp: ['SFTime', OUT, 0],
+    timestamp: ['SFTime', OUT, -1],
     transmitterApplicationID: ['SFInt32', IO, 0],
     transmitterEntityID: ['SFInt32', IO, 0],
     transmitterRadioID: ['SFInt32', IO, 0],
@@ -39,7 +39,6 @@ BR.node('ReceiverPdu', {
     whichGeometry: ['SFInt32', IO, 1],
     writeInterval: ['SFTime', IO, 1.0],
   },
-  // receive(n, field, value): return true when the event is handled here
-  // tick(n, now): once per timestamp, before the event queue drains
-  // build(body, n, parent, chain): a drawn node
+  // X_ITE 16.6.0 marks the DIS component as not supported: the node stores its fields and does nothing else. It draws nothing, accepts no children, opens no connection and never fires an output
+  // (isActive, isStandAlone, isNetworkReader, isNetworkWriter, isRtpHeaderHeard, timestamp stay at their defaults). The bridge copies that; no build, no events.
 });

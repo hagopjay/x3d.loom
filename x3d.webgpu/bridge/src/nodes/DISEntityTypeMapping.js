@@ -18,7 +18,5 @@ BR.node('DISEntityTypeMapping', {
     subcategory: ['SFInt32', INIT, 0],
     url: ['MFString', IO, []],
   },
-  // receive(n, field, value): return true when the event is handled here
-  // tick(n, now): once per timestamp, before the event queue drains
-  // build(body, n, parent, chain): a drawn node
+  // X_ITE 16.6.0 marks the DIS component as not supported: the node holds its url and never loads it; loadState and loadCount are not fields of the node and the mapping is never resolved, it draws nothing. The bridge copies that (no build).
 });

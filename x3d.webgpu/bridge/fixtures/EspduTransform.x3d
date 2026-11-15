@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
-  <head><meta name="title" content="EspduTransform.x3d"/><meta name="description" content="Bridge fixture for EspduTransform"/></head>
+  <head><component name="DIS" level="2"/><meta name="title" content="EspduTransform.x3d"/><meta name="description" content="Bridge fixture for EspduTransform: the node is a Group in X_ITE 16.6.0 (translation, rotation and scale stored and not applied), nothing is sent or received, outputs never fire"/></head>
   <Scene>
+    <Viewpoint position="0 0 10"/>
+    <EspduTransform DEF="E1" translation="2 0 0" rotation="0 0 1 1.5708" scale="0.5 0.5 0.5" linearVelocity="1 0 0" linearAcceleration="0 1 0" deadReckoning="2">
+      <Shape DEF="RB"><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="2 2 2"/></Shape>
+    </EspduTransform>
+    <EspduTransform DEF="E2" visible="false"><Transform translation="-3 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 1 0"/></Appearance><Box size="2 2 2"/></Shape></Transform></EspduTransform>
+    <EspduTransform DEF="E3" networkMode="networkReader" address="127.0.0.1" port="3000" readInterval="0.2" enabled="false"><Transform translation="0 2.5 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 0 1"/></Appearance><Box size="1 1 1"/></Shape></Transform></EspduTransform>
     <EspduTransform DEF="N"/>
   </Scene>
 </X3D>

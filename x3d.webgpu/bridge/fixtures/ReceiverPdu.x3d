@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
-  <head><meta name="title" content="ReceiverPdu.x3d"/><meta name="description" content="Bridge fixture for ReceiverPdu"/></head>
+  <head><component name="DIS" level="2"/><meta name="title" content="ReceiverPdu.x3d"/><meta name="description" content="Bridge fixture for ReceiverPdu: stores its fields, draws nothing, no connection, no output ever fires (X_ITE 16.6.0)"/></head>
   <Scene>
+    <Viewpoint position="0 0 10"/>
+    <Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="2 2 2"/></Shape>
     <ReceiverPdu DEF="N"/>
+    <ReceiverPdu DEF="R2" transmitterApplicationID="7" transmitterEntityID="8" transmitterRadioID="9" transmitterSiteID="10" receivedPower="2.5" receiverState="1" networkMode="networkReader" address="127.0.0.1" port="3000" visible="false" enabled="false"/>
   </Scene>
 </X3D>

@@ -1,20 +1,508 @@
 {
  "node": "GeoProximitySensor",
- "mode": "events",
+ "mode": "scene",
+ "note": "X_ITE 16.6.0 wraps a ProximitySensor. size 0 0 0 is never active, size -1 -1 -1 always, the box test is inclusive. position_changed, orientation_changed and centerOfRotation_changed are in the frame of the sensor's parent (the nested sensor, 10 m east and turned 90 degrees, reads the camera at (-12,0,-10)); geoCoord_changed is the same local position read through geoSystem and GeoOrigin (as in GeoTouchSensor: only the true position of the viewer when nothing moves the sensor). At the start the camera at (0,0,12) is 12 m south of the origin: latitude -1.085e-4. `geoCenter` is copied to `center` as raw numbers when it is written at run time and the attribute of a file is ignored (PG stays inactive, PC with center written is active). On leaving, the first position outside (60,0,0) is announced before isActive false. The fixture animates a small box with a TimeSensor: X_ITE draws on demand and only notices an enter after a pure camera move when something else keeps it drawing.",
+ "gaps": [
+  "a sensor inside a Transform reports geoCoord_changed of the local position (X_ITE's shortcut), not the viewer's geographic position",
+  "X_ITE sends isActive false and exitTime twice when the sensor is disabled while active: the bridge sends them once (the fixture asserts at least one)",
+  "the viewer's own navigation (mouse, keys) is not simulated: the camera is moved by writing the Viewpoint position",
+  "events carry the pose of the camera in the same frame (no frame of lag as in X_ITE)"
+ ],
  "steps": [
   {
-   "set": [
-    "N",
-    "FIELD",
-    null
+   "settle": 3
+  },
+  {
+   "expect": [
+    "P",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('P').enterTime)>1e9",
+    true
+   ]
+  },
+  {
+   "nearv": [
+    "P",
+    "position_changed",
+    [
+     0,
+     0,
+     12
+    ],
+    0.0001
+   ]
+  },
+  {
+   "nearv": [
+    "P",
+    "orientation_changed",
+    [
+     0,
+     0,
+     1,
+     0
+    ],
+    0.0001
+   ]
+  },
+  {
+   "nearv": [
+    "P",
+    "centerOfRotation_changed",
+    [
+     0,
+     0,
+     0
+    ],
+    0.0001
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('P').geoCoord_changed),e=[-0.00010852427999999999, 0, 1.1288e-05],t=[1e-08, 1e-08, 0.001];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
    ]
   },
   {
    "expect": [
-    "N",
-    "FIELD",
-    null
+    "P0",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "P0",
+    "size",
+    [
+     0,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "PA",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "PN",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "PC",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "PG",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "PR",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "PC",
+    "center",
+    [
+     0,
+     0,
+     10
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "PG",
+    "center",
+    [
+     0,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "PG",
+    "geoCenter",
+    [
+     0,
+     0,
+     10
+    ]
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('PU').geoCoord_changed),e=[0.000108524, 0, 1.1288e-05],t=[1e-08, 1e-08, 0.001];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('PN').geoCoord_changed),e=[9.04368e-05, -0.000107798, 1.9e-05],t=[1e-08, 1e-08, 0.001];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "nearv": [
+    "PN",
+    "position_changed",
+    [
+     -12,
+     0,
+     -10
+    ],
+    0.001
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const o=plain(node('PN').orientation_changed),h=1.5707963;return (Math.abs(o[1]+1)<1e-4&&Math.abs(o[3]-h)<1e-4)||(Math.abs(o[1]-1)<1e-4&&Math.abs(o[3]+h)<1e-4)})()",
+    true
+   ]
+  },
+  {
+   "set": [
+    "PR",
+    "geoCenter",
+    [
+     0,
+     0,
+     10
+    ],
+    "SFVec3d"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "PR",
+    "center",
+    [
+     0,
+     0,
+     10
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "PR",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "PR",
+    "center",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3d"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "PR",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "set": [
+    "V",
+    "position",
+    [
+     60,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "P",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "nearv": [
+    "P",
+    "position_changed",
+    [
+     60,
+     0,
+     0
+    ],
+    0.001
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('P').geoCoord_changed),e=[0, 0.000538989, 0.000282214],t=[1e-08, 1e-08, 0.001];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "atleast": [
+    "P",
+    "exitTime",
+    1
+   ]
+  },
+  {
+   "jsn": [
+    "plain(node('P').exitTime)>1e9",
+    true
+   ]
+  },
+  {
+   "set": [
+    "V",
+    "position",
+    [
+     49,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "P",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "nearv": [
+    "P",
+    "position_changed",
+    [
+     49,
+     0,
+     0
+    ],
+    0.001
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('P').geoCoord_changed),e=[0, 0.000440174, 0.000188221],t=[1e-08, 1e-08, 0.001];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "atleast": [
+    "P",
+    "enterTime",
+    1
+   ]
+  },
+  {
+   "set": [
+    "V",
+    "position",
+    [
+     51,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "P",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "nearv": [
+    "P",
+    "position_changed",
+    [
+     51,
+     0,
+     0
+    ],
+    0.001
+   ]
+  },
+  {
+   "set": [
+    "V",
+    "position",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "P",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('P').geoCoord_changed),e=[0, 0, 0],t=[1e-09, 1e-09, 0.001];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "set": [
+    "V",
+    "position",
+    [
+     0,
+     40,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "jsn": [
+    "(()=>{const a=plain(node('P').geoCoord_changed),e=[0, 0, 40],t=[1e-08, 1e-08, 0.001];return a.length===e.length&&e.every((x,i)=>Math.abs(a[i]-x)<=t[i])})()",
+    true
+   ]
+  },
+  {
+   "nearv": [
+    "P",
+    "position_changed",
+    [
+     0,
+     40,
+     0
+    ],
+    0.001
+   ]
+  },
+  {
+   "expect": [
+    "P",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "P",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "atleast": [
+    "P",
+    "exitTime",
+    1
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "P",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "atleast": [
+    "P",
+    "enterTime",
+    1
+   ]
+  },
+  {
+   "atleast": [
+    "P",
+    "position_changed",
+    1
+   ]
+  },
+  {
+   "atleast": [
+    "P",
+    "orientation_changed",
+    1
    ]
   }
- ]
+ ],
+ "tone": "none"
 }

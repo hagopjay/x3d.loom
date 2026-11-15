@@ -1,20 +1,791 @@
 {
  "node": "GeoLOD",
- "mode": "events",
+ "mode": "scene",
+ "note": "X_ITE 16.6.0: one `range`, two levels. Level 1 when the eye-space distance of `center` (through geoSystem and GeoOrigin) is strictly below range, else level 0. Level 0 draws the root (a red 20 m box); level 1 draws the four children together (green, blue, yellow, cyan 10 m boxes at the corners, in the GeoLOD frame) once all four are loaded. The camera is at z 200, the GeoLOD moves with its parent: distance = 200 - T.z (99.9 gives 1, 100.1 gives 0, exactly 100 gives 0). The parent scale counts (the eye-space distance of an offset centre). East is +X with rotateYUp and +Y without; 0.00045 degrees of longitude is 50.094 m. A run-time change of range is followed, 0 and negatives are always level 0. rootNode wins over rootUrl (GL5 draws its blue rootNode, the cyan rootUrl box is never shown). Level 1 with no child content draws nothing (GL6).",
+ "gaps": [
+  "children are fetched at first entry to level 1 and never unloaded: the \"fetched once\" rule is not counted in the fixture",
+  "level_changed before children is the order in X_ITE and in the bridge; the fixture does not assert event order (the runner reads values)",
+  "the root is kept on screen until all four children are finished, so a slow child delays the picture, not level_changed (not tested: data: urls arrive at once)",
+  "bboxDisplay and the bounding box of a GeoLOD are not implemented"
+ ],
  "steps": [
   {
-   "set": [
-    "N",
-    "FIELD",
-    null
+   "settle": 2
+  },
+  {
+   "expect": [
+    "GL",
+    "level_changed",
+    0
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    152,
+    112,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    135,
+    95,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    130,
+    90,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    96,
+    56,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    224,
+    184,
+    [
+     0,
+     0,
+     0
+    ],
+    12
    ]
   },
   {
    "expect": [
-    "N",
-    "FIELD",
-    null
+    "GL",
+    "rootUrl",
+    [
+     "data:model/x3d+xml,%3CX3D%20profile%3D%27Interchange%27%20version%3D%274.0%27%3E%3CScene%3E%3CTransform%20translation%3D%270%200%200%27%3E%3CShape%3E%3CAppearance%3E%3CMaterial%20diffuseColor%3D%270%200%200%27%20emissiveColor%3D%271%200%200%27%2F%3E%3C%2FAppearance%3E%3CBox%20size%3D%2720%2020%2020%27%2F%3E%3C%2FShape%3E%3C%2FTransform%3E%3C%2FScene%3E%3C%2FX3D%3E"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "GL",
+    "range",
+    100
+   ]
+  },
+  {
+   "expect": [
+    "GL",
+    "geoSystem",
+    [
+     "GD",
+     "WE"
+    ]
+   ]
+  },
+  {
+   "jsn": [
+    "node('GL').children.length",
+    1
+   ]
+  },
+  {
+   "px": [
+    247,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    16
+   ]
+  },
+  {
+   "px": [
+    73,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    16
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     100.1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 2.5
+  },
+  {
+   "expect": [
+    "GL",
+    "level_changed",
+    1
+   ]
+  },
+  {
+   "jsn": [
+    "node('GL').children.length",
+    4
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    130,
+    90,
+    [
+     0,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    190,
+    90,
+    [
+     0,
+     0,
+     255
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    130,
+    150,
+    [
+     255,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    190,
+    150,
+    [
+     0,
+     255,
+     255
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     99.9
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "GL",
+    "level_changed",
+    0
+   ]
+  },
+  {
+   "px": [
+    135,
+    95,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    96,
+    56,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "jsn": [
+    "node('GL').children.length",
+    1
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     100.1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "GL",
+    "level_changed",
+    1
+   ]
+  },
+  {
+   "px": [
+    130,
+    90,
+    [
+     0,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     100
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "GL",
+    "level_changed",
+    0
+   ]
+  },
+  {
+   "px": [
+    135,
+    95,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     150
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "GL",
+    "level_changed",
+    1
+   ]
+  },
+  {
+   "px": [
+    96,
+    56,
+    [
+     0,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    224,
+    56,
+    [
+     0,
+     0,
+     255
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    96,
+    184,
+    [
+     255,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    224,
+    184,
+    [
+     0,
+     255,
+     255
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    130,
+    90,
+    [
+     0,
+     255,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "px": [
+    190,
+    150,
+    [
+     0,
+     255,
+     255
+    ],
+    12
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "GL",
+    "level_changed",
+    0
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "expect": [
+    "GL2",
+    "level_changed",
+    1
+   ]
+  },
+  {
+   "set": [
+    "S",
+    "scale",
+    [
+     1.9,
+     1.9,
+     1.9
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "GL2",
+    "level_changed",
+    1
+   ]
+  },
+  {
+   "set": [
+    "S",
+    "scale",
+    [
+     2.1,
+     2.1,
+     2.1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "GL2",
+    "level_changed",
+    0
+   ]
+  },
+  {
+   "set": [
+    "S",
+    "scale",
+    [
+     1,
+     1,
+     1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "GL2",
+    "level_changed",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "GL3",
+    "level_changed",
+    0
+   ]
+  },
+  {
+   "set": [
+    "T3",
+    "translation",
+    [
+     -0.2,
+     0,
+     200
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "GL3",
+    "level_changed",
+    1
+   ]
+  },
+  {
+   "set": [
+    "T3",
+    "translation",
+    [
+     0.2,
+     0,
+     200
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "GL3",
+    "level_changed",
+    0
+   ]
+  },
+  {
+   "set": [
+    "T3",
+    "translation",
+    [
+     0,
+     0.2,
+     200
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "GL3",
+    "level_changed",
+    0
+   ]
+  },
+  {
+   "set": [
+    "T3",
+    "translation",
+    [
+     0,
+     -0.2,
+     200
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "GL3",
+    "level_changed",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "GL4",
+    "level_changed",
+    0
+   ]
+  },
+  {
+   "set": [
+    "T4",
+    "translation",
+    [
+     0,
+     -0.2,
+     200
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "GL4",
+    "level_changed",
+    1
+   ]
+  },
+  {
+   "set": [
+    "T4",
+    "translation",
+    [
+     -0.2,
+     0,
+     200
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "GL4",
+    "level_changed",
+    0
+   ]
+  },
+  {
+   "set": [
+    "GL6",
+    "range",
+    300,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "GL6",
+    "level_changed",
+    1
+   ]
+  },
+  {
+   "px": [
+    73,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    12
+   ]
+  },
+  {
+   "jsn": [
+    "node('GL6').children.length",
+    0
+   ]
+  },
+  {
+   "set": [
+    "GL6",
+    "range",
+    0,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "GL6",
+    "level_changed",
+    0
+   ]
+  },
+  {
+   "px": [
+    73,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    16
+   ]
+  },
+  {
+   "set": [
+    "GL6",
+    "range",
+    -5,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "GL6",
+    "level_changed",
+    0
    ]
   }
- ]
+ ],
+ "tone": "none"
 }

@@ -286,7 +286,7 @@ function receive(node, field, value) {
   }
   node.f[field] = clone(value);
   node.version = (node.version || 0) + 1;
-  if (R.hooks.changed) R.hooks.changed(node, field);
+  if (R.hooks.changed) { R.rx = true; try { R.hooks.changed(node, field); } finally { R.rx = false; } }     // R.rx: the callbacks of this field are raised once, by emit below (an inputOutput echo is one event, as in X_ITE)
   events.emit(node, field, value);
 }
 function rgb2hsv([r, g, b]) {

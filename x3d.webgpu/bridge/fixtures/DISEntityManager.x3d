@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
-  <head><meta name="title" content="DISEntityManager.x3d"/><meta name="description" content="Bridge fixture for DISEntityManager"/></head>
+  <head><component name="DIS" level="2"/><meta name="title" content="DISEntityManager.x3d"/><meta name="description" content="Bridge fixture for DISEntityManager: inert in X_ITE 16.6.0, holds its mapping children and never reports an entity"/></head>
   <Scene>
-    <DISEntityManager DEF="N"/>
+    <Viewpoint position="0 0 10"/>
+    <Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="2 2 2"/></Shape>
+    <DISEntityManager DEF="M" address="localhost" port="0" siteID="0" applicationID="0">
+      <DISEntityTypeMapping DEF="TM" category="1" country="225" domain="1" kind="1" url='"tank.x3d"'/>
+    </DISEntityManager>
+    <EspduTransform DEF="RD" networkMode="networkReader" address="127.0.0.1" port="3001"><Transform translation="-3 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 1 0"/></Appearance><Box size="1 1 1"/></Shape></Transform></EspduTransform>
   </Scene>
 </X3D>

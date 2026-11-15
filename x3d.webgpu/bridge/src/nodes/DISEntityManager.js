@@ -13,7 +13,5 @@ BR.node('DISEntityManager', {
     removedEntities: ['MFNode', OUT, []],
     siteID: ['SFInt32', IO, 0],
   },
-  // receive(n, field, value): return true when the event is handled here
-  // tick(n, now): once per timestamp, before the event queue drains
-  // build(body, n, parent, chain): a drawn node
+  // X_ITE 16.6.0 marks the DIS component as not supported: the node holds its fields and its children; no socket is opened, addedEntities and removedEntities never fire, and it draws nothing (neither the children nor the node). The bridge copies that (no build).
 });

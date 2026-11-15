@@ -13,7 +13,6 @@ BR.node('GeoMetadata', {
     summary: ['MFString', IO, []],
     url: ['MFString', IO, []],
   },
-  // receive(n, field, value): return true when the event is handled here
-  // tick(n, now): once per timestamp, before the event queue drains
-  // build(body, n, parent, chain): a drawn node
+  // X_ITE 16.6.0: the node stores its fields and does nothing else. The url is never fetched (requestImmediateLoad is an empty function there: not at load, not after `load` or `url` change), `summary` is never
+  // read, and the nodes in `data` are parsed and never drawn (a node DEFined in `data` can still be USEd elsewhere and drawn there). No build: the body ignores the node and does not walk its `data`.
 });
