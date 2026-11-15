@@ -1,0 +1,24 @@
+{
+ "node": "GeoOrigin",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 55659ded1574",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 22/22",
+ "xite": "pass 22/22",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "only GD and UTM and GC geoSystems with the WE and IN style ellipsoids are exercised in the unit checks of BR.geo; the picture tests use GD WE",
+  "a plain list handed to a double field of X_ITE 16.6.0 (a harness slip, now converted to SFVec3d) turns the picture to nothing and a second set kills the page",
+  "the origin is read at use: a change of geoSystem of an existing GeoOrigin at run time is not tested (the field is initializeOnly)"
+ ]
+}

@@ -39,14 +39,23 @@ R.bridge.three.cube = {
     }
     return null;
   },
-  empty() { const d = { data: new Uint8Array([0, 0, 0, 255]), width: 1, height: 1 }, t = new THREE.CubeTexture([d, d, d, d, d, d]); t.needsUpdate = true; return t; },
+  empty(body) {   // one black cube per page: the cube a material shows until its picture is there
+    if (body && body.cubeEmpty) return body.cubeEmpty;
+    const d = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1), t = new THREE.CubeTexture([d, d, d, d, d, d]); t.needsUpdate = true; if (body) body.cubeEmpty = t; return t;   // DataTexture faces: three.js uploads them as data
+  },
+  /* a material (a Shape rebuilt, or removed) goes: its uniform set is taken out of every record that tells it of a new picture */
+  drop(body, m) { const u = m.userData && m.userData.cubeU; if (!u) return; for (const e of body.texCache.values()) if (e && e.users) e.users.delete(u); if (body.cubeMats) body.cubeMats.delete(m); },
+  /* six canvases of one size (WebGL calls a cube with unequal faces incomplete): the faces are drawn at the largest side, at most 4096 */
+  equal(got) { const C = R.bridge.three.cube; let S = 1; for (const k of C.ORDER) S = Math.max(S, got[k].width, got[k].height); S = Math.min(S, 4096); for (const k of C.ORDER) { const c = got[k]; if (c.width !== S || c.height !== S) { const q = document.createElement('canvas'); q.width = q.height = S; q.getContext('2d').drawImage(c, 0, 0, S, S); got[k] = q; } } return got; },
   entry(body, n) { const key = 'cube:' + n.id; let e = body.texCache.get(key); if (!e) { e = { node: n, tex: null, ready: false, users: new Set(), flip: R.bridge.three.cube.FLIP }; body.texCache.set(key, e); } return e; },
   /* the texture of a cube map node as a record {tex, ready, flip}: the image loads in, the record's users (uniform sets) are told */
   use(body, n, u) {
     const C = R.bridge.three.cube, e = C.entry(body, n); e.users.add(u);
-    if (n.type === 'ImageCubeMapTexture') { if (!e.started) { e.started = true; C.loadImage(body, n, e); } }
-    else if (n.type === 'ComposedCubeMapTexture') { if (!e.started) { e.started = true; C.loadComposed(body, n, e); } }
-    else C.setupGenerated(body, n, e);
+    try {   // a bad url or picture leaves the cube empty and says so: it does not stop the world from being built
+      if (n.type === 'ImageCubeMapTexture') { if (!e.started) { e.started = true; C.loadImage(body, n, e); } }
+      else if (n.type === 'ComposedCubeMapTexture') { if (!e.started) { e.started = true; C.loadComposed(body, n, e); } }
+      else C.setupGenerated(body, n, e);
+    } catch (err) { body.note(n.type + ': ' + (err && err.message || err)); }
     return e;
   },
   tell(e) { for (const u of e.users) { u.cubeMap.value = e.ready ? e.tex : u.empty; u.cubeOn.value = e.ready ? 1 : 0; u.cubeFlip.value.fromArray(e.flip); u.cubeWorld.value = e.world ? 1 : 0; } },
@@ -59,22 +68,23 @@ R.bridge.three.cube = {
       if (e.tex) e.tex.dispose(); const t = new THREE.CubeTexture(C.ORDER.map((k) => f[k])); t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.needsUpdate = true; e.tex = t; e.ready = true; C.tell(e); body.dirty = true;
     };
     img.onerror = () => body.note('ImageCubeMapTexture: image not loaded');
-    img.src = body.resolve(u, body.baseUrl);
+    img.src = body.resolve(u, body.baseUrl);   // a url that cannot be resolved throws into use(), which says so
   },
   /* ComposedCubeMapTexture: six face nodes (ImageTexture, or PixelTexture), each one picture, drawn unturned on a face of the cube */
   loadComposed(body, n, e) {
     const C = R.bridge.three.cube, f = n.f, names = { right: 'rightTexture', left: 'leftTexture', top: 'topTexture', bottom: 'bottomTexture', front: 'frontTexture', back: 'backTexture' }; e.ready = false; e.gen = (e.gen || 0) + 1; const gen = e.gen, got = {}; let left = 6;
-    const done = () => { if (--left || gen !== e.gen) return; if (e.tex) e.tex.dispose(); const t = new THREE.CubeTexture(C.ORDER.map((k) => got[k])); t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.needsUpdate = true; e.tex = t; e.ready = true; C.tell(e); body.dirty = true; };
+    const done = () => { if (--left || gen !== e.gen) return; if (e.tex) e.tex.dispose(); C.equal(got); const t = new THREE.CubeTexture(C.ORDER.map((k) => got[k])); t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.needsUpdate = true; e.tex = t; e.ready = true; C.tell(e); body.dirty = true; };
     for (const k of C.ORDER) {
       const tn = f[names[k]], blank = () => { const c = document.createElement('canvas'); c.width = c.height = 1; got[k] = c; done(); };
       if (!tn) { blank(); continue; }
-      if (tn.type === 'PixelTexture') { const im = tn.f.image || [], w = im[0] | 0, h = im[1] | 0, c = document.createElement('canvas'); if (!(w > 0 && h > 0)) { blank(); continue; } c.width = w; c.height = h; const g = c.getContext('2d'), d = g.createImageData(w, h), nc = im[2] | 0;
+      if (tn.type === 'PixelTexture') { const im = tn.f.image || [], w = im[0] | 0, h = im[1] | 0, c = document.createElement('canvas'); if (!(w > 0 && h > 0 && w <= 8192 && h <= 8192 && im.length >= 3 + w * h)) { blank(); continue; }   // sizes the pixel list cannot fill, or past the largest texture, are an empty face c.width = w; c.height = h; const g = c.getContext('2d'), d = g.createImageData(w, h), nc = im[2] | 0;
         for (let i = 0; i < w * h; i++) { const v = im[3 + i] >>> 0; let r, gg, b, a = 255; if (nc === 1) r = gg = b = v & 255; else if (nc === 2) { r = gg = b = (v >> 8) & 255; a = v & 255; } else if (nc === 3) { r = (v >> 16) & 255; gg = (v >> 8) & 255; b = v & 255; } else { r = (v >>> 24) & 255; gg = (v >> 16) & 255; b = (v >> 8) & 255; a = v & 255; }
           const o = ((h - 1 - ((i / w) | 0)) * w + (i % w)) * 4; d.data.set([r, gg, b, a], o); }   // X3D image rows run bottom to top
         g.putImageData(d, 0, 0); got[k] = C.ORI[k] ? C.turn(c, w, C.ORI[k]) : c; done(); continue; }
       const u = (tn.f.url || [])[0]; if (!u) { blank(); continue; }
+      let src; try { src = body.resolve(u, body.baseUrl); } catch (err) { blank(); continue; }
       const img = new Image(); img.crossOrigin = 'anonymous'; img.onload = () => { const w = Math.max(img.naturalWidth, img.naturalHeight), c = document.createElement('canvas'); c.width = c.height = w; c.getContext('2d').drawImage(img, 0, 0, w, w); got[k] = C.ORI[k] ? C.turn(c, w, C.ORI[k]) : c; done(); };
-      img.onerror = () => { body.note('ComposedCubeMapTexture: the ' + k + ' image did not load'); blank(); }; img.src = body.resolve(u, body.baseUrl);
+      img.onerror = () => { body.note('ComposedCubeMapTexture: the ' + k + ' image did not load'); blank(); }; img.src = src;
     }
   },
   reload(body, n) { const e = body.texCache.get('cube:' + n.id); if (e && n.type === 'ImageCubeMapTexture') R.bridge.three.cube.loadImage(body, n, e); },
@@ -89,15 +99,19 @@ R.bridge.three.cube = {
     if (!body.cubeGen) return;
     for (const e of body.cubeGen) {
       const m = e.mode; if (!(m === 'ALWAYS' || (m === 'NEXT_FRAME_ONLY' && e.pending))) continue;
-      const hide = []; for (const u of e.users) for (const mesh of u.meshes || []) { if (mesh.visible) { mesh.visible = false; hide.push(mesh); } }
-      const o = new THREE.Vector3(); const mesh = [...e.users][0] && [...e.users][0].meshes && [...e.users][0].meshes[0]; if (mesh) { mesh.updateWorldMatrix(true, false); o.setFromMatrixPosition(mesh.matrixWorld); }
-      e.cam.position.copy(o); e.cam.update(body.renderer, body.scene); for (const h of hide) h.visible = true;
+      const shown = (o) => { for (let x = o; x; x = x.parent) { if (x.visible === false) return false; if (x === body.root) return true; } return false; };
+      const live = []; for (const u of e.users) { const mesh = (u.meshes || []).find((x) => x.parent && shown(x.parent)); if (mesh) live.push({ u, mesh }); }
+      if (!live.length) continue;   // nothing that shows this cube is on the page: no picture is taken (a NEXT_FRAME_ONLY waits until one is)
+      const hide = []; for (const { u } of live) for (const mesh of u.meshes) for (const x of [mesh, mesh.userData && mesh.userData.hatch]) if (x && x.visible) { x.visible = false; hide.push(x); }   // the shape does not show itself in its own mirror (its hatch overlay neither)
+      const o = new THREE.Vector3(); live[0].mesh.updateWorldMatrix(true, false); o.setFromMatrixPosition(live[0].mesh.matrixWorld);
+      const F = Math.max(2000, body.cam.far); if (e.far !== F) { e.far = F; for (const c of e.cam.children) { c.far = F; c.updateProjectionMatrix(); } }   // the backdrop sits at half the camera's far: the pictures reach as far
+      try { e.cam.position.copy(o); e.cam.update(body.renderer, body.scene); } finally { for (const h of hide) h.visible = true; }
       if (m === 'NEXT_FRAME_ONLY') { e.pending = false; e.node.f.update = 'NONE'; e.mode = 'NONE'; R.events.emit(e.node, 'update', 'NONE'); }
     }
   },
   /* the shader patch: reflection of the view in camera space, looked up in the cube map in place of the map lookup */
   patch(body, m, node, shape, hasTcg) {
-    const C = R.bridge.three.cube, u = { cubeMap: { value: null }, cubeOn: { value: 0 }, cubeFlip: { value: new THREE.Vector3(1, 1, 1) }, cubeWorld: { value: 0 }, cubeRot: { value: new THREE.Matrix3() }, empty: C.empty(), meshes: [] };
+    const C = R.bridge.three.cube, u = { cubeMap: { value: null }, cubeOn: { value: 0 }, cubeFlip: { value: new THREE.Vector3(1, 1, 1) }, cubeWorld: { value: 0 }, cubeRot: { value: new THREE.Matrix3() }, empty: C.empty(body), meshes: [] };
     u.cubeMap.value = u.empty; m.userData.cubeU = u; (body.cubeMats ||= new Set()).add(m);
     body.patchMaterial(m, hasTcg ? 'cube-tc' : 'cube', (sh) => {
       Object.assign(sh.uniforms, { cubeMap: u.cubeMap, cubeOn: u.cubeOn, cubeFlip: u.cubeFlip, cubeWorld: u.cubeWorld, cubeRot: u.cubeRot });

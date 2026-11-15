@@ -84,11 +84,17 @@ class Body {
     if (!this.root) return;
     this.root.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) [].concat(o.material).forEach((m) => { if (m.map) m.map.dispose(); m.dispose(); }); });
     this.scene.remove(this.root); this.scene.fog = this.worldFog = null; this.fogHooks = false; this.fogScopes = new WeakMap(); this.localFogs = new Map(); this.tcgMeshes = [];
+    for (const r of this.inlines || []) { r.dead = true; r.gen++; r.world = null; } this.inlines = new Set(); this.inlineLoads = 0;
+    if (this.cubeGen) for (const e of this.cubeGen) if (e.target) e.target.dispose(); this.cubeGen = new Set(); this.cubeMats = new Set(); if (this.cubeEmpty) { this.cubeEmpty.dispose(); this.cubeEmpty = null; }
+    for (const tc of this.textCache.values()) if (tc && tc.map && tc.map.dispose) tc.map.dispose();
+    for (const v of this.texCache.values()) { if (v && v.dispose) v.dispose(); else if (v && v.tex && v.tex.dispose) v.tex.dispose(); if (v && v.target && v.target.dispose) v.target.dispose(); }
+    this.textCache.clear(); this.texCache.clear(); this.meshesOf.clear(); this.pose.geo = null;
     this.rec.clear(); this.geoCache.clear(); this.lights = []; this.billboards = []; this.lods = []; this.clips = []; this.clipDirty = false; this.bound = null; this.viewpoints = []; this.root = null;
   }
 
   build(n, parent, chain) {
     if (!n) return null;
+    if (chain && chain.length > 400) { this.note('three.js body: <' + n.type + '> is nested more than 400 deep (a USE that contains itself?), not built'); return null; }
     switch (n.type) {
       case 'Group': case 'Switch': case 'Transform': case 'Billboard': case 'LOD': case 'Anchor': case 'Collision': case 'StaticGroup': return this.buildGroup(n, parent, chain);   // Anchor, Collision and StaticGroup draw as plain groups (the link, the collision test and the freezing are the SAI's and the navigation's business)
       case 'ClipPlane': (this.clips ||= []).push({ node: n, parent }); this.clipDirty = true; return null;
@@ -100,28 +106,59 @@ class Body {
       default: { const fn = T3.build[n.type]; if (!fn) this.note('three.js body: skipped <' + n.type + '>'); else return fn(this, n, parent, chain); return null; }
     }
   }
-  /* Inline: the file is fetched (gzip too), parsed by the SAI shim and its roots built under this node's group; load FALSE hides it and holds the fetch until load turns TRUE. A relative url is read against the
-     page's base url; the textures and urls inside the inline file are read against the main file, not the inline one (a gap). The inline file's own Viewpoint, lights, fog and background are built where they are drawn
-     (lights, viewpoints) or ignored (fog, background), as for the main file. */
+  /* Inline: the file is fetched (gzip too), parsed by the SAI shim and its roots built under this node's group. load FALSE (or a url change) unloads it and load TRUE loads again; the urls are tried in
+     order and a relative one is read against the file that holds the Inline (n.base). A file that includes itself (directly or through others) is refused, as is a nesting deeper than 8, more than 512 loads
+     in one world and a file bigger than 32 MB (128 MB once unzipped). An Inline that is cleared, rebuilt or unloaded while its file is on the way is dropped with the TimeSensors and DEFs that the parse
+     added to the page. The textures and urls inside the inline file are still read against the main file (a gap). The inline file's own Viewpoint and lights are built where they are drawn, its fog
+     and background are ignored, as for the main file. */
   buildInline(n, parent, chain) {
-    const o = new THREE.Group(); o.name = n.def || 'Inline'; parent.add(o); const r = { node: n, tn: o, kids: [], chain: [n, ...chain], loaded: false }; this.rec.set(n.id, r);
-    if (n.f.load !== false) this.loadInline(n, r); else o.visible = false;
+    const o = new THREE.Group(); o.name = n.def || 'Inline'; parent.add(o); const r = { node: n, tn: o, kids: [], chain: [n, ...chain], loaded: false, gen: 0 }; this.rec.set(n.id, r); (this.inlines ||= new Set()).add(r);
+    if (n.f.visible === false) o.visible = false;
+    if (n.f.load !== false) this.loadInline(n, r);
     return r;
   }
-  async loadInline(n, r) {
-    if (r.loaded || r.loading || !(n.f.url || []).length) return; r.loading = true;
-    try {
-      const url = this.resolve(n.f.url[0], this.baseUrl), res = await fetch(url); if (!res.ok) throw new Error(res.status + ' for ' + url);
-      const u = new Uint8Array(await res.arrayBuffer()), text = u[0] === 0x1f && u[1] === 0x8b ? await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text() : new TextDecoder().decode(u);
-      const sc = await X3DSAI.B.createX3DFromString(text, url); if (!this.rec.get(n.id) || r.tn !== this.rec.get(n.id).tn) return;   // the Inline was rebuilt or removed while the file came in
-      for (const root of sc._world.children) r.kids.push(this.build(root, r.tn, r.chain));
-      r.loaded = true; this.clipDirty = true;
-    } catch (e) { this.note('Inline ' + (n.def || '') + ' did not load: ' + e.message); }
-    r.loading = false;
+  async fetchText(url, max) {
+    const res = await fetch(url); if (!res.ok) throw new Error(res.status + ' for ' + url);
+    if (+res.headers.get('content-length') > max) throw new Error('the file is larger than ' + max + ' bytes');
+    const u = new Uint8Array(await res.arrayBuffer()); if (u.length > max) throw new Error('the file is larger than ' + max + ' bytes');
+    if (!(u[0] === 0x1f && u[1] === 0x8b)) return new TextDecoder().decode(u);
+    const rd = new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).body.getReader(), parts = []; let total = 0;
+    for (;;) { const { done, value } = await rd.read(); if (done) break; total += value.length; if (total > max * 4) { rd.cancel(); throw new Error('the unzipped file is larger than ' + max * 4 + ' bytes'); } parts.push(value); }
+    return new TextDecoder().decode(await new Blob(parts).arrayBuffer());
   }
+  async loadInline(n, r) {
+    if (r.dead || r.loaded || r.loading) return; const urls = n.f.url || []; if (!urls.length) return;
+    if (r.chain.filter((x) => x.type === 'Inline').length > 8) { this.note('Inline ' + (n.def || '') + ': nested more than 8 deep, not loaded'); return; }
+    if ((this.inlineLoads = (this.inlineLoads || 0) + 1) > 512) { this.note('Inline: more than 512 loads in one world, ' + (n.def || '') + ' not loaded'); return; }
+    r.loading = true; const my = ++r.gen, stale = () => r.dead || r.gen !== my || n.f.load === false, errs = [];
+    try {
+      for (const u of urls) {
+        try {
+          const url = this.resolve(u, n.base || this.baseUrl);
+          if (r.chain.some((x) => x !== n && x.type === 'Inline' && x._inlineUrl === url)) throw new Error('the file includes itself');
+          n._inlineUrl = url; const text = await this.fetchText(url, 32e6); if (stale()) return;
+          const sc = await X3DSAI.B.createX3DFromString(text, url); if (stale()) { this.releaseWorld(sc._world); return; }   // the parse has put the file's TimeSensors and DEFs on the page: taken off again
+          r.world = sc._world; r.defKeys = this.defsOf(r.world); this.inlines.add(r);
+          try { for (const root of r.world.children) r.kids.push(this.build(root, r.tn, r.chain)); } catch (e) { this.unloadInline(r, true); throw e; }
+          r.loaded = true; this.clipDirty = true; return;
+        } catch (e) { errs.push(String(e && e.message || e)); }
+      }
+      this.note('Inline ' + (n.def || '') + ' did not load: ' + errs.join(' | '));
+    } finally { if (r.gen === my) r.loading = false; }
+  }
+  defsOf(world) { const cur = X3DSAI.B.currentScene, out = []; if (cur && cur._world) for (const [k, v] of world.defs) if (cur._world.defs.get(k) === v) out.push(k); return out; }   // the DEFs the parse added to the page
+  releaseWorld(world) {
+    if (!world) return; const set = new Set(world.nodes); this.timeSensors = (this.timeSensors || []).filter((t) => !set.has(t));
+    const cur = X3DSAI.B.currentScene; if (cur && cur._world) for (const k of this.defsOf(world)) cur._world.defs.delete(k);
+  }
+  unloadInline(r, keepGen) {
+    if (!keepGen) r.gen++; for (const k of r.kids) this.disposeRec(k); r.kids = []; if (r.world) this.releaseWorld(r.world); r.world = null; r.loaded = false; r.loading = false; r.defKeys = null; this.clipDirty = true;
+  }
+  /* every node of the page: the main file's and those of the Inline files that are loaded (the scans for the users of a texture, a font, a fog coordinate look here) */
+  allNodes() { const out = this.world ? this.world.nodes.slice() : []; for (const r of this.inlines || []) if (r.world) for (const x of r.world.nodes) out.push(x); return out; }
   buildGroup(n, parent, chain) {
     const o = new THREE.Group(); o.name = n.def || n.type; parent.add(o);
-    const r = { node: n, tn: o, kids: [], chain: [n, ...chain] }; this.rec.set(n.id, r);
+    const r = { node: n, tn: o, kids: [], chain: [n, ...chain] }; this.rec.set(n.id, r); o.userData.node = n;   // the pointer layer finds the object of a group from its node
     if (n.type === 'Transform') this.applyTransform(n, o);
     if (n.type === 'Billboard') (this.billboards ||= []).push(r);   // turned toward the eye every frame (updateView)
     if (n.type === 'LOD') { (this.lods ||= []).push(r); r.level = -1; }
@@ -265,6 +302,8 @@ class Body {
       fragmentShader: 'uniform sampler2D hatch; uniform vec2 res;\nvoid main() { vec2 t = vec2( gl_FragCoord.x, res.y - gl_FragCoord.y ) / 32.0; gl_FragColor = texture2D( hatch, t );\n#include <colorspace_fragment>\n}' });
     const ov = new T.Mesh(r.meshes[0].geometry, mat); ov.userData = { hatchOf: r.meshes[0] }; o.add(ov); r.meshes[0].userData.hatch = ov;
   }
+  mapMeshes(node) { return this.matMeshes(node).filter((m) => !(m.userData.shape.f.geometry && m.userData.shape.f.geometry.type === 'Text')); }   // a Text's map is its glyph atlas, a shader's material has none: a texture change leaves both alone
+  matMeshes(node) { return [...(this.meshesOf.get(node.id) || [])].filter((m) => !(m.material && m.material.userData && m.material.userData.x3dShader)); }   // a ComposedShader mesh has no colour fields to refresh
   isPlain(m) { return m.isLineSegments || m.isPoints || !!m.userData.wide; }   // a line, a point cloud, or a line drawn as screen-space quads
   emptyGeometry() { const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(0), 3)); return geo; }
   dataGeometry(d, g) {
@@ -291,7 +330,7 @@ class Body {
       if (pl && !!pl.wide !== !!m.userData.wide) { this.rebuildShape(m.userData.shape); return; }   // thin <-> wide: a different kind of mesh
       const g = (pl ? pl.geo : this.threeGeometry(n)) || this.emptyGeometry();
       if (n.type === 'Text' && !pl && m.material && !m.material.isShaderMaterial) { const tc = this.textCache.get(n.id); if (tc) { m.material.map = tc.map; m.material.needsUpdate = true; } }
-      m.geometry.dispose(); m.geometry = g; if (m.material.userData && m.material.userData.x3dShader) R.bridge.three.shader.alias(g); if (m.userData.hatch) m.userData.hatch.geometry = g; if (pl) { m.material.dispose(); m.material = pl.mat; }
+      m.geometry.dispose(); m.geometry = g; m.userData.tcgKey = null; if (m.material.userData && m.material.userData.x3dShader) R.bridge.three.shader.alias(g); if (m.userData.hatch) m.userData.hatch.geometry = g; if (pl) { m.material.dispose(); m.material = pl.mat; }
       if (g.userData.tcg && !(this.tcgMeshes || []).includes(m)) (this.tcgMeshes ||= []).push(m);
       this.clipDirty = true;
     }
@@ -350,7 +389,7 @@ class Body {
   multiTex(node) {
     const body = this, SZ = 256, cv = document.createElement('canvas'); cv.width = cv.height = SZ; const ctx = cv.getContext('2d'), dt = new THREE.CanvasTexture(cv); dt.wrapS = dt.wrapT = THREE.RepeatWrapping;
     const cv2 = document.createElement('canvas'); cv2.width = cv2.height = SZ; const ctx2 = cv2.getContext('2d'), dt2 = dt.userData.add = new THREE.CanvasTexture(cv2); dt2.wrapS = dt2.wrapT = THREE.RepeatWrapping;   // the ADD stages, summed: X_ITE 16.6.0 adds them to the lit colour, not to the texture colour
-    const imgs = [], app = this.world.nodes.find((x) => x.type === 'Appearance' && x.f.texture === node);
+    const imgs = [], app = this.allNodes().find((x) => x.type === 'Appearance' && x.f.texture === node);
     const mul = (m, n) => [m[0] * n[0] + m[2] * n[1], m[1] * n[0] + m[3] * n[1], m[0] * n[2] + m[2] * n[3], m[1] * n[2] + m[3] * n[3], m[0] * n[4] + m[2] * n[5] + m[4], m[1] * n[4] + m[3] * n[5] + m[5]];   // [a b c d e f]: x' = a x + c y + e
     const inv = (m) => { const d = m[0] * m[3] - m[1] * m[2]; return [m[3] / d, -m[1] / d, -m[2] / d, m[0] / d, (m[2] * m[5] - m[3] * m[4]) / d, (m[1] * m[4] - m[0] * m[5]) / d]; };
     const ttM = (t) => { const f = t.f, c = f.center || [0, 0], s = f.scale || [1, 1], r = f.rotation || 0, T = f.translation || [0, 0], co = Math.cos(r), si = Math.sin(r);
@@ -388,10 +427,11 @@ class Body {
   /* Material -> MeshPhongMaterial (the Phong model X3D and X_ITE share); PhysicalMaterial -> MeshPhysicalMaterial (the glTF model, linear colours) */
   makeMaterial(shape, g, app, back) {
     const T = THREE, mat = app && app.f.material, texN = app && app.f.texture, side = back ? T.BackSide : g.f.solid === true || (mat && mat.type === 'TwoSidedMaterial') ? T.FrontSide : T.DoubleSide;
-    let m; const cs = app && (app.f.shaders || []).find((x) => x.type === 'ComposedShader');
-    if (cs) { const sm = R.bridge.three.shader.make(this, cs, side); R.bridge.three.shader.announce(cs, !!sm); if (sm) return sm; }   // a shader that compiles takes the place of the Material; one that does not leaves the Material
-    if (mat && mat.type === 'TwoSidedMaterial') { m = new T.MeshPhongMaterial({ side, specular: 0 }); this.refreshPhong(m, this.twoSrc(mat, !!back)); m.map = this.texFor(texN, app && app.f.textureTransform); return m; } const vc = !!g.f.color;   // a Color node replaces diffuseColor (19775-1 12.2.2): the material colour is white so the vertex colour is not multiplied by it
-    if (mat && mat.type === 'PhysicalMaterial') { m = new T.MeshPhysicalMaterial({ side }); this.refreshPBR(m, mat); m.map = this.texFor(mat.f.baseTexture, app && app.f.textureTransform); }
+    let m;
+    for (const cs of app ? (app.f.shaders || []) : []) { if (!cs || cs.type !== 'ComposedShader') continue; const sm = R.bridge.three.shader.make(this, cs, side); R.bridge.three.shader.announce(cs, !!sm); if (sm) return sm; }   // the first shader that compiles takes the place of the Material (19775-1 31.4.1: the browser uses the first it supports)   // a shader that compiles takes the place of the Material; one that does not leaves the Material
+    const vc = !!g.f.color;   // a Color node replaces diffuseColor (19775-1 12.2.2): the material colour is white so the vertex colour is not multiplied by it
+    if (mat && mat.type === 'TwoSidedMaterial') { m = new T.MeshPhongMaterial({ side, specular: 0 }); this.refreshPhong(m, this.twoSrc(mat, !!back)); m.map = this.texFor(texN, app && app.f.textureTransform); }
+    else if (mat && mat.type === 'PhysicalMaterial') { m = new T.MeshPhysicalMaterial({ side }); this.refreshPBR(m, mat); m.map = this.texFor(mat.f.baseTexture, app && app.f.textureTransform); }
     else if (mat && mat.type === 'Material') { m = new T.MeshPhongMaterial({ side, specular: 0 }); this.refreshPhong(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }
     else if (mat && mat.type === 'UnlitMaterial') { m = new T.MeshBasicMaterial({ side }); this.refreshUnlit(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }   // 19775-1 4.0: no lighting, emissiveColor is the colour
     else { m = new T.MeshBasicMaterial({ side, color: 0xffffff }); m.map = this.texFor(texN, app && app.f.textureTransform); }   // no Material: unlit, white, texture as is (19775-1 12.2.2)
@@ -401,7 +441,7 @@ class Body {
       sh.fragmentShader = 'varying float vFogCoord;\n' + sh.fragmentShader.replace('#include <fog_fragment>', '#ifdef USE_FOG\n gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, clamp( vFogCoord, 0.0, 1.0 ) );\n#endif'); });
     const mt = texN && texN.type === 'MultiTexture' && this.texCache.get(texN.id);
     if (mt && mt.userData.add) this.addStage(m, mt.userData.add);
-    if (vc) { m.vertexColors = true; if (mat && mat.type === 'Material') this.refreshPhong(m, mat); else if (mat && mat.type === 'PhysicalMaterial') this.refreshPBR(m, mat); }
+    if (vc) { m.vertexColors = true; if (mat && mat.type === 'Material') this.refreshPhong(m, mat); else if (mat && mat.type === 'PhysicalMaterial') this.refreshPBR(m, mat); else if (mat && mat.type === 'TwoSidedMaterial') this.refreshPhong(m, this.twoSrc(mat, !!back)); }
     if (texN && /^(Image|Generated|Composed)CubeMapTexture$/.test(texN.type)) R.bridge.three.cube.patch(this, m, texN, shape, !!(g.f.texCoord && g.f.texCoord.type === 'TextureCoordinateGenerator'));
     return m;
   }
@@ -481,23 +521,31 @@ class Body {
   /* --------------------------------------------------------------- changes */
   changed(node, field) {
     const t = node.type;
-    if (t === 'Inline') { const r = this.rec.get(node.id); if (r && field === 'load') { if (node.f.load !== false) { r.tn.visible = true; this.loadInline(node, r); } else r.tn.visible = false; } return; }
+    if (t === 'Inline') {
+      for (const r of this.inlines || []) {   // every use of the node (DEF and USE) answers
+        if (r.node !== node || r.dead) continue;
+        if (field === 'load') { if (node.f.load !== false) this.loadInline(node, r); else this.unloadInline(r); }
+        else if (field === 'url') { this.unloadInline(r); if (node.f.load !== false) this.loadInline(node, r); }
+        else if (field === 'visible') r.tn.visible = node.f.visible !== false;
+      }
+      return;
+    }
     if (t === 'Switch' && field === 'whichChoice') this.applySwitch(node);
     else if (t === 'Transform' && field !== 'children') { const r = this.rec.get(node.id); if (r && r.tn) { this.applyTransform(node, r.tn); } }
     else if (field === 'children' && this.rec.get(node.id) && this.rec.get(node.id).kids) this.rebuildGroup(node);   // Group, Switch, Transform, Billboard, LOD, Anchor, Collision, StaticGroup
-    else if (t === 'Material') for (const m of this.meshesOf.get(node.id) || []) { if (this.isPlain(m)) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshPhong(m.material, node); }
-    else if (t === 'PhysicalMaterial') for (const m of this.meshesOf.get(node.id) || []) { if (this.isPlain(m)) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshPBR(m.material, node); }
-    else if (t === 'UnlitMaterial') for (const m of this.meshesOf.get(node.id) || []) { if (this.isPlain(m)) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshUnlit(m.material, node); }
+    else if (t === 'Material') for (const m of this.matMeshes(node)) { if (this.isPlain(m)) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshPhong(m.material, node); }
+    else if (t === 'PhysicalMaterial') for (const m of this.matMeshes(node)) { if (this.isPlain(m)) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshPBR(m.material, node); }
+    else if (t === 'UnlitMaterial') for (const m of this.matMeshes(node)) { if (this.isPlain(m)) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshUnlit(m.material, node); }
     else if (t === 'DirectionalLight' || t === 'PointLight' || t === 'SpotLight') { const l = this.lights.find((x) => x.userData.node === node); if (l) { this.refreshLight(l); this.refreshAmbient(); } }
     else if (t === 'Fog') this.applyFog();
     else if (t === 'ClipPlane') this.clipDirty = true;
-    else if (t === 'TwoSidedMaterial') for (const m of this.meshesOf.get(node.id) || []) this.refreshPhong(m.material, this.twoSrc(node, !!m.userData.back));
-    else if (t === 'TextureProperties') { for (const tn of this.world.nodes) if (tn.f && tn.f.textureProperties === node) this.retex(tn); }
+    else if (t === 'TwoSidedMaterial') for (const m of this.matMeshes(node)) this.refreshPhong(m.material, this.twoSrc(node, !!m.userData.back));
+    else if (t === 'TextureProperties') { for (const tn of this.allNodes()) if (tn.f && tn.f.textureProperties === node) this.retex(tn); }
     else if (t === 'TextureCoordinateGenerator') { for (const g of new Set([...(this.meshesOf.get(node.id) || [])].map((m) => m.userData.shape.f.geometry))) this.regeo(g); }
     else if (t === 'LineProperties' || t === 'FillProperties') { for (const sh of new Set([...(this.meshesOf.get(node.id) || [])].map((m) => m.userData.shape))) this.rebuildShape(sh); }
     else if (t === 'MultiTextureTransform') this.redrawMulti(node);
-    else if (t === 'FogCoordinate') { for (const g of this.world.nodes) if (g.f && g.f.fogCoord === node) this.regeo(g); }
-    else if (t === 'TextureTransform') { this.redrawMulti(node); for (const m of this.meshesOf.get(node.id) || []) { const ap = m.userData.shape.f.appearance, mat = ap && ap.f.material, tex = mat && mat.type === 'PhysicalMaterial' ? mat.f.baseTexture : ap && ap.f.texture; const old = m.material.map; m.material.map = this.texFor(tex, node); m.material.needsUpdate = true; if (old && old.userData.copyOf) old.dispose(); } }
+    else if (t === 'FogCoordinate') { for (const g of this.allNodes()) if (g.f && g.f.fogCoord === node) this.regeo(g); }
+    else if (t === 'TextureTransform') { this.redrawMulti(node); for (const m of this.mapMeshes(node)) { const ap = m.userData.shape.f.appearance, mat = ap && ap.f.material, tex = mat && mat.type === 'PhysicalMaterial' ? mat.f.baseTexture : ap && ap.f.texture; const old = m.material.map; m.material.map = this.texFor(tex, node); m.material.needsUpdate = true; if (old && old.userData.copyOf) old.dispose(); } }
     else if (t === 'Background' || t === 'TextureBackground') this.applyBackground();
     else if (t === 'NavigationInfo') this.applyNavigation();
     else if (t === 'Viewpoint' || t === 'OrthoViewpoint') this.viewpointChanged(node, field);
@@ -519,20 +567,23 @@ class Body {
   /* a TextureProperties changed: the texture is made again (its copies carrying a TextureTransform too) and set on the meshes that show it */
   retex(texN) {
     const old = this.texCache.get(texN.id); this.texCache.delete(texN.id); if (old) old.dispose();
-    for (const m of this.meshesOf.get(texN.id) || []) { const ap = m.userData.shape.f.appearance, prev = m.material.map; m.material.map = this.texFor(texN, ap && ap.f.textureTransform); m.material.needsUpdate = true; if (prev && prev.userData.copyOf) prev.dispose(); }
+    for (const m of this.mapMeshes(texN)) { const ap = m.userData.shape.f.appearance, prev = m.material.map; m.material.map = this.texFor(texN, ap && ap.f.textureTransform); m.material.needsUpdate = true; if (prev && prev.userData.copyOf) prev.dispose(); }
   }
   /* a TextureTransform, or the MultiTextureTransform that holds it, changed: the MultiTextures drawn through it are composed again */
   redrawMulti(tt) {
-    for (const a of this.world.nodes) { const x = a.type === 'Appearance' && a.f.texture; if (!x || x.type !== 'MultiTexture') continue; const at = a.f.textureTransform; if (at === tt || (at && at.f.textureTransform && [].concat(at.f.textureTransform).includes(tt))) { const dt = this.texCache.get(x.id); if (dt && dt.userData.redraw) dt.userData.redraw(); } }
+    for (const a of this.allNodes()) { const x = a.type === 'Appearance' && a.f.texture; if (!x || x.type !== 'MultiTexture') continue; const at = a.f.textureTransform; if (at === tt || (at && at.f.textureTransform && [].concat(at.f.textureTransform).includes(tt))) { const dt = this.texCache.get(x.id); if (dt && dt.userData.redraw) dt.userData.redraw(); } }
   }
-  disposeObj(o) { o.removeFromParent(); o.traverse((x) => { if (x.geometry) x.geometry.dispose(); if (x.material) { if (this.cubeMats) this.cubeMats.delete(x.material); x.material.dispose(); } }); }
+  disposeObj(o) { o.removeFromParent(); o.traverse((x) => { if (x.geometry) x.geometry.dispose(); if (x.material) { R.bridge.three.cube.drop(this, x.material); x.material.dispose(); } }); }
   rebuildGroup(node) {
     const r = this.rec.get(node.id); if (!r) return;
     for (const k of r.kids) this.disposeRec(k);
     this.clips = (this.clips || []).filter((cl) => cl.parent !== r.tn);   // the ClipPlanes of this group are built again below
     r.kids = node.f.children.map((c) => this.build(c, r.tn, r.chain)); if (node.type === 'Switch') this.applySwitch(node); if (node.type === 'LOD') r.level = -1; this.clipDirty = true;
   }
-  disposeRec(k) { if (!k) return; (k.kids || []).forEach((x) => this.disposeRec(x)); if (k.tn && k.node && k.node.type !== 'Viewpoint' && k.node.type !== 'OrthoViewpoint') this.disposeObj(k.tn); if (k.node) this.rec.delete(k.node.id); }
+  disposeRec(k) {
+    if (!k) return; k.dead = true; (k.kids || []).forEach((x) => this.disposeRec(x)); if (k.world) { this.releaseWorld(k.world); k.world = null; } if (this.inlines) this.inlines.delete(k);
+    if (k.tn && k.node && k.node.type !== 'Viewpoint' && k.node.type !== 'OrthoViewpoint') this.disposeObj(k.tn); if (k.node && this.rec.get(k.node.id) === k) this.rec.delete(k.node.id);   // a USE'd node has one entry: only its own record is taken out
+  }
   adopt(node, parentNode) {
     const pr = parentNode ? this.rec.get(parentNode.id) : null, cr = this.build(node, pr ? pr.tn : this.root, pr ? pr.chain : []);
     if (pr && pr.kids && cr) pr.kids.push(cr); return cr;
@@ -646,7 +697,7 @@ class Body {
     this.tcgMeshes = (this.tcgMeshes || []).filter((m) => m.parent && m.geometry.userData.tcg);
     for (const m of this.tcgMeshes) {
       const mv = new T.Matrix4().multiplyMatrices(this.cam.matrixWorldInverse, m.matrixWorld), key = mv.elements.join(',') + m.geometry.userData.tcg.mode; if (m.userData.tcgKey === key) continue; m.userData.tcgKey = key;
-      R.bridge.three.tcg.make(m.geometry, m.geometry.userData.tcg.mode, m.geometry.userData.tcg.params, mv);
+      R.bridge.three.tcg.make(m.geometry, m.geometry.userData.tcg.mode, m.geometry.userData.tcg.params, mv, !!(m.material.userData && m.material.userData.cubeU));
     }
     /* ClipPlane: the plane (a b c d) of 19775-1 is in the frame of the node's parent group and keeps the half space where a x + b y + c z + d >= 0, which is three.js's own rule.
        Every enabled plane that applies to a mesh is set on its material (three.js intersects them); a disabled one adds nothing. Entries whose group left the scene are dropped. */

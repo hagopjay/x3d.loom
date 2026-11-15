@@ -5,6 +5,21 @@
    field's name. Not built in: the x3d_ light, fog, material and texture structs, textures as fields (SFNode fields are not read), ShaderPart urls that need a fetch (data: and inline text only), the
    geometry, tessellation and compute stages, vertex attributes (FloatVertexAttribute). A source that does not compile is dropped and the Shape is drawn with its Material (isValid stays FALSE). */
 R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
+/* the index just after the #version line, when only blanks and comments come before it; -1 otherwise (linear in the length of the source) */
+const S_versionEnd = (src) => {
+  let i = 0; const n = src.length;
+  while (i < n) {
+    const c = src[i];
+    if (c === ' ' || c === '\t' || c === '\r' || c === '\n') i++;
+    else if (c === '/' && src[i + 1] === '*') { const e = src.indexOf('*/', i + 2); if (e < 0) return -1; i = e + 2; }
+    else if (c === '/' && src[i + 1] === '/') { const e = src.indexOf('\n', i); if (e < 0) return -1; i = e + 1; }
+    else if (src.startsWith('#version', i)) { const e = src.indexOf('\n', i); return e < 0 ? n : e + 1; }
+    else return -1;
+  }
+  return -1;
+};
+/* the same line, when it is #version 300 es: its index range, or null */
+const S_es3Line = (src) => { for (let i = 0; i < src.length;) { let e = src.indexOf('\n', i); if (e < 0) e = src.length; const l = src.slice(i, e); if (/^\s*#version\s+300\s+es\s*$/.test(l)) return [i, e]; i = e + 1; } return null; };
 R.bridge.three.shader = {
   UNI: {   // field type -> a function from the reader's value to a uniform value
     SFFloat: (v) => v, SFDouble: (v) => v, SFTime: (v) => v, SFInt32: (v) => v | 0, SFBool: (v) => !!v,
@@ -16,16 +31,18 @@ R.bridge.three.shader = {
   },
   source(part) {   // the text of a ShaderPart: inline text or a data: url (a url that is a file name would need a fetch)
     const u = (part.f.url || [])[0]; if (u == null) return null; let t = String(u);
-    const m = /^data:[^,]*,/.exec(t); if (m) { const head = m[0]; t = t.slice(head.length); if (/;base64/.test(head)) t = atob(t); else { try { t = decodeURIComponent(t); } catch (e) { /* as is */ } } return t; }
+    const m = /^data:[^,]*,/.exec(t); if (m) { const head = m[0]; t = t.slice(head.length); if (/;base64/.test(head)) { try { t = atob(t); } catch (e) { return null; } } else { try { t = decodeURIComponent(t); } catch (e) { /* as is */ } } return t; }
     return /\n|void\s+main/.test(t) ? t : null;
   },
   withDefines(src, type) {   // X_ITE puts its defines after the #version line, as the first thing the source says
-    const d = '#define X3D_' + type + '_SHADER\n#define X_ITE\n#define x3d_MaxLights 8\n', m = /^((?:\s|\/\*[\s\S]*?\*\/|\/\/.*\n)*#version[^\n]*\n)/.exec(src);
-    return m ? m[1] + d + src.slice(m[1].length) : d + src;
+    const d = '#define X3D_' + type + '_SHADER\n#define X_ITE\n#define x3d_MaxLights 8\n', e = S_versionEnd(src);   // a scan, not a regular expression: the author's source can be anything
+    return e >= 0 ? src.slice(0, e) + d + src.slice(e) : d + src;
   },
   compiles(body, vs, fs) {   // a throw-away compile on the renderer's context: three.js would only log a failure
-    const gl = body.renderer.getContext(); let ok = true, log = '';
-    for (const [t, s] of [[gl.VERTEX_SHADER, vs], [gl.FRAGMENT_SHADER, fs]]) { const sh = gl.createShader(t); gl.shaderSource(sh, s); gl.compileShader(sh); if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) { ok = false; log += gl.getShaderInfoLog(sh) + ' '; } gl.deleteShader(sh); }
+    const gl = body.renderer.getContext(); let ok = true, log = ''; const made = [];
+    for (const [t, s] of [[gl.VERTEX_SHADER, vs], [gl.FRAGMENT_SHADER, fs]]) { const sh = gl.createShader(t); gl.shaderSource(sh, s); gl.compileShader(sh); made.push(sh); if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) { ok = false; log += gl.getShaderInfoLog(sh) + ' '; } }
+    if (ok) { const pr = gl.createProgram(); for (const sh of made) gl.attachShader(pr, sh); gl.linkProgram(pr); if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { ok = false; log += 'link: ' + gl.getProgramInfoLog(pr); } gl.deleteProgram(pr); }   // a pair that compiles but does not link (a varying that does not match) is no shader either
+    for (const sh of made) gl.deleteShader(sh);
     return { ok, log: log.trim() };
   },
   /* -> a RawShaderMaterial for the node, or null (and a note) */
@@ -37,16 +54,17 @@ R.bridge.three.shader = {
     if (!c.ok) { body.note('ComposedShader ' + (cs.def || '') + ' did not compile: ' + c.log); return null; }
     const u = { x3d_ModelViewMatrix: { value: new THREE.Matrix4() }, x3d_ProjectionMatrix: { value: new THREE.Matrix4() }, x3d_NormalMatrix: { value: new THREE.Matrix3() }, x3d_ViewMatrix: { value: new THREE.Matrix4() }, x3d_CameraSpaceMatrix: { value: new THREE.Matrix4() }, x3d_ModelMatrix: { value: new THREE.Matrix4() } };
     // three.js puts its own #define lines first, which a #version line may not follow: for an ES 3.00 source it writes the #version line itself (glslVersion) and the source's own is taken out
-    const v3 = /^\s*#version\s+300\s+es\s*$/m, es3 = v3.test(vs) && v3.test(fs), cut = (x) => (es3 ? x.replace(v3, '') : x);
+    const lv = S_es3Line(vs), lf = S_es3Line(fs), es3 = !!(lv && lf), cut = (x) => { if (!es3) return x; const l = S_es3Line(x); return x.slice(0, l[0]) + x.slice(l[1]); };
     const m = new THREE.RawShaderMaterial({ vertexShader: cut(vs), fragmentShader: cut(fs), uniforms: u, side, glslVersion: es3 ? THREE.GLSL3 : null }); m.userData.x3dShader = cs;
     S.setFields(cs, u);
     return m;
   },
   setFields(cs, u, only) {
-    const S = R.bridge.three.shader, base = new Set(['language', 'parts', 'activate', 'isSelected', 'isValid', 'metadata']);
+    const S = R.bridge.three.shader, base = new Set(['language', 'parts', 'activate', 'isSelected', 'isValid', 'metadata']), has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
     for (const [k, d] of Object.entries(cs.fdefs || {})) {
-      if (base.has(k) || (only && only !== k)) continue; const fn = S.UNI[d[0]]; if (!fn || cs.f[k] == null) continue;
-      try { const v = fn(cs.f[k]); if (u[k]) u[k].value = v; else u[k] = { value: v }; } catch (e) { /* a field the table cannot carry */ }
+      if (base.has(k) || (only && only !== k)) continue; if (/^x3d_/.test(k) || k === '__proto__' || k === 'constructor' || k === 'prototype') continue;   // x3d_ names are the built-in uniforms; the others would reach Object.prototype
+      const fn = has(S.UNI, d[0]) && S.UNI[d[0]]; if (!fn || cs.f[k] == null) continue;
+      try { const v = fn(cs.f[k]); if (has(u, k)) u[k].value = v; else u[k] = { value: v }; } catch (e) { /* a field the table cannot carry */ }
     }
   },
   /* the geometry's attributes under the names X_ITE gives them */
@@ -67,4 +85,4 @@ R.bridge.three.changed.ComposedShader = (body, n, field) => {
   if (field === 'activate') { if (n.f.activate) { for (const m of body.meshesOf.get(n.id) || []) body.rebuildShape(m.userData.shape); } return; }
   for (const m of body.meshesOf.get(n.id) || []) { const mt = m.material; if (mt && mt.userData && mt.userData.x3dShader === n) S.setFields(n, mt.uniforms, field); }
 };
-R.bridge.three.changed.ShaderPart = (body, n, field) => { for (const cs of body.world.nodes) if (cs.type === 'ComposedShader' && (cs.f.parts || []).includes(n)) for (const m of body.meshesOf.get(cs.id) || []) body.rebuildShape(m.userData.shape); };
+R.bridge.three.changed.ShaderPart = (body, n, field) => { for (const cs of body.allNodes()) if (cs.type === 'ComposedShader' && (cs.f.parts || []).includes(n)) for (const m of body.meshesOf.get(cs.id) || []) body.rebuildShape(m.userData.shape); };

@@ -6,38 +6,66 @@
 R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
 {
   const live = {}; R.bridge.live = (k) => (live[k] ||= new Set());
-  const T3 = R.bridge.three, DRAG = (t) => { const s = R.bridge.specs.get(t); return !!(s && s.dragStart); }, SENS = (c) => c.f.enabled !== false && (c.type === 'TouchSensor' || DRAG(c.type));
-  for (const t of ['TouchSensor', 'PlaneSensor', 'SphereSensor', 'CylinderSensor']) T3.build[t] = () => null;
-  T3.build.KeySensor = T3.build.StringSensor = (body, n) => { live.key = live.key || new Set(); live.key.add(n); return null; };
+  const T3 = R.bridge.three, DRAG = (t) => { const s = R.bridge.specs.get(t); return !!(s && s.dragStart); }, TOUCH = (t) => t === 'TouchSensor' || t === 'GeoTouchSensor', SENS = (c) => c.f.enabled !== false && (TOUCH(c.type) || DRAG(c.type));
+  for (const t of ['TouchSensor', 'GeoTouchSensor', 'PlaneSensor', 'SphereSensor', 'CylinderSensor']) T3.build[t] = (body, n) => { (live.ptr ||= new Set()).add(n); return null; };   // live.ptr: the world has a pointer sensor, so hover is worth a pick
+  T3.build.KeySensor = T3.build.StringSensor = (body, n, parent) => { n._host = parent; (live.key ||= new Set()).add(n); return null; };
+  /* a sensor is live while the group it sits in is attached to the page and shown (a Switch choice, a LOD level, a load FALSE Inline or a removed child turn it off) */
+  const attached = (o, root) => { for (let x = o; x; x = x.parent) { if (x.visible === false) return false; if (x === root) return true; } return false; };
   T3.build.VisibilitySensor = T3.build.TransformSensor = (body, n, parent) => { n._tn = parent; return null; };
+  T3.live = (body, n) => attached(n._tn || n._host, body.root);
   const P = T3.pointer = {
     reset() { for (const s of Object.values(live)) s.clear(); },
     /* ---- picking ---- */
     pick(body, x, y) {                                  // client pixel -> { mesh, point, normal, uv } in world space, or null
       const r = body.canvas.getBoundingClientRect(), rc = (body.raycaster ||= new THREE.Raycaster()); if (!body.root || !r.width || !r.height) return null;
-      body.scene.updateMatrixWorld(true); rc.setFromCamera(new THREE.Vector2(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1), body.cam);
-      const list = []; body.root.traverse((o) => { if (!o.isMesh || !o.userData || !o.userData.shape || o.userData.back) return; for (let p = o; p; p = p.parent) if (!p.visible) return; list.push(o); });
-      const hit = rc.intersectObjects(list, false)[0]; if (!hit) return null;
+      body.scene.updateMatrixWorld(true); rc.setFromCamera(new THREE.Vector2(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1), body.cam); rc.near = body.cam.near; rc.far = body.cam.far;
+      const list = []; body.root.traverse((o) => { if (!o.isMesh || !o.userData) return; const own = o.userData.shape ? o : (o.userData.hatchOf && o.userData.hatchOf.visible === false ? o.userData.hatchOf : null); if (!own) return; for (let p = o; p; p = p.parent) if (!p.visible) return; list.push(o); });   // a shape drawn as hatching only (filled FALSE) is touched through its hatch
+      const hit = rc.intersectObjects(list, false).find((h) => { const m = h.object.material, cp = (m && m.clippingPlanes) || []; return cp.every((pl) => pl.distanceToPoint(h.point) >= 0); }); if (!hit) return null;   // a ClipPlane cuts what can be touched as it cuts what is drawn
       const nm = new THREE.Matrix3().getNormalMatrix(hit.object.matrixWorld), n = hit.face ? hit.face.normal.clone().applyMatrix3(nm).normalize() : new THREE.Vector3(0, 0, 1);
-      return { mesh: hit.object, point: hit.point.clone(), normal: n, uv: hit.uv ? [hit.uv.x, hit.uv.y] : [0, 0] };
+      return { mesh: hit.object.userData.shape ? hit.object : hit.object.userData.hatchOf, point: hit.point.clone(), normal: n, uv: hit.uv ? [hit.uv.x, hit.uv.y] : [0, 0] };
     },
     /* the sensors of the nearest group around the shape that holds any enabled one */
-    sensorsFor(mesh) { for (const g of (mesh.userData && mesh.userData.chain) || []) { const s = (g.f.children || []).filter(SENS); if (s.length) return s.map((n) => ({ node: n, group: g })); } return []; },
-    frameOf(body, g) { const r = body.rec.get(g.id); if (r && r.tn) { r.tn.updateWorldMatrix(true, false); return r.tn.matrixWorld.clone(); } return new THREE.Matrix4(); },
-    local(M, p, dir) { const inv = M.clone().invert(); const v = new THREE.Vector3(p.x, p.y, p.z); return dir ? v.transformDirection(inv).toArray() : v.applyMatrix4(inv).toArray(); },
+    sensorsFor(mesh) {
+      for (const g of (mesh.userData && mesh.userData.chain) || []) {
+        const s = (g.f.children || []).filter(SENS); if (!s.length) continue;
+        let obj = null; for (let p = mesh.parent; p && !obj; p = p.parent) if (p.userData && p.userData.node === g) obj = p;   // the object of THIS use of the group (a USE'd group has one record, many objects)
+        return s.map((n) => ({ node: n, group: g, obj }));
+      }
+      return [];
+    },
+    frameOf(body, g, obj) { const o = obj || (body.rec.get(g.id) || {}).tn; if (o) { o.updateWorldMatrix(true, false); return o.matrixWorld.clone(); } return new THREE.Matrix4(); },
+    local(M, p, dir) {
+      const v = new THREE.Vector3(p.x, p.y, p.z);
+      if (!dir) return v.applyMatrix4(M.clone().invert()).toArray();
+      return v.applyMatrix3(new THREE.Matrix3().setFromMatrix4(M).transpose()).normalize().toArray();   // a normal goes back with the transpose of the forward matrix (the inverse of its inverse transpose): right under a non-uniform scale
+    },
     over(body, sens, hit) {
       const st = body.ptr, old = st.over || [], now = sens.map((s) => s.node);
       for (const n of old) if (!now.includes(n)) R.hooks.fire(n, 'isOver', false);
       for (const s of sens) {
         if (!old.includes(s.node)) R.hooks.fire(s.node, 'isOver', true);
-        if (hit && s.node.type === 'TouchSensor') P.hitEvents(body, s, hit);
+        if (hit && TOUCH(s.node.type)) P.hitEvents(body, s, hit);
       }
       st.over = now; body.canvas.classList.toggle('is-over-sensor', now.length > 0);
     },
-    hitEvents(body, s, hit) { const M = P.frameOf(body, s.group); R.hooks.fire(s.node, 'hitPoint_changed', P.local(M, hit.point)); R.hooks.fire(s.node, 'hitNormal_changed', P.local(M, hit.normal, true)); R.hooks.fire(s.node, 'hitTexCoord_changed', hit.uv); },
+    hitEvents(body, s, hit) {
+      const M = P.frameOf(body, s.group, s.obj), pt = P.local(M, hit.point), nr = P.local(M, hit.normal, true);
+      if (s.node.type === 'GeoTouchSensor') {   // texCoord, normal, point, then the geographic coordinate: the local hit point through the sensor's geoSystem and GeoOrigin, as X_ITE does (true only with no Transform above)
+        R.hooks.fire(s.node, 'hitTexCoord_changed', hit.uv); R.hooks.fire(s.node, 'hitNormal_changed', nr); R.hooks.fire(s.node, 'hitPoint_changed', pt); R.hooks.fire(s.node, 'hitGeoCoord_changed', Array.from(R.bridge.geo.geoOf(s.node, pt))); return;
+      }
+      R.hooks.fire(s.node, 'hitPoint_changed', pt); R.hooks.fire(s.node, 'hitNormal_changed', nr); R.hooks.fire(s.node, 'hitTexCoord_changed', hit.uv);
+    },
+    /* a sensor that is disabled while it is over, pressed or dragged lets go at once */
+    release(body, n) {
+      const st = body.ptr; if (!st) return;
+      if (st.over && st.over.includes(n)) { st.over = st.over.filter((x) => x !== n); R.hooks.fire(n, 'isOver', false); }
+      if (st.touch && st.touch.some((s) => s.node === n)) { st.touch = st.touch.filter((s) => s.node !== n); if (!st.touch.length) st.touch = null; R.hooks.fire(n, 'isActive', false); }
+      if (st.drag && st.drag.sens.some((s) => s.node === n)) { st.drag.sens = st.drag.sens.filter((s) => s.node !== n); R.bridge.drag.end(n); if (!st.drag.sens.length) st.drag = null; }
+    },
+    hover(body, x, y) { const h = P.pick(body, x, y); P.over(body, h ? P.sensorsFor(h.mesh) : [], h); },
     /* ---- navigation ---- */
     pan(body, dx, dy) {
-      const p = body.pose, d = Math.max(R.v3.len(R.v3.sub(p.pos, p.center)), 1), s = d * 0.0016 * Math.tan(p.fov / 2) * 2 / 0.9;
+      const p = body.pose, d = Math.max(R.v3.len(R.v3.sub(p.pos, p.center)), 1), s = p.ortho ? (body.cam.top - body.cam.bottom) / (body.canvas.clientHeight || 1) : d * 0.0016 * Math.tan(p.fov / 2) * 2 / 0.9;   // an orthographic view: the height of the view in world units over its pixels
       const up = R.quat.rotate(p.q, [0, 1, 0]), right = R.quat.rotate(p.q, [1, 0, 0]), t = R.v3.add(R.v3.scale(right, -dx * s), R.v3.scale(up, dy * s));
       body.tr = null; body.pose = { ...p, pos: R.v3.add(p.pos, t), center: R.v3.add(p.center, t) }; body.applyCamera();
     },
@@ -55,45 +83,53 @@ R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
       cv.style.touchAction = 'none'; cv.addEventListener('contextmenu', (e) => e.preventDefault());
       const rel = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
       cv.addEventListener('pointerdown', (e) => {
+        if (st.drag || st.touch) return;   // a second finger or button while a sensor is held is none of the sensor's business, and does not take it away
         cv.setPointerCapture(e.pointerId); st.pts.set(e.pointerId, [e.clientX, e.clientY]);
-        st.down = true; st.x = st.sx = e.clientX; st.y = st.sy = e.clientY; st.t0 = performance.now(); st.moved = 0; st.button = e.button; st.shift = e.shiftKey; st.drag = null; st.touch = null;
-        if (st.pts.size === 2) { const [a, b] = [...st.pts.values()]; st.pinch = Math.hypot(a[0] - b[0], a[1] - b[1]); return; }
+        st.down = true; st.x = st.sx = e.clientX; st.y = st.sy = e.clientY; st.t0 = performance.now(); st.moved = 0; st.button = e.button; st.shift = e.shiftKey; st.drag = null; st.touch = null; st.activeId = null;
+        if (st.pts.size === 2) { const [a, b] = [...st.pts.values()]; st.pinch = Math.hypot(a[0] - b[0], a[1] - b[1]); st.moved = 99; return; }   // two fingers are a pinch, never a click
         if (e.button !== 0 || st.pts.size !== 1) return;
         const hit = P.pick(body, e.clientX, e.clientY); if (!hit) return; const sens = P.sensorsFor(hit.mesh); if (!sens.length) return;
-        const drags = sens.filter((s) => DRAG(s.node.type)), touches = sens.filter((s) => s.node.type === 'TouchSensor');
+        P.over(body, sens, hit); st.activeId = e.pointerId;   // isOver comes before isActive, as it does when the pointer has moved onto the shape first
+        const drags = sens.filter((s) => DRAG(s.node.type)), touches = sens.filter((s) => TOUCH(s.node.type));
         if (touches.length) { st.touch = touches; for (const s of touches) { P.hitEvents(body, s, hit); R.hooks.fire(s.node, 'isActive', true); } }
         if (drags.length) {
-          const M = P.frameOf(body, drags[0].group), fr = P.dragFrame(body, M), pt = rel(e), rl = fr.ray(pt[0], pt[1]), hp = P.local(M, hit.point);
+          const M = P.frameOf(body, drags[0].group, drags[0].obj), fr = P.dragFrame(body, M), pt = rel(e), rl = fr.ray(pt[0], pt[1]), hp = P.local(M, hit.point);
           st.drag = { sens: drags, fr }; e.stopImmediatePropagation(); st.down = false;   // the view does not move
           for (const s of drags) R.bridge.drag.start(s.node, { o: rl.o, d: rl.d, hit: hp, pointer: pt, ray: fr.ray, scr: fr.scr, cam: fr.cam });
         }
       });
       cv.addEventListener('pointermove', (e) => {
         if (st.pts.has(e.pointerId)) st.pts.set(e.pointerId, [e.clientX, e.clientY]);
+        if (st.activeId != null && e.pointerId !== st.activeId) return;
         if (st.drag) { const pt = rel(e), rl = st.drag.fr.ray(pt[0], pt[1]); for (const s of st.drag.sens) R.bridge.drag.move(s.node, { o: rl.o, d: rl.d, pointer: pt, ray: st.drag.fr.ray, scr: st.drag.fr.scr, cam: st.drag.fr.cam }); return; }
-        if (st.down && st.pts.size === 2) { const [a, b] = [...st.pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (st.pinch > 0) body.zoom(st.pinch / d); st.pinch = d; st.moved += 10; return; }
+        if (st.down && st.pts.size === 2 && !st.touch) { const [a, b] = [...st.pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (st.pinch > 0) body.zoom(st.pinch / d); st.pinch = d; st.moved += 10; return; }
         if (st.down) { const dx = e.clientX - st.x, dy = e.clientY - st.y; st.x = e.clientX; st.y = e.clientY; st.moved += Math.abs(dx) + Math.abs(dy); if (st.button === 2 || st.button === 1 || st.shift) P.pan(body, dx, dy); else body.orbit(dx, dy); }
-        else { st.pickAt = [e.clientX, e.clientY]; if (!st.queued) { st.queued = true; requestAnimationFrame(() => { st.queued = false; if (st.pickAt && !st.down) { const h = P.pick(body, ...st.pickAt); P.over(body, h ? P.sensorsFor(h.mesh) : [], h); } }); } }
+        if ((!st.down || st.touch) && live.ptr && live.ptr.size) {   // hover: once a frame, only when the world has a pointer sensor, and while a TouchSensor is held (isOver follows the pointer off the shape)
+          st.pickAt = [e.clientX, e.clientY]; if (!st.queued) { st.queued = true; requestAnimationFrame(() => { st.queued = false; if (st.pickAt) P.hover(body, ...st.pickAt); }); }
+        }
       });
       const up = (e) => {
         st.pts.delete(e.pointerId);
+        if ((st.drag || st.touch) && st.activeId != null && e.pointerId !== st.activeId) return;   // another finger lifting does not end the sensor's press
         if (st.drag) { const d = st.drag; st.drag = null; e.stopImmediatePropagation(); for (const s of d.sens) R.bridge.drag.end(s.node); }
         if (st.touch) {
           const t = st.touch, now = (performance.timeOrigin + performance.now()) / 1000, hit = e.type === 'pointerup' ? P.pick(body, e.clientX, e.clientY) : null, here = hit ? P.sensorsFor(hit.mesh).map((s) => s.node) : []; st.touch = null;
           for (const s of t) { R.hooks.fire(s.node, 'isActive', false); if (here.includes(s.node)) R.hooks.fire(s.node, 'touchTime', now); }
         }
+        st.activeId = null; if (e.type === 'pointerup' && live.ptr && live.ptr.size) P.hover(body, e.clientX, e.clientY);   // the pointer is where it was let go: isOver is told
         if (!st.down) return;
+        if (st.pts.size === 1) { const q = [...st.pts.values()][0]; st.x = q[0]; st.y = q[1]; st.pinch = 0; }   // one finger of a pinch is left: it orbits from where it is, not from where it was
         if (st.pts.size === 0) {
           st.down = false;
-          if (st.moved < 6 && performance.now() - st.t0 < 600 && e.type === 'pointerup') { const h = P.pick(body, e.clientX, e.clientY); if (h) for (const g of h.mesh.userData.chain || []) if (g.type === 'Anchor') { if (g.f.load !== false) R.bridge.specs.get('Anchor').activate(body, g); break; } }
+          if (st.moved < 6 && performance.now() - st.t0 < 600 && e.type === 'pointerup') { const h = P.pick(body, e.clientX, e.clientY); if (h && st.button === 0) { const ch = h.mesh.userData.chain || [], ia = ch.findIndex((g) => g.type === 'Anchor'), is = ch.findIndex((g) => (g.f.children || []).some(SENS)); if (ia >= 0 && !(is >= 0 && is < ia) && ch[ia].f.load !== false) R.bridge.specs.get('Anchor').activate(body, ch[ia]); } }   // the left button; a sensor nearer the shape than the Anchor keeps the click
         }
       };
       cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
-      cv.addEventListener('pointerleave', () => { if (!st.down) P.over(body, [], null); });
+      cv.addEventListener('pointerleave', () => { st.pickAt = null; if (!st.down) P.over(body, [], null); });
       cv.addEventListener('wheel', (e) => { e.preventDefault(); body.zoom(Math.exp(Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), 240) * 0.0012)); }, { passive: false });
       /* key sensors: the canvas takes focus, key down and up go to every enabled KeySensor and StringSensor of the world, losing focus lets go of held modifiers */
       if (cv.tabIndex < 0) cv.tabIndex = 0; cv.style.outline = 'none';
-      const each = (fn, e) => { let used = false; for (const n of live.key || []) if (R.bridge.specs.get(n.type)[fn](n, e)) used = true; return used; };
+      const each = (fn, e) => { let used = false; for (const n of live.key || []) if (T3.live(body, n) && R.bridge.specs.get(n.type)[fn](n, e)) used = true; return used; };
       cv.addEventListener('keydown', (e) => { if (each('keydown', e)) e.preventDefault(); });
       cv.addEventListener('keyup', (e) => { if (each('keyup', e)) e.preventDefault(); });
       cv.addEventListener('blur', () => { for (const n of live.key || []) R.bridge.specs.get(n.type).release(n); });
@@ -103,7 +139,7 @@ R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
   const BR = R.bridge;
   BR.specs.get('VisibilitySensor').tick = (n, now) => {
     const body = BR.body, f = n.f; if (!body || !n._tn || !body.cam) return;
-    const sz = f.size, on = f.enabled && (sz[0] > 0 || sz[1] > 0 || sz[2] > 0); let vis = false;
+    const sz = f.size, on = f.enabled && T3.live(body, n) && (sz[0] > 0 || sz[1] > 0 || sz[2] > 0); let vis = false;
     if (on) {
       body.cam.updateMatrixWorld(true); n._tn.updateWorldMatrix(true, false); const c = f.center, box = new THREE.Box3();
       for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const sz2 of [-1, 1]) box.expandByPoint(new THREE.Vector3(c[0] + sx * sz[0] / 2, c[1] + sy * sz[1] / 2, c[2] + sz2 * sz[2] / 2).applyMatrix4(n._tn.matrixWorld));
@@ -117,7 +153,7 @@ R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
     const rec = t && body.rec.get(t.id), tn = rec && (rec.tn || (rec.meshes && rec.meshes[0] && rec.meshes[0].parent));
     const z = f.size[0] === 0 && f.size[1] === 0 && f.size[2] === 0, always = f.size[0] === -1 && f.size[1] === -1 && f.size[2] === -1;
     let inside = false, pos, rot;
-    if (f.enabled && tn && !z) {
+    if (f.enabled && tn && !z && T3.live(body, n)) {
       tn.updateWorldMatrix(true, false); n._tn.updateWorldMatrix(true, false);
       const rel = new THREE.Matrix4().copy(n._tn.matrixWorld).invert().multiply(tn.matrixWorld), s = new THREE.Vector3(), q = new THREE.Quaternion(), p = new THREE.Vector3();
       rel.decompose(p, q, s); pos = p.toArray(); rot = BR.q.toRot([q.x, q.y, q.z, q.w]);
@@ -131,3 +167,5 @@ R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
     } else if (f.isActive) { BR.fire(n, 'isActive', false); BR.fire(n, 'exitTime', now); }
   };
 }
+
+R.bridge.three.changed.TouchSensor = R.bridge.three.changed.GeoTouchSensor = R.bridge.three.changed.PlaneSensor = R.bridge.three.changed.SphereSensor = R.bridge.three.changed.CylinderSensor = (body, n, field) => { if (field === 'enabled' && n.f.enabled === false) R.bridge.three.pointer.release(body, n); };

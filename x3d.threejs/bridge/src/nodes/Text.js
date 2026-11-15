@@ -18,14 +18,15 @@ R.bridge.three.text = {
     const file = X.FILES[fam], name = 'x3d-' + fam + '-' + k; body.fontFaces = body.fontFaces || new Map();
     if (!body.fontFaces.has(name)) {
       const ff = new FontFace(name, 'url(' + body.opts.fontBase + file[0] + file[k] + '.woff2)'); body.fontFaces.set(name, { ready: false });
-      ff.load().then((f) => { document.fonts.add(f); body.fontFaces.get(name).ready = true; for (const n of body.world ? body.world.nodes : []) if (n.type === 'Text') body.regeo(n); }, () => body.note('Text: font ' + name + ' not loaded, the browser font is used'));
+      ff.load().then((f) => { document.fonts.add(f); body.fontFaces.get(name).ready = true; for (const n of body.allNodes()) if (n.type === 'Text') body.regeo(n); }, () => body.note('Text: font ' + name + ' not loaded, the browser font is used'));
     }
     return slant + weight + X.EM + 'px ' + (body.fontFaces.get(name).ready ? name + ', ' : '') + gen;
   },
   /* geometry of a Text node: one quad per line, positions in X3D units; the atlas texture is kept in body.textCache for the material */
   build(body, g) {
     const X = R.bridge.three.text, T = THREE, f = g.f, fs = f.fontStyle || { f: { family: ['SERIF'], style: 'PLAIN', size: 1, spacing: 1, justify: ['BEGIN'], horizontal: true } };
-    const lines = (f.string || []).map(String), n = lines.length; if (!n) return body.emptyGeometry();
+    const LINES = Math.max(1, Math.floor(4096 / (Math.ceil(1.6 * X.EM) + 2 * X.PAD))), all = (f.string || []).map(String), lines = all.slice(0, LINES), n = lines.length; if (!n) return body.emptyGeometry();
+    if (all.length > n) body.note('Text: ' + all.length + ' lines do not fit one 4096 px atlas, the first ' + n + ' are drawn');   // a cell is about 1.6 em high at the atlas scale
     const size = fs.f.size > 0 ? fs.f.size : 1, spacing = fs.f.spacing, J = (fs.f.justify || ['BEGIN']).map((j) => String(j).toUpperCase()), major = J[0] || 'BEGIN', minor = J[1] || 'FIRST';
     if (fs.f.horizontal === false || fs.f.leftToRight === false || fs.f.topToBottom === false) body.note('Text: vertical, right-to-left or bottom-to-top text is laid out left to right, top to bottom');
     const cv = document.createElement('canvas'), cx = cv.getContext('2d'), font = X.font(body, fs); cx.font = font;
@@ -55,4 +56,4 @@ R.bridge.three.text = {
 };
 R.bridge.three.geometry.Text = (g, body) => R.bridge.three.text.build(body, g);
 R.bridge.three.changed.Text = (body, n, field) => { if (['string', 'length', 'maxExtent', 'fontStyle'].includes(field)) body.regeo(n); };
-R.bridge.three.changed.FontStyle = (body, n) => { for (const t of body.world.nodes) if (t.type === 'Text' && t.f.fontStyle === n) body.regeo(t); };
+R.bridge.three.changed.FontStyle = (body, n) => { for (const t of body.allNodes()) if (t.type === 'Text' && t.f.fontStyle === n) body.regeo(t); };

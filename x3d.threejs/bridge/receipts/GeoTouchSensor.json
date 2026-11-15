@@ -1,0 +1,24 @@
+{
+ "node": "GeoTouchSensor",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha f3c23e9dcc27",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 51/51",
+ "xite": "pass 51/51",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "hitGeoCoord under a Transform or GeoLocation is wrong on purpose (X_ITE converts the local point as if it were in the GeoOrigin frame); the specification wants the true position of the hit",
+  "the bridge reports a click as one press and release (isActive true then false, touchTime); the hit outputs are sent again after it, X_ITE sends them after press and release too; hitPoint repeats with every pointer move in X_ITE, once per move here",
+  "hover events repeat on every pointer move in both engines; the fixture checks values, not counts"
+ ]
+}

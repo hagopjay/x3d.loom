@@ -42,13 +42,13 @@ R.bridge.three.tcg = {
     }
   },
   /* the uv attribute of a BufferGeometry from its positions and normals; mv = a THREE.Matrix4 (model-view) for the camera-space modes, null for the object-space ones */
-  make(geo, mode, params, mv) {
+  make(geo, mode, params, mv, want3) {   // want3: the mesh shows a cube map, which reads the three numbers (tc3); the others keep to uv
     const pos = geo.attributes.position, nr = geo.attributes.normal, n = pos.count, uv = geo.attributes.uv && geo.attributes.uv.count === n ? geo.attributes.uv : new THREE.BufferAttribute(new Float32Array(n * 2), 2);
-    const nm = mv ? new THREE.Matrix3().getNormalMatrix(mv) : null, v = new THREE.Vector3(), w = new THREE.Vector3(), t3 = geo.attributes.tc3 && geo.attributes.tc3.count === n ? geo.attributes.tc3 : new THREE.BufferAttribute(new Float32Array(n * 3), 3);
+    const nm = mv ? new THREE.Matrix3().getNormalMatrix(mv) : null, v = new THREE.Vector3(), w = new THREE.Vector3(), t3 = !want3 ? null : geo.attributes.tc3 && geo.attributes.tc3.count === n ? geo.attributes.tc3 : new THREE.BufferAttribute(new Float32Array(n * 3), 3);
     for (let i = 0; i < n; i++) {
       v.fromBufferAttribute(pos, i); w.fromBufferAttribute(nr, i); if (mv) { v.applyMatrix4(mv); w.applyMatrix3(nm); } w.normalize();
-      R.bridge.three.tcg.fill(mode, params, uv.array, i, [v.x, v.y, v.z], [w.x, w.y, w.z], t3.array);
+      R.bridge.three.tcg.fill(mode, params, uv.array, i, [v.x, v.y, v.z], [w.x, w.y, w.z], t3 && t3.array);
     }
-    uv.needsUpdate = true; if (geo.attributes.uv !== uv) geo.setAttribute('uv', uv); t3.needsUpdate = true; if (geo.attributes.tc3 !== t3) geo.setAttribute('tc3', t3);
+    uv.needsUpdate = true; if (geo.attributes.uv !== uv) geo.setAttribute('uv', uv); if (t3) { t3.needsUpdate = true; if (geo.attributes.tc3 !== t3) geo.setAttribute('tc3', t3); }
   },
 };

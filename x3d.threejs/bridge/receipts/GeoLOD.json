@@ -1,0 +1,25 @@
+{
+ "node": "GeoLOD",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 55659ded1574",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 92/92",
+ "xite": "pass 92/92",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "children are fetched at first entry to level 1 and never unloaded: the \"fetched once\" rule is not counted in the fixture",
+  "level_changed before children is the order in X_ITE and in the bridge; the fixture does not assert event order (the runner reads values)",
+  "the root is kept on screen until all four children are finished, so a slow child delays the picture, not level_changed (not tested: data: urls arrive at once)",
+  "bboxDisplay and the bounding box of a GeoLOD are not implemented"
+ ]
+}

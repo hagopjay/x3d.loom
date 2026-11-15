@@ -119,4 +119,34 @@ R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
     walk(world.children, []);
     return out;
   };
+  /* GeoProximitySensor: the viewer's position, orientation and centre of rotation in the frame of the group it sits in (nodes/GeoProximitySensor.js, with three.js matrices) */
+  T3.build.GeoProximitySensor = (body, n, parent) => { n._tn = parent; return null; };
+  const ps = BR.specs.get('GeoProximitySensor');
+  if (ps) ps.tick = (n, now) => {
+    const body = BR.body, f = n.f; if (!body || !n._tn || !body.pose) return;
+    const P = body.pose; n._tn.updateWorldMatrix(true, false); const M = n._tn.matrixWorld, inv = M.clone().invert();
+    const loc = (a) => { const p = new THREE.Vector3(a[0], a[1], a[2]).applyMatrix4(inv); return [p.x, p.y, p.z]; };
+    const sz = f.size, off = sz[0] === 0 && sz[1] === 0 && sz[2] === 0, always = sz[0] === -1 && sz[1] === -1 && sz[2] === -1;
+    let inside = false, pos = null, ori = null, cor = null;
+    if (f.enabled !== false && !off && T3.live(body, n)) {
+      pos = loc(P.pos); cor = loc(P.center);
+      const sc = new THREE.Vector3(), q = new THREE.Quaternion(), t = new THREE.Vector3(); M.decompose(t, q, sc);
+      ori = BR.q.toRot(BR.q.mul(BR.q.inv([q.x, q.y, q.z, q.w]), P.q));
+      const c = f.center, h = sz.map((x) => x / 2);
+      inside = always || (pos[0] >= c[0] - h[0] && pos[0] <= c[0] + h[0] && pos[1] >= c[1] - h[1] && pos[1] <= c[1] + h[1] && pos[2] >= c[2] - h[2] && pos[2] <= c[2] + h[2]);
+    }
+    const same = (a, b) => a && b && a.length === b.length && a.every((x, i) => Math.abs(x - b[i]) < 1e-9);
+    const out = (all) => {
+      if (all || !same(n._pos, pos)) { BR.fire(n, 'geoCoord_changed', Array.from(G.geoOf(n, pos))); BR.fire(n, 'position_changed', pos); }
+      if (all || !same(n._ori, ori)) BR.fire(n, 'orientation_changed', ori);
+      if (all || !same(n._cor, cor)) BR.fire(n, 'centerOfRotation_changed', cor);
+      n._pos = pos; n._ori = ori; n._cor = cor;
+    };
+    if (inside) {
+      if (!f.isActive) { BR.fire(n, 'isActive', true); BR.fire(n, 'enterTime', now); out(true); } else out(false);
+    } else if (f.isActive) {
+      if (pos) out(false);
+      BR.fire(n, 'isActive', false); BR.fire(n, 'exitTime', now); n._pos = n._ori = n._cor = null;
+    }
+  };
 }
