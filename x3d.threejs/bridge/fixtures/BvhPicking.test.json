@@ -1,0 +1,95 @@
+{
+ "node": "TouchSensor",
+ "mode": "scene",
+ "tone": "none",
+ "note": "a 51,200 triangle ElevationGrid under a TouchSensor: the pick with the three-mesh-bvh bounds tree equals the plain raycast at three points (the plain cast really runs without the tree), and exactly one tree is built",
+ "gaps": [
+  "three.js bridge only: the bounds tree is built by the three-mesh-bvh library when it is on the page (window.MeshBVHLib); the Babylon bridge picks by its own engine"
+ ],
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    160,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "event": [
+    "T",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "atleast": [
+    "T",
+    "hitPoint_changed",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(() => { const P = __R.bridge.three.pointer, b = __body; b.bvhOn = true; const a = P.pick(b, 160, 120), n = b.pickStats.treeMeshes; b.bvhOn = false; const c = P.pick(b, 160, 120); const plain = b.pickStats.treeMeshes; b.bvhOn = true; return plain === 0 && !!a && !!c && Math.hypot(a.point.x - c.point.x, a.point.y - c.point.y, a.point.z - c.point.z) < 1e-6 && n >= 1 && a.mesh === c.mesh; })()",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(() => { const P = __R.bridge.three.pointer, b = __body; b.bvhOn = true; const a = P.pick(b, 120, 150), n = b.pickStats.treeMeshes; b.bvhOn = false; const c = P.pick(b, 120, 150); const plain = b.pickStats.treeMeshes; b.bvhOn = true; return plain === 0 && !!a && !!c && Math.hypot(a.point.x - c.point.x, a.point.y - c.point.y, a.point.z - c.point.z) < 1e-6 && n >= 1 && a.mesh === c.mesh; })()",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(() => { const P = __R.bridge.three.pointer, b = __body; b.bvhOn = true; const a = P.pick(b, 200, 90), n = b.pickStats.treeMeshes; b.bvhOn = false; const c = P.pick(b, 200, 90); const plain = b.pickStats.treeMeshes; b.bvhOn = true; return plain === 0 && !!a && !!c && Math.hypot(a.point.x - c.point.x, a.point.y - c.point.y, a.point.z - c.point.z) < 1e-6 && n >= 1 && a.mesh === c.mesh; })()",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body.pickStats.trees",
+    1
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "mouse": [
+    "move",
+    5,
+    5
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "event": [
+    "T",
+    "isOver",
+    false
+   ]
+  },
+  {
+   "shot": "terrain"
+  }
+ ],
+ "compare": {
+  "terrain": {
+   "mad": 6,
+   "fg": 15
+  }
+ }
+}

@@ -1,0 +1,172 @@
+{
+ "node": "HAnimHumanoid",
+ "mode": "scene",
+ "tone": "none",
+ "note": "a three joint chain skinning a four ring tube with joint binding positions that make the rest pose the identity (bone matrices and skinned positions of all 16 coordinates compared with X_ITE 16.6.0: its joint matrices exact from the node, its skinned positions by its own shader formula on those matrices), then bent, moved and scaled; the segment and the site ride their joints. Pictures compared as silhouettes.",
+ "gaps": [
+  "three.js body: the skin is skinned on the CPU with X_ITE's own formula (no influence limit, a joint's displacers rotated by the joint matrix as X_ITE does); it is redone every frame a joint, weight or displacer changes, so a very large humanoid costs CPU time that GPU skinning would not. Skinned normals blend the joint rotations by the same weights"
+ ],
+ "steps": [
+  {
+   "settle": 1.5
+  },
+  {
+   "jsmap": [
+    "((eng.name === 'ours' ? (() => { const p = window.__R.bridge.hanim.probe(window.__body, 'H'); return p ? { bones: p.bones.flat(), coords: p.coords.flat() } : null; })() : (() => {\n  const hv = node('H').getValue(), J = (i) => Array.from(hv.jointMatricesArray.slice(i * 32, i * 32 + 16)), nj = hv.jointNodes.length;\n  const nC = hv.skinCoordNode._point.length, pts = Array.from(hv.skinCoordNode._point.getValue()).slice(0, nC * 3);\n  const ap = (m, v) => [v[0] * m[0] + v[1] * m[4] + v[2] * m[8] + m[12], v[0] * m[1] + v[1] * m[5] + v[2] * m[9] + m[13], v[0] * m[2] + v[1] * m[6] + v[2] * m[10] + m[14]];\n  const r3 = (m, d) => [d[0] * m[0] + d[1] * m[4] + d[2] * m[8], d[0] * m[1] + d[1] * m[5] + d[2] * m[9], d[0] * m[2] + d[1] * m[6] + d[2] * m[10]];\n  const out = [];\n  for (let c = 0; c < nC; c++) out.push([pts[c * 3], pts[c * 3 + 1], pts[c * 3 + 2]]);\n  const res = out.map((v) => v.slice());\n  for (let i = 1; i < nj; i++) {\n    const jn = hv.jointNodes[i], ix = jn._skinCoordIndex, wt = jn._skinCoordWeight, m = J(i);\n    for (let k = 0; k < ix.length; k++) { const c = ix[k], w = wt[k]; if (!w || c < 0 || c >= nC) continue; const t = ap(m, out[c]); for (let a = 0; a < 3; a++) res[c][a] += (t[a] - out[c][a]) * w; }\n    for (const d of jn.getDisplacers()) { const ci = d._coordIndex, dp = d._displacements, w = d._weight.getValue(); for (let k = 0; k < ci.length; k++) { const c = ci[k]; if (c < 0 || c >= nC) continue; const t = r3(m, [dp[k].x, dp[k].y, dp[k].z]); for (let a = 0; a < 3; a++) res[c][a] += t[a] * w; } }\n  }\n  return { bones: Array.from({ length: nj - 1 }, (_, i) => J(i + 1)).flat(), coords: res.flat() };\n})())).bones",
+    "rest_bones"
+   ]
+  },
+  {
+   "jsmap": [
+    "((eng.name === 'ours' ? (() => { const p = window.__R.bridge.hanim.probe(window.__body, 'H'); return p ? { bones: p.bones.flat(), coords: p.coords.flat() } : null; })() : (() => {\n  const hv = node('H').getValue(), J = (i) => Array.from(hv.jointMatricesArray.slice(i * 32, i * 32 + 16)), nj = hv.jointNodes.length;\n  const nC = hv.skinCoordNode._point.length, pts = Array.from(hv.skinCoordNode._point.getValue()).slice(0, nC * 3);\n  const ap = (m, v) => [v[0] * m[0] + v[1] * m[4] + v[2] * m[8] + m[12], v[0] * m[1] + v[1] * m[5] + v[2] * m[9] + m[13], v[0] * m[2] + v[1] * m[6] + v[2] * m[10] + m[14]];\n  const r3 = (m, d) => [d[0] * m[0] + d[1] * m[4] + d[2] * m[8], d[0] * m[1] + d[1] * m[5] + d[2] * m[9], d[0] * m[2] + d[1] * m[6] + d[2] * m[10]];\n  const out = [];\n  for (let c = 0; c < nC; c++) out.push([pts[c * 3], pts[c * 3 + 1], pts[c * 3 + 2]]);\n  const res = out.map((v) => v.slice());\n  for (let i = 1; i < nj; i++) {\n    const jn = hv.jointNodes[i], ix = jn._skinCoordIndex, wt = jn._skinCoordWeight, m = J(i);\n    for (let k = 0; k < ix.length; k++) { const c = ix[k], w = wt[k]; if (!w || c < 0 || c >= nC) continue; const t = ap(m, out[c]); for (let a = 0; a < 3; a++) res[c][a] += (t[a] - out[c][a]) * w; }\n    for (const d of jn.getDisplacers()) { const ci = d._coordIndex, dp = d._displacements, w = d._weight.getValue(); for (let k = 0; k < ci.length; k++) { const c = ci[k]; if (c < 0 || c >= nC) continue; const t = r3(m, [dp[k].x, dp[k].y, dp[k].z]); for (let a = 0; a < 3; a++) res[c][a] += t[a] * w; } }\n  }\n  return { bones: Array.from({ length: nj - 1 }, (_, i) => J(i + 1)).flat(), coords: res.flat() };\n})())).coords",
+    "rest_skin"
+   ]
+  },
+  {
+   "shot": "rest"
+  },
+  {
+   "set": [
+    "J1",
+    "rotation",
+    [
+     0,
+     0,
+     1,
+     0.7853982
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "set": [
+    "J2",
+    "rotation",
+    [
+     0,
+     0,
+     1,
+     0.7853982
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "jsmap": [
+    "((eng.name === 'ours' ? (() => { const p = window.__R.bridge.hanim.probe(window.__body, 'H'); return p ? { bones: p.bones.flat(), coords: p.coords.flat() } : null; })() : (() => {\n  const hv = node('H').getValue(), J = (i) => Array.from(hv.jointMatricesArray.slice(i * 32, i * 32 + 16)), nj = hv.jointNodes.length;\n  const nC = hv.skinCoordNode._point.length, pts = Array.from(hv.skinCoordNode._point.getValue()).slice(0, nC * 3);\n  const ap = (m, v) => [v[0] * m[0] + v[1] * m[4] + v[2] * m[8] + m[12], v[0] * m[1] + v[1] * m[5] + v[2] * m[9] + m[13], v[0] * m[2] + v[1] * m[6] + v[2] * m[10] + m[14]];\n  const r3 = (m, d) => [d[0] * m[0] + d[1] * m[4] + d[2] * m[8], d[0] * m[1] + d[1] * m[5] + d[2] * m[9], d[0] * m[2] + d[1] * m[6] + d[2] * m[10]];\n  const out = [];\n  for (let c = 0; c < nC; c++) out.push([pts[c * 3], pts[c * 3 + 1], pts[c * 3 + 2]]);\n  const res = out.map((v) => v.slice());\n  for (let i = 1; i < nj; i++) {\n    const jn = hv.jointNodes[i], ix = jn._skinCoordIndex, wt = jn._skinCoordWeight, m = J(i);\n    for (let k = 0; k < ix.length; k++) { const c = ix[k], w = wt[k]; if (!w || c < 0 || c >= nC) continue; const t = ap(m, out[c]); for (let a = 0; a < 3; a++) res[c][a] += (t[a] - out[c][a]) * w; }\n    for (const d of jn.getDisplacers()) { const ci = d._coordIndex, dp = d._displacements, w = d._weight.getValue(); for (let k = 0; k < ci.length; k++) { const c = ci[k]; if (c < 0 || c >= nC) continue; const t = r3(m, [dp[k].x, dp[k].y, dp[k].z]); for (let a = 0; a < 3; a++) res[c][a] += t[a] * w; } }\n  }\n  return { bones: Array.from({ length: nj - 1 }, (_, i) => J(i + 1)).flat(), coords: res.flat() };\n})())).bones",
+    "bent_bones"
+   ]
+  },
+  {
+   "jsmap": [
+    "((eng.name === 'ours' ? (() => { const p = window.__R.bridge.hanim.probe(window.__body, 'H'); return p ? { bones: p.bones.flat(), coords: p.coords.flat() } : null; })() : (() => {\n  const hv = node('H').getValue(), J = (i) => Array.from(hv.jointMatricesArray.slice(i * 32, i * 32 + 16)), nj = hv.jointNodes.length;\n  const nC = hv.skinCoordNode._point.length, pts = Array.from(hv.skinCoordNode._point.getValue()).slice(0, nC * 3);\n  const ap = (m, v) => [v[0] * m[0] + v[1] * m[4] + v[2] * m[8] + m[12], v[0] * m[1] + v[1] * m[5] + v[2] * m[9] + m[13], v[0] * m[2] + v[1] * m[6] + v[2] * m[10] + m[14]];\n  const r3 = (m, d) => [d[0] * m[0] + d[1] * m[4] + d[2] * m[8], d[0] * m[1] + d[1] * m[5] + d[2] * m[9], d[0] * m[2] + d[1] * m[6] + d[2] * m[10]];\n  const out = [];\n  for (let c = 0; c < nC; c++) out.push([pts[c * 3], pts[c * 3 + 1], pts[c * 3 + 2]]);\n  const res = out.map((v) => v.slice());\n  for (let i = 1; i < nj; i++) {\n    const jn = hv.jointNodes[i], ix = jn._skinCoordIndex, wt = jn._skinCoordWeight, m = J(i);\n    for (let k = 0; k < ix.length; k++) { const c = ix[k], w = wt[k]; if (!w || c < 0 || c >= nC) continue; const t = ap(m, out[c]); for (let a = 0; a < 3; a++) res[c][a] += (t[a] - out[c][a]) * w; }\n    for (const d of jn.getDisplacers()) { const ci = d._coordIndex, dp = d._displacements, w = d._weight.getValue(); for (let k = 0; k < ci.length; k++) { const c = ci[k]; if (c < 0 || c >= nC) continue; const t = r3(m, [dp[k].x, dp[k].y, dp[k].z]); for (let a = 0; a < 3; a++) res[c][a] += t[a] * w; } }\n  }\n  return { bones: Array.from({ length: nj - 1 }, (_, i) => J(i + 1)).flat(), coords: res.flat() };\n})())).coords",
+    "bent_skin"
+   ]
+  },
+  {
+   "shot": "bent"
+  },
+  {
+   "set": [
+    "J0",
+    "translation",
+    [
+     0.4,
+     0.2,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "J1",
+    "scale",
+    [
+     1.4,
+     1,
+     1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "J2",
+    "rotation",
+    [
+     0.3,
+     0.9,
+     0.3,
+     -0.9
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "jsmap": [
+    "((eng.name === 'ours' ? (() => { const p = window.__R.bridge.hanim.probe(window.__body, 'H'); return p ? { bones: p.bones.flat(), coords: p.coords.flat() } : null; })() : (() => {\n  const hv = node('H').getValue(), J = (i) => Array.from(hv.jointMatricesArray.slice(i * 32, i * 32 + 16)), nj = hv.jointNodes.length;\n  const nC = hv.skinCoordNode._point.length, pts = Array.from(hv.skinCoordNode._point.getValue()).slice(0, nC * 3);\n  const ap = (m, v) => [v[0] * m[0] + v[1] * m[4] + v[2] * m[8] + m[12], v[0] * m[1] + v[1] * m[5] + v[2] * m[9] + m[13], v[0] * m[2] + v[1] * m[6] + v[2] * m[10] + m[14]];\n  const r3 = (m, d) => [d[0] * m[0] + d[1] * m[4] + d[2] * m[8], d[0] * m[1] + d[1] * m[5] + d[2] * m[9], d[0] * m[2] + d[1] * m[6] + d[2] * m[10]];\n  const out = [];\n  for (let c = 0; c < nC; c++) out.push([pts[c * 3], pts[c * 3 + 1], pts[c * 3 + 2]]);\n  const res = out.map((v) => v.slice());\n  for (let i = 1; i < nj; i++) {\n    const jn = hv.jointNodes[i], ix = jn._skinCoordIndex, wt = jn._skinCoordWeight, m = J(i);\n    for (let k = 0; k < ix.length; k++) { const c = ix[k], w = wt[k]; if (!w || c < 0 || c >= nC) continue; const t = ap(m, out[c]); for (let a = 0; a < 3; a++) res[c][a] += (t[a] - out[c][a]) * w; }\n    for (const d of jn.getDisplacers()) { const ci = d._coordIndex, dp = d._displacements, w = d._weight.getValue(); for (let k = 0; k < ci.length; k++) { const c = ci[k]; if (c < 0 || c >= nC) continue; const t = r3(m, [dp[k].x, dp[k].y, dp[k].z]); for (let a = 0; a < 3; a++) res[c][a] += t[a] * w; } }\n  }\n  return { bones: Array.from({ length: nj - 1 }, (_, i) => J(i + 1)).flat(), coords: res.flat() };\n})())).bones",
+    "moved_bones"
+   ]
+  },
+  {
+   "jsmap": [
+    "((eng.name === 'ours' ? (() => { const p = window.__R.bridge.hanim.probe(window.__body, 'H'); return p ? { bones: p.bones.flat(), coords: p.coords.flat() } : null; })() : (() => {\n  const hv = node('H').getValue(), J = (i) => Array.from(hv.jointMatricesArray.slice(i * 32, i * 32 + 16)), nj = hv.jointNodes.length;\n  const nC = hv.skinCoordNode._point.length, pts = Array.from(hv.skinCoordNode._point.getValue()).slice(0, nC * 3);\n  const ap = (m, v) => [v[0] * m[0] + v[1] * m[4] + v[2] * m[8] + m[12], v[0] * m[1] + v[1] * m[5] + v[2] * m[9] + m[13], v[0] * m[2] + v[1] * m[6] + v[2] * m[10] + m[14]];\n  const r3 = (m, d) => [d[0] * m[0] + d[1] * m[4] + d[2] * m[8], d[0] * m[1] + d[1] * m[5] + d[2] * m[9], d[0] * m[2] + d[1] * m[6] + d[2] * m[10]];\n  const out = [];\n  for (let c = 0; c < nC; c++) out.push([pts[c * 3], pts[c * 3 + 1], pts[c * 3 + 2]]);\n  const res = out.map((v) => v.slice());\n  for (let i = 1; i < nj; i++) {\n    const jn = hv.jointNodes[i], ix = jn._skinCoordIndex, wt = jn._skinCoordWeight, m = J(i);\n    for (let k = 0; k < ix.length; k++) { const c = ix[k], w = wt[k]; if (!w || c < 0 || c >= nC) continue; const t = ap(m, out[c]); for (let a = 0; a < 3; a++) res[c][a] += (t[a] - out[c][a]) * w; }\n    for (const d of jn.getDisplacers()) { const ci = d._coordIndex, dp = d._displacements, w = d._weight.getValue(); for (let k = 0; k < ci.length; k++) { const c = ci[k]; if (c < 0 || c >= nC) continue; const t = r3(m, [dp[k].x, dp[k].y, dp[k].z]); for (let a = 0; a < 3; a++) res[c][a] += t[a] * w; } }\n  }\n  return { bones: Array.from({ length: nj - 1 }, (_, i) => J(i + 1)).flat(), coords: res.flat() };\n})())).coords",
+    "moved_skin"
+   ]
+  },
+  {
+   "shot": "moved"
+  }
+ ],
+ "agree": [
+  [
+   "rest_bones",
+   2e-05
+  ],
+  [
+   "rest_skin",
+   2e-05
+  ],
+  [
+   "bent_bones",
+   2e-05
+  ],
+  [
+   "bent_skin",
+   2e-05
+  ],
+  [
+   "moved_bones",
+   2e-05
+  ],
+  [
+   "moved_skin",
+   2e-05
+  ]
+ ],
+ "compare": {
+  "rest": {
+   "iou": 0.85,
+   "mad": 14
+  },
+  "bent": {
+   "iou": 0.8,
+   "mad": 18
+  },
+  "moved": {
+   "iou": 0.75,
+   "mad": 22
+  }
+ },
+ "scope": [
+  "skinNormal, skinBindingCoords and skinBindingNormals are stored; neither engine uses them (X_ITE 16.6.0 reads skinCoord only): the skin normals follow the bone matrices in the shader (X_ITE blends the inverse transpose per joint, the same for rotations, different under non-uniform joint scale)",
+  "only IndexedFaceSet and IndexedTriangleSet skin shapes are skinned (a vertex's coordinate index is known); a vertex with more than 8 joint influences keeps the 8 largest, X_ITE has no limit; the viewpoints, joints, segments and sites lists are references (not drawn twice)"
+ ]
+}

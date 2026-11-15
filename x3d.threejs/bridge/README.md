@@ -8,10 +8,10 @@ How hard is the port, group by group: [ESTIMATE.md](ESTIMATE.md). Node-by-node s
 
 | | nodes | meaning |
 |---|---|---|
-| drawn | 110 | the three.js body draws it, a fixture passed against X_ITE (111 fixtures, 108 of them scene fixtures; Group, Normal, Collision, StaticGroup, Shape, Appearance, Material, Coordinate, Color, TextureCoordinate, NavigationInfo, Background, PixelTexture ride along) |
+| drawn | 130 | the three.js body draws it, a fixture passed against X_ITE (132 fixtures, 127 of them scene fixtures; Group, Normal, Collision, StaticGroup, Shape, Appearance, Material, Coordinate, Color, TextureCoordinate, NavigationInfo, Background, PixelTexture ride along) |
 | reader-checked | 33 | event or logic node; a shared fixture passed in the three.js bundle and in X_ITE |
 | reader | 41 | engine-free, not re-run here |
-| todo | 53 | needs the three.js body |
+| todo | 32 | needs the three.js body |
 | upstream | 23 | the Babylon bridge has not bridged it yet |
 
 ## Run it

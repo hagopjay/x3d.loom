@@ -1,0 +1,69 @@
+{
+ "node": "SurfaceEmitter",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 8f93bd6b3684",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+ },
+ "ok": true,
+ "ours": "pass 5/5",
+ "xite": "pass 4/4",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "shell": {
+   "iou": 0.17,
+   "coverOurs": 0.3,
+   "coverXite": 0.3,
+   "bboxOurs": [
+    91,
+    51,
+    234,
+    192
+   ],
+   "bboxXite": [
+    89,
+    48,
+    229,
+    176
+   ],
+   "nOurs": 3723,
+   "nXite": 3773,
+   "fgFracOurs": 0.05,
+   "fgFracXite": 0.05,
+   "mad": 14.44,
+   "psnr": 13.17,
+   "fgMeanOurs": [
+    197,
+    197,
+    197
+   ],
+   "fgMeanXite": [
+    195,
+    195,
+    195
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "colour is compared: a quad particle is lit like a surface (emissive + diffuse x headlight, white for this Material); ours is 255 white, X_ITE 16.6.0's mean over its drawn pixels is about 200 (its edges are blended), fg tolerance 70; no fade at the end of life without a colorRamp (as X_ITE)",
+  "particle age at the shot differs between the engines on this CPU raster (ours runs on elapsed time at about 3 frames per second under SwiftShader), so the extent is compared with a wide bound",
+  "the emission point is a random point of the surface triangles, area weighted, along the face normal (a Sphere is cut into 16 x 12 facets for this)"
+ ]
+}

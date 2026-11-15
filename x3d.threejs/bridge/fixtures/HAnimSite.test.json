@@ -1,0 +1,143 @@
+{
+ "node": "HAnimSite",
+ "mode": "scene",
+ "tone": "none",
+ "note": "sites under the segments of two joints: translation, rotation, scale of a site and the joint it rides, visible FALSE; pictures compared as silhouettes with X_ITE 16.6.0. The viewpoint site listed in the humanoid's viewpoints is a reference only (not drawn twice).",
+ "gaps": [],
+ "steps": [
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "SITE",
+    "name",
+    "head_tip"
+   ]
+  },
+  {
+   "expect": [
+    "SITE",
+    "translation",
+    [
+     0,
+     0.6,
+     0
+    ]
+   ]
+  },
+  {
+   "shot": "rest"
+  },
+  {
+   "set": [
+    "J1",
+    "rotation",
+    [
+     0,
+     0,
+     1,
+     0.7853982
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "set": [
+    "J2",
+    "rotation",
+    [
+     0,
+     0,
+     1,
+     0.7853982
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "bent"
+  },
+  {
+   "set": [
+    "SITE",
+    "translation",
+    [
+     0.5,
+     0.2,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "SITE1",
+    "rotation",
+    [
+     0,
+     0,
+     1,
+     -0.7854
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "set": [
+    "SITE1",
+    "scale",
+    [
+     1.5,
+     1,
+     1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "moved"
+  },
+  {
+   "set": [
+    "SITE1",
+    "visible",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "shot": "hidden"
+  }
+ ],
+ "agree": [],
+ "compare": {
+  "rest": {
+   "iou": 0.85,
+   "mad": 14
+  },
+  "bent": {
+   "iou": 0.8,
+   "mad": 18
+  },
+  "moved": {
+   "iou": 0.75,
+   "mad": 22
+  },
+  "hidden": {
+   "iou": 0.75,
+   "mad": 22
+  }
+ },
+ "scope": [
+  "a Viewpoint inside a site of the humanoid's viewpoints list is not bound from the site in the bridge (the site is a Transform; HAnim viewpoints are not navigation viewpoints)"
+ ]
+}

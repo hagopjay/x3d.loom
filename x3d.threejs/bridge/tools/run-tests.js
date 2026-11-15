@@ -16,20 +16,20 @@ const args = process.argv.slice(2), noXite = args.includes('--no-xite');
 const si = args.indexOf('--shots'); const shotsDir = si >= 0 ? args.splice(si, 2)[1] : process.env.BRIDGE_SHOTS || null;
 const names = args.filter((a) => !a.startsWith('--'));
 const rootOf = (m) => [path.join(HERE, 'node_modules', m), path.join(process.cwd(), 'node_modules', m), path.join('/tmp/tj/node_modules', m)].find((d) => fs.existsSync(path.join(d, 'package.json'))) || null;
-const XITE_DIR = process.env.XITE_DIR || (rootOf('x_ite') && path.join(rootOf('x_ite'), 'dist')), THREE_DIR = process.env.THREE_DIR || (rootOf('three') && path.join(rootOf('three'), 'build'));
+const XITE_DIR = process.env.XITE_DIR || (rootOf('x_ite') && path.join(rootOf('x_ite'), 'dist')), THREE_DIR = process.env.THREE_DIR || (rootOf('three') && path.join(rootOf('three'), 'build')), BVH_DIR = process.env.BVH_DIR || (rootOf('three-mesh-bvh') && path.join(rootOf('three-mesh-bvh'), 'build'));
 
 // METRICS (iou, mad, psnr, foreground mean) is read out of the Babylon runner's source and run in a page, so both bridges score a picture with the same code
 const METRICS_SRC = (() => { const s = fs.readFileSync(path.join(BAB, 'tools', 'run-tests.js'), 'utf8'), a = s.indexOf('const METRICS = '), b = s.indexOf('\nconst SIDE', a); if (a < 0 || b < 0) throw new Error('METRICS not found in the Babylon run-tests.js'); return s.slice(a + 'const METRICS = '.length, b).replace(/;\s*$/, ''); })();
 
-const THREE_BOOT = `<script type="module">import * as THREE from '/three/three.module.js'; window.THREE = THREE;
+const THREE_BOOT = `<script type="importmap">{"imports":{"three":"/three/three.module.js"}}</script><script type="module">import * as THREE from '/three/three.module.js'; window.THREE = THREE;
 const add = (src) => new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.body.appendChild(s); });
-window.pageReady = add('/bundle-body.js').then(async () => { const body = new Body(document.getElementById('c'), { tone: window.__tone || 'none', fontBase: '/x_ite/assets/fonts/', onNote: (m) => (window.__notes = window.__notes || []).push(m) }); await body.init(); X3DSAI.setBody(body); window.__body = body; });</script>`;
+window.pageReady = import('/mesh-bvh/index.module.js').then((m) => { window.MeshBVHLib = m; }, () => { window.MeshBVHLib = null; }).then(() => add('/bundle-body.js')).then(async () => { const body = new Body(document.getElementById('c'), { tone: window.__tone || 'none', fontBase: '/x_ite/assets/fonts/', onNote: (m) => (window.__notes = window.__notes || []).push(m) }); await body.init(); X3DSAI.setBody(body); window.__body = body; });</script>`;
 const PAGE_OURS = `<!doctype html><meta charset=utf-8><body><script src="/bundle.js"></script><script>${RUNNER}
 let ts = performance.timeOrigin / 1000 + performance.now() / 1000;
 window.runOurs = async (spec, xml) => (window.__R && (__R.bridge.allowScripts = spec.scripts !== false), runSpec({ name: 'ours',
   open: async (x) => X3DSAI.B.createX3DFromString(x), now: () => ts,
   apply: async (fn) => { __events.begin(ts += 0.05); fn(); __events.drain(); },
-  settle: async (dt) => { const steps = Math.max(1, Math.round((dt || 0.05) / 0.05)); for (let i = 0; i < steps; i++) { __events.begin(ts += 0.05); for (const n of (window.__worlds || [])) for (const t of n.nodes) if (t.type === 'TimeSensor') __R.tickTimeSensor(t, ts); __events.drain(); },
+  settle: async (dt) => { const steps = Math.max(1, Math.round((dt || 0.05) / 0.05)); for (let i = 0; i < steps; i++) { __events.begin(ts += 0.05); for (const n of (window.__worlds || [])) for (const t of n.nodes) if (t.type === 'TimeSensor') __R.tickTimeSensor(t, ts); __events.drain(); } },
   audioCtx: () => __bridge.audio.ctx(), audioNode: (def, kind) => { const n = __worlds[__worlds.length - 1].nodes.find((q) => q.def === def); const a = n && n._au; return a && (kind === 'in' ? a.in : kind === 'proc' ? a.proc : a.out); },
 }, spec, xml));</script>`;
 const PAGE_XITE = (w, h) => `<!doctype html><meta charset=utf-8><link rel=stylesheet href="/x_ite/x_ite.css"><body style="margin:0"><x3d-canvas id=c style="width:${w}px;height:${h}px;display:block"></x3d-canvas><script src="/x_ite/x_ite.min.js"></script><script>${RUNNER}
@@ -57,7 +57,7 @@ const MICFIX = () => { if (navigator.mediaDevices && navigator.mediaDevices.getU
 
 function serve(files) {
   const mime = { '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.html': 'text/html', '.json': 'application/json', '.png': 'image/png', '.woff2': 'font/woff2' };
-  const dirs = { '/x_ite/': XITE_DIR, '/three/': THREE_DIR };
+  const dirs = { '/x_ite/': XITE_DIR, '/three/': THREE_DIR, '/mesh-bvh/': BVH_DIR };
   return new Promise((res) => { const s = http.createServer((q, r) => {
     const u = decodeURIComponent(q.url.split('?')[0]);
     if (u === '/px.png' || u === '/slow.png') { const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64'); r.setHeader('content-type', 'image/png'); r.setHeader('cache-control', 'no-store'); return u === '/px.png' ? r.end(png) : setTimeout(() => r.end(png), 2500); }   // the two images the LoadSensor fixture asks for, as in the Babylon rig
@@ -77,7 +77,7 @@ async function main() {
   try {
     b = await chromium.launch({ executablePath: process.env.CHROMIUM_EXECUTABLE || undefined, args: ['--autoplay-policy=no-user-gesture-required', '--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream', '--use-file-for-fake-audio-capture=' + fakeMic(), '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
     const env = { chromium: b.version(), ours: 'x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha ' + crypto.createHash('sha256').update(files['/bundle-body.js']).digest('hex').slice(0, 12) };
-    const errs = [], results = {}, newPage = async () => { const pg = await b.newPage(); await pg.addInitScript(MICFIX); pg.on('pageerror', (e) => errs.push(e.message.slice(0, 200))); return pg; };
+    const errs = [], results = {}, newPage = async () => { const pg = await b.newPage(); await pg.addInitScript(MICFIX); pg.on('pageerror', (e) => errs.push((e.message + ' @ ' + String(e.stack).split('\n').slice(1,3).join(' ')).slice(0, 400))); return pg; };
     const haveX = !noXite && XITE_DIR && fs.existsSync(path.join(XITE_DIR, 'x_ite.min.js'));
     if (!haveX) env.xite = noXite ? 'skipped (--no-xite)' : 'not found (set XITE_DIR)';
     let po = null, px = null, pos = null, pxs = null, mp = null;
