@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>yx3d two-peer demo</title>
+<style>
+:root{--bg:#0f1115;--fg:#e6e8ee;--mut:#8b93a7;--card:#171a21;--bd:#2a2f3b;--ac:#6ab0ff;--ok:#5fd38d;--bad:#ff7b72}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]){--bg:#f6f7fa;--fg:#161a22;--mut:#5b6478;--card:#fff;--bd:#d9dde6;--ac:#1b6fd1;--ok:#16813f;--bad:#c4382f}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,sans-serif;padding:16px}
+h1{font-size:18px;margin:0 0 4px}p.s{color:var(--mut);margin:0 0 12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:10px}
+.card h2{font-size:13px;margin:0 0 6px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+x3d-canvas{width:100%;height:260px;display:block;border:1px solid var(--bd);border-radius:6px}
+button{background:var(--bg);color:var(--fg);border:1px solid var(--bd);border-radius:6px;padding:4px 9px;margin:6px 4px 0 0;cursor:pointer;font:inherit}
+button:hover{border-color:var(--ac)}table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+td,th{border-bottom:1px solid var(--bd);padding:3px 6px;text-align:left}th{color:var(--mut);font-weight:500}
+#log{height:150px;overflow:auto;font:12px ui-monospace,monospace;color:var(--mut);white-space:pre-wrap}
+.ok{color:var(--ok)}.bad{color:var(--bad)}label{color:var(--mut)}input[type=range]{vertical-align:middle}
+</style></head><body>
+<h1>yx3d: two peers, one X3D scene</h1>
+<p class="s">Two Yjs documents, two X_ITE browsers, an in-page link with a latency knob and an offline switch. Peer C is an agent that edits through the same op vocabulary as x3d_mcp. No server, no relay service.</p>
+<div class="card" style="margin-bottom:12px">
+ <label>link latency <input id="lat" type="range" min="0" max="500" value="0" step="10"> <b id="latv">0</b> ms</label>
+ <button id="off">go offline</button><button id="storm">edit storm (200 ops)</button><button id="agent">agent: add + recolour</button><button id="clash">clash: both move the box</button>
+</div>
+<div class="grid">
+ <div class="card"><h2>Peer A</h2><x3d-canvas id="ca" splashScreen="false" contextMenu="false" notifications="false" timings="false"></x3d-canvas>
+  <button data-p="A" data-a="nudge">nudge box</button><button data-p="A" data-a="color">recolour</button><button data-p="A" data-a="add">add sphere</button></div>
+ <div class="card"><h2>Peer B</h2><x3d-canvas id="cb" splashScreen="false" contextMenu="false" notifications="false" timings="false"></x3d-canvas>
+  <button data-p="B" data-a="nudge">nudge box</button><button data-p="B" data-a="color">recolour</button><button data-p="B" data-a="remove">remove last</button></div>
+</div>
+<div class="grid" style="margin-top:12px">
+ <div class="card"><h2>State</h2><table id="st"></table></div>
+ <div class="card"><h2>Log</h2><div id="log"></div></div>
+</div>
+<script>
+const q=new URLSearchParams(location.search);
+const XITE=q.get('xite')||'https://cdn.jsdelivr.net/npm/x_ite@16.6.0/dist/x_ite.min.js';
+document.write('<script src="'+XITE+'"><\/script>');
+</script>
+<script type="module">
+import {X3DDoc,Y,Link,XiteAdapter,agentApply,ROOT} from './dist/yx3d.js'
+const SRC=`<?xml version="1.0" encoding="UTF-8"?><X3D profile="Interchange" version="4.0"><Scene>
+<NavigationInfo type='"NONE"'/><Viewpoint position="0 1.5 9" description="v"/><DirectionalLight direction="-0.3 -1 -0.5"/>
+<Transform DEF="Floor" translation="0 -1 0"><Shape><Appearance><Material diffuseColor="0.3 0.35 0.4"/></Appearance><Box size="10 0.2 6"/></Shape></Transform>
+<Transform DEF="BoxT" translation="-2 0 0"><Shape DEF="BoxS"><Appearance><Material DEF="BoxM" diffuseColor="0.9 0.3 0.2"/></Appearance><Box/></Shape></Transform>
+<Transform DEF="BallT" translation="2 0 0"><Shape><Appearance><Material diffuseColor="0.2 0.5 0.9"/></Appearance><Sphere radius="0.8"/></Shape></Transform>
+</Scene></X3D>`
+const log=m=>{const l=document.getElementById('log');l.textContent+=m+'\n';l.scrollTop=1e9}
+const A=new X3DDoc(),B=new X3DDoc(),C=new X3DDoc()
+A.loadXML(SRC); Y.applyUpdate(B.doc,Y.encodeStateAsUpdate(A.doc)); Y.applyUpdate(C.doc,Y.encodeStateAsUpdate(A.doc))
+const AB=new Link(A.doc,B.doc),AC=new Link(A.doc,C.doc)
+await new Promise(r=>{const t=setInterval(()=>{if(window.X3D){clearInterval(t);r()}},20)})
+const ba=X3D.getBrowser('#ca'),bb=X3D.getBrowser('#cb')
+await ba.loaded?.catch?.(()=>{})
+const adA=await new XiteAdapter(A,ba).load(),adB=await new XiteAdapter(B,bb).load()
+let lastLat=null,t0=null
+B.observe((ev,o)=>{if(o===AB&&t0!=null){lastLat=performance.now()-t0;t0=null}})
+const win=window.demo={A,B,C,AB,AC,adA,adB,ba,bb,Y,agentApply,ROOT,get lastLat(){return lastLat},mark(){t0=performance.now()}}
+const hs=x=>{let h=0;const s=x.toXML();for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return (h>>>0).toString(16)}
+function render(){
+ const same=hs(A)===hs(B)&&hs(B)===hs(C)
+ const c=A.tree().conflicts.length
+ const rows=[['XML hash A / B / C',hs(A)+' / '+hs(B)+' / '+hs(C)],['converged',same?'<span class=ok>yes</span>':'<span class=bad>not yet</span>'],
+ ['nodes (A)',A.nodes.size],['conflicts reported',c],['link A-B',AB.online?'online':'<span class=bad>offline</span>'],['updates / bytes A-B',AB.sent+' / '+AB.bytes],
+ ['last A-to-B latency',lastLat==null?'-':lastLat.toFixed(1)+' ms'],['X_ITE applied A (field/add/rm/mv)',['fields','added','removed','moved'].map(k=>adA.stats[k]).join(' / ')],
+ ['X_ITE applied B',['fields','added','removed','moved'].map(k=>adB.stats[k]).join(' / ')],['adapter error',adB.stats.error||adA.stats.error||'-']]
+ document.getElementById('st').innerHTML=rows.map(r=>`<tr><th>${r[0]}</th><td>${r[1]}</td></tr>`).join('')
+}
+setInterval(render,250);render()
+const P={A,B}
+let n=0
+const act={
+ nudge:(d)=>{const t=d.findByDef('BoxT');const x=(Math.random()*4-3).toFixed(2);if(d===A)win.mark();d.setField(t,'translation',`${x} ${(Math.random()).toFixed(2)} 0`);log(`${d===A?'A':'B'}: BoxT translation ${x}`)},
+ color:(d)=>{const m=d.findByDef('BoxM');const c=[Math.random(),Math.random(),Math.random()].map(v=>v.toFixed(2)).join(' ');d.setField(m,'diffuseColor',c);log(`${d===A?'A':'B'}: BoxM colour ${c}`)},
+ add:(d)=>{d.addXML(`<Transform DEF="N${++n}" translation="${(n*0.7-3).toFixed(1)} 1.5 0"><Shape><Appearance><Material diffuseColor="0.9 0.8 0.2"/></Appearance><Sphere radius="0.3"/></Shape></Transform>`);log('A: added sphere N'+n)},
+ remove:(d)=>{const k=d.tree().roots.filter(r=>r.def&&/^N/.test(r.def)).pop();if(k){d.remove(k.uid);log('B: removed '+k.def)}}
+}
+document.querySelectorAll('button[data-a]').forEach(b=>b.onclick=()=>act[b.dataset.a](P[b.dataset.p]))
+document.getElementById('lat').oninput=e=>{AB.latency=AC.latency=+e.target.value;document.getElementById('latv').textContent=e.target.value}
+document.getElementById('off').onclick=e=>{AB.setOnline(!AB.online);e.target.textContent=AB.online?'go offline':'go online';log('link A-B '+(AB.online?'back online, state exchanged':'offline: edits queue locally'))}
+document.getElementById('storm').onclick=()=>{const t=performance.now();for(let i=0;i<200;i++){(i%2?A:B).setField((i%2?A:B).findByDef('BoxT'),'translation',`${(i%7)-3} ${i%3} 0`)};log(`200 ops in ${(performance.now()-t).toFixed(1)} ms (local transactions, both peers)`)}
+document.getElementById('agent').onclick=()=>{const r=agentApply(C,[{op:'add_node',parent:'#scene',xml:'<Transform DEF="AgentBall" translation="0 2 0"><Shape><Appearance><Material DEF="AgentM" diffuseColor="0.2 0.9 0.4"/></Appearance><Sphere radius="0.5"/></Shape></Transform>'},{op:'modify_node',def:'AgentM',fields:{diffuseColor:'0.9 0.2 0.9'}},{op:'modify_node',def:'NoSuchNode',fields:{x:'1'}}],'demo');log('agent results '+JSON.stringify(r))}
+document.getElementById('clash').onclick=()=>{const t=A.findByDef('BoxT');A.setField(t,'translation','-3 0 0');B.setField(t,'translation','3 0 0');log('A and B both set BoxT.translation; one value wins on every peer')}
+window.demoReady=true
+</script></body></html>
