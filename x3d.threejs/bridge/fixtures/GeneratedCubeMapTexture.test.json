@@ -1,0 +1,247 @@
+{
+ "node": "GeneratedCubeMapTexture",
+ "mode": "scene",
+ "note": "A ball (radius 3 at the origin) with a GeneratedCubeMapTexture. Three big boxes sit off screen: red on the left, green on the right, blue above (the ball sees them in its sides and top; nothing is behind the camera). update NONE: nothing is drawn, the ball is black; NEXT_FRAME_ONLY: one picture is taken on the next frame and update goes back to NONE (an event, in both engines), the ball then shows the boxes; ALWAYS: a picture every frame.",
+ "gaps": [
+  "measured against X_ITE 16.6.0 (Chromium 153 SwiftShader, three.js r187): main 34.0 dB, IoU 0.94; turned (camera 30 degrees round the ball) IoU 0.98 at 34.0 dB: X_ITE does not turn the picture with the camera, and neither does this body (the reflection is in camera space, the six pictures are in world axes, as X_ITE's)",
+  "the six pictures are taken with a cube camera at the origin of the first mesh of the Shape with the Shape left out; faces are 'size' pixels, linearly filtered, no mipmaps",
+  "a Background is drawn as spheres around the main camera, so the cube camera sees them from the Shape's origin, not from the main camera (not tested)"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "update",
+    "NONE"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "size",
+    128
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    94,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    226,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    54,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "update",
+    "NEXT_FRAME_ONLY"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "expect": [
+    "N",
+    "update",
+    "NONE"
+   ]
+  },
+  {
+   "px": [
+    94,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    226,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    54,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "update",
+    "ALWAYS"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "update",
+    "ALWAYS"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "px": [
+    94,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    226,
+    120,
+    [
+     0,
+     255,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    54,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    160,
+    120,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "V2",
+    "set_bind",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "shot": "turned"
+  }
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.9,
+   "mad": 1,
+   "fg": 8
+  },
+  "turned": {
+   "iou": 0.9,
+   "mad": 1,
+   "fg": 8
+  }
+ }
+}

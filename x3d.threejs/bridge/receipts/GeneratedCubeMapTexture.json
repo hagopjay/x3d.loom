@@ -1,0 +1,112 @@
+{
+ "node": "GeneratedCubeMapTexture",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 3c648b9ea070",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 27/27",
+ "xite": "pass 27/27",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "main": {
+   "iou": 0.94,
+   "coverOurs": 0.97,
+   "coverXite": 0.97,
+   "bboxOurs": [
+    81,
+    41,
+    238,
+    144
+   ],
+   "bboxXite": [
+    81,
+    41,
+    238,
+    144
+   ],
+   "nOurs": 2688,
+   "nXite": 2701,
+   "fgFracOurs": 0.04,
+   "fgFracXite": 0.04,
+   "mad": 0.16,
+   "psnr": 34.03,
+   "fgMeanOurs": [
+    82,
+    82,
+    82
+   ],
+   "fgMeanXite": [
+    82,
+    82,
+    82
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  },
+  "turned": {
+   "iou": 0.98,
+   "coverOurs": 0.99,
+   "coverXite": 0.99,
+   "bboxOurs": [
+    0,
+    41,
+    238,
+    180
+   ],
+   "bboxXite": [
+    0,
+    41,
+    238,
+    180
+   ],
+   "nOurs": 8746,
+   "nXite": 8759,
+   "fgFracOurs": 0.11,
+   "fgFracXite": 0.11,
+   "mad": 0.16,
+   "psnr": 34.03,
+   "fgMeanOurs": [
+    198,
+    25,
+    25
+   ],
+   "fgMeanXite": [
+    198,
+    25,
+    25
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "measured against X_ITE 16.6.0 (Chromium 153 SwiftShader, three.js r187): main 34.0 dB, IoU 0.94; turned (camera 30 degrees round the ball) IoU 0.98 at 34.0 dB: X_ITE does not turn the picture with the camera, and neither does this body (the reflection is in camera space, the six pictures are in world axes, as X_ITE's)",
+  "the six pictures are taken with a cube camera at the origin of the first mesh of the Shape with the Shape left out; faces are 'size' pixels, linearly filtered, no mipmaps",
+  "a Background is drawn as spheres around the main camera, so the cube camera sees them from the Shape's origin, not from the main camera (not tested)"
+ ]
+}

@@ -154,6 +154,7 @@ class Body {
     if (two && g.f.solid !== true) {   // TwoSidedMaterial draws the back faces as a second mesh on the same geometry, in the back colours; solid TRUE culls them (X_ITE 16.6.0 does the same)
       const bm = this.makeMaterial(n, g, app, true), back = new THREE.Mesh(geo, bm); back.userData = { shape: n, chain: r.chain, back: true }; o.add(back); r.meshes.push(back); all.push(back);
     }
+    for (const m of all) if (m.material.userData && m.material.userData.cubeU) m.material.userData.cubeU.meshes = all;
     if (!pl && app && app.f.fillProperties) this.applyFill(r, app.f.fillProperties, o);
     for (const m of all) this.hookFog(m);
     for (const m of all) if (geo.userData.tcg) (this.tcgMeshes ||= []).push(m);
@@ -298,7 +299,7 @@ class Body {
 
   /* ImageTexture (url) and PixelTexture (image: width height components pixels...; rows run bottom to top, as X3D images do, so flipY stays off for the data texture). */
   tex(node) {
-    if (!node) return null; const hit = this.texCache.get(node.id); if (hit) return hit; let t = null;
+    if (!node || /^(Image|Generated|Composed)CubeMapTexture$/.test(node.type)) return null; const hit = this.texCache.get(node.id); if (hit) return hit; let t = null;   // a cube map is not a 2D map: makeMaterial patches the shader
     if (node.type === 'MultiTexture') return this.multiTex(node);
     if (node.type === 'PixelTexture') {
       const im = node.f.image || [], w = im[0] | 0, h = im[1] | 0, k = im[2] | 0; if (!(w > 0 && h > 0 && k >= 1 && k <= 4)) return null;
@@ -400,6 +401,7 @@ class Body {
     const mt = texN && texN.type === 'MultiTexture' && this.texCache.get(texN.id);
     if (mt && mt.userData.add) this.addStage(m, mt.userData.add);
     if (vc) { m.vertexColors = true; if (mat && mat.type === 'Material') this.refreshPhong(m, mat); else if (mat && mat.type === 'PhysicalMaterial') this.refreshPBR(m, mat); }
+    if (texN && /^(Image|Generated|Composed)CubeMapTexture$/.test(texN.type)) R.bridge.three.cube.patch(this, m, texN, shape, !!(g.f.texCoord && g.f.texCoord.type === 'TextureCoordinateGenerator'));
     return m;
   }
   /* TwoSidedMaterial: the fields refreshPhong reads, from the front set or (separateBackColor) the back set */
@@ -522,7 +524,7 @@ class Body {
   redrawMulti(tt) {
     for (const a of this.world.nodes) { const x = a.type === 'Appearance' && a.f.texture; if (!x || x.type !== 'MultiTexture') continue; const at = a.f.textureTransform; if (at === tt || (at && at.f.textureTransform && [].concat(at.f.textureTransform).includes(tt))) { const dt = this.texCache.get(x.id); if (dt && dt.userData.redraw) dt.userData.redraw(); } }
   }
-  disposeObj(o) { o.removeFromParent(); o.traverse((x) => { if (x.geometry) x.geometry.dispose(); if (x.material) x.material.dispose(); }); }
+  disposeObj(o) { o.removeFromParent(); o.traverse((x) => { if (x.geometry) x.geometry.dispose(); if (x.material) { if (this.cubeMats) this.cubeMats.delete(x.material); x.material.dispose(); } }); }
   rebuildGroup(node) {
     const r = this.rec.get(node.id); if (!r) return;
     for (const k of r.kids) this.disposeRec(k);
@@ -663,6 +665,8 @@ class Body {
       }
       for (const [mt, l] of planesOf) mt.clippingPlanes = l;
     }
+    if (this.cubeMats) for (const m of this.cubeMats) m.userData.cubeU.cubeRot.value.setFromMatrix4(this.cam.matrixWorld);   // view space -> world space for the cube maps that hold pictures of the world
+    R.bridge.three.cube.takePictures(this);
   }
   fps() { const t = this.frameTimes; return t.length > 2 ? 1000 * (t.length - 1) / (t[t.length - 1] - t[0]) : 0; }
   shot() { this.updateView(); this.renderer.render(this.scene, this.cam); if (this.fogHooks) this.scene.fog = this.worldFog; return this.renderer.domElement.toDataURL('image/png'); }
