@@ -1,7 +1,7 @@
 {
  "node": "DISEntityTypeMapping",
  "mode": "scene",
- "note": "X_ITE 16.6.0 marks the DIS component as not supported: DISEntityTypeMapping keeps the type fields (read at parse, initializeOnly) and the url, and never loads it or matches an entity (no loadState or loadCount field exists to read). It draws nothing at the scene root or inside a DISEntityManager.",
+ "note": "X_ITE 16.6.0 marks the DIS component as not supported: DISEntityTypeMapping keeps the type fields (read at parse, initializeOnly) and the url, and never loads it or matches an entity (no loadState or loadCount field exists to read). It draws nothing inside its DISEntityManager (the schema allows it nowhere else).",
  "gaps": [
   "the url is held and never fetched (X_ITE measured 0 requests; the bridge issues none either); a mapping can never be resolved because no entity is ever received",
   "autoRefresh never fires"

@@ -1,0 +1,32 @@
+{
+ "node": "EspduTransform",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/EspduTransform.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 146/146",
+  "xite": "pass 146/146",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the bridge copies X_ITE: translation, rotation, scale, center, scaleOrientation of an EspduTransform are not applied (the specification says they place the entity like a Transform)",
+   "no dead reckoning, no network (isStandAlone never fires), no articulation parameters; the DIS traffic cannot be tested from a scene file",
+   "bboxDisplay draws no wire cube in the bridge (no shared bbox helper yet); X_ITE draws one"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 5e13cb162b9c",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "465c5ab"
+}

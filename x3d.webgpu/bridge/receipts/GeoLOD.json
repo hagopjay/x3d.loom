@@ -1,0 +1,33 @@
+{
+ "node": "GeoLOD",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/GeoLOD.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 92/92",
+  "xite": "pass 92/92",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "children are fetched at first entry to level 1 and never unloaded: the \"fetched once\" rule is not counted in the fixture",
+   "level_changed before children is the order in X_ITE and in the bridge; the fixture does not assert event order (the runner reads values)",
+   "the root is kept on screen until all four children are finished, so a slow child delays the picture, not level_changed (not tested: data: urls arrive at once)",
+   "bboxDisplay and the bounding box of a GeoLOD are not implemented"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 5e13cb162b9c",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "465c5ab"
+}

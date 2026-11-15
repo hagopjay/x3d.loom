@@ -1,0 +1,31 @@
+{
+ "node": "DISEntityTypeMapping",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/DISEntityTypeMapping.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 43/43",
+  "xite": "pass 43/43",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the url is held and never fetched (X_ITE measured 0 requests; the bridge issues none either); a mapping can never be resolved because no entity is ever received",
+   "autoRefresh never fires"
+  ]
+ },
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 5e13cb162b9c",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "465c5ab"
+}
