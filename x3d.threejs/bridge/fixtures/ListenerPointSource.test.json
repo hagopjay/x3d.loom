@@ -1,0 +1,1102 @@
+{
+ "node": "ListenerPointSource",
+ "mode": "scene",
+ "note": "the node sits in a Transform; its position and orientation, taken through the Transform and the camera (a viewpoint at 0 0 10), become the Web Audio listener's position, forward and up in view space, compared with X_ITE 16.6.0; trackCurrentView puts the listener at the camera (origin, forward -z). Runs in the real Babylon body. Signal compared with X_ITE 16.6.0 and with the Web Audio panner formulas on the page's real Web Audio clock: a SpatialSound at view position 0 0 -4 plays a 1 kHz sine and the listener is moved with a ListenerPointSource: the page's AudioListener position and orientation are read back (position, forward and up, compared with X_ITE within 0.01 and with the expected view space pose) and the two channels of the sound are held to the panner's gains for the new relative position within 0.012: one unit in front of the camera (distance 3 ahead: 0.167 each ear), moved to the left (the source is on the right: only the right ear), turned 90 degrees about y (the source is on its right again: only the right ear), trackCurrentView TRUE (distance 4 ahead: 0.125 each ear), and disabled (the listener stays at the origin when the node is told a new position).",
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "trackCurrentView",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "position",
+    [
+     0,
+     0,
+     -2
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "interauralDistance",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "dopplerEnabled",
+    false
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.positionX.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.positionX.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.positionY.value})()",
+    2
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.positionY.value",
+    2
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.positionZ.value})()",
+    -9
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.positionZ.value",
+    -9
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.forwardX.value})()",
+    -1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.forwardX.value",
+    -1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.forwardZ.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.forwardZ.value",
+    0
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.upY.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.upY.value",
+    1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "position",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.positionZ.value})()",
+    -7
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.positionZ.value",
+    -7
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "orientation",
+    [
+     0,
+     1,
+     0,
+     0
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.forwardX.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.forwardX.value",
+    0
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.forwardZ.value})()",
+    -1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.forwardZ.value",
+    -1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "trackCurrentView",
+    true
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.positionX.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.positionX.value",
+    0
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.positionY.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.positionY.value",
+    0
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.positionZ.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.positionZ.value",
+    0
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.forwardZ.value})()",
+    -1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.forwardZ.value",
+    -1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "trackCurrentView",
+    false
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.positionX.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.positionX.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._lis.positionZ.value})()",
+    -7
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().getBrowser().getAudioContext().listener.positionZ.value",
+    -7
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "set": [
+    "SL",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "set": [
+    "SL",
+    "trackCurrentView",
+    false
+   ]
+  },
+  {
+   "tap": [
+    "p",
+    "SS",
+    "out",
+    {
+     "channels": 2
+    }
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1.0
+  },
+  {
+   "set": [
+    "SL",
+    "position",
+    [
+     0,
+     0,
+     9
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "amap": [
+    "(()=>{const l=AUD.ctx.listener;return {px:l.positionX.value,py:l.positionY.value,pz:l.positionZ.value,fx:l.forwardX.value,fy:l.forwardY.value,fz:l.forwardZ.value,ux:l.upX.value,uy:l.upY.value,uz:l.upZ.value}})()",
+    "lis.ahead"
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "aheadL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "aheadR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(0,0,-3,'inverse',1,1,10000);return {l:0.7071067811865476*g[0],r:0.7071067811865476*g[1]}})()",
+    "x.ahead"
+   ]
+  },
+  {
+   "close": [
+    "aheadL.rms",
+    "x.ahead.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "aheadR.rms",
+    "x.ahead.r",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "lis.ahead.px",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.ahead.py",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.ahead.pz",
+    -1,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.ahead.fx",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.ahead.fy",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.ahead.fz",
+    -1,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.ahead.uy",
+    1,
+    0.01
+   ]
+  },
+  {
+   "set": [
+    "SL",
+    "position",
+    [
+     -3,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "amap": [
+    "(()=>{const l=AUD.ctx.listener;return {px:l.positionX.value,py:l.positionY.value,pz:l.positionZ.value,fx:l.forwardX.value,fy:l.forwardY.value,fz:l.forwardZ.value,ux:l.upX.value,uy:l.upY.value,uz:l.upZ.value}})()",
+    "lis.side"
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "sideL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "sideR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(3,0,0,'inverse',1,1,10000);return {l:0.7071067811865476*g[0],r:0.7071067811865476*g[1]}})()",
+    "x.side"
+   ]
+  },
+  {
+   "close": [
+    "sideL.rms",
+    "x.side.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "sideR.rms",
+    "x.side.r",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "lis.side.px",
+    -3,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.side.py",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.side.pz",
+    -4,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.side.fz",
+    -1,
+    0.01
+   ]
+  },
+  {
+   "set": [
+    "SL",
+    "position",
+    [
+     0,
+     0,
+     9
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "SL",
+    "orientation",
+    [
+     0,
+     1,
+     0,
+     1.5707963
+    ],
+    "SFRotation"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "amap": [
+    "(()=>{const l=AUD.ctx.listener;return {px:l.positionX.value,py:l.positionY.value,pz:l.positionZ.value,fx:l.forwardX.value,fy:l.forwardY.value,fz:l.forwardZ.value,ux:l.upX.value,uy:l.upY.value,uz:l.upZ.value}})()",
+    "lis.turned"
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "turnedL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "turnedR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(3,0,0,'inverse',1,1,10000);return {l:0.7071067811865476*g[0],r:0.7071067811865476*g[1]}})()",
+    "x.turned"
+   ]
+  },
+  {
+   "close": [
+    "turnedL.rms",
+    "x.turned.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "turnedR.rms",
+    "x.turned.r",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "lis.turned.px",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.turned.pz",
+    -1,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.turned.fx",
+    -1,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.turned.fz",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.turned.uy",
+    1,
+    0.01
+   ]
+  },
+  {
+   "set": [
+    "SL",
+    "trackCurrentView",
+    true
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "amap": [
+    "(()=>{const l=AUD.ctx.listener;return {px:l.positionX.value,py:l.positionY.value,pz:l.positionZ.value,fx:l.forwardX.value,fy:l.forwardY.value,fz:l.forwardZ.value,ux:l.upX.value,uy:l.upY.value,uz:l.upZ.value}})()",
+    "lis.track"
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "trackL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "trackR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(0,0,-4,'inverse',1,1,10000);return {l:0.7071067811865476*g[0],r:0.7071067811865476*g[1]}})()",
+    "x.track"
+   ]
+  },
+  {
+   "close": [
+    "trackL.rms",
+    "x.track.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "trackR.rms",
+    "x.track.r",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "lis.track.px",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.track.py",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.track.pz",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.track.fx",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.track.fy",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.track.fz",
+    -1,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.track.uy",
+    1,
+    0.01
+   ]
+  },
+  {
+   "set": [
+    "SL",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "set": [
+    "SL",
+    "trackCurrentView",
+    false
+   ]
+  },
+  {
+   "set": [
+    "SL",
+    "position",
+    [
+     -3,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "amap": [
+    "(()=>{const l=AUD.ctx.listener;return {px:l.positionX.value,py:l.positionY.value,pz:l.positionZ.value,fx:l.forwardX.value,fy:l.forwardY.value,fz:l.forwardZ.value,ux:l.upX.value,uy:l.upY.value,uz:l.upZ.value}})()",
+    "lis.off"
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "offL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "offR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(0,0,-4,'inverse',1,1,10000);return {l:0.7071067811865476*g[0],r:0.7071067811865476*g[1]}})()",
+    "x.off"
+   ]
+  },
+  {
+   "close": [
+    "offL.rms",
+    "x.off.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "offR.rms",
+    "x.off.r",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "lis.off.px",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.off.py",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.off.pz",
+    0,
+    0.01
+   ]
+  },
+  {
+   "close": [
+    "lis.off.fz",
+    -1,
+    0.01
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "aheadL.rms",
+   0.012
+  ],
+  [
+   "aheadR.rms",
+   0.012
+  ],
+  [
+   "lis.ahead.px",
+   0.01
+  ],
+  [
+   "lis.ahead.py",
+   0.01
+  ],
+  [
+   "lis.ahead.pz",
+   0.01
+  ],
+  [
+   "lis.ahead.fx",
+   0.01
+  ],
+  [
+   "lis.ahead.fy",
+   0.01
+  ],
+  [
+   "lis.ahead.fz",
+   0.01
+  ],
+  [
+   "lis.ahead.ux",
+   0.01
+  ],
+  [
+   "lis.ahead.uy",
+   0.01
+  ],
+  [
+   "lis.ahead.uz",
+   0.01
+  ],
+  [
+   "sideL.rms",
+   0.012
+  ],
+  [
+   "sideR.rms",
+   0.012
+  ],
+  [
+   "lis.side.px",
+   0.01
+  ],
+  [
+   "lis.side.py",
+   0.01
+  ],
+  [
+   "lis.side.pz",
+   0.01
+  ],
+  [
+   "lis.side.fx",
+   0.01
+  ],
+  [
+   "lis.side.fy",
+   0.01
+  ],
+  [
+   "lis.side.fz",
+   0.01
+  ],
+  [
+   "lis.side.ux",
+   0.01
+  ],
+  [
+   "lis.side.uy",
+   0.01
+  ],
+  [
+   "lis.side.uz",
+   0.01
+  ],
+  [
+   "turnedL.rms",
+   0.012
+  ],
+  [
+   "turnedR.rms",
+   0.012
+  ],
+  [
+   "lis.turned.px",
+   0.01
+  ],
+  [
+   "lis.turned.py",
+   0.01
+  ],
+  [
+   "lis.turned.pz",
+   0.01
+  ],
+  [
+   "lis.turned.fx",
+   0.01
+  ],
+  [
+   "lis.turned.fy",
+   0.01
+  ],
+  [
+   "lis.turned.fz",
+   0.01
+  ],
+  [
+   "lis.turned.ux",
+   0.01
+  ],
+  [
+   "lis.turned.uy",
+   0.01
+  ],
+  [
+   "lis.turned.uz",
+   0.01
+  ],
+  [
+   "trackL.rms",
+   0.012
+  ],
+  [
+   "trackR.rms",
+   0.012
+  ],
+  [
+   "lis.track.px",
+   0.01
+  ],
+  [
+   "lis.track.py",
+   0.01
+  ],
+  [
+   "lis.track.pz",
+   0.01
+  ],
+  [
+   "lis.track.fx",
+   0.01
+  ],
+  [
+   "lis.track.fy",
+   0.01
+  ],
+  [
+   "lis.track.fz",
+   0.01
+  ],
+  [
+   "lis.track.ux",
+   0.01
+  ],
+  [
+   "lis.track.uy",
+   0.01
+  ],
+  [
+   "lis.track.uz",
+   0.01
+  ],
+  [
+   "offL.rms",
+   0.012
+  ],
+  [
+   "offR.rms",
+   0.012
+  ],
+  [
+   "lis.off.px",
+   0.01
+  ],
+  [
+   "lis.off.py",
+   0.01
+  ],
+  [
+   "lis.off.pz",
+   0.01
+  ],
+  [
+   "lis.off.fx",
+   0.01
+  ],
+  [
+   "lis.off.fy",
+   0.01
+  ],
+  [
+   "lis.off.fz",
+   0.01
+  ],
+  [
+   "lis.off.ux",
+   0.01
+  ],
+  [
+   "lis.off.uy",
+   0.01
+  ],
+  [
+   "lis.off.uz",
+   0.01
+  ]
+ ],
+ "scope": [
+  "the listener follows the node once per frame; X_ITE does it while it draws the node; enabled = false leaves the listener where it was; interauralDistance and dopplerEnabled are held, Web Audio has no use for them; the 4.0 UOM gives ListenerPointSource gain, mediaDeviceID and a start/stop clock; X_ITE 16.6.0 has none of them, so they are held here and not compared"
+ ]
+}

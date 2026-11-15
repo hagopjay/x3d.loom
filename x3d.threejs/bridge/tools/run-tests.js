@@ -29,19 +29,31 @@ let ts = performance.timeOrigin / 1000 + performance.now() / 1000;
 window.runOurs = async (spec, xml) => (window.__R && (__R.bridge.allowScripts = spec.scripts !== false), runSpec({ name: 'ours',
   open: async (x) => X3DSAI.B.createX3DFromString(x), now: () => ts,
   apply: async (fn) => { __events.begin(ts += 0.05); fn(); __events.drain(); },
-  settle: async (dt) => { const steps = Math.max(1, Math.round((dt || 0.05) / 0.05)); for (let i = 0; i < steps; i++) { __events.begin(ts += 0.05); for (const n of (window.__worlds || [])) for (const t of n.nodes) if (t.type === 'TimeSensor') __R.tickTimeSensor(t, ts); __events.drain(); } },
+  settle: async (dt) => { const steps = Math.max(1, Math.round((dt || 0.05) / 0.05)); for (let i = 0; i < steps; i++) { __events.begin(ts += 0.05); for (const n of (window.__worlds || [])) for (const t of n.nodes) if (t.type === 'TimeSensor') __R.tickTimeSensor(t, ts); __events.drain(); },
+  audioCtx: () => __bridge.audio.ctx(), audioNode: (def, kind) => { const n = __worlds[__worlds.length - 1].nodes.find((q) => q.def === def); const a = n && n._au; return a && (kind === 'in' ? a.in : kind === 'proc' ? a.proc : a.out); },
 }, spec, xml));</script>`;
 const PAGE_XITE = (w, h) => `<!doctype html><meta charset=utf-8><link rel=stylesheet href="/x_ite/x_ite.css"><body style="margin:0"><x3d-canvas id=c style="width:${w}px;height:${h}px;display:block"></x3d-canvas><script src="/x_ite/x_ite.min.js"></script><script>${RUNNER}
 window.runXite = async (spec, xml) => { const b = X3D.getBrowser('#c'); try { b.setBrowserOption('Notifications', false); b.setBrowserOption('Timings', false); } catch (e) {} await b.loadComponents?.(b.getProfile ? b.getProfile('Full') : undefined).catch(() => {});
   return runSpec({ name: 'xite', open: async (x) => { const sc = await b.createX3DFromString(x); await b.replaceWorld(sc); await b.nextFrame(); await b.nextFrame(); return sc; },
-    apply: async (fn) => { fn(); await b.nextFrame(); await b.nextFrame(); }, settle: async (dt) => { await new Promise((r) => setTimeout(r, (dt || 0.05) * 1000)); await b.nextFrame(); } }, spec, xml); };
+    apply: async (fn) => { fn(); await b.nextFrame(); await b.nextFrame(); }, settle: async (dt) => { await new Promise((r) => setTimeout(r, (dt || 0.05) * 1000)); await b.nextFrame(); },
+    audioCtx: () => b.getAudioContext(), audioNode: (def, kind, sc) => { const n = sc.getNamedNode(def).getValue(); return kind === 'in' ? n.getAudioDestination() : kind === 'proc' ? (n.getSoundProcessor ? n.getSoundProcessor() : null) : (n.getSoundDestination ? n.getSoundDestination() : n.getAudioSource()); } }, spec, xml); };
 window.xiteInfo = () => ({ name: X3D.getBrowser('#c').name, version: X3D.getBrowser('#c').version });</script>`;
 const PAGE_OURS_SCENE = `<!doctype html><meta charset=utf-8><body style="margin:0;background:#000"><canvas id=c width=320 height=240 style="width:320px;height:240px;display:block"></canvas>${THREE_BOOT}<script>${RUNNER}
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 window.__bodyShot = async () => window.__body.shot();
 window.runScene = async (spec, xml) => { await window.pageReady; if (window.__R) __R.bridge.allowScripts = spec.scripts !== false; window.__body.setTone(spec.tone === 'none' || !spec.tone ? 'none' : spec.tone); return runSpec({ name: 'ours',
   open: async (x) => { const sc = await X3DSAI.B.createX3DFromString(x); await X3DSAI.B.replaceWorld(sc); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); return sc; },
-  apply: async (fn) => { fn(); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); }, settle: async (dt) => { await sleep((dt || 0.05) * 1000); await X3DSAI.B.nextFrame(); } }, spec, xml); };</script>`;
+  apply: async (fn) => { fn(); await X3DSAI.B.nextFrame(); await X3DSAI.B.nextFrame(); }, settle: async (dt) => { await sleep((dt || 0.05) * 1000); await X3DSAI.B.nextFrame(); },
+  audioCtx: () => __bridge.audio.ctx(), audioNode: (def, kind) => { const n = __worlds[__worlds.length - 1].nodes.find((q) => q.def === def); const a = n && n._au; return a && (kind === 'in' ? a.in : kind === 'proc' ? a.proc : a.out); } }, spec, xml); };</script>`;
+
+// A deterministic microphone for the headless browser (as the Babylon runner): a 1 kHz sine at amplitude 0.5, 16 bit mono 48 kHz, looped, with the capture processing of the browser switched off so the level can be compared.
+function fakeMic() {
+  const sr = 48000, n = sr * 2, bf = Buffer.alloc(44 + n * 2);
+  bf.write('RIFF', 0); bf.writeUInt32LE(36 + n * 2, 4); bf.write('WAVEfmt ', 8); bf.writeUInt32LE(16, 16); bf.writeUInt16LE(1, 20); bf.writeUInt16LE(1, 22); bf.writeUInt32LE(sr, 24); bf.writeUInt32LE(sr * 2, 28); bf.writeUInt16LE(2, 32); bf.writeUInt16LE(16, 34); bf.write('data', 36); bf.writeUInt32LE(n * 2, 40);
+  for (let i = 0; i < n; i++) bf.writeInt16LE(Math.round(0.5 * 32767 * Math.sin(2 * Math.PI * 1000 * i / sr)), 44 + i * 2);
+  const f = path.join(require('os').tmpdir(), 'bridge-fake-mic-1khz.wav'); fs.writeFileSync(f, bf); return f;
+}
+const MICFIX = () => { if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) { const g = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices); navigator.mediaDevices.getUserMedia = (c) => g(c && c.audio ? { ...c, audio: Object.assign({}, c.audio === true ? {} : c.audio, { echoCancellation: false, noiseSuppression: false, autoGainControl: false }) } : c); } };
 
 function serve(files) {
   const mime = { '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.html': 'text/html', '.json': 'application/json', '.png': 'image/png', '.woff2': 'font/woff2' };
@@ -63,9 +75,9 @@ async function main() {
   const files = { '/bundle.js': bundle('reader'), '/bundle-body.js': bundle('body'), '/ours.html': PAGE_OURS, '/ours-scene.html': PAGE_OURS_SCENE, '/xite.html': PAGE_XITE(64, 64), '/xite-scene.html': PAGE_XITE(320, 240) };
   const server = await serve(files), base = 'http://localhost:' + server.address().port; let b;
   try {
-    b = await chromium.launch({ executablePath: process.env.CHROMIUM_EXECUTABLE || undefined, args: ['--autoplay-policy=no-user-gesture-required', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+    b = await chromium.launch({ executablePath: process.env.CHROMIUM_EXECUTABLE || undefined, args: ['--autoplay-policy=no-user-gesture-required', '--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream', '--use-file-for-fake-audio-capture=' + fakeMic(), '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
     const env = { chromium: b.version(), ours: 'x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha ' + crypto.createHash('sha256').update(files['/bundle-body.js']).digest('hex').slice(0, 12) };
-    const errs = [], results = {}, newPage = async () => { const pg = await b.newPage(); pg.on('pageerror', (e) => errs.push(e.message.slice(0, 200))); return pg; };
+    const errs = [], results = {}, newPage = async () => { const pg = await b.newPage(); await pg.addInitScript(MICFIX); pg.on('pageerror', (e) => errs.push(e.message.slice(0, 200))); return pg; };
     const haveX = !noXite && XITE_DIR && fs.existsSync(path.join(XITE_DIR, 'x_ite.min.js'));
     if (!haveX) env.xite = noXite ? 'skipped (--no-xite)' : 'not found (set XITE_DIR)';
     let po = null, px = null, pos = null, pxs = null, mp = null;

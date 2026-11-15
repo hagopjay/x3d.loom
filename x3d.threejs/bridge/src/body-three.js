@@ -723,6 +723,7 @@ class Body {
     }
     if (this.cubeMats) for (const m of this.cubeMats) m.userData.cubeU.cubeRot.value.setFromMatrix4(this.cam.matrixWorld);   // view space -> world space for the cube maps that hold pictures of the world
     R.bridge.three.cube.takePictures(this);
+    if (R.bridge.three.sound) R.bridge.three.sound.update(this);   // the audio listener and spatial sources, in the view space of the camera
     R.bridge.three.layers.update(this);   // the cameras, bits, rectangles of the layers and viewports, then the layouts
   }
   /* One picture: the world alone, or, with a LayerSet or a world Viewport (nodes/Layering.js), one pass per entry of this.passes in order: each through its own camera, its own rectangle of the canvas
