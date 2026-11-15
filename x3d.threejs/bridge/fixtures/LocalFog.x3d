@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="LocalFog.x3d"/><meta name="description" content="three groups, each with an emissive-white box: a LocalFog LINEAR red range 20, a LocalFog EXPONENTIAL green range 20, and a clear group with no fog (the world has no Fog); then the red one is switched off and the green range set to 8"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+    <Group><LocalFog DEF="R" color="1 0 0" visibilityRange="20"/><Transform translation="-3.4 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 1 1"/></Appearance><Box size="2 2 2"/></Shape></Transform></Group>
+    <Group><LocalFog DEF="G" color="0 1 0" visibilityRange="20" fogType="EXPONENTIAL"/><Transform translation="0 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 1 1"/></Appearance><Box size="2 2 2"/></Shape></Transform></Group>
+    <Group><Transform translation="3.4 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 1 1"/></Appearance><Box size="2 2 2"/></Shape></Transform></Group>
+  </Scene>
+</X3D>

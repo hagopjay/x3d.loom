@@ -1,0 +1,187 @@
+{
+ "node": "PackagedShader",
+ "mode": "scene",
+ "note": "A PackagedShader in an Appearance. X_ITE 16.6.0 marks the node 'not supported': it keeps the fields and never compiles, so isValid and isSelected stay FALSE, also after activate. The bridge does the same.",
+ "gaps": [
+  "no shader language runs: the node is only a holder (the WebGPU body runs WGSL ports of known GLSL parts)",
+  "author-defined <field> declarations are not read for this node (the stock reader reads them for ComposedShader only)"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "description",
+    ""
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "language",
+    "GLSL"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "load",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefresh",
+    0
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefreshTimeLimit",
+    3600
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "url",
+    [
+     "data:x-shader/x-fragment,void main() { }"
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isValid",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isSelected",
+    false
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "expect": [
+    "N",
+    "isValid",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isSelected",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "activate",
+    true
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "expect": [
+    "N",
+    "isValid",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isSelected",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "description",
+    "a shader"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "description",
+    "a shader"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "load",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "load",
+    false
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "url",
+    [
+     "a.glsl",
+     "b.glsl"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "url",
+    [
+     "a.glsl",
+     "b.glsl"
+    ]
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "autoRefresh",
+    5
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefresh",
+    5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "autoRefreshTimeLimit",
+    60
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "autoRefreshTimeLimit",
+    60
+   ]
+  }
+ ]
+}

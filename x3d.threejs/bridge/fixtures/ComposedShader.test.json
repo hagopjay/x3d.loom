@@ -1,0 +1,74 @@
+{
+ "node": "ComposedShader",
+ "mode": "scene",
+ "note": "A sphere and a box drawn by one banded-normal GLSL ES 3.00 shader (built-in x3d_ModelViewMatrix, x3d_ProjectionMatrix, x3d_NormalMatrix, x3d_Vertex, x3d_Normal and the fields tint, bands and level as uniforms); the fields change through events. The source is in data: urls: X_ITE 16.6.0 loses the newlines of a CDATA ShaderPart read from an .x3d file (the #version line then fails to compile), this body reads both forms",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "expect": [
+    "N",
+    "isValid",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "isSelected",
+    true
+   ]
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "N",
+    "tint",
+    [
+     0.2,
+     0.7,
+     1.0
+    ],
+    "SFColor"
+   ]
+  },
+  {
+   "set": [
+    "N2",
+    "bands",
+    6,
+    "SFInt32"
+   ]
+  },
+  {
+   "set": [
+    "N2",
+    "level",
+    0.6,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "fields"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "fields": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  }
+ }
+}

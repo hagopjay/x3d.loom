@@ -1,0 +1,40 @@
+{
+ "node": "OrthoViewpoint",
+ "mode": "scene",
+ "note": "an OrthoViewpoint bound first: a row of three boxes at different depths, drawn without perspective (equal size); then the perspective Viewpoint is bound",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "ortho"
+  },
+  {
+   "set": [
+    "P",
+    "set_bind",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "persp"
+  }
+ ],
+ "compare": {
+  "ortho": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "persp": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  }
+ }
+}

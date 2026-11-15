@@ -1,0 +1,45 @@
+{
+ "node": "FogCoordinate",
+ "mode": "scene",
+ "note": "two white unlit quads under the world Fog (red, range 20): the left one with per-vertex fog depths 0 0 1 1 (bottom clear, top fully fogged), the right one with the distance law; then the depths are set to 1 1 0 0",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "FC",
+    "depth",
+    [
+     1,
+     1,
+     0,
+     0
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "flipped"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "flipped": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  }
+ }
+}

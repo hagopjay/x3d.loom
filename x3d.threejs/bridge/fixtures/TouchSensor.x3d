@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="TouchSensor.x3d"/><meta name="description" content="A box and a sphere, each with a TouchSensor (the sphere's sensor sits in the same group as a second TouchSensor). The mouse moves over the box, presses and releases on it, presses on it and releases away from it, and moves over the sphere; X_ITE 16.6.0 is the oracle for the event counts"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+    <Group>
+      <Transform DEF="TB" translation="-2.5 0 0"><Shape><Appearance><Material diffuseColor="0.9 0.35 0.2"/></Appearance><Box size="2 2 2"/></Shape><TouchSensor DEF="A" description="box"/></Transform>
+      <Transform DEF="TS" translation="2.5 0 0"><Shape><Appearance><Material diffuseColor="0.2 0.6 0.9"/></Appearance><Sphere radius="1.2"/></Shape><TouchSensor DEF="B"/><TouchSensor DEF="B2" enabled="false"/></Transform>
+    </Group>
+  </Scene>
+</X3D>

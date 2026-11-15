@@ -1,0 +1,45 @@
+{
+ "node": "ImageCubeMapTexture",
+ "mode": "scene",
+ "note": "Two mirror balls (IndexedFaceSet spheres with a CAMERASPACEREFLECTIONVECTOR generator): the left holds a 4:3 cross whose six faces each carry a white block upper left, a black block lower right and a white bar along the top; the right a 2:1 panorama (hue by longitude, light by latitude, a white block at 20,20 and a black one in the middle). Seen from the front and from 30 degrees to the right: X_ITE shows the same picture, the reflection is in camera space and the cube turns with the camera.",
+ "gaps": [
+  "three.js r187 and X_ITE 16.6.0 on Chromium 153 SwiftShader agree on the orientation of all six cross faces and of the panorama with no turn of any face (the markers land at the same places, 29 to 31 dB on the balls); the face borders are a little softer here (mipmapped cube, X_ITE samples without)",
+  "a cube map on a Shape with no TextureCoordinateGenerator is drawn here as the camera-space mirror; X_ITE 16.6.0 draws something else there (the geometry's own 2D coordinates read as a direction: a magenta over blue split on a Sphere), which is not reproduced",
+  "the cube map multiplies the lit colour like any texture; KTX2 and DDS are not read; a panorama is resampled to six faces of up to 256 pixels"
+ ],
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "V2",
+    "set_bind",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "shot": "turned"
+  }
+ ],
+ "tone": "none",
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 8,
+   "fg": 25
+  },
+  "turned": {
+   "iou": 0.97,
+   "mad": 8,
+   "fg": 25
+  }
+ }
+}

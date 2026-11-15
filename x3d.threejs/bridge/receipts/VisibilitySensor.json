@@ -1,0 +1,23 @@
+{
+ "node": "VisibilitySensor",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 510892626d44",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 34/34",
+ "xite": "FAIL step 34: N.isActive is true, expected false",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": false,
+ "comparison": "failed",
+ "msg": "X_ITE differs (X_ITE 16.6.0 keeps a size 0 0 0 sensor active (it treats it as unbounded); the 4.0 text says a zero size sensor never fires)",
+ "scope": [
+  "occlusion by other shapes is not tested, by either engine (X_ITE 16.6.0 tests the frustum only); compared with X_ITE: inside, behind the camera, beyond the side plane, a box straddling the side plane (active), just outside (inactive), centre moved out and back, enabled false and true",
+  "one decision per frame; enterTime and exitTime are the frame timestamps"
+ ]
+}

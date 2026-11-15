@@ -35,9 +35,11 @@ function patchThreeShaders() {
 class Body {
   constructor(canvas, opts) {
     this.canvas = canvas; this.opts = opts || {};
-    this.rec = new Map(); this.geoCache = new Map(); this.texCache = new Map(); this.meshesOf = new Map();
+    this.rec = new Map(); this.geoCache = new Map(); this.textCache = new Map(); this.texCache = new Map(); this.meshesOf = new Map();
     this.notes = new Set(); this.frameTimes = []; this.stats = { frames: 0 };
     this.pose = { pos: [0, 0, 10], q: [0, 0, 0, 1], center: [0, 0, 0], fov: 0.7854 };
+    this.fogScopes = new WeakMap(); this.localFogs = new Map(); this.worldFog = null; this.fogHooks = false;
+    this.screenU = { res: { value: new THREE.Vector2(1, 1) }, ratio: { value: 1 } };   // the drawing buffer size in pixels, for the shaders that work in screen space (wide lines, hatching)
     this.tr = null; this.bound = null; this.started = false; this.lights = []; this.look = { wired: false };
   }
 
@@ -49,8 +51,8 @@ class Body {
     r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     this.engine = { setHardwareScalingLevel: (l) => { r.setPixelRatio((window.devicePixelRatio || 1) / l); this.fit(); }, getRenderWidth: () => r.domElement.width, getRenderHeight: () => r.domElement.height };
     this.scene = new THREE.Scene(); this.scene.background = new THREE.Color(0.003, 0.005, 0.012);
-    this.cam = new THREE.PerspectiveCamera(45, 1, 0.5, 4000);
-    this.scene.add(this.cam);
+    this.cam = this.camP = new THREE.PerspectiveCamera(45, 1, 0.5, 4000); this.camO = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 1e4);   // camO is drawn with while an OrthoViewpoint is bound (applyCamera swaps this.cam)
+    this.scene.add(this.cam, this.camO);
     this.headlight = new THREE.DirectionalLight(0xffffff, THREE_PI); this.headlight.position.set(0, 0, 1); this.headlight.target.position.set(0, 0, -1);
     this.cam.add(this.headlight, this.headlight.target);
     this.ambient = new THREE.AmbientLight(0xffffff, 0); this.scene.add(this.ambient);
@@ -70,18 +72,18 @@ class Body {
 
   /* ----------------------------------------------------------------- world */
   setWorld(world, baseUrl, resolve) {
-    this.clearWorld(); R.bridge.body = this;   // the shared bridge nodes reach the body through this (receive hooks call body.regeo)
+    this.clearWorld(); R.bridge.three.pointer.reset(); R.bridge.body = this;   // the shared bridge nodes reach the body through this (receive hooks call body.regeo)
     this.world = world; this.baseUrl = baseUrl; this.resolve = resolve || ((u) => u);
     this.root = new THREE.Group(); this.root.name = 'x3d-root'; this.scene.add(this.root);
     for (const n of world.children) this.build(n, this.root, []);
     this.applyBackground(); this.applyNavigation(); this.applyFog();
-    const first = world.nodes.find((n) => n.type === 'Viewpoint');   // 19775-1 23.4.1: the first Viewpoint in the file is bound at load (the Babylon stock body does this in body-br.js)
+    const first = world.nodes.find((n) => n.type === 'Viewpoint' || n.type === 'OrthoViewpoint');   // 19775-1 23.4.1: the first Viewpoint in the file is bound at load (the Babylon stock body does this in body-br.js)
     if (first) { this.started = false; this.bindViewpoint(first, true); }
   }
   clearWorld() {
     if (!this.root) return;
     this.root.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) [].concat(o.material).forEach((m) => { if (m.map) m.map.dispose(); m.dispose(); }); });
-    this.scene.remove(this.root); this.scene.fog = null;
+    this.scene.remove(this.root); this.scene.fog = this.worldFog = null; this.fogHooks = false; this.fogScopes = new WeakMap(); this.localFogs = new Map(); this.tcgMeshes = [];
     this.rec.clear(); this.geoCache.clear(); this.lights = []; this.billboards = []; this.lods = []; this.clips = []; this.clipDirty = false; this.bound = null; this.viewpoints = []; this.root = null;
   }
 
@@ -91,11 +93,31 @@ class Body {
       case 'Group': case 'Switch': case 'Transform': case 'Billboard': case 'LOD': case 'Anchor': case 'Collision': case 'StaticGroup': return this.buildGroup(n, parent, chain);   // Anchor, Collision and StaticGroup draw as plain groups (the link, the collision test and the freezing are the SAI's and the navigation's business)
       case 'ClipPlane': (this.clips ||= []).push({ node: n, parent }); this.clipDirty = true; return null;
       case 'Shape': return this.buildShape(n, parent, chain);
-      case 'Viewpoint': { const r = { node: n, parent, tn: parent }; this.rec.set(n.id, r); (this.viewpoints ||= []).includes(n) || this.viewpoints.push(n); this.vpParent ||= new Map(); this.vpParent.set(n, parent); return r; }
+      case 'Inline': return this.buildInline(n, parent, chain);
+      case 'Viewpoint': case 'OrthoViewpoint': { const r = { node: n, parent, tn: parent }; this.rec.set(n.id, r); (this.viewpoints ||= []).includes(n) || this.viewpoints.push(n); this.vpParent ||= new Map(); this.vpParent.set(n, parent); return r; }
       case 'DirectionalLight': case 'PointLight': case 'SpotLight': return this.buildLight(n, parent);
-      case 'NavigationInfo': case 'Background': case 'Fog': case 'WorldInfo': case 'TimeSensor': case 'ScalarInterpolator': case 'PositionInterpolator': case 'OrientationInterpolator': case 'ColorInterpolator': return null;
+      case 'NavigationInfo': case 'Background': case 'TextureBackground': case 'Fog': case 'WorldInfo': case 'TimeSensor': case 'ScalarInterpolator': case 'PositionInterpolator': case 'OrientationInterpolator': case 'ColorInterpolator': return null;
       default: { const fn = T3.build[n.type]; if (!fn) this.note('three.js body: skipped <' + n.type + '>'); else return fn(this, n, parent, chain); return null; }
     }
+  }
+  /* Inline: the file is fetched (gzip too), parsed by the SAI shim and its roots built under this node's group; load FALSE hides it and holds the fetch until load turns TRUE. A relative url is read against the
+     page's base url; the textures and urls inside the inline file are read against the main file, not the inline one (a gap). The inline file's own Viewpoint, lights, fog and background are built where they are drawn
+     (lights, viewpoints) or ignored (fog, background), as for the main file. */
+  buildInline(n, parent, chain) {
+    const o = new THREE.Group(); o.name = n.def || 'Inline'; parent.add(o); const r = { node: n, tn: o, kids: [], chain: [n, ...chain], loaded: false }; this.rec.set(n.id, r);
+    if (n.f.load !== false) this.loadInline(n, r); else o.visible = false;
+    return r;
+  }
+  async loadInline(n, r) {
+    if (r.loaded || r.loading || !(n.f.url || []).length) return; r.loading = true;
+    try {
+      const url = this.resolve(n.f.url[0], this.baseUrl), res = await fetch(url); if (!res.ok) throw new Error(res.status + ' for ' + url);
+      const u = new Uint8Array(await res.arrayBuffer()), text = u[0] === 0x1f && u[1] === 0x8b ? await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text() : new TextDecoder().decode(u);
+      const sc = await X3DSAI.B.createX3DFromString(text, url); if (!this.rec.get(n.id) || r.tn !== this.rec.get(n.id).tn) return;   // the Inline was rebuilt or removed while the file came in
+      for (const root of sc._world.children) r.kids.push(this.build(root, r.tn, r.chain));
+      r.loaded = true; this.clipDirty = true;
+    } catch (e) { this.note('Inline ' + (n.def || '') + ' did not load: ' + e.message); }
+    r.loading = false;
   }
   buildGroup(n, parent, chain) {
     const o = new THREE.Group(); o.name = n.def || n.type; parent.add(o);
@@ -116,7 +138,7 @@ class Body {
     const m = new M().multiplyMatrices(t(f.translation), t(c)).multiply(q(f.rotation)).multiply(q(sr)).multiply(new M().makeScale(f.scale[0], f.scale[1], f.scale[2])).multiply(q(srInv)).multiply(t([-c[0], -c[1], -c[2]]));
     o.matrixAutoUpdate = false; o.matrix.copy(m); o.matrixWorldNeedsUpdate = true;
   }
-  applySwitch(n) { const r = this.rec.get(n.id); if (r) r.kids.forEach((k, i) => { if (k && k.tn && k.node.type !== 'Viewpoint') k.tn.visible = i === n.f.whichChoice && k.node.f.visible !== false; }); }   // a Viewpoint child's object is its parent's: leave it alone
+  applySwitch(n) { const r = this.rec.get(n.id); if (r) r.kids.forEach((k, i) => { if (k && k.tn && k.node.type !== 'Viewpoint' && k.node.type !== 'OrthoViewpoint') k.tn.visible = i === n.f.whichChoice && k.node.f.visible !== false; }); }   // a Viewpoint child's object is its parent's: leave it alone
 
   /* ---------------------------------------------------------------- shapes */
   buildShape(n, parent, chain) {
@@ -126,9 +148,17 @@ class Body {
     const pl = this.pointLine(g, app);   // lines and points: unlit, drawn in the Material's emissiveColor (or the Color node), not as triangles
     const geo = (pl ? pl.geo : this.threeGeometry(g)) || this.emptyGeometry();   // an empty node keeps its mesh so a later event (regeo) can fill it
     this.clipDirty = true;
-    const mat = pl ? pl.mat : this.makeMaterial(n, g, app);
-    const mesh = pl ? new (pl.points ? THREE.Points : THREE.LineSegments)(geo, mat) : new THREE.Mesh(geo, mat); mesh.userData = { shape: n, chain: r.chain }; o.add(mesh); r.meshes.push(mesh);
-    for (const dep of [app && app.f.material, app && app.f.texture, app && app.f.textureTransform, g]) if (dep) (this.meshesOf.get(dep.id) || this.meshesOf.set(dep.id, []).get(dep.id)).push(mesh);
+    const mat = pl ? pl.mat : this.makeMaterial(n, g, app), two = !pl && app && app.f.material && app.f.material.type === 'TwoSidedMaterial';
+    const mesh = pl ? (pl.wide ? new THREE.Mesh(geo, mat) : new (pl.points ? THREE.Points : THREE.LineSegments)(geo, mat)) : new THREE.Mesh(geo, mat); mesh.userData = { shape: n, chain: r.chain, wide: !!(pl && pl.wide) }; o.add(mesh); r.meshes.push(mesh);
+    const all = [mesh];
+    if (two && g.f.solid !== true) {   // TwoSidedMaterial draws the back faces as a second mesh on the same geometry, in the back colours; solid TRUE culls them (X_ITE 16.6.0 does the same)
+      const bm = this.makeMaterial(n, g, app, true), back = new THREE.Mesh(geo, bm); back.userData = { shape: n, chain: r.chain, back: true }; o.add(back); r.meshes.push(back); all.push(back);
+    }
+    for (const m of all) if (m.material.userData && m.material.userData.cubeU) m.material.userData.cubeU.meshes = all;
+    if (!pl && app && app.f.fillProperties) this.applyFill(r, app.f.fillProperties, o);
+    for (const m of all) { this.hookFog(m); if (m.material.userData && m.material.userData.x3dShader) { R.bridge.three.shader.alias(geo); m.onBeforeRender = (r, sc, cam) => R.bridge.three.shader.beforeRender(m, cam); } }
+    for (const m of all) if (geo.userData.tcg) (this.tcgMeshes ||= []).push(m);
+    for (const dep of [...((app && app.f.shaders) || []), app && app.f.material, app && app.f.texture, app && app.f.textureTransform, app && app.f.lineProperties, app && app.f.fillProperties, g, g.f.texCoord]) if (dep) for (const m of all) (this.meshesOf.get(dep.id) || this.meshesOf.set(dep.id, []).get(dep.id)).push(m);
     if (f.visible === false) o.visible = false;
     return r;
   }
@@ -137,17 +167,25 @@ class Body {
     switch (g.type) {
       case 'Box': return new T.BoxGeometry(f.size[0], f.size[1], f.size[2]);
       case 'Sphere': { const g2 = new T.SphereGeometry(f.radius, 48, 32); g2.rotateY(-Math.PI / 2); return g2; }   // X3D: u = 0 at -Z and grows toward -X (X_ITE QuadSphereOptions); three.js starts at -X and grows toward +Z
-      case 'Cylinder': return this.x3dRound(new T.CylinderGeometry(f.radius, f.radius, f.height, 48, 1, false));
+      case 'Cylinder': {
+        const cg = new T.CylinderGeometry(f.radius, f.radius, f.height, 48, 1, false);
+        if (f.top === false || f.bottom === false) {   // CylinderGeometry's groups are 0 side, 1 top, 2 bottom: the caps asked away are cut from the index, the others keep their group (x3dRound finds the cap vertices through it)
+          const keep = [], groups = [], idx = cg.index;
+          for (const gr of cg.groups) if (gr.materialIndex === 0 || (gr.materialIndex === 1 && f.top !== false) || (gr.materialIndex === 2 && f.bottom !== false)) { groups.push({ start: keep.length, count: gr.count, materialIndex: gr.materialIndex }); for (let i = gr.start; i < gr.start + gr.count; i++) keep.push(idx.getX(i)); }
+          cg.setIndex(keep); cg.clearGroups(); for (const gr of groups) cg.addGroup(gr.start, gr.count, gr.materialIndex);
+        }
+        return this.x3dRound(cg);
+      }
       case 'Cone': return this.x3dRound(new T.ConeGeometry(f.bottomRadius, f.height, 48, 1, f.bottom === false));
       case 'IndexedFaceSet': case 'IndexedTriangleSet': {
         let d = this.geometryData(g);
         if (g.type === 'IndexedFaceSet') { const x = R.bridge.ifsExtras(g, d); if (x.nrm || x.col) d = { ...d, nrm: x.nrm || d.nrm, col: x.col || d.col }; }   // Normal node, creaseAngle, per-face colour: see Geometry.js
-        return this.dataGeometry(d);
+        return this.dataGeometry(d, g);
       }
       default: {
         const fn = T3.geometry[g.type]; if (fn) return fn(g, this);
         const sp = R.bridge.specs.get(g.type);   // a node of the shared bridge with a geometry() hook returns plain vertex data {pos, nrm, uv, col, idx}: the same hook the Babylon body reads, wrapped here in a BufferGeometry
-        if (sp && sp.geometry) { const d = sp.geometry(g, this); return d && d.pos && d.pos.length ? this.dataGeometry(d) : null; }
+        if (sp && sp.geometry) { const d = sp.geometry(g, this); return d && d.pos && d.pos.length ? this.dataGeometry(d, g) : null; }
         this.note('three.js body: skipped geometry <' + g.type + '>'); return null;
       }
     }
@@ -188,37 +226,81 @@ class Body {
       }
       geo.setAttribute('position', new T.BufferAttribute(Float32Array.from(pos), 3)); if (C && col.length && col.every((x) => x !== undefined)) colors = Float32Array.from(col);
     }
+    const lp = app && app.f.lineProperties, lw = lp && lp.f.applied !== false ? lp.f.linewidthScaleFactor : 0;   // 19775-1 12.2.3: X_ITE 16.6.0 draws a line linewidthScaleFactor pixels wide (when applied)
+    if (isLine && lw > 1 && geo.attributes.position.count) { const w = this.wideLines(geo, colors, lw); this.refreshPlain(w.mat, app && app.f.material, !!colors); return w; }
     if (colors) geo.setAttribute('color', new T.BufferAttribute(colors, 3));
     const mat = isPts ? new T.PointsMaterial({ size: 1, sizeAttenuation: false }) : new T.LineBasicMaterial();
     this.refreshPlain(mat, app && app.f.material, !!colors); return { geo, mat, points: isPts };
   }
+  /* WebGL draws lines one pixel wide, so a wider line is a quad per segment, widened in the vertex shader to `width` pixels across (butt ends, no joins). One corner = the segment end it sits at, the other end, and the side. */
+  wideLines(lg, colors, width) {
+    const T = THREE, P = lg.attributes.position.array, n = P.length / 6, pos = new Float32Array(n * 12), oth = new Float32Array(n * 12), side = new Float32Array(n * 4), col = colors ? new Float32Array(n * 12) : null, idx = [];
+    for (let i = 0; i < n; i++) {
+      const a = P.subarray(i * 6, i * 6 + 3), b = P.subarray(i * 6 + 3, i * 6 + 6);
+      [[a, b, -1], [a, b, 1], [b, a, 1], [b, a, -1]].forEach(([p, q, sd], k) => { const v = i * 4 + k; pos.set(p, v * 3); oth.set(q, v * 3); side[v] = sd; if (col) col.set(colors.subarray(i * 6 + (k < 2 ? 0 : 3), i * 6 + (k < 2 ? 3 : 6)), v * 3); });
+      idx.push(i * 4, i * 4 + 1, i * 4 + 2, i * 4 + 1, i * 4 + 3, i * 4 + 2);
+    }
+    const geo = new T.BufferGeometry(); geo.setAttribute('position', new T.BufferAttribute(pos, 3)); geo.setAttribute('other', new T.BufferAttribute(oth, 3)); geo.setAttribute('side', new T.BufferAttribute(side, 1)); if (col) geo.setAttribute('color', new T.BufferAttribute(col, 3)); geo.setIndex(idx);
+    const mat = new T.ShaderMaterial({ uniforms: { res: this.screenU.res, ratio: this.screenU.ratio, width: { value: width }, diffuse: { value: new T.Color(1, 1, 1) }, opacity: { value: 1 } }, vertexColors: !!col, side: T.DoubleSide,
+      vertexShader: 'uniform vec2 res; uniform float ratio; uniform float width; attribute vec3 other; attribute float side; varying vec3 vCol;\nvoid main() { vec4 a = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ), b = projectionMatrix * modelViewMatrix * vec4( other, 1.0 );\n vec2 d = b.xy / b.w * res * 0.5 - a.xy / a.w * res * 0.5; d = length( d ) < 1e-6 ? vec2( 1.0, 0.0 ) : normalize( d );\n gl_Position = vec4( a.xy + vec2( -d.y, d.x ) * side * width * ratio / res * a.w, a.z, a.w );\n#ifdef USE_COLOR\n vCol = color;\n#else\n vCol = vec3( 1.0 );\n#endif\n}',
+      fragmentShader: 'uniform vec3 diffuse; uniform float opacity; varying vec3 vCol;\nvoid main() { gl_FragColor = vec4( diffuse * vCol, opacity );\n#include <colorspace_fragment>\n}' });
+    mat.userData.width = width; return { geo, mat, points: false, wide: true };
+  }
   refreshPlain(m, mat, hasColors) {
     const e = mat && (mat.f.emissiveColor || (mat.f.baseColor && [0, 0, 0])) || [1, 1, 1];
+    if (m.isShaderMaterial) { m.uniforms.diffuse.value.setRGB(hasColors ? 1 : e[0], hasColors ? 1 : e[1], hasColors ? 1 : e[2]); m.uniforms.opacity.value = mat ? 1 - (mat.f.transparency || 0) : 1; m.transparent = m.uniforms.opacity.value < 0.999; return; }
     m.color.setRGB(hasColors ? 1 : e[0], hasColors ? 1 : e[1], hasColors ? 1 : e[2]); m.vertexColors = hasColors; m.fog = true;
     m.opacity = mat ? 1 - (mat.f.transparency || 0) : 1; m.transparent = m.opacity < 0.999; m.needsUpdate = true;
   }
+  /* FillProperties (19775-1 12.2.4): filled FALSE draws no fill; hatched TRUE lays one of the 19 hatch patterns over the shape in hatchColor. X_ITE 16.6.0 (Hatch.glsl) reads the 32 x 32 mask
+     in screen space, one texel per pixel, so the pattern does not follow the surface: an overlay mesh on the same geometry with a shader that reads the fragment position. */
+  applyFill(r, fp, o) {
+    const f = fp.f, T = THREE; if (f.filled === false) for (const m of r.meshes) m.visible = false;
+    if (f.hatched === false) return;
+    const col = f.hatchColor || [1, 1, 1], style = Math.max(1, Math.min(19, f.hatchStyle | 0)), bits = Uint8Array.from(atob(R.bridge.HATCH[style - 1]), (ch) => ch.charCodeAt(0)), d = new Uint8Array(32 * 32 * 4);
+    for (let k = 0; k < 1024; k++) if (bits[k >> 3] >> (k & 7) & 1) d.set([Math.round(col[0] * 255), Math.round(col[1] * 255), Math.round(col[2] * 255), 255], k * 4);
+    const tx = new T.DataTexture(d, 32, 32, T.RGBAFormat); tx.magFilter = tx.minFilter = T.NearestFilter; tx.wrapS = tx.wrapT = T.RepeatWrapping; tx.generateMipmaps = false; tx.needsUpdate = true;
+    const mat = new T.ShaderMaterial({ uniforms: { res: this.screenU.res, hatch: { value: tx } }, transparent: true, depthWrite: false, side: T.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
+      vertexShader: 'void main() { gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); }',
+      fragmentShader: 'uniform sampler2D hatch; uniform vec2 res;\nvoid main() { vec2 t = vec2( gl_FragCoord.x, res.y - gl_FragCoord.y ) / 32.0; gl_FragColor = texture2D( hatch, t );\n#include <colorspace_fragment>\n}' });
+    const ov = new T.Mesh(r.meshes[0].geometry, mat); ov.userData = { hatchOf: r.meshes[0] }; o.add(ov); r.meshes[0].userData.hatch = ov;
+  }
+  isPlain(m) { return m.isLineSegments || m.isPoints || !!m.userData.wide; }   // a line, a point cloud, or a line drawn as screen-space quads
   emptyGeometry() { const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(0), 3)); return geo; }
-  dataGeometry(d) {
+  dataGeometry(d, g) {
     const T = THREE, geo = new T.BufferGeometry();
     geo.setAttribute('position', new T.BufferAttribute(Float32Array.from(d.pos), 3)); geo.setIndex(new T.BufferAttribute(Uint32Array.from(d.idx), 1));
     if (d.nrm) geo.setAttribute('normal', new T.BufferAttribute(Float32Array.from(d.nrm), 3)); else geo.computeVertexNormals();
     if (d.uv) geo.setAttribute('uv', new T.BufferAttribute(Float32Array.from(d.uv), 2));
     if (d.col) geo.setAttribute('color', new T.BufferAttribute(Float32Array.from(d.col), 3));
+    const fc = g && g.f && g.f.fogCoord;   // FogCoordinate: the fog amount of each vertex (0 clear, 1 fully fogged), read by the material patch of makeMaterial; vertices past the end of depth are 0
+    if (fc) { const dp = fc.f.depth || [], n = d.pos.length / 3, a = new Float32Array(n); for (let i = 0; i < n; i++) a[i] = Math.min(1, Math.max(0, dp[i] || 0)); geo.setAttribute('fogCoord', new T.BufferAttribute(a, 1)); }
+    const tg = g && g.f && g.f.texCoord;
+    if (tg && tg.type === 'TextureCoordinateGenerator') {   // coordinates made from the geometry: object-space modes now, camera-space ones first as object space and then again in updateView
+      const mode = String(tg.f.mode || 'SPHERE').toUpperCase(), tc = R.bridge.three.tcg, params = tg.f.parameter || [];
+      if (!tc.CAM.test(mode) && !tc.LOCAL.test(mode)) this.note('TextureCoordinateGenerator mode ' + mode + ' is not made (uv left at 0)');
+      tc.make(geo, mode, params, null); if (tc.CAM.test(mode)) geo.userData.tcg = { mode, params };
+    }
     return geo;
   }
   /* a geometry node's own fields changed (the shared bridge nodes call this as body.regeo(node)): drop its cached data and give every mesh that draws it a fresh BufferGeometry */
   regeo(n) {
     this.geoCache.delete(n.id);
     for (const m of this.meshesOf.get(n.id) || []) {
-      const app = m.userData.shape.f.appearance, pl = (m.isLineSegments || m.isPoints) ? this.pointLine(n, app) : null, g = (pl ? pl.geo : this.threeGeometry(n)) || this.emptyGeometry();
-      m.geometry.dispose(); m.geometry = g; if (pl) { m.material.dispose(); m.material = pl.mat; }
+      const app = m.userData.shape.f.appearance, pl = this.isPlain(m) ? this.pointLine(n, app) : null;
+      if (pl && !!pl.wide !== !!m.userData.wide) { this.rebuildShape(m.userData.shape); return; }   // thin <-> wide: a different kind of mesh
+      const g = (pl ? pl.geo : this.threeGeometry(n)) || this.emptyGeometry();
+      if (n.type === 'Text' && !pl && m.material && !m.material.isShaderMaterial) { const tc = this.textCache.get(n.id); if (tc) { m.material.map = tc.map; m.material.needsUpdate = true; } }
+      m.geometry.dispose(); m.geometry = g; if (m.material.userData && m.material.userData.x3dShader) R.bridge.three.shader.alias(g); if (m.userData.hatch) m.userData.hatch.geometry = g; if (pl) { m.material.dispose(); m.material = pl.mat; }
+      if (g.userData.tcg && !(this.tcgMeshes || []).includes(m)) (this.tcgMeshes ||= []).push(m);
       this.clipDirty = true;
     }
   }
 
   /* ImageTexture (url) and PixelTexture (image: width height components pixels...; rows run bottom to top, as X3D images do, so flipY stays off for the data texture). */
   tex(node) {
-    if (!node) return null; const hit = this.texCache.get(node.id); if (hit) return hit; let t = null;
+    if (!node || /^(Image|Generated|Composed)CubeMapTexture$/.test(node.type)) return null; const hit = this.texCache.get(node.id); if (hit) return hit; let t = null;   // a cube map is not a 2D map: makeMaterial patches the shader
+    if (node.type === 'MultiTexture') return this.multiTex(node);
     if (node.type === 'PixelTexture') {
       const im = node.f.image || [], w = im[0] | 0, h = im[1] | 0, k = im[2] | 0; if (!(w > 0 && h > 0 && k >= 1 && k <= 4)) return null;
       const d = new Uint8Array(w * h * 4);
@@ -226,31 +308,105 @@ class Body {
         if (k === 1) r = g = b = v & 255; else if (k === 2) { r = g = b = (v >> 8) & 255; a = v & 255; } else if (k === 3) { r = (v >> 16) & 255; g = (v >> 8) & 255; b = v & 255; } else { r = (v >>> 24) & 255; g = (v >> 16) & 255; b = (v >> 8) & 255; a = v & 255; }
         d.set([r, g, b, a], i * 4); }
       t = new THREE.DataTexture(d, w, h, THREE.RGBAFormat); t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter; t.needsUpdate = true;
+      this.smallImage(t, node, w, h);
     } else {
       if (!node.f.url || !node.f.url.length) return null;
-      t = new THREE.TextureLoader().load(this.resolve(node.f.url[0], this.baseUrl));
+      t = new THREE.TextureLoader().load(this.resolve(node.f.url[0], this.baseUrl), (tx) => this.smallImage(tx, node, tx.image.width, tx.image.height));
     }
     t.wrapS = node.f.repeatS === false ? THREE.ClampToEdgeWrapping : THREE.RepeatWrapping; t.wrapT = node.f.repeatT === false ? THREE.ClampToEdgeWrapping : THREE.RepeatWrapping;
+    this.texProps(t, node);
     this.texCache.set(node.id, t); return t;
+  }
+  /* X_ITE 16.6.0 samples an image smaller than 16 x 16 with hard texels (nearest, no mipmaps) unless a TextureProperties asks otherwise; a copy made for a TextureTransform follows (texFor) */
+  smallImage(t, node, w, h) {
+    if (node.f.textureProperties || Math.max(w, h) >= 16) return; const set = (x) => { x.generateMipmaps = false; x.minFilter = x.magFilter = THREE.NearestFilter; x.needsUpdate = true; };
+    set(t); t.userData.tiny = true; for (const c of t.userData.clones || []) set(c);
+  }
+  /* TextureProperties (19775-1 18.4.3) on a texture: the boundary modes replace repeatS / repeatT, the filters pick nearest or linear sampling, generateMipMaps false drops the mipmap part of the
+     minification filter. Only the NEAREST_PIXEL names give hard texels; FASTEST, DEFAULT and NICEST are linear (NICEST and DEFAULT mipmapped when generateMipMaps asks). */
+  texProps(t, node) {
+    const tp = node.f.textureProperties; if (!tp) return; const T = THREE, U = (v) => String(v || '').toUpperCase(), f = tp.f;
+    const wrap = (m) => { m = U(m); return m === 'MIRRORED_REPEAT' ? T.MirroredRepeatWrapping : m.startsWith('CLAMP') ? T.ClampToEdgeWrapping : T.RepeatWrapping; };   // CLAMP and CLAMP_TO_BOUNDARY have no border colour here: they clamp to the edge, as X_ITE does
+    t.wrapS = wrap(f.boundaryModeS); t.wrapT = wrap(f.boundaryModeT);
+    const mag = U(f.magnificationFilter); t.magFilter = mag === 'NEAREST_PIXEL' ? T.NearestFilter : T.LinearFilter;   // measured against X_ITE 16.6.0: only NEAREST_PIXEL gives hard texels, FASTEST (the default) is smooth
+    const mip = f.generateMipMaps === true, mn = U(f.minificationFilter);
+    const MIN = { NEAREST_PIXEL: [T.NearestFilter, T.NearestFilter], FASTEST: [T.LinearMipmapLinearFilter, T.LinearFilter], AVG_PIXEL: [T.LinearFilter, T.LinearFilter],
+      NEAREST_PIXEL_NEAREST_MIPMAP: [T.NearestMipmapNearestFilter, T.NearestFilter], NEAREST_PIXEL_AVG_MIPMAP: [T.NearestMipmapLinearFilter, T.NearestFilter],
+      AVG_PIXEL_NEAREST_MIPMAP: [T.LinearMipmapNearestFilter, T.LinearFilter], AVG_PIXEL_AVG_MIPMAP: [T.LinearMipmapLinearFilter, T.LinearFilter], NICEST: [T.LinearMipmapLinearFilter, T.LinearFilter], DEFAULT: [T.LinearMipmapLinearFilter, T.LinearFilter] };
+    const [withMip, without] = MIN[mn] || MIN.DEFAULT; t.generateMipmaps = mip; t.minFilter = mip ? withMip : without;
+    t.anisotropy = Math.max(1, f.anisotropicDegree || 1); t.needsUpdate = true;
+  }
+  /* the summed ADD stages of a MultiTexture are added to the texture colour before the light is applied, without the clip at 1 a canvas would give: diffuse * (stages so far + ADD stages), through the same uv as the map (X_ITE 16.6.0: whites burn out, a canvas sum would stay at 1) */
+  addStage(m, add) {
+    this.patchMaterial(m, 'mt-add', (sh) => { sh.uniforms.addMap = { value: add }; sh.fragmentShader = 'uniform sampler2D addMap;\n' + sh.fragmentShader.replace('#include <map_fragment>', '#include <map_fragment>\n#ifdef USE_MAP\n diffuseColor.rgb += diffuse * texture2D( addMap, vMapUv ).rgb;\n#endif'); });
+  }
+  /* shader patches of one material, chained (a material can carry the ADD stage and a FogCoordinate): each has its key so the program cache tells the combinations apart */
+  patchMaterial(m, key, fn) {
+    const prev = m.onBeforeCompile; (m.userData.keys ||= []).push(key);
+    m.onBeforeCompile = (sh, r) => { if (prev) prev.call(m, sh, r); fn(sh); }; m.customProgramCacheKey = () => m.userData.keys.join('|');
+  }
+  /* MultiTexture: the textures are drawn over each other on a canvas texture (the Babylon body does the same); texture i meets the result so far by mode[i], moved by the TextureTransform of stage i
+     (the Appearance's MultiTextureTransform, or one TextureTransform for all stages). The first stage is drawn as it is. */
+  multiTex(node) {
+    const body = this, SZ = 256, cv = document.createElement('canvas'); cv.width = cv.height = SZ; const ctx = cv.getContext('2d'), dt = new THREE.CanvasTexture(cv); dt.wrapS = dt.wrapT = THREE.RepeatWrapping;
+    const cv2 = document.createElement('canvas'); cv2.width = cv2.height = SZ; const ctx2 = cv2.getContext('2d'), dt2 = dt.userData.add = new THREE.CanvasTexture(cv2); dt2.wrapS = dt2.wrapT = THREE.RepeatWrapping;   // the ADD stages, summed: X_ITE 16.6.0 adds them to the lit colour, not to the texture colour
+    const imgs = [], app = this.world.nodes.find((x) => x.type === 'Appearance' && x.f.texture === node);
+    const mul = (m, n) => [m[0] * n[0] + m[2] * n[1], m[1] * n[0] + m[3] * n[1], m[0] * n[2] + m[2] * n[3], m[1] * n[2] + m[3] * n[3], m[0] * n[4] + m[2] * n[5] + m[4], m[1] * n[4] + m[3] * n[5] + m[5]];   // [a b c d e f]: x' = a x + c y + e
+    const inv = (m) => { const d = m[0] * m[3] - m[1] * m[2]; return [m[3] / d, -m[1] / d, -m[2] / d, m[0] / d, (m[2] * m[5] - m[3] * m[4]) / d, (m[1] * m[4] - m[0] * m[5]) / d]; };
+    const ttM = (t) => { const f = t.f, c = f.center || [0, 0], s = f.scale || [1, 1], r = f.rotation || 0, T = f.translation || [0, 0], co = Math.cos(r), si = Math.sin(r);
+      return mul(mul(mul([1, 0, 0, 1, T[0] + c[0], T[1] + c[1]], [co, si, -si, co, 0, 0]), [s[0], 0, 0, s[1], 0, 0]), [1, 0, 0, 1, -c[0], -c[1]]); };
+    const OPS = { REPLACE: 'source-over', MODULATE: 'multiply', MODULATE2X: 'multiply', MODULATE4X: 'multiply', ADD: 'lighter' }, P = [SZ, 0, 0, -SZ, 0, SZ];   // P: uv -> canvas pixels (v up)
+    const ctx0 = ctx, redraw = dt.userData.redraw = () => {
+      const tt = app && app.f.textureTransform, stageTT = (i) => !tt ? null : tt.type === 'MultiTextureTransform' ? (tt.f.textureTransform || [])[i] || null : tt;
+      ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = '#fff'; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillRect(0, 0, SZ, SZ);
+      ctx2.globalCompositeOperation = 'source-over'; ctx2.fillStyle = '#000'; ctx2.fillRect(0, 0, SZ, SZ); let adds = 0;
+      imgs.forEach((im, i) => {
+        if (!im.complete || !im.naturalWidth) return;
+        const mode = String((node.f.mode || [])[i] || 'MODULATE').toUpperCase(), op = OPS[mode], ctx = i && mode === 'ADD' ? ctx2 : ctx0, cv = ctx.canvas; if (ctx === ctx2) adds++;
+        if (!op && i) body.note('MultiTexture mode ' + mode + ' drawn as MODULATE');
+        ctx.globalCompositeOperation = i === 0 || ctx === ctx2 && adds === 1 ? 'source-over' : op || 'multiply';
+        ctx.imageSmoothingEnabled = Math.max(im.naturalWidth, im.naturalHeight) >= 16;   // an image under 16 x 16 is magnified with hard texels (X_ITE 16.6.0 shows a 2 x 1 image as two flat halves), a larger one smoothly
+        const t = stageTT(i);
+        if (t && t.type === 'TextureTransform') { const Q = mul(mul(P, ttM(t)), inv(P)), D = inv(Q), pat = ctx.createPattern(im, 'repeat');   // canvas(px) = image(Q px) with Q = P M P^-1: the image is placed by Q^-1 and tiled
+          pat.setTransform(new DOMMatrix([D[0] * SZ / im.naturalWidth, D[1] * SZ / im.naturalWidth, D[2] * SZ / im.naturalHeight, D[3] * SZ / im.naturalHeight, D[4], D[5]])); ctx.fillStyle = pat; ctx.fillRect(0, 0, SZ, SZ); }
+        else ctx.drawImage(im, 0, 0, SZ, SZ);
+        const extra = mode === 'MODULATE2X' ? 1 : mode === 'MODULATE4X' ? 3 : 0;
+        for (let k = 0; k < extra && i; k++) { ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(cv, 0, 0); }
+      });
+      ctx0.globalCompositeOperation = 'source-over'; dt.needsUpdate = true; dt2.needsUpdate = true; dt.userData.hasAdd = adds > 0;
+    };
+    for (const t of node.f.texture || []) { const u = t.f.url && t.f.url[0]; if (!u) continue; const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = redraw; im.src = this.resolve(u, this.baseUrl); imgs.push(im); }
+    redraw(); this.texCache.set(node.id, dt); return dt;
   }
   /* TextureTransform: the matrix of 19775-1 18.4.5 (-C S R C T, not the Transform order), set as the 3x3 uv matrix of a copy of the texture (the copy shares the image, so one texture can carry two transforms) */
   texFor(texN, ttN) {
-    const t = this.tex(texN); if (!t || !ttN) return t; const f = ttN.f, c = f.center, r = f.rotation, s = f.scale, tr = f.translation, M = THREE.Matrix3;
+    const t = this.tex(texN); if (!t || !ttN || ttN.type !== 'TextureTransform' || texN.type === 'MultiTexture') return t; const f = ttN.f, c = f.center, r = f.rotation, s = f.scale, tr = f.translation, M = THREE.Matrix3;
     const T = (x, y) => new M().set(1, 0, x, 0, 1, y, 0, 0, 1), S = (x, y) => new M().set(x, 0, 0, 0, y, 0, 0, 0, 1), Rm = (a) => new M().set(Math.cos(a), -Math.sin(a), 0, Math.sin(a), Math.cos(a), 0, 0, 0, 1);
     const m = new M().multiplyMatrices(T(-c[0], -c[1]), S(s[0], s[1])).multiply(Rm(r)).multiply(T(c[0], c[1])).multiply(T(tr[0], tr[1]));   // the product as 19775-1 writes it, -C S R C T, taken as a column-vector matrix: found by trying the order and sign variants against X_ITE (50.1 dB; the T C R S -C order of Transform gives 21.3 dB)
-    const u = t.clone(); u.userData.copyOf = true; u.matrixAutoUpdate = false; u.matrix.copy(m); u.needsUpdate = true; return u;
+    const u = t.clone(); u.userData.copyOf = true; (t.userData.clones ||= []).push(u); u.matrixAutoUpdate = false; u.matrix.copy(m); u.needsUpdate = true; return u;
   }
   /* Material -> MeshPhongMaterial (the Phong model X3D and X_ITE share); PhysicalMaterial -> MeshPhysicalMaterial (the glTF model, linear colours) */
-  makeMaterial(shape, g, app) {
-    const T = THREE, mat = app && app.f.material, texN = app && app.f.texture, side = g.f.solid === true ? T.FrontSide : T.DoubleSide;
-    let m; const vc = !!g.f.color;   // a Color node replaces diffuseColor (19775-1 12.2.2): the material colour is white so the vertex colour is not multiplied by it
+  makeMaterial(shape, g, app, back) {
+    const T = THREE, mat = app && app.f.material, texN = app && app.f.texture, side = back ? T.BackSide : g.f.solid === true || (mat && mat.type === 'TwoSidedMaterial') ? T.FrontSide : T.DoubleSide;
+    let m; const cs = app && (app.f.shaders || []).find((x) => x.type === 'ComposedShader');
+    if (cs) { const sm = R.bridge.three.shader.make(this, cs, side); R.bridge.three.shader.announce(cs, !!sm); if (sm) return sm; }   // a shader that compiles takes the place of the Material; one that does not leaves the Material
+    if (mat && mat.type === 'TwoSidedMaterial') { m = new T.MeshPhongMaterial({ side, specular: 0 }); this.refreshPhong(m, this.twoSrc(mat, !!back)); m.map = this.texFor(texN, app && app.f.textureTransform); return m; } const vc = !!g.f.color;   // a Color node replaces diffuseColor (19775-1 12.2.2): the material colour is white so the vertex colour is not multiplied by it
     if (mat && mat.type === 'PhysicalMaterial') { m = new T.MeshPhysicalMaterial({ side }); this.refreshPBR(m, mat); m.map = this.texFor(mat.f.baseTexture, app && app.f.textureTransform); }
     else if (mat && mat.type === 'Material') { m = new T.MeshPhongMaterial({ side, specular: 0 }); this.refreshPhong(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }
     else if (mat && mat.type === 'UnlitMaterial') { m = new T.MeshBasicMaterial({ side }); this.refreshUnlit(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }   // 19775-1 4.0: no lighting, emissiveColor is the colour
     else { m = new T.MeshBasicMaterial({ side, color: 0xffffff }); m.map = this.texFor(texN, app && app.f.textureTransform); }   // no Material: unlit, white, texture as is (19775-1 12.2.2)
+    if (g.type === 'Text') { const tc = this.textCache.get(g.id); m.map = tc ? tc.map : null; m.alphaTest = 0.01; m.alphaToCoverage = true; if (texN) this.note('Text: a texture on a Text is not drawn'); m.needsUpdate = true; }   // the glyph atlas is the map: its alpha cuts the quads to the letters
+    if (g.f.fogCoord) this.patchMaterial(m, 'fogcoord', (sh) => {   // X_ITE: colour = mix(fogColor, colour, 1 - depth) in place of the distance law; only where a fog covers the mesh
+      sh.vertexShader = 'attribute float fogCoord; varying float vFogCoord;\n' + sh.vertexShader.replace('#include <fog_vertex>', '#include <fog_vertex>\n vFogCoord = fogCoord;');
+      sh.fragmentShader = 'varying float vFogCoord;\n' + sh.fragmentShader.replace('#include <fog_fragment>', '#ifdef USE_FOG\n gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, clamp( vFogCoord, 0.0, 1.0 ) );\n#endif'); });
+    const mt = texN && texN.type === 'MultiTexture' && this.texCache.get(texN.id);
+    if (mt && mt.userData.add) this.addStage(m, mt.userData.add);
     if (vc) { m.vertexColors = true; if (mat && mat.type === 'Material') this.refreshPhong(m, mat); else if (mat && mat.type === 'PhysicalMaterial') this.refreshPBR(m, mat); }
+    if (texN && /^(Image|Generated|Composed)CubeMapTexture$/.test(texN.type)) R.bridge.three.cube.patch(this, m, texN, shape, !!(g.f.texCoord && g.f.texCoord.type === 'TextureCoordinateGenerator'));
     return m;
   }
+  /* TwoSidedMaterial: the fields refreshPhong reads, from the front set or (separateBackColor) the back set */
+  twoSrc(mat, back) { const f = mat.f, B = back && f.separateBackColor; return { f: { diffuseColor: B ? f.backDiffuseColor : f.diffuseColor, emissiveColor: B ? f.backEmissiveColor : f.emissiveColor, transparency: B ? f.backTransparency : f.transparency, specularColor: B ? f.backSpecularColor : f.specularColor, shininess: B ? f.backShininess : f.shininess } }; }
   refreshPhong(m, mat) {
     const f = mat.f, vc = m.vertexColors; m.color.setRGB(vc ? 1 : f.diffuseColor[0], vc ? 1 : f.diffuseColor[1], vc ? 1 : f.diffuseColor[2]); m.emissive.setRGB(f.emissiveColor[0], f.emissiveColor[1], f.emissiveColor[2]);
     m.specular.setRGB(f.specularColor[0], f.specularColor[1], f.specularColor[2]); m.shininess = Math.max(f.shininess * 128 * (this.opts.shininessScale || 4), 1e-3);   // X_ITE evaluates Phong with the reflection vector; Blinn-Phong (three.js) needs about 4x the exponent for the same highlight width
@@ -298,51 +454,85 @@ class Body {
   /* Fog: the first Fog node of the world. X_ITE 16.6.0 (Fog2.glsl): LINEAR  f = max(range - d, 0) / range, EXPONENTIAL  f = exp(-d / max(range - d, 0.001)), d = distance from the eye;
      colour = mix(fogColor, colour, f). three.js fog uses view depth and smoothstep, so patchShaders replaces both formulas; FogExp2.density carries the range. */
   applyFog() {
-    const fg = this.world.nodes.find((n) => n.type === 'Fog'); if (!fg || !(fg.f.visibilityRange > 0)) { this.scene.fog = null; return; }
-    const c = fg.f.color, col = new THREE.Color(c[0], c[1], c[2]), t = String(fg.f.fogType).toUpperCase();
-    this.scene.fog = t === 'EXPONENTIAL' ? new THREE.FogExp2(col, fg.f.visibilityRange) : new THREE.Fog(col, 0, fg.f.visibilityRange);
-      }
+    const fg = this.world.nodes.find((n) => n.type === 'Fog'); if (!fg || !(fg.f.visibilityRange > 0)) { this.scene.fog = this.worldFog = null; return; }
+    this.scene.fog = this.worldFog = this.makeFog(fg);
+  }
+  makeFog(fg) { const c = fg.f.color, col = new THREE.Color(c[0], c[1], c[2]), t = String(fg.f.fogType).toUpperCase(); return t === 'EXPONENTIAL' || t === 'EXPONENTIAL2' ? new THREE.FogExp2(col, fg.f.visibilityRange) : new THREE.Fog(col, 0, fg.f.visibilityRange); }
+  /* LocalFog (19775-1 41.4.3) is a child node: it fogs the geometry of the group it sits in, nothing outside; the nearest group above a mesh that holds an enabled LocalFog with a range decides, else the world Fog.
+     three.js has one fog per scene, so each mesh sets scene.fog just before it is drawn (Object3D.onBeforeRender) and the frame puts the world fog back. Its fields are read at every draw, so enabled, colour, range and type changes show at once. */
+  fogFor(obj) {
+    for (let p = obj.parent; p; p = p.parent) { const l = this.fogScopes.get(p); if (l) { const n = l.find((x) => x.f.enabled !== false && x.f.visibilityRange > 0); if (n) return this.localFog(n); } }
+    return this.worldFog || null;
+  }
+  localFog(n) {
+    const want = this.makeFog(n), have = this.localFogs.get(n.id);
+    if (have && have.isFogExp2 === !!want.isFogExp2) { have.color.copy(want.color); if (have.isFogExp2) have.density = want.density; else have.far = want.far; return have; }
+    this.localFogs.set(n.id, want); return want;
+  }
+  hookFog(m) { const body = this; m.onBeforeRender = function () { if (body.fogHooks) body.scene.fog = body.fogFor(this); }; }
+  /* Background / TextureBackground: see src/nodes/Background.js. The first one in the file is drawn (set_bind between several is not ported: NODES.md). */
   applyBackground() {
-    const bg = this.world.nodes.find((x) => x.type === 'Background'); if (!bg) { this.scene.background = new THREE.Color(0, 0, 0); return; }
-    const c = bg.f.skyColor[0] || [0, 0, 0], last = bg.f.skyColor[bg.f.skyColor.length - 1] || c, g = bg.f.groundColor && bg.f.groundColor.length ? bg.f.groundColor[bg.f.groundColor.length - 1] : last;
-    this.scene.background = new THREE.Color((last[0] + g[0]) / 2 * 0.6 + c[0] * 0.4, (last[1] + g[1]) / 2 * 0.6 + c[1] * 0.4, (last[2] + g[2]) / 2 * 0.6 + c[2] * 0.4);   // same flat approximation as the Babylon body, so the two stay comparable
+    if (this.bgGroup) { this.bgGroup.removeFromParent(); this.bgGroup.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); }); this.bgGroup = null; }
+    this.scene.background = new THREE.Color(0, 0, 0);   // a world with no Background is black (19775-1 24.4.1)
+    const bg = this.world.nodes.find((x) => x.type === 'Background' || x.type === 'TextureBackground'); if (!bg) return;
+    this.bgGroup = R.bridge.three.backdrop.make(this, bg); this.scene.add(this.bgGroup);
   }
 
   /* --------------------------------------------------------------- changes */
   changed(node, field) {
     const t = node.type;
+    if (t === 'Inline') { const r = this.rec.get(node.id); if (r && field === 'load') { if (node.f.load !== false) { r.tn.visible = true; this.loadInline(node, r); } else r.tn.visible = false; } return; }
     if (t === 'Switch' && field === 'whichChoice') this.applySwitch(node);
     else if (t === 'Transform' && field !== 'children') { const r = this.rec.get(node.id); if (r && r.tn) { this.applyTransform(node, r.tn); } }
     else if (field === 'children' && this.rec.get(node.id) && this.rec.get(node.id).kids) this.rebuildGroup(node);   // Group, Switch, Transform, Billboard, LOD, Anchor, Collision, StaticGroup
-    else if (t === 'Material') for (const m of this.meshesOf.get(node.id) || []) { if (m.isLineSegments || m.isPoints) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshPhong(m.material, node); }
-    else if (t === 'PhysicalMaterial') for (const m of this.meshesOf.get(node.id) || []) { if (m.isLineSegments || m.isPoints) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshPBR(m.material, node); }
-    else if (t === 'UnlitMaterial') for (const m of this.meshesOf.get(node.id) || []) { if (m.isLineSegments || m.isPoints) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshUnlit(m.material, node); }
+    else if (t === 'Material') for (const m of this.meshesOf.get(node.id) || []) { if (this.isPlain(m)) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshPhong(m.material, node); }
+    else if (t === 'PhysicalMaterial') for (const m of this.meshesOf.get(node.id) || []) { if (this.isPlain(m)) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshPBR(m.material, node); }
+    else if (t === 'UnlitMaterial') for (const m of this.meshesOf.get(node.id) || []) { if (this.isPlain(m)) this.refreshPlain(m.material, node, !!m.geometry.attributes.color); else this.refreshUnlit(m.material, node); }
     else if (t === 'DirectionalLight' || t === 'PointLight' || t === 'SpotLight') { const l = this.lights.find((x) => x.userData.node === node); if (l) { this.refreshLight(l); this.refreshAmbient(); } }
     else if (t === 'Fog') this.applyFog();
     else if (t === 'ClipPlane') this.clipDirty = true;
-    else if (t === 'TextureTransform') for (const m of this.meshesOf.get(node.id) || []) { const ap = m.userData.shape.f.appearance, mat = ap && ap.f.material, tex = mat && mat.type === 'PhysicalMaterial' ? mat.f.baseTexture : ap && ap.f.texture; const old = m.material.map; m.material.map = this.texFor(tex, node); m.material.needsUpdate = true; if (old && old.userData.copyOf) old.dispose(); }
-    else if (t === 'Background') this.applyBackground();
+    else if (t === 'TwoSidedMaterial') for (const m of this.meshesOf.get(node.id) || []) this.refreshPhong(m.material, this.twoSrc(node, !!m.userData.back));
+    else if (t === 'TextureProperties') { for (const tn of this.world.nodes) if (tn.f && tn.f.textureProperties === node) this.retex(tn); }
+    else if (t === 'TextureCoordinateGenerator') { for (const g of new Set([...(this.meshesOf.get(node.id) || [])].map((m) => m.userData.shape.f.geometry))) this.regeo(g); }
+    else if (t === 'LineProperties' || t === 'FillProperties') { for (const sh of new Set([...(this.meshesOf.get(node.id) || [])].map((m) => m.userData.shape))) this.rebuildShape(sh); }
+    else if (t === 'MultiTextureTransform') this.redrawMulti(node);
+    else if (t === 'FogCoordinate') { for (const g of this.world.nodes) if (g.f && g.f.fogCoord === node) this.regeo(g); }
+    else if (t === 'TextureTransform') { this.redrawMulti(node); for (const m of this.meshesOf.get(node.id) || []) { const ap = m.userData.shape.f.appearance, mat = ap && ap.f.material, tex = mat && mat.type === 'PhysicalMaterial' ? mat.f.baseTexture : ap && ap.f.texture; const old = m.material.map; m.material.map = this.texFor(tex, node); m.material.needsUpdate = true; if (old && old.userData.copyOf) old.dispose(); } }
+    else if (t === 'Background' || t === 'TextureBackground') this.applyBackground();
     else if (t === 'NavigationInfo') this.applyNavigation();
-    else if (t === 'Viewpoint') this.viewpointChanged(node, field);
+    else if (t === 'Viewpoint' || t === 'OrthoViewpoint') this.viewpointChanged(node, field);
     else if (t === 'Coordinate' || t === 'Color' || t === 'Normal' || t === 'TextureCoordinate') this.geometryChanged(node);
     const sp = R.bridge.specs.get(t); if (sp && (sp.geometry || sp.lines || sp.points) && sp.changed) sp.changed(this, node, field);   // the geometry nodes of the shared bridge keep their own change hooks
     if (T3.changed[t]) T3.changed[t](this, node, field);
   }
   geometryChanged(n) {
-    for (const r of [...this.rec.values()]) if (r.node && r.node.type === 'Shape' && r.node.f.geometry && ['coord', 'color', 'normal', 'texCoord'].some((k) => r.node.f.geometry.f[k] === n)) {
-      this.geoCache.delete(r.node.f.geometry.id); const parent = r.tn.parent, vis = r.tn.visible; this.disposeObj(r.tn); const nr = this.buildShape(r.node, parent, r.chain.slice(1));
-      for (const pr of this.rec.values()) if (pr.kids) { const i = pr.kids.indexOf(r); if (i >= 0) pr.kids[i] = nr; }
-      nr.tn.visible = vis;
-    }
+    for (const r of [...this.rec.values()]) if (r.node && r.node.type === 'Shape' && r.node.f.geometry && ['coord', 'color', 'normal', 'texCoord'].some((k) => r.node.f.geometry.f[k] === n)) this.rebuildShape(r.node);
   }
-  disposeObj(o) { o.removeFromParent(); o.traverse((x) => { if (x.geometry) x.geometry.dispose(); if (x.material) x.material.dispose(); }); }
+  rebuildShape(shape) {   // the Shape's objects are made again from its nodes, in the same place in its parent
+    const r = this.rec.get(shape.id); if (!r) return; if (shape.f.geometry) this.geoCache.delete(shape.f.geometry.id);
+    const parent = r.tn.parent, vis = r.tn.visible; this.tcgMeshes = (this.tcgMeshes || []).filter((m) => !r.meshes.includes(m));
+    for (const [id, l] of this.meshesOf) { const k = l.filter((m) => !r.meshes.includes(m)); if (k.length) this.meshesOf.set(id, k); else this.meshesOf.delete(id); }
+    this.disposeObj(r.tn); const nr = this.buildShape(shape, parent, r.chain.slice(1));
+    for (const pr of this.rec.values()) if (pr.kids) { const i = pr.kids.indexOf(r); if (i >= 0) pr.kids[i] = nr; }
+    nr.tn.visible = vis;
+  }
+  /* a TextureProperties changed: the texture is made again (its copies carrying a TextureTransform too) and set on the meshes that show it */
+  retex(texN) {
+    const old = this.texCache.get(texN.id); this.texCache.delete(texN.id); if (old) old.dispose();
+    for (const m of this.meshesOf.get(texN.id) || []) { const ap = m.userData.shape.f.appearance, prev = m.material.map; m.material.map = this.texFor(texN, ap && ap.f.textureTransform); m.material.needsUpdate = true; if (prev && prev.userData.copyOf) prev.dispose(); }
+  }
+  /* a TextureTransform, or the MultiTextureTransform that holds it, changed: the MultiTextures drawn through it are composed again */
+  redrawMulti(tt) {
+    for (const a of this.world.nodes) { const x = a.type === 'Appearance' && a.f.texture; if (!x || x.type !== 'MultiTexture') continue; const at = a.f.textureTransform; if (at === tt || (at && at.f.textureTransform && [].concat(at.f.textureTransform).includes(tt))) { const dt = this.texCache.get(x.id); if (dt && dt.userData.redraw) dt.userData.redraw(); } }
+  }
+  disposeObj(o) { o.removeFromParent(); o.traverse((x) => { if (x.geometry) x.geometry.dispose(); if (x.material) { if (this.cubeMats) this.cubeMats.delete(x.material); x.material.dispose(); } }); }
   rebuildGroup(node) {
     const r = this.rec.get(node.id); if (!r) return;
     for (const k of r.kids) this.disposeRec(k);
     this.clips = (this.clips || []).filter((cl) => cl.parent !== r.tn);   // the ClipPlanes of this group are built again below
     r.kids = node.f.children.map((c) => this.build(c, r.tn, r.chain)); if (node.type === 'Switch') this.applySwitch(node); if (node.type === 'LOD') r.level = -1; this.clipDirty = true;
   }
-  disposeRec(k) { if (!k) return; (k.kids || []).forEach((x) => this.disposeRec(x)); if (k.tn && k.node && k.node.type !== 'Viewpoint') this.disposeObj(k.tn); if (k.node) this.rec.delete(k.node.id); }
+  disposeRec(k) { if (!k) return; (k.kids || []).forEach((x) => this.disposeRec(x)); if (k.tn && k.node && k.node.type !== 'Viewpoint' && k.node.type !== 'OrthoViewpoint') this.disposeObj(k.tn); if (k.node) this.rec.delete(k.node.id); }
   adopt(node, parentNode) {
     const pr = parentNode ? this.rec.get(parentNode.id) : null, cr = this.build(node, pr ? pr.tn : this.root, pr ? pr.chain : []);
     if (pr && pr.kids && cr) pr.kids.push(cr); return cr;
@@ -357,11 +547,20 @@ class Body {
       const sc = new THREE.Vector3(), rq = new THREE.Quaternion(), tr = new THREE.Vector3(); M.decompose(tr, rq, sc);
       pos = [P.x, P.y, P.z]; center = [C.x, C.y, C.z]; q = R.quat.mul([rq.x, rq.y, rq.z, rq.w], q);
     }
+    if (vp.type === 'OrthoViewpoint') return { pos, q: R.quat.norm(q), center, fov: 0.7854, ortho: { f: Array.from(f.fieldOfView), near: f.nearDistance, far: f.farDistance, scale: 1 } };   // 19775-1 23.3.8: fieldOfView = minX minY maxX maxY, the view's width and height in the units of the space
     return { pos, q: R.quat.norm(q), center, fov: f.fieldOfView };
   }
   applyCamera() {
-    const c = this.cam, p = this.pose; c.position.set(p.pos[0], p.pos[1], p.pos[2]); c.quaternion.set(p.q[0], p.q[1], p.q[2], p.q[3]);   // a Viewpoint looks down -Z with +Y up, as a three.js camera does
+    const p = this.pose, o = p.ortho, c = o ? this.camO : this.camP;
+    if (c !== this.cam) { this.cam = c; c.add(this.headlight, this.headlight.target); }   // the headlight rides on whichever camera draws
+    c.position.set(p.pos[0], p.pos[1], p.pos[2]); c.quaternion.set(p.q[0], p.q[1], p.q[2], p.q[3]);   // a Viewpoint looks down -Z with +Y up, as a three.js camera does
     const w = this.canvas.clientWidth || 1, h = this.canvas.clientHeight || 1, aspect = w / h;
+    if (o) {   // the box fieldOfView is kept whole: the longer side of the canvas shows more of the world, as the Babylon body does
+      const f = o.f, s = o.scale || 1, x0 = (f[0] ?? -1) * s, y0 = (f[1] ?? -1) * s, x1 = (f[2] ?? 1) * s, y1 = (f[3] ?? 1) * s, sx = x1 - x0, sy = y1 - y0;
+      if (aspect > sx / sy) { const cx = (x0 + x1) / 2, hw = sy * aspect / 2; c.left = cx - hw; c.right = cx + hw; c.bottom = y0; c.top = y1; }
+      else { const cy = (y0 + y1) / 2, hh = sx / aspect / 2; c.left = x0; c.right = x1; c.bottom = cy - hh; c.top = cy + hh; }
+      c.near = o.near > 0 ? o.near : 0.1; c.far = o.far > 0 ? o.far : 1e4; c.updateProjectionMatrix(); return;
+    }
     c.fov = THREE.MathUtils.radToDeg(aspect >= 1 ? p.fov : 2 * Math.atan(Math.tan(p.fov / 2) / aspect));   // X3D fieldOfView is the angle across the smaller side of the view
     c.aspect = aspect; const d = Math.hypot(p.pos[0] - p.center[0], p.pos[1] - p.center[1], p.pos[2] - p.center[2]);
     c.near = Math.max(0.3, Math.min(2, d * 0.004)); c.far = Math.max(2000, d * 12); c.updateProjectionMatrix();
@@ -372,11 +571,13 @@ class Body {
     this.bound = vp; vp.f.isBound = true; R.events.emit(vp, 'isBound', true); vp.f.bindTime = (performance.timeOrigin + performance.now()) / 1000;
     const nav = this.world && this.world.nodes.find((n) => n.type === 'NavigationInfo');
     const tt = nav ? String(nav.f.transitionType[0] || 'LINEAR').toUpperCase() : 'LINEAR', dur = nav ? Math.max(nav.f.transitionTime || 1, 0.05) : 1, to = this.vpPose(vp);
-    if (!prev || tt === 'TELEPORT' || !this.started) { this.pose = to; this.tr = null; this.started = true; this.applyCamera(); return; }
+    if (!prev || tt === 'TELEPORT' || !this.started || to.ortho || this.pose.ortho) {   // a move into or out of an orthographic view is a cut
+      this.pose = to; this.tr = null; this.started = true; this.applyCamera(); return; }
     this.tr = { from: { pos: this.pose.pos.slice(), q: this.pose.q.slice(), center: this.pose.center.slice(), fov: this.pose.fov }, to, t0: performance.now(), dur: dur * 1000 };
   }
   viewpointChanged(vp, field) {
     if (vp !== this.bound) return; const to = this.vpPose(vp);
+    if (to.ortho && ['fieldOfView', 'nearDistance', 'farDistance', 'position', 'orientation', 'centerOfRotation'].includes(field)) { to.ortho.scale = (this.pose.ortho && this.pose.ortho.scale) || 1; this.pose = to; this.tr = null; this.applyCamera(); return; }
     if (field === 'fieldOfView') { if (this.tr) this.tr.to.fov = to.fov; else { this.pose.fov = to.fov; this.applyCamera(); } }
     else if (['position', 'orientation', 'centerOfRotation'].includes(field)) { this.pose = to; this.tr = null; this.applyCamera(); }
   }
@@ -389,26 +590,21 @@ class Body {
   }
   userPosition() { const p = this.pose.pos; return { x: p[0], y: p[1], z: p[2] }; }
   /* EXAMINE: drag orbits about the centre of rotation, the wheel dollies. Pointer sensors, picking and the other navigation types are not ported yet (NODES.md). */
-  setupInput() {
-    const cv = this.canvas; let drag = null;
-    cv.addEventListener('pointerdown', (e) => { drag = [e.clientX, e.clientY]; cv.setPointerCapture(e.pointerId); });
-    cv.addEventListener('pointerup', () => { drag = null; });
-    cv.addEventListener('pointermove', (e) => { if (!drag) return; const dx = e.clientX - drag[0], dy = e.clientY - drag[1]; drag = [e.clientX, e.clientY]; this.orbit(dx, dy); });
-    cv.addEventListener('wheel', (e) => { e.preventDefault(); this.zoom(Math.exp(e.deltaY * 0.001)); }, { passive: false });
-  }
+  setupInput() { R.bridge.three.pointer.init(this); }
   orbit(dx, dy) {
     this.tr = null; const p = this.pose, c = new THREE.Vector3(...p.center), off = new THREE.Vector3(...p.pos).sub(c), up = new THREE.Vector3(0, 1, 0);
     off.applyAxisAngle(up, -dx * 0.008); const right = new THREE.Vector3().crossVectors(up, off).normalize(); off.applyAxisAngle(right, -dy * 0.008);
     const pos = c.clone().add(off), m = new THREE.Matrix4().lookAt(pos, c, up), q = new THREE.Quaternion().setFromRotationMatrix(m);
     this.pose = { ...p, pos: [pos.x, pos.y, pos.z], q: [q.x, q.y, q.z, q.w] }; this.applyCamera();
   }
-  zoom(f) { const p = this.pose; this.tr = null; this.pose = { ...p, pos: [0, 1, 2].map((i) => p.center[i] + (p.pos[i] - p.center[i]) * f) }; this.applyCamera(); }
+  zoom(f) { const p = this.pose; this.tr = null; if (p.ortho) { p.ortho.scale = Math.min(50, Math.max(0.02, (p.ortho.scale || 1) * f)); this.applyCamera(); return; }   // moving along the view axis changes nothing in an orthographic view: the zoom scales the box
+     this.pose = { ...p, pos: [0, 1, 2].map((i) => p.center[i] + (p.pos[i] - p.center[i]) * f) }; this.applyCamera(); }
 
   /* ------------------------------------------------------------ frame loop */
   frame() {
     const now = (performance.timeOrigin + performance.now()) / 1000;
     if (this.world) { R.events.begin(now); for (const n of this.timeSensors || []) R.tickTimeSensor(n, now); R.events.drain(); this.stepTransition(); }
-    this.updateView(); this.renderer.render(this.scene, this.cam); this.stats.frames++;
+    this.updateView(); this.renderer.render(this.scene, this.cam); if (this.fogHooks) this.scene.fog = this.worldFog; this.stats.frames++;
     this.frameTimes.push(performance.now()); if (this.frameTimes.length > 30) this.frameTimes.shift();
     if (this.frameWaiters && this.frameWaiters.length) { const w = this.frameWaiters; this.frameWaiters = []; w.forEach((f) => f()); }
     if (this.opts.onFrame) this.opts.onFrame(this);
@@ -439,7 +635,16 @@ class Body {
       if (!r.tn.parent) continue; const c = r.node.f.center, rg = r.node.f.range, L = toLocal(r.tn);
       const d = Math.hypot(L.p.x - c[0], L.p.y - c[1], L.p.z - c[2]); let lv = 0; while (lv < rg.length && d >= rg[lv]) lv++;
       lv = Math.min(lv, r.kids.length - 1);
-      if (lv !== r.level) { r.level = lv; r.kids.forEach((k, i) => { if (k && k.tn && k.node.type !== 'Viewpoint') k.tn.visible = i === lv && k.node.f.visible !== false; }); }
+      if (lv !== r.level) { r.level = lv; r.kids.forEach((k, i) => { if (k && k.tn && k.node.type !== 'Viewpoint' && k.node.type !== 'OrthoViewpoint') k.tn.visible = i === lv && k.node.f.visible !== false; }); }
+    }
+    this.renderer.getDrawingBufferSize(this.screenU.res.value);
+    if (this.bgGroup) { const R0 = this.cam.far * 0.5; this.bgGroup.position.copy(eye); this.bgGroup.scale.setScalar(R0); }   // the backdrop rides on the camera and fills it to the far plane
+    this.screenU.ratio.value = this.renderer.getPixelRatio();
+    /* TextureCoordinateGenerator, camera-space modes: the uv of every vertex from the model-view matrix, redone in a frame in which the camera or the mesh moved */
+    this.tcgMeshes = (this.tcgMeshes || []).filter((m) => m.parent && m.geometry.userData.tcg);
+    for (const m of this.tcgMeshes) {
+      const mv = new T.Matrix4().multiplyMatrices(this.cam.matrixWorldInverse, m.matrixWorld), key = mv.elements.join(',') + m.geometry.userData.tcg.mode; if (m.userData.tcgKey === key) continue; m.userData.tcgKey = key;
+      R.bridge.three.tcg.make(m.geometry, m.geometry.userData.tcg.mode, m.geometry.userData.tcg.params, mv);
     }
     /* ClipPlane: the plane (a b c d) of 19775-1 is in the frame of the node's parent group and keeps the half space where a x + b y + c z + d >= 0, which is three.js's own rule.
        Every enabled plane that applies to a mesh is set on its material (three.js intersects them); a disabled one adds nothing. Entries whose group left the scene are dropped. */
@@ -455,7 +660,9 @@ class Body {
       }
       for (const [mt, l] of planesOf) mt.clippingPlanes = l;
     }
+    if (this.cubeMats) for (const m of this.cubeMats) m.userData.cubeU.cubeRot.value.setFromMatrix4(this.cam.matrixWorld);   // view space -> world space for the cube maps that hold pictures of the world
+    R.bridge.three.cube.takePictures(this);
   }
   fps() { const t = this.frameTimes; return t.length > 2 ? 1000 * (t.length - 1) / (t[t.length - 1] - t[0]) : 0; }
-  shot() { this.updateView(); this.renderer.render(this.scene, this.cam); return this.renderer.domElement.toDataURL('image/png'); }
+  shot() { this.updateView(); this.renderer.render(this.scene, this.cam); if (this.fogHooks) this.scene.fog = this.worldFog; return this.renderer.domElement.toDataURL('image/png'); }
 }

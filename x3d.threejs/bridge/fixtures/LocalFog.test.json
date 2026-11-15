@@ -1,0 +1,48 @@
+{
+ "node": "LocalFog",
+ "mode": "scene",
+ "note": "three groups, each with an emissive-white box: a LocalFog LINEAR red range 20, a LocalFog EXPONENTIAL green range 20, and a clear group with no fog (the world has no Fog); then the red one is switched off and the green range set to 8",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "R",
+    "enabled",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "set": [
+    "G",
+    "visibilityRange",
+    8,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 1
+  },
+  {
+   "shot": "after"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "after": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  }
+ }
+}

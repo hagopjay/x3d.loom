@@ -1,0 +1,184 @@
+{
+ "node": "TouchSensor",
+ "mode": "scene",
+ "note": "A box and a sphere, each with a TouchSensor (the sphere's sensor sits in the same group as a second TouchSensor). The mouse moves over the box, presses and releases on it, presses on it and releases away from it, and moves over the sphere; X_ITE 16.6.0 is the oracle for the event counts",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "mouse": [
+    "move",
+    40,
+    200
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "reset": true
+  },
+  {
+   "mouse": [
+    "move",
+    88,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "event": [
+    "A",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "atleast": [
+    "A",
+    "hitPoint_changed",
+    1
+   ]
+  },
+  {
+   "atleast": [
+    "A",
+    "hitNormal_changed",
+    1
+   ]
+  },
+  {
+   "atleast": [
+    "A",
+    "hitTexCoord_changed",
+    1
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "mouse": [
+    "down",
+    88,
+    120
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "event": [
+    "A",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "mouse": [
+    "up",
+    88,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "event": [
+    "A",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "atleast": [
+    "A",
+    "touchTime",
+    1
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    40,
+    200
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "reset": true
+  },
+  {
+   "mouse": [
+    "down",
+    88,
+    120
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "reset": true
+  },
+  {
+   "mouse": [
+    "up",
+    40,
+    200
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "event": [
+    "A",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "noevent": [
+    "A",
+    "touchTime"
+   ]
+  },
+  {
+   "reset": true
+  },
+  {
+   "mouse": [
+    "move",
+    232,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "atleast": [
+    "B",
+    "isOver",
+    1
+   ]
+  },
+  {
+   "noevent": [
+    "B2",
+    "isOver"
+   ]
+  }
+ ]
+}

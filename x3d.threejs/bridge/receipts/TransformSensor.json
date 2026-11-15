@@ -1,0 +1,23 @@
+{
+ "node": "TransformSensor",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 510892626d44",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 48/48",
+ "xite": "pass 48/48",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "scope": [
+  "the official x3d-4.0.xsd cannot express TransformSensor.targetObject (containerField is limited to children, proxy, rootNode, shape, skin), so the fixture leaves it out and the test sets it through the SAI",
+  "compared with X_ITE 16.6.0 numerically (position_changed and orientation_changed within 0.001): target at the root, sensor under a translated and rotated Transform that is then moved again, target a Shape (its group's matrix), size 0 0 0 (never active) and -1 -1 -1 (always active); the sensor runs once per timestamp, so a moved target is seen one frame late"
+ ]
+}
