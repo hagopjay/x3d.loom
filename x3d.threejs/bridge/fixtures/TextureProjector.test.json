@@ -1,0 +1,878 @@
+{
+ "node": "TextureProjector",
+ "mode": "scene",
+ "tone": "none",
+ "note": "a perspective projector over a wall, a box and an unlit slab",
+ "gaps": [
+  "three.js body: the projection is GLSL added by onBeforeCompile to every mesh material the body makes (one shared set of uniforms, up to four projectors, nearest texel through textureLod); a shape drawn by a ShaderMaterial is not tinted",
+  "a shape drawn by a ShaderMaterial (a ComposedShader, volume or Texturing3D mesh) is not tinted; X_ITE 16.6.0 tints those too; points and lines are not tinted either",
+  "PhysicalMaterial (MeshPhysicalMaterial) gets the same tint of its diffuse colour before the lights; not compared by picture here (the Babylon fixture could not show it)",
+  "upVector default: X3DUOM 4.0 says 0 1 0 (used here); X_ITE 16.6.0 reads 0 0 1 for a scene whose version is 4.0 or lower, so a tilted projector with no upVector written is rolled differently there",
+  "at most four projectors at a time (X_ITE's maxTextures), the first four that are on; the picture is read nearest-texel, mip levels and TextureProperties filters are not applied (X_ITE's default look is nearest as well)",
+  "a face of an unlit shape that turns away from the projector: X_ITE 16.6.0 still tints a thin visible side strip of an unlit slab, the bridge does not (compare 'back', fg tolerance 20)"
+ ],
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__body._pjU.pjCount.value",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "P",
+    "aspectRatio",
+    1
+   ]
+  },
+  {
+   "px": [
+    120,
+    80,
+    [
+     0,
+     0,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    146,
+    107,
+    [
+     102,
+     204,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    173,
+    133,
+    [
+     204,
+     204,
+     204
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    200,
+    160,
+    [
+     204,
+     204,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    202,
+    78,
+    [
+     255,
+     128,
+     128
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    10,
+    10,
+    [
+     204,
+     204,
+     204
+    ],
+    6
+   ]
+  },
+  {
+   "shot": "base"
+  },
+  {
+   "set": [
+    "P",
+    "direction",
+    [
+     0.3,
+     -0.2,
+     -1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "px": [
+    200,
+    150,
+    [
+     102,
+     204,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "shot": "tilt"
+  },
+  {
+   "set": [
+    "P",
+    "direction",
+    [
+     0,
+     0,
+     -1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "upVector",
+    [
+     1,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "px": [
+    120,
+    80,
+    [
+     204,
+     0,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    202,
+    78,
+    [
+     0,
+     0,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "shot": "up"
+  },
+  {
+   "set": [
+    "P",
+    "upVector",
+    [
+     0,
+     1,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "color",
+    [
+     1,
+     0.5,
+     0.5
+    ],
+    "SFColor"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "intensity",
+    0.5,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "px": [
+    120,
+    160,
+    [
+     204,
+     102,
+     102
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    202,
+    78,
+    [
+     255,
+     160,
+     160
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    160,
+    100,
+    [
+     102,
+     128,
+     153
+    ],
+    6
+   ]
+  },
+  {
+   "shot": "color"
+  },
+  {
+   "set": [
+    "P",
+    "color",
+    [
+     1,
+     1,
+     1
+    ],
+    "SFColor"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "intensity",
+    1,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "on",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "px": [
+    120,
+    80,
+    [
+     204,
+     204,
+     204
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    202,
+    78,
+    [
+     255,
+     255,
+     255
+    ],
+    6
+   ]
+  },
+  {
+   "shot": "off"
+  },
+  {
+   "set": [
+    "P",
+    "on",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "set": [
+    "MOVE",
+    "translation",
+    [
+     2,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "on"
+  },
+  {
+   "set": [
+    "MOVE",
+    "translation",
+    [
+     0,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "fieldOfView",
+    0.3,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "fov"
+  },
+  {
+   "set": [
+    "P",
+    "fieldOfView",
+    0.6,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "nearDistance",
+    7,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "px": [
+    120,
+    80,
+    [
+     204,
+     204,
+     204
+    ],
+    6
+   ]
+  },
+  {
+   "shot": "near"
+  },
+  {
+   "set": [
+    "P",
+    "nearDistance",
+    -1,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "farDistance",
+    5,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "far"
+  },
+  {
+   "set": [
+    "P",
+    "nearDistance",
+    0.5,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "farDistance",
+    20,
+    "SFFloat"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "shot": "dist"
+  },
+  {
+   "set": [
+    "P",
+    "nearDistance",
+    -1,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "farDistance",
+    -1,
+    "SFFloat"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "direction",
+    [
+     0,
+     0,
+     1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "px": [
+    120,
+    160,
+    [
+     0,
+     0,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    202,
+    78,
+    [
+     255,
+     255,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "shot": "away"
+  },
+  {
+   "set": [
+    "P",
+    "location",
+    [
+     0,
+     0,
+     -6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "px": [
+    120,
+    80,
+    [
+     204,
+     204,
+     204
+    ],
+    6
+   ]
+  },
+  {
+   "shot": "back"
+  },
+  {
+   "set": [
+    "P",
+    "location",
+    [
+     0,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "direction",
+    [
+     0,
+     0,
+     -1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "setnode": [
+    "P",
+    "texture",
+    "T2"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "P",
+    "aspectRatio",
+    2
+   ]
+  },
+  {
+   "px": [
+    130,
+    120,
+    [
+     204,
+     204,
+     102
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    190,
+    120,
+    [
+     0,
+     204,
+     204
+    ],
+    6
+   ]
+  },
+  {
+   "shot": "wide"
+  },
+  {
+   "setnode": [
+    "P",
+    "texture",
+    "T4"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "P",
+    "aspectRatio",
+    1.5
+   ]
+  },
+  {
+   "px": [
+    100,
+    100,
+    [
+     204,
+     0,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    160,
+    100,
+    [
+     0,
+     204,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    220,
+    100,
+    [
+     0,
+     0,
+     204
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    100,
+    150,
+    [
+     204,
+     204,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    160,
+    150,
+    [
+     0,
+     204,
+     204
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    220,
+    150,
+    [
+     204,
+     0,
+     204
+    ],
+    6
+   ]
+  },
+  {
+   "shot": "image"
+  },
+  {
+   "setnode": [
+    "P",
+    "texture",
+    "T"
+   ]
+  },
+  {
+   "set": [
+    "Q",
+    "on",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "expect": [
+    "P",
+    "aspectRatio",
+    1
+   ]
+  },
+  {
+   "px": [
+    130,
+    150,
+    [
+     204,
+     0,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    220,
+    150,
+    [
+     41,
+     204,
+     204
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    190,
+    160,
+    [
+     204,
+     204,
+     0
+    ],
+    6
+   ]
+  },
+  {
+   "shot": "two"
+  },
+  {
+   "set": [
+    "Q",
+    "on",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "set": [
+    "P",
+    "global",
+    false,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "px": [
+    202,
+    78,
+    [
+     255,
+     128,
+     128
+    ],
+    6
+   ]
+  },
+  {
+   "px": [
+    120,
+    80,
+    [
+     204,
+     204,
+     204
+    ],
+    6
+   ]
+  },
+  {
+   "shot": "local"
+  }
+ ],
+ "compare": {
+  "base": {
+   "mad": 3,
+   "fg": 12
+  },
+  "tilt": {
+   "mad": 5,
+   "fg": 12
+  },
+  "up": {
+   "mad": 3,
+   "fg": 12
+  },
+  "color": {
+   "mad": 3,
+   "fg": 12
+  },
+  "off": {
+   "mad": 3,
+   "fg": 12
+  },
+  "on": {
+   "mad": 3,
+   "fg": 12
+  },
+  "fov": {
+   "mad": 3,
+   "fg": 12
+  },
+  "near": {
+   "mad": 3,
+   "fg": 12
+  },
+  "far": {
+   "mad": 3,
+   "fg": 12
+  },
+  "dist": {
+   "mad": 3,
+   "fg": 12
+  },
+  "away": {
+   "mad": 3,
+   "fg": 12
+  },
+  "back": {
+   "mad": 3,
+   "fg": 20
+  },
+  "wide": {
+   "mad": 3,
+   "fg": 12
+  },
+  "image": {
+   "mad": 3,
+   "fg": 12
+  },
+  "two": {
+   "mad": 3,
+   "fg": 12
+  },
+  "local": {
+   "mad": 3,
+   "fg": 12
+  }
+ }
+}

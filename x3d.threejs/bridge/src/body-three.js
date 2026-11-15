@@ -83,7 +83,7 @@ class Body {
   clearWorld() {
     if (!this.root) return;
     this.root.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) [].concat(o.material).forEach((m) => { if (m.map) m.map.dispose(); m.dispose(); }); });
-    this.psys = []; R.bridge.three.layers.clear(this); this.scene.remove(this.root); this.scene.fog = this.worldFog = null; this.fogHooks = false; this.fogScopes = new WeakMap(); this.localFogs = new Map(); this.tcgMeshes = [];
+    this.psys = []; this.projs = []; this._pjScoped = false; R.bridge.three.layers.clear(this); this.scene.remove(this.root); this.scene.fog = this.worldFog = null; this.fogHooks = false; this.fogScopes = new WeakMap(); this.localFogs = new Map(); this.tcgMeshes = [];
     for (const r of this.inlines || []) { r.dead = true; r.gen++; r.world = null; } this.inlines = new Set(); this.inlineLoads = 0;
     if (this.cubeGen) for (const e of this.cubeGen) if (e.target) e.target.dispose(); this.cubeGen = new Set(); this.cubeMats = new Set(); if (this.cubeEmpty) { this.cubeEmpty.dispose(); this.cubeEmpty = null; }
     for (const tc of this.textCache.values()) if (tc && tc.map && tc.map.dispose) tc.map.dispose();
@@ -440,6 +440,7 @@ class Body {
     else if (mat && mat.type === 'UnlitMaterial') { m = new T.MeshBasicMaterial({ side }); this.refreshUnlit(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }   // 19775-1 4.0: no lighting, emissiveColor is the colour
     else { m = new T.MeshBasicMaterial({ side, color: 0xffffff }); m.map = this.texFor(texN, app && app.f.textureTransform); }   // no Material: unlit, white, texture as is (19775-1 12.2.2)
     if (g.type === 'Text') { const tc = this.textCache.get(g.id); m.map = tc ? tc.map : null; m.alphaTest = 0.01; m.alphaToCoverage = true; if (texN) this.note('Text: a texture on a Text is not drawn'); m.needsUpdate = true; }   // the glyph atlas is the map: its alpha cuts the quads to the letters
+    R.bridge.three.proj.patch(this, m);   // TextureProjector: a few lines that read the projectors' uniforms
     if (g.f.fogCoord) this.patchMaterial(m, 'fogcoord', (sh) => {   // X_ITE: colour = mix(fogColor, colour, 1 - depth) in place of the distance law; only where a fog covers the mesh
       sh.vertexShader = 'attribute float fogCoord; varying float vFogCoord;\n' + sh.vertexShader.replace('#include <fog_vertex>', '#include <fog_vertex>\n vFogCoord = fogCoord;');
       sh.fragmentShader = 'varying float vFogCoord;\n' + sh.fragmentShader.replace('#include <fog_fragment>', '#ifdef USE_FOG\n gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, clamp( vFogCoord, 0.0, 1.0 ) );\n#endif'); });
@@ -723,6 +724,7 @@ class Body {
     }
     if (this.cubeMats) for (const m of this.cubeMats) m.userData.cubeU.cubeRot.value.setFromMatrix4(this.cam.matrixWorld);   // view space -> world space for the cube maps that hold pictures of the world
     R.bridge.three.cube.takePictures(this);
+    R.bridge.three.proj.update(this);   // the projectors' matrices and scope masks
     if (R.bridge.three.particles) R.bridge.three.particles.update(this);   // the CPU particle systems
     if (R.bridge.three.sound) R.bridge.three.sound.update(this);   // the audio listener and spatial sources, in the view space of the camera
     R.bridge.three.layers.update(this);   // the cameras, bits, rectangles of the layers and viewports, then the layouts

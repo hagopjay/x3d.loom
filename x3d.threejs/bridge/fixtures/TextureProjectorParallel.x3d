@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="TextureProjection" level="2"/><meta name="title" content="TextureProjectorParallel.x3d"/><meta name="description" content="Bridge fixture for TextureProjectorParallel: an orthographic projector in front of a grey wall, a small box and an unlit slab projects a 4 x 4 picture (the first row is the bottom) over the box fieldOfView (minimumX minimumY maximumX maximumY) that tints the lit shapes inside the volume on the faces that look towards it"/></head>
+  <Scene>
+    <NavigationInfo headlight="false"/>
+    <Viewpoint position="0 0 10"/>
+    <DirectionalLight direction="0 0 -1" intensity="1"/>
+    <Transform DEF="MOVE">
+      <TextureProjectorParallel DEF="P" location="0 0 6" direction="0 0 -1" upVector="0 1 0" fieldOfView="-2 -2 2 2">
+        <PixelTexture DEF="T" containerField="texture" image="4 4 3 0xff0000 0x00ff00 0x0000ff 0xffff00  0xff00ff 0x00ffff 0xffffff 0x808080  0xff8000 0x80ff00 0x0080ff 0x8000ff  0x000000 0x404040 0xc0c0c0 0xff8080"/>
+      </TextureProjectorParallel>
+      <Transform translation="0 0 1"><Shape><Appearance><Material diffuseColor="0.8 0.8 0.8"/></Appearance><Box size="1 1 1"/></Shape></Transform>
+      <Transform translation="1.5 1.5 0.5"><Shape><Appearance/><Box size="0.5 0.5 0.1"/></Shape></Transform>
+    </Transform>
+    <TextureProjectorParallel DEF="Q" on="false" location="2 -1 6" direction="0 0 -1" upVector="0 1 0" fieldOfView="-1 -1 1 1" intensity="0.8">
+      <PixelTexture DEF="T2" containerField="texture" image="2 1 4 0xffff0080 0x00ffffff"/>
+    </TextureProjectorParallel>
+    <TextureProjectorParallel DEF="R" on="false" location="0 0 6" direction="0 0 -1" upVector="0 1 0" fieldOfView="-2 -2 2 2">
+      <ImageTexture DEF="T4" containerField="texture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAACCAIAAAASFvFNAAAAGElEQVR4nGP4z8DA8J+BgeE/E4T6z8AAADvsBf1YPrxHAAAAAElFTkSuQmCC"'/>
+    </TextureProjectorParallel>
+    <Shape><Appearance><Material diffuseColor="0.8 0.8 0.8"/></Appearance><Box size="14 9 0.2"/></Shape>
+  </Scene>
+</X3D>
