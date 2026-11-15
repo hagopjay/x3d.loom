@@ -1,0 +1,24 @@
+{
+ "node": "LayoutGroup",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 2803982405de",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 65/65",
+ "xite": "pass 65/65",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "viewport of a LayoutGroup is held: the world camera is shared with the rest of the scene",
+  "a LayoutGroup in the perspective world uses the near plane of the camera as the viewport size, so its layout is microscopic there, as in X_ITE; only the orthographic layer is probed",
+  "XSD finding: x3d-4.0.xsd (x3d_mcp) lists LayoutGroup only in the pick-target content model, in no child content model, so NO scene can hold a LayoutGroup and still validate; the fixture is checked against the XSD plus one line (receipt names it)"
+ ]
+}

@@ -1,0 +1,688 @@
+{
+ "node": "LayoutGroup",
+ "mode": "scene",
+ "note": "The LayoutLayer takes the left half of the canvas (a Layout of 0.5 by 1 FRACTION, aligned LEFT), the LayoutGroup inside it takes a rectangle of that rectangle and puts its blue box there. Each step sets all six fields of the inner Layout and probes where the box is predicted (X_ITE 16.6.0's arithmetic, nested: sizes and offsets in FRACTION are fractions of the outer rectangle, the scale mode NONE keeps the scale of the layout around it). A LayoutGroup in the world without a Layout changes nothing: the red box in the middle of the frame stays.",
+ "gaps": [
+  "viewport of a LayoutGroup is held: the world camera is shared with the rest of the scene",
+  "a LayoutGroup in the perspective world uses the near plane of the camera as the viewport size, so its layout is microscopic there, as in X_ITE; only the orthographic layer is probed",
+  "XSD finding: x3d-4.0.xsd (x3d_mcp) lists LayoutGroup only in the pick-target content model, in no child content model, so NO scene can hold a LayoutGroup and still validate; the fixture is checked against the XSD plus one line (receipt names it)"
+ ],
+ "xsdAllow": [
+  "LayoutGroup"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "G",
+    "visible",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "G",
+    "visible",
+    true
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "set": [
+    "LY",
+    "align",
+    [
+     "RIGHT",
+     "TOP"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "offsetUnits",
+    [
+     "WORLD",
+     "WORLD"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "offset",
+    [
+     0,
+     0
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "sizeUnits",
+    [
+     "FRACTION",
+     "FRACTION"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "size",
+    [
+     0.5,
+     0.5
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "scaleMode",
+    [
+     "FRACTION",
+     "FRACTION"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "settle": 0.4
+  },
+  {
+   "px": [
+    120,
+    60,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    88,
+    8,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    152,
+    8,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    88,
+    112,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    152,
+    112,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    72,
+    60,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    168,
+    60,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    120,
+    128,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "align",
+    [
+     "LEFT",
+     "BOTTOM"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "offsetUnits",
+    [
+     "WORLD",
+     "WORLD"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "offset",
+    [
+     0,
+     0
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "sizeUnits",
+    [
+     "FRACTION",
+     "FRACTION"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "size",
+    [
+     0.5,
+     0.5
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "scaleMode",
+    [
+     "NONE",
+     "NONE"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "settle": 0.4
+  },
+  {
+   "px": [
+    40,
+    180,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    112,
+    68,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    128,
+    180,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    40,
+    52,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "align",
+    [
+     "CENTER",
+     "CENTER"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "offsetUnits",
+    [
+     "FRACTION",
+     "FRACTION"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "offset",
+    [
+     0.25,
+     -0.25
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "sizeUnits",
+    [
+     "FRACTION",
+     "FRACTION"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "size",
+    [
+     0.5,
+     0.5
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "scaleMode",
+    [
+     "FRACTION",
+     "FRACTION"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "settle": 0.4
+  },
+  {
+   "px": [
+    120,
+    180,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    88,
+    128,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    152,
+    128,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    88,
+    232,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    152,
+    232,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    72,
+    180,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    168,
+    180,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    120,
+    112,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "align",
+    [
+     "RIGHT",
+     "BOTTOM"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "offsetUnits",
+    [
+     "WORLD",
+     "WORLD"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "offset",
+    [
+     0,
+     0
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "sizeUnits",
+    [
+     "PIXEL",
+     "PIXEL"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "size",
+    [
+     80,
+     80
+    ],
+    "MFFloat"
+   ]
+  },
+  {
+   "set": [
+    "LY",
+    "scaleMode",
+    [
+     "STRETCH",
+     "STRETCH"
+    ],
+    "MFString"
+   ]
+  },
+  {
+   "settle": 0.4
+  },
+  {
+   "px": [
+    120,
+    200,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    88,
+    168,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    152,
+    168,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    88,
+    232,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    152,
+    232,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    72,
+    200,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    168,
+    200,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    120,
+    152,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "G",
+    "visible",
+    false
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    240,
+    60,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    80,
+    60,
+    [
+     0,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "set": [
+    "G",
+    "visible",
+    true
+   ]
+  },
+  {
+   "settle": 0.5
+  }
+ ]
+}

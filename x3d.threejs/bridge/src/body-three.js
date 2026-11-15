@@ -53,9 +53,9 @@ class Body {
     this.scene = new THREE.Scene(); this.scene.background = new THREE.Color(0.003, 0.005, 0.012);
     this.cam = this.camP = new THREE.PerspectiveCamera(45, 1, 0.5, 4000); this.camO = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 1e4);   // camO is drawn with while an OrthoViewpoint is bound (applyCamera swaps this.cam)
     this.scene.add(this.cam, this.camO);
-    this.headlight = new THREE.DirectionalLight(0xffffff, THREE_PI); this.headlight.position.set(0, 0, 1); this.headlight.target.position.set(0, 0, -1);
+    this.headlight = new THREE.DirectionalLight(0xffffff, THREE_PI); this.headlight.layers.mask = 0xffffffff; this.headlight.position.set(0, 0, 1); this.headlight.target.position.set(0, 0, -1);
     this.cam.add(this.headlight, this.headlight.target);
-    this.ambient = new THREE.AmbientLight(0xffffff, 0); this.scene.add(this.ambient);
+    this.ambient = new THREE.AmbientLight(0xffffff, 0); this.ambient.layers.mask = 0xffffffff; this.scene.add(this.ambient);   // lights reach every layer
     this.setTone(this.opts.tone === undefined ? 'none' : this.opts.tone);
     this.setupInput(); this.fit();
     new ResizeObserver(() => this.fit()).observe(this.canvas);
@@ -77,13 +77,13 @@ class Body {
     this.root = new THREE.Group(); this.root.name = 'x3d-root'; this.scene.add(this.root);
     for (const n of world.children) this.build(n, this.root, []);
     this.applyBackground(); this.applyNavigation(); this.applyFog();
-    const first = world.nodes.find((n) => n.type === 'Viewpoint' || n.type === 'OrthoViewpoint' || n.type === 'GeoViewpoint');   // 19775-1 23.4.1: the first Viewpoint in the file is bound at load (the Babylon stock body does this in body-br.js)
+    const first = (this.viewpoints || []).find((n) => n.type === 'Viewpoint' || n.type === 'OrthoViewpoint' || n.type === 'GeoViewpoint');   // 19775-1 23.4.1: the first Viewpoint in the file is bound at load (the Babylon stock body does this in body-br.js)
     if (first) { this.started = false; this.bindViewpoint(first, true); }
   }
   clearWorld() {
     if (!this.root) return;
     this.root.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) [].concat(o.material).forEach((m) => { if (m.map) m.map.dispose(); m.dispose(); }); });
-    this.scene.remove(this.root); this.scene.fog = this.worldFog = null; this.fogHooks = false; this.fogScopes = new WeakMap(); this.localFogs = new Map(); this.tcgMeshes = [];
+    R.bridge.three.layers.clear(this); this.scene.remove(this.root); this.scene.fog = this.worldFog = null; this.fogHooks = false; this.fogScopes = new WeakMap(); this.localFogs = new Map(); this.tcgMeshes = [];
     for (const r of this.inlines || []) { r.dead = true; r.gen++; r.world = null; } this.inlines = new Set(); this.inlineLoads = 0;
     if (this.cubeGen) for (const e of this.cubeGen) if (e.target) e.target.dispose(); this.cubeGen = new Set(); this.cubeMats = new Set(); if (this.cubeEmpty) { this.cubeEmpty.dispose(); this.cubeEmpty = null; }
     for (const tc of this.textCache.values()) if (tc && tc.map && tc.map.dispose) tc.map.dispose();
@@ -464,7 +464,7 @@ class Body {
      DirectionalLight: direction; PointLight: location, radius (hard edge, see patchShaders), attenuation; SpotLight: the same plus direction, beamWidth, cutOffAngle. */
   buildLight(n, parent) {
     const T = THREE, l = n.type === 'DirectionalLight' ? new T.DirectionalLight(0xffffff, THREE_PI) : n.type === 'SpotLight' ? new T.SpotLight(0xffffff, THREE_PI) : new T.PointLight(0xffffff, THREE_PI);
-    l.name = (n.def || n.type) + '-light'; l.userData.node = n; parent.add(l); if (l.target) parent.add(l.target);
+    l.name = (n.def || n.type) + '-light'; l.layers.mask = 0xffffffff; l.userData.node = n; parent.add(l); if (l.target) parent.add(l.target);
     this.lights.push(l); this.refreshLight(l); this.refreshAmbient();
     const r = { node: n, tn: l, light: l, kids: [] }; this.rec.set(n.id, r); return r;
   }
@@ -604,19 +604,22 @@ class Body {
     return { pos, q: R.quat.norm(q), center, fov: f.fieldOfView };
   }
   applyCamera() {
-    const p = this.pose, o = p.ortho, c = o ? this.camO : this.camP;
+    const c = this.poseCamera(this.pose, this.camP, this.camO, (this.canvas.clientWidth || 1) / (this.canvas.clientHeight || 1));
     if (c !== this.cam) { this.cam = c; c.add(this.headlight, this.headlight.target); }   // the headlight rides on whichever camera draws
+  }
+  /* a pose onto the perspective camera or, for an OrthoViewpoint, the orthographic one; returns the one used. The layers and viewports (nodes/Layering.js) pose cameras of their own the same way */
+  poseCamera(p, camP, camO, aspect) {
+    const o = p.ortho, c = o ? camO : camP;
     c.position.set(p.pos[0], p.pos[1], p.pos[2]); c.quaternion.set(p.q[0], p.q[1], p.q[2], p.q[3]);   // a Viewpoint looks down -Z with +Y up, as a three.js camera does
-    const w = this.canvas.clientWidth || 1, h = this.canvas.clientHeight || 1, aspect = w / h;
     if (o) {   // the box fieldOfView is kept whole: the longer side of the canvas shows more of the world, as the Babylon body does
       const f = o.f, s = o.scale || 1, x0 = (f[0] ?? -1) * s, y0 = (f[1] ?? -1) * s, x1 = (f[2] ?? 1) * s, y1 = (f[3] ?? 1) * s, sx = x1 - x0, sy = y1 - y0;
       if (aspect > sx / sy) { const cx = (x0 + x1) / 2, hw = sy * aspect / 2; c.left = cx - hw; c.right = cx + hw; c.bottom = y0; c.top = y1; }
       else { const cy = (y0 + y1) / 2, hh = sx / aspect / 2; c.left = x0; c.right = x1; c.bottom = cy - hh; c.top = cy + hh; }
-      c.near = o.near > 0 ? o.near : 0.1; c.far = o.far > 0 ? o.far : 1e4; c.updateProjectionMatrix(); return;
+      c.near = o.near > 0 ? o.near : 0.1; c.far = o.far > 0 ? o.far : 1e4; c.updateProjectionMatrix(); return c;
     }
     c.fov = THREE.MathUtils.radToDeg(aspect >= 1 ? p.fov : 2 * Math.atan(Math.tan(p.fov / 2) / aspect));   // X3D fieldOfView is the angle across the smaller side of the view
     c.aspect = aspect; const d = Math.hypot(p.pos[0] - p.center[0], p.pos[1] - p.center[1], p.pos[2] - p.center[2]);
-    c.near = Math.max(0.3, Math.min(2, d * 0.004)); c.far = Math.max(2000, d * 12); if (p.geo) { c.near = p.geo.near; c.far = p.geo.far; } c.updateProjectionMatrix();
+    c.near = Math.max(0.3, Math.min(2, d * 0.004)); c.far = Math.max(2000, d * 12); if (p.geo) { c.near = p.geo.near; c.far = p.geo.far; } c.updateProjectionMatrix(); return c;
   }
   bindViewpoint(vp, on) {
     if (!on) { vp.f.isBound = false; return; }
@@ -657,7 +660,7 @@ class Body {
   frame() {
     const now = (performance.timeOrigin + performance.now()) / 1000;
     if (this.world) { R.events.begin(now); for (const n of this.timeSensors || []) R.tickTimeSensor(n, now); R.events.drain(); this.stepTransition(); }
-    this.updateView(); this.renderer.render(this.scene, this.cam); if (this.fogHooks) this.scene.fog = this.worldFog; this.stats.frames++;
+    this.updateView(); this.renderAll(); if (this.fogHooks) this.scene.fog = this.worldFog; this.stats.frames++;
     this.frameTimes.push(performance.now()); if (this.frameTimes.length > 30) this.frameTimes.shift();
     if (this.frameWaiters && this.frameWaiters.length) { const w = this.frameWaiters; this.frameWaiters = []; w.forEach((f) => f()); }
     if (this.opts.onFrame) this.opts.onFrame(this);
@@ -715,7 +718,25 @@ class Body {
     }
     if (this.cubeMats) for (const m of this.cubeMats) m.userData.cubeU.cubeRot.value.setFromMatrix4(this.cam.matrixWorld);   // view space -> world space for the cube maps that hold pictures of the world
     R.bridge.three.cube.takePictures(this);
+    R.bridge.three.layers.update(this);   // the cameras, bits, rectangles of the layers and viewports, then the layouts
+  }
+  /* One picture: the world alone, or, with a LayerSet or a world Viewport (nodes/Layering.js), one pass per entry of this.passes in order: each through its own camera, its own rectangle of the canvas
+     and its own layer bit, the depth buffer cleared in the rectangle between two passes so a later layer is in front. The first pass clears the whole canvas. */
+  renderAll() {
+    const r = this.renderer, ps = this.passes;
+    if (!ps || !ps.length) { r.render(this.scene, this.cam); return; }
+    const W = this.canvas.clientWidth || 1, H = this.canvas.clientHeight || 1, ac = r.autoClear; r.autoClear = false;
+    r.setScissorTest(false); r.setViewport(0, 0, W, H); r.clear(true, true, true);
+    ps.forEach((p, i) => {
+      const x = p.vp[0] * W, y = p.vp[1] * H, w = p.vp[2] * W, h = p.vp[3] * H; r.setViewport(x, y, w, h); r.setScissor(x, y, w, h); r.setScissorTest(!(p.vp[2] >= 1 && p.vp[3] >= 1));
+      if (i) r.clearDepth();
+      if (this.headlight.parent !== p.cam) p.cam.add(this.headlight, this.headlight.target);   // the headlight rides on the camera that draws (a pass camera is in the scene, so its children are drawn)
+      const bg = this.scene.background; if (i) this.scene.background = null;   // the Background is the world's: a later pass paints over the pictures before it
+      r.render(this.scene, p.cam);
+      this.scene.background = bg;
+    });
+    this.cam.add(this.headlight, this.headlight.target); r.setScissorTest(false); r.setViewport(0, 0, W, H); r.autoClear = ac;
   }
   fps() { const t = this.frameTimes; return t.length > 2 ? 1000 * (t.length - 1) / (t[t.length - 1] - t[0]) : 0; }
-  shot() { this.updateView(); this.renderer.render(this.scene, this.cam); if (this.fogHooks) this.scene.fog = this.worldFog; return this.renderer.domElement.toDataURL('image/png'); }
+  shot() { this.updateView(); this.renderAll(); if (this.fogHooks) this.scene.fog = this.worldFog; return this.renderer.domElement.toDataURL('image/png'); }
 }

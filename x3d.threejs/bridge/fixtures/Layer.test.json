@@ -1,0 +1,429 @@
+{
+  "node": "Layer",
+  "mode": "scene",
+  "note": "a layer holding a blue box is drawn over the (empty) world by its LayerSet; visible FALSE hides it. Probed from the composited frame in both engines (tolerance 45 for the body's neutral tone map). pickable and objectType gate a pick sensor inside the layer, pointerEvents gates a TouchSensor inside it (both compared with X_ITE).; addChildren and removeChildren change what the layer draws (a second box appears and goes)",
+  "gaps": [
+    "PointPickSensor and the layer's pickable/objectType: the pick sensors are not ported to three.js yet (BR.pick is the Babylon adapter), so the steps that expect a pick are compared on X_ITE only"
+  ],
+  "steps": [
+    {
+      "expect": [
+        "N",
+        "visible",
+        true
+      ]
+    },
+    {
+      "expect": [
+        "N",
+        "pickable",
+        true
+      ]
+    },
+    {
+      "expect": [
+        "N",
+        "objectType",
+        [
+          "ALL"
+        ]
+      ]
+    },
+    {
+      "expect": [
+        "N",
+        "pointerEvents",
+        true
+      ]
+    },
+    {
+      "settle": 2
+    },
+    {
+      "px": [
+        160,
+        120,
+        [
+          0,
+          0,
+          255
+        ],
+        45
+      ]
+    },
+    {
+      "px": [
+        300,
+        20,
+        [
+          0,
+          0,
+          0
+        ],
+        45
+      ]
+    },
+    {
+      "set": [
+        "N",
+        "visible",
+        false
+      ]
+    },
+    {
+      "settle": 0.5
+    },
+    {
+      "px": [
+        160,
+        120,
+        [
+          0,
+          0,
+          0
+        ],
+        45
+      ]
+    },
+    {
+      "set": [
+        "N",
+        "visible",
+        true
+      ]
+    },
+    {
+      "settle": 0.5
+    },
+    {
+      "px": [
+        160,
+        120,
+        [
+          0,
+          0,
+          255
+        ],
+        45
+      ]
+    },
+    {
+      "expect": [
+        "PS",
+        "isActive",
+        true
+      ],
+      "only": "xite"
+    },
+    {
+      "expect": [
+        "PS",
+        "pickedGeometry",
+        [
+          "[node LB]"
+        ]
+      ],
+      "only": "xite"
+    },
+    {
+      "set": [
+        "N",
+        "pickable",
+        false
+      ]
+    },
+    {
+      "settle": 0.5
+    },
+    {
+      "expect": [
+        "N",
+        "pickable",
+        false
+      ]
+    },
+    {
+      "expect": [
+        "PS",
+        "isActive",
+        false
+      ],
+      "only": "xite"
+    },
+    {
+      "expect": [
+        "PS",
+        "pickedGeometry",
+        []
+      ],
+      "only": "xite"
+    },
+    {
+      "set": [
+        "N",
+        "pickable",
+        true
+      ]
+    },
+    {
+      "settle": 0.5
+    },
+    {
+      "expect": [
+        "PS",
+        "isActive",
+        true
+      ],
+      "only": "xite"
+    },
+    {
+      "set": [
+        "N",
+        "objectType",
+        [
+          "NONE"
+        ],
+        "MFString"
+      ]
+    },
+    {
+      "settle": 0.5
+    },
+    {
+      "expect": [
+        "N",
+        "objectType",
+        [
+          "NONE"
+        ]
+      ]
+    },
+    {
+      "expect": [
+        "PS",
+        "isActive",
+        false
+      ],
+      "only": "xite"
+    },
+    {
+      "set": [
+        "N",
+        "objectType",
+        [
+          "ALL"
+        ],
+        "MFString"
+      ]
+    },
+    {
+      "settle": 0.5
+    },
+    {
+      "expect": [
+        "PS",
+        "isActive",
+        true
+      ],
+      "only": "xite"
+    },
+    {
+      "expect": [
+        "PS",
+        "pickedGeometry",
+        [
+          "[node LB]"
+        ]
+      ],
+      "only": "xite"
+    },
+    {
+      "mouse": [
+        "move",
+        160,
+        120
+      ]
+    },
+    {
+      "settle": 0.3
+    },
+    {
+      "expect": [
+        "LTS",
+        "isOver",
+        true
+      ]
+    },
+    {
+      "set": [
+        "N",
+        "pointerEvents",
+        false
+      ]
+    },
+    {
+      "settle": 0.3
+    },
+    {
+      "mouse": [
+        "move",
+        161,
+        120
+      ]
+    },
+    {
+      "settle": 0.3
+    },
+    {
+      "expect": [
+        "LTS",
+        "isOver",
+        false
+      ]
+    },
+    {
+      "set": [
+        "N",
+        "pointerEvents",
+        true
+      ]
+    },
+    {
+      "settle": 0.3
+    },
+    {
+      "mouse": [
+        "move",
+        160,
+        120
+      ]
+    },
+    {
+      "settle": 0.3
+    },
+    {
+      "expect": [
+        "LTS",
+        "isOver",
+        true
+      ]
+    },
+    {
+      "set": [
+        "N",
+        "visible",
+        false
+      ]
+    },
+    {
+      "settle": 0.5
+    },
+    {
+      "mouse": [
+        "move",
+        161,
+        120
+      ]
+    },
+    {
+      "settle": 0.3
+    },
+    {
+      "expect": [
+        "LTS",
+        "isOver",
+        false
+      ]
+    },
+    {
+      "set": [
+        "N",
+        "visible",
+        true
+      ]
+    },
+    {
+      "settle": 0.5
+    },
+    {
+      "px": [
+        256,
+        120,
+        [
+          0,
+          0,
+          0
+        ],
+        45
+      ]
+    },
+    {
+      "setnodes": [
+        "N",
+        "addChildren",
+        [
+          "LX"
+        ]
+      ]
+    },
+    {
+      "settle": 0.7
+    },
+    {
+      "px": [
+        256,
+        120,
+        [
+          255,
+          0,
+          0
+        ],
+        45
+      ]
+    },
+    {
+      "px": [
+        160,
+        120,
+        [
+          0,
+          0,
+          255
+        ],
+        45
+      ]
+    },
+    {
+      "setnodes": [
+        "N",
+        "removeChildren",
+        [
+          "LX"
+        ]
+      ]
+    },
+    {
+      "settle": 0.7
+    },
+    {
+      "px": [
+        256,
+        120,
+        [
+          0,
+          0,
+          0
+        ],
+        45
+      ]
+    }
+  ],
+  "xsdContainerField": [
+    "pickTarget"
+  ],
+  "scope": [
+    "viewport of a Layer is a clip rectangle of the layer's camera, compared with X_ITE in the Viewport fixture, not here",
+    "a pick sensor sees only the shapes of its own layer (X_ITE gives every layer a pickable group of its own); the world counts as layer 0",
+    "a layer's pointer events: the top drawn layer that has a hit wins whatever its depth; compared on the LayerSet fixture"
+  ]
+}

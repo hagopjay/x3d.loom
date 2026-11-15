@@ -16,13 +16,27 @@ R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
   const P = T3.pointer = {
     reset() { for (const s of Object.values(live)) s.clear(); },
     /* ---- picking ---- */
-    pick(body, x, y) {                                  // client pixel -> { mesh, point, normal, uv } in world space, or null
-      const r = body.canvas.getBoundingClientRect(), rc = (body.raycaster ||= new THREE.Raycaster()); if (!body.root || !r.width || !r.height) return null;
-      body.scene.updateMatrixWorld(true); rc.setFromCamera(new THREE.Vector2(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1), body.cam); rc.near = body.cam.near; rc.far = body.cam.far;
+    pick(body, x, y, only) {                            // only: the pass a held sensor was pressed in ({cam, vp, bit}): X_ITE keeps a press in its layer, so the pointer is followed through that pass alone, even off its rectangle
+      // client pixel -> { mesh, point, normal, uv, cam, vp } in world space, or null. With layers or Viewports: the passes that are drawn from the top one down, each through its camera and its layer bit
+      const r = body.canvas.getBoundingClientRect(); if (!body.root || !r.width || !r.height) return null;
+      body.scene.updateMatrixWorld(true);
+      const fx = (x - r.left) / r.width, fy = 1 - (y - r.top) / r.height, passes = body.passes;
+      if (only) return P.pickThrough(body, fx, fy, only.cam, only.vp, only.bit, true);
+      if (!passes) return P.pickThrough(body, fx, fy, body.cam, [0, 0, 1, 1], 0, false);
+      for (let i = passes.length - 1; i >= 0; i--) {
+        const ps = passes[i]; if (ps.layer && ps.layer.layer.f.pointerEvents === false) continue;   // a layer with pointerEvents FALSE is passed over
+        const v = ps.vp; if (fx < v[0] || fx > v[0] + v[2] || fy < v[1] || fy > v[1] + v[3]) continue;   // outside the rectangle of the layer or Viewport
+        const h = P.pickThrough(body, fx, fy, ps.cam, v, ps.bit, true); if (h) return h;   // the first layer that has a hit wins whatever its depth (X_ITE 16.6.0)
+      }
+      return null;
+    },
+    pickThrough(body, fx, fy, cam, v, bit, layered) {
+      const rc = (body.raycaster ||= new THREE.Raycaster());
+      rc.layers.set(bit); rc.setFromCamera(new THREE.Vector2(((fx - v[0]) / v[2]) * 2 - 1, ((fy - v[1]) / v[3]) * 2 - 1), cam); rc.near = cam.near; rc.far = cam.far;
       const list = []; body.root.traverse((o) => { if (!o.isMesh || !o.userData) return; const own = o.userData.shape ? o : (o.userData.hatchOf && o.userData.hatchOf.visible === false ? o.userData.hatchOf : null); if (!own) return; for (let p = o; p; p = p.parent) if (!p.visible) return; list.push(o); });   // a shape drawn as hatching only (filled FALSE) is touched through its hatch
       const hit = rc.intersectObjects(list, false).find((h) => { const m = h.object.material, cp = (m && m.clippingPlanes) || []; return cp.every((pl) => pl.distanceToPoint(h.point) >= 0); }); if (!hit) return null;   // a ClipPlane cuts what can be touched as it cuts what is drawn
       const nm = new THREE.Matrix3().getNormalMatrix(hit.object.matrixWorld), n = hit.face ? hit.face.normal.clone().applyMatrix3(nm).normalize() : new THREE.Vector3(0, 0, 1);
-      return { mesh: hit.object.userData.shape ? hit.object : hit.object.userData.hatchOf, point: hit.point.clone(), normal: n, uv: hit.uv ? [hit.uv.x, hit.uv.y] : [0, 0] };
+      return { mesh: hit.object.userData.shape ? hit.object : hit.object.userData.hatchOf, point: hit.point.clone(), normal: n, uv: hit.uv ? [hit.uv.x, hit.uv.y] : [0, 0], cam, vp: v, bit };
     },
     /* the sensors of the nearest group around the shape that holds any enabled one */
     sensorsFor(mesh) {
@@ -62,7 +76,7 @@ R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
       if (st.touch && st.touch.some((s) => s.node === n)) { st.touch = st.touch.filter((s) => s.node !== n); if (!st.touch.length) st.touch = null; R.hooks.fire(n, 'isActive', false); }
       if (st.drag && st.drag.sens.some((s) => s.node === n)) { st.drag.sens = st.drag.sens.filter((s) => s.node !== n); R.bridge.drag.end(n); if (!st.drag.sens.length) st.drag = null; }
     },
-    hover(body, x, y) { const h = P.pick(body, x, y); P.over(body, h ? P.sensorsFor(h.mesh) : [], h); },
+    hover(body, x, y) { const st = body.ptr, h = P.pick(body, x, y, st && st.touch ? st.pass : null); P.over(body, h ? P.sensorsFor(h.mesh) : [], h); },
     /* ---- navigation ---- */
     pan(body, dx, dy) {
       const p = body.pose, d = Math.max(R.v3.len(R.v3.sub(p.pos, p.center)), 1), s = p.ortho ? (body.cam.top - body.cam.bottom) / (body.canvas.clientHeight || 1) : d * 0.0016 * Math.tan(p.fov / 2) * 2 / 0.9;   // an orthographic view: the height of the view in world units over its pixels
@@ -70,10 +84,10 @@ R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
       body.tr = null; body.pose = { ...p, pos: R.v3.add(p.pos, t), center: R.v3.add(p.center, t) }; body.applyCamera();
     },
     /* ---- the frame a drag sensor works in: rays, the screen projection and the camera, all in the sensor's group frame as it was at the press ---- */
-    dragFrame(body, M) {
-      const inv = M.clone().invert(), cv = body.canvas, cam = body.cam, V = THREE.Vector3;
-      const ray = (x, y) => { const r = cv.getBoundingClientRect(), rc = new THREE.Raycaster(); rc.setFromCamera(new THREE.Vector2((x / r.width) * 2 - 1, -(y / r.height) * 2 + 1), cam); const o = rc.ray.origin.clone().applyMatrix4(inv), d = rc.ray.direction.clone().transformDirection(inv); return { o: o.toArray(), d: d.toArray() }; };
-      const scr = (p) => { const r = cv.getBoundingClientRect(), v = new V(p[0], p[1], p[2]).applyMatrix4(M).project(cam); return [(v.x + 1) / 2 * r.width, (1 - v.y) / 2 * r.height]; };
+    dragFrame(body, M, hit) {   // hit: the pick that started the drag: its camera and rectangle (a layer's), else the world's
+      const inv = M.clone().invert(), cv = body.canvas, cam = (hit && hit.cam) || body.cam, vp = (hit && hit.vp) || [0, 0, 1, 1], V = THREE.Vector3;
+      const ray = (x, y) => { const r = cv.getBoundingClientRect(), rc = new THREE.Raycaster(); rc.setFromCamera(new THREE.Vector2(((x / r.width - vp[0]) / vp[2]) * 2 - 1, (((1 - y / r.height) - vp[1]) / vp[3]) * 2 - 1), cam); const o = rc.ray.origin.clone().applyMatrix4(inv), d = rc.ray.direction.clone().transformDirection(inv); return { o: o.toArray(), d: d.toArray() }; };
+      const scr = (p) => { const r = cv.getBoundingClientRect(), v = new V(p[0], p[1], p[2]).applyMatrix4(M).project(cam); return [(vp[0] + (v.x + 1) / 2 * vp[2]) * r.width, (1 - vp[1] - (v.y + 1) / 2 * vp[3]) * r.height]; };
       const eye = cam.getWorldPosition(new V()).applyMatrix4(inv), fw = new V(0, 0, -1).transformDirection(cam.matrixWorld).transformDirection(inv).normalize();
       return { ray, scr, cam: { pos: eye.toArray(), back: [-fw.x, -fw.y, -fw.z] } };
     },
@@ -91,9 +105,9 @@ R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
         const hit = P.pick(body, e.clientX, e.clientY); if (!hit) return; const sens = P.sensorsFor(hit.mesh); if (!sens.length) return;
         P.over(body, sens, hit); st.activeId = e.pointerId;   // isOver comes before isActive, as it does when the pointer has moved onto the shape first
         const drags = sens.filter((s) => DRAG(s.node.type)), touches = sens.filter((s) => TOUCH(s.node.type));
-        if (touches.length) { st.touch = touches; for (const s of touches) { P.hitEvents(body, s, hit); R.hooks.fire(s.node, 'isActive', true); } }
+        if (touches.length) { st.touch = touches; st.pass = hit.cam ? { cam: hit.cam, vp: hit.vp, bit: hit.bit } : null; for (const s of touches) { P.hitEvents(body, s, hit); R.hooks.fire(s.node, 'isActive', true); } }
         if (drags.length) {
-          const M = P.frameOf(body, drags[0].group, drags[0].obj), fr = P.dragFrame(body, M), pt = rel(e), rl = fr.ray(pt[0], pt[1]), hp = P.local(M, hit.point);
+          const M = P.frameOf(body, drags[0].group, drags[0].obj), fr = P.dragFrame(body, M, hit), pt = rel(e), rl = fr.ray(pt[0], pt[1]), hp = P.local(M, hit.point);
           st.drag = { sens: drags, fr }; e.stopImmediatePropagation(); st.down = false;   // the view does not move
           for (const s of drags) R.bridge.drag.start(s.node, { o: rl.o, d: rl.d, hit: hp, pointer: pt, ray: fr.ray, scr: fr.scr, cam: fr.cam });
         }
@@ -113,7 +127,7 @@ R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} };
         if ((st.drag || st.touch) && st.activeId != null && e.pointerId !== st.activeId) return;   // another finger lifting does not end the sensor's press
         if (st.drag) { const d = st.drag; st.drag = null; e.stopImmediatePropagation(); for (const s of d.sens) R.bridge.drag.end(s.node); }
         if (st.touch) {
-          const t = st.touch, now = (performance.timeOrigin + performance.now()) / 1000, hit = e.type === 'pointerup' ? P.pick(body, e.clientX, e.clientY) : null, here = hit ? P.sensorsFor(hit.mesh).map((s) => s.node) : []; st.touch = null;
+          const t = st.touch, now = (performance.timeOrigin + performance.now()) / 1000, hit = e.type === 'pointerup' ? P.pick(body, e.clientX, e.clientY, st.pass) : null, here = hit ? P.sensorsFor(hit.mesh).map((s) => s.node) : []; st.touch = null;
           for (const s of t) { R.hooks.fire(s.node, 'isActive', false); if (here.includes(s.node)) R.hooks.fire(s.node, 'touchTime', now); }
         }
         st.activeId = null; if (e.type === 'pointerup' && live.ptr && live.ptr.size) P.hover(body, e.clientX, e.clientY);   // the pointer is where it was let go: isOver is told
