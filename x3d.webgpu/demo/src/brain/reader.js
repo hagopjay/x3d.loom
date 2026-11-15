@@ -213,7 +213,7 @@ function parseNode(el, ctx) {
   const node = { type: tag, def: el.getAttribute('DEF') || null, f: {}, id: R.allocNodeId(), out: null };
   for (const [name, [type, , dflt]] of Object.entries(def)) node.f[name] = type === 'MFNode' ? [] : clone(dflt);
   for (const a of el.attributes) {
-    if (SKIP_ATTR.has(a.name) || a.name.includes(':')) continue;
+    if ((SKIP_ATTR.has(a.name) && !(a.name === 'style' && (tag === 'FontStyle' || tag === 'ScreenFontStyle'))) || a.name.includes(':')) continue;   // `style` is an XML presentation attribute everywhere except FontStyle, where it is the field PLAIN | BOLD | ITALIC | BOLDITALIC
     const fd = Object.hasOwn(def, a.name) ? def[a.name] : null;
     if (!fd || fd[1] === OUT || fd[1] === IN) { ctx.warnings.push(`<${tag}> has no field ${a.name}; ignored.`); continue; }
     const flat = FLAT[tag + '.' + a.name];

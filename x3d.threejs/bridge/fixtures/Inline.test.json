@@ -1,0 +1,40 @@
+{
+ "node": "Inline",
+ "mode": "scene",
+ "note": "three Inlines of the same small scene (an orange box with a sphere on it): one loaded at once, one under a Transform that moves and scales it, and one with load FALSE that is switched on by an event",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "shot": "main"
+  },
+  {
+   "set": [
+    "IN",
+    "load",
+    true,
+    "SFBool"
+   ]
+  },
+  {
+   "settle": 2
+  },
+  {
+   "shot": "loaded"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  },
+  "loaded": {
+   "iou": 0.97,
+   "mad": 2,
+   "fg": 8
+  }
+ }
+}

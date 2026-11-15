@@ -35,7 +35,7 @@ function patchThreeShaders() {
 class Body {
   constructor(canvas, opts) {
     this.canvas = canvas; this.opts = opts || {};
-    this.rec = new Map(); this.geoCache = new Map(); this.texCache = new Map(); this.meshesOf = new Map();
+    this.rec = new Map(); this.geoCache = new Map(); this.textCache = new Map(); this.texCache = new Map(); this.meshesOf = new Map();
     this.notes = new Set(); this.frameTimes = []; this.stats = { frames: 0 };
     this.pose = { pos: [0, 0, 10], q: [0, 0, 0, 1], center: [0, 0, 0], fov: 0.7854 };
     this.fogScopes = new WeakMap(); this.localFogs = new Map(); this.worldFog = null; this.fogHooks = false;
@@ -93,11 +93,31 @@ class Body {
       case 'Group': case 'Switch': case 'Transform': case 'Billboard': case 'LOD': case 'Anchor': case 'Collision': case 'StaticGroup': return this.buildGroup(n, parent, chain);   // Anchor, Collision and StaticGroup draw as plain groups (the link, the collision test and the freezing are the SAI's and the navigation's business)
       case 'ClipPlane': (this.clips ||= []).push({ node: n, parent }); this.clipDirty = true; return null;
       case 'Shape': return this.buildShape(n, parent, chain);
+      case 'Inline': return this.buildInline(n, parent, chain);
       case 'Viewpoint': case 'OrthoViewpoint': { const r = { node: n, parent, tn: parent }; this.rec.set(n.id, r); (this.viewpoints ||= []).includes(n) || this.viewpoints.push(n); this.vpParent ||= new Map(); this.vpParent.set(n, parent); return r; }
       case 'DirectionalLight': case 'PointLight': case 'SpotLight': return this.buildLight(n, parent);
       case 'NavigationInfo': case 'Background': case 'TextureBackground': case 'Fog': case 'WorldInfo': case 'TimeSensor': case 'ScalarInterpolator': case 'PositionInterpolator': case 'OrientationInterpolator': case 'ColorInterpolator': return null;
       default: { const fn = T3.build[n.type]; if (!fn) this.note('three.js body: skipped <' + n.type + '>'); else return fn(this, n, parent, chain); return null; }
     }
+  }
+  /* Inline: the file is fetched (gzip too), parsed by the SAI shim and its roots built under this node's group; load FALSE hides it and holds the fetch until load turns TRUE. A relative url is read against the
+     page's base url; the textures and urls inside the inline file are read against the main file, not the inline one (a gap). The inline file's own Viewpoint, lights, fog and background are built where they are drawn
+     (lights, viewpoints) or ignored (fog, background), as for the main file. */
+  buildInline(n, parent, chain) {
+    const o = new THREE.Group(); o.name = n.def || 'Inline'; parent.add(o); const r = { node: n, tn: o, kids: [], chain: [n, ...chain], loaded: false }; this.rec.set(n.id, r);
+    if (n.f.load !== false) this.loadInline(n, r); else o.visible = false;
+    return r;
+  }
+  async loadInline(n, r) {
+    if (r.loaded || r.loading || !(n.f.url || []).length) return; r.loading = true;
+    try {
+      const url = this.resolve(n.f.url[0], this.baseUrl), res = await fetch(url); if (!res.ok) throw new Error(res.status + ' for ' + url);
+      const u = new Uint8Array(await res.arrayBuffer()), text = u[0] === 0x1f && u[1] === 0x8b ? await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text() : new TextDecoder().decode(u);
+      const sc = await X3DSAI.B.createX3DFromString(text, url); if (!this.rec.get(n.id) || r.tn !== this.rec.get(n.id).tn) return;   // the Inline was rebuilt or removed while the file came in
+      for (const root of sc._world.children) r.kids.push(this.build(root, r.tn, r.chain));
+      r.loaded = true; this.clipDirty = true;
+    } catch (e) { this.note('Inline ' + (n.def || '') + ' did not load: ' + e.message); }
+    r.loading = false;
   }
   buildGroup(n, parent, chain) {
     const o = new THREE.Group(); o.name = n.def || n.type; parent.add(o);
@@ -269,6 +289,7 @@ class Body {
       const app = m.userData.shape.f.appearance, pl = this.isPlain(m) ? this.pointLine(n, app) : null;
       if (pl && !!pl.wide !== !!m.userData.wide) { this.rebuildShape(m.userData.shape); return; }   // thin <-> wide: a different kind of mesh
       const g = (pl ? pl.geo : this.threeGeometry(n)) || this.emptyGeometry();
+      if (n.type === 'Text' && !pl && m.material && !m.material.isShaderMaterial) { const tc = this.textCache.get(n.id); if (tc) { m.material.map = tc.map; m.material.needsUpdate = true; } }
       m.geometry.dispose(); m.geometry = g; if (m.userData.hatch) m.userData.hatch.geometry = g; if (pl) { m.material.dispose(); m.material = pl.mat; }
       if (g.userData.tcg && !(this.tcgMeshes || []).includes(m)) (this.tcgMeshes ||= []).push(m);
       this.clipDirty = true;
@@ -372,6 +393,7 @@ class Body {
     else if (mat && mat.type === 'Material') { m = new T.MeshPhongMaterial({ side, specular: 0 }); this.refreshPhong(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }
     else if (mat && mat.type === 'UnlitMaterial') { m = new T.MeshBasicMaterial({ side }); this.refreshUnlit(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }   // 19775-1 4.0: no lighting, emissiveColor is the colour
     else { m = new T.MeshBasicMaterial({ side, color: 0xffffff }); m.map = this.texFor(texN, app && app.f.textureTransform); }   // no Material: unlit, white, texture as is (19775-1 12.2.2)
+    if (g.type === 'Text') { const tc = this.textCache.get(g.id); m.map = tc ? tc.map : null; m.alphaTest = 0.01; m.alphaToCoverage = true; if (texN) this.note('Text: a texture on a Text is not drawn'); m.needsUpdate = true; }   // the glyph atlas is the map: its alpha cuts the quads to the letters
     if (g.f.fogCoord) this.patchMaterial(m, 'fogcoord', (sh) => {   // X_ITE: colour = mix(fogColor, colour, 1 - depth) in place of the distance law; only where a fog covers the mesh
       sh.vertexShader = 'attribute float fogCoord; varying float vFogCoord;\n' + sh.vertexShader.replace('#include <fog_vertex>', '#include <fog_vertex>\n vFogCoord = fogCoord;');
       sh.fragmentShader = 'varying float vFogCoord;\n' + sh.fragmentShader.replace('#include <fog_fragment>', '#ifdef USE_FOG\n gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, clamp( vFogCoord, 0.0, 1.0 ) );\n#endif'); });
@@ -456,6 +478,7 @@ class Body {
   /* --------------------------------------------------------------- changes */
   changed(node, field) {
     const t = node.type;
+    if (t === 'Inline') { const r = this.rec.get(node.id); if (r && field === 'load') { if (node.f.load !== false) { r.tn.visible = true; this.loadInline(node, r); } else r.tn.visible = false; } return; }
     if (t === 'Switch' && field === 'whichChoice') this.applySwitch(node);
     else if (t === 'Transform' && field !== 'children') { const r = this.rec.get(node.id); if (r && r.tn) { this.applyTransform(node, r.tn); } }
     else if (field === 'children' && this.rec.get(node.id) && this.rec.get(node.id).kids) this.rebuildGroup(node);   // Group, Switch, Transform, Billboard, LOD, Anchor, Collision, StaticGroup

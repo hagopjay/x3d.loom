@@ -23,7 +23,7 @@ const METRICS_SRC = (() => { const s = fs.readFileSync(path.join(BAB, 'tools', '
 
 const THREE_BOOT = `<script type="module">import * as THREE from '/three/three.module.js'; window.THREE = THREE;
 const add = (src) => new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.body.appendChild(s); });
-window.pageReady = add('/bundle-body.js').then(async () => { const body = new Body(document.getElementById('c'), { tone: window.__tone || 'none', onNote: (m) => (window.__notes = window.__notes || []).push(m) }); await body.init(); X3DSAI.setBody(body); window.__body = body; });</script>`;
+window.pageReady = add('/bundle-body.js').then(async () => { const body = new Body(document.getElementById('c'), { tone: window.__tone || 'none', fontBase: '/x_ite/assets/fonts/', onNote: (m) => (window.__notes = window.__notes || []).push(m) }); await body.init(); X3DSAI.setBody(body); window.__body = body; });</script>`;
 const PAGE_OURS = `<!doctype html><meta charset=utf-8><body><script src="/bundle.js"></script><script>${RUNNER}
 let ts = performance.timeOrigin / 1000 + performance.now() / 1000;
 window.runOurs = async (spec, xml) => (window.__R && (__R.bridge.allowScripts = spec.scripts !== false), runSpec({ name: 'ours',
