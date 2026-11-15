@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Picking" level="3"/><meta name="title" content="LinePickSensor.x3d"/><meta name="description" content="Bridge fixture for LinePickSensor: two line segments through a Box and a Sphere; pickedPoint and pickedNormal"/></head>
+  <Scene>
+    <Viewpoint position="0 0 14"/>
+    <Group DEF="WORLD">
+      <PickableGroup DEF="PG">
+        <Transform translation="-2 0 0"><Shape><Appearance><Material diffuseColor="0.9 0.3 0.2"/></Appearance><Box DEF="BA" size="2 2 2"/></Shape></Transform>
+        <Transform translation="2 0 0"><Shape><Appearance><Material diffuseColor="0.2 0.5 0.9"/></Appearance><Sphere DEF="SB" radius="1"/></Shape></Transform>
+      </PickableGroup>
+      <PickableGroup DEF="PGW" objectType='"WALL"'>
+        <Transform translation="0 3 0"><Shape><Appearance><Material diffuseColor="0.3 0.8 0.3"/></Appearance><Box DEF="BC" size="2 1 2"/></Shape></Transform>
+      </PickableGroup>
+      <PickableGroup DEF="PGOFF" pickable="false">
+        <Transform translation="0 -3 0"><Shape><Appearance><Material diffuseColor="0.8 0.8 0.2"/></Appearance><Box DEF="BD" size="2 1 2"/></Shape></Transform>
+      </PickableGroup>
+      <Transform translation="6 -3 0"><Shape><Appearance><Material diffuseColor="0.6 0.3 0.8"/></Appearance><Box DEF="BE" size="1 1 1"/></Shape></Transform>
+    </Group>
+    <Transform DEF="TN" translation="0 0 0">
+      <Shape><Box size="0.02 0.02 0.02"/></Shape>
+      <LinePickSensor DEF="N" intersectionType="GEOMETRY" sortOrder="ALL">
+        <IndexedLineSet DEF="PLn" coordIndex="0 1 -1 2 3 -1" containerField="pickingGeometry"><Coordinate point="-2.3 0.3 -3 -2.3 0.3 3 2.4 0.3 -3 2.4 0.3 3"/></IndexedLineSet>
+        <Group USE="WORLD" containerField="pickTarget"/>
+      </LinePickSensor>
+    </Transform>
+    <Transform DEF="TNB" translation="0 0 0">
+      <Shape><Box size="0.02 0.02 0.02"/></Shape>
+      <LinePickSensor DEF="NB" intersectionType="BOUNDS" sortOrder="ALL">
+        <IndexedLineSet USE="PLn" containerField="pickingGeometry"/>
+        <Group USE="WORLD" containerField="pickTarget"/>
+      </LinePickSensor>
+    </Transform>
+    <Transform DEF="TNC" translation="0 0 0">
+      <Shape><Box size="0.02 0.02 0.02"/></Shape>
+      <LinePickSensor DEF="NC" intersectionType="GEOMETRY" sortOrder="CLOSEST">
+        <IndexedLineSet USE="PLn" containerField="pickingGeometry"/>
+        <Group USE="WORLD" containerField="pickTarget"/>
+      </LinePickSensor>
+    </Transform>
+  </Scene>
+</X3D>

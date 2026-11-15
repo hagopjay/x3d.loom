@@ -1,0 +1,112 @@
+{
+ "node": "LayoutLayer",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 39494f00a8a7",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 66/66",
+ "xite": "pass 66/66",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "half_left": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    40,
+    80,
+    119,
+    159
+   ],
+   "bboxXite": [
+    40,
+    80,
+    119,
+    159
+   ],
+   "nOurs": 6400,
+   "nXite": 6400,
+   "fgFracOurs": 0.08,
+   "fgFracXite": 0.08,
+   "mad": 0,
+   "psnr": 99,
+   "fgMeanOurs": [
+    0,
+    0,
+    255
+   ],
+   "fgMeanXite": [
+    0,
+    0,
+    255
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  },
+  "half_right": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    200,
+    80,
+    279,
+    159
+   ],
+   "bboxXite": [
+    200,
+    80,
+    279,
+    159
+   ],
+   "nOurs": 6400,
+   "nXite": 6400,
+   "fgFracOurs": 0.08,
+   "fgFracXite": 0.08,
+   "mad": 0,
+   "psnr": 99,
+   "fgMeanOurs": [
+    0,
+    0,
+    255
+   ],
+   "fgMeanXite": [
+    0,
+    0,
+    255
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "scope": [
+  "pickable and objectType gate a pick sensor in the layer, pointerEvents gates a TouchSensor in it, addChildren / removeChildren change what it draws (all compared with X_ITE 16.6.0)",
+  "two pictures of the layer's viewport (left and right half) agree with X_ITE 16.6.0: silhouette iou 1.0, mean difference 1.5 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0",
+  "a LayoutLayer without a Layout shows its children as they are; a Layout is probed in the Layout fixture"
+ ]
+}

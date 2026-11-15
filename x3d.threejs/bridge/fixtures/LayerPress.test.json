@@ -1,0 +1,103 @@
+{
+ "node": "LayerPress",
+ "mode": "scene",
+ "note": "a press in layer 1 holds the pointer to that layer (X_ITE 16.6.0): dragged over the red box of layer 2 the TouchSensor of layer 1 stays over while it is held, and after the release over the red box it is not over (X_ITE 16.6.0 agrees); found by the review of batch 6",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    130,
+    120,
+    [
+     0,
+     0,
+     255
+    ],
+    45
+   ]
+  },
+  {
+   "px": [
+    185,
+    120,
+    [
+     255,
+     0,
+     0
+    ],
+    45
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    130,
+    120
+   ]
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "down",
+    130,
+    120
+   ]
+  },
+  {
+   "expect": [
+    "TS",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "move",
+    185,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    true
+   ]
+  },
+  {
+   "mouse": [
+    "up",
+    185,
+    120
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "expect": [
+    "TS",
+    "isActive",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "TS",
+    "isOver",
+    false
+   ]
+  }
+ ]
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Layering" level="1"/><meta name="title" content="LayerHeadlight.x3d"/><meta name="description" content="Bridge fixture for LayerSet: the headlight of the world after a layer is drawn first (order 1 0), and a layer looking another way"/></head>
+  <Scene>
+    <NavigationInfo type='"EXAMINE" "ANY"' transitionType='"TELEPORT"' headlight="true"/>
+    <Viewpoint position="0 0 6"/>
+    <Transform rotation="0 1 0 0.5"><Shape><Appearance><Material diffuseColor="1 1 1"/></Appearance><Box size="2 2 2"/></Shape></Transform>
+    <LayerSet DEF="N" order="1 0">
+      <Layer DEF="L1">
+        <Viewpoint position="0 0 6" orientation="0 1 0 1.5708"/>
+        <Transform translation="-30 0 0"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 0 1"/></Appearance><Box size="1 1 1"/></Shape></Transform>
+        <Transform translation="-10 0 4"><Shape><Appearance><Material diffuseColor="1 1 1"/></Appearance><Box size="2 2 2"/></Shape></Transform>
+      </Layer>
+    </LayerSet>
+  </Scene>
+</X3D>

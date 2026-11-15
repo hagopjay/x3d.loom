@@ -1,0 +1,155 @@
+{
+ "node": "ScreenGroup",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 2803982405de",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 75/75",
+ "xite": "pass 75/75",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "v1": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    132,
+    92,
+    187,
+    147
+   ],
+   "bboxXite": [
+    132,
+    92,
+    187,
+    147
+   ],
+   "nOurs": 3134,
+   "nXite": 3134,
+   "fgFracOurs": 0.04,
+   "fgFracXite": 0.04,
+   "mad": 0,
+   "psnr": 99,
+   "fgMeanOurs": [
+    0,
+    0,
+    244
+   ],
+   "fgMeanXite": [
+    0,
+    0,
+    244
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  },
+  "v2": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    132,
+    92,
+    187,
+    147
+   ],
+   "bboxXite": [
+    132,
+    92,
+    187,
+    147
+   ],
+   "nOurs": 3134,
+   "nXite": 3134,
+   "fgFracOurs": 0.04,
+   "fgFracXite": 0.04,
+   "mad": 0,
+   "psnr": 99,
+   "fgMeanOurs": [
+    0,
+    0,
+    244
+   ],
+   "fgMeanXite": [
+    0,
+    0,
+    244
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  },
+  "v3": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    136,
+    96,
+    191,
+    151
+   ],
+   "bboxXite": [
+    136,
+    96,
+    191,
+    151
+   ],
+   "nOurs": 3133,
+   "nXite": 3133,
+   "fgFracOurs": 0.04,
+   "fgFracXite": 0.04,
+   "mad": 0,
+   "psnr": 99,
+   "fgMeanOurs": [
+    0,
+    0,
+    243
+   ],
+   "fgMeanXite": [
+    0,
+    0,
+    243
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "scope": [
+  "three pictures agree with X_ITE 16.6.0 on place and size (bounding boxes within 1 px; silhouette iou 0.93, mean difference 1.7 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0); X_ITE's picture has an anti-aliased ring of about one pixel that the body's does not, which is what the iou below 1 measures (bound iou 0.9)",
+  "the pixel size comes from the depth of the group's origin only, as in X_ITE: the nearer face of a deep child looks a little larger; no snapping to whole pixels (X_ITE does not snap for ScreenGroup either)",
+  "the device content scale is taken as 1 (X_ITE multiplies by its ContentScale)"
+ ]
+}

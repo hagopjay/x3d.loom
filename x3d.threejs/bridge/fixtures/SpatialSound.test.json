@@ -1,0 +1,1710 @@
+{
+ "node": "SpatialSound",
+ "mode": "scene",
+ "note": "the node's gain stage (intensity 0..1 times gain, stereo explicit) and the Web Audio panner (distance model and rolloff, with LINEAR held to rolloff 1, reference and maximum distance, cone angles from radians to degrees held to 0..360, cone outer gain, HRTF or equal power) are compared with X_ITE 16.6.0, and so is the panner's position and orientation: location and direction taken through the Transform and the camera (a viewpoint at 0 0 10) into view space. Runs in the real Babylon body. The panner gets a stereo input (a mono source is up-mixed to two equal channels, in both engines), so the stereo panning of the Web Audio specification applies, not the mono one: a source far to the left is twice as loud in the left ear as the mono formula says (0.2747 against 0.1373 at 5.1 distance). Signal compared with X_ITE 16.6.0 and with the Web Audio specification's panner formulas on the page's real Web Audio clock: a 1 kHz sine (rms 0.7071) from a SpatialSound is recorded as two channels, left and right, and each channel's rms is held to the expected distance gain times the equal power pan gain (azimuth from the view space position, camera at 0 0 10) within 0.012: a source on the left (view position -5 0 -1: left 0.137, right 0.014), on the right, straight ahead at distance 4 (INVERSE: gain 0.25 split 0.707 / 0.707), LINEAR with maxDistance 10, EXPONENTIAL with rolloff 2, intensity 0.5 and gain 0.5 (a quarter), a cone (direction away from the listener, outer angle 1 rad, outer gain 0.2: a fifth), the same cone facing the listener (no loss) and referenceDistance 4; with enableHRTF (a stereo input is panned by the HRTF as two channels, so the ratio is about 2.2, not that of the equal power model) the left ear is louder than the right (rms 0.0288 against 0.0132) and equals X_ITE's; enabled = false is silent. Ours and X_ITE agree within 0.012 on every case.",
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "intensity",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "gain",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "spatialize",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "distanceModel",
+    "INVERSE"
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "rolloffFactor",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "maxDistance",
+    10000
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "referenceDistance",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enableHRTF",
+    false
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "coneOuterGain",
+    0
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.gain.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().gainNode.gain.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelCount})()",
+    2
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().gainNode.channelCount",
+    2
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.channelCountMode})()",
+    "explicit"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().gainNode.channelCountMode",
+    "explicit"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.distanceModel})()",
+    "inverse"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.distanceModel",
+    "inverse"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.rolloffFactor})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.rolloffFactor",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.maxDistance})()",
+    10000
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.maxDistance",
+    10000
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.refDistance})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.refDistance",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.panningModel})()",
+    "equalpower"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.panningModel",
+    "equalpower"
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneOuterGain})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneOuterGain",
+    0
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneInnerAngle})()",
+    360
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneInnerAngle",
+    360
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneOuterAngle})()",
+    360
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneOuterAngle",
+    360
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.positionX.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.positionX.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.positionY.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.positionY.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.positionZ.value})()",
+    -10
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.positionZ.value",
+    -10
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.orientationX.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.orientationX.value",
+    0
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.orientationZ.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.orientationZ.value",
+    1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "location",
+    [
+     0,
+     0,
+     -5
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.positionX.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.positionX.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.positionY.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.positionY.value",
+    0
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.positionZ.value})()",
+    -15
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.positionZ.value",
+    -15
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "direction",
+    [
+     1,
+     0,
+     0
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 0.3
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.orientationX.value})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.orientationX.value",
+    1
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.orientationZ.value})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.orientationZ.value",
+    0
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "intensity",
+    0.5
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.gain.value})()",
+    0.5
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().gainNode.gain.value",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.gain.value})()",
+    0.25
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().gainNode.gain.value",
+    0.25
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "intensity",
+    5
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.in.gain.value})()",
+    0.5
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().gainNode.gain.value",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "coneInnerAngle",
+    1.5708
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneInnerAngle})()",
+    90
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneInnerAngle",
+    90
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "coneOuterAngle",
+    3.1416
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneOuterAngle})()",
+    180
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneOuterAngle",
+    180
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "coneInnerAngle",
+    20
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneInnerAngle})()",
+    360
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneInnerAngle",
+    360
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "coneOuterGain",
+    0.4
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneOuterGain})()",
+    0.4
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneOuterGain",
+    0.4
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "coneOuterGain",
+    3
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.coneOuterGain})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.coneOuterGain",
+    1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "maxDistance",
+    50
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.maxDistance})()",
+    50
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.maxDistance",
+    50
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "referenceDistance",
+    2
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.refDistance})()",
+    2
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.refDistance",
+    2
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "distanceModel",
+    "LINEAR"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.distanceModel})()",
+    "linear"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.distanceModel",
+    "linear"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "distanceModel",
+    "EXPONENTIAL"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.distanceModel})()",
+    "exponential"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.distanceModel",
+    "exponential"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "distanceModel",
+    "INVERSE"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.distanceModel})()",
+    "inverse"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.distanceModel",
+    "inverse"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "distanceModel",
+    "NONSENSE"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.distanceModel})()",
+    "inverse"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.distanceModel",
+    "inverse"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "distanceModel",
+    "LINEAR"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "rolloffFactor",
+    3
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.rolloffFactor})()",
+    1
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.rolloffFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "distanceModel",
+    "INVERSE"
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.rolloffFactor})()",
+    3
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.rolloffFactor",
+    3
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "rolloffFactor",
+    -2
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.rolloffFactor})()",
+    0
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.rolloffFactor",
+    0
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "enableHRTF",
+    true
+   ]
+  },
+  {
+   "settle": 0.1
+  },
+  {
+   "only": "ours",
+   "js": [
+    "(()=>{const w=__worlds[__worlds.length-1];const n=w.nodes.find(n=>n.def==='N');return n._au.proc.panningModel})()",
+    "HRTF"
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('N').getValue().pannerNode.panningModel",
+    "HRTF"
+   ]
+  },
+  {
+   "tap": [
+    "p",
+    "SS",
+    "out",
+    {
+     "channels": 2
+    }
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1.0
+  },
+  {
+   "set": [
+    "SS",
+    "location",
+    [
+     -5,
+     0,
+     9
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "leftL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "leftR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(-5,0,-1,'inverse',1,1,10000);return {l:0.7071067811865476*g[0]*1.0,r:0.7071067811865476*g[1]*1.0}})()",
+    "x.left"
+   ]
+  },
+  {
+   "close": [
+    "leftL.rms",
+    "x.left.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "leftR.rms",
+    "x.left.r",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "location",
+    [
+     5,
+     0,
+     9
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "rightL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "rightR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(5,0,-1,'inverse',1,1,10000);return {l:0.7071067811865476*g[0]*1.0,r:0.7071067811865476*g[1]*1.0}})()",
+    "x.right"
+   ]
+  },
+  {
+   "close": [
+    "rightL.rms",
+    "x.right.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "rightR.rms",
+    "x.right.r",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "location",
+    [
+     0,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "front4L",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "front4R",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(0,0,-4,'inverse',1,1,10000);return {l:0.7071067811865476*g[0]*1.0,r:0.7071067811865476*g[1]*1.0}})()",
+    "x.front4"
+   ]
+  },
+  {
+   "close": [
+    "front4L.rms",
+    "x.front4.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "front4R.rms",
+    "x.front4.r",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "distanceModel",
+    "LINEAR"
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "maxDistance",
+    10
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "location",
+    [
+     0,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "linearL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "linearR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(0,0,-4,'linear',1,1,10);return {l:0.7071067811865476*g[0]*1.0,r:0.7071067811865476*g[1]*1.0}})()",
+    "x.linear"
+   ]
+  },
+  {
+   "close": [
+    "linearL.rms",
+    "x.linear.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "linearR.rms",
+    "x.linear.r",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "distanceModel",
+    "EXPONENTIAL"
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "maxDistance",
+    10000
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "rolloffFactor",
+    2
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "location",
+    [
+     0,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "exp2L",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "exp2R",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(0,0,-4,'exponential',1,2,10000);return {l:0.7071067811865476*g[0]*1.0,r:0.7071067811865476*g[1]*1.0}})()",
+    "x.exp2"
+   ]
+  },
+  {
+   "close": [
+    "exp2L.rms",
+    "x.exp2.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "exp2R.rms",
+    "x.exp2.r",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "distanceModel",
+    "INVERSE"
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "rolloffFactor",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "intensity",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "gain",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "location",
+    [
+     0,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "intenL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "intenR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(0,0,-4,'inverse',1,1,10000);return {l:0.7071067811865476*g[0]*0.25,r:0.7071067811865476*g[1]*0.25}})()",
+    "x.inten"
+   ]
+  },
+  {
+   "close": [
+    "intenL.rms",
+    "x.inten.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "intenR.rms",
+    "x.inten.r",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "intensity",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "gain",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "direction",
+    [
+     0,
+     0,
+     -1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "coneInnerAngle",
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "coneOuterAngle",
+    1.0
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "coneOuterGain",
+    0.2
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "location",
+    [
+     0,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "coneL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "coneR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(0,0,-4,'inverse',1,1,10000);return {l:0.7071067811865476*g[0]*0.2,r:0.7071067811865476*g[1]*0.2}})()",
+    "x.cone"
+   ]
+  },
+  {
+   "close": [
+    "coneL.rms",
+    "x.cone.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "coneR.rms",
+    "x.cone.r",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "direction",
+    [
+     0,
+     0,
+     1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "location",
+    [
+     0,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "coneInL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "coneInR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(0,0,-4,'inverse',1,1,10000);return {l:0.7071067811865476*g[0]*1.0,r:0.7071067811865476*g[1]*1.0}})()",
+    "x.coneIn"
+   ]
+  },
+  {
+   "close": [
+    "coneInL.rms",
+    "x.coneIn.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "coneInR.rms",
+    "x.coneIn.r",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "referenceDistance",
+    4
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "location",
+    [
+     0,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "ref4L",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "ref4R",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "(()=>{const g=AUD.panGain(0,0,-4,'inverse',4,1,10000);return {l:0.7071067811865476*g[0]*1.0,r:0.7071067811865476*g[1]*1.0}})()",
+    "x.ref4"
+   ]
+  },
+  {
+   "close": [
+    "ref4L.rms",
+    "x.ref4.l",
+    0.012
+   ]
+  },
+  {
+   "close": [
+    "ref4R.rms",
+    "x.ref4.r",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "referenceDistance",
+    1
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "location",
+    [
+     -5,
+     0,
+     9
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "enableHRTF",
+    true
+   ]
+  },
+  {
+   "settle": 1.5
+  },
+  {
+   "sig": [
+    "p",
+    "hrtfL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "hrtfR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "map['hrtfL.rms']>1.5*map['hrtfR.rms']?1:0",
+    "chkH"
+   ]
+  },
+  {
+   "close": [
+    "chkH",
+    1,
+    0.5
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "enableHRTF",
+    false
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 1.0
+  },
+  {
+   "sig": [
+    "p",
+    "off",
+    {
+     "ch": 0,
+     "from": -0.3
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "set": [
+    "SS",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "settle": 1.0
+  },
+  {
+   "sig": [
+    "p",
+    "on",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    },
+    {}
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "leftL.rms",
+   0.012
+  ],
+  [
+   "leftR.rms",
+   0.012
+  ],
+  [
+   "rightL.rms",
+   0.012
+  ],
+  [
+   "rightR.rms",
+   0.012
+  ],
+  [
+   "front4L.rms",
+   0.012
+  ],
+  [
+   "front4R.rms",
+   0.012
+  ],
+  [
+   "linearL.rms",
+   0.012
+  ],
+  [
+   "linearR.rms",
+   0.012
+  ],
+  [
+   "exp2L.rms",
+   0.012
+  ],
+  [
+   "exp2R.rms",
+   0.012
+  ],
+  [
+   "intenL.rms",
+   0.012
+  ],
+  [
+   "intenR.rms",
+   0.012
+  ],
+  [
+   "coneL.rms",
+   0.012
+  ],
+  [
+   "coneR.rms",
+   0.012
+  ],
+  [
+   "coneInL.rms",
+   0.012
+  ],
+  [
+   "coneInR.rms",
+   0.012
+  ],
+  [
+   "ref4L.rms",
+   0.012
+  ],
+  [
+   "ref4R.rms",
+   0.012
+  ],
+  [
+   "hrtfL.rms",
+   0.004
+  ],
+  [
+   "hrtfR.rms",
+   0.004
+  ],
+  [
+   "off.rms",
+   0.0001
+  ]
+ ],
+ "scope": [
+  "a SpatialSound plays only while it is drawn in X_ITE (its traversed flag, which a Switch or culling turns off); the bridge plays it whenever it is enabled; spatialize is an initializeOnly field: set at load, bypassing the panner; the routing is not read back; dopplerEnabled and priority are held; Web Audio has no doppler and there is one voice per node; a maxDistance of 0 or less is refused by Web Audio (RangeError): the old distance stays; X_ITE 16.6.0 raises the error inside its event handler, so the test does not try it; the HRTF response itself (inter-aural delay and spectrum) is compared only as the level of the two ears"
+ ]
+}

@@ -1,0 +1,64 @@
+{
+ "node": "ParticleSystem",
+ "mode": "scene",
+ "tone": "none",
+ "note": "a ConeEmitter throws 400 particles up at 1.2 m/s in a narrow cone; the column is compared with X_ITE 16.6.0 by extent and count. Force, wind and ramp are not in this picture (X_ITE reads a force differently, see the gaps)",
+ "steps": [
+  {
+   "expect": [
+    "PS",
+    "maxParticles",
+    400
+   ]
+  },
+  {
+   "expect": [
+    "PS",
+    "isActive",
+    true
+   ]
+  },
+  {
+   "settle": 2.5
+  },
+  {
+   "js": [
+    "__body.psys.length",
+    1
+   ],
+   "only": "ours"
+  },
+  {
+   "js": [
+    "__body.psys[0].parts.length > 50",
+    true
+   ],
+   "only": "ours"
+  },
+  {
+   "js": [
+    "__body.psys[0].parts.every(q => Math.hypot(q.p[0], q.p[2]) < 3)",
+    true
+   ],
+   "only": "ours"
+  },
+  {
+   "shot": "cloud"
+  }
+ ],
+ "compare": {
+  "cloud": {
+   "iou": 0.0,
+   "bbox": 70,
+   "count": [
+    0.3,
+    3.0
+   ],
+   "fg": 90
+  }
+ },
+ "gaps": [
+  "the particle age at the shot differs between the engines (ours runs on elapsed time, about 3 frames per second under SwiftShader), so the extent and the count are compared with wide bounds and the shape is checked from the particle list in our body",
+  "ForcePhysicsModel: X_ITE 16.6.0 lifts a cloud much higher than a force of 0 -2 0 on a 3 m/s cone should (not reproduced here, measured in the first run of this fixture: the top of the cloud was at the top of the picture against 128 px in ours); a colorRamp without colorKey is drawn white by X_ITE where the Babylon bridge and this body spread the colours evenly over the life"
+ ]
+}

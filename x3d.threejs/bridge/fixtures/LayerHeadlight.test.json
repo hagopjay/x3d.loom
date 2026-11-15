@@ -1,0 +1,120 @@
+{
+ "node": "LayerHeadlight",
+ "mode": "scene",
+ "note": "the world's headlight shines along the world camera, not along the camera of a layer drawn before it (order 1 0): the box seen from 0 0 6 is lit the same with order 0 1 and 1 0; found by the review of batch 6, where the headlight stayed on the layer camera and the world went dark; the layer's own box (a lit white box seen along the layer's view) is lit by the headlight too",
+ "steps": [
+  {
+   "settle": 2
+  },
+  {
+   "px": [
+    150,
+    120,
+    [
+     224,
+     224,
+     224
+    ],
+    60
+   ]
+  },
+  {
+   "px": [
+    170,
+    120,
+    [
+     224,
+     224,
+     224
+    ],
+    60
+   ]
+  },
+  {
+   "px": [
+    218,
+    120,
+    [
+     224,
+     224,
+     224
+    ],
+    60
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "order",
+    [
+     0,
+     1
+    ],
+    "MFInt32"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    150,
+    120,
+    [
+     224,
+     224,
+     224
+    ],
+    60
+   ]
+  },
+  {
+   "px": [
+    170,
+    120,
+    [
+     224,
+     224,
+     224
+    ],
+    60
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "order",
+    [
+     1,
+     0
+    ],
+    "MFInt32"
+   ]
+  },
+  {
+   "settle": 0.5
+  },
+  {
+   "px": [
+    150,
+    120,
+    [
+     224,
+     224,
+     224
+    ],
+    60
+   ]
+  },
+  {
+   "shot": "headlight"
+  }
+ ],
+ "compare": {
+  "headlight": {
+   "iou": 0.85,
+   "mad": 8,
+   "fg": 20
+  }
+ }
+}

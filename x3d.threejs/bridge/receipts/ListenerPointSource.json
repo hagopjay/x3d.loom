@@ -1,0 +1,22 @@
+{
+ "node": "ListenerPointSource",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha b905b33ddee8",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 105/105",
+ "xite": "pass 105/105",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "scope": [
+  "the listener follows the node once per frame; X_ITE does it while it draws the node; enabled = false leaves the listener where it was; interauralDistance and dopplerEnabled are held, Web Audio has no use for them; the 4.0 UOM gives ListenerPointSource gain, mediaDeviceID and a start/stop clock; X_ITE 16.6.0 has none of them, so they are held here and not compared"
+ ]
+}

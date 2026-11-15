@@ -1,0 +1,155 @@
+{
+ "node": "Layout",
+ "date": "2026-11-15",
+ "env": {
+  "chromium": "153.0.8010.12",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha 2803982405de",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 122/122",
+ "xite": "pass 122/122",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "v2": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    0,
+    120,
+    159,
+    239
+   ],
+   "bboxXite": [
+    0,
+    120,
+    159,
+    239
+   ],
+   "nOurs": 19200,
+   "nXite": 19200,
+   "fgFracOurs": 0.25,
+   "fgFracXite": 0.25,
+   "mad": 0,
+   "psnr": 99,
+   "fgMeanOurs": [
+    0,
+    0,
+    255
+   ],
+   "fgMeanXite": [
+    0,
+    0,
+    255
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  },
+  "v3": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    160,
+    60,
+    319,
+    179
+   ],
+   "bboxXite": [
+    160,
+    60,
+    319,
+    179
+   ],
+   "nOurs": 19200,
+   "nXite": 19200,
+   "fgFracOurs": 0.25,
+   "fgFracXite": 0.25,
+   "mad": 0,
+   "psnr": 99,
+   "fgMeanOurs": [
+    0,
+    0,
+    255
+   ],
+   "fgMeanXite": [
+    0,
+    0,
+    255
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  },
+  "v1": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    0,
+    100,
+    159,
+    239
+   ],
+   "bboxXite": [
+    0,
+    100,
+    159,
+    239
+   ],
+   "nOurs": 22400,
+   "nXite": 22400,
+   "fgFracOurs": 0.29,
+   "fgFracXite": 0.29,
+   "mad": 0,
+   "psnr": 99,
+   "fgMeanOurs": [
+    0,
+    0,
+    255
+   ],
+   "fgMeanXite": [
+    0,
+    0,
+    255
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "scope": [
+  "three pictures (settings of all six fields) agree with X_ITE 16.6.0: silhouette iou 1.0, mean difference 1.2 of 255 on Chromium 153.0.8010.12 SwiftShader / Babylon 9.32.0",
+  "a Layout inside a LayoutGroup that sits in the perspective world uses the near plane of the camera as the viewport size (as X_ITE does), so only the orthographic layer is probed",
+  "the offset and size units of PIXEL count CSS pixels of the canvas; no device pixel ratio is read (X_ITE divides by its ContentScale)"
+ ]
+}
