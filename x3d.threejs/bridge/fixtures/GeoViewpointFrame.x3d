@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><component name="Geospatial" level="2"/><meta name="title" content="GeoViewpointFrame.x3d"/><meta name="description" content="A GeoViewpoint at latitude 0, longitude 90, height 100 with no GeoOrigin: the frame at its position (east, up, south) is turned a quarter of the way round the earth from the world axes, so a basis written the wrong way round shows. A red box 55 m north and a green box 55 m east of the camera, both 100 m up"/></head>
+  <Scene>
+    <GeoViewpoint DEF="V" position="0 90 100" description="frame"/>
+    <GeoLocation geoCoords="0.0005 90 100"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="1 0 0"/></Appearance><Box size="10 10 10"/></Shape></GeoLocation>
+    <GeoLocation geoCoords="0 90.0005 100"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 1 0"/></Appearance><Box size="10 10 10"/></Shape></GeoLocation>
+    <GeoLocation geoCoords="0 90 150"><Shape><Appearance><Material diffuseColor="0 0 0" emissiveColor="0 0 1"/></Appearance><Box size="10 10 10"/></Shape></GeoLocation>
+  </Scene>
+</X3D>
