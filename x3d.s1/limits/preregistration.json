@@ -1,7 +1,7 @@
 {
   "schema": "x3d.s1.limits/1",
   "written": "2026-11-16",
-  "status": "declared before any model call; no model has been called",
+  "status": "declared before any model call; no model has been called; E7 and E8 need no model",
   "note": "Bars are fixed here first. A run that changes a bar must change this file in an earlier commit, and an excursion is reported as a waiver, never absorbed.",
   "scope": "Oracle labels are exact for structure only: they say whether the validator complains, not whether a scene is good or visible. Calibration on seeded mutants is reported separately from calibration on real scenes.",
   "experiments": {
@@ -44,6 +44,52 @@
       "question": "Are advisory judgments steady?",
       "repeats": 5,
       "least_stable_option_flip_probability_max": 0.05
+    },
+    "E7_evidence_planted_claims": {
+      "question": "Does the quote check refuse planted wrong claims and accept true ones on real scene text?",
+      "needs_model": false,
+      "instrument": "tools/evidence_measure.py over the public corpus; truth by construction; seeds taken from each scene's sha256",
+      "families": {
+        "true_exact": {"expect": "verified", "items_min": 5000, "verified_wilson_lower_min": 0.99},
+        "true_noisy": {"expect": "verified", "items_min": 5000, "verified_wilson_lower_min": 0.99},
+        "number_wrong": {"expect": "not_verified", "items_min": 500, "false_verified_max": 0},
+        "word_not_in_quote": {"expect": "not_verified", "items_min": 5000, "false_verified_max": 0},
+        "quote_fabricated": {"expect": "not_verified", "items_min": 5000, "false_verified_max": 0},
+        "wrong_source": {"expect": "not_verified", "items_min": 1500, "false_verified_max": 0},
+        "attack_known": {"expect": "not_verified", "items_min": 500, "false_verified_max": 0}
+      },
+      "report_always": [
+        "rule-of-three upper bound beside every zero",
+        "classes of true claims not verified (partial identifier, odd number form, flagged)",
+        "repeat rate: true claims whose quote occurs in more than one string",
+        "attack_paraphrase verified share (the lint's blind spot): reported, not a bar",
+        "wrong-place claims are NOT detectable by this check: say so beside the table"
+      ]
+    },
+    "E8_evidence_cap": {
+      "question": "Does the cap stop an unverified claim from riding a light route and leave verified claims alone?",
+      "needs_model": false,
+      "exhaustive_table": "4 verdicts x 3 routes x flagged or not",
+      "unverified_reaching_suspected_ok_max": 0,
+      "verified_clean_route_changes_max": 0,
+      "loosened_routes_max": 0,
+      "verdicts_graded_C_max": 0,
+      "d_and_c_answers_changed_max": 0
+    },
+    "E9_quote_copy": {
+      "question": "Does a cheap writer copy exact quotes next to its values, and do the verdicts track the truth?",
+      "gate": "needs the owner's typed yes and a pinned model id; no model has been called",
+      "items_min": 500,
+      "scenes_min": 100,
+      "coverage_min": 0.95,
+      "quote_found_share_min": 0.95,
+      "verified_share_of_true_claims_min": 0.90,
+      "report_always": [
+        "verdict table with Wilson 95% per writer model id",
+        "origin split: real scenes vs seeded mutants (law 30)",
+        "seconds and cost per 1,000 claims",
+        "claims whose quote is repeated in the source"
+      ]
     }
   },
   "routes_may_change": "the order of work and what a person sees first; never a witness status",
