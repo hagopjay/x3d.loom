@@ -5,6 +5,10 @@
   questions                                              the D / C / J catalogue
   lint-text TEXT_OR_FILE                                 the untrusted-text pattern screen
   triage FILE [--replay RECORDED.json] [--untrusted]     one triage pass; J questions need --replay
+  evidence SOURCE CLAIMS.json [--strict] [--require verified|reworded] [--quotes]
+                                                         quote-and-verify: SOURCE is a scene or a text file; CLAIMS is a list of {field, value, quote[, source]};
+                                                         exit 1 when any claim falls below --require (default verified), so `kit/loom command` can record it;
+                                                         the output holds no scene text unless --quotes (then quoted, capped, linted, flagged ones withheld)
 """
 from __future__ import annotations
 
@@ -16,6 +20,7 @@ import sys
 from . import __version__
 from .backends import ReplayBackend
 from .decidable import CATALOGUE, partition
+from .evidence import EvidencePolicy, Source, check_claims, scene_sources, summary, to_receipt, to_wire
 from .pipeline import triage
 from .state import FACETS, load, slice_state
 from .untrusted import lint_text
@@ -35,6 +40,8 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("questions")
     p = sub.add_parser("lint-text"); p.add_argument("text")
     p = sub.add_parser("triage"); p.add_argument("file"); p.add_argument("--replay"); p.add_argument("--untrusted", action="store_true")
+    p = sub.add_parser("evidence"); p.add_argument("source"); p.add_argument("claims"); p.add_argument("--strict", action="store_true"); p.add_argument("--quotes", action="store_true")
+    p.add_argument("--require", choices=["verified", "reworded"], default="verified")
     a = ap.parse_args(argv)
 
     if a.cmd == "state":
@@ -58,6 +65,16 @@ def main(argv: list[str] | None = None) -> int:
             with open(a.replay, encoding="utf-8") as fh:
                 backend = ReplayBackend(json.load(fh))
         _dump(triage(a.file, backend=backend, allow_untrusted=a.untrusted))
+    elif a.cmd == "evidence":
+        with open(a.source, encoding="utf-8") as fh:
+            head = fh.read(2048).lstrip()
+        sources = scene_sources(a.source) if head.startswith("<") else [Source("text", open(a.source, encoding="utf-8").read())]
+        with open(a.claims, encoding="utf-8") as fh:
+            claims = json.load(fh)
+        evs = check_claims(claims, sources, EvidencePolicy.strict() if a.strict else EvidencePolicy())
+        ok = {"verified"} | ({"reworded"} if a.require == "reworded" else set())
+        _dump({"summary": summary(evs, expected=[c["field"] for c in claims]), "items": [(to_wire if a.quotes else to_receipt)(e) for e in evs], "require": a.require})
+        return 0 if all(e.verdict in ok and not e.flags for e in evs) else 1
     return 0
 
 

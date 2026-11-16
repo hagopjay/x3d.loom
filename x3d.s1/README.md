@@ -30,8 +30,8 @@ chapter 22; this folder is the executable half.
 
 ```bash
 cd x3d.s1
-python3 -B -m pytest -q tests                 # 113 tests; pytest is the only thing installed, the package itself is standard library only
-python3 -B tools/mutation_check.py            # plants 20 bugs in a scratch copy; every one must turn the suite red (writes receipts/mutation-check.json)
+python3 -B -m pytest -q tests                 # 151 tests; pytest is the only thing installed, the package itself is standard library only
+python3 -B tools/mutation_check.py            # plants 41 bugs in a scratch copy; every one must turn the suite red (writes receipts/mutation-check.json)
 python3 -B tools/corpus_measure.py receipts/corpus-2026-11-16.json docs=<x3d.docs> loom=<x3d.loom> mcp=<x3d_mcp>   # needs checkouts; offline
 python3 -B -m x3d_s1 questions                # the D / C / J catalogue
 python3 -B -m x3d_s1 state scene.x3d --facets header,census,lighting     # sliced, trust-tiered state as JSON
@@ -67,6 +67,30 @@ threshold_for_precision(probs, outcomes, target=0.95, min_n=30)    # (bar, n, k,
 `HostedAdapter(transport, model)` builds the documented request and parses the typed response; the HTTP step is a callable **you** inject. It refuses a model id
 that ends in `latest` or `preview`, because aliases move and an answer you cannot reproduce is not evidence.
 
+## Evidence: a quote beside a value, checked by code
+
+A judged answer or a written claim ("the pier is 6 m tall") can come with the exact words it rests on. `x3d_s1.evidence` checks that in plain code, with no model:
+**FIND** the quote as an unbroken run of whole words inside one source string, **COMPARE** the value to the quote (numbers as numbers, `4.200` read as 4.2 or 4200,
+a vector in order, an identifier by case), **LOCATE** it (node path, attribute, MFString item, character span). The verdicts are `verified`, `check`, `reworded` and
+`unchecked`; no quote is `unchecked`, never "false". The method is the FIND / COMPARE / LOCATE check of source tracing (GAIK, MIT); the code here is an independent
+implementation of the verdict table, and `check_claims(..., verifier=callable)` is the slot for the richer x3d.ML engine (`x3dtrace`) without importing it.
+
+```bash
+python3 -B -m x3d_s1 evidence SOURCE CLAIMS.json [--strict] [--require verified|reworded] [--quotes]   # exit 0 only if every claim clears the bar
+```
+
+Rules that follow from the lane's laws: a quote is untrusted scene text, so it and the string it sits in go through the lint, and a flagged one can never verify;
+a verified quote caps a *claim* at grade `L` and anything else at `S`, never `C` (law 6: the CHECK is exact, the claim is still model-written); the route cap only
+tightens (`ROUTE_FLOOR`, tested over 4 verdicts x 3 routes) and never turns a witness green; a quote from the scene's own text shows what the scene *says*, so it
+never replaces a twin for a class C or D question. Preregistered bars: E7 and E8 (no model) and E9 (a model copying quotes, gated on the owner's typed yes), in
+`limits/preregistration.json`, written in an earlier commit than the code.
+
+Measured (`tools/evidence_measure.py`, offline, Python 3.13.18, one run, 501 scenes: `x3d.docs@4d394d7`, `x3d.loom@7a7d657`, `x3d_mcp@dcf0815`; claims planted by
+code, so truth is known by construction): true claims 5,782 of 5,808 verified (Wilson 95% lower bound 0.99345, the E7 bar is 0.99); wrong number 0 of 806, a word
+outside the quote 0 of 5,357, a fabricated quote 0 of 5,808, a quote from another string 0 of 1,696, a known injection phrase quoted as evidence 0 of 501 (each zero
+has a rule-of-three upper bound in the receipt). **Blind spot, reported not hidden:** 501 of 501 paraphrased instruction-like strings the lint was never shown
+verified as quotes, because the lint is a pre-filter and a verified quote proves the words are there, not that they are true or in the right place.
+
 ## What this is not
 
 It never calls a model, holds a key, opens a socket or spends anything (a test reads the package's source and fails on a network import). The shipped backends
@@ -76,7 +100,7 @@ they say whether the validator complains, not whether a scene is good or visible
 
 ## Rig for every number
 
-Python 3.13.18 on one container (4 vCPU, x86_64, no GPU), standard library only; pytest 9.x for the tests. The same 113 tests and 20 of 20 mutants also ran green under Python 3.12.3 (the CI version). Timings are single runs on a shared VM, so a second
+Python 3.13.18 on one container (4 vCPU, x86_64, no GPU), standard library only; pytest 9.x for the tests. The same 151 tests and 41 of 41 mutants also ran green under Python 3.12.3 (the CI version). Timings are single runs on a shared VM, so a second
 run moves the third digit (the median slice time was 0.278 ms on the first run and 0.288 ms on the committed one). Sizes are exact; token counts are bytes/4
 estimates, a floor for number-heavy text. The corpus is every `.x3d` under `x3d.docs@3aab064`, `x3d.loom@0752865` and `x3d_mcp@dcf0815`.
 
@@ -86,8 +110,9 @@ estimates, a floor for number-heavy text. The corpus is every `.x3d` under `x3d.
 |---|---|---|
 | `corpus-2026-11-16.json` (`x3d.s1.corpus-census/1`) | 499 public scenes: raw bytes 57,468,875, all-facet state bytes 507,786 (113.18x aggregate; median ratio 1.73, p10 0.79, p90 185.72); median state 983 B, largest 1,740 B; 58 scenes over the 32,000-token question limit raw, 0 sliced; 36,743 text strings, 0 flagged by the lint; slice median 0.288 ms | `tools/corpus_measure.py`, Python 3.13.18, the three commits above |
 | `corpus-2026-11-16.scenes.csv` | one row per scene with `origin` (`repo@sha7:path`) and `file_sha256`; no scene text | same |
-| `mutation-check.json` (`x3d.s1.mutation-check/1`) | 20 planted bugs, 20 killed; a crash, a missing target or a survivor fails the check | `tools/mutation_check.py` |
-| `../limits/preregistration.json` | the bars for experiments E1 to E6, written before any model call; a changed bar goes in an earlier commit and an excursion is reported as a waiver | none yet: no experiment has run |
+| `mutation-check.json` (`x3d.s1.mutation-check/1`) | 41 planted bugs, 41 killed; a crash, a missing target or a survivor fails the check | `tools/mutation_check.py` |
+| `evidence-2026-11-16.json` (`x3d.s1.evidence-measure/1`) | 11,616 true and 13,667 planted-wrong claims plus 501 injection quotes, over 501 scenes, per family counts, Wilson and rule-of-three bounds, the paraphrase blind spot; aggregates only, no scene text | `tools/evidence_measure.py`, Python 3.13.18, the three commits in the file |
+| `../limits/preregistration.json` | the bars for experiments E1 to E9, written before any model call (E7 and E8 need none); a changed bar goes in an earlier commit and an excursion is reported as a waiver | none yet: no experiment has run |
 
 Rows with ratio under 1 (the 10th percentile is 0.79) are scenes smaller than the state they would produce: the rule is to send a scene under about 1 KB raw
 (capped and linted) and slice the rest.
