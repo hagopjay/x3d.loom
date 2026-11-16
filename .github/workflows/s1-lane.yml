@@ -1,0 +1,46 @@
+# x3d.loom/.github/workflows/s1-lane.yml
+# The typed-judgment lane (x3d.s1): the question and answer types, state slicing and its trust tiers, the injection lint, routing, calibration arithmetic and the
+# package's own safety lints (no assert, no network import, standard library only). It calls no model and needs no key. It does not run the corpus census
+# (that reads other repositories' checkouts and is run by hand; its receipt is committed) and it measures no latency of any service.
+name: s1-lane
+
+on:
+  push:
+    paths: ['x3d.s1/**', '.github/workflows/s1-lane.yml']
+  pull_request:
+    paths: ['x3d.s1/**', '.github/workflows/s1-lane.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: s1-lane-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+    working-directory: x3d.s1
+
+jobs:
+  lane:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pytest
+      - name: Tests (the package itself imports only the standard library)
+        run: python -B -m pytest -q -p no:cacheprovider tests
+      - name: Mutation check (every planted bug must turn the suite red)
+        run: python -B tools/mutation_check.py
+      - name: Receipt
+        run: |
+          echo "commit: $GITHUB_SHA"
+          echo "runner: $(uname -sr)"
+          python --version
+          python -m pytest --version
+          echo "scope: structure and arithmetic only; no model call, no network, no GPU, no corpus census"
