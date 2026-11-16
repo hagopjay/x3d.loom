@@ -15,6 +15,7 @@ from typing import Mapping, Sequence
 from . import __version__
 from .backends import Backend, build_request, estimate_cost_usd, estimate_input_tokens, parse_all
 from .decidable import BY_ID, C, D, J, QSpec, exact_answer
+from .evidence import Evidence, cap_route, to_receipt
 from .questions import AnswerSpaceError, Choice, ChoiceAnswer, Noul, NoulAnswer, Score, ScoreAnswer, parse_answer
 from .routing import Policy, route_choice, route_noul
 from .state import Scene, jsize, load, slice_state
@@ -44,7 +45,8 @@ def group_judged(specs: Sequence[QSpec]) -> dict[tuple, list[QSpec]]:
 
 def triage(scene: Scene | str | bytes, qids: Sequence[str] | None = None, backend: Backend | None = None,
            policy: Policy | None = None, twin_results: Mapping[str, Mapping] | None = None,
-           allow_untrusted: bool = False, budget_bytes: int = 6_000, yes: float = 0.7, no: float = 0.3) -> dict:
+           allow_untrusted: bool = False, budget_bytes: int = 6_000, yes: float = 0.7, no: float = 0.3,
+           evidence: Mapping[str, Evidence] | None = None) -> dict:
     sc = scene if isinstance(scene, Scene) else load(scene)
     policy = policy or Policy()
     twin_results = twin_results or {}
@@ -100,6 +102,10 @@ def triage(scene: Scene | str | bytes, qids: Sequence[str] | None = None, backen
             else:
                 e["outcome"] = "report"
                 e["route"] = "suspected_ok"
+            if evidence and s.id in evidence:             # a judged answer that rests on a quoted claim: no verified quote, no light route
+                before = e["route"]
+                e["route"] = cap_route(before, evidence[s.id])
+                e["evidence"] = {**to_receipt(evidence[s.id]), "route_before_cap": before}
             entries.append(e)
 
     order = {q: i for i, q in enumerate(qids or list(BY_ID))}
@@ -116,5 +122,7 @@ def triage(scene: Scene | str | bytes, qids: Sequence[str] | None = None, backen
                    "backend_calls": len(calls), "est_input_tokens": est_tokens,
                    "est_cost_usd_at_list_price": round(est_tokens * 0.042 / 1_000_000, 8)},
     }
+    if evidence:
+        body["totals"]["evidence_capped"] = sum(1 for e in entries if e.get("evidence", {}).get("route_before_cap", e.get("route")) != e.get("route"))
     body["receipt_sha256"] = _h(body)
     return body
