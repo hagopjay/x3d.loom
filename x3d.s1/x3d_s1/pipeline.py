@@ -1,9 +1,9 @@
 """Triage: answer what code can answer, run the twin for what a validator can answer, ask a judge only the rest.
 
-One pass per scene: slice the state per question group, answer D questions from code, fold in any twin results the
-caller supplies for C questions, send the J questions as ONE speculative fan-out per state slice, route each typed
+One pass per scene: slice the state per question group, answer D questions from code, retain any caller-supplied C
+answers as unverified imports that still require an oracle, send the J questions as ONE speculative fan-out per state slice, route each typed
 answer through a Policy, and write a receipt that records the model id, thresholds, state hashes and where every answer
-came from. The judge never decides alone: a receipt line says whether the answer was exact, from a twin, or judged.
+came from. A caller's raw mapping is not an artifact-bound instrument witness. This module does not verify Loom acceptance.
 """
 from __future__ import annotations
 
@@ -63,7 +63,9 @@ def triage(scene: Scene | str | bytes, qids: Sequence[str] | None = None, backen
         elif s.cls == C:
             if s.id in twin_results:
                 ans = parse_answer(s.question, twin_results[s.id])
-                entries.append({"id": s.id, "class": s.cls, "source": "twin", "route": "resolve_by_code", "twin": s.twin, **_summ(ans)})
+                entries.append({"id": s.id, "class": s.cls, "source": "unverified_import", "route": "escalate_oracle", "twin": s.twin,
+                                "provenance_status": "caller_supplied_unverified",
+                                "note": "Caller-supplied answer is not an artifact-bound oracle witness; run and verify the required instrument.", **_summ(ans)})
             else:
                 entries.append({"id": s.id, "class": s.cls, "source": "deferred", "route": "escalate_oracle", "twin": s.twin,
                                 "note": "run the twin; a judge is not asked"})
@@ -80,6 +82,13 @@ def triage(scene: Scene | str | bytes, qids: Sequence[str] | None = None, backen
     for (needs, untr), grp in group_judged(judged).items():
         facets = list(needs) or ["header"]
         sl = slice_state(sc, facets=facets, include_untrusted=untr and allow_untrusted, budget_bytes=budget_bytes)
+        missing = [facet for facet in needs if facet not in sl["state"]]
+        if missing:
+            for s in grp:
+                entries.append({"id": s.id, "class": s.cls, "source": "skipped", "route": "escalate_oracle", "twin": s.twin,
+                                "code": "S1_MISSING_FACET", "missing_facets": missing,
+                                "note": "The state budget omitted required context; no judgment was requested."})
+            continue
         questions = {s.id: s.question for s in grp}
         req = build_request(backend.model, sl["state"], questions)
         est_tokens += estimate_input_tokens(req)
@@ -114,11 +123,11 @@ def triage(scene: Scene | str | bytes, qids: Sequence[str] | None = None, backen
     body = {
         "x3d_s1": __version__, "scene_sha256": sc.sha256, "scene_bytes": sc.raw_bytes,
         "backend": getattr(backend, "model", None), "served_model": getattr(backend, "served_model", None),
-        "policy": {"floor": policy.floor, "default_min_p": policy.default.min_p,
+        "policy": {"floor": policy.floor, "default_min_p": policy.default.min_p, "default": asdict(policy.default),
                    "actions": {k: asdict(v) for k, v in policy.actions.items()}, "noul_yes": yes, "noul_no": no},
         "allow_untrusted": allow_untrusted, "state_budget_bytes": budget_bytes,
         "calls": calls, "answers": entries,
-        "totals": {"questions": len(entries), **{k: src.count(k) for k in ("exact", "twin", "deferred", "judge", "skipped")},
+        "totals": {"questions": len(entries), **{k: src.count(k) for k in ("exact", "twin", "unverified_import", "deferred", "judge", "skipped")},
                    "backend_calls": len(calls), "est_input_tokens": est_tokens,
                    "est_cost_usd_at_list_price": round(est_tokens * 0.042 / 1_000_000, 8)},
     }

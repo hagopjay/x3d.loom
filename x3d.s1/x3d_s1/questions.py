@@ -9,6 +9,7 @@ Limits come from the same docs and the launch coverage: a Choice takes at most 2
 from __future__ import annotations
 
 import math
+from numbers import Real
 from dataclasses import dataclass, field
 from typing import Mapping, Sequence
 
@@ -118,12 +119,21 @@ class NoulAnswer:
     noul: float
 
 
+def _number(value, code: str, label: str, lo: float = 0.0, hi: float = 1.0) -> float:
+    if isinstance(value, bool) or not isinstance(value, Real):
+        raise AnswerSpaceError(code, f"{label} must be a JSON number")
+    value = float(value)
+    if not math.isfinite(value) or not lo <= value <= hi:
+        raise AnswerSpaceError(code, f"{label} must be finite and within [{lo}, {hi}]")
+    return value
+
+
 def _check_probs(probs: Mapping, keys: Sequence) -> list[float]:
+    if not isinstance(probs, Mapping):
+        raise AnswerSpaceError("S1_ANSWER_SHAPE", "probabilities must be an object")
     if set(probs) != set(keys):
         raise AnswerSpaceError("S1_PROB_KEYS", f"probabilities keys {sorted(map(str, probs))} do not match the declared space {list(map(str, keys))}")
-    vals = [float(probs[k]) for k in keys]
-    if any((not math.isfinite(v)) or v < -1e-9 or v > 1 + 1e-9 for v in vals):
-        raise AnswerSpaceError("S1_PROB_RANGE", "probabilities must be finite and within [0, 1]")
+    vals = [_number(probs[k], "S1_PROB_RANGE", "probability") for k in keys]
     if abs(sum(vals) - 1.0) > PROB_SUM_TOL:
         raise AnswerSpaceError("S1_PROB_SUM", f"probabilities sum to {sum(vals):.4f}, not 1")
     return vals
@@ -137,30 +147,40 @@ def parse_answer(question, raw: Mapping):
     the answer is still returned, because the vendor's formula can change between releases. Call
     `confidence_mismatch` to audit that.
     """
+    if not isinstance(raw, Mapping):
+        raise AnswerSpaceError("S1_ANSWER_SHAPE", "answer must be an object")
     t = raw.get("type", question.kind)
     if t != question.kind:
         raise AnswerSpaceError("S1_TYPE_MISMATCH", f"answer type {t!r} does not match question type {question.kind!r}")
+    if question.kind in ("choice", "score") and "probabilities" not in raw:
+        raise AnswerSpaceError("S1_ANSWER_SHAPE", "answer is missing probabilities")
     if isinstance(question, Choice):
         choice = raw.get("choice")
-        if choice not in question.criteria:
+        if not isinstance(choice, str) or choice not in question.criteria:
             raise AnswerSpaceError("S1_CHOICE_OUT_OF_SPACE", f"choice {choice!r} is not one of {list(question.options)}")
         vals = _check_probs(raw["probabilities"], question.options)
         conf = raw.get("confidence")
-        conf = choice_confidence(vals) if conf is None else float(conf)
+        conf = choice_confidence(vals) if conf is None else _number(conf, "S1_CONFIDENCE_RANGE", "confidence")
         return ChoiceAnswer(choice, {k: float(raw["probabilities"][k]) for k in question.options}, conf)
     if isinstance(question, Score):
-        probs = {int(k): v for k, v in raw["probabilities"].items()}
+        source = raw["probabilities"]
+        if not isinstance(source, Mapping):
+            raise AnswerSpaceError("S1_ANSWER_SHAPE", "probabilities must be an object")
+        probs = {}
+        for k, value in source.items():
+            if isinstance(k, bool) or not (type(k) is int or (isinstance(k, str) and k in {str(i) for i in range(question.levels)})):
+                raise AnswerSpaceError("S1_PROB_KEYS", "Score probability keys must be canonical level indices")
+            index = int(k)
+            if index in probs:
+                raise AnswerSpaceError("S1_PROB_KEYS", "duplicate Score level after key normalization")
+            probs[index] = value
         vals = _check_probs(probs, list(range(question.levels)))
-        score = float(raw["score"])
-        if not (0 - 1e-9 <= score <= question.levels - 1 + 1e-9):
-            raise AnswerSpaceError("S1_SCORE_RANGE", f"score {score} outside 0..{question.levels - 1}")
+        score = _number(raw.get("score"), "S1_SCORE_RANGE", "score", 0, question.levels - 1)
         conf = raw.get("confidence")
-        conf = score_confidence(vals) if conf is None else float(conf)
+        conf = score_confidence(vals) if conf is None else _number(conf, "S1_CONFIDENCE_RANGE", "confidence")
         return ScoreAnswer(score, {i: float(probs[i]) for i in range(question.levels)}, conf)
     if isinstance(question, Noul):
-        p = float(raw["noul"])
-        if not (math.isfinite(p) and 0 <= p <= 1):
-            raise AnswerSpaceError("S1_PROB_RANGE", f"noul {p} outside [0, 1]")
+        p = _number(raw.get("noul"), "S1_PROB_RANGE", "noul")
         return NoulAnswer(p)
     raise TypeError(type(question))
 

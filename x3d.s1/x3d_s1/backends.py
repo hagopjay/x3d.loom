@@ -7,6 +7,7 @@ HTTP client is a deliberate step the caller takes (and needs the owner's yes: it
 from __future__ import annotations
 
 import json
+import re
 from typing import Callable, Mapping, Protocol
 
 from .questions import AnswerSpaceError, parse_answer
@@ -76,6 +77,15 @@ class StubBackend:
         return {qid: self.fn(qid, q, state) for qid, q in questions.items()}
 
 
+def _require_pinned_model(model: str) -> None:
+    if not isinstance(model, str) or model != model.strip():
+        raise ValueError("S1_MODEL_NOT_PINNED: model must be an exact non-empty versioned identifier")
+    if not model or model.endswith("latest") or model.endswith("preview"):
+        raise ValueError("S1_MODEL_NOT_PINNED: pin a versioned model id (for example jev-1.14.0): aliases move and answers change")
+    if re.search(r"(?:^|[-_.@])(?:latest|preview)(?:$|[-_.@])", model, re.I) or not re.search(r"\d+\.\d+", model):
+        raise ValueError("S1_MODEL_NOT_PINNED: moving aliases and unversioned identifiers are not reproducible")
+
+
 class HostedAdapter:
     """Builds the documented typed-judgment request (the public System One interface) and parses the typed response; the HTTP step is injected.
 
@@ -83,27 +93,36 @@ class HostedAdapter:
     id is pinned: aliases move and answers change (vendor advice, models page, read 16 Nov 2026), so use a versioned id.
     """
     def __init__(self, transport: Callable[[dict], dict], model: str):
-        if not model or model.endswith("latest") or model.endswith("preview"):
-            raise ValueError("S1_MODEL_NOT_PINNED: pin a versioned model id (for example jev-1.14.0): aliases move and answers change")
+        _require_pinned_model(model)
         self.transport, self.model = transport, model
         self.last_request: dict | None = None
         self.last_usage: dict | None = None
         self.served_model: str | None = None
 
     def ask(self, state: object, questions: Mapping[str, object]) -> dict:
+        self.last_usage, self.served_model = None, None
         req = build_request(self.model, state, questions)
         problems = check_limits(req)
         if problems:
             raise AnswerSpaceError("S1_OVER_BUDGET", "request would not fit: " + "; ".join(problems))
         self.last_request = req
         resp = self.transport(req)
+        if not isinstance(resp, Mapping):
+            raise AnswerSpaceError("S1_RESPONSE_SHAPE", "response must be an object")
+        if resp.get("model") != self.model:
+            raise AnswerSpaceError("S1_MODEL_MISMATCH", "served model must exactly match the pinned requested model")
         answers = resp.get("answers", {})
+        if not isinstance(answers, Mapping):
+            raise AnswerSpaceError("S1_RESPONSE_SHAPE", "answers must be an object")
         if set(answers) != set(questions):
             raise AnswerSpaceError("S1_ANSWER_IDS", f"response answered {sorted(answers)} but {sorted(questions)} were asked")
+        parse_all(questions, answers)  # validate before publishing successful response metadata
         self.last_usage = resp.get("usage")
         self.served_model = resp.get("model")
         return {qid: dict(a) for qid, a in answers.items()}
 
 
 def parse_all(questions: Mapping[str, object], raw: Mapping[str, Mapping]) -> dict:
+    if not isinstance(raw, Mapping) or set(raw) != set(questions):
+        raise AnswerSpaceError("S1_ANSWER_IDS", "answer identifiers must exactly match the requested questions")
     return {qid: parse_answer(q, raw[qid]) for qid, q in questions.items()}

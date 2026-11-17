@@ -7,6 +7,8 @@ re-expressed here; every Decision carries the numbers it was made with, so it ca
 from __future__ import annotations
 
 from dataclasses import dataclass, field, asdict
+import math
+from numbers import Real
 from typing import Mapping
 
 from .questions import ChoiceAnswer, ScoreAnswer, NoulAnswer
@@ -18,18 +20,30 @@ ACT, CHECK, ESCALATE = SUSPECTED_OK, ESCALATE_ORACLE, DEFER_HUMAN   # short alia
 STAKES = ("low", "medium", "high", "irreversible")
 
 
+def _probability(value, name):
+    if isinstance(value, bool) or not isinstance(value, Real) or not math.isfinite(value) or not 0 <= value <= 1:
+        raise ValueError(f"{name} must be a finite probability within [0, 1]")
+
+
+def _bands(yes, no):
+    _probability(yes, "yes"); _probability(no, "no")
+    if not no < yes:
+        raise ValueError("need 0 <= no < yes <= 1")
+
+
 @dataclass(frozen=True)
 class ActionPolicy:
     action: str
     stakes: str = "medium"
-    min_p: float = 0.7           # probability of the chosen option needed for suspected_ok without running the oracle
+    min_p: float = 0.7           # advisory flag threshold; required witnesses still run independently
     never_auto: bool = False     # irreversible actions can reach escalate_oracle at best
 
     def __post_init__(self):
+        if not isinstance(self.action, str) or not self.action.strip():
+            raise ValueError("action must be a non-empty string")
         if self.stakes not in STAKES:
             raise ValueError(f"stakes must be one of {STAKES}")
-        if not 0.0 <= self.min_p <= 1.0:
-            raise ValueError("min_p must be in [0, 1]")
+        _probability(self.min_p, "min_p")
 
 
 @dataclass(frozen=True)
@@ -37,6 +51,13 @@ class Policy:
     floor: float = 0.5                                   # below this probability nobody acts
     actions: Mapping[str, ActionPolicy] = field(default_factory=dict)
     default: ActionPolicy = ActionPolicy("default", "medium", 0.7)
+
+    def __post_init__(self):
+        _probability(self.floor, "floor")
+        if not isinstance(self.default, ActionPolicy) or not isinstance(self.actions, Mapping):
+            raise ValueError("default and action entries must be ActionPolicy objects")
+        if any(not isinstance(k, str) or not isinstance(v, ActionPolicy) for k, v in self.actions.items()):
+            raise ValueError("actions must map option strings to ActionPolicy objects")
 
     def for_option(self, option: str) -> ActionPolicy:
         return self.actions.get(option, self.default)
@@ -59,6 +80,7 @@ def route_choice(answer: ChoiceAnswer, policy: Policy) -> Decision:
     """Routing by probability: threshold the probability of the option your code will act on."""
     pol = policy.for_option(answer.choice)
     p = answer.p
+    _probability(p, "chosen probability")
     if p < policy.floor:
         return Decision(ESCALATE, f"p={p:.3f} is below the floor {policy.floor:.2f}", p, pol.min_p, policy.floor, answer.choice)
     if pol.never_auto:
@@ -70,8 +92,7 @@ def route_choice(answer: ChoiceAnswer, policy: Policy) -> Decision:
 
 def route_noul(answer: NoulAnswer, yes: float = 0.7, no: float = 0.3) -> str:
     """Three-way read of a Noul: 'yes' above `yes`, 'no' below `no`, else 'unsure' (its own outcome, never rounded)."""
-    if not 0.0 <= no < yes <= 1.0:
-        raise ValueError("need 0 <= no < yes <= 1")
+    _bands(yes, no); _probability(answer.noul, "noul")
     if answer.noul > yes:
         return "yes"
     if answer.noul < no:
@@ -82,6 +103,11 @@ def route_noul(answer: NoulAnswer, yes: float = 0.7, no: float = 0.3) -> str:
 def route_score(answer: ScoreAnswer, bands: list[float], conf_floor: float = 0.5) -> str:
     """Routing by confidence: an answer spread across distant levels goes to a person; the rest route on the
     score using ascending `bands` (len(bands)+1 outcomes: 'band0' .. 'bandN'). Returns 'defer_human' or 'bandK'."""
+    _probability(answer.confidence, "confidence"); _probability(conf_floor, "conf_floor")
+    if not isinstance(answer.score, Real) or not math.isfinite(answer.score):
+        raise ValueError("score must be finite")
+    if any(isinstance(b, bool) or not isinstance(b, Real) or not math.isfinite(b) for b in bands) or any(a >= b for a, b in zip(bands, bands[1:])):
+        raise ValueError("score bands must be finite and strictly ascending")
     if answer.confidence < conf_floor:
         return ESCALATE
     k = sum(1 for b in bands if answer.score >= b)
@@ -89,6 +115,9 @@ def route_score(answer: ScoreAnswer, bands: list[float], conf_floor: float = 0.5
 
 
 def screen(noul: NoulAnswer, yes: float = 0.7, no: float = 0.3) -> str:
-    """Screen with a Noul first: 'run' the expensive step on a clear yes, 'skip' on a clear no, 'cheap' otherwise."""
+    """Route optional advisory work: 'run', 'skip', or 'cheap'. Never skip a required Loom witness.
+
+    This helper knows nothing about a required witness plan and conveys no release authority.
+    """
     r = route_noul(noul, yes, no)
     return {"yes": "run", "no": "skip", "unsure": "cheap"}[r]

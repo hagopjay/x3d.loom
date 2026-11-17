@@ -202,7 +202,7 @@ def f_lighting(sc: Scene) -> dict:
 
 
 def f_behavior(sc: Scene) -> dict:
-    c = Counter()
+    c = Counter({"timers": 0, "interpolators": 0, "sensors": 0, "physics_nodes": 0, "sequencers": 0})
     routes = 0; scripts = 0; protos = 0; langs = Counter()
     for el, _ in _walk(sc.root):
         t = el.tag
@@ -213,8 +213,8 @@ def f_behavior(sc: Scene) -> dict:
             langs["ecmascript" if ("ecmascript" in u.lower() or "javascript" in u.lower() or "function" in u) else "other"] += 1
         elif t in ("ProtoDeclare", "ExternalProtoDeclare"): protos += 1
         elif t.endswith("Interpolator"): c["interpolators"] += 1
+        elif t == "TimeSensor": c["timers"] += 1; c["sensors"] += 1
         elif t.endswith("Sensor"): c["sensors"] += 1
-        elif t == "TimeSensor": c["timers"] += 1
         elif t in PHYSICS: c["physics_nodes"] += 1
         elif t.endswith("Sequencer"): c["sequencers"] += 1
     return {"routes": routes, "scripts": scripts, "script_languages": dict(langs), "protos": protos, **dict(c)}
