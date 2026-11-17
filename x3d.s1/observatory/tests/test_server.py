@@ -71,8 +71,29 @@ class ServerTests(unittest.TestCase):
         response.read()
         connection.close()
         connection = HTTPConnection('127.0.0.1', self.server.server_port, timeout=5)
+        connection.request('HEAD', '/', headers={'Host': 'rebound.example'})
+        response = connection.getresponse()
+        self.assertEqual(response.status, 421)
+        response.read()
+        connection.close()
+        connection = HTTPConnection('127.0.0.1', self.server.server_port, timeout=5)
         connection.request('POST', '/api/rehearse', body='{"scene_id":"clean-rig"}', headers={'Host': 'localhost:1', 'Content-Type': 'application/json'})
         self.assertEqual(connection.getresponse().status, 421)
+        connection.close()
+
+    def test_hostile_numbers_and_nesting_get_a_400_not_a_dropped_connection(self):
+        for body in ['{"scene_id":"clean-rig","p":' + '9' * 400 + '}', '[' * 8000 + ']' * 8000]:
+            connection = HTTPConnection('127.0.0.1', self.server.server_port, timeout=5)
+            connection.request('POST', '/api/rehearse', body=body, headers={'Host': f'127.0.0.1:{self.server.server_port}', 'Content-Type': 'application/json'})
+            response = connection.getresponse()
+            self.assertEqual(response.status, 400)
+            response.read()
+            connection.close()
+
+    def test_a_loopback_head_request_is_served(self):
+        connection = HTTPConnection('127.0.0.1', self.server.server_port, timeout=5)
+        connection.request('HEAD', '/', headers={'Host': f'127.0.0.1:{self.server.server_port}'})
+        self.assertEqual(connection.getresponse().status, 200)
         connection.close()
 
     def test_static_paths_cannot_climb_out_of_the_web_folder(self):

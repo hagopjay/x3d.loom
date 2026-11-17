@@ -20,8 +20,16 @@ ACT, CHECK, ESCALATE = SUSPECTED_OK, ESCALATE_ORACLE, DEFER_HUMAN   # short alia
 STAKES = ("low", "medium", "high", "irreversible")
 
 
+def _isfinite(value) -> bool:
+    """math.isfinite, but an int too large for a float is simply not finite here (no OverflowError escapes the S1_* contract)."""
+    try:
+        return math.isfinite(value)
+    except OverflowError:
+        return False
+
+
 def _probability(value, name):
-    if isinstance(value, bool) or not isinstance(value, Real) or not math.isfinite(value) or not 0 <= value <= 1:
+    if isinstance(value, bool) or not isinstance(value, Real) or not _isfinite(value) or not 0 <= value <= 1:
         raise ValueError(f"{name} must be a finite probability within [0, 1]")
 
 
@@ -104,9 +112,9 @@ def route_score(answer: ScoreAnswer, bands: list[float], conf_floor: float = 0.5
     """Routing by confidence: an answer spread across distant levels goes to a person; the rest route on the
     score using ascending `bands` (len(bands)+1 outcomes: 'band0' .. 'bandN'). Returns 'defer_human' or 'bandK'."""
     _probability(answer.confidence, "confidence"); _probability(conf_floor, "conf_floor")
-    if not isinstance(answer.score, Real) or not math.isfinite(answer.score):
+    if not isinstance(answer.score, Real) or not _isfinite(answer.score):
         raise ValueError("score must be finite")
-    if any(isinstance(b, bool) or not isinstance(b, Real) or not math.isfinite(b) for b in bands) or any(a >= b for a, b in zip(bands, bands[1:])):
+    if any(isinstance(b, bool) or not isinstance(b, Real) or not _isfinite(b) for b in bands) or any(a >= b for a, b in zip(bands, bands[1:])):
         raise ValueError("score bands must be finite and strictly ascending")
     if answer.confidence < conf_floor:
         return ESCALATE

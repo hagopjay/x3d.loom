@@ -50,6 +50,15 @@ class Handler(SimpleHTTPRequestHandler):
         else:
             super().do_GET()
 
+    def do_HEAD(self):
+        # HEAD shares the static handler, so it needs the same Host gate as GET.
+        if not self.host_allowed():
+            self.send_response(421)
+            self.send_header('Content-Length', '0')
+            self.end_headers()
+            return
+        super().do_HEAD()
+
     def do_POST(self):
         if not self.host_allowed():
             self.send_data({'error': 'Unexpected Host header'}, status=421)
@@ -67,7 +76,7 @@ class Handler(SimpleHTTPRequestHandler):
             if not isinstance(data.get('scene_id'), str) or not isinstance(data.get('profile_id', 'preview'), str):
                 raise ValueError('A local scene ID and profile ID are required')
             self.send_data(rehearse(**data))
-        except (ValueError, KeyError, TypeError) as error:
+        except (ValueError, KeyError, TypeError, OverflowError, RecursionError) as error:
             self.send_data({'error': str(error), 'model_calls': 0}, status=400)
 
     def log_message(self, *_):

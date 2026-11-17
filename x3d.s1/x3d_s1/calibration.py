@@ -12,8 +12,16 @@ from numbers import Real
 from typing import Iterable, Sequence
 
 
+def _isfinite(value) -> bool:
+    """math.isfinite, but an int too large for a float is simply not finite here (no OverflowError escapes the S1_* contract)."""
+    try:
+        return math.isfinite(value)
+    except OverflowError:
+        return False
+
+
 def _real(value, name, lo=0.0, hi=1.0):
-    if isinstance(value, bool) or not isinstance(value, Real) or not math.isfinite(value) or not lo <= value <= hi:
+    if isinstance(value, bool) or not isinstance(value, Real) or not _isfinite(value) or not lo <= value <= hi:
         raise ValueError(f"{name} must be a finite number within [{lo}, {hi}]")
     return float(value)
 
@@ -31,7 +39,7 @@ def _pairs(probs, outcomes, allow_empty=True):
     for p in probs:
         _real(p, "probability")
     for outcome in outcomes:
-        if not isinstance(outcome, Real) or not math.isfinite(outcome) or outcome not in (0, 1):
+        if not isinstance(outcome, Real) or not _isfinite(outcome) or outcome not in (0, 1):
             raise ValueError("outcomes must be binary 0/1 labels")
 
 

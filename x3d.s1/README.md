@@ -33,8 +33,8 @@ chapter 22; this folder is the executable half.
 
 ```bash
 cd x3d.s1
-python3 -B -m pytest -q tests                 # 207 tests; pytest is a test-only dependency, the package itself is standard library only
-python3 -B tools/mutation_check.py            # plants 41 bugs in scratch copies; writes receipts/mutation-hardening.json (x3d.s1.mutation-check/2)
+python3 -B -m pytest -q tests                 # 239 tests; pytest is a test-only dependency, the package itself is standard library only
+python3 -B tools/mutation_check.py            # plants 59 bugs in scratch copies; writes receipts/mutation-hardening.json (x3d.s1.mutation-check/2)
 python3 -B tools/corpus_measure.py receipts/corpus-current.json docs=<x3d.docs> loom=<x3d.loom> mcp=<x3d_mcp>   # needs checkouts; offline
 python3 -B -m x3d_s1 questions                # the D / C / J catalogue
 python3 -B -m x3d_s1 state scene.x3d --facets header,census,lighting     # sliced, trust-tiered state as JSON
@@ -67,7 +67,7 @@ route_choice(answer, policy).outcome                        # 'suspected_ok' | '
 text and DEF names stay out unless the caller opts into the untrusted tier, and included text is capped, quoted and screened. Pattern screening is not a prompt-injection guarantee.
 
 `HostedAdapter(transport, model)` builds the documented request and parses the typed response; the HTTP step is a callable **you** inject (the package has no HTTP client,
-key storage or vendor SDK, and a test reads its source and fails on a network import). It refuses a model id that is empty, ends in `latest` or `preview`, requires the
+key storage or vendor SDK, and a test reads its source and fails on a network import). It refuses a model id that is empty, padded, or has an alias word (`latest`, `preview`, `current`, `stable`, `nightly`, `canary`, `beta`, `alpha`) as a segment or segment prefix, and one that carries neither a dotted version (`jev-1.14.0`) nor a date stamp (`20250929`, `2024-08-06`). It requires the
 served model to equal the pinned requested model, validates answer identifiers and typed values before publishing response metadata, and clears stale metadata before each
 attempt. `ReplayBackend` and `StubBackend` support offline runs; their outputs are not measurements, and a missing replay answer raises.
 
@@ -139,8 +139,8 @@ quotes" (the injection lint skipped on the quote itself). `test_an_instruction_l
 
 The revised harness (`x3d.s1.mutation-check/2`, `receipts/mutation-hardening.json`) runs the real suite and an unmutated copy first (both must pass), starts every mutant from
 the same snapshot, checks that the mutated source compiles, and calls a mutant `killed` only when a failing test is one named for that operator. Other outcomes are
-`SURVIVED`, `UNRELATED_FAILURE`, `INVALID_RUN`, `INVALID_SOURCE`, `MISSING_TARGET` and `CRASH`; any of them fails the check. Current result: **41 planted bugs, 41 killed**,
-each by a named test. Its scope is these 41 operators and this suite; it is not proof of general defect detection. Re-run it after editing README, tests or instruments.
+`SURVIVED`, `UNRELATED_FAILURE`, `INVALID_RUN`, `INVALID_SOURCE`, `MISSING_TARGET` and `CRASH`; any of them fails the check. Current result: **59 planted bugs, 59 killed**,
+each by a named test. Eighteen of the 59 aim at the 0.2.0 hardening guards (an independent review of the first merge found most of them unguarded: it planted 30 by hand and ten survived); a test now checks that every mutant has named tests and that every name is a real test. Its scope is these 59 operators and this suite; it is not proof of general defect detection. Re-run it after editing README, tests or instruments.
 
 ## Receipts (`receipts/`)
 
@@ -150,7 +150,7 @@ each by a named test. Its scope is these 41 operators and this suite; it is not 
 | `corpus-current.scenes.csv`, `corpus-current.unparsed.json` | per-scene rows with `origin` (`repo@sha7:path`) and `file_sha256`; no scene text; 0 unparsed | same |
 | `corpus-2026-11-16.json` (`x3d.s1.corpus-census/1`) | **Superseded, kept for provenance.** 499 public scenes: raw bytes 57,468,875, all-facet state bytes 507,786 (113.18x aggregate; median ratio 1.73, p10 0.79, p90 185.72); median state 983 B, largest 1,740 B; 58 scenes over the 32,000-token question limit raw, 0 sliced; 36,743 text strings, 0 flagged by the lint; slice median 0.288 ms. It predates the TimeSensor fix and used older commits; on the same 520 scenes the old code measured 530,416 state bytes and 33 animated scenes. | `tools/corpus_measure.py`, Python 3.13.18, `x3d.docs@3aab064`, `x3d.loom@0752865`, `x3d_mcp@dcf0815` |
 | `corpus-2026-11-16.scenes.csv` | one row per scene of that run | same |
-| `mutation-hardening.json` (`x3d.s1.mutation-check/2`) | **Current.** controls, named failing tests, tested snapshot digest; 41 planted bugs, 41 killed | `tools/mutation_check.py` |
+| `mutation-hardening.json` (`x3d.s1.mutation-check/2`) | **Current.** controls, named failing tests, tested snapshot digest; 59 planted bugs, 59 killed | `tools/mutation_check.py` |
 | `mutation-check.json` (`x3d.s1.mutation-check/1`) | **Superseded; not evidence** (see above): 41 planted bugs, 41 killed | the earlier harness |
 | `evidence-2026-11-16.json` (`x3d.s1.evidence-measure/1`) | 11,616 true and 13,667 planted-wrong claims plus 501 injection quotes, over 501 scenes, per family counts, Wilson and rule-of-three bounds, the paraphrase blind spot; aggregates only, no scene text | `tools/evidence_measure.py`, Python 3.13.18, the three commits in the file |
 | `../limits/preregistration.json` | the bars for experiments E1 to E9, written before any model call (E7 and E8 need none); a changed bar goes in an earlier commit and an excursion is reported as a waiver | none yet: no live experiment has run |
