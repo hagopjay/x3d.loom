@@ -8,7 +8,31 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from numbers import Real
 from typing import Iterable, Sequence
+
+
+def _real(value, name, lo=0.0, hi=1.0):
+    if isinstance(value, bool) or not isinstance(value, Real) or not math.isfinite(value) or not lo <= value <= hi:
+        raise ValueError(f"{name} must be a finite number within [{lo}, {hi}]")
+    return float(value)
+
+
+def _count(value, name, minimum=0):
+    if type(value) is not int or value < minimum:
+        raise ValueError(f"{name} must be an integer >= {minimum}")
+
+
+def _pairs(probs, outcomes, allow_empty=True):
+    if len(probs) != len(outcomes):
+        raise ValueError("probs and outcomes differ in length")
+    if not allow_empty and not probs:
+        raise ValueError("at least one observation is required")
+    for p in probs:
+        _real(p, "probability")
+    for outcome in outcomes:
+        if not isinstance(outcome, Real) or not math.isfinite(outcome) or outcome not in (0, 1):
+            raise ValueError("outcomes must be binary 0/1 labels")
 
 
 @dataclass(frozen=True)
@@ -22,8 +46,8 @@ class Bin:
 
 def reliability(probs: Sequence[float], outcomes: Sequence[int], bins: int = 10) -> list[Bin]:
     """Equal-width reliability bins over [0, 1]. outcomes are 0/1. Empty bins are omitted."""
-    if len(probs) != len(outcomes):
-        raise ValueError("probs and outcomes differ in length")
+    _pairs(probs, outcomes)
+    _count(bins, "bins", 1)
     out = []
     for b in range(bins):
         lo, hi = b / bins, (b + 1) / bins
@@ -36,8 +60,9 @@ def reliability(probs: Sequence[float], outcomes: Sequence[int], bins: int = 10)
 
 def ece(probs: Sequence[float], outcomes: Sequence[int], bins: int = 10) -> float:
     """Expected calibration error: sum over bins of (n_b / N) |freq_b - mean_p_b|."""
+    rb = reliability(probs, outcomes, bins)
     n = len(probs)
-    return sum(b.n / n * abs(b.freq - b.mean_p) for b in reliability(probs, outcomes, bins)) if n else float("nan")
+    return sum(b.n / n * abs(b.freq - b.mean_p) for b in rb) if n else float("nan")
 
 
 def mce(probs, outcomes, bins: int = 10) -> float:
@@ -47,10 +72,15 @@ def mce(probs, outcomes, bins: int = 10) -> float:
 
 
 def brier(probs: Sequence[float], outcomes: Sequence[int]) -> float:
+    _pairs(probs, outcomes, allow_empty=False)
     return sum((p - o) ** 2 for p, o in zip(probs, outcomes)) / len(probs)
 
 
 def log_loss(probs: Sequence[float], outcomes: Sequence[int], eps: float = 1e-12) -> float:
+    _pairs(probs, outcomes, allow_empty=False)
+    _real(eps, "eps", 0, 0.5)
+    if eps <= 0 or eps >= 0.5:
+        raise ValueError("eps must lie strictly between zero and one half")
     s = 0.0
     for p, o in zip(probs, outcomes):
         p = min(max(p, eps), 1 - eps)
@@ -60,6 +90,9 @@ def log_loss(probs: Sequence[float], outcomes: Sequence[int], eps: float = 1e-12
 
 def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     """Wilson score interval for a binomial proportion (default 95%). (0, 1) when n == 0."""
+    _count(n, "n"); _count(k, "k"); _real(z, "z", 0, float("inf"))
+    if k > n or z <= 0:
+        raise ValueError("need 0 <= k <= n and positive z")
     if n == 0:
         return (0.0, 1.0)
     ph = k / n
@@ -71,13 +104,21 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
 
 def rule_of_three(n: int) -> float:
     """Upper 95% bound on a rate when 0 events were seen in n trials."""
-    return 3.0 / n if n else 1.0
+    _count(n, "n")
+    return min(1.0, 3.0 / n) if n else 1.0
 
 
 def threshold_for_precision(scores: Sequence[float], correct: Sequence[int], target: float,
                             min_n: int = 30, z: float = 1.96):
     """Lowest threshold t such that answers with score >= t have Wilson LOWER bound >= target and at least min_n members.
-    Returns (t, n, k, lower_bound) or None. Using the lower bound keeps a lucky small bin from setting a bar."""
+    Returns (t, n, k, lower_bound) or None. Using the lower bound keeps a lucky small bin from setting a bar.
+
+    This selects a threshold on the supplied data. Its interval is not a simultaneous bound over the threshold
+    search, nor an out-of-sample guarantee. Freeze the selected threshold and evaluate on an independent holdout.
+    """
+    _pairs(scores, correct); _real(target, "target"); _count(min_n, "min_n", 1); _real(z, "z", 0, float("inf"))
+    if z <= 0:
+        raise ValueError("z must be positive")
     order = sorted(set(scores))
     for t in order:
         sel = [c for s, c in zip(scores, correct) if s >= t]
@@ -100,9 +141,9 @@ class CheckReport:
     flagged_wrong: int
 
     @property
-    def base_rate(self): return self.base_correct / self.total
+    def base_rate(self): return self.base_correct / self.total if self.total else float("nan")
     @property
-    def pass_share(self): return self.passed / self.total
+    def pass_share(self): return self.passed / self.total if self.total else float("nan")
     @property
     def passed_precision(self): return self.passed_correct / self.passed if self.passed else float("nan")
     @property
@@ -115,8 +156,7 @@ class CheckReport:
 
 def check_report(flag: Sequence[float], correct: Sequence[int], threshold: float) -> CheckReport:
     """Flag answers with risk >= threshold for review; report coverage, precision and the review burden."""
-    if len(flag) != len(correct):
-        raise ValueError("length mismatch")
+    _pairs(flag, correct); _real(threshold, "threshold")
     n = len(flag)
     passed = [c for f, c in zip(flag, correct) if f < threshold]
     flagged = [c for f, c in zip(flag, correct) if f >= threshold]
@@ -127,6 +167,13 @@ def cascade_at(rows: Sequence[dict], threshold: float) -> dict:
     """Cost and quality of a two-rung cascade. Each row: flag (risk from the check), cheap_ok, strong_ok (0/1),
     cheap_cost, check_cost, strong_cost (dollars per task). A task escalates when flag > threshold.
     Returns cost per 1,000 tasks, share that works, and share escalated (the vendor cookbook's definition)."""
+    if not rows:
+        raise ValueError("at least one cascade row is required")
+    _real(threshold, "threshold", -1, 1)
+    for r in rows:
+        _pairs([r["flag"]], [r["cheap_ok"]]); _pairs([r["flag"]], [r["strong_ok"]])
+        for key in ("cheap_cost", "check_cost", "strong_cost"):
+            _real(r[key], key, 0, float("inf"))
     n = len(rows)
     esc = [r["flag"] > threshold for r in rows]
     cost = sum(r["cheap_cost"] + r["check_cost"] + (r["strong_cost"] if e else 0.0) for r, e in zip(rows, esc)) / n
@@ -136,6 +183,8 @@ def cascade_at(rows: Sequence[dict], threshold: float) -> dict:
 
 def cascade_sweep(rows: Sequence[dict]) -> list[dict]:
     """Every distinct flag value as a threshold, plus 'never escalate' and 'always escalate'."""
+    if not rows:
+        raise ValueError("at least one cascade row is required")
     ts = sorted({r["flag"] for r in rows})
     pts = [cascade_at(rows, t) for t in [-1.0] + ts]
     return pts
@@ -156,6 +205,11 @@ def cascade_bill(volume: int, share_code: float, share_special: float, c_judge: 
                  c_special: float = 0.0) -> dict:
     """Closed-form bill for the article's three-way split. Shares are fractions; the remainder escalates.
     `article_pricing` leaves the specialist unpriced (as the article's $6,480 does); `full` prices it."""
+    _count(volume, "volume"); _real(share_code, "share_code"); _real(share_special, "share_special")
+    for name, value in (("c_judge", c_judge), ("c_frontier", c_frontier), ("c_special", c_special)):
+        _real(value, name, 0, float("inf"))
+    if c_frontier <= 0:
+        raise ValueError("c_frontier must be positive to compare savings")
     esc = 1.0 - share_code - share_special
     if esc < -1e-9:
         raise ValueError("shares exceed 1")

@@ -19,4 +19,4 @@ from .questions import (Choice, Score, Noul, ChoiceAnswer, ScoreAnswer, NoulAnsw
                         parse_answer, with_companion, CHOICE_MAX_OPTIONS, SCORE_MIN_LEVELS, SCORE_MAX_LEVELS)
 from .confidence import (choice_confidence, score_confidence, noul_confidence, top_probability, top_to_second)
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

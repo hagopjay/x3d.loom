@@ -1,7 +1,8 @@
 # x3d.loom/.github/workflows/s1-lane.yml
 # The typed-judgment lane (x3d.s1): the question and answer types, state slicing and its trust tiers, the injection lint, routing, calibration arithmetic and the
 # package's own safety lints (no assert, no network import, standard library only). It calls no model and needs no key. It does not run the corpus census
-# (that reads other repositories' checkouts and is run by hand; its receipt is committed) and it measures no latency of any service.
+# (that reads other repositories' checkouts and is run by hand; its receipt is committed) and it measures no latency of any service. The offline Decision Observatory
+# (x3d.s1/observatory) is tested here too; its optional renderer is never fetched in CI.
 name: s1-lane
 
 on:
@@ -35,8 +36,13 @@ jobs:
       - run: python -m pip install pytest
       - name: Tests (the package itself imports only the standard library)
         run: python -B -m pytest -q -p no:cacheprovider tests
-      - name: Mutation check (every planted bug must turn the suite red)
+      - name: Mutation check (the unmutated copy passes; every planted bug must fail a named test)
         run: python -B tools/mutation_check.py
+      - name: Observatory tests (loopback server, rehearsal records, renderer pin; stdlib unittest, also with assertions stripped)
+        working-directory: x3d.s1/observatory
+        run: |
+          python -B -m unittest discover -s tests -p 'test_*.py'
+          python -B -O -m unittest discover -s tests -p 'test_*.py'
       - name: Receipt
         run: |
           echo "commit: $GITHUB_SHA"

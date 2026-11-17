@@ -94,7 +94,9 @@ def test_untrusted_questions_skipped_unless_allowed_and_attack_text_never_sent()
 def test_twin_results_are_folded_in_with_their_source():
     r = triage(fixture("benign.x3d"), qids=["scene.is_valid"], twin_results={"scene.is_valid": {"type": "noul", "noul": 1.0}})
     e = r["answers"][0]
-    assert e["source"] == "twin" and e["noul"] == 1.0 and e["twin"].startswith("validate_x3d")
+    assert e["source"] == "unverified_import" and e["noul"] == 1.0 and e["twin"].startswith("validate_x3d")
+    assert e["route"] == "escalate_oracle" and e["provenance_status"] == "caller_supplied_unverified"
+    assert r["totals"]["twin"] == 0 and r["totals"]["unverified_import"] == 1
 
 
 def test_judged_choice_is_routed_by_probability_of_the_chosen_option():

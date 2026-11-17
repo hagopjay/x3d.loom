@@ -101,6 +101,19 @@ CATALOGUE: tuple[QSpec, ...] = (
 
 BY_ID: dict[str, QSpec] = {q.id: q for q in CATALOGUE}
 
+# An omitted facet/key is unknown, never an exact zero. These are the input
+# fields used by the shipped D functions, not an X3D semantic validator.
+_EXACT_FIELDS = {
+    "scene.has_lights": (("lighting", "light_count", int),),
+    "scene.uses_remote_refs": (("refs", "has_remote_refs", bool),),
+    "scene.has_viewpoint": (("view", "viewpoints", int),),
+    "scene.has_scripts": (("behavior", "scripts", int),),
+    "scene.is_animated": (("behavior", "timers", int), ("behavior", "interpolators", int)),
+    "scene.material_model": (("appearance", "material_model", str),),
+    "scene.size_class": (("census", "size", str),),
+    "scene.profile": (("header", "profile", str),),
+}
+
 
 def by_class(cls: str) -> list[QSpec]:
     return [q for q in CATALOGUE if q.cls == cls]
@@ -114,9 +127,20 @@ def exact_answer(spec: QSpec, state: Mapping) -> dict:
     """Typed raw answer for a D question, shaped like a backend's answer (probabilities are one-hot)."""
     if spec.cls != D:
         raise ValueError(f"{spec.id} is class {spec.cls}; only D questions are answered by code")
+    if not isinstance(state, Mapping):
+        raise ValueError("S1_EXACT_STATE: computed state must be a mapping")
+    for facet in spec.question.needs:
+        if facet not in state or not isinstance(state[facet], Mapping):
+            raise ValueError(f"S1_EXACT_STATE: {spec.id} requires computed facet {facet!r}")
+    for facet, key, kind in _EXACT_FIELDS.get(spec.id, ()):
+        value = state[facet].get(key)
+        if type(value) is not kind or (kind is int and value < 0):
+            raise ValueError(f"S1_EXACT_STATE: {spec.id} requires a valid {facet}.{key}")
     v = spec.exact(state)
     q = spec.question
     if isinstance(q, Noul):
+        if v not in (0, 1):
+            raise ValueError(f"S1_EXACT_STATE: {spec.id} did not produce an exact binary answer")
         return {"type": "noul", "noul": float(v)}
     if isinstance(q, Choice):
         if v not in q.criteria:
