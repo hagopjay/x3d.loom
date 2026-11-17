@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+<head>
+<component name='RigidBodyPhysics' level='2'/>
+<meta name='title' content='Flop Lab level'/>
+<meta name='description' content='A 2.5D physics course. Bodies, hinges and regions are standard RigidBodyPhysics nodes; what the Flop Lab engine adds is carried in "flop" metadata. Units are metres, kilograms, seconds, radians. All motion is in the XY plane.'/>
+<meta name='generator' content='Flop Lab'/>
+</head>
+<Scene>
+<WorldInfo DEF='LEVEL' title='Flop Lab level'>
+ <MetadataSet name='flop:parts' containerField='metadata'>
+  <MetadataString containerField='value' name='recipe_floor' value='"platform" "x=33" "y=-1.5" "w=86" "h=2"'/>
+  <MetadataString containerField='value' name='recipe_left_wall' value='"platform" "x=-10" "y=12" "w=1" "h=16"'/>
+  <MetadataString containerField='value' name='recipe_right_wall' value='"platform" "x=76" "y=12" "w=1" "h=16"'/>
+  <MetadataString containerField='value' name='cp_feel' value='"checkpoint" "x=-5" "y=-1.5" "name=0 Feel"'/>
+  <MetadataString containerField='value' name='cascade_1_7' value='"label" "x=1" "y=9" "title=CASCADE FOUNDRY" "text=Authored seed 7. Export X3D to keep the exact generated layout."'/>
+  <MetadataString containerField='value' name='cp_contact' value='"checkpoint" "x=11" "y=-1.5" "name=1 Contact"'/>
+  <MetadataString containerField='value' name='dominoes_1' value='"dominoes" "x=3" "y=-1.5" "count=16" "spacing=0.6719" "height=1.8" "thick=0.23"'/>
+  <MetadataString containerField='value' name='cascade_2_7' value='"seesaw" "x=22" "y=-1.5" "length=7"'/>
+  <MetadataString containerField='value' name='cascade_3_7' value='"ball" "x=19.2" "y=3.2" "r=0.6" "mass=7" "bounce=0.15"'/>
+  <MetadataString containerField='value' name='cascade_4_7' value='"crates" "x=25.2" "y=-1.3" "cols=1" "rows=2" "size=0.6" "mass=0.8"'/>
+  <MetadataString containerField='value' name='cascade_5_7' value='"pegs" "x=38" "y=7" "cols=7" "rows=5" "spacing=1.15" "r=0.16"'/>
+  <MetadataString containerField='value' name='cascade_6_7' value='"balls" "x=38" "y=9" "count=30" "r=0.23" "mass=0.3" "bounce=0.35"'/>
+  <MetadataString containerField='value' name='cp_broad' value='"checkpoint" "x=32" "y=-1.5" "name=5 Broad phase"'/>
+  <MetadataString containerField='value' name='cascade_7_7' value='"crates" "x=57" "y=-1.5" "cols=3" "rows=6" "size=0.85" "mass=1.2"'/>
+  <MetadataString containerField='value' name='cannon_1' value='"cannon" "x=46" "y=-0.5" "angle=38" "power=23"'/>
+  <MetadataString containerField='value' name='cp_cannon' value='"checkpoint" "x=45" "y=-1.5" "name=6 Cannon"'/>
+  <MetadataString containerField='value' name='goal_1' value='"goal" "x=68" "y=2.5" "r=1.8"'/>
+  <MetadataString containerField='value' name='cascade_8_7' value='"star" "x=8" "y=2"'/>
+  <MetadataString containerField='value' name='cascade_9_7' value='"star" "x=22" "y=2"'/>
+  <MetadataString containerField='value' name='cascade_10_7' value='"star" "x=38" "y=3"'/>
+  <MetadataString containerField='value' name='cascade_11_7' value='"star" "x=58" "y=5"'/>
+  <MetadataString containerField='value' name='cascade_12_7' value='"star" "x=68" "y=2.5"'/>
+  <MetadataString containerField='value' name='cascade_13_7' value='"label" "x=28" "y=13" "title=TRACE THE CHAIN REACTION" "text=Pause, single-step and inspect contacts. Drop a ball, change one mass, then compare."'/>
+ </MetadataSet>
+</WorldInfo>
+<NavigationInfo type='"EXAMINE" "ANY"'/>
+<Viewpoint description='Whole course' position='80 4 150'/>
+<Background skyColor='0.02 0.05 0.11'/>
+<Group DEF='VISUAL'>
+ <CollidableShape DEF='C_recipe_floor_0' translation='33 -2.5 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='86 2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_recipe_left_wall_0' translation='-10 4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='1 16 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_recipe_right_wall_0' translation='76 4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='1 16 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_0' translation='3 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_1' translation='3.6719 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_2' translation='4.3437 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_3' translation='5.0156 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_4' translation='5.6875 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_5' translation='6.3594 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_6' translation='7.0312 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_7' translation='7.7031 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_8' translation='8.375 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_9' translation='9.0469 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_10' translation='9.7187 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_11' translation='10.3906 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_12' translation='11.0625 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_13' translation='11.7343 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_14' translation='12.4062 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_dominoes_1_15' translation='13.0781 -0.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.23 1.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_2_7_0' translation='22 -1.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.5 0.6 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_2_7_1' translation='22 -0.78 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='7 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_3_7_0' translation='19.2 3.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.6'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_4_7_0' translation='25.2 -1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.6 0.6 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_4_7_1' translation='25.2 -0.398 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.6 0.6 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_0' translation='34.55 7 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_1' translation='35.7 7 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_2' translation='36.85 7 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_3' translation='38 7 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_4' translation='39.15 7 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_5' translation='40.3 7 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_6' translation='41.45 7 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_7' translation='35.125 6.08 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_8' translation='36.275 6.08 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_9' translation='37.425 6.08 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_10' translation='38.575 6.08 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_11' translation='39.725 6.08 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_12' translation='40.875 6.08 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_13' translation='34.55 5.16 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_14' translation='35.7 5.16 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_15' translation='36.85 5.16 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_16' translation='38 5.16 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_17' translation='39.15 5.16 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_18' translation='40.3 5.16 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_19' translation='41.45 5.16 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_20' translation='35.125 4.24 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_21' translation='36.275 4.24 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_22' translation='37.425 4.24 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_23' translation='38.575 4.24 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_24' translation='39.725 4.24 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_25' translation='40.875 4.24 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_26' translation='34.55 3.32 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_27' translation='35.7 3.32 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_28' translation='36.85 3.32 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_29' translation='38 3.32 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_30' translation='39.15 3.32 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_31' translation='40.3 3.32 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_5_7_32' translation='41.45 3.32 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Sphere radius='0.16'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_0' translation='36.2909 9.23 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_1' translation='36.7855 9.23 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_2' translation='37.2734 9.23 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_3' translation='37.7669 9.23 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_4' translation='38.2579 9.23 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_5' translation='38.7393 9.23 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_6' translation='39.2362 9.23 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_7' translation='39.746 9.23 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_8' translation='36.2923 9.7245 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_9' translation='36.7465 9.7245 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_10' translation='37.2685 9.7245 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_11' translation='37.765 9.7245 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_12' translation='38.2229 9.7245 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_13' translation='38.7345 9.7245 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_14' translation='39.2265 9.7245 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_15' translation='39.7455 9.7245 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_16' translation='36.2565 10.219 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_17' translation='36.7581 10.219 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_18' translation='37.2735 10.219 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_19' translation='37.7469 10.219 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_20' translation='38.2325 10.219 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_21' translation='38.7393 10.219 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_22' translation='39.2515 10.219 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_23' translation='39.7478 10.219 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_24' translation='36.2578 10.7135 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_25' translation='36.7729 10.7135 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_26' translation='37.2701 10.7135 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_27' translation='37.7331 10.7135 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_28' translation='38.2254 10.7135 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_6_7_29' translation='38.7618 10.7135 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.23'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_0' translation='56.133 -1.075 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_1' translation='57 -1.075 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_2' translation='57.867 -1.075 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_3' translation='56.133 -0.223 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_4' translation='57 -0.223 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_5' translation='57.867 -0.223 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_6' translation='56.133 0.629 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_7' translation='57 0.629 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_8' translation='57.867 0.629 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_9' translation='56.133 1.481 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_10' translation='57 1.481 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_11' translation='57.867 1.481 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_12' translation='56.133 2.333 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_13' translation='57 2.333 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_14' translation='57.867 2.333 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_15' translation='56.133 3.185 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_16' translation='57 3.185 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_cascade_7_7_17' translation='57.867 3.185 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.85 0.85 1.2'/></Shape></CollidableShape>
+</Group>
+<RigidBodyCollection DEF='WORLD' gravity='0 -30 0' iterations='1'>
+ <MetadataString containerField='metadata' name='flop' value='"substeps=8"'/>
+ <RigidBody DEF='recipe_floor_0' containerField='bodies' position='33 -2.5 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=recipe_floor" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_recipe_floor_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='recipe_left_wall_0' containerField='bodies' position='-10 4 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=recipe_left_wall" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_recipe_left_wall_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='recipe_right_wall_0' containerField='bodies' position='76 4 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=recipe_right_wall" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_recipe_right_wall_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_0' containerField='bodies' position='3 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_1' containerField='bodies' position='3.6719 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_2' containerField='bodies' position='4.3437 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_3' containerField='bodies' position='5.0156 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_4' containerField='bodies' position='5.6875 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_5' containerField='bodies' position='6.3594 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_6' containerField='bodies' position='7.0312 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_7' containerField='bodies' position='7.7031 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_8' containerField='bodies' position='8.375 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_9' containerField='bodies' position='9.0469 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_10' containerField='bodies' position='9.7187 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_11' containerField='bodies' position='10.3906 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_12' containerField='bodies' position='11.0625 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_12' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_13' containerField='bodies' position='11.7343 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_13' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_14' containerField='bodies' position='12.4062 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_14' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='dominoes_1_15' containerField='bodies' position='13.0781 -0.6 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=dominoes_1" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_dominoes_1_15' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_2_7_0' containerField='bodies' position='22 -1.2 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_2_7" "role=static" "group=101"'/>
+  <CollidableShape USE='C_cascade_2_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_2_7_1' containerField='bodies' position='22 -0.78 0' orientation='0 0 1 0' mass='3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_2_7" "role=plank" "group=101"'/>
+  <CollidableShape USE='C_cascade_2_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_3_7_0' containerField='bodies' position='19.2 3.2 0' orientation='0 0 1 0' mass='7' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_3_7" "role=ball" "fric=0.5" "rest=0.15"'/>
+  <CollidableShape USE='C_cascade_3_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_4_7_0' containerField='bodies' position='25.2 -1 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_4_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_4_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_4_7_1' containerField='bodies' position='25.2 -0.398 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_4_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_4_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_0' containerField='bodies' position='34.55 7 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_1' containerField='bodies' position='35.7 7 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_2' containerField='bodies' position='36.85 7 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_3' containerField='bodies' position='38 7 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_4' containerField='bodies' position='39.15 7 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_5' containerField='bodies' position='40.3 7 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_6' containerField='bodies' position='41.45 7 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_7' containerField='bodies' position='35.125 6.08 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_8' containerField='bodies' position='36.275 6.08 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_9' containerField='bodies' position='37.425 6.08 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_10' containerField='bodies' position='38.575 6.08 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_11' containerField='bodies' position='39.725 6.08 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_12' containerField='bodies' position='40.875 6.08 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_12' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_13' containerField='bodies' position='34.55 5.16 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_13' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_14' containerField='bodies' position='35.7 5.16 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_14' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_15' containerField='bodies' position='36.85 5.16 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_15' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_16' containerField='bodies' position='38 5.16 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_16' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_17' containerField='bodies' position='39.15 5.16 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_17' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_18' containerField='bodies' position='40.3 5.16 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_18' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_19' containerField='bodies' position='41.45 5.16 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_19' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_20' containerField='bodies' position='35.125 4.24 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_20' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_21' containerField='bodies' position='36.275 4.24 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_21' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_22' containerField='bodies' position='37.425 4.24 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_22' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_23' containerField='bodies' position='38.575 4.24 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_23' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_24' containerField='bodies' position='39.725 4.24 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_24' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_25' containerField='bodies' position='40.875 4.24 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_25' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_26' containerField='bodies' position='34.55 3.32 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_26' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_27' containerField='bodies' position='35.7 3.32 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_27' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_28' containerField='bodies' position='36.85 3.32 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_28' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_29' containerField='bodies' position='38 3.32 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_29' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_30' containerField='bodies' position='39.15 3.32 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_30' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_31' containerField='bodies' position='40.3 3.32 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_31' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_5_7_32' containerField='bodies' position='41.45 3.32 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_5_7" "role=peg" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_5_7_32' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_0' containerField='bodies' position='36.2909 9.23 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_1' containerField='bodies' position='36.7855 9.23 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_2' containerField='bodies' position='37.2734 9.23 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_3' containerField='bodies' position='37.7669 9.23 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_4' containerField='bodies' position='38.2579 9.23 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_5' containerField='bodies' position='38.7393 9.23 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_6' containerField='bodies' position='39.2362 9.23 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_7' containerField='bodies' position='39.746 9.23 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_8' containerField='bodies' position='36.2923 9.7245 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_9' containerField='bodies' position='36.7465 9.7245 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_10' containerField='bodies' position='37.2685 9.7245 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_11' containerField='bodies' position='37.765 9.7245 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_12' containerField='bodies' position='38.2229 9.7245 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_12' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_13' containerField='bodies' position='38.7345 9.7245 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_13' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_14' containerField='bodies' position='39.2265 9.7245 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_14' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_15' containerField='bodies' position='39.7455 9.7245 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_15' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_16' containerField='bodies' position='36.2565 10.219 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_16' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_17' containerField='bodies' position='36.7581 10.219 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_17' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_18' containerField='bodies' position='37.2735 10.219 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_18' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_19' containerField='bodies' position='37.7469 10.219 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_19' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_20' containerField='bodies' position='38.2325 10.219 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_20' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_21' containerField='bodies' position='38.7393 10.219 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_21' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_22' containerField='bodies' position='39.2515 10.219 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_22' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_23' containerField='bodies' position='39.7478 10.219 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_23' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_24' containerField='bodies' position='36.2578 10.7135 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_24' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_25' containerField='bodies' position='36.7729 10.7135 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_25' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_26' containerField='bodies' position='37.2701 10.7135 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_26' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_27' containerField='bodies' position='37.7331 10.7135 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_27' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_28' containerField='bodies' position='38.2254 10.7135 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_28' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_6_7_29' containerField='bodies' position='38.7618 10.7135 0' orientation='0 0 1 0' mass='0.3' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_6_7" "role=ball" "fric=0.3" "rest=0.35"'/>
+  <CollidableShape USE='C_cascade_6_7_29' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_0' containerField='bodies' position='56.133 -1.075 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_1' containerField='bodies' position='57 -1.075 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_2' containerField='bodies' position='57.867 -1.075 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_3' containerField='bodies' position='56.133 -0.223 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_4' containerField='bodies' position='57 -0.223 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_5' containerField='bodies' position='57.867 -0.223 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_6' containerField='bodies' position='56.133 0.629 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_7' containerField='bodies' position='57 0.629 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_8' containerField='bodies' position='57.867 0.629 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_9' containerField='bodies' position='56.133 1.481 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_10' containerField='bodies' position='57 1.481 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_11' containerField='bodies' position='57.867 1.481 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_12' containerField='bodies' position='56.133 2.333 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_12' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_13' containerField='bodies' position='57 2.333 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_13' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_14' containerField='bodies' position='57.867 2.333 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_14' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_15' containerField='bodies' position='56.133 3.185 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_15' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_16' containerField='bodies' position='57 3.185 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_16' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='cascade_7_7_17' containerField='bodies' position='57.867 3.185 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_7_7" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_cascade_7_7_17' containerField='geometry'/>
+ </RigidBody>
+ <SingleAxisHingeJoint DEF='cascade_2_7_j2' containerField='joints' anchorPoint='22 -0.78 0' axis='0 0 1' minAngle='-0.35' maxAngle='0.35'>
+  <MetadataString containerField='metadata' name='flop' value='"part=cascade_2_7" "limits=1"'/>
+  <RigidBody USE='cascade_2_7_1' containerField='body1'/><RigidBody USE='cascade_2_7_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+</RigidBodyCollection>
+<ProximitySensor DEF='cp_feel_z0' center='-5 0.5 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=0 Feel" "part=cp_feel"'/></ProximitySensor>
+<ProximitySensor DEF='cascade_1_7_z0' center='1 9 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=CASCADE FOUNDRY" "text=Authored seed 7. Export X3D to keep the exact generated layout." "part=cascade_1_7"'/></ProximitySensor>
+<ProximitySensor DEF='cp_contact_z0' center='11 0.5 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=1 Contact" "part=cp_contact"'/></ProximitySensor>
+<ProximitySensor DEF='cp_broad_z0' center='32 0.5 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=5 Broad phase" "part=cp_broad"'/></ProximitySensor>
+<ProximitySensor DEF='cannon_1_z0' center='46 -0.5 0' size='2 2 2'><MetadataString containerField='metadata' name='flop' value='"kind=cannon" "angle=38" "power=23" "part=cannon_1"'/></ProximitySensor>
+<ProximitySensor DEF='cp_cannon_z0' center='45 0.5 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=6 Cannon" "part=cp_cannon"'/></ProximitySensor>
+<ProximitySensor DEF='goal_1_z0' center='68 2.5 0' size='3.6 3.6 2'><MetadataString containerField='metadata' name='flop' value='"kind=goal" "part=goal_1"'/></ProximitySensor>
+<ProximitySensor DEF='cascade_8_7_z0' center='8 2 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=cascade_8_7"'/></ProximitySensor>
+<ProximitySensor DEF='cascade_9_7_z0' center='22 2 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=cascade_9_7"'/></ProximitySensor>
+<ProximitySensor DEF='cascade_10_7_z0' center='38 3 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=cascade_10_7"'/></ProximitySensor>
+<ProximitySensor DEF='cascade_11_7_z0' center='58 5 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=cascade_11_7"'/></ProximitySensor>
+<ProximitySensor DEF='cascade_12_7_z0' center='68 2.5 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=cascade_12_7"'/></ProximitySensor>
+<ProximitySensor DEF='cascade_13_7_z0' center='28 13 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=TRACE THE CHAIN REACTION" "text=Pause, single-step and inspect contacts. Drop a ball, change one mass, then compare." "part=cascade_13_7"'/></ProximitySensor>
+</Scene>
+</X3D>

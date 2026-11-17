@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+<head>
+<component name='RigidBodyPhysics' level='2'/>
+<meta name='title' content='Flop Lab level'/>
+<meta name='description' content='A 2.5D physics course. Bodies, hinges and regions are standard RigidBodyPhysics nodes; what the Flop Lab engine adds is carried in "flop" metadata. Units are metres, kilograms, seconds, radians. All motion is in the XY plane.'/>
+<meta name='generator' content='Flop Lab'/>
+</head>
+<Scene>
+<WorldInfo DEF='LEVEL' title='Flop Lab level'>
+ <MetadataSet name='flop:parts' containerField='metadata'>
+  <MetadataString containerField='value' name='recipe_floor' value='"platform" "x=33" "y=-1.5" "w=86" "h=2"'/>
+  <MetadataString containerField='value' name='recipe_left_wall' value='"platform" "x=-10" "y=12" "w=1" "h=16"'/>
+  <MetadataString containerField='value' name='recipe_right_wall' value='"platform" "x=76" "y=12" "w=1" "h=16"'/>
+  <MetadataString containerField='value' name='cp_feel' value='"checkpoint" "x=-5" "y=-1.5" "name=0 Feel"'/>
+  <MetadataString containerField='value' name='skyline_1_7' value='"label" "x=1" "y=9" "title=GRAPPLE SKYLINE" "text=Authored seed 7. Export X3D to keep the exact generated layout."'/>
+  <MetadataString containerField='value' name='skyline_2_7' value='"spring" "x=2" "y=-1.4" "w=2.4"'/>
+  <MetadataString containerField='value' name='skyline_3_7' value='"platform" "x=9" "y=1" "w=4.2" "h=0.4"'/>
+  <MetadataString containerField='value' name='skyline_4_7' value='"ring" "x=12.7" "y=5.5117"'/>
+  <MetadataString containerField='value' name='skyline_5_7' value='"star" "x=9" "y=2.9"'/>
+  <MetadataString containerField='value' name='skyline_6_7' value='"lift" "x=14.4" "y=1.5" "w=2.2" "dx=1.3" "dy=2.062" "period=6.4538"'/>
+  <MetadataString containerField='value' name='skyline_7_7' value='"platform" "x=20" "y=3.4" "w=4.2" "h=0.4"'/>
+  <MetadataString containerField='value' name='skyline_8_7' value='"ring" "x=23.7" "y=8.599"'/>
+  <MetadataString containerField='value' name='skyline_9_7' value='"star" "x=20" "y=5.3"'/>
+  <MetadataString containerField='value' name='skyline_10_7' value='"lift" "x=25.4" "y=3.9" "w=2.2" "dx=1.3" "dy=2.5214" "period=5.311"'/>
+  <MetadataString containerField='value' name='skyline_11_7' value='"platform" "x=31" "y=5.8" "w=4.2" "h=0.4"'/>
+  <MetadataString containerField='value' name='skyline_12_7' value='"ring" "x=34.7" "y=10.7662"'/>
+  <MetadataString containerField='value' name='skyline_13_7' value='"star" "x=31" "y=7.7"'/>
+  <MetadataString containerField='value' name='skyline_14_7' value='"lift" "x=36.4" "y=6.3" "w=2.2" "dx=1.3" "dy=2.2399" "period=5.6067"'/>
+  <MetadataString containerField='value' name='skyline_15_7' value='"platform" "x=42" "y=1" "w=4.2" "h=0.4"'/>
+  <MetadataString containerField='value' name='skyline_16_7' value='"ring" "x=45.7" "y=6.2298"'/>
+  <MetadataString containerField='value' name='skyline_17_7' value='"star" "x=42" "y=2.9"'/>
+  <MetadataString containerField='value' name='skyline_18_7' value='"lift" "x=47.4" "y=1.5" "w=2.2" "dx=1.3" "dy=2.2578" "period=4.8119"'/>
+  <MetadataString containerField='value' name='skyline_19_7' value='"platform" "x=53" "y=3.4" "w=4.2" "h=0.4"'/>
+  <MetadataString containerField='value' name='skyline_20_7' value='"ring" "x=56.7" "y=8.6641"'/>
+  <MetadataString containerField='value' name='skyline_21_7' value='"star" "x=53" "y=5.3"'/>
+  <MetadataString containerField='value' name='cp_joints' value='"checkpoint" "x=31" "y=-1.5" "name=2 Joints"'/>
+  <MetadataString containerField='value' name='skyline_22_7' value='"bridge" "x=28" "y=6.2" "length=12" "planks=10"'/>
+  <MetadataString containerField='value' name='skyline_23_7' value='"jelly" "x=62" "y=-1.5" "cols=5" "rows=3" "size=0.65" "softness=0.006"'/>
+  <MetadataString containerField='value' name='skyline_24_7' value='"fan" "x=66" "y=-1.5" "w=3.2" "h=11" "force=43"'/>
+  <MetadataString containerField='value' name='skyline_25_7' value='"star" "x=66" "y=7"'/>
+  <MetadataString containerField='value' name='skyline_26_7' value='"label" "x=41" "y=12" "title=OWN YOUR MOMENTUM" "text=Hook a ring, reel with W/S, jump to release. E dashes once before landing."'/>
+ </MetadataSet>
+</WorldInfo>
+<NavigationInfo type='"EXAMINE" "ANY"'/>
+<Viewpoint description='Whole course' position='80 4 150'/>
+<Background skyColor='0.02 0.05 0.11'/>
+<Group DEF='VISUAL'>
+ <CollidableShape DEF='C_recipe_floor_0' translation='33 -2.5 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='86 2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_recipe_left_wall_0' translation='-10 4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='1 16 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_recipe_right_wall_0' translation='76 4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='1 16 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_2_7_0' translation='2 -1.55 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Box size='2.4 0.3 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_3_7_0' translation='9 0.8 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='4.2 0.4 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_6_7_0' translation='14.4 1.35 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7176 0.6078 1'/></Appearance><Box size='2.2 0.3 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_7_7_0' translation='20 3.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='4.2 0.4 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_10_7_0' translation='25.4 3.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7176 0.6078 1'/></Appearance><Box size='2.2 0.3 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_11_7_0' translation='31 5.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='4.2 0.4 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_14_7_0' translation='36.4 6.15 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7176 0.6078 1'/></Appearance><Box size='2.2 0.3 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_15_7_0' translation='42 0.8 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='4.2 0.4 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_18_7_0' translation='47.4 1.35 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7176 0.6078 1'/></Appearance><Box size='2.2 0.3 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_19_7_0' translation='53 3.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='4.2 0.4 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_22_7_0' translation='27.85 5.95 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.3 0.5 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_22_7_1' translation='40.15 5.95 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.3 0.5 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_22_7_2' translation='28.6 6.1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.16 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_22_7_4' translation='29.8 6.1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.16 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_22_7_6' translation='31 6.1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.16 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_22_7_8' translation='32.2 6.1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.16 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_22_7_10' translation='33.4 6.1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.16 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_22_7_12' translation='34.6 6.1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.16 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_22_7_14' translation='35.8 6.1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.16 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_22_7_16' translation='37 6.1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.16 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_22_7_18' translation='38.2 6.1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.16 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_22_7_20' translation='39.4 6.1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.16 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_0' translation='60.7 -1.175 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_1' translation='61.35 -1.175 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_2' translation='62 -1.175 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_3' translation='62.65 -1.175 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_4' translation='63.3 -1.175 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_5' translation='60.7 -0.525 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_6' translation='61.35 -0.525 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_7' translation='62 -0.525 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_8' translation='62.65 -0.525 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_9' translation='63.3 -0.525 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_10' translation='60.7 0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_11' translation='61.35 0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_12' translation='62 0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_13' translation='62.65 0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_skyline_23_7_14' translation='63.3 0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.325'/></Shape></CollidableShape>
+</Group>
+<RigidBodyCollection DEF='WORLD' gravity='0 -22 0' iterations='1'>
+ <MetadataString containerField='metadata' name='flop' value='"substeps=8"'/>
+ <RigidBody DEF='recipe_floor_0' containerField='bodies' position='33 -2.5 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=recipe_floor" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_recipe_floor_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='recipe_left_wall_0' containerField='bodies' position='-10 4 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=recipe_left_wall" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_recipe_left_wall_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='recipe_right_wall_0' containerField='bodies' position='76 4 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=recipe_right_wall" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_recipe_right_wall_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_2_7_0' containerField='bodies' position='2 -1.55 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_2_7" "role=spring" "rest=0.95"'/>
+  <CollidableShape USE='C_skyline_2_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_3_7_0' containerField='bodies' position='9 0.8 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_3_7" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_skyline_3_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_6_7_0' containerField='bodies' position='14.4 1.35 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_6_7" "role=lift" "fric=1" "kin_x0=14.4" "kin_y0=1.35" "kin_ax=1.3" "kin_ay=2.062" "kin_period=6.4538"'/>
+  <CollidableShape USE='C_skyline_6_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_7_7_0' containerField='bodies' position='20 3.2 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_7_7" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_skyline_7_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_10_7_0' containerField='bodies' position='25.4 3.75 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_10_7" "role=lift" "fric=1" "kin_x0=25.4" "kin_y0=3.75" "kin_ax=1.3" "kin_ay=2.5214" "kin_period=5.311"'/>
+  <CollidableShape USE='C_skyline_10_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_11_7_0' containerField='bodies' position='31 5.6 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_11_7" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_skyline_11_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_14_7_0' containerField='bodies' position='36.4 6.15 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_14_7" "role=lift" "fric=1" "kin_x0=36.4" "kin_y0=6.15" "kin_ax=1.3" "kin_ay=2.2399" "kin_period=5.6067"'/>
+  <CollidableShape USE='C_skyline_14_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_15_7_0' containerField='bodies' position='42 0.8 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_15_7" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_skyline_15_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_18_7_0' containerField='bodies' position='47.4 1.35 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_18_7" "role=lift" "fric=1" "kin_x0=47.4" "kin_y0=1.35" "kin_ax=1.3" "kin_ay=2.2578" "kin_period=4.8119"'/>
+  <CollidableShape USE='C_skyline_18_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_19_7_0' containerField='bodies' position='53 3.2 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_19_7" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_skyline_19_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_22_7_0' containerField='bodies' position='27.85 5.95 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "role=static" "group=101"'/>
+  <CollidableShape USE='C_skyline_22_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_22_7_1' containerField='bodies' position='40.15 5.95 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "role=static" "group=101"'/>
+  <CollidableShape USE='C_skyline_22_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_22_7_2' containerField='bodies' position='28.6 6.1 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_skyline_22_7_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_22_7_4' containerField='bodies' position='29.8 6.1 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_skyline_22_7_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_22_7_6' containerField='bodies' position='31 6.1 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_skyline_22_7_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_22_7_8' containerField='bodies' position='32.2 6.1 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_skyline_22_7_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_22_7_10' containerField='bodies' position='33.4 6.1 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_skyline_22_7_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_22_7_12' containerField='bodies' position='34.6 6.1 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_skyline_22_7_12' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_22_7_14' containerField='bodies' position='35.8 6.1 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_skyline_22_7_14' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_22_7_16' containerField='bodies' position='37 6.1 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_skyline_22_7_16' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_22_7_18' containerField='bodies' position='38.2 6.1 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_skyline_22_7_18' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_22_7_20' containerField='bodies' position='39.4 6.1 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_skyline_22_7_20' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_0' containerField='bodies' position='60.7 -1.175 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_1' containerField='bodies' position='61.35 -1.175 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_2' containerField='bodies' position='62 -1.175 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_3' containerField='bodies' position='62.65 -1.175 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_4' containerField='bodies' position='63.3 -1.175 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_5' containerField='bodies' position='60.7 -0.525 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_6' containerField='bodies' position='61.35 -0.525 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_7' containerField='bodies' position='62 -0.525 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_8' containerField='bodies' position='62.65 -0.525 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_9' containerField='bodies' position='63.3 -0.525 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_10' containerField='bodies' position='60.7 0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_11' containerField='bodies' position='61.35 0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_12' containerField='bodies' position='62 0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_12' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_13' containerField='bodies' position='62.65 0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_13' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='skyline_23_7_14' containerField='bodies' position='63.3 0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_skyline_23_7_14' containerField='geometry'/>
+ </RigidBody>
+ <SingleAxisHingeJoint DEF='skyline_22_7_j3' containerField='joints' anchorPoint='28 6.1 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='skyline_22_7_2' containerField='body1'/><RigidBody USE='skyline_22_7_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='skyline_22_7_j5' containerField='joints' anchorPoint='29.2 6.1 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='skyline_22_7_4' containerField='body1'/><RigidBody USE='skyline_22_7_2' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='skyline_22_7_j7' containerField='joints' anchorPoint='30.4 6.1 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='skyline_22_7_6' containerField='body1'/><RigidBody USE='skyline_22_7_4' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='skyline_22_7_j9' containerField='joints' anchorPoint='31.6 6.1 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='skyline_22_7_8' containerField='body1'/><RigidBody USE='skyline_22_7_6' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='skyline_22_7_j11' containerField='joints' anchorPoint='32.8 6.1 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='skyline_22_7_10' containerField='body1'/><RigidBody USE='skyline_22_7_8' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='skyline_22_7_j13' containerField='joints' anchorPoint='34 6.1 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='skyline_22_7_12' containerField='body1'/><RigidBody USE='skyline_22_7_10' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='skyline_22_7_j15' containerField='joints' anchorPoint='35.2 6.1 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='skyline_22_7_14' containerField='body1'/><RigidBody USE='skyline_22_7_12' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='skyline_22_7_j17' containerField='joints' anchorPoint='36.4 6.1 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='skyline_22_7_16' containerField='body1'/><RigidBody USE='skyline_22_7_14' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='skyline_22_7_j19' containerField='joints' anchorPoint='37.6 6.1 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='skyline_22_7_18' containerField='body1'/><RigidBody USE='skyline_22_7_16' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='skyline_22_7_j21' containerField='joints' anchorPoint='38.8 6.1 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='skyline_22_7_20' containerField='body1'/><RigidBody USE='skyline_22_7_18' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='skyline_22_7_j22' containerField='joints' anchorPoint='40 6.1 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_22_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='skyline_22_7_20' containerField='body1'/><RigidBody USE='skyline_22_7_1' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <BallJoint DEF='skyline_23_7_j15' containerField='joints' anchorPoint='60.7 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=61.35" "by=-1.175" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_0' containerField='body1'/><RigidBody USE='skyline_23_7_1' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j16' containerField='joints' anchorPoint='60.7 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=60.7" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_0' containerField='body1'/><RigidBody USE='skyline_23_7_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j17' containerField='joints' anchorPoint='60.7 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=61.35" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_0' containerField='body1'/><RigidBody USE='skyline_23_7_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j18' containerField='joints' anchorPoint='61.35 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=60.7" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_1' containerField='body1'/><RigidBody USE='skyline_23_7_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j19' containerField='joints' anchorPoint='61.35 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62" "by=-1.175" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_1' containerField='body1'/><RigidBody USE='skyline_23_7_2' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j20' containerField='joints' anchorPoint='61.35 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=61.35" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_1' containerField='body1'/><RigidBody USE='skyline_23_7_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j21' containerField='joints' anchorPoint='61.35 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_1' containerField='body1'/><RigidBody USE='skyline_23_7_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j22' containerField='joints' anchorPoint='62 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=61.35" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_2' containerField='body1'/><RigidBody USE='skyline_23_7_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j23' containerField='joints' anchorPoint='62 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62.65" "by=-1.175" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_2' containerField='body1'/><RigidBody USE='skyline_23_7_3' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j24' containerField='joints' anchorPoint='62 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_2' containerField='body1'/><RigidBody USE='skyline_23_7_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j25' containerField='joints' anchorPoint='62 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62.65" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_2' containerField='body1'/><RigidBody USE='skyline_23_7_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j26' containerField='joints' anchorPoint='62.65 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_3' containerField='body1'/><RigidBody USE='skyline_23_7_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j27' containerField='joints' anchorPoint='62.65 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=63.3" "by=-1.175" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_3' containerField='body1'/><RigidBody USE='skyline_23_7_4' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j28' containerField='joints' anchorPoint='62.65 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62.65" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_3' containerField='body1'/><RigidBody USE='skyline_23_7_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j29' containerField='joints' anchorPoint='62.65 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=63.3" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_3' containerField='body1'/><RigidBody USE='skyline_23_7_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j30' containerField='joints' anchorPoint='63.3 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62.65" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_4' containerField='body1'/><RigidBody USE='skyline_23_7_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j31' containerField='joints' anchorPoint='63.3 -1.175 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=63.3" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_4' containerField='body1'/><RigidBody USE='skyline_23_7_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j32' containerField='joints' anchorPoint='60.7 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=61.35" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_5' containerField='body1'/><RigidBody USE='skyline_23_7_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j33' containerField='joints' anchorPoint='60.7 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=60.7" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_5' containerField='body1'/><RigidBody USE='skyline_23_7_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j34' containerField='joints' anchorPoint='60.7 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=61.35" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_5' containerField='body1'/><RigidBody USE='skyline_23_7_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j35' containerField='joints' anchorPoint='61.35 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=60.7" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_6' containerField='body1'/><RigidBody USE='skyline_23_7_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j36' containerField='joints' anchorPoint='61.35 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_6' containerField='body1'/><RigidBody USE='skyline_23_7_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j37' containerField='joints' anchorPoint='61.35 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=61.35" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_6' containerField='body1'/><RigidBody USE='skyline_23_7_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j38' containerField='joints' anchorPoint='61.35 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_6' containerField='body1'/><RigidBody USE='skyline_23_7_12' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j39' containerField='joints' anchorPoint='62 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=61.35" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_7' containerField='body1'/><RigidBody USE='skyline_23_7_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j40' containerField='joints' anchorPoint='62 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62.65" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_7' containerField='body1'/><RigidBody USE='skyline_23_7_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j41' containerField='joints' anchorPoint='62 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_7' containerField='body1'/><RigidBody USE='skyline_23_7_12' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j42' containerField='joints' anchorPoint='62 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62.65" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_7' containerField='body1'/><RigidBody USE='skyline_23_7_13' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j43' containerField='joints' anchorPoint='62.65 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_8' containerField='body1'/><RigidBody USE='skyline_23_7_12' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j44' containerField='joints' anchorPoint='62.65 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=63.3" "by=-0.525" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_8' containerField='body1'/><RigidBody USE='skyline_23_7_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j45' containerField='joints' anchorPoint='62.65 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62.65" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_8' containerField='body1'/><RigidBody USE='skyline_23_7_13' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j46' containerField='joints' anchorPoint='62.65 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=63.3" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_8' containerField='body1'/><RigidBody USE='skyline_23_7_14' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j47' containerField='joints' anchorPoint='63.3 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62.65" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_9' containerField='body1'/><RigidBody USE='skyline_23_7_13' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j48' containerField='joints' anchorPoint='63.3 -0.525 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=63.3" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_9' containerField='body1'/><RigidBody USE='skyline_23_7_14' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j49' containerField='joints' anchorPoint='60.7 0.125 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=61.35" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_10' containerField='body1'/><RigidBody USE='skyline_23_7_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j50' containerField='joints' anchorPoint='61.35 0.125 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_11' containerField='body1'/><RigidBody USE='skyline_23_7_12' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j51' containerField='joints' anchorPoint='62 0.125 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=62.65" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_12' containerField='body1'/><RigidBody USE='skyline_23_7_13' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='skyline_23_7_j52' containerField='joints' anchorPoint='62.65 0.125 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=skyline_23_7" "type=spring" "bx=63.3" "by=0.125" "comp=0.006"'/>
+  <RigidBody USE='skyline_23_7_13' containerField='body1'/><RigidBody USE='skyline_23_7_14' containerField='body2'/>
+ </BallJoint>
+</RigidBodyCollection>
+<ProximitySensor DEF='cp_feel_z0' center='-5 0.5 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=0 Feel" "part=cp_feel"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_1_7_z0' center='1 9 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=GRAPPLE SKYLINE" "text=Authored seed 7. Export X3D to keep the exact generated layout." "part=skyline_1_7"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_4_7_z0' center='12.7 5.5117 0' size='0.6 0.6 2'><MetadataString containerField='metadata' name='flop' value='"kind=ring" "part=skyline_4_7"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_5_7_z0' center='9 2.9 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=skyline_5_7"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_8_7_z0' center='23.7 8.599 0' size='0.6 0.6 2'><MetadataString containerField='metadata' name='flop' value='"kind=ring" "part=skyline_8_7"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_9_7_z0' center='20 5.3 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=skyline_9_7"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_12_7_z0' center='34.7 10.7662 0' size='0.6 0.6 2'><MetadataString containerField='metadata' name='flop' value='"kind=ring" "part=skyline_12_7"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_13_7_z0' center='31 7.7 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=skyline_13_7"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_16_7_z0' center='45.7 6.2298 0' size='0.6 0.6 2'><MetadataString containerField='metadata' name='flop' value='"kind=ring" "part=skyline_16_7"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_17_7_z0' center='42 2.9 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=skyline_17_7"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_20_7_z0' center='56.7 8.6641 0' size='0.6 0.6 2'><MetadataString containerField='metadata' name='flop' value='"kind=ring" "part=skyline_20_7"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_21_7_z0' center='53 5.3 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=skyline_21_7"'/></ProximitySensor>
+<ProximitySensor DEF='cp_joints_z0' center='31 0.5 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=2 Joints" "part=cp_joints"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_24_7_z0' center='66 4 0' size='3.2 11 2'><MetadataString containerField='metadata' name='flop' value='"kind=fan" "fx=2.633e-15" "fy=43" "angle=90" "part=skyline_24_7"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_25_7_z0' center='66 7 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=skyline_25_7"'/></ProximitySensor>
+<ProximitySensor DEF='skyline_26_7_z0' center='41 12 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=OWN YOUR MOMENTUM" "text=Hook a ring, reel with W/S, jump to release. E dashes once before landing." "part=skyline_26_7"'/></ProximitySensor>
+</Scene>
+</X3D>

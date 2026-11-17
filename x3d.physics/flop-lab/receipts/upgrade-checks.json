@@ -1,0 +1,257 @@
+{
+  "schema": "floplab.release-checks/1",
+  "started_utc": "2026-11-16T23:19:55.893Z",
+  "environment": {
+    "node": "v24.22.1",
+    "v8": "13.6.233.17-node.58",
+    "platform": "linux",
+    "arch": "x64",
+    "cpu": "AMD EPYC 9V74 80-Core Processor"
+  },
+  "source_sha256": {
+    "build.mjs": "4627fc75f38ae414eacfe1b6d874cb8318cb2b44cf63d637bdf0965c08edf77e",
+    "package-lock.json": "5101b4387a83424b8a755dbe72e5a6d5dd1c67c1d18b162ccf1cfb45891d09c5",
+    "package.json": "9b0cf78f5429fb81c245e00af84c89fd327d94342e357bb710ca6301fb35c7c9",
+    "src/app.js": "15d7558a00c2894124ba6b90a8394c1952cd36f1359ea5556ab270c17605a496",
+    "src/core.js": "687e14cc771972714923434238edad1e3ea8bd9bf0bc406f945ac12fc80ff7ea",
+    "src/expedition.js": "4ef04fb218db60b48a9ab79f7e14329abc5feb739dbff0d36c2fce1563b0298d",
+    "src/game.js": "dbdd37b0cf2673bd01bc81dc30a89b350c0e5829d8736902b3c775ade447732f",
+    "src/level.js": "1543362d05034c2220c2c131e5cdcd2769509e072105e61ea4d673e9eec5e20c",
+    "src/recipes.js": "82c528167f5e5e26f914c56c13c9e9340c4645c3c3aeed9d0bef667612d47ba4",
+    "src/template.html": "c7194f865c87c084db92d0f4b06826ff34f5c5c70cf726706d5d6ff58cae6a45",
+    "src/view.js": "28facf627106bfe0fdfeb76d0a73e0992f099111e0de1d60ac6cdb42e624f003",
+    "src/x3dio.js": "c1db30e2c7bd492db8fd71cf61e946869013e35e41c94cbfbf6f53fd1bb0a8eb",
+    "test/browser.mjs": "e79e8d65bc686e7a5de332cf9c06d3df217d7dda78f3a7b09db4df2508945d97",
+    "test/core.test.mjs": "0f0126907190883f82f7e466393a000cdaf31f2078a3c4dd3045f5eacebabd6e",
+    "test/expedition-integration.test.mjs": "b0195b3748adf13ae8fa8f408b0ef8234c241de5aefa4011400c1beec28a1ce4",
+    "test/expedition.test.mjs": "60ecec4c1ff5646fba0894117e2a1ad770bff1cb62c59fe4c5cab7db878a0607",
+    "test/gates.test.mjs": "8192dba8abc2ed318411be975c51928c604a5cfd66fab72f2227e3663becb471",
+    "test/limits.json": "cc6e49bdebd51f5a564709380569b595d97c665236d0970471986e3a04197886",
+    "test/math-sweep.mjs": "122af1845b51453ca1992cde572496e6e79c830242bd83c8059b2dd16c513bdc",
+    "test/mk.mjs": "f989db4887dbc5e00f44c4131d5a2a7a8fe8ae67dc3181b03ed2234528d69293",
+    "test/new-controls.state-scope.mjs": "c85de15c3cebff6961c749016c603a5287be4e7faa15d36c6cfc555be4e8d5bd",
+    "test/play.mjs": "be68f9f94474eadab04877f8e39a8d69c8f9473b7efcfa123c22f7fc1f777756",
+    "test/recipes.test.mjs": "357c13977ebb6411cfc81f6f1ea990ae9839485dec7b959064533e9e3a102019",
+    "test/trig.mjs": "d69095aab0975c2331f52034a39142774222acf7b4e72ee14e98358771a4a09e",
+    "test/x3dio-dom.test.mjs": "192e7aed88f0f5ef9e680e2008d7380b6160cd72c45ce96a1da28936b3b59729",
+    "test/x3dio.test.mjs": "654d43b70db51073688a15e68677dca601e2b326a9e306d27a3f5b6824340eab",
+    "tools/check_release.mjs": "fc4d3010bf7a2ed586e730b52dc2ad0d95d35e422049b6898ec64eac156277c7",
+    "vendor/three/ORIGIN.json": "75108b496751d5c9d37c349cd722b16db1291a0c09fab24ced37486a818b650f",
+    "vendor/x3d_mcp/ORIGIN.json": "e7587506b4b4e3455f358451e104ad8d8e31514e6f8e687bdb2b9be5b170c349"
+  },
+  "tests": [
+    {
+      "path": "test/core.test.mjs",
+      "exit_code": 0,
+      "duration_ms": 2101.05,
+      "stdout": "PASS free fall vs discrete solution: err 2.19e-10 m\nPASS 6-crate stack after 6 s: top y 5.480 (5.5), x 0.0000, a 0.0000\nPASS stack at rest: max speed 0.0000 m/s\nPASS incline 20 deg, mu 0.6: moved 0.000 m, expected stick\nPASS incline 40 deg, mu 0.6: moved 8.321 m, expected slide\nPASS   sliding speed 10.70 vs Coulomb 10.99 m/s\nPASS pendulum period 1.9900 s vs 1.9875 s\nPASS bounce e=0.5 from 3 m: peak 0.742 m (0.75)\nPASS two runs of the default level agree on all 300 step hashes (42358dcd)\n  default level: 267 bodies, 192 joints, 30 zones, 1.34 ms/step, pairs 248 of 32385 brute, contacts 229\nPASS no NaN after 5 s\nPASS nothing fell out of the world ()\nPASS dominoes still standing untouched after 5 s\nPASS crate tower still standing after 5 s\nPASS poked dominoes: 12 of 13 fell\n   {\"fallen\":12,\"of\":13,\"moved_m\":0.94,\"energy_start_J\":-646.4,\"energy_end_J\":-793.5,\"peak_kinetic_J\":13.6,\"bodies\":45,\"ms_per_step\":0,\"hash\":\"0c4a92d7\"}\n  cannon 25 deg: dist 23.04 air 0.78 peak 2.66 miss 3.59 goal false bonks 6 score 905 0.442 ms/step bodies 35\n  cannon 35 deg: dist 26.06 air 1.28 peak 5.06 miss 0.29 goal true bonks 3 score 1334 0.28 ms/step bodies 35\n  cannon 45 deg: dist 26.25 air 1.57 peak 7.87 miss 2.21 goal false bonks 3 score 947 0.242 ms/step bodies 35\n  cannon 55 deg: dist 13.35 air 1.28 peak 7.79 miss 11.51 goal false bonks 7 score 899 0.239 ms/step bodies 35\n  cannon 65 deg: dist 26.46 air 2.07 peak 13.39 miss 0.93 goal true bonks 3 score 1468 0.192 ms/step bodies 35\nPASS cannon sweep ran\nPASS hero stands on the floor: y 0.697\nPASS full jump apex 3.08 m (3.12 ideal)\nPASS run speed 8.60 m/s (8.6), went 3.91 m\nPASS F goes limp\nPASS stood up again; stunt {\"why\":\"you let go\",\"seconds\":1.38,\"distance_m\":1.63,\"airtime_s\":0.18,\"spins\":0.14,\"bonks\":1,\"hardest_hit_mps\":7.8,\"peak_speed_mps\":9.9,\"peak_height_m\":0,\"hit_goal\":false,\"goal_miss_m\":163.98,\"score\":141}\nPASS ragdoll has 10 hinges\nPASS kernel recompiled from its own source gives the same hash after 120 steps\n\nall passed\n",
+      "stderr": "",
+      "instrument_error": null
+    },
+    {
+      "path": "test/gates.test.mjs",
+      "exit_code": 0,
+      "duration_ms": 2395.696,
+      "stdout": "PASS free fall vs the discrete solution: 2.19e-10 m (limit 1e-9 m)\nPASS 10-crate stack, max tilt in 10 s: 0.00000 rad (limit 0.002 rad)\nPASS 10-crate stack, max speed: 0.058 m/s (limit 0.2 m/s)\nPASS 5 x 5 crate wall, max tilt: 0.00000 rad (limit 0.002 rad)\nPASS one crate at rest, sideways creep in 6 s: 0.00000 m (limit 0.002 m)\nCAUGHT control face contacts solved one corner at a time (10-stack tilt, rad; judged by the gate's own limit): 0.0148 (must exceed 0.002)\nINFO   friction at each corner, 10-stack tilt: 0.0000 rad, max speed 0.058 m/s\nINFO   friction inside the push pass, corner by corner: one crate crept 0.2807 m in 6 s\nPASS incline 20 deg, mu 0.6 sticks (moved in 2 s): 0.0001 m (limit 0.2 m)\nPASS incline 40 deg, speed after 2 s vs Coulomb: 0.0037 relative (limit 0.05 relative)\nCAUGHT control friction 0 on the 20 deg incline (moved, m): 19.30 (must exceed 1)\nPASS pendulum period vs 2 pi sqrt(I / m g L): 0.00054 relative (limit 0.01 relative)\nCAUGHT control hinge solved along the error direction only (period error, relative): 0.0295 (must exceed 0.02)\nPASS bounce e = 0.5 from 3 m, peak vs e^2 h: 0.0079 m (limit 0.08 m)\nPASS bounce e = 0.1 (the default material) from 3 m, peak (e^2 h = 0.03): 0.0247 m (limit 0.1 m)\nCAUGHT control restitution raised by 0.3 (peak error against 0.75 m): 1.161 (must exceed 0.08)\nPASS sweep and prune vs brute force over 300 frames, pairs missed (1206 tests a frame against 35245): 0 (limit 0)\nCAUGHT control list sorted by centre instead of left edge (pairs missed in 300 frames): 4835 (must exceed 1)\nPASS two runs of a cannon shot on the default level, differing step hashes of 300: 0 (limit 0)\nCAUGHT control friction changed by 1e-7 (differing step hashes of 300): 287 (must exceed 1)\n\n12 of 12 gates pass; 6 of 6 controls caught\n",
+      "stderr": "",
+      "instrument_error": null
+    },
+    {
+      "path": "test/expedition.test.mjs",
+      "exit_code": 0,
+      "duration_ms": 115.203,
+      "stdout": "PASS Free play is the default and every physically available chapter remains selectable\nPASS Starting an unavailable chapter refuses without mutating a live run\nPASS Upright airtime is not First Flight; one actual ragdoll airtime threshold completes\nPASS Completed stunts can satisfy airtime but a stale earlier result is not borrowed\nPASS Air Mail requires finishing the current distant flop, not passing through 12 m in midair\nPASS Collector resets fresh stars and cannot complete with one\nPASS Contact Sprint requires the destination region, not a distant x coordinate\nPASS Wind Rider requires limp contact with a fan before height qualifies\nPASS An old peak before fan entry and a separate later flop cannot satisfy the wind rise\nPASS A generic goal hit cannot satisfy Cannon Post without a cannon launch\nPASS Respawning fails the attempt and a retry resets its death baseline\nPASS Challenge expiry is explicit and no progress earns a timeout medal\nPASS Modified runs complete only as practice and retry does not erase the modification\nPASS A nonfinite airtime cannot earn a medal and a ghost from another course is not shown\nPASS Dash requires one airborne unhooked hero and normalizes diagonal speed\nPASS Disabled dash and malformed timing cannot silently alter the hero\nPASS Visual trace storage is bounded and restarting can follow a prior eligible completion\n17 expedition controls passed\n",
+      "stderr": "",
+      "instrument_error": null
+    },
+    {
+      "path": "test/expedition-integration.test.mjs",
+      "exit_code": 0,
+      "duration_ms": 24257.31,
+      "stdout": "PASS neutral expedition hooks preserve every stock physical pose hash for an identical model and input trace\nPASS grounded dash is refused and one airborne burst changes the real trajectory against a disabled twin\nPASS two real dash input traces repeat on this host while the changed-input twin diverges\nPASS First Flight accepts actual ragdoll airtime while upright flight is a negative control\nPASS First Flight is achievable from the stock spawn by an ordinary jump then flop input trace\nPASS real respawn fails the attempt and retry establishes a fresh death baseline\nPASS real completed ragdoll objective remains practice after invalidation and retry\nPASS actual mission-start lifecycle rebuilds physical state while free exploration preserves it\n8 real-Sim integration controls passed\n",
+      "stderr": "",
+      "instrument_error": null
+    },
+    {
+      "path": "test/x3dio.test.mjs",
+      "exit_code": 0,
+      "duration_ms": 301.964,
+      "stdout": "PASS Default scene still exports byte-for-byte to its retained X3D\nPASS Stats distinguish actual model counts and centre-only bounds\nPASS Negative dimensions are refused before world construction\nPASS NaN position cannot be repaired silently by JSON cloning\nPASS Infinity material friction is refused\nPASS Negative restitution is refused\nPASS Fractional substep counts are refused\nPASS Unknown physics settings cannot disappear during export\nPASS Body velocity fields cannot disappear during export\nPASS Duplicate global body identifiers are refused\nPASS Body IDs colliding with derived visual IDs are refused\nPASS Reserved world DEF cannot become a body\nPASS Dangling joint endpoint is refused\nPASS Self-joint is refused\nPASS Reversed hinge bounds are refused\nPASS Region size is validated, not just body poses\nPASS Water allocation is bounded independently of source body count\nPASS Pill sampling expansion is bounded independently of body count\nPASS Unknown kinematic channel is refused\nPASS Invalid prefab density is refused before expansion\nPASS Unknown prefab parameter is diagnosed, not discarded\nPASS Part updates reject out-of-range cannon power\nPASS Finite source-size overflow is refused\nPASS external DTD preflight is refused\nPASS entity subset preflight is refused\nPASS CDATA payload preflight is refused\nPASS processing instruction preflight is refused\nPASS MFString retains quotes and backslashes rather than deleting them\nPASS MFString prototype keys and repeated keys are refused\nPASS Small compliance survives the serializer\n\n30 X3D bridge controls passed. DOM and schema checks remain separate.\n",
+      "stderr": "",
+      "instrument_error": null
+    },
+    {
+      "path": "test/x3dio-dom.test.mjs",
+      "exit_code": 0,
+      "duration_ms": 743.955,
+      "stdout": "PASS XML DOM canonical round trip: museum\nPASS XML DOM canonical round trip: skyline\nPASS XML DOM canonical round trip: cascade\nPASS XML DOM canonical round trip: tidal\nPASS refused negative geometry; repaired twin retained\nPASS refused nonfinite gravity; repaired twin retained\nPASS refused unsupported 3D orientation; repaired twin retained\nPASS refused entity declaration; repaired twin retained\nPASS refused script capability; repaired twin retained\n14 XML DOM controls pass (linkedom; not a browser render test).\n",
+      "stderr": "",
+      "instrument_error": null
+    },
+    {
+      "path": "test/recipes.test.mjs",
+      "exit_code": 0,
+      "duration_ms": 4495.388,
+      "stdout": "PASS recipe museum: 255 bodies, 180 fixed steps finite\nPASS recipe skyline: 40 bodies, 180 fixed steps finite\nPASS recipe cascade: 105 bodies, 180 fixed steps finite\nPASS recipe tidal: 86 bodies, 180 fixed steps finite\nRecipe checks: 27 pass. No renderer or cross-host result claimed.\n",
+      "stderr": "",
+      "instrument_error": null
+    },
+    {
+      "path": "test/new-controls.state-scope.mjs",
+      "exit_code": 0,
+      "duration_ms": 104.167,
+      "stdout": "PASS pose_hash_does_not_identify_velocity: {\"beforeSame\":true,\"nextDiffers\":true,\"ax\":0,\"bx\":0.016666666666666673}\nPASS review_snapshot_is_not_a_full_world_checkpoint: {\"restored\":true,\"restoredTime\":0,\"retainedFrame\":1}\nPASS hidden_rng_requires_its_own_checkpoint_or_input_trace: {\"beforeSame\":true,\"restored\":true,\"missedRandomState\":true,\"repairedTwinMatches\":true}\n",
+      "stderr": "",
+      "instrument_error": null
+    }
+  ],
+  "status": "pass",
+  "limits": {
+    "path": "test/limits.json",
+    "sha256": "cc6e49bdebd51f5a564709380569b595d97c665236d0970471986e3a04197886",
+    "scope": "Inherited authored physics limits retained unchanged from the supplied committed fold-back baseline; historical bars are not retroactively precommitted."
+  },
+  "limitations": [
+    "One Node executor; no fresh browser cross-host comparison, real GPU, gamepad, mobile hardware or formal Loom acceptance in this command.",
+    "Pose fingerprints cover poses only. Ghosts and history review are not full-state checkpoints.",
+    "Historical receipts are restored after testing; fresh numerical gate results are retained in this report."
+  ],
+  "physics_gates": {
+    "engine": "flop-lab xpbd2d",
+    "node": "v24.22.1",
+    "date": "2026-11-16T23:19:58.073Z",
+    "gates": [
+      {
+        "name": "free fall vs the discrete solution",
+        "value": "2.19e-10",
+        "limit": 1e-9,
+        "pass": true
+      },
+      {
+        "name": "10-crate stack, max tilt in 10 s",
+        "value": "0.00000",
+        "limit": 0.002,
+        "pass": true
+      },
+      {
+        "name": "10-crate stack, max speed",
+        "value": "0.058",
+        "limit": 0.2,
+        "pass": true
+      },
+      {
+        "name": "5 x 5 crate wall, max tilt",
+        "value": "0.00000",
+        "limit": 0.002,
+        "pass": true
+      },
+      {
+        "name": "one crate at rest, sideways creep in 6 s",
+        "value": "0.00000",
+        "limit": 0.002,
+        "pass": true
+      },
+      {
+        "name": "incline 20 deg, mu 0.6 sticks (moved in 2 s)",
+        "value": "0.0001",
+        "limit": 0.2,
+        "pass": true
+      },
+      {
+        "name": "incline 40 deg, speed after 2 s vs Coulomb",
+        "value": "0.0037",
+        "limit": 0.05,
+        "pass": true
+      },
+      {
+        "name": "pendulum period vs 2 pi sqrt(I / m g L)",
+        "value": "0.00054",
+        "limit": 0.01,
+        "pass": true
+      },
+      {
+        "name": "bounce e = 0.5 from 3 m, peak vs e^2 h",
+        "value": "0.0079",
+        "limit": 0.08,
+        "pass": true
+      },
+      {
+        "name": "bounce e = 0.1 (the default material) from 3 m, peak (e^2 h = 0.03)",
+        "value": "0.0247",
+        "limit": 0.1,
+        "pass": true
+      },
+      {
+        "name": "sweep and prune vs brute force over 300 frames, pairs missed (1206 tests a frame against 35245)",
+        "value": 0,
+        "limit": 0,
+        "pass": true
+      },
+      {
+        "name": "two runs of a cannon shot on the default level, differing step hashes of 300",
+        "value": 0,
+        "limit": 0,
+        "pass": true
+      }
+    ],
+    "controls": [
+      {
+        "name": "face contacts solved one corner at a time (10-stack tilt, rad; judged by the gate's own limit)",
+        "value": "0.0148",
+        "need": 0.002,
+        "caught": true
+      },
+      {
+        "name": "friction pulled at each corner instead of the face middle (10-stack tilt, rad)",
+        "value": "0.0000",
+        "need": "reported, not gated",
+        "caught": null
+      },
+      {
+        "name": "friction inside the push pass, corner by corner (one crate, creep in 6 s, m)",
+        "value": "0.2807",
+        "need": "reported, not gated",
+        "caught": null
+      },
+      {
+        "name": "friction 0 on the 20 deg incline (moved, m)",
+        "value": "19.30",
+        "need": 1,
+        "caught": true
+      },
+      {
+        "name": "hinge solved along the error direction only (period error, relative)",
+        "value": "0.0295",
+        "need": 0.02,
+        "caught": true
+      },
+      {
+        "name": "restitution raised by 0.3 (peak error against 0.75 m)",
+        "value": "1.161",
+        "need": 0.08,
+        "caught": true
+      },
+      {
+        "name": "list sorted by centre instead of left edge (pairs missed in 300 frames)",
+        "value": 4835,
+        "need": 1,
+        "caught": true
+      },
+      {
+        "name": "friction changed by 1e-7 (differing step hashes of 300)",
+        "value": 287,
+        "need": 1,
+        "caught": true
+      }
+    ],
+    "hash300": "f5a046f3",
+    "model_sha256": "cfa68107223b1c1652190e0adc5d4fdde660a8e57badf85fe9d5f2d58e2cc928",
+    "engine_sha256": "54d7d2dedc5327136d9a5469765e601315a57f1d993f41c54e3255b4c5a8ab13",
+    "caught": 6,
+    "gated_controls": 6,
+    "passed": 12
+  },
+  "source_drift": "none",
+  "finished_utc": "2026-11-16T23:20:30.421Z",
+  "report_sha256": "dbe25a25ddd575b214c3a45ec137928b60ffbf4ccc7d6bba982938c70f4b0fd6"
+}

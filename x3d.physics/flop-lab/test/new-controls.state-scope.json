@@ -1,0 +1,48 @@
+{
+  "schema": "flop-lab.state-scope-probes/1",
+  "node": "v24.22.1",
+  "source_sha256": {
+    "core.js": "687e14cc771972714923434238edad1e3ea8bd9bf0bc406f945ac12fc80ff7ea",
+    "level.js": "1543362d05034c2220c2c131e5cdcd2769509e072105e61ea4d673e9eec5e20c",
+    "game.js": "dbdd37b0cf2673bd01bc81dc30a89b350c0e5829d8736902b3c775ade447732f"
+  },
+  "probes": [
+    {
+      "id": "pose_hash_does_not_identify_velocity",
+      "pass": true,
+      "observed": {
+        "beforeSame": true,
+        "nextDiffers": true,
+        "ax": 0,
+        "bx": 0.016666666666666673
+      },
+      "scope": "Expected scope control. Equal pose digests cannot alone authorize continuation-state equivalence."
+    },
+    {
+      "id": "review_snapshot_is_not_a_full_world_checkpoint",
+      "pass": true,
+      "observed": {
+        "restored": true,
+        "restoredTime": 0,
+        "retainedFrame": 1
+      },
+      "scope": "Documents current snapshot scope; this command does not claim deterministic branch/resume."
+    },
+    {
+      "id": "hidden_rng_requires_its_own_checkpoint_or_input_trace",
+      "pass": true,
+      "observed": {
+        "beforeSame": true,
+        "restored": true,
+        "missedRandomState": true,
+        "repairedTwinMatches": true
+      },
+      "scope": "One same-host controlled RNG-consumption difference and repaired twin; not a cross-host result."
+    }
+  ],
+  "limitations": [
+    "Expected scope probes, not assertions that the current review snapshot is a full checkpoint.",
+    "No browser, renderer, cross-host replay or formal Loom acceptance was executed.",
+    "A future full-state implementation should replace these scope expectations with corresponding checkpoint controls."
+  ]
+}

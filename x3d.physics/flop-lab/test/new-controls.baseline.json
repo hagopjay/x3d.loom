@@ -1,0 +1,156 @@
+{
+  "kind": "fresh_independent_node_rerun",
+  "node": "v24.22.1",
+  "tests": [
+    {
+      "test": "test/core.test.mjs",
+      "returncode": 0,
+      "seconds": 1.9944,
+      "stdout": "PASS free fall vs discrete solution: err 2.19e-10 m\nPASS 6-crate stack after 6 s: top y 5.480 (5.5), x 0.0000, a 0.0000\nPASS stack at rest: max speed 0.0000 m/s\nPASS incline 20 deg, mu 0.6: moved 0.000 m, expected stick\nPASS incline 40 deg, mu 0.6: moved 8.321 m, expected slide\nPASS   sliding speed 10.70 vs Coulomb 10.99 m/s\nPASS pendulum period 1.9900 s vs 1.9875 s\nPASS bounce e=0.5 from 3 m: peak 0.742 m (0.75)\nPASS two runs of the default level agree on all 300 step hashes (42358dcd)\n  default level: 267 bodies, 192 joints, 30 zones, 1.26 ms/step, pairs 248 of 32385 brute, contacts 229\nPASS no NaN after 5 s\nPASS nothing fell out of the world ()\nPASS dominoes still standing untouched after 5 s\nPASS crate tower still standing after 5 s\nPASS poked dominoes: 12 of 13 fell\n   {\"fallen\":12,\"of\":13,\"moved_m\":0.94,\"energy_start_J\":-646.4,\"energy_end_J\":-793.5,\"peak_kinetic_J\":13.6,\"bodies\":45,\"ms_per_step\":0,\"hash\":\"0c4a92d7\"}\n  cannon 25 deg: dist 23.04 air 0.78 peak 2.66 miss 3.59 goal false bonks 6 score 905 0.342 ms/step bodies 35\n  cannon 35 deg: dist 26.06 air 1.28 peak 5.06 miss 0.29 goal true bonks 3 score 1334 0.245 ms/step bodies 35\n  cannon 45 deg: dist 26.25 air 1.57 peak 7.87 miss 2.21 goal false bonks 3 score 947 0.173 ms/step bodies 35\n  cannon 55 deg: dist 13.35 air 1.28 peak 7.79 miss 11.51 goal false bonks 7 score 899 0.186 ms/step bodies 35\n  cannon 65 deg: dist 26.46 air 2.07 peak 13.39 miss 0.93 goal true bonks 3 score 1468 0.157 ms/step bodies 35\nPASS cannon sweep ran\nPASS hero stands on the floor: y 0.697\nPASS full jump apex 3.08 m (3.12 ideal)\nPASS run speed 8.60 m/s (8.6), went 3.91 m\nPASS F goes limp\nPASS stood up again; stunt {\"why\":\"you let go\",\"seconds\":1.38,\"distance_m\":1.63,\"airtime_s\":0.18,\"spins\":0.14,\"bonks\":1,\"hardest_hit_mps\":7.8,\"peak_speed_mps\":9.9,\"peak_height_m\":0,\"hit_goal\":false,\"goal_miss_m\":163.98,\"score\":141}\nPASS ragdoll has 10 hinges\nPASS kernel recompiled from its own source gives the same hash after 120 steps\n\nall passed\n",
+      "stderr": ""
+    },
+    {
+      "test": "test/gates.test.mjs",
+      "returncode": 0,
+      "seconds": 2.4516,
+      "stdout": "PASS free fall vs the discrete solution: 2.19e-10 m (limit 1e-9 m)\nPASS 10-crate stack, max tilt in 10 s: 0.00000 rad (limit 0.002 rad)\nPASS 10-crate stack, max speed: 0.058 m/s (limit 0.2 m/s)\nPASS 5 x 5 crate wall, max tilt: 0.00000 rad (limit 0.002 rad)\nPASS one crate at rest, sideways creep in 6 s: 0.00000 m (limit 0.002 m)\nCAUGHT control face contacts solved one corner at a time (10-stack tilt, rad; judged by the gate's own limit): 0.0148 (must exceed 0.002)\nINFO   friction at each corner, 10-stack tilt: 0.0000 rad, max speed 0.058 m/s\nINFO   friction inside the push pass, corner by corner: one crate crept 0.2807 m in 6 s\nPASS incline 20 deg, mu 0.6 sticks (moved in 2 s): 0.0001 m (limit 0.2 m)\nPASS incline 40 deg, speed after 2 s vs Coulomb: 0.0037 relative (limit 0.05 relative)\nCAUGHT control friction 0 on the 20 deg incline (moved, m): 19.30 (must exceed 1)\nPASS pendulum period vs 2 pi sqrt(I / m g L): 0.00054 relative (limit 0.01 relative)\nCAUGHT control hinge solved along the error direction only (period error, relative): 0.0295 (must exceed 0.02)\nPASS bounce e = 0.5 from 3 m, peak vs e^2 h: 0.0079 m (limit 0.08 m)\nPASS bounce e = 0.1 (the default material) from 3 m, peak (e^2 h = 0.03): 0.0247 m (limit 0.1 m)\nCAUGHT control restitution raised by 0.3 (peak error against 0.75 m): 1.161 (must exceed 0.08)\nPASS sweep and prune vs brute force over 300 frames, pairs missed (1206 tests a frame against 35245): 0 (limit 0)\nCAUGHT control list sorted by centre instead of left edge (pairs missed in 300 frames): 4835 (must exceed 1)\nPASS two runs of a cannon shot on the default level, differing step hashes of 300: 0 (limit 0)\nCAUGHT control friction changed by 1e-7 (differing step hashes of 300): 287 (must exceed 1)\n\n12 of 12 gates pass; 6 of 6 controls caught\n",
+      "stderr": ""
+    }
+  ],
+  "physics_gates": {
+    "engine": "flop-lab xpbd2d",
+    "node": "v24.22.1",
+    "date": "2026-11-16T23:02:11.732Z",
+    "gates": [
+      {
+        "name": "free fall vs the discrete solution",
+        "value": "2.19e-10",
+        "limit": 1e-09,
+        "pass": true
+      },
+      {
+        "name": "10-crate stack, max tilt in 10 s",
+        "value": "0.00000",
+        "limit": 0.002,
+        "pass": true
+      },
+      {
+        "name": "10-crate stack, max speed",
+        "value": "0.058",
+        "limit": 0.2,
+        "pass": true
+      },
+      {
+        "name": "5 x 5 crate wall, max tilt",
+        "value": "0.00000",
+        "limit": 0.002,
+        "pass": true
+      },
+      {
+        "name": "one crate at rest, sideways creep in 6 s",
+        "value": "0.00000",
+        "limit": 0.002,
+        "pass": true
+      },
+      {
+        "name": "incline 20 deg, mu 0.6 sticks (moved in 2 s)",
+        "value": "0.0001",
+        "limit": 0.2,
+        "pass": true
+      },
+      {
+        "name": "incline 40 deg, speed after 2 s vs Coulomb",
+        "value": "0.0037",
+        "limit": 0.05,
+        "pass": true
+      },
+      {
+        "name": "pendulum period vs 2 pi sqrt(I / m g L)",
+        "value": "0.00054",
+        "limit": 0.01,
+        "pass": true
+      },
+      {
+        "name": "bounce e = 0.5 from 3 m, peak vs e^2 h",
+        "value": "0.0079",
+        "limit": 0.08,
+        "pass": true
+      },
+      {
+        "name": "bounce e = 0.1 (the default material) from 3 m, peak (e^2 h = 0.03)",
+        "value": "0.0247",
+        "limit": 0.1,
+        "pass": true
+      },
+      {
+        "name": "sweep and prune vs brute force over 300 frames, pairs missed (1206 tests a frame against 35245)",
+        "value": 0,
+        "limit": 0,
+        "pass": true
+      },
+      {
+        "name": "two runs of a cannon shot on the default level, differing step hashes of 300",
+        "value": 0,
+        "limit": 0,
+        "pass": true
+      }
+    ],
+    "controls": [
+      {
+        "name": "face contacts solved one corner at a time (10-stack tilt, rad; judged by the gate's own limit)",
+        "value": "0.0148",
+        "need": 0.002,
+        "caught": true
+      },
+      {
+        "name": "friction pulled at each corner instead of the face middle (10-stack tilt, rad)",
+        "value": "0.0000",
+        "need": "reported, not gated",
+        "caught": null
+      },
+      {
+        "name": "friction inside the push pass, corner by corner (one crate, creep in 6 s, m)",
+        "value": "0.2807",
+        "need": "reported, not gated",
+        "caught": null
+      },
+      {
+        "name": "friction 0 on the 20 deg incline (moved, m)",
+        "value": "19.30",
+        "need": 1,
+        "caught": true
+      },
+      {
+        "name": "hinge solved along the error direction only (period error, relative)",
+        "value": "0.0295",
+        "need": 0.02,
+        "caught": true
+      },
+      {
+        "name": "restitution raised by 0.3 (peak error against 0.75 m)",
+        "value": "1.161",
+        "need": 0.08,
+        "caught": true
+      },
+      {
+        "name": "list sorted by centre instead of left edge (pairs missed in 300 frames)",
+        "value": 4835,
+        "need": 1,
+        "caught": true
+      },
+      {
+        "name": "friction changed by 1e-7 (differing step hashes of 300)",
+        "value": 287,
+        "need": 1,
+        "caught": true
+      }
+    ],
+    "hash300": "f5a046f3",
+    "model_sha256": "cfa68107223b1c1652190e0adc5d4fdde660a8e57badf85fe9d5f2d58e2cc928",
+    "engine_sha256": "52e2839b7a36ef4e02cb538239540e89fa12b3698647a207cfd36710c73181c6",
+    "caught": 6,
+    "gated_controls": 6,
+    "passed": 12
+  },
+  "scope": "One executor and Node runtime. No browser, host comparison, render, real GPU, real player or formal Loom acceptance result."
+}

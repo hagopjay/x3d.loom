@@ -1,0 +1,115 @@
+{
+  "schema": "flop-lab.expedition-integration/1",
+  "node": "v24.22.1",
+  "source_sha256": {
+    "core.js": "687e14cc771972714923434238edad1e3ea8bd9bf0bc406f945ac12fc80ff7ea",
+    "level.js": "1543362d05034c2220c2c131e5cdcd2769509e072105e61ea4d673e9eec5e20c",
+    "game.js": "dbdd37b0cf2673bd01bc81dc30a89b350c0e5829d8736902b3c775ade447732f",
+    "expedition.js": "4ef04fb218db60b48a9ab79f7e14329abc5feb739dbff0d36c2fce1563b0298d"
+  },
+  "passed": 8,
+  "checks": [
+    {
+      "name": "neutral expedition hooks preserve every stock physical pose hash for an identical model and input trace",
+      "pass": true,
+      "observed": {
+        "checkedSteps": 300,
+        "finalPoseHash": "49dbf6fd",
+        "traceSha256": "fb5ee720ef468a944e821a8cf280c1ee05ec997e176ef3bcae1febc3c1067d6f",
+        "modelUnchanged": true
+      }
+    },
+    {
+      "name": "grounded dash is refused and one airborne burst changes the real trajectory against a disabled twin",
+      "pass": true,
+      "observed": {
+        "enabledDashes": 1,
+        "disabledDashes": 0,
+        "enabledPoseHash": "959731e1",
+        "disabledPoseHash": "8a4afd80"
+      }
+    },
+    {
+      "name": "two real dash input traces repeat on this host while the changed-input twin diverges",
+      "pass": true,
+      "observed": {
+        "checkedSteps": 180,
+        "dashCount": 1,
+        "changedInputDifferingSteps": 147,
+        "inputTraceSha256": "32ca55b70e151030e7d54689c25813073c2abafb96f04c73552900f5657a8bc3",
+        "poseTraceSha256": "cbee5f622b7031e07b94de3bdbdf327124d9afa2230a95f2fd3b6b5450cae18a"
+      }
+    },
+    {
+      "name": "First Flight accepts actual ragdoll airtime while upright flight is a negative control",
+      "pass": true,
+      "observed": {
+        "realRagdollProgress": 0.8,
+        "uprightProgress": 0,
+        "achievedAtFixedSeconds": 0.8000000000000008,
+        "positiveMedal": "gold",
+        "scope": "Controlled high-altitude initial pose isolates objective semantics; this is not a normal-course player completion."
+      }
+    },
+    {
+      "name": "First Flight is achievable from the stock spawn by an ordinary jump then flop input trace",
+      "pass": true,
+      "observed": {
+        "initial": {
+          "x": -2,
+          "y": 0.8
+        },
+        "thresholdSeconds": 0.8,
+        "recordedRagdollAirtime": 0.8,
+        "fixedSecondsAtCompletion": 1.5499999999999994,
+        "medal": "gold",
+        "input": {
+          "settleSteps": 40,
+          "jumpOnStep": 41,
+          "flopOnStep": 46,
+          "jumpHeldThroughStep": 70
+        },
+        "scope": "One stock-level fixed-step Node input trace, not a human feel or browser timing measurement."
+      }
+    },
+    {
+      "name": "real respawn fails the attempt and retry establishes a fresh death baseline",
+      "pass": true,
+      "observed": {
+        "deaths": 1,
+        "stateAfterRetry": "active"
+      }
+    },
+    {
+      "name": "real completed ragdoll objective remains practice after invalidation and retry",
+      "pass": true,
+      "observed": {
+        "state": "complete",
+        "eligible": false,
+        "medal": null,
+        "completedRecords": 0,
+        "bestRecords": 0
+      }
+    },
+    {
+      "name": "actual mission-start lifecycle rebuilds physical state while free exploration preserves it",
+      "pass": true,
+      "observed": {
+        "newPhysicalWorld": true,
+        "challengeFrameAtStart": 0,
+        "retainedCampaignObject": true,
+        "restoredSourceObstaclePose": true,
+        "freeplayRetainsWorld": true,
+        "unavailableMissionLeavesWorld": true,
+        "appSourceSha256": "bcc1a5f8e0d0e560905c2e7718d5ba9ab1056460527d46d67b1c26bb000f36e2",
+        "codecSourceSha256": "c1db30e2c7bd492db8fd71cf61e946869013e35e41c94cbfbf6f53fd1bb0a8eb",
+        "scope": "Actual app lifecycle functions plus real Sim/Expedition/validator; view and DOM adapters are non-browser stubs."
+      }
+    }
+  ],
+  "limitations": [
+    "Actual Sim and Expedition hooks in one Node host.",
+    "No browser input, player feel, cross-host replay, external leaderboard or formal Loom acceptance was measured.",
+    "Game medal thresholds are authored design values, separate from scientific solver gates."
+  ]
+}
