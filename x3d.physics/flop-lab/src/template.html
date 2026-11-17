@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flop Lab · Giggleworks Showtime</title>
+<script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
+<style>
+:root {
+  /* Neon blueprint lab: one dark world by choice. Layout: stage left, tabbed bench right; bench drops under the stage on phones. */
+  --bg: #06122a; --panel: #0a1a38; --panel2: #0e2348; --line: #1d3a6b; --ink: #d7e6ff; --dim: #86a2d0;
+  --cyan: #3fd0ff; --amber: #ffc23d; --pink: #ff4fa3; --mint: #7dffb2; --violet: #b79bff;
+  --display: "Saira Condensed", "Arial Narrow", sans-serif; --body: "IBM Plex Sans", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 14px/1.45 var(--body); display: flex; flex-direction: column; overflow: hidden; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; background: var(--panel2); border: 1px solid var(--line); border-radius: 4px; padding: 5px 10px; }
+button:hover { border-color: var(--cyan); }
+button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
+button.on { background: var(--cyan); color: #04122a; border-color: var(--cyan); font-weight: 600; }
+button.go { background: var(--amber); color: #1b1200; border-color: var(--amber); font-weight: 600; }
+button:disabled { opacity: 0.45; cursor: default; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+header { display: flex; align-items: center; gap: 12px; padding: 6px 12px; border-bottom: 1px solid var(--line); background: var(--panel); flex-wrap: wrap; }
+h1 { font: 700 24px/1 var(--display); letter-spacing: 0.06em; margin: 0; color: var(--cyan); }
+h1 span { color: var(--amber); }
+#halls { display: flex; gap: 4px; flex-wrap: wrap; flex: 1 1 320px; }
+#halls button { padding: 3px 8px; font: 500 13px var(--display); letter-spacing: 0.04em; text-transform: uppercase; }
+.ctl { display: flex; gap: 4px; align-items: center; }
+#stat { font: 12px var(--mono); color: var(--dim); min-width: 150px; text-align: right; }
+#stars { font: 600 16px var(--display); color: var(--amber); letter-spacing: 0.05em; }
+
+main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 400px; grid-template-rows: minmax(0, 1fr); min-height: 0; }
+#stage { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+#view { width: 100%; height: 100%; display: block; touch-action: none; cursor: crosshair; }
+.hud { position: absolute; pointer-events: none; }
+#hall { left: 14px; top: 10px; font: 600 15px var(--display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+#prompt { left: 50%; bottom: 84px; transform: translateX(-50%); background: rgba(6,18,42,.86); border: 1px solid var(--amber); color: var(--amber); padding: 6px 12px; border-radius: 4px; font: 13px var(--mono); white-space: nowrap; }
+#meter { left: 50%; top: 12px; transform: translateX(-50%); font: 14px var(--mono); color: var(--amber); background: rgba(6,18,42,.8); padding: 4px 10px; border-radius: 4px; border: 1px solid var(--line); white-space: nowrap; }
+#keys { left: 14px; bottom: 12px; font: 12px/1.6 var(--mono); color: var(--dim); background: rgba(6,18,42,.72); padding: 6px 10px; border-radius: 4px; border: 1px solid var(--line); }
+#keys b { color: var(--ink); font-weight: 500; }
+#inspect { right: 12px; top: 10px; font: 12px/1.5 var(--mono); color: var(--ink); background: rgba(6,18,42,.86); border: 1px solid var(--line); padding: 6px 10px; border-radius: 4px; text-align: right; max-width: 60%; }
+#card { right: 12px; bottom: 12px; width: 250px; background: rgba(10,26,56,.94); border: 1px solid var(--amber); border-radius: 6px; padding: 10px 12px; pointer-events: auto; }
+#card h3 { margin: 0 0 4px; font: 700 26px/1 var(--display); color: var(--amber); letter-spacing: 0.04em; }
+#card .why { color: var(--dim); font-size: 12px; margin-bottom: 6px; }
+#card table { width: 100%; border-collapse: collapse; font: 12px var(--mono); }
+#card td:last-child { text-align: right; color: var(--ink); } #card td { color: var(--dim); padding: 1px 0; }
+#card button { margin-top: 8px; width: 100%; }
+#toast { left: 50%; top: 22%; transform: translateX(-50%); font: 700 40px var(--display); letter-spacing: 0.08em; color: var(--mint); text-shadow: 0 0 18px rgba(125,255,178,.5); opacity: 0; transition: opacity .25s; white-space: nowrap; }
+#toast.show { opacity: 1; }
+#touch { position: absolute; inset: auto 0 8px 0; display: none; justify-content: space-between; padding: 0 10px; pointer-events: none; }
+#touch div { display: flex; gap: 8px; pointer-events: auto; }
+#touch button { width: 54px; height: 54px; border-radius: 50%; font-size: 18px; background: rgba(14,35,72,.8); touch-action: none; user-select: none; }
+@media (pointer: coarse) { #touch { display: flex; } #keys { display: none; } #prompt { bottom: 76px; } #card { bottom: 72px; } }
+
+#dock { border-left: 1px solid var(--line); background: var(--panel); display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+#tabs { display: flex; border-bottom: 1px solid var(--line); }
+#tabs button { flex: 1; border: 0; border-right: 1px solid var(--line); border-radius: 0; background: none; padding: 8px 2px; font: 600 14px var(--display); letter-spacing: 0.06em; text-transform: uppercase; color: var(--dim); }
+#tabs button:last-child { border-right: 0; }
+#tabs button[aria-selected="true"] { color: var(--cyan); box-shadow: inset 0 -2px 0 var(--cyan); background: var(--panel2); }
+.pane { flex: 1; min-height: 0; display: none; flex-direction: column; gap: 8px; padding: 10px; overflow: auto; }
+.pane.show { display: flex; }
+.pane > * { flex-shrink: 0; }
+.pane h2 { font: 600 14px var(--display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); margin: 6px 0 0; }
+.note { color: var(--dim); font-size: 12.5px; margin: 0; }
+.row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.chips button { font-size: 12.5px; padding: 3px 8px; border-radius: 12px; }
+textarea.code { flex: 1; min-height: 180px; width: 100%; resize: none; background: #040d20; border: 1px solid var(--line); border-radius: 4px; padding: 8px; font: 12px/1.5 var(--mono); color: #cfe2ff; white-space: pre; overflow: auto; tab-size: 2; }
+.status { font: 12px var(--mono); color: var(--dim); min-height: 18px; white-space: pre-wrap; }
+.status.bad { color: var(--pink); } .status.good { color: var(--mint); }
+
+#log { flex: 1; min-height: 120px; overflow: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 2px; }
+.msg { padding: 7px 10px; border-radius: 6px; max-width: 96%; white-space: pre-wrap; overflow-wrap: anywhere; }
+.msg.you { align-self: flex-end; background: var(--panel2); border: 1px solid var(--line); }
+.msg.ai { align-self: flex-start; background: #081630; border: 1px solid var(--line); border-left: 2px solid var(--cyan); }
+.msg.ai code, .msg.you code { font: 12px var(--mono); color: var(--amber); }
+.msg.tool { align-self: flex-start; font: 11.5px var(--mono); color: var(--dim); padding: 2px 8px; border-left: 2px solid var(--violet); border-radius: 0; }
+.msg.tool b { color: var(--violet); font-weight: 500; }
+.msg canvas { display: block; width: 100%; height: 150px; margin-top: 4px; }
+.msg table { border-collapse: collapse; font: 11.5px var(--mono); margin-top: 4px; } .msg td, .msg th { padding: 1px 8px 1px 0; text-align: right; color: var(--ink); } .msg th { color: var(--dim); font-weight: 400; white-space: nowrap; }
+.msg tr.best td { color: var(--mint); }
+#ask { display: flex; gap: 6px; } #ask input { flex: 1; min-width: 0; background: #040d20; border: 1px solid var(--line); border-radius: 4px; padding: 7px 9px; }
+#who { font: 11.5px var(--mono); color: var(--dim); }
+
+.sl { display: grid; grid-template-columns: 118px minmax(0, 1fr) 54px; gap: 8px; align-items: center; font-size: 13px; }
+.sl output { font: 12px var(--mono); text-align: right; color: var(--amber); }
+input[type=range] { width: 100%; accent-color: var(--cyan); }
+label.tg { display: inline-flex; gap: 5px; align-items: center; font-size: 13px; cursor: pointer; }
+#flame, #energy { width: 100%; display: block; background: #040d20; border: 1px solid var(--line); border-radius: 4px; }
+#flame { height: 30px; } #energy { height: 120px; }
+#legend { display: flex; flex-wrap: wrap; gap: 2px 10px; font: 11.5px var(--mono); color: var(--dim); }
+#legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 4px; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; font: 12px var(--mono); } .kv span:nth-child(odd) { color: var(--dim); } .kv span:nth-child(even) { text-align: right; }
+
+@media (max-width: 900px) {
+  body { overflow: auto; } main { grid-template-columns: minmax(0, 1fr); grid-template-rows: 62vh auto; }
+  #dock { border-left: 0; border-top: 1px solid var(--line); min-height: 70vh; } #stat { display: none; } h1 { font-size: 20px; }
+}
+@media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
+
+/* Expedition edition: a readable game and an inspectable laboratory share the same world. */
+:root{--line:#254875;--panel:#091a32;--panel2:#102744;--dim:#95afd2;--body:Inter,"Segoe UI",system-ui,sans-serif;--display:"Arial Narrow","Segoe UI",sans-serif;--mono:ui-monospace,Menlo,Consolas,monospace}
+header{padding:10px 14px;background:linear-gradient(105deg,#0b2340,#091a32);gap:14px}h1{font-size:23px;letter-spacing:.13em}.edition{display:block;font:8px var(--mono);letter-spacing:.2em;color:var(--dim);margin-top:6px}main{grid-template-columns:minmax(0,1fr) 420px}#tabs{flex-wrap:wrap}#tabs button{min-width:70px;padding:11px 4px;font-size:11px;letter-spacing:.07em}.pane{padding:17px;gap:11px}.pane h2{font-size:11px;letter-spacing:.13em}#halls{gap:5px}#halls button{font-size:10px;padding:5px 8px}#hall{top:13px;font-size:11px;letter-spacing:.15em}#meter{top:111px;font-size:11px}#missionStrip{left:14px;top:41px;max-width:min(520px,calc(100% - 28px));padding:11px 15px;background:linear-gradient(110deg,#0b203be8,#10243baa);border:1px solid #345678;border-left:3px solid var(--amber);border-radius:5px;backdrop-filter:blur(12px)}#missionStripTitle{display:block;font-size:14px;color:#edf6ff;letter-spacing:.01em}#missionStripInfo{font:9px/1.7 var(--mono);color:#aac5df;letter-spacing:.05em}#missionStrip[data-state=complete]{border-left-color:var(--mint)}.kicker{font:9px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}.play-intro{margin:0;font-size:25px;line-height:1.15;letter-spacing:-.04em;font-weight:550;color:#edf4fa}.play-intro em{font-style:normal;color:var(--amber)}.mission-live{padding:16px;background:linear-gradient(135deg,#122c48,#0a1c34);border:1px solid #345373;border-radius:6px;box-shadow:0 10px 30px #0002}.mission-live h3{font-size:19px;margin:9px 0}.mission-meta{display:flex;justify-content:space-between;gap:12px;align-items:center;font:9px var(--mono);color:var(--mint);letter-spacing:.07em}#missionTimer{font:26px var(--mono);color:var(--amber)}#missionHint{font-size:12px;color:#a9c0dc;margin:8px 0 14px}#missionValue{display:block;font:10px var(--mono);color:var(--dim);margin-top:8px}progress{appearance:none;width:100%;height:5px;display:block;border:0;background:#193957;border-radius:5px}progress::-webkit-progress-bar{background:#193957;border-radius:5px}progress::-webkit-progress-value{background:linear-gradient(90deg,var(--cyan),var(--mint));border-radius:5px}.missions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mission{padding:13px 11px;text-align:left;background:#0c213b;border:1px solid #2b486b;min-height:124px;transition:background .15s,transform .15s}.mission:hover{background:#173854;transform:translateY(-1px)}.mission strong{display:block;font-size:13px;color:#e4effc;margin-bottom:7px}.mission span{display:block;font-size:10px;line-height:1.55;color:var(--dim)}.mission small{display:block;margin-top:10px;font:8px/1.4 var(--mono);text-transform:uppercase;color:var(--cyan)}.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mini-row label{display:flex;flex-direction:column;gap:6px;font-size:10px;color:var(--dim)}select,input[type=number]{width:100%;background:#07172b;border:1px solid #345273;padding:8px;border-radius:4px;min-width:0}.scope-note{margin:0;padding:9px 11px;border-left:2px solid #496882;color:var(--dim);font-size:10px;line-height:1.6}.practice{color:var(--amber);font:10px/1.6 var(--mono)}.control-card{display:grid;grid-template-columns:1fr 1fr;gap:9px;border:1px solid #29496d;padding:12px;border-radius:5px;font:10px/1.5 var(--mono);color:var(--dim)}.control-card b{color:#dcecff;font-weight:500}.workshop-tools{border-top:1px solid var(--line);padding-top:12px}.compact-code{width:100%;height:150px;min-height:100px!important;flex:none!important}.device-note{font:9px/1.5 var(--mono);color:var(--dim);margin:0}#partLabel{font-size:12px;color:var(--amber);overflow-wrap:anywhere}#partKind{font:10px/1.5 var(--mono);color:var(--dim)}#partStatus{font-size:10px;color:var(--mint)}#dashStatus{color:var(--amber);font:9px var(--mono);letter-spacing:.07em}#rendererScope{font:9px/1.6 var(--mono);color:var(--dim)}#touch{padding:0 8px}#touch div{gap:5px}#touch button{width:43px;height:43px;font-size:14px}#prompt{max-width:calc(100% - 28px);white-space:normal;text-align:center;font-size:11px}#keys{font-size:9px;line-height:1.7;max-width:calc(100% - 28px)}#inspect{top:112px;max-width:47%;font-size:10px}#toast{font-size:clamp(19px,3vw,40px)}#card{font-size:11px}#card h3{font-size:24px}#card td{font-size:10px}#card .why{font-size:10px}.pane .sl{grid-template-columns:116px minmax(0,1fr) 66px;font-size:11px}.sl output{font-size:10px}.pane .tg{font-size:11px}.chips button{font-size:10px;padding:6px 9px}.note{font-size:11px}#counts{font-size:10px}#who{font-size:9px;line-height:1.6;padding-bottom:8px;border-bottom:1px solid var(--line)}#gamepadToggle{accent-color:var(--mint)}#p-play .row button{font-size:11px;padding:8px 11px}.guide-link{font:9px var(--mono);color:var(--mint);text-decoration:none;letter-spacing:.06em;white-space:nowrap}.guide-link:hover{color:white}.catalog-note{font-size:10px;line-height:1.6;color:var(--dim)}
+@media(min-width:1600px){main{grid-template-columns:minmax(0,1fr) 455px}.pane{padding:22px}.mission{min-height:135px}.mission span{font-size:11px}}
+@media(max-width:1100px){main{grid-template-columns:minmax(0,1fr) 370px}.missions{grid-template-columns:1fr 1fr}.mission{padding:11px 9px}.mission strong{font-size:12px}#stat{display:none}#meter{left:14px;transform:none}#inspect{top:150px}}
+@media(max-width:900px){main{grid-template-columns:minmax(0,1fr);grid-template-rows:65vh auto}#dock{min-height:760px}header{gap:8px;padding:8px 10px}#halls{order:3;flex-basis:100%}#halls button{flex:1;padding:4px}#stars{margin-left:auto}.ctl button{font-size:10px}#missionStrip{max-width:calc(100% - 28px)}#missionStripTitle{font-size:12px}#keys{bottom:8px}#inspect{display:none!important}.missions{grid-template-columns:repeat(3,1fr)}#tabs button{min-width:55px;font-size:10px}.pane{padding:16px}.mini-row{grid-template-columns:1fr 1fr}.control-card{font-size:10px}.edition{font-size:7px}}
+@media(max-width:520px){.missions{grid-template-columns:1fr 1fr}#stage{min-height:430px}main{grid-template-rows:62vh auto}h1{font-size:19px}#halls{gap:3px}#halls button{font-size:8px}.ctl{gap:3px}.ctl button{padding:5px 6px}#stars{font-size:13px}#touch button{width:37px;height:42px;border-radius:10px}.play-intro{font-size:25px}#card{width:220px}#meter{font-size:9px}#prompt{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.mission{transition:none}.mission:hover{transform:none}}
+
+
+/* Giggleworks: expressive play feedback without obscuring the physical scene. */
+.carnival-launch{display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:17px 18px;border:1px solid #ffdf83;border-radius:9px;background:linear-gradient(110deg,#ffca54,#ffa15c);color:#25132b;box-shadow:0 8px 28px #ffb54615;text-align:left}.carnival-launch span{font-weight:850;font-size:17px;letter-spacing:.07em}.carnival-launch small{font-size:10px;color:#65372c}.carnival-launch:hover{border-color:#fff3b0;background:linear-gradient(110deg,#ffdc77,#ffb47b)}.first-giggle{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:3px 0;font:10px var(--mono);color:var(--dim)}.first-giggle b{display:inline-flex;justify-content:center;align-items:center;min-width:25px;min-height:25px;padding:3px 5px;background:#193354;border:1px solid #426080;border-bottom-width:3px;border-radius:5px;color:#e8f4ff}.first-giggle i{font-style:normal;color:var(--amber);margin:0 2px}.show-live{padding:16px;border:1px solid #975d87;border-radius:9px;background:radial-gradient(ellipse at 95% 0,#78355577,transparent 70%),linear-gradient(140deg,#18243d,#111c34);position:relative}.show-eyebrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font:8px var(--mono);letter-spacing:.08em;color:#f9bedc}.show-eyebrow>strong{font-size:23px;color:#ffda7b}.show-live h3{font-size:20px;line-height:1.15;margin:7px 0 6px;color:#ffedf4;letter-spacing:-.025em}.show-number{display:flex;align-items:baseline;gap:13px}.show-number>strong{font:800 43px/1.2 var(--mono);letter-spacing:-.07em;color:#ffdc77}.show-number>span{font:9px var(--mono);color:#b9bfd4}.show-number b{color:#f2d7e6}.show-live>p{font-size:11px;line-height:1.6;color:#dbb9d1;min-height:35px;margin:8px 0 13px}.show-totals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}.show-totals span{font:8px/1.8 var(--mono);letter-spacing:.07em;color:#a9b6cf}.show-totals strong{display:block;font:16px var(--mono);letter-spacing:0;color:#fff0ce}.show-live progress::-webkit-progress-value{background:linear-gradient(90deg,#ff7dbd,#ffd778)}.show-puff-row{justify-content:space-between;margin-top:12px}.show-puff-row>span{font:9px var(--mono);color:#7dffcf}.show-puff-row .tg{font-size:9px}.show-prompt{padding:13px 14px;border:1px solid #325b73;border-radius:7px;background:#0b2436}.show-prompt .mission-meta{font-size:8px;letter-spacing:.05em}.show-prompt button{font-size:9px;padding:4px 6px}.show-prompt h3{font-size:16px;color:#d5fff0;margin:9px 0 5px}.show-prompt p{font-size:11px;line-height:1.55;color:#a8c7d0;margin:0 0 12px}.show-prompt>span{display:block;font:9px var(--mono);color:var(--dim);margin-top:7px}.sticker-album,.smile-settings{border:1px solid #304c70;border-radius:6px;background:#0c2038;padding:11px 13px}.sticker-album summary,.smile-settings summary{font-size:11px;color:#c3d6ef;cursor:pointer}.stickers{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding-top:12px}.sticker{padding:10px 9px;border:1px dashed #39516b;border-radius:5px;color:#7f94ad;background:#0a1a2e}.sticker strong{display:block;font-size:10px;line-height:1.4;margin-bottom:5px}.sticker span{display:block;font-size:9px;line-height:1.5}.sticker.earned{color:#f9dda1;border-style:solid;border-color:#977c52;background:linear-gradient(125deg,#493c3377,#203146)}.smile-settings-body{display:flex;flex-direction:column;gap:12px;padding-top:13px}.smile-settings .tg{display:flex;gap:7px}.smile-settings .tg small{margin-left:auto;font:9px var(--mono);border:1px solid #456080;border-radius:3px;padding:1px 5px}.costume-choice{display:flex;flex-direction:column;gap:6px;font-size:10px;color:var(--dim)}.show-hud{left:14px;top:143px;padding:10px 12px;min-width:190px;background:linear-gradient(110deg,#27182edb,#14243bba);border:1px solid #845f84;border-radius:7px;backdrop-filter:blur(8px)}.show-hud>span{display:block;color:#f0b6d9;font:9px var(--mono);letter-spacing:.07em}.show-hud>div{display:flex;align-items:center;gap:13px}.show-hud strong{font:800 29px/1.5 var(--mono);letter-spacing:-.06em;color:#ffdc77}.show-hud b{font:9px var(--mono);color:#c8cde5}.show-hud small{font:8px var(--mono);color:#99b9d2}.show-hud small:last-child{margin-left:15px}.calm .mission,.calm #toast{transition:none}.calm .mission:hover{transform:none}
+@media(max-width:1100px){.show-hud{top:141px;min-width:170px;padding:8px 10px}.show-hud strong{font-size:25px}.show-hud b{font-size:8px}}
+@media(max-width:520px){.show-hud{top:130px;min-width:155px;max-width:calc(100% - 28px);padding:6px 9px}.show-hud>span{font-size:8px}.show-hud strong{font-size:24px}.show-hud small{font-size:7px}#touch{padding:0 7px}#touch div{gap:4px}#touch button{width:32px;height:40px;font-size:13px}.show-number>strong{font-size:38px}.first-giggle{font-size:9px;gap:4px}.first-giggle i{margin:0}.show-live{padding:14px}}
+
+</style>
+</head>
+<body>
+<header>
+  <h1>FLOP<span>LAB</span><small class="edition">GIGGLEWORKS / STUNT WORKSHOP</small></h1>
+  <div id="halls" aria-label="Jump to a hall"></div>
+  <div class="ctl">
+    <button id="bPause" title="Pause (P)">Pause</button>
+    <button id="bStep" title="One step (.)">Step</button>
+    <button id="bSlow" title="Quarter speed">Slow-mo</button>
+    <button id="bReset" title="Rebuild the level as it was loaded">Reset</button>
+  </div>
+  <a class="guide-link" href="docs/Stunt-Playbook.html" target="_blank" rel="noopener">Stunt playbook ↗</a>
+  <div id="stars" title="Stars collected">★ 0/9</div>
+  <div id="stat" class="mono"></div>
+</header>
+<main>
+  <section id="stage">
+    <canvas id="view" tabindex="0" aria-label="Flop Lab playable course. A and D move, Space jumps, E dashes, F goes limp, Q gives a ragdoll puff."></canvas>
+    <div class="hud" id="missionStrip"><strong id="missionStripTitle">Your next experiment is a leap away.</strong><span id="missionStripInfo">Run · jump · hook · go limp · discover</span></div>
+    <div class="hud" id="hall"></div>
+    <div class="hud show-hud" id="showHud"><span id="showHudTitle">MAKE A SCENE</span><div><strong id="showHudScore">0</strong><b id="showHudCombo">×1.0 · 0 tricks</b></div><small id="showHudPuffs">Q 3/3</small><small>F to stand & bank</small></div>
+    <div class="hud" id="meter" hidden></div>
+    <div class="hud" id="inspect" hidden></div>
+    <div class="hud" id="toast"></div>
+    <div class="hud" id="prompt" hidden></div>
+    <div class="hud" id="keys"><b>A D</b> run · <b>Space</b> jump · <b>E / C</b> air dash · <b>F</b> go limp / get up · <b>Q</b> ragdoll puff · <b>Shift</b> hook a ring · <b>W S</b> aim, reel<br><b>click</b> inspect · <b>Alt+drag</b> pan · <b>drag</b> any body · <b>wheel</b> zoom · <b>1-8</b> drop a part at the cursor · <b>Del</b> remove it · <b>R</b> respawn</div>
+    <div class="hud" id="card" hidden></div>
+    <div id="touch"><div><button data-k="left">◀</button><button data-k="right">▶</button><button data-k="up">▲</button><button data-k="down">▼</button></div><div><button data-k="hook" aria-label="Hold grapple">⚓</button><button data-k="dash" aria-label="Air dash">E</button><button data-k="puff" aria-label="Ragdoll puff">Q</button><button data-k="flop" aria-label="Go limp or stand">F</button><button data-k="jump">⤒</button></div></div>
+  </section>
+  <aside id="dock">
+    <div id="tabs" role="tablist">
+      <button role="tab" data-t="play" aria-selected="true">Play</button><button role="tab" data-t="curator" aria-selected="false">Curator</button><button role="tab" data-t="tinker">Tinker</button><button role="tab" data-t="x3d">X3D</button><button role="tab" data-t="solver">Solver</button><button role="tab" data-t="profile">Profiler</button>
+    </div>
+    <div class="pane show" id="p-play">
+      <div class="kicker">A very serious institute of extremely silly landings</div>
+      <p class="play-intro">Make a scene.<br><em>Stick the giggle.</em></p>
+      <p class="note">Jump. Go floppy. Add a puff of absolutely unnecessary confidence. Chain different tricks and stand up to bank them, then take the playground apart in X3D.</p>
+      <button class="carnival-launch" id="carnivalStart"><span>OPEN GIGGLEWORKS</span><small>Bowling · jelly landings · wind · cannon chaos</small></button>
+      <div class="first-giggle"><b>Space</b><span>jump</span><i>→</i><b>F</b><span>flop</span><i>→</i><b>Q</b><span>puff</span><i>→</i><b>F</b><span>bank</span></div>
+      <section class="show-live" aria-label="Showtime stunt chain"><div class="show-eyebrow"><span>SHOWTIME · SESSION TOY SCORE</span><strong id="showMultiplier">×1.0</strong></div><h3 id="showTitle">Your audience is ready</h3><div class="show-number"><strong id="showScore">0</strong><span><b id="showCombo">0</b> tricks in this chain</span></div><p id="showCaption" aria-live="polite">Jump, F, then Q. Finish with F to bank your chain.</p><div class="show-totals"><span>BANKED<strong id="showBank">0</strong></span><span>BEST CHAIN<strong id="showBest">0</strong></span><span>CROWD<strong id="crowdValue">0%</strong></span></div><progress id="crowdMeter" max="1" value="0" aria-label="Audience excitement"></progress><div class="row show-puff-row"><span id="puffStatus">Q · 3 / 3 PUFFS</span><label class="tg"><input type="checkbox" id="puffToggle" checked>Ragdoll puffs</label></div></section>
+      <section class="show-prompt" aria-label="Showtime creative prompt"><div class="mission-meta"><span>TRY SOMETHING RIDICULOUS</span><button id="showPromptNext">Another idea ↻</button></div><h3 id="showPromptTitle">A little creative gravity</h3><p id="showPromptBrief">Try a trick, then stand to bank it.</p><progress id="showPromptProgress" max="1" value="0" aria-label="Current Showtime prompt progress"></progress><span id="showPromptValue"></span></section>
+      <details class="sticker-album"><summary>Your souvenir sticker album</summary><div class="stickers" id="stickers"></div></details>
+      <details class="smile-settings"><summary>Sound, smiles & comfort</summary><div class="smile-settings-body"><label class="tg"><input type="checkbox" id="soundToggle">Enable boings & tiny fanfares <small>M</small></label><label class="sl"><span>Effects volume</span><input id="showVolume" type="range" min="0" max="1" step="0.05" value="0.2" aria-label="Showtime effects volume"></label><p id="audioStatus" class="device-note">Sound off. Enable it for boings, squeaks and tiny fanfares.</p><label class="tg"><input type="checkbox" id="effectsToggle" checked>Comic captions & confetti</label><label class="tg"><input type="checkbox" id="reducedMotionToggle">Reduce motion</label><p class="device-note">Reduced motion suppresses bursts and shake. Your system preference is always respected.</p><label class="costume-choice">Mascot outfit<select id="costumeMode"><option value="party" selected>Party hat</option><option value="pilot">Pilot goggles</option><option value="noodle">Noodle antenna</option></select></label></div></details>
+      <p class="scope-note">Showtime is a playful session score. Repeat tricks pay less. Stand with F to bank; a respawn loses the current chain. Puffs during an Expedition mark that challenge as practice.</p>
+      <h2>Expedition challenges</h2><p class="note">Six goals and the original seven teaching halls remain open. Each challenge start resets the physical world; its records stay in this course session.</p>
+      <div class="mission-live"><div class="mission-meta"><span id="missionState">FREE EXPLORATION</span><span id="missionMedal">SESSION RECORDS</span></div><h3 id="missionTitle">Free exploration</h3><span id="missionTimer">0.00 s</span><p id="missionHint">Choose a challenge or explore the course.</p><progress id="missionProgress" max="1" value="0" aria-label="Current challenge progress"></progress><span id="missionValue"></span><p id="practiceNote" class="practice" hidden></p><div class="row" style="margin-top:13px"><button class="go" id="missionRetry">Retry</button><button id="missionNext">Next challenge</button><button id="missionFree">Free play</button></div></div>
+      <div class="row"><span id="dashStatus">DASH READY · E / C</span><label class="tg"><input type="checkbox" id="ghostToggle" checked>Best-run ghost trail</label></div>
+      <h2>Choose your challenge</h2><div class="missions" id="missions"></div>
+      <p class="scope-note">Medals are local game goals, not physics certification. Editing the course, tuning or solver turns the session into practice. The mission clock counts simulation time.</p>
+      <div class="row"><button id="stockCourse">Restore stock course & settings</button></div>
+      <h2>World forge</h2><div class="mini-row"><label>World recipe<select id="worldRecipe"></select></label><label>Seed<input id="worldSeed" type="number" min="1" max="2147483647" step="1" value="7"></label></div><div class="row"><button id="worldGenerate">Generate & explore</button><span id="worldNote" class="device-note"></span></div>
+      <h2>Flight controls</h2><div class="control-card"><span><b>A D / arrows</b><br>Run and steer</span><span><b>Space</b><br>Jump, swim, release</span><span><b>E / C</b><br>One air dash; land to recharge</span><span><b>F / Q</b><br>Go limp or stand / ragdoll puff</span><span><b>Shift + W S</b><br>Hook and reel</span><span><b>Alt + drag</b><br>Free-camera pan</span></div>
+      <label class="tg"><input type="checkbox" id="gamepadToggle">Enable gamepad while the course is focused</label><p id="controllerStatus" class="device-note">Keyboard / touch. Gamepad is opt-in.</p>
+    </div>
+    <div class="pane" id="p-curator">
+      <div id="who">LOCAL LAB PARTNER · built-in commands · no model calls</div>
+      <div id="log"></div>
+      <div class="row chips" id="chips"></div>
+      <form id="ask"><input id="q" autocomplete="off" placeholder="Ask, or say what to build…" aria-label="Message the curator"><button class="go" id="send">Send</button><button type="button" id="stop" hidden>Stop</button></form>
+    </div>
+    <div class="pane" id="p-tinker">
+      <h2>View & comfort</h2><div class="mini-row"><label>Camera<select id="cameraMode"><option value="follow">Follow hero</option><option value="free">Free camera</option><option value="overview">Whole-course overview</option></select></label><label>Quality<select id="quality"><option value="low">Low · lighter</option><option value="balanced" selected>Balanced</option><option value="high">High · richer</option></select></label></div><label class="tg"><input type="checkbox" id="shakeToggle" checked>Impact camera shake</label><div id="rendererScope"></div>
+      <h2>World & authored movement</h2><div id="sliders" style="display:flex;flex-direction:column;gap:6px"></div>
+      <h2>See the solver</h2><div class="row" id="toggles"></div>
+      <p class="scope-note">World gravity changes loose objects. The hero has a separate authored gravity/feel controller. Source changes enter practice mode.</p><h2>Drop a part near the hero</h2><div class="row chips" id="drops"></div>
+      <p class="note">Drag any body with the mouse. Hover a part and press Delete to remove it. Changes here are written into the level, so the X3D tab and the curator's experiments see them.</p>
+    <div class="workshop-tools"><h2>Selected source part</h2><p id="partLabel">Click a body to inspect its source part</p><p id="partKind"></p><textarea id="partParams" class="code compact-code" spellcheck="false" aria-label="Selected prefab parameters as JSON" disabled></textarea><div class="row"><button id="partApply" disabled>Apply parameters</button><button id="partFocus" disabled>Frame selected</button><button id="partDelete" disabled>Remove part</button><button id="undoEdit">Undo last source edit</button></div><p id="partStatus"></p></div>
+    </div>
+    <div class="pane" id="p-x3d">
+      <p class="note">This level is one X3D 4.0 file: RigidBody, CollidableShape, SingleAxisHingeJoint and ProximitySensor nodes, with Flop Lab's extras in <span class="mono">flop</span> metadata. Edit it and apply, or export it for pinned x3d_mcp validation. Local import checks this application's supported slice; it does not run XSD in the browser.</p>
+      <div class="row"><button class="go" id="xApply">Apply to the game</button><button id="xFresh">Write from the game</button><button id="xCopy">Copy</button></div>
+      <textarea class="code" id="xText" spellcheck="false" aria-label="Level X3D source"></textarea>
+      <div class="status" id="xStat"></div>
+    </div>
+    <div class="pane" id="p-solver">
+      <p class="note">This is the code that runs every substep. Change trusted local code and apply: the game uses your version at once. Throws restore the stock solver; an infinite loop can still block the tab.</p>
+      <div class="row"><button class="go" id="kApply" title="Ctrl+Enter">Apply</button><button id="kReset">Stock solver</button></div>
+      <div class="row chips" id="breaks"></div>
+      <textarea class="code" id="kText" spellcheck="false" aria-label="Solver source"></textarea>
+      <div class="status" id="kStat"></div>
+    </div>
+    <div class="pane" id="p-profile">
+      <h2>Where one fixed physics step goes</h2>
+      <canvas id="flame" width="760" height="60"></canvas><div id="legend"></div>
+      <div class="kv" id="counts"></div>
+      <h2>Energy, last 10 s</h2><canvas id="energy" width="760" height="240"></canvas>
+      <div id="elegend" class="note mono"></div>
+      <h2>Same-browser pose comparison</h2>
+      <div class="row"><button id="bDet">Run the level twice, compare poses</button></div><div class="status" id="detStat">pose fingerprint —</div>
+      <h2>Pose review, last 10 simulation seconds</h2><p class="scope-note">Review stores body poses, not complete controller/RNG/contact state. Return to the retained live state to continue playing.</p>
+      <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Replay position">
+      <div class="row"><button id="bLive">Back to live</button><button id="bFrom">Return live state</button><span class="status" id="scrubStat"></span></div>
+    </div>
+  </aside>
+</main>
+<script>
+// loom:sim
+// The simulation: core.js, level.js, recipes.js, game.js, expedition.js and showtime.js. No clock, no randomness, no engine-approximated math (kit/loom pagetraps checks this block).
+'use strict';
+/*__SIM__*/
+</script>
+<script type="module">
+// The page: X3D in and out, the three.js view, the bench and the curator. Free to use Math.sin and the clock.
+import * as THREE from './vendor/three/build/three.module.js';
+/*__JS__*/
+</script>
+</body>
+</html>

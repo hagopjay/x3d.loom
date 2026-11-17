@@ -55,8 +55,12 @@ RULES = {
         "A game whose proof of play is a replayed tape needs the same state hash in every JavaScript engine. ECMAScript leaves "
         "Math.sin, cos, exp, pow, atan2 and the ** operator implementation-approximated, so two engines may differ in the last bit "
         "and a tape recorded in one diverges in another; Math.random and clocks differ on every run. x3d.platformer's sim "
-        "replaced them with a portable polynomial (engine/physics.js dsin, 6 Nov). Spec fact; a cross-engine divergence was not "
-        "reproduced here (grade L). Only code that declares itself sim is held to it: render and audio code may use Math.sin."),
+        "replaced them with a portable polynomial (engine/physics.js dsin, 6 Nov). A spec fact then (grade L). Reproduced 16 Nov 2026 "
+        "(Flop Lab, one machine, read by its author: grade L until a second reader recomputes it, law 44): Node 22.23.4 (V8 12.4) and Chrome 153 disagree on 6,583 of 200,000 Math.sin results, 6,531 of cos, "
+        "28,473 of atan2, 19,291 of exp and 19,540 of pow; 0 of sqrt and of hypot (hypot stays banned: the spec leaves it approximated too). "
+        "A 2D XPBD run diverged at step 1 and, with only its solver on the built-in trig, in 282 of 300 step hashes (failure mode 161). "
+        "Only code that declares itself sim is held to it: render and audio code may use Math.sin. An unmarked sim file is not read "
+        "(failure mode 162); the witness reports how many units declared sim (seen.sim_units)."),
     "loadurl-unbudgeted": Rule("loadurl-unbudgeted", "warning", "X_ITE 16.6.1 (source reading)",
         "replaceWorld can leave its promise pending when an internal wait rejects (X_ITE teardown F01, L2; not reproduced here, failure mode 89). "
         "Give the world load a time budget (Promise.race with a timeout)."),
@@ -208,6 +212,15 @@ def is_sim(src: str) -> bool:
     """Code declares itself part of a deterministic simulation with a `// loom:sim` line among its first five lines."""
     lines = [l for l in src.splitlines() if l.strip()][:5]
     return any(SIM_MARKER.match(l) for l in lines)
+
+
+def sim_units(src: str, html: bool = False) -> int:
+    """How many units of code declare themselves sim: a .js file counts once, an HTML file once per marked inline script.
+    Zero means sim-nonportable-math judged nothing. Flop Lab (16 Nov 2026) shipped unmarked sim files, so the rule,
+    which already existed, never read them, and Node and Chrome disagreed from step 1 (failure modes 161, 162)."""
+    if html:
+        return sum(1 for a, b, _ in inline_scripts(src) if is_sim(src[a:b]))
+    return int(is_sim(src))
 
 
 def sim_math(code: str, path: str = "<page>") -> list[Hit]:

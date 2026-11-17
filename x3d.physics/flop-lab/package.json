@@ -1,0 +1,21 @@
+{
+  "name": "flop-lab",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "A slapstick stunt carnival and X3D workshop: trick chains, ragdoll puffs, comic feedback and five editable worlds.",
+  "scripts": {
+    "build": "node build.mjs",
+    "vendor": "node tools/vendor_three.mjs",
+    "test": "node test/core.test.mjs && node test/gates.test.mjs && node test/expedition.test.mjs && node test/expedition-integration.test.mjs && node test/x3dio.test.mjs && node test/x3dio-dom.test.mjs && node test/recipes.test.mjs && node test/new-controls.state-scope.mjs && node test/showtime.test.mjs && node test/showtime-integration.test.mjs && node test/carnival.test.mjs && node test/presentation.test.mjs",
+    "test:browser": "node build.mjs && node test/gates.test.mjs && node test/browser.mjs && node test/browser.mjs --noeval",
+    "record": "node tools/run_record.mjs",
+    "export:levels": "node tools/export_levels.mjs"
+  },
+  "devDependencies": {
+    "linkedom": "0.18.12",
+    "playwright": "1.63.0",
+    "three": "0.187.0"
+  }
+}

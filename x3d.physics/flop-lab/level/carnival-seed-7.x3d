@@ -1,0 +1,1084 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+<head>
+<component name='RigidBodyPhysics' level='2'/>
+<meta name='title' content='Flop Lab level'/>
+<meta name='description' content='A 2.5D physics course. Bodies, hinges and regions are standard RigidBodyPhysics nodes; what the Flop Lab engine adds is carried in "flop" metadata. Units are metres, kilograms, seconds, radians. All motion is in the XY plane.'/>
+<meta name='generator' content='Flop Lab'/>
+</head>
+<Scene>
+<WorldInfo DEF='LEVEL' title='Flop Lab level'>
+ <MetadataSet name='flop:parts' containerField='metadata'>
+  <MetadataString containerField='value' name='carnival_floor_left' value='"platform" "x=28.4" "y=0" "w=80.8" "h=2"'/>
+  <MetadataString containerField='value' name='carnival_floor_right' value='"platform" "x=99" "y=0" "w=40.8" "h=2"'/>
+  <MetadataString containerField='value' name='carnival_left_wall' value='"platform" "x=-12" "y=9" "w=0.7" "h=11"'/>
+  <MetadataString containerField='value' name='carnival_right_wall' value='"platform" "x=119.4" "y=12" "w=0.8" "h=14"'/>
+  <MetadataString containerField='value' name='cp_feel' value='"checkpoint" "x=-5" "y=0" "name=0 Giggle School"'/>
+  <MetadataString containerField='value' name='carnival_1_7' value='"label" "x=-2" "y=7.2" "title=GIGGLEWORKS CARNIVAL" "text=Seed 7. Jump, then F while rising. Q puffs a limp body; recover with F to bank the show."'/>
+  <MetadataString containerField='value' name='carnival_first_pad' value='"spring" "x=2.5" "y=0.08" "w=2.6"'/>
+  <MetadataString containerField='value' name='carnival_2_7' value='"star" "x=2.5" "y=4.2"'/>
+  <MetadataString containerField='value' name='carnival_3_7' value='"ring" "x=8.3" "y=4.6"'/>
+  <MetadataString containerField='value' name='carnival_4_7' value='"label" "x=6" "y=9.5" "title=GRAVITY IS A SUGGESTION DEPARTMENT" "text=Three Q puffs per flop. Aim with the movement keys. No points are worth getting stuck: R respawns."'/>
+  <MetadataString containerField='value' name='cp_contact' value='"checkpoint" "x=14" "y=0" "name=1 Biscuit Bowling"'/>
+  <MetadataString containerField='value' name='carnival_biscuits' value='"dominoes" "x=17" "y=0" "count=8" "spacing=0.7609" "height=1.35" "thick=0.22"'/>
+  <MetadataString containerField='value' name='carnival_bowling_ball' value='"ball" "x=24.2" "y=0.55" "r=0.55" "mass=3.062" "bounce=0.28"'/>
+  <MetadataString containerField='value' name='carnival_5_7' value='"star" "x=20.2" "y=2.7"'/>
+  <MetadataString containerField='value' name='carnival_6_7' value='"label" "x=17.5" "y=6.1" "title=BISCUIT BOWLING" "text=Run into the row, or jump over it and flop back. The biscuits have declined to comment."'/>
+  <MetadataString containerField='value' name='cp_joints' value='"checkpoint" "x=29" "y=0" "name=2 Sky Noodles"'/>
+  <MetadataString containerField='value' name='carnival_7_7' value='"spring" "x=32" "y=0.08" "w=2.2"'/>
+  <MetadataString containerField='value' name='carnival_noodle_bridge' value='"bridge" "x=34" "y=1.3" "length=9" "planks=8"'/>
+  <MetadataString containerField='value' name='carnival_8_7' value='"ring" "x=35" "y=4.8"'/>
+  <MetadataString containerField='value' name='carnival_9_7' value='"ring" "x=39.5" "y=6"'/>
+  <MetadataString containerField='value' name='carnival_10_7' value='"ring" "x=44" "y=4.8"'/>
+  <MetadataString containerField='value' name='carnival_11_7' value='"star" "x=38.5" "y=4.2"'/>
+  <MetadataString containerField='value' name='carnival_catch_jelly' value='"jelly" "x=44" "y=0" "cols=5" "rows=2" "size=0.5" "softness=0.008"'/>
+  <MetadataString containerField='value' name='carnival_12_7' value='"label" "x=33" "y=9.4" "title=SKY NOODLES" "text=Hold Shift near a ring. Space releases. Jump, dash, hook, then F: one continuous very questionable plan."'/>
+  <MetadataString containerField='value' name='cp_soft' value='"checkpoint" "x=47" "y=0" "name=3 Jelly Department"'/>
+  <MetadataString containerField='value' name='carnival_firm_jelly' value='"jelly" "x=51" "y=0" "cols=4" "rows=3" "size=0.5" "softness=0.0006"'/>
+  <MetadataString containerField='value' name='carnival_wobble_jelly' value='"jelly" "x=56" "y=0" "cols=4" "rows=3" "size=0.5" "softness=0.0109"'/>
+  <MetadataString containerField='value' name='carnival_13_7' value='"star" "x=56" "y=2.9"'/>
+  <MetadataString containerField='value' name='carnival_14_7' value='"label" "x=49.4" "y=6.5" "title=THE FLOOR IS HAVING FEELINGS" "text=Two jelly landings, two compliances. Soft is not the same as bouncy. Inspect one part and compare."'/>
+  <MetadataString containerField='value' name='cp_fields' value='"checkpoint" "x=60" "y=0" "name=4 Fan Club"'/>
+  <MetadataString containerField='value' name='carnival_fan' value='"fan" "x=64" "y=0.05" "w=3.5" "h=10.5" "force=49"'/>
+  <MetadataString containerField='value' name='carnival_fan_ribbons' value='"curtain" "x=63.3" "y=11.2" "strands=3" "links=4" "length=2.7" "spacing=0.65"'/>
+  <MetadataString containerField='value' name='carnival_15_7' value='"star" "x=64" "y=6.5"'/>
+  <MetadataString containerField='value' name='carnival_splash_pool' value='"water" "x=74" "y=0.65" "w=9" "depth=2.5"'/>
+  <MetadataString containerField='value' name='carnival_16_7' value='"raft" "x=71" "y=0.7" "w=2.1" "h=0.35" "mass=2.8"'/>
+  <MetadataString containerField='value' name='carnival_17_7' value='"raft" "x=74" "y=0.7" "w=2.1" "h=0.35" "mass=2.8"'/>
+  <MetadataString containerField='value' name='carnival_18_7' value='"raft" "x=77" "y=0.7" "w=2.1" "h=0.35" "mass=2.8"'/>
+  <MetadataString containerField='value' name='carnival_19_7' value='"star" "x=74" "y=2.3"'/>
+  <MetadataString containerField='value' name='carnival_20_7' value='"label" "x=65" "y=14" "title=YOUR FAN CLUB IS LITERALLY A FAN" "text=Enter upright, then F to float. Puff out sideways. Pool ahead: jump while upright to swim, or F to recover."'/>
+  <MetadataString containerField='value' name='cp_cannon' value='"checkpoint" "x=84" "y=0" "name=5 Confetti Cannon"'/>
+  <MetadataString containerField='value' name='carnival_cannon' value='"cannon" "x=86" "y=0.95" "angle=41" "power=22"'/>
+  <MetadataString containerField='value' name='carnival_big_target' value='"goal" "x=100" "y=3.7" "r=3"'/>
+  <MetadataString containerField='value' name='carnival_confetti_tower' value='"crates" "x=104.5" "y=0" "cols=3" "rows=4" "size=0.8" "mass=0.9"'/>
+  <MetadataString containerField='value' name='carnival_final_jelly' value='"jelly" "x=111" "y=0" "cols=5" "rows=2" "size=0.55" "softness=0.009"'/>
+  <MetadataString containerField='value' name='carnival_21_7' value='"star" "x=100" "y=3.7"'/>
+  <MetadataString containerField='value' name='carnival_22_7' value='"label" "x=84.5" "y=7.8" "title=UNLICENSED CONFETTI DELIVERY" "text=W enters the cannon. W/S aims; A/D changes power; Space fires. Hit the wide target, meet the tower, F to take your bow."'/>
+  <MetadataString containerField='value' name='carnival_23_7' value='"label" "x=108" "y=10" "title=AN EXTREMELY PROFESSIONAL LANDING" "text=A failed trick can be a good experiment. Retry one change, or take this entire carnival home as X3D."'/>
+ </MetadataSet>
+</WorldInfo>
+<NavigationInfo type='"EXAMINE" "ANY"'/>
+<Viewpoint description='Whole course' position='80 4 150'/>
+<Background skyColor='0.02 0.05 0.11'/>
+<Group DEF='VISUAL'>
+ <CollidableShape DEF='C_carnival_floor_left_0' translation='28.4 -1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='80.8 2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_floor_right_0' translation='99 -1 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='40.8 2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_left_wall_0' translation='-12 3.5 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.7 11 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_right_wall_0' translation='119.4 5 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.8 14 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_first_pad_0' translation='2.5 -0.07 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Box size='2.6 0.3 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_biscuits_0' translation='17 0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.22 1.35 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_biscuits_1' translation='17.7609 0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.22 1.35 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_biscuits_2' translation='18.5219 0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.22 1.35 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_biscuits_3' translation='19.2828 0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.22 1.35 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_biscuits_4' translation='20.0437 0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.22 1.35 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_biscuits_5' translation='20.8047 0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.22 1.35 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_biscuits_6' translation='21.5656 0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.22 1.35 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_biscuits_7' translation='22.3266 0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.9647 0.9451 0.8824'/></Appearance><Box size='0.22 1.35 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_bowling_ball_0' translation='24.2 0.55 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.9137 0.6902'/></Appearance><Sphere radius='0.55'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_7_7_0' translation='32 -0.07 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Box size='2.2 0.3 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_noodle_bridge_0' translation='33.85 1.05 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.3 0.5 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_noodle_bridge_1' translation='43.15 1.05 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.3 0.5 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_noodle_bridge_2' translation='34.5625 1.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_noodle_bridge_4' translation='35.6875 1.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_noodle_bridge_6' translation='36.8125 1.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_noodle_bridge_8' translation='37.9375 1.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_noodle_bridge_10' translation='39.0625 1.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_noodle_bridge_12' translation='40.1875 1.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_noodle_bridge_14' translation='41.3125 1.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_noodle_bridge_16' translation='42.4375 1.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_catch_jelly_0' translation='43 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_catch_jelly_1' translation='43.5 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_catch_jelly_2' translation='44 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_catch_jelly_3' translation='44.5 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_catch_jelly_4' translation='45 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_catch_jelly_5' translation='43 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_catch_jelly_6' translation='43.5 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_catch_jelly_7' translation='44 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_catch_jelly_8' translation='44.5 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_catch_jelly_9' translation='45 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_firm_jelly_0' translation='50.25 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_firm_jelly_1' translation='50.75 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_firm_jelly_2' translation='51.25 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_firm_jelly_3' translation='51.75 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_firm_jelly_4' translation='50.25 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_firm_jelly_5' translation='50.75 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_firm_jelly_6' translation='51.25 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_firm_jelly_7' translation='51.75 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_firm_jelly_8' translation='50.25 1.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_firm_jelly_9' translation='50.75 1.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_firm_jelly_10' translation='51.25 1.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_firm_jelly_11' translation='51.75 1.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_wobble_jelly_0' translation='55.25 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_wobble_jelly_1' translation='55.75 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_wobble_jelly_2' translation='56.25 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_wobble_jelly_3' translation='56.75 0.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_wobble_jelly_4' translation='55.25 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_wobble_jelly_5' translation='55.75 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_wobble_jelly_6' translation='56.25 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_wobble_jelly_7' translation='56.75 0.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_wobble_jelly_8' translation='55.25 1.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_wobble_jelly_9' translation='55.75 1.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_wobble_jelly_10' translation='56.25 1.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_wobble_jelly_11' translation='56.75 1.25 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.25'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_0' translation='63.95 11.3 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='1.9 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_1' translation='63.3 10.8625 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.675'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_3' translation='63.3 10.1875 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.675'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_5' translation='63.3 9.5125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.675'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_7' translation='63.3 8.8375 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.675'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_9' translation='63.95 10.8625 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.675'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_11' translation='63.95 10.1875 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.675'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_13' translation='63.95 9.5125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.675'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_15' translation='63.95 8.8375 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.675'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_17' translation='64.6 10.8625 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.675'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_19' translation='64.6 10.1875 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.675'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_21' translation='64.6 9.5125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.675'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_fan_ribbons_23' translation='64.6 8.8375 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.675'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_splash_pool_0' translation='74 -2.05 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='9.8 0.4 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_splash_pool_1' translation='69.3 -0.4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.4 2.9 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_splash_pool_2' translation='78.7 -0.4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.4 2.9 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_16_7_0' translation='71 0.7 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='2.1 0.35 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_17_7_0' translation='74 0.7 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='2.1 0.35 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_18_7_0' translation='77 0.7 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='2.1 0.35 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_confetti_tower_0' translation='103.684 0.4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.8 0.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_confetti_tower_1' translation='104.5 0.4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.8 0.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_confetti_tower_2' translation='105.316 0.4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.8 0.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_confetti_tower_3' translation='103.684 1.202 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.8 0.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_confetti_tower_4' translation='104.5 1.202 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.8 0.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_confetti_tower_5' translation='105.316 1.202 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.8 0.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_confetti_tower_6' translation='103.684 2.004 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.8 0.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_confetti_tower_7' translation='104.5 2.004 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.8 0.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_confetti_tower_8' translation='105.316 2.004 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.8 0.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_confetti_tower_9' translation='103.684 2.806 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.8 0.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_confetti_tower_10' translation='104.5 2.806 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.8 0.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_confetti_tower_11' translation='105.316 2.806 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='0.8 0.8 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_final_jelly_0' translation='109.9 0.275 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_final_jelly_1' translation='110.45 0.275 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_final_jelly_2' translation='111 0.275 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_final_jelly_3' translation='111.55 0.275 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_final_jelly_4' translation='112.1 0.275 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_final_jelly_5' translation='109.9 0.825 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_final_jelly_6' translation='110.45 0.825 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_final_jelly_7' translation='111 0.825 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_final_jelly_8' translation='111.55 0.825 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_carnival_final_jelly_9' translation='112.1 0.825 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+</Group>
+<RigidBodyCollection DEF='WORLD' gravity='0 -30 0' iterations='1'>
+ <MetadataString containerField='metadata' name='flop' value='"substeps=8"'/>
+ <RigidBody DEF='carnival_floor_left_0' containerField='bodies' position='28.4 -1 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_floor_left" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_carnival_floor_left_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_floor_right_0' containerField='bodies' position='99 -1 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_floor_right" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_carnival_floor_right_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_left_wall_0' containerField='bodies' position='-12 3.5 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_left_wall" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_carnival_left_wall_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_right_wall_0' containerField='bodies' position='119.4 5 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_right_wall" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_carnival_right_wall_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_first_pad_0' containerField='bodies' position='2.5 -0.07 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_first_pad" "role=spring" "rest=0.95"'/>
+  <CollidableShape USE='C_carnival_first_pad_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_biscuits_0' containerField='bodies' position='17 0.675 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_biscuits" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_carnival_biscuits_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_biscuits_1' containerField='bodies' position='17.7609 0.675 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_biscuits" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_carnival_biscuits_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_biscuits_2' containerField='bodies' position='18.5219 0.675 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_biscuits" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_carnival_biscuits_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_biscuits_3' containerField='bodies' position='19.2828 0.675 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_biscuits" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_carnival_biscuits_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_biscuits_4' containerField='bodies' position='20.0437 0.675 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_biscuits" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_carnival_biscuits_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_biscuits_5' containerField='bodies' position='20.8047 0.675 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_biscuits" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_carnival_biscuits_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_biscuits_6' containerField='bodies' position='21.5656 0.675 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_biscuits" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_carnival_biscuits_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_biscuits_7' containerField='bodies' position='22.3266 0.675 0' orientation='0 0 1 0' mass='0.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_biscuits" "role=domino" "fric=0.55" "rest=0"'/>
+  <CollidableShape USE='C_carnival_biscuits_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_bowling_ball_0' containerField='bodies' position='24.2 0.55 0' orientation='0 0 1 0' mass='3.062' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_bowling_ball" "role=ball" "fric=0.5" "rest=0.28"'/>
+  <CollidableShape USE='C_carnival_bowling_ball_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_7_7_0' containerField='bodies' position='32 -0.07 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_7_7" "role=spring" "rest=0.95"'/>
+  <CollidableShape USE='C_carnival_7_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_noodle_bridge_0' containerField='bodies' position='33.85 1.05 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "role=static" "group=101"'/>
+  <CollidableShape USE='C_carnival_noodle_bridge_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_noodle_bridge_1' containerField='bodies' position='43.15 1.05 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "role=static" "group=101"'/>
+  <CollidableShape USE='C_carnival_noodle_bridge_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_noodle_bridge_2' containerField='bodies' position='34.5625 1.2 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_carnival_noodle_bridge_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_noodle_bridge_4' containerField='bodies' position='35.6875 1.2 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_carnival_noodle_bridge_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_noodle_bridge_6' containerField='bodies' position='36.8125 1.2 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_carnival_noodle_bridge_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_noodle_bridge_8' containerField='bodies' position='37.9375 1.2 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_carnival_noodle_bridge_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_noodle_bridge_10' containerField='bodies' position='39.0625 1.2 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_carnival_noodle_bridge_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_noodle_bridge_12' containerField='bodies' position='40.1875 1.2 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_carnival_noodle_bridge_12' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_noodle_bridge_14' containerField='bodies' position='41.3125 1.2 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_carnival_noodle_bridge_14' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_noodle_bridge_16' containerField='bodies' position='42.4375 1.2 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "role=plank" "fric=0.9" "group=101"'/>
+  <CollidableShape USE='C_carnival_noodle_bridge_16' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_catch_jelly_0' containerField='bodies' position='43 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_carnival_catch_jelly_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_catch_jelly_1' containerField='bodies' position='43.5 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_carnival_catch_jelly_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_catch_jelly_2' containerField='bodies' position='44 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_carnival_catch_jelly_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_catch_jelly_3' containerField='bodies' position='44.5 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_carnival_catch_jelly_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_catch_jelly_4' containerField='bodies' position='45 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_carnival_catch_jelly_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_catch_jelly_5' containerField='bodies' position='43 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_carnival_catch_jelly_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_catch_jelly_6' containerField='bodies' position='43.5 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_carnival_catch_jelly_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_catch_jelly_7' containerField='bodies' position='44 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_carnival_catch_jelly_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_catch_jelly_8' containerField='bodies' position='44.5 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_carnival_catch_jelly_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_catch_jelly_9' containerField='bodies' position='45 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_carnival_catch_jelly_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_firm_jelly_0' containerField='bodies' position='50.25 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=103"'/>
+  <CollidableShape USE='C_carnival_firm_jelly_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_firm_jelly_1' containerField='bodies' position='50.75 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=103"'/>
+  <CollidableShape USE='C_carnival_firm_jelly_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_firm_jelly_2' containerField='bodies' position='51.25 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=103"'/>
+  <CollidableShape USE='C_carnival_firm_jelly_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_firm_jelly_3' containerField='bodies' position='51.75 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=103"'/>
+  <CollidableShape USE='C_carnival_firm_jelly_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_firm_jelly_4' containerField='bodies' position='50.25 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=103"'/>
+  <CollidableShape USE='C_carnival_firm_jelly_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_firm_jelly_5' containerField='bodies' position='50.75 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=103"'/>
+  <CollidableShape USE='C_carnival_firm_jelly_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_firm_jelly_6' containerField='bodies' position='51.25 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=103"'/>
+  <CollidableShape USE='C_carnival_firm_jelly_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_firm_jelly_7' containerField='bodies' position='51.75 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=103"'/>
+  <CollidableShape USE='C_carnival_firm_jelly_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_firm_jelly_8' containerField='bodies' position='50.25 1.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=103"'/>
+  <CollidableShape USE='C_carnival_firm_jelly_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_firm_jelly_9' containerField='bodies' position='50.75 1.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=103"'/>
+  <CollidableShape USE='C_carnival_firm_jelly_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_firm_jelly_10' containerField='bodies' position='51.25 1.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=103"'/>
+  <CollidableShape USE='C_carnival_firm_jelly_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_firm_jelly_11' containerField='bodies' position='51.75 1.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=103"'/>
+  <CollidableShape USE='C_carnival_firm_jelly_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_wobble_jelly_0' containerField='bodies' position='55.25 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=104"'/>
+  <CollidableShape USE='C_carnival_wobble_jelly_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_wobble_jelly_1' containerField='bodies' position='55.75 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=104"'/>
+  <CollidableShape USE='C_carnival_wobble_jelly_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_wobble_jelly_2' containerField='bodies' position='56.25 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=104"'/>
+  <CollidableShape USE='C_carnival_wobble_jelly_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_wobble_jelly_3' containerField='bodies' position='56.75 0.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=104"'/>
+  <CollidableShape USE='C_carnival_wobble_jelly_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_wobble_jelly_4' containerField='bodies' position='55.25 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=104"'/>
+  <CollidableShape USE='C_carnival_wobble_jelly_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_wobble_jelly_5' containerField='bodies' position='55.75 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=104"'/>
+  <CollidableShape USE='C_carnival_wobble_jelly_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_wobble_jelly_6' containerField='bodies' position='56.25 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=104"'/>
+  <CollidableShape USE='C_carnival_wobble_jelly_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_wobble_jelly_7' containerField='bodies' position='56.75 0.75 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=104"'/>
+  <CollidableShape USE='C_carnival_wobble_jelly_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_wobble_jelly_8' containerField='bodies' position='55.25 1.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=104"'/>
+  <CollidableShape USE='C_carnival_wobble_jelly_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_wobble_jelly_9' containerField='bodies' position='55.75 1.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=104"'/>
+  <CollidableShape USE='C_carnival_wobble_jelly_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_wobble_jelly_10' containerField='bodies' position='56.25 1.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=104"'/>
+  <CollidableShape USE='C_carnival_wobble_jelly_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_wobble_jelly_11' containerField='bodies' position='56.75 1.25 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=104"'/>
+  <CollidableShape USE='C_carnival_wobble_jelly_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_0' containerField='bodies' position='63.95 11.3 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=static" "group=105"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_1' containerField='bodies' position='63.3 10.8625 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=cloth" "shape=pill" "group=105" "wind=1.6"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_3' containerField='bodies' position='63.3 10.1875 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=cloth" "shape=pill" "group=105" "wind=1.6"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_5' containerField='bodies' position='63.3 9.5125 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=cloth" "shape=pill" "group=105" "wind=1.6"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_7' containerField='bodies' position='63.3 8.8375 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=cloth" "shape=pill" "group=105" "wind=1.6"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_9' containerField='bodies' position='63.95 10.8625 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=cloth" "shape=pill" "group=105" "wind=1.6"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_11' containerField='bodies' position='63.95 10.1875 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=cloth" "shape=pill" "group=105" "wind=1.6"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_13' containerField='bodies' position='63.95 9.5125 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=cloth" "shape=pill" "group=105" "wind=1.6"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_13' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_15' containerField='bodies' position='63.95 8.8375 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=cloth" "shape=pill" "group=105" "wind=1.6"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_15' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_17' containerField='bodies' position='64.6 10.8625 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=cloth" "shape=pill" "group=105" "wind=1.6"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_17' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_19' containerField='bodies' position='64.6 10.1875 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=cloth" "shape=pill" "group=105" "wind=1.6"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_19' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_21' containerField='bodies' position='64.6 9.5125 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=cloth" "shape=pill" "group=105" "wind=1.6"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_21' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_fan_ribbons_23' containerField='bodies' position='64.6 8.8375 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "role=cloth" "shape=pill" "group=105" "wind=1.6"'/>
+  <CollidableShape USE='C_carnival_fan_ribbons_23' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_splash_pool_0' containerField='bodies' position='74 -2.05 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_splash_pool" "role=static"'/>
+  <CollidableShape USE='C_carnival_splash_pool_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_splash_pool_1' containerField='bodies' position='69.3 -0.4 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_splash_pool" "role=static"'/>
+  <CollidableShape USE='C_carnival_splash_pool_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_splash_pool_2' containerField='bodies' position='78.7 -0.4 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_splash_pool" "role=static"'/>
+  <CollidableShape USE='C_carnival_splash_pool_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_16_7_0' containerField='bodies' position='71 0.7 0' orientation='0 0 1 0' mass='2.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_16_7" "role=crate" "fric=0.9" "buoy=2.6"'/>
+  <CollidableShape USE='C_carnival_16_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_17_7_0' containerField='bodies' position='74 0.7 0' orientation='0 0 1 0' mass='2.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_17_7" "role=crate" "fric=0.9" "buoy=2.6"'/>
+  <CollidableShape USE='C_carnival_17_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_18_7_0' containerField='bodies' position='77 0.7 0' orientation='0 0 1 0' mass='2.8' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_18_7" "role=crate" "fric=0.9" "buoy=2.6"'/>
+  <CollidableShape USE='C_carnival_18_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_confetti_tower_0' containerField='bodies' position='103.684 0.4 0' orientation='0 0 1 0' mass='0.9' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_confetti_tower" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_carnival_confetti_tower_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_confetti_tower_1' containerField='bodies' position='104.5 0.4 0' orientation='0 0 1 0' mass='0.9' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_confetti_tower" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_carnival_confetti_tower_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_confetti_tower_2' containerField='bodies' position='105.316 0.4 0' orientation='0 0 1 0' mass='0.9' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_confetti_tower" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_carnival_confetti_tower_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_confetti_tower_3' containerField='bodies' position='103.684 1.202 0' orientation='0 0 1 0' mass='0.9' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_confetti_tower" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_carnival_confetti_tower_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_confetti_tower_4' containerField='bodies' position='104.5 1.202 0' orientation='0 0 1 0' mass='0.9' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_confetti_tower" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_carnival_confetti_tower_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_confetti_tower_5' containerField='bodies' position='105.316 1.202 0' orientation='0 0 1 0' mass='0.9' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_confetti_tower" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_carnival_confetti_tower_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_confetti_tower_6' containerField='bodies' position='103.684 2.004 0' orientation='0 0 1 0' mass='0.9' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_confetti_tower" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_carnival_confetti_tower_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_confetti_tower_7' containerField='bodies' position='104.5 2.004 0' orientation='0 0 1 0' mass='0.9' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_confetti_tower" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_carnival_confetti_tower_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_confetti_tower_8' containerField='bodies' position='105.316 2.004 0' orientation='0 0 1 0' mass='0.9' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_confetti_tower" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_carnival_confetti_tower_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_confetti_tower_9' containerField='bodies' position='103.684 2.806 0' orientation='0 0 1 0' mass='0.9' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_confetti_tower" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_carnival_confetti_tower_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_confetti_tower_10' containerField='bodies' position='104.5 2.806 0' orientation='0 0 1 0' mass='0.9' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_confetti_tower" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_carnival_confetti_tower_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_confetti_tower_11' containerField='bodies' position='105.316 2.806 0' orientation='0 0 1 0' mass='0.9' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_confetti_tower" "role=crate" "fric=0.7"'/>
+  <CollidableShape USE='C_carnival_confetti_tower_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_final_jelly_0' containerField='bodies' position='109.9 0.275 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=106"'/>
+  <CollidableShape USE='C_carnival_final_jelly_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_final_jelly_1' containerField='bodies' position='110.45 0.275 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=106"'/>
+  <CollidableShape USE='C_carnival_final_jelly_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_final_jelly_2' containerField='bodies' position='111 0.275 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=106"'/>
+  <CollidableShape USE='C_carnival_final_jelly_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_final_jelly_3' containerField='bodies' position='111.55 0.275 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=106"'/>
+  <CollidableShape USE='C_carnival_final_jelly_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_final_jelly_4' containerField='bodies' position='112.1 0.275 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=106"'/>
+  <CollidableShape USE='C_carnival_final_jelly_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_final_jelly_5' containerField='bodies' position='109.9 0.825 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=106"'/>
+  <CollidableShape USE='C_carnival_final_jelly_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_final_jelly_6' containerField='bodies' position='110.45 0.825 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=106"'/>
+  <CollidableShape USE='C_carnival_final_jelly_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_final_jelly_7' containerField='bodies' position='111 0.825 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=106"'/>
+  <CollidableShape USE='C_carnival_final_jelly_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_final_jelly_8' containerField='bodies' position='111.55 0.825 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=106"'/>
+  <CollidableShape USE='C_carnival_final_jelly_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='carnival_final_jelly_9' containerField='bodies' position='112.1 0.825 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "role=jelly" "fric=0.8" "rest=0.3" "group=106"'/>
+  <CollidableShape USE='C_carnival_final_jelly_9' containerField='geometry'/>
+ </RigidBody>
+ <SingleAxisHingeJoint DEF='carnival_noodle_bridge_j3' containerField='joints' anchorPoint='34 1.2 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='carnival_noodle_bridge_2' containerField='body1'/><RigidBody USE='carnival_noodle_bridge_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_noodle_bridge_j5' containerField='joints' anchorPoint='35.125 1.2 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='carnival_noodle_bridge_4' containerField='body1'/><RigidBody USE='carnival_noodle_bridge_2' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_noodle_bridge_j7' containerField='joints' anchorPoint='36.25 1.2 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='carnival_noodle_bridge_6' containerField='body1'/><RigidBody USE='carnival_noodle_bridge_4' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_noodle_bridge_j9' containerField='joints' anchorPoint='37.375 1.2 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='carnival_noodle_bridge_8' containerField='body1'/><RigidBody USE='carnival_noodle_bridge_6' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_noodle_bridge_j11' containerField='joints' anchorPoint='38.5 1.2 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='carnival_noodle_bridge_10' containerField='body1'/><RigidBody USE='carnival_noodle_bridge_8' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_noodle_bridge_j13' containerField='joints' anchorPoint='39.625 1.2 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='carnival_noodle_bridge_12' containerField='body1'/><RigidBody USE='carnival_noodle_bridge_10' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_noodle_bridge_j15' containerField='joints' anchorPoint='40.75 1.2 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='carnival_noodle_bridge_14' containerField='body1'/><RigidBody USE='carnival_noodle_bridge_12' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_noodle_bridge_j17' containerField='joints' anchorPoint='41.875 1.2 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='carnival_noodle_bridge_16' containerField='body1'/><RigidBody USE='carnival_noodle_bridge_14' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_noodle_bridge_j18' containerField='joints' anchorPoint='43 1.2 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_noodle_bridge" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='carnival_noodle_bridge_16' containerField='body1'/><RigidBody USE='carnival_noodle_bridge_1' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <BallJoint DEF='carnival_catch_jelly_j10' containerField='joints' anchorPoint='43 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=43.5" "by=0.25" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_0' containerField='body1'/><RigidBody USE='carnival_catch_jelly_1' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j11' containerField='joints' anchorPoint='43 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=43" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_0' containerField='body1'/><RigidBody USE='carnival_catch_jelly_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j12' containerField='joints' anchorPoint='43 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=43.5" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_0' containerField='body1'/><RigidBody USE='carnival_catch_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j13' containerField='joints' anchorPoint='43.5 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=43" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_1' containerField='body1'/><RigidBody USE='carnival_catch_jelly_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j14' containerField='joints' anchorPoint='43.5 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=44" "by=0.25" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_1' containerField='body1'/><RigidBody USE='carnival_catch_jelly_2' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j15' containerField='joints' anchorPoint='43.5 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=43.5" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_1' containerField='body1'/><RigidBody USE='carnival_catch_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j16' containerField='joints' anchorPoint='43.5 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=44" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_1' containerField='body1'/><RigidBody USE='carnival_catch_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j17' containerField='joints' anchorPoint='44 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=43.5" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_2' containerField='body1'/><RigidBody USE='carnival_catch_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j18' containerField='joints' anchorPoint='44 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=44.5" "by=0.25" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_2' containerField='body1'/><RigidBody USE='carnival_catch_jelly_3' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j19' containerField='joints' anchorPoint='44 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=44" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_2' containerField='body1'/><RigidBody USE='carnival_catch_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j20' containerField='joints' anchorPoint='44 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=44.5" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_2' containerField='body1'/><RigidBody USE='carnival_catch_jelly_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j21' containerField='joints' anchorPoint='44.5 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=44" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_3' containerField='body1'/><RigidBody USE='carnival_catch_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j22' containerField='joints' anchorPoint='44.5 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=45" "by=0.25" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_3' containerField='body1'/><RigidBody USE='carnival_catch_jelly_4' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j23' containerField='joints' anchorPoint='44.5 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=44.5" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_3' containerField='body1'/><RigidBody USE='carnival_catch_jelly_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j24' containerField='joints' anchorPoint='44.5 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=45" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_3' containerField='body1'/><RigidBody USE='carnival_catch_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j25' containerField='joints' anchorPoint='45 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=44.5" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_4' containerField='body1'/><RigidBody USE='carnival_catch_jelly_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j26' containerField='joints' anchorPoint='45 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=45" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_4' containerField='body1'/><RigidBody USE='carnival_catch_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j27' containerField='joints' anchorPoint='43 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=43.5" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_5' containerField='body1'/><RigidBody USE='carnival_catch_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j28' containerField='joints' anchorPoint='43.5 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=44" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_6' containerField='body1'/><RigidBody USE='carnival_catch_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j29' containerField='joints' anchorPoint='44 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=44.5" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_7' containerField='body1'/><RigidBody USE='carnival_catch_jelly_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_catch_jelly_j30' containerField='joints' anchorPoint='44.5 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_catch_jelly" "type=spring" "bx=45" "by=0.75" "comp=0.008"'/>
+  <RigidBody USE='carnival_catch_jelly_8' containerField='body1'/><RigidBody USE='carnival_catch_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j12' containerField='joints' anchorPoint='50.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.75" "by=0.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_0' containerField='body1'/><RigidBody USE='carnival_firm_jelly_1' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j13' containerField='joints' anchorPoint='50.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.25" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_0' containerField='body1'/><RigidBody USE='carnival_firm_jelly_4' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j14' containerField='joints' anchorPoint='50.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.75" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_0' containerField='body1'/><RigidBody USE='carnival_firm_jelly_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j15' containerField='joints' anchorPoint='50.75 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.25" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_1' containerField='body1'/><RigidBody USE='carnival_firm_jelly_4' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j16' containerField='joints' anchorPoint='50.75 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.25" "by=0.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_1' containerField='body1'/><RigidBody USE='carnival_firm_jelly_2' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j17' containerField='joints' anchorPoint='50.75 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.75" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_1' containerField='body1'/><RigidBody USE='carnival_firm_jelly_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j18' containerField='joints' anchorPoint='50.75 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.25" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_1' containerField='body1'/><RigidBody USE='carnival_firm_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j19' containerField='joints' anchorPoint='51.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.75" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_2' containerField='body1'/><RigidBody USE='carnival_firm_jelly_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j20' containerField='joints' anchorPoint='51.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.75" "by=0.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_2' containerField='body1'/><RigidBody USE='carnival_firm_jelly_3' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j21' containerField='joints' anchorPoint='51.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.25" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_2' containerField='body1'/><RigidBody USE='carnival_firm_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j22' containerField='joints' anchorPoint='51.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.75" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_2' containerField='body1'/><RigidBody USE='carnival_firm_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j23' containerField='joints' anchorPoint='51.75 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.25" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_3' containerField='body1'/><RigidBody USE='carnival_firm_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j24' containerField='joints' anchorPoint='51.75 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.75" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_3' containerField='body1'/><RigidBody USE='carnival_firm_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j25' containerField='joints' anchorPoint='50.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.75" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_4' containerField='body1'/><RigidBody USE='carnival_firm_jelly_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j26' containerField='joints' anchorPoint='50.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.25" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_4' containerField='body1'/><RigidBody USE='carnival_firm_jelly_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j27' containerField='joints' anchorPoint='50.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.75" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_4' containerField='body1'/><RigidBody USE='carnival_firm_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j28' containerField='joints' anchorPoint='50.75 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.25" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_5' containerField='body1'/><RigidBody USE='carnival_firm_jelly_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j29' containerField='joints' anchorPoint='50.75 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.25" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_5' containerField='body1'/><RigidBody USE='carnival_firm_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j30' containerField='joints' anchorPoint='50.75 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.75" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_5' containerField='body1'/><RigidBody USE='carnival_firm_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j31' containerField='joints' anchorPoint='50.75 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.25" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_5' containerField='body1'/><RigidBody USE='carnival_firm_jelly_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j32' containerField='joints' anchorPoint='51.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.75" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_6' containerField='body1'/><RigidBody USE='carnival_firm_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j33' containerField='joints' anchorPoint='51.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.75" "by=0.75" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_6' containerField='body1'/><RigidBody USE='carnival_firm_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j34' containerField='joints' anchorPoint='51.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.25" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_6' containerField='body1'/><RigidBody USE='carnival_firm_jelly_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j35' containerField='joints' anchorPoint='51.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.75" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_6' containerField='body1'/><RigidBody USE='carnival_firm_jelly_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j36' containerField='joints' anchorPoint='51.75 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.25" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_7' containerField='body1'/><RigidBody USE='carnival_firm_jelly_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j37' containerField='joints' anchorPoint='51.75 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.75" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_7' containerField='body1'/><RigidBody USE='carnival_firm_jelly_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j38' containerField='joints' anchorPoint='50.25 1.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=50.75" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_8' containerField='body1'/><RigidBody USE='carnival_firm_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j39' containerField='joints' anchorPoint='50.75 1.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.25" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_9' containerField='body1'/><RigidBody USE='carnival_firm_jelly_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_firm_jelly_j40' containerField='joints' anchorPoint='51.25 1.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_firm_jelly" "type=spring" "bx=51.75" "by=1.25" "comp=0.0006"'/>
+  <RigidBody USE='carnival_firm_jelly_10' containerField='body1'/><RigidBody USE='carnival_firm_jelly_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j12' containerField='joints' anchorPoint='55.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.75" "by=0.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_0' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_1' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j13' containerField='joints' anchorPoint='55.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.25" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_0' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_4' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j14' containerField='joints' anchorPoint='55.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.75" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_0' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j15' containerField='joints' anchorPoint='55.75 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.25" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_1' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_4' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j16' containerField='joints' anchorPoint='55.75 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.25" "by=0.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_1' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_2' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j17' containerField='joints' anchorPoint='55.75 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.75" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_1' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j18' containerField='joints' anchorPoint='55.75 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.25" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_1' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j19' containerField='joints' anchorPoint='56.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.75" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_2' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j20' containerField='joints' anchorPoint='56.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.75" "by=0.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_2' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_3' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j21' containerField='joints' anchorPoint='56.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.25" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_2' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j22' containerField='joints' anchorPoint='56.25 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.75" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_2' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j23' containerField='joints' anchorPoint='56.75 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.25" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_3' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j24' containerField='joints' anchorPoint='56.75 0.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.75" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_3' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j25' containerField='joints' anchorPoint='55.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.75" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_4' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j26' containerField='joints' anchorPoint='55.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.25" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_4' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j27' containerField='joints' anchorPoint='55.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.75" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_4' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j28' containerField='joints' anchorPoint='55.75 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.25" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_5' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j29' containerField='joints' anchorPoint='55.75 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.25" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_5' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j30' containerField='joints' anchorPoint='55.75 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.75" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_5' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j31' containerField='joints' anchorPoint='55.75 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.25" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_5' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j32' containerField='joints' anchorPoint='56.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.75" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_6' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j33' containerField='joints' anchorPoint='56.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.75" "by=0.75" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_6' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j34' containerField='joints' anchorPoint='56.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.25" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_6' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j35' containerField='joints' anchorPoint='56.25 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.75" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_6' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j36' containerField='joints' anchorPoint='56.75 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.25" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_7' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j37' containerField='joints' anchorPoint='56.75 0.75 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.75" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_7' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j38' containerField='joints' anchorPoint='55.25 1.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=55.75" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_8' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j39' containerField='joints' anchorPoint='55.75 1.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.25" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_9' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_wobble_jelly_j40' containerField='joints' anchorPoint='56.25 1.25 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_wobble_jelly" "type=spring" "bx=56.75" "by=1.25" "comp=0.0109"'/>
+  <RigidBody USE='carnival_wobble_jelly_10' containerField='body1'/><RigidBody USE='carnival_wobble_jelly_11' containerField='body2'/>
+ </BallJoint>
+ <SingleAxisHingeJoint DEF='carnival_fan_ribbons_j2' containerField='joints' anchorPoint='63.3 11.2 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "damp=2" "limits=0"'/>
+  <RigidBody USE='carnival_fan_ribbons_1' containerField='body1'/><RigidBody USE='carnival_fan_ribbons_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_fan_ribbons_j4' containerField='joints' anchorPoint='63.3 10.525 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "damp=2" "limits=0"'/>
+  <RigidBody USE='carnival_fan_ribbons_3' containerField='body1'/><RigidBody USE='carnival_fan_ribbons_1' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_fan_ribbons_j6' containerField='joints' anchorPoint='63.3 9.85 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "damp=2" "limits=0"'/>
+  <RigidBody USE='carnival_fan_ribbons_5' containerField='body1'/><RigidBody USE='carnival_fan_ribbons_3' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_fan_ribbons_j8' containerField='joints' anchorPoint='63.3 9.175 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "damp=2" "limits=0"'/>
+  <RigidBody USE='carnival_fan_ribbons_7' containerField='body1'/><RigidBody USE='carnival_fan_ribbons_5' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_fan_ribbons_j10' containerField='joints' anchorPoint='63.95 11.2 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "damp=2" "limits=0"'/>
+  <RigidBody USE='carnival_fan_ribbons_9' containerField='body1'/><RigidBody USE='carnival_fan_ribbons_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_fan_ribbons_j12' containerField='joints' anchorPoint='63.95 10.525 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "damp=2" "limits=0"'/>
+  <RigidBody USE='carnival_fan_ribbons_11' containerField='body1'/><RigidBody USE='carnival_fan_ribbons_9' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_fan_ribbons_j14' containerField='joints' anchorPoint='63.95 9.85 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "damp=2" "limits=0"'/>
+  <RigidBody USE='carnival_fan_ribbons_13' containerField='body1'/><RigidBody USE='carnival_fan_ribbons_11' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_fan_ribbons_j16' containerField='joints' anchorPoint='63.95 9.175 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "damp=2" "limits=0"'/>
+  <RigidBody USE='carnival_fan_ribbons_15' containerField='body1'/><RigidBody USE='carnival_fan_ribbons_13' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_fan_ribbons_j18' containerField='joints' anchorPoint='64.6 11.2 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "damp=2" "limits=0"'/>
+  <RigidBody USE='carnival_fan_ribbons_17' containerField='body1'/><RigidBody USE='carnival_fan_ribbons_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_fan_ribbons_j20' containerField='joints' anchorPoint='64.6 10.525 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "damp=2" "limits=0"'/>
+  <RigidBody USE='carnival_fan_ribbons_19' containerField='body1'/><RigidBody USE='carnival_fan_ribbons_17' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_fan_ribbons_j22' containerField='joints' anchorPoint='64.6 9.85 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "damp=2" "limits=0"'/>
+  <RigidBody USE='carnival_fan_ribbons_21' containerField='body1'/><RigidBody USE='carnival_fan_ribbons_19' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='carnival_fan_ribbons_j24' containerField='joints' anchorPoint='64.6 9.175 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_fan_ribbons" "damp=2" "limits=0"'/>
+  <RigidBody USE='carnival_fan_ribbons_23' containerField='body1'/><RigidBody USE='carnival_fan_ribbons_21' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <BallJoint DEF='carnival_final_jelly_j10' containerField='joints' anchorPoint='109.9 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=110.45" "by=0.275" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_0' containerField='body1'/><RigidBody USE='carnival_final_jelly_1' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j11' containerField='joints' anchorPoint='109.9 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=109.9" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_0' containerField='body1'/><RigidBody USE='carnival_final_jelly_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j12' containerField='joints' anchorPoint='109.9 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=110.45" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_0' containerField='body1'/><RigidBody USE='carnival_final_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j13' containerField='joints' anchorPoint='110.45 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=109.9" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_1' containerField='body1'/><RigidBody USE='carnival_final_jelly_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j14' containerField='joints' anchorPoint='110.45 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=111" "by=0.275" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_1' containerField='body1'/><RigidBody USE='carnival_final_jelly_2' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j15' containerField='joints' anchorPoint='110.45 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=110.45" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_1' containerField='body1'/><RigidBody USE='carnival_final_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j16' containerField='joints' anchorPoint='110.45 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=111" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_1' containerField='body1'/><RigidBody USE='carnival_final_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j17' containerField='joints' anchorPoint='111 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=110.45" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_2' containerField='body1'/><RigidBody USE='carnival_final_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j18' containerField='joints' anchorPoint='111 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=111.55" "by=0.275" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_2' containerField='body1'/><RigidBody USE='carnival_final_jelly_3' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j19' containerField='joints' anchorPoint='111 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=111" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_2' containerField='body1'/><RigidBody USE='carnival_final_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j20' containerField='joints' anchorPoint='111 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=111.55" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_2' containerField='body1'/><RigidBody USE='carnival_final_jelly_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j21' containerField='joints' anchorPoint='111.55 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=111" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_3' containerField='body1'/><RigidBody USE='carnival_final_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j22' containerField='joints' anchorPoint='111.55 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=112.1" "by=0.275" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_3' containerField='body1'/><RigidBody USE='carnival_final_jelly_4' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j23' containerField='joints' anchorPoint='111.55 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=111.55" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_3' containerField='body1'/><RigidBody USE='carnival_final_jelly_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j24' containerField='joints' anchorPoint='111.55 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=112.1" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_3' containerField='body1'/><RigidBody USE='carnival_final_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j25' containerField='joints' anchorPoint='112.1 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=111.55" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_4' containerField='body1'/><RigidBody USE='carnival_final_jelly_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j26' containerField='joints' anchorPoint='112.1 0.275 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=112.1" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_4' containerField='body1'/><RigidBody USE='carnival_final_jelly_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j27' containerField='joints' anchorPoint='109.9 0.825 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=110.45" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_5' containerField='body1'/><RigidBody USE='carnival_final_jelly_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j28' containerField='joints' anchorPoint='110.45 0.825 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=111" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_6' containerField='body1'/><RigidBody USE='carnival_final_jelly_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j29' containerField='joints' anchorPoint='111 0.825 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=111.55" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_7' containerField='body1'/><RigidBody USE='carnival_final_jelly_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='carnival_final_jelly_j30' containerField='joints' anchorPoint='111.55 0.825 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=carnival_final_jelly" "type=spring" "bx=112.1" "by=0.825" "comp=0.009"'/>
+  <RigidBody USE='carnival_final_jelly_8' containerField='body1'/><RigidBody USE='carnival_final_jelly_9' containerField='body2'/>
+ </BallJoint>
+</RigidBodyCollection>
+<ProximitySensor DEF='cp_feel_z0' center='-5 2 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=0 Giggle School" "part=cp_feel"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_1_7_z0' center='-2 7.2 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=GIGGLEWORKS CARNIVAL" "text=Seed 7. Jump, then F while rising. Q puffs a limp body; recover with F to bank the show." "part=carnival_1_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_2_7_z0' center='2.5 4.2 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=carnival_2_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_3_7_z0' center='8.3 4.6 0' size='0.6 0.6 2'><MetadataString containerField='metadata' name='flop' value='"kind=ring" "part=carnival_3_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_4_7_z0' center='6 9.5 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=GRAVITY IS A SUGGESTION DEPARTMENT" "text=Three Q puffs per flop. Aim with the movement keys. No points are worth getting stuck: R respawns." "part=carnival_4_7"'/></ProximitySensor>
+<ProximitySensor DEF='cp_contact_z0' center='14 2 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=1 Biscuit Bowling" "part=cp_contact"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_5_7_z0' center='20.2 2.7 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=carnival_5_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_6_7_z0' center='17.5 6.1 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=BISCUIT BOWLING" "text=Run into the row, or jump over it and flop back. The biscuits have declined to comment." "part=carnival_6_7"'/></ProximitySensor>
+<ProximitySensor DEF='cp_joints_z0' center='29 2 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=2 Sky Noodles" "part=cp_joints"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_8_7_z0' center='35 4.8 0' size='0.6 0.6 2'><MetadataString containerField='metadata' name='flop' value='"kind=ring" "part=carnival_8_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_9_7_z0' center='39.5 6 0' size='0.6 0.6 2'><MetadataString containerField='metadata' name='flop' value='"kind=ring" "part=carnival_9_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_10_7_z0' center='44 4.8 0' size='0.6 0.6 2'><MetadataString containerField='metadata' name='flop' value='"kind=ring" "part=carnival_10_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_11_7_z0' center='38.5 4.2 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=carnival_11_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_12_7_z0' center='33 9.4 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=SKY NOODLES" "text=Hold Shift near a ring. Space releases. Jump, dash, hook, then F: one continuous very questionable plan." "part=carnival_12_7"'/></ProximitySensor>
+<ProximitySensor DEF='cp_soft_z0' center='47 2 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=3 Jelly Department" "part=cp_soft"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_13_7_z0' center='56 2.9 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=carnival_13_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_14_7_z0' center='49.4 6.5 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=THE FLOOR IS HAVING FEELINGS" "text=Two jelly landings, two compliances. Soft is not the same as bouncy. Inspect one part and compare." "part=carnival_14_7"'/></ProximitySensor>
+<ProximitySensor DEF='cp_fields_z0' center='60 2 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=4 Fan Club" "part=cp_fields"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_fan_z0' center='64 5.3 0' size='3.5 10.5 2'><MetadataString containerField='metadata' name='flop' value='"kind=fan" "fx=3e-15" "fy=49" "angle=90" "part=carnival_fan"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_15_7_z0' center='64 6.5 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=carnival_15_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_splash_pool_z3' center='74 -0.6 0' size='9 2.5 2'><MetadataString containerField='metadata' name='flop' value='"kind=water" "part=carnival_splash_pool"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_19_7_z0' center='74 2.3 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=carnival_19_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_20_7_z0' center='65 14 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=YOUR FAN CLUB IS LITERALLY A FAN" "text=Enter upright, then F to float. Puff out sideways. Pool ahead: jump while upright to swim, or F to recover." "part=carnival_20_7"'/></ProximitySensor>
+<ProximitySensor DEF='cp_cannon_z0' center='84 2 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=5 Confetti Cannon" "part=cp_cannon"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_cannon_z0' center='86 0.95 0' size='2 2 2'><MetadataString containerField='metadata' name='flop' value='"kind=cannon" "angle=41" "power=22" "part=carnival_cannon"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_big_target_z0' center='100 3.7 0' size='6 6 2'><MetadataString containerField='metadata' name='flop' value='"kind=goal" "part=carnival_big_target"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_21_7_z0' center='100 3.7 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=carnival_21_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_22_7_z0' center='84.5 7.8 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=UNLICENSED CONFETTI DELIVERY" "text=W enters the cannon. W/S aims; A/D changes power; Space fires. Hit the wide target, meet the tower, F to take your bow." "part=carnival_22_7"'/></ProximitySensor>
+<ProximitySensor DEF='carnival_23_7_z0' center='108 10 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=AN EXTREMELY PROFESSIONAL LANDING" "text=A failed trick can be a good experiment. Retry one change, or take this entire carnival home as X3D." "part=carnival_23_7"'/></ProximitySensor>
+</Scene>
+</X3D>

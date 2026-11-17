@@ -1,0 +1,119 @@
+{
+  "coverage": {
+    "max_waivers": 0,
+    "require_takeover": false,
+    "runs": 1
+  },
+  "development": false,
+  "environment": {
+    "optimized": false,
+    "python": "3.13.18"
+  },
+  "evidence": [],
+  "finished_at": "2026-11-16T22:34:20+00:00",
+  "grade": "C",
+  "instrument": {
+    "hosts": "as each record names them",
+    "max_waivers": 0,
+    "require_takeover": false,
+    "rules_sha256": "24a8ebeafebb00346c05bdd84df2f9303e9699b3c584a77a5b73ae341d4eec56",
+    "tool": "loomkit.physics"
+  },
+  "limitations": [
+    "Determinism is shown on the hosts and the machine the record names; another machine or another engine build needs its own replay (law 42).",
+    "A passing record shows the run answers to its references and hashes; it does not show the engine's model is right where no exact reference exists.",
+    "The witness reads the record a project's own harness wrote; the harness is trusted to have replayed what it says (the project's browser evidence is the behaviour witness)."
+  ],
+  "measurements": {
+    "runs": {
+      "flop-lab-cannon-shot-node.physics.json": {
+        "controls": 7,
+        "engine": "flop-lab xpbd2d 0.1.0",
+        "id": "flop-lab/default-level/cannon-shot/recorded-in-node",
+        "leaks": 0,
+        "recorded_in": "node",
+        "references": [
+          {
+            "id": "free fall vs the discrete solution",
+            "limit": 1e-09,
+            "observed": 2.19e-10
+          },
+          {
+            "id": "10-crate stack, max tilt in 10 s",
+            "limit": 0.002,
+            "observed": 0
+          },
+          {
+            "id": "10-crate stack, max speed",
+            "limit": 0.2,
+            "observed": 0.058
+          },
+          {
+            "id": "5 x 5 crate wall, max tilt",
+            "limit": 0.002,
+            "observed": 0
+          },
+          {
+            "id": "one crate at rest, sideways creep in 6 s",
+            "limit": 0.002,
+            "observed": 0
+          },
+          {
+            "id": "incline 20 deg, mu 0.6 sticks (moved in 2 s)",
+            "limit": 0.2,
+            "observed": 0.0001
+          },
+          {
+            "id": "incline 40 deg, speed after 2 s vs Coulomb",
+            "limit": 0.05,
+            "observed": 0.0037
+          },
+          {
+            "id": "pendulum period vs 2 pi sqrt(I / m g L)",
+            "limit": 0.01,
+            "observed": 0.00054
+          },
+          {
+            "id": "bounce e = 0.5 from 3 m, peak vs e^2 h",
+            "limit": 0.08,
+            "observed": 0.0079
+          },
+          {
+            "id": "bounce e = 0.1 (the default material) from 3 m, peak (e^2 h = 0.03)",
+            "limit": 0.1,
+            "observed": 0.0247
+          },
+          {
+            "id": "sweep and prune vs brute force over 300 frames, pairs missed (1206 tests a frame against 35245)",
+            "limit": 0,
+            "observed": 0
+          },
+          {
+            "id": "two runs of a cannon shot on the default level, differing step hashes of 300",
+            "limit": 0,
+            "observed": 0
+          }
+        ],
+        "replayed_in": [
+          "chromium",
+          "node"
+        ],
+        "required_hosts": [
+          "chromium",
+          "node"
+        ],
+        "steps": 300,
+        "takeover": false,
+        "tolerances": 0,
+        "trace_sha256": "1f6b2cbd1489a65e8ae0b6e457d4ce5516148195a1a6a4fcb63f29dca9619131",
+        "waivers": []
+      }
+    },
+    "waivers": 0
+  },
+  "reason": "",
+  "schema": "loom.witness/1",
+  "status": "pass",
+  "subject_sha256": "d5031c5ba4c05cc588f43c4e01cdabc8180041ab60149a6bab48ab069476044b",
+  "witness": "physics"
+}

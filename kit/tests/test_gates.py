@@ -229,6 +229,11 @@ def page_controls() -> list[dict]:
     if pagetraps.inventory(pagetraps.scripts_view(_html("const a = 1;\n"))) != {"field_callbacks": 0, "world_loads": 0}:
         raise RuntimeError("INVENTORY counts code outside inline scripts")
     rows.append({"case": "inventory counts what was read, and only that", "result": "exact"})
+    units = (pagetraps.sim_units(_SIM + "const t = 1;\n"), pagetraps.sim_units("const t = 1;\n" * 6 + _SIM),
+             pagetraps.sim_units(_html(_SIM + "const t = 1;\n") + _html("const u = 2;\n"), html=True), pagetraps.sim_units(_html("const u = 2;\n"), html=True))
+    if units != (1, 0, 1, 0):
+        raise RuntimeError(f"SIM_UNITS: {units}, expected (1, 0, 1, 0): a marked file, a marker past line five, one marked inline script of two, none")
+    rows.append({"case": "sim units count the code that declared // loom:sim, and only that", "result": "exact"})
     return rows
 
 

@@ -1,0 +1,135 @@
+{
+ "engine": "flop-lab xpbd2d",
+ "node": "v22.23.4",
+ "date": "2026-11-16T22:08:33.231Z",
+ "gates": [
+  {
+   "name": "free fall vs the discrete solution",
+   "value": "2.19e-10",
+   "limit": 1e-9,
+   "pass": true
+  },
+  {
+   "name": "10-crate stack, max tilt in 10 s",
+   "value": "0.00000",
+   "limit": 0.002,
+   "pass": true
+  },
+  {
+   "name": "10-crate stack, max speed",
+   "value": "0.058",
+   "limit": 0.2,
+   "pass": true
+  },
+  {
+   "name": "5 x 5 crate wall, max tilt",
+   "value": "0.00000",
+   "limit": 0.002,
+   "pass": true
+  },
+  {
+   "name": "one crate at rest, sideways creep in 6 s",
+   "value": "0.00000",
+   "limit": 0.002,
+   "pass": true
+  },
+  {
+   "name": "incline 20 deg, mu 0.6 sticks (moved in 2 s)",
+   "value": "0.0001",
+   "limit": 0.2,
+   "pass": true
+  },
+  {
+   "name": "incline 40 deg, speed after 2 s vs Coulomb",
+   "value": "0.0037",
+   "limit": 0.05,
+   "pass": true
+  },
+  {
+   "name": "pendulum period vs 2 pi sqrt(I / m g L)",
+   "value": "0.00054",
+   "limit": 0.01,
+   "pass": true
+  },
+  {
+   "name": "bounce e = 0.5 from 3 m, peak vs e^2 h",
+   "value": "0.0079",
+   "limit": 0.08,
+   "pass": true
+  },
+  {
+   "name": "bounce e = 0.1 (the default material) from 3 m, peak (e^2 h = 0.03)",
+   "value": "0.0247",
+   "limit": 0.1,
+   "pass": true
+  },
+  {
+   "name": "sweep and prune vs brute force over 300 frames, pairs missed (1206 tests a frame against 35245)",
+   "value": 0,
+   "limit": 0,
+   "pass": true
+  },
+  {
+   "name": "two runs of a cannon shot on the default level, differing step hashes of 300",
+   "value": 0,
+   "limit": 0,
+   "pass": true
+  }
+ ],
+ "controls": [
+  {
+   "name": "face contacts solved one corner at a time (10-stack tilt, rad; judged by the gate's own limit)",
+   "value": "0.0148",
+   "need": 0.002,
+   "caught": true
+  },
+  {
+   "name": "friction pulled at each corner instead of the face middle (10-stack tilt, rad)",
+   "value": "0.0000",
+   "need": "reported, not gated",
+   "caught": null
+  },
+  {
+   "name": "friction inside the push pass, corner by corner (one crate, creep in 6 s, m)",
+   "value": "0.2807",
+   "need": "reported, not gated",
+   "caught": null
+  },
+  {
+   "name": "friction 0 on the 20 deg incline (moved, m)",
+   "value": "19.30",
+   "need": 1,
+   "caught": true
+  },
+  {
+   "name": "hinge solved along the error direction only (period error, relative)",
+   "value": "0.0295",
+   "need": 0.02,
+   "caught": true
+  },
+  {
+   "name": "restitution raised by 0.3 (peak error against 0.75 m)",
+   "value": "1.161",
+   "need": 0.08,
+   "caught": true
+  },
+  {
+   "name": "list sorted by centre instead of left edge (pairs missed in 300 frames)",
+   "value": 4835,
+   "need": 1,
+   "caught": true
+  },
+  {
+   "name": "friction changed by 1e-7 (differing step hashes of 300)",
+   "value": 287,
+   "need": 1,
+   "caught": true
+  }
+ ],
+ "hash300": "f5a046f3",
+ "model_sha256": "cfa68107223b1c1652190e0adc5d4fdde660a8e57badf85fe9d5f2d58e2cc928",
+ "engine_sha256": "52e2839b7a36ef4e02cb538239540e89fa12b3698647a207cfd36710c73181c6",
+ "caught": 6,
+ "gated_controls": 6,
+ "passed": 12
+}

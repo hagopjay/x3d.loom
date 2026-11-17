@@ -1,0 +1,962 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+<head>
+<component name='RigidBodyPhysics' level='2'/>
+<meta name='title' content='Flop Lab level'/>
+<meta name='description' content='A 2.5D physics course. Bodies, hinges and regions are standard RigidBodyPhysics nodes; what the Flop Lab engine adds is carried in "flop" metadata. Units are metres, kilograms, seconds, radians. All motion is in the XY plane.'/>
+<meta name='generator' content='Flop Lab'/>
+</head>
+<Scene>
+<WorldInfo DEF='LEVEL' title='Flop Lab level'>
+ <MetadataSet name='flop:parts' containerField='metadata'>
+  <MetadataString containerField='value' name='recipe_floor' value='"platform" "x=33" "y=-1.5" "w=86" "h=2"'/>
+  <MetadataString containerField='value' name='recipe_left_wall' value='"platform" "x=-10" "y=12" "w=1" "h=16"'/>
+  <MetadataString containerField='value' name='recipe_right_wall' value='"platform" "x=76" "y=12" "w=1" "h=16"'/>
+  <MetadataString containerField='value' name='cp_feel' value='"checkpoint" "x=-5" "y=-1.5" "name=0 Feel"'/>
+  <MetadataString containerField='value' name='tidal_1_7' value='"label" "x=1" "y=9" "title=TIDAL CONSERVATORY" "text=Authored seed 7. Export X3D to keep the exact generated layout."'/>
+  <MetadataString containerField='value' name='cp_soft' value='"checkpoint" "x=10" "y=-1.5" "name=3 Compliance"'/>
+  <MetadataString containerField='value' name='tidal_2_7' value='"jelly" "x=8" "y=-1.5" "cols=5" "rows=3" "size=0.55" "softness=0.0002"'/>
+  <MetadataString containerField='value' name='tidal_3_7' value='"jelly" "x=14" "y=-1.5" "cols=5" "rows=3" "size=0.55" "softness=0.012"'/>
+  <MetadataString containerField='value' name='tidal_4_7' value='"fan" "x=22" "y=-1.5" "w=3.4" "h=11" "force=47"'/>
+  <MetadataString containerField='value' name='tidal_5_7' value='"curtain" "x=20.8" "y=10.5" "strands=5" "length=3.3" "spacing=0.55" "links=5"'/>
+  <MetadataString containerField='value' name='cp_fields' value='"checkpoint" "x=18" "y=-1.5" "name=4 Fields"'/>
+  <MetadataString containerField='value' name='tidal_6_7' value='"water" "x=38" "y=-0.6" "w=15" "depth=3.6"'/>
+  <MetadataString containerField='value' name='tidal_7_7' value='"raft" "x=32.3" "y=-0.4" "w=2.1" "h=0.45" "mass=2.5117"'/>
+  <MetadataString containerField='value' name='tidal_8_7' value='"raft" "x=35.1" "y=-0.4" "w=2.1" "h=0.45" "mass=2.562"'/>
+  <MetadataString containerField='value' name='tidal_9_7' value='"raft" "x=37.9" "y=-0.4" "w=2.1" "h=0.45" "mass=3.4769"'/>
+  <MetadataString containerField='value' name='tidal_10_7' value='"raft" "x=40.7" "y=-0.4" "w=2.1" "h=0.45" "mass=3.199"'/>
+  <MetadataString containerField='value' name='tidal_11_7' value='"raft" "x=43.5" "y=-0.4" "w=2.1" "h=0.45" "mass=3.0214"'/>
+  <MetadataString containerField='value' name='tidal_12_7' value='"bridge" "x=47" "y=2" "length=9" "planks=8"'/>
+  <MetadataString containerField='value' name='tidal_13_7' value='"pendulum" "x=60" "y=8" "length=6" "r=0.65" "mass=24" "angle=48.1104" "links=6"'/>
+  <MetadataString containerField='value' name='tidal_14_7' value='"spring" "x=67" "y=-1.4" "w=3"'/>
+  <MetadataString containerField='value' name='tidal_15_7' value='"star" "x=8" "y=1.5"'/>
+  <MetadataString containerField='value' name='tidal_16_7' value='"star" "x=14" "y=1.5"'/>
+  <MetadataString containerField='value' name='tidal_17_7' value='"star" "x=22" "y=7"'/>
+  <MetadataString containerField='value' name='tidal_18_7' value='"star" "x=38" "y=1.5"'/>
+  <MetadataString containerField='value' name='tidal_19_7' value='"star" "x=53" "y=4"'/>
+  <MetadataString containerField='value' name='tidal_20_7' value='"star" "x=67" "y=5"'/>
+  <MetadataString containerField='value' name='tidal_21_7' value='"label" "x=31" "y=13" "title=FORCES DO NOT KNOW YOUR INTENT" "text=Compare upright and limp flight. Change softness or mass independently, then export your experiment."'/>
+ </MetadataSet>
+</WorldInfo>
+<NavigationInfo type='"EXAMINE" "ANY"'/>
+<Viewpoint description='Whole course' position='80 4 150'/>
+<Background skyColor='0.02 0.05 0.11'/>
+<Group DEF='VISUAL'>
+ <CollidableShape DEF='C_recipe_floor_0' translation='33 -2.5 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='86 2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_recipe_left_wall_0' translation='-10 4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='1 16 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_recipe_right_wall_0' translation='76 4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='1 16 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_0' translation='6.9 -1.225 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_1' translation='7.45 -1.225 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_2' translation='8 -1.225 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_3' translation='8.55 -1.225 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_4' translation='9.1 -1.225 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_5' translation='6.9 -0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_6' translation='7.45 -0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_7' translation='8 -0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_8' translation='8.55 -0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_9' translation='9.1 -0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_10' translation='6.9 -0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_11' translation='7.45 -0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_12' translation='8 -0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_13' translation='8.55 -0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_2_7_14' translation='9.1 -0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_0' translation='12.9 -1.225 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_1' translation='13.45 -1.225 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_2' translation='14 -1.225 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_3' translation='14.55 -1.225 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_4' translation='15.1 -1.225 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_5' translation='12.9 -0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_6' translation='13.45 -0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_7' translation='14 -0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_8' translation='14.55 -0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_9' translation='15.1 -0.675 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_10' translation='12.9 -0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_11' translation='13.45 -0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_12' translation='14 -0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_13' translation='14.55 -0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_3_7_14' translation='15.1 -0.125 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Sphere radius='0.275'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_0' translation='21.9 10.6 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='2.8 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_1' translation='20.8 10.17 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_3' translation='20.8 9.51 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_5' translation='20.8 8.85 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_7' translation='20.8 8.19 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_9' translation='20.8 7.53 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_11' translation='21.35 10.17 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_13' translation='21.35 9.51 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_15' translation='21.35 8.85 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_17' translation='21.35 8.19 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_19' translation='21.35 7.53 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_21' translation='21.9 10.17 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_23' translation='21.9 9.51 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_25' translation='21.9 8.85 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_27' translation='21.9 8.19 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_29' translation='21.9 7.53 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_31' translation='22.45 10.17 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_33' translation='22.45 9.51 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_35' translation='22.45 8.85 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_37' translation='22.45 8.19 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_39' translation='22.45 7.53 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_41' translation='23 10.17 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_43' translation='23 9.51 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_45' translation='23 8.85 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_47' translation='23 8.19 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_5_7_49' translation='23 7.53 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.7882 0.6549 1'/></Appearance><Cylinder radius='0.05' height='0.66'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_6_7_0' translation='38 -4.4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='15.8 0.4 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_6_7_1' translation='30.3 -2.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.4 4 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_6_7_2' translation='45.7 -2.2 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.4 4 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_7_7_0' translation='32.3 -0.4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='2.1 0.45 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_8_7_0' translation='35.1 -0.4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='2.1 0.45 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_9_7_0' translation='37.9 -0.4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='2.1 0.45 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_10_7_0' translation='40.7 -0.4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='2.1 0.45 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_11_7_0' translation='43.5 -0.4 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.8235 0.4784'/></Appearance><Box size='2.1 0.45 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_12_7_0' translation='46.85 1.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.3 0.5 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_12_7_1' translation='56.15 1.75 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.3 0.5 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_12_7_2' translation='47.5625 1.9 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_12_7_4' translation='48.6875 1.9 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_12_7_6' translation='49.8125 1.9 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_12_7_8' translation='50.9375 1.9 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_12_7_10' translation='52.0625 1.9 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_12_7_12' translation='53.1875 1.9 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_12_7_14' translation='54.3125 1.9 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_12_7_16' translation='55.4375 1.9 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.7412 0.451'/></Appearance><Box size='1.085 0.2 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_13_7_0' translation='60 8.15 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.2471 0.8157 1'/></Appearance><Box size='0.8 0.3 1.2'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_13_7_1' translation='60.3319 7.7023 0' rotation='0 0 1 0.8397'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.6235 0.7059 0.851'/></Appearance><Cylinder radius='0.07' height='0.8917'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_13_7_3' translation='60.9957 7.107 0' rotation='0 0 1 0.8397'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.6235 0.7059 0.851'/></Appearance><Cylinder radius='0.07' height='0.8917'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_13_7_5' translation='61.6595 6.5116 0' rotation='0 0 1 0.8397'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.6235 0.7059 0.851'/></Appearance><Cylinder radius='0.07' height='0.8917'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_13_7_7' translation='62.3233 5.9162 0' rotation='0 0 1 0.8397'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.6235 0.7059 0.851'/></Appearance><Cylinder radius='0.07' height='0.8917'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_13_7_9' translation='62.987 5.3209 0' rotation='0 0 1 0.8397'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.6235 0.7059 0.851'/></Appearance><Cylinder radius='0.07' height='0.8917'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_13_7_11' translation='63.6508 4.7255 0' rotation='0 0 1 0.8397'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.6235 0.7059 0.851'/></Appearance><Cylinder radius='0.07' height='0.8917'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_13_7_13' translation='64.4666 3.9938 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='1 0.3098 0.6392'/></Appearance><Sphere radius='0.65'/></Shape></CollidableShape>
+ <CollidableShape DEF='C_tidal_14_7_0' translation='67 -1.55 0' rotation='0 0 1 0'><Shape containerField='shape'><Appearance><Material diffuseColor='0.05 0.09 0.16' emissiveColor='0.4902 1 0.698'/></Appearance><Box size='3 0.3 1.2'/></Shape></CollidableShape>
+</Group>
+<RigidBodyCollection DEF='WORLD' gravity='0 -30 0' iterations='1'>
+ <MetadataString containerField='metadata' name='flop' value='"substeps=8"'/>
+ <RigidBody DEF='recipe_floor_0' containerField='bodies' position='33 -2.5 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=recipe_floor" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_recipe_floor_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='recipe_left_wall_0' containerField='bodies' position='-10 4 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=recipe_left_wall" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_recipe_left_wall_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='recipe_right_wall_0' containerField='bodies' position='76 4 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=recipe_right_wall" "role=static" "fric=0.8"'/>
+  <CollidableShape USE='C_recipe_right_wall_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_0' containerField='bodies' position='6.9 -1.225 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_1' containerField='bodies' position='7.45 -1.225 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_2' containerField='bodies' position='8 -1.225 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_3' containerField='bodies' position='8.55 -1.225 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_4' containerField='bodies' position='9.1 -1.225 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_5' containerField='bodies' position='6.9 -0.675 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_6' containerField='bodies' position='7.45 -0.675 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_7' containerField='bodies' position='8 -0.675 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_8' containerField='bodies' position='8.55 -0.675 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_9' containerField='bodies' position='9.1 -0.675 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_10' containerField='bodies' position='6.9 -0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_11' containerField='bodies' position='7.45 -0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_12' containerField='bodies' position='8 -0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_12' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_13' containerField='bodies' position='8.55 -0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_13' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_2_7_14' containerField='bodies' position='9.1 -0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "role=jelly" "fric=0.8" "rest=0.3" "group=101"'/>
+  <CollidableShape USE='C_tidal_2_7_14' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_0' containerField='bodies' position='12.9 -1.225 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_1' containerField='bodies' position='13.45 -1.225 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_2' containerField='bodies' position='14 -1.225 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_3' containerField='bodies' position='14.55 -1.225 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_4' containerField='bodies' position='15.1 -1.225 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_5' containerField='bodies' position='12.9 -0.675 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_6' containerField='bodies' position='13.45 -0.675 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_7' containerField='bodies' position='14 -0.675 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_8' containerField='bodies' position='14.55 -0.675 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_9' containerField='bodies' position='15.1 -0.675 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_10' containerField='bodies' position='12.9 -0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_11' containerField='bodies' position='13.45 -0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_12' containerField='bodies' position='14 -0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_12' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_13' containerField='bodies' position='14.55 -0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_13' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_3_7_14' containerField='bodies' position='15.1 -0.125 0' orientation='0 0 1 0' mass='0.5' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "role=jelly" "fric=0.8" "rest=0.3" "group=102"'/>
+  <CollidableShape USE='C_tidal_3_7_14' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_0' containerField='bodies' position='21.9 10.6 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=static" "group=103"'/>
+  <CollidableShape USE='C_tidal_5_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_1' containerField='bodies' position='20.8 10.17 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_3' containerField='bodies' position='20.8 9.51 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_5' containerField='bodies' position='20.8 8.85 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_7' containerField='bodies' position='20.8 8.19 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_9' containerField='bodies' position='20.8 7.53 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_11' containerField='bodies' position='21.35 10.17 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_13' containerField='bodies' position='21.35 9.51 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_13' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_15' containerField='bodies' position='21.35 8.85 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_15' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_17' containerField='bodies' position='21.35 8.19 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_17' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_19' containerField='bodies' position='21.35 7.53 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_19' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_21' containerField='bodies' position='21.9 10.17 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_21' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_23' containerField='bodies' position='21.9 9.51 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_23' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_25' containerField='bodies' position='21.9 8.85 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_25' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_27' containerField='bodies' position='21.9 8.19 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_27' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_29' containerField='bodies' position='21.9 7.53 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_29' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_31' containerField='bodies' position='22.45 10.17 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_31' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_33' containerField='bodies' position='22.45 9.51 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_33' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_35' containerField='bodies' position='22.45 8.85 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_35' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_37' containerField='bodies' position='22.45 8.19 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_37' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_39' containerField='bodies' position='22.45 7.53 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_39' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_41' containerField='bodies' position='23 10.17 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_41' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_43' containerField='bodies' position='23 9.51 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_43' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_45' containerField='bodies' position='23 8.85 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_45' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_47' containerField='bodies' position='23 8.19 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_47' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_5_7_49' containerField='bodies' position='23 7.53 0' orientation='0 0 1 0' mass='0.08' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "role=cloth" "shape=pill" "group=103" "wind=1.6"'/>
+  <CollidableShape USE='C_tidal_5_7_49' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_6_7_0' containerField='bodies' position='38 -4.4 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_6_7" "role=static"'/>
+  <CollidableShape USE='C_tidal_6_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_6_7_1' containerField='bodies' position='30.3 -2.2 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_6_7" "role=static"'/>
+  <CollidableShape USE='C_tidal_6_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_6_7_2' containerField='bodies' position='45.7 -2.2 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_6_7" "role=static"'/>
+  <CollidableShape USE='C_tidal_6_7_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_7_7_0' containerField='bodies' position='32.3 -0.4 0' orientation='0 0 1 0' mass='2.5117' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_7_7" "role=crate" "fric=0.9" "buoy=2.6"'/>
+  <CollidableShape USE='C_tidal_7_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_8_7_0' containerField='bodies' position='35.1 -0.4 0' orientation='0 0 1 0' mass='2.562' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_8_7" "role=crate" "fric=0.9" "buoy=2.6"'/>
+  <CollidableShape USE='C_tidal_8_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_9_7_0' containerField='bodies' position='37.9 -0.4 0' orientation='0 0 1 0' mass='3.4769' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_9_7" "role=crate" "fric=0.9" "buoy=2.6"'/>
+  <CollidableShape USE='C_tidal_9_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_10_7_0' containerField='bodies' position='40.7 -0.4 0' orientation='0 0 1 0' mass='3.199' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_10_7" "role=crate" "fric=0.9" "buoy=2.6"'/>
+  <CollidableShape USE='C_tidal_10_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_11_7_0' containerField='bodies' position='43.5 -0.4 0' orientation='0 0 1 0' mass='3.0214' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_11_7" "role=crate" "fric=0.9" "buoy=2.6"'/>
+  <CollidableShape USE='C_tidal_11_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_12_7_0' containerField='bodies' position='46.85 1.75 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "role=static" "group=104"'/>
+  <CollidableShape USE='C_tidal_12_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_12_7_1' containerField='bodies' position='56.15 1.75 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "role=static" "group=104"'/>
+  <CollidableShape USE='C_tidal_12_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_12_7_2' containerField='bodies' position='47.5625 1.9 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "role=plank" "fric=0.9" "group=104"'/>
+  <CollidableShape USE='C_tidal_12_7_2' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_12_7_4' containerField='bodies' position='48.6875 1.9 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "role=plank" "fric=0.9" "group=104"'/>
+  <CollidableShape USE='C_tidal_12_7_4' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_12_7_6' containerField='bodies' position='49.8125 1.9 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "role=plank" "fric=0.9" "group=104"'/>
+  <CollidableShape USE='C_tidal_12_7_6' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_12_7_8' containerField='bodies' position='50.9375 1.9 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "role=plank" "fric=0.9" "group=104"'/>
+  <CollidableShape USE='C_tidal_12_7_8' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_12_7_10' containerField='bodies' position='52.0625 1.9 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "role=plank" "fric=0.9" "group=104"'/>
+  <CollidableShape USE='C_tidal_12_7_10' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_12_7_12' containerField='bodies' position='53.1875 1.9 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "role=plank" "fric=0.9" "group=104"'/>
+  <CollidableShape USE='C_tidal_12_7_12' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_12_7_14' containerField='bodies' position='54.3125 1.9 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "role=plank" "fric=0.9" "group=104"'/>
+  <CollidableShape USE='C_tidal_12_7_14' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_12_7_16' containerField='bodies' position='55.4375 1.9 0' orientation='0 0 1 0' mass='1.2' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "role=plank" "fric=0.9" "group=104"'/>
+  <CollidableShape USE='C_tidal_12_7_16' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_13_7_0' containerField='bodies' position='60 8.15 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "role=static" "group=105"'/>
+  <CollidableShape USE='C_tidal_13_7_0' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_13_7_1' containerField='bodies' position='60.3319 7.7023 0' orientation='0 0 1 0.8397' mass='0.6' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "role=chain" "shape=pill" "group=105"'/>
+  <CollidableShape USE='C_tidal_13_7_1' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_13_7_3' containerField='bodies' position='60.9957 7.107 0' orientation='0 0 1 0.8397' mass='0.6' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "role=chain" "shape=pill" "group=105"'/>
+  <CollidableShape USE='C_tidal_13_7_3' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_13_7_5' containerField='bodies' position='61.6595 6.5116 0' orientation='0 0 1 0.8397' mass='0.6' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "role=chain" "shape=pill" "group=105"'/>
+  <CollidableShape USE='C_tidal_13_7_5' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_13_7_7' containerField='bodies' position='62.3233 5.9162 0' orientation='0 0 1 0.8397' mass='0.6' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "role=chain" "shape=pill" "group=105"'/>
+  <CollidableShape USE='C_tidal_13_7_7' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_13_7_9' containerField='bodies' position='62.987 5.3209 0' orientation='0 0 1 0.8397' mass='0.6' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "role=chain" "shape=pill" "group=105"'/>
+  <CollidableShape USE='C_tidal_13_7_9' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_13_7_11' containerField='bodies' position='63.6508 4.7255 0' orientation='0 0 1 0.8397' mass='0.6' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "role=chain" "shape=pill" "group=105"'/>
+  <CollidableShape USE='C_tidal_13_7_11' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_13_7_13' containerField='bodies' position='64.4666 3.9938 0' orientation='0 0 1 0' mass='24' fixed='false'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "role=hazard" "rest=0.2" "group=105"'/>
+  <CollidableShape USE='C_tidal_13_7_13' containerField='geometry'/>
+ </RigidBody>
+ <RigidBody DEF='tidal_14_7_0' containerField='bodies' position='67 -1.55 0' orientation='0 0 1 0' mass='1' fixed='true'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_14_7" "role=spring" "rest=0.95"'/>
+  <CollidableShape USE='C_tidal_14_7_0' containerField='geometry'/>
+ </RigidBody>
+ <BallJoint DEF='tidal_2_7_j15' containerField='joints' anchorPoint='6.9 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=7.45" "by=-1.225" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_0' containerField='body1'/><RigidBody USE='tidal_2_7_1' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j16' containerField='joints' anchorPoint='6.9 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=6.9" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_0' containerField='body1'/><RigidBody USE='tidal_2_7_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j17' containerField='joints' anchorPoint='6.9 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=7.45" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_0' containerField='body1'/><RigidBody USE='tidal_2_7_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j18' containerField='joints' anchorPoint='7.45 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=6.9" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_1' containerField='body1'/><RigidBody USE='tidal_2_7_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j19' containerField='joints' anchorPoint='7.45 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8" "by=-1.225" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_1' containerField='body1'/><RigidBody USE='tidal_2_7_2' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j20' containerField='joints' anchorPoint='7.45 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=7.45" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_1' containerField='body1'/><RigidBody USE='tidal_2_7_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j21' containerField='joints' anchorPoint='7.45 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_1' containerField='body1'/><RigidBody USE='tidal_2_7_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j22' containerField='joints' anchorPoint='8 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=7.45" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_2' containerField='body1'/><RigidBody USE='tidal_2_7_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j23' containerField='joints' anchorPoint='8 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8.55" "by=-1.225" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_2' containerField='body1'/><RigidBody USE='tidal_2_7_3' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j24' containerField='joints' anchorPoint='8 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_2' containerField='body1'/><RigidBody USE='tidal_2_7_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j25' containerField='joints' anchorPoint='8 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8.55" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_2' containerField='body1'/><RigidBody USE='tidal_2_7_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j26' containerField='joints' anchorPoint='8.55 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_3' containerField='body1'/><RigidBody USE='tidal_2_7_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j27' containerField='joints' anchorPoint='8.55 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=9.1" "by=-1.225" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_3' containerField='body1'/><RigidBody USE='tidal_2_7_4' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j28' containerField='joints' anchorPoint='8.55 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8.55" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_3' containerField='body1'/><RigidBody USE='tidal_2_7_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j29' containerField='joints' anchorPoint='8.55 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=9.1" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_3' containerField='body1'/><RigidBody USE='tidal_2_7_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j30' containerField='joints' anchorPoint='9.1 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8.55" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_4' containerField='body1'/><RigidBody USE='tidal_2_7_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j31' containerField='joints' anchorPoint='9.1 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=9.1" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_4' containerField='body1'/><RigidBody USE='tidal_2_7_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j32' containerField='joints' anchorPoint='6.9 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=7.45" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_5' containerField='body1'/><RigidBody USE='tidal_2_7_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j33' containerField='joints' anchorPoint='6.9 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=6.9" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_5' containerField='body1'/><RigidBody USE='tidal_2_7_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j34' containerField='joints' anchorPoint='6.9 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=7.45" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_5' containerField='body1'/><RigidBody USE='tidal_2_7_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j35' containerField='joints' anchorPoint='7.45 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=6.9" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_6' containerField='body1'/><RigidBody USE='tidal_2_7_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j36' containerField='joints' anchorPoint='7.45 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_6' containerField='body1'/><RigidBody USE='tidal_2_7_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j37' containerField='joints' anchorPoint='7.45 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=7.45" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_6' containerField='body1'/><RigidBody USE='tidal_2_7_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j38' containerField='joints' anchorPoint='7.45 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_6' containerField='body1'/><RigidBody USE='tidal_2_7_12' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j39' containerField='joints' anchorPoint='8 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=7.45" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_7' containerField='body1'/><RigidBody USE='tidal_2_7_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j40' containerField='joints' anchorPoint='8 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8.55" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_7' containerField='body1'/><RigidBody USE='tidal_2_7_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j41' containerField='joints' anchorPoint='8 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_7' containerField='body1'/><RigidBody USE='tidal_2_7_12' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j42' containerField='joints' anchorPoint='8 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8.55" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_7' containerField='body1'/><RigidBody USE='tidal_2_7_13' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j43' containerField='joints' anchorPoint='8.55 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_8' containerField='body1'/><RigidBody USE='tidal_2_7_12' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j44' containerField='joints' anchorPoint='8.55 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=9.1" "by=-0.675" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_8' containerField='body1'/><RigidBody USE='tidal_2_7_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j45' containerField='joints' anchorPoint='8.55 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8.55" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_8' containerField='body1'/><RigidBody USE='tidal_2_7_13' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j46' containerField='joints' anchorPoint='8.55 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=9.1" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_8' containerField='body1'/><RigidBody USE='tidal_2_7_14' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j47' containerField='joints' anchorPoint='9.1 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8.55" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_9' containerField='body1'/><RigidBody USE='tidal_2_7_13' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j48' containerField='joints' anchorPoint='9.1 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=9.1" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_9' containerField='body1'/><RigidBody USE='tidal_2_7_14' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j49' containerField='joints' anchorPoint='6.9 -0.125 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=7.45" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_10' containerField='body1'/><RigidBody USE='tidal_2_7_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j50' containerField='joints' anchorPoint='7.45 -0.125 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_11' containerField='body1'/><RigidBody USE='tidal_2_7_12' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j51' containerField='joints' anchorPoint='8 -0.125 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=8.55" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_12' containerField='body1'/><RigidBody USE='tidal_2_7_13' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_2_7_j52' containerField='joints' anchorPoint='8.55 -0.125 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_2_7" "type=spring" "bx=9.1" "by=-0.125" "comp=0.0002"'/>
+  <RigidBody USE='tidal_2_7_13' containerField='body1'/><RigidBody USE='tidal_2_7_14' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j15' containerField='joints' anchorPoint='12.9 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=13.45" "by=-1.225" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_0' containerField='body1'/><RigidBody USE='tidal_3_7_1' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j16' containerField='joints' anchorPoint='12.9 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=12.9" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_0' containerField='body1'/><RigidBody USE='tidal_3_7_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j17' containerField='joints' anchorPoint='12.9 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=13.45" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_0' containerField='body1'/><RigidBody USE='tidal_3_7_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j18' containerField='joints' anchorPoint='13.45 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=12.9" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_1' containerField='body1'/><RigidBody USE='tidal_3_7_5' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j19' containerField='joints' anchorPoint='13.45 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14" "by=-1.225" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_1' containerField='body1'/><RigidBody USE='tidal_3_7_2' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j20' containerField='joints' anchorPoint='13.45 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=13.45" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_1' containerField='body1'/><RigidBody USE='tidal_3_7_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j21' containerField='joints' anchorPoint='13.45 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_1' containerField='body1'/><RigidBody USE='tidal_3_7_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j22' containerField='joints' anchorPoint='14 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=13.45" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_2' containerField='body1'/><RigidBody USE='tidal_3_7_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j23' containerField='joints' anchorPoint='14 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14.55" "by=-1.225" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_2' containerField='body1'/><RigidBody USE='tidal_3_7_3' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j24' containerField='joints' anchorPoint='14 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_2' containerField='body1'/><RigidBody USE='tidal_3_7_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j25' containerField='joints' anchorPoint='14 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14.55" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_2' containerField='body1'/><RigidBody USE='tidal_3_7_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j26' containerField='joints' anchorPoint='14.55 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_3' containerField='body1'/><RigidBody USE='tidal_3_7_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j27' containerField='joints' anchorPoint='14.55 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=15.1" "by=-1.225" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_3' containerField='body1'/><RigidBody USE='tidal_3_7_4' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j28' containerField='joints' anchorPoint='14.55 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14.55" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_3' containerField='body1'/><RigidBody USE='tidal_3_7_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j29' containerField='joints' anchorPoint='14.55 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=15.1" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_3' containerField='body1'/><RigidBody USE='tidal_3_7_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j30' containerField='joints' anchorPoint='15.1 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14.55" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_4' containerField='body1'/><RigidBody USE='tidal_3_7_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j31' containerField='joints' anchorPoint='15.1 -1.225 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=15.1" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_4' containerField='body1'/><RigidBody USE='tidal_3_7_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j32' containerField='joints' anchorPoint='12.9 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=13.45" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_5' containerField='body1'/><RigidBody USE='tidal_3_7_6' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j33' containerField='joints' anchorPoint='12.9 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=12.9" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_5' containerField='body1'/><RigidBody USE='tidal_3_7_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j34' containerField='joints' anchorPoint='12.9 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=13.45" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_5' containerField='body1'/><RigidBody USE='tidal_3_7_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j35' containerField='joints' anchorPoint='13.45 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=12.9" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_6' containerField='body1'/><RigidBody USE='tidal_3_7_10' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j36' containerField='joints' anchorPoint='13.45 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_6' containerField='body1'/><RigidBody USE='tidal_3_7_7' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j37' containerField='joints' anchorPoint='13.45 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=13.45" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_6' containerField='body1'/><RigidBody USE='tidal_3_7_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j38' containerField='joints' anchorPoint='13.45 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_6' containerField='body1'/><RigidBody USE='tidal_3_7_12' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j39' containerField='joints' anchorPoint='14 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=13.45" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_7' containerField='body1'/><RigidBody USE='tidal_3_7_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j40' containerField='joints' anchorPoint='14 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14.55" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_7' containerField='body1'/><RigidBody USE='tidal_3_7_8' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j41' containerField='joints' anchorPoint='14 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_7' containerField='body1'/><RigidBody USE='tidal_3_7_12' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j42' containerField='joints' anchorPoint='14 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14.55" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_7' containerField='body1'/><RigidBody USE='tidal_3_7_13' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j43' containerField='joints' anchorPoint='14.55 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_8' containerField='body1'/><RigidBody USE='tidal_3_7_12' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j44' containerField='joints' anchorPoint='14.55 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=15.1" "by=-0.675" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_8' containerField='body1'/><RigidBody USE='tidal_3_7_9' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j45' containerField='joints' anchorPoint='14.55 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14.55" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_8' containerField='body1'/><RigidBody USE='tidal_3_7_13' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j46' containerField='joints' anchorPoint='14.55 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=15.1" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_8' containerField='body1'/><RigidBody USE='tidal_3_7_14' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j47' containerField='joints' anchorPoint='15.1 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14.55" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_9' containerField='body1'/><RigidBody USE='tidal_3_7_13' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j48' containerField='joints' anchorPoint='15.1 -0.675 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=15.1" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_9' containerField='body1'/><RigidBody USE='tidal_3_7_14' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j49' containerField='joints' anchorPoint='12.9 -0.125 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=13.45" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_10' containerField='body1'/><RigidBody USE='tidal_3_7_11' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j50' containerField='joints' anchorPoint='13.45 -0.125 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_11' containerField='body1'/><RigidBody USE='tidal_3_7_12' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j51' containerField='joints' anchorPoint='14 -0.125 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=14.55" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_12' containerField='body1'/><RigidBody USE='tidal_3_7_13' containerField='body2'/>
+ </BallJoint>
+ <BallJoint DEF='tidal_3_7_j52' containerField='joints' anchorPoint='14.55 -0.125 0'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_3_7" "type=spring" "bx=15.1" "by=-0.125" "comp=0.012"'/>
+  <RigidBody USE='tidal_3_7_13' containerField='body1'/><RigidBody USE='tidal_3_7_14' containerField='body2'/>
+ </BallJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j2' containerField='joints' anchorPoint='20.8 10.5 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_1' containerField='body1'/><RigidBody USE='tidal_5_7_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j4' containerField='joints' anchorPoint='20.8 9.84 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_3' containerField='body1'/><RigidBody USE='tidal_5_7_1' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j6' containerField='joints' anchorPoint='20.8 9.18 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_5' containerField='body1'/><RigidBody USE='tidal_5_7_3' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j8' containerField='joints' anchorPoint='20.8 8.52 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_7' containerField='body1'/><RigidBody USE='tidal_5_7_5' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j10' containerField='joints' anchorPoint='20.8 7.86 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_9' containerField='body1'/><RigidBody USE='tidal_5_7_7' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j12' containerField='joints' anchorPoint='21.35 10.5 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_11' containerField='body1'/><RigidBody USE='tidal_5_7_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j14' containerField='joints' anchorPoint='21.35 9.84 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_13' containerField='body1'/><RigidBody USE='tidal_5_7_11' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j16' containerField='joints' anchorPoint='21.35 9.18 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_15' containerField='body1'/><RigidBody USE='tidal_5_7_13' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j18' containerField='joints' anchorPoint='21.35 8.52 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_17' containerField='body1'/><RigidBody USE='tidal_5_7_15' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j20' containerField='joints' anchorPoint='21.35 7.86 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_19' containerField='body1'/><RigidBody USE='tidal_5_7_17' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j22' containerField='joints' anchorPoint='21.9 10.5 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_21' containerField='body1'/><RigidBody USE='tidal_5_7_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j24' containerField='joints' anchorPoint='21.9 9.84 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_23' containerField='body1'/><RigidBody USE='tidal_5_7_21' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j26' containerField='joints' anchorPoint='21.9 9.18 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_25' containerField='body1'/><RigidBody USE='tidal_5_7_23' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j28' containerField='joints' anchorPoint='21.9 8.52 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_27' containerField='body1'/><RigidBody USE='tidal_5_7_25' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j30' containerField='joints' anchorPoint='21.9 7.86 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_29' containerField='body1'/><RigidBody USE='tidal_5_7_27' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j32' containerField='joints' anchorPoint='22.45 10.5 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_31' containerField='body1'/><RigidBody USE='tidal_5_7_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j34' containerField='joints' anchorPoint='22.45 9.84 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_33' containerField='body1'/><RigidBody USE='tidal_5_7_31' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j36' containerField='joints' anchorPoint='22.45 9.18 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_35' containerField='body1'/><RigidBody USE='tidal_5_7_33' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j38' containerField='joints' anchorPoint='22.45 8.52 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_37' containerField='body1'/><RigidBody USE='tidal_5_7_35' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j40' containerField='joints' anchorPoint='22.45 7.86 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_39' containerField='body1'/><RigidBody USE='tidal_5_7_37' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j42' containerField='joints' anchorPoint='23 10.5 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_41' containerField='body1'/><RigidBody USE='tidal_5_7_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j44' containerField='joints' anchorPoint='23 9.84 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_43' containerField='body1'/><RigidBody USE='tidal_5_7_41' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j46' containerField='joints' anchorPoint='23 9.18 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_45' containerField='body1'/><RigidBody USE='tidal_5_7_43' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j48' containerField='joints' anchorPoint='23 8.52 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_47' containerField='body1'/><RigidBody USE='tidal_5_7_45' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_5_7_j50' containerField='joints' anchorPoint='23 7.86 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_5_7" "damp=2" "limits=0"'/>
+  <RigidBody USE='tidal_5_7_49' containerField='body1'/><RigidBody USE='tidal_5_7_47' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_12_7_j3' containerField='joints' anchorPoint='47 1.9 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='tidal_12_7_2' containerField='body1'/><RigidBody USE='tidal_12_7_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_12_7_j5' containerField='joints' anchorPoint='48.125 1.9 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='tidal_12_7_4' containerField='body1'/><RigidBody USE='tidal_12_7_2' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_12_7_j7' containerField='joints' anchorPoint='49.25 1.9 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='tidal_12_7_6' containerField='body1'/><RigidBody USE='tidal_12_7_4' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_12_7_j9' containerField='joints' anchorPoint='50.375 1.9 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='tidal_12_7_8' containerField='body1'/><RigidBody USE='tidal_12_7_6' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_12_7_j11' containerField='joints' anchorPoint='51.5 1.9 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='tidal_12_7_10' containerField='body1'/><RigidBody USE='tidal_12_7_8' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_12_7_j13' containerField='joints' anchorPoint='52.625 1.9 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='tidal_12_7_12' containerField='body1'/><RigidBody USE='tidal_12_7_10' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_12_7_j15' containerField='joints' anchorPoint='53.75 1.9 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='tidal_12_7_14' containerField='body1'/><RigidBody USE='tidal_12_7_12' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_12_7_j17' containerField='joints' anchorPoint='54.875 1.9 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='tidal_12_7_16' containerField='body1'/><RigidBody USE='tidal_12_7_14' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_12_7_j18' containerField='joints' anchorPoint='56 1.9 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_12_7" "comp=0.00001" "limits=0"'/>
+  <RigidBody USE='tidal_12_7_16' containerField='body1'/><RigidBody USE='tidal_12_7_1' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_13_7_j2' containerField='joints' anchorPoint='60 8 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "limits=0"'/>
+  <RigidBody USE='tidal_13_7_1' containerField='body1'/><RigidBody USE='tidal_13_7_0' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_13_7_j4' containerField='joints' anchorPoint='60.6638 7.4046 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "limits=0"'/>
+  <RigidBody USE='tidal_13_7_3' containerField='body1'/><RigidBody USE='tidal_13_7_1' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_13_7_j6' containerField='joints' anchorPoint='61.3276 6.8093 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "limits=0"'/>
+  <RigidBody USE='tidal_13_7_5' containerField='body1'/><RigidBody USE='tidal_13_7_3' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_13_7_j8' containerField='joints' anchorPoint='61.9914 6.2139 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "limits=0"'/>
+  <RigidBody USE='tidal_13_7_7' containerField='body1'/><RigidBody USE='tidal_13_7_5' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_13_7_j10' containerField='joints' anchorPoint='62.6551 5.6185 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "limits=0"'/>
+  <RigidBody USE='tidal_13_7_9' containerField='body1'/><RigidBody USE='tidal_13_7_7' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_13_7_j12' containerField='joints' anchorPoint='63.3189 5.0232 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "limits=0"'/>
+  <RigidBody USE='tidal_13_7_11' containerField='body1'/><RigidBody USE='tidal_13_7_9' containerField='body2'/>
+ </SingleAxisHingeJoint>
+ <SingleAxisHingeJoint DEF='tidal_13_7_j14' containerField='joints' anchorPoint='63.9827 4.4278 0' axis='0 0 1'>
+  <MetadataString containerField='metadata' name='flop' value='"part=tidal_13_7" "limits=0"'/>
+  <RigidBody USE='tidal_13_7_13' containerField='body1'/><RigidBody USE='tidal_13_7_11' containerField='body2'/>
+ </SingleAxisHingeJoint>
+</RigidBodyCollection>
+<ProximitySensor DEF='cp_feel_z0' center='-5 0.5 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=0 Feel" "part=cp_feel"'/></ProximitySensor>
+<ProximitySensor DEF='tidal_1_7_z0' center='1 9 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=TIDAL CONSERVATORY" "text=Authored seed 7. Export X3D to keep the exact generated layout." "part=tidal_1_7"'/></ProximitySensor>
+<ProximitySensor DEF='cp_soft_z0' center='10 0.5 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=3 Compliance" "part=cp_soft"'/></ProximitySensor>
+<ProximitySensor DEF='tidal_4_7_z0' center='22 4 0' size='3.4 11 2'><MetadataString containerField='metadata' name='flop' value='"kind=fan" "fx=2.878e-15" "fy=47" "angle=90" "part=tidal_4_7"'/></ProximitySensor>
+<ProximitySensor DEF='cp_fields_z0' center='18 0.5 0' size='2 4 2'><MetadataString containerField='metadata' name='flop' value='"kind=checkpoint" "name=4 Fields" "part=cp_fields"'/></ProximitySensor>
+<ProximitySensor DEF='tidal_6_7_z3' center='38 -2.4 0' size='15 3.6 2'><MetadataString containerField='metadata' name='flop' value='"kind=water" "part=tidal_6_7"'/></ProximitySensor>
+<ProximitySensor DEF='tidal_15_7_z0' center='8 1.5 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=tidal_15_7"'/></ProximitySensor>
+<ProximitySensor DEF='tidal_16_7_z0' center='14 1.5 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=tidal_16_7"'/></ProximitySensor>
+<ProximitySensor DEF='tidal_17_7_z0' center='22 7 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=tidal_17_7"'/></ProximitySensor>
+<ProximitySensor DEF='tidal_18_7_z0' center='38 1.5 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=tidal_18_7"'/></ProximitySensor>
+<ProximitySensor DEF='tidal_19_7_z0' center='53 4 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=tidal_19_7"'/></ProximitySensor>
+<ProximitySensor DEF='tidal_20_7_z0' center='67 5 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=star" "part=tidal_20_7"'/></ProximitySensor>
+<ProximitySensor DEF='tidal_21_7_z0' center='31 13 0' size='1 1 2'><MetadataString containerField='metadata' name='flop' value='"kind=label" "title=FORCES DO NOT KNOW YOUR INTENT" "text=Compare upright and limp flight. Change softness or mass independently, then export your experiment." "part=tidal_21_7"'/></ProximitySensor>
+</Scene>
+</X3D>

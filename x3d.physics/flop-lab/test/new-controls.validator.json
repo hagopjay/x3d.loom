@@ -1,0 +1,35 @@
+{
+  "schema": "flop-lab.validator-adapter-controls/1",
+  "python": "3.12.14",
+  "tool_sha256": "6ce3add1a2f89efb2d81b0f24d1d7ee358d594ddaf8c080fe89ca9979c241b45",
+  "passed": 4,
+  "controls": [
+    {
+      "id": "healthy_repaired_scene",
+      "pass": true,
+      "status": "pass"
+    },
+    {
+      "id": "foreign_loaded_module_refused",
+      "pass": true,
+      "status": "error",
+      "diagnostic": "MCP_NAMESPACE_CONFLICT: validation"
+    },
+    {
+      "id": "declared_input_cap_is_not_a_pass",
+      "pass": true,
+      "status": "not_run",
+      "bytes": 2097153
+    },
+    {
+      "id": "changed_validator_source_refused",
+      "pass": true,
+      "status": "error",
+      "diagnostic": "MCP_FILE_DRIFT: src/validation/semantic.py"
+    }
+  ],
+  "limitations": [
+    "One local Python runtime; no renderer, browser, MCP transport or formal Loom acceptance ran.",
+    "These controls test the named adapter boundaries; they do not prove all XML or upstream semantic behavior."
+  ]
+}

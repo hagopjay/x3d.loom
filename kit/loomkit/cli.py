@@ -66,14 +66,16 @@ def cmd_pagetraps(a) -> dict:
     """Page traps over a study's JavaScript: the X_ITE runtime contracts the Loom has paid for (law 32)."""
     root = Path(a.root)
     subject = candidate(root)["sha256"]
-    rows, errors, warnings, seen = {}, 0, 0, {"field_callbacks": 0, "world_loads": 0, "inline_scripts": 0}
+    rows, errors, warnings, seen = {}, 0, 0, {"field_callbacks": 0, "world_loads": 0, "inline_scripts": 0, "sim_units": 0}
     for f in _files(root, a.files):
         text, rel = f.read_text(encoding="utf-8"), f.relative_to(root).as_posix()
         if f.suffix.lower() in (".html", ".htm"):
             hits, code = pagetraps.check_html(text, rel), pagetraps.scripts_view(text)
             seen["inline_scripts"] += len(pagetraps.inline_scripts(text))
+            seen["sim_units"] += pagetraps.sim_units(text, html=True)
         else:
             hits, code = pagetraps.check(text, rel), text
+            seen["sim_units"] += pagetraps.sim_units(text)
         for k, v in pagetraps.inventory(code).items():
             seen[k] += v
         rows[rel] = [h.__dict__ for h in hits]
@@ -84,7 +86,7 @@ def cmd_pagetraps(a) -> dict:
                          measurements={"files": len(rows), "errors": errors, "warnings": warnings, "seen": seen, "hits": rows},
                          coverage={"rules": len(pagetraps.RULES)},
                          limitations=["Static pattern reading of page JavaScript; a clean result means none of these known traps is present, not that the page behaves correctly.",
-                                      "Reads .js files and the inline <script> blocks of .html files listed in --files; 'seen' counts the field callbacks and world loads it read (zero means the X_ITE rules had nothing to judge).",
+                                      "Reads .js files and the inline <script> blocks of .html files listed in --files; 'seen' counts the field callbacks and world loads it read (zero means the X_ITE rules had nothing to judge), and sim_units, the files and inline scripts that declare // loom:sim (zero means sim-nonportable-math judged nothing: a deterministic simulation must be marked to be held to it).",
                                       "Rules are labelled with the runtime they were observed on (X_ITE 16.5.1 unless stated)."])
 
 
