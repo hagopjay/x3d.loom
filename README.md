@@ -9,6 +9,7 @@ The X3D Loom, consolidated: one definition, its sources, what the other model's 
 | [SCIENCE-PLAYBOOK.md](SCIENCE-PLAYBOOK.md) | **For science- and maths-intensive studies.** The order of work, nine witness patterns (exact references and exact discrete identities, convergence, invariants vs events, measured claims, controls that must fail, the display chain, cross-implementation, reproducibility, units), a numerics cheat-sheet, the builder and page skeleton, and the study card (`kit/templates/SCIENCE-STUDY-CARD.md`) |
 | [SOURCES.md](SOURCES.md) | Every input, what it gave, how it was read, and the 14 places sources disagree, each with its resolution |
 | [LEARNINGS-from-patches.md](LEARNINGS-from-patches.md) | The seven patches and the Loomsong v1 → v4 history, turned into 25 reusable rules |
+| [LEARNINGS-mathlab.md](LEARNINGS-mathlab.md) | The Math Lab launch: a dependency major version, float-hash identity across runtimes, an overlay hiding a validated scene, Pyodide on a static host |
 | [GLOSSARY.md](GLOSSARY.md) | The words |
 | [REVIEW-loom2.md](REVIEW-loom2.md) | Review of the 4 Nov delivery: Cabinet of Worlds, Linked Observatory, Living Archive, Constellation 3 |
 | [REVIEW-scientific.md](REVIEW-scientific.md) | Review of the first x3d.STEM delivery, the Scientific Loom Observatory: measurements, six findings, the hardening patch, 13 lessons |
