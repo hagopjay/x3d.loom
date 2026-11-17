@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#091216">
+  <title>Loom · Decision Observatory</title>
+  <link rel="stylesheet" href="/vendor/x_ite/x_ite.css">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/vendor/x_ite/x_ite.min.js"></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#controls">Skip to controls</a>
+  <header class="masthead">
+    <a class="brand" href="/" aria-label="Loom Decision Observatory home">
+      <svg class="brand-mark" viewBox="0 0 42 42" aria-hidden="true"><path d="M7 7v28M21 7v28M35 7v28M7 7l28 14L7 35M7 21l28 14M7 7l28 28"/><circle cx="7" cy="7" r="2.7"/><circle cx="35" cy="21" r="2.7"/><circle cx="7" cy="35" r="2.7"/></svg>
+      <span><strong>LOOM</strong><span class="brand-sub">DECISION OBSERVATORY <b>/ 01</b></span></span>
+    </a>
+    <p class="masthead-statement">Change the judgment.<br><em>Keep the proof obligations.</em></p>
+    <nav aria-label="Observatory actions"><button class="quiet" id="help-open">How to explore <span aria-hidden="true">↗</span></button><button id="export-top" class="export" disabled>Export rehearsal <span aria-hidden="true">↓</span></button></nav>
+  </header>
+
+  <div class="mode-bar" role="note"><span class="mode-dot" aria-hidden="true"></span><strong>OFFLINE REHEARSAL</strong><span class="mode-divider">/</span><span>ZERO MODEL CALLS</span><span class="mode-divider">/</span><span>NOT RELEASE EVIDENCE</span><span class="mode-tail">X3D × typed judgments × inspectable decisions</span></div>
+
+  <main class="workspace">
+    <aside class="controls panel" id="controls" aria-label="Rehearsal controls">
+      <div class="panel-heading"><span class="eyebrow">01 / SET THE EXPERIMENT</span><span class="tiny-token">LOCAL</span></div>
+      <h1>A scene. <br>A choice. <br><em>A fixed contract.</em></h1>
+      <p class="intro">Explore how a typed judgment can guide attention while exact instruments retain their own authority.</p>
+
+      <label class="field-label" for="scenario">Scene specimen <span>01</span></label>
+      <select id="scenario" disabled><option>Loading specimens…</option></select>
+      <p id="scenario-description" class="field-note">Reading the local catalogue.</p>
+
+      <label class="field-label" for="profile">Witness profile <span>02</span></label>
+      <select id="profile" disabled><option>Loading profiles…</option></select>
+      <p class="field-note">The profile determines what evidence is required. The synthetic answer does not.</p>
+
+      <div class="control-separator"></div>
+      <div class="field-label slider-label"><label for="probability">P(continue)</label><span class="synthetic-badge">SYNTHETIC</span></div>
+      <div class="big-reading"><output id="probability-value" for="probability">0.85</output><span id="probability-caption">authored continue input<br>calibration unmeasured</span></div>
+      <input id="probability" type="range" min="0" max="1" step="0.01" value="0.85" aria-describedby="probability-caption" disabled>
+      <div class="range-endpoints"><span>0.00</span><span>1.00</span></div>
+      <div class="presets" role="group" aria-label="Synthetic probability presets"><button data-p="0.20" disabled>Low <b>.20</b></button><button data-p="0.80" disabled>Boundary <b>.80</b></button><button data-p="0.98" disabled>High <b>.98</b></button></div>
+
+      <div class="threshold-row"><label for="threshold">Action threshold</label><output id="threshold-value" for="threshold">0.80</output></div>
+      <input id="threshold" type="range" min="0" max="1" step="0.01" value="0.80" disabled>
+      <p class="field-note">A policy bar, not a measured accuracy claim.</p>
+      <button class="primary" id="rehearse" disabled><span>Rehearse this decision</span><span aria-hidden="true">→</span></button>
+      <p class="run-state" id="run-state" role="status" aria-live="polite">Starting the offline observatory…</p>
+
+      <div class="margin-note"><span class="margin-number">J ≠ W</span><p>A judgment may suggest the next check. It cannot create a witness or certify a release.</p></div>
+    </aside>
+
+    <section class="center-column" aria-label="Scene and observation workbench">
+      <div class="viewport-card panel">
+        <div class="viewport-heading"><div><span class="eyebrow">02 / INSPECT THE CANDIDATE</span><h2 id="scene-title">Loading the specimen</h2></div><button class="icon-button" id="reset-view" aria-label="Reset the 3D preview camera" title="Reset preview camera" disabled>↺</button></div>
+        <div class="viewport" id="viewport">
+          <div class="viewport-grid" aria-hidden="true"></div>
+          <x3d-canvas id="scene" splashScreen="false" contextMenu="false" aria-label="Illustrative local X3D scene preview"></x3d-canvas>
+          <div class="viewport-topline"><span class="preview-tag"><i></i>LOCAL X3D PREVIEW</span><span id="renderer-state">Checking renderer</span></div>
+          <div id="preview-fallback" class="preview-fallback" hidden><span class="fallback-symbol" aria-hidden="true">◇</span><strong>The rehearsal remains open.</strong><p>No renderer is available: this browser has no usable WebGL context, or the optional X_ITE files have not been fetched (<code>python3 tools/fetch_renderer.py</code>). Exact observations, witness planning and synthetic routing still work.</p></div>
+          <div class="viewport-bottomline"><span>Drag to orbit · wheel to zoom</span><span>Preview ≠ render witness</span></div>
+        </div>
+        <div class="candidate-strip"><span><span class="dot" aria-hidden="true"></span> CANDIDATE <code id="candidate-hash">—</code></span><span id="candidate-bytes">— bytes</span></div>
+      </div>
+
+      <div class="metric-grid" aria-label="Rehearsal summary">
+        <article class="metric"><span class="eyebrow">EXACT ANSWERS</span><div><strong id="exact-count">—</strong><span>computed locally</span></div></article>
+        <article class="metric"><span class="eyebrow">WITNESS GAP</span><div><strong id="gap-count">—</strong><span>required / not run</span></div></article>
+        <article class="metric route-metric"><span class="eyebrow">ADVISORY ROUTE</span><div><strong id="route-short">—</strong><span>synthetic / grade S</span></div></article>
+      </div>
+
+      <section class="details-card panel" aria-label="Inspectable rehearsal details">
+        <div class="tab-bar" role="tablist" aria-label="Inspection views"><button role="tab" id="tab-evidence" aria-controls="panel-evidence" aria-selected="true" tabindex="0" data-tab="evidence">Observations</button><button role="tab" id="tab-slice" aria-controls="panel-slice" aria-selected="false" tabindex="-1" data-tab="slice">State slice</button><button role="tab" id="tab-source" aria-controls="panel-source" aria-selected="false" tabindex="-1" data-tab="source">Scene source</button><button role="tab" id="tab-receipt" aria-controls="panel-receipt" aria-selected="false" tabindex="-1" data-tab="receipt">Receipt <span aria-hidden="true">↙</span></button></div>
+        <div id="panel-evidence" class="tab-panel" role="tabpanel" aria-labelledby="tab-evidence">
+          <div class="section-intro"><span class="eyebrow">CODE OBSERVES / A MODEL DOES NOT CERTIFY</span><p>Read the scope of each local observation. These checks do not stand in for the required Loom instruments.</p></div>
+          <div id="observations" class="observations"><p class="empty">Local observations will appear here.</p></div>
+          <details class="exact-details"><summary>Computed D-class answers <span id="exact-detail-count"></span></summary><div class="table-wrap"><table><thead><tr><th>Question</th><th>Answer</th><th>Origin</th></tr></thead><tbody id="exact-answers"></tbody></table></div></details>
+        </div>
+        <div id="panel-slice" class="tab-panel" role="tabpanel" aria-labelledby="tab-slice" hidden><div class="section-intro"><span class="eyebrow">THE STATE ACTUALLY USED</span><p>Computed facets, trust boundaries and any budget omissions remain inspectable.</p></div><pre id="slice-text" class="code-block" tabindex="0">No state slice yet.</pre></div>
+        <div id="panel-source" class="tab-panel" role="tabpanel" aria-labelledby="tab-source" hidden><div class="section-intro"><span class="eyebrow">THE CANDIDATE AS WRITTEN</span><p>Only the listed local specimens are rendered. Scene text below is displayed as text.</p></div><pre id="source-text" class="code-block" tabindex="0">Select a specimen to inspect its source.</pre></div>
+        <div id="panel-receipt" class="tab-panel" role="tabpanel" aria-labelledby="tab-receipt" hidden><div class="section-intro receipt-intro"><div><span class="eyebrow">REHEARSAL / NOT A LOOM ACCEPTANCE RECEIPT</span><p>Hashes bind this record to bytes and settings; they do not confer authority.</p></div><button id="export-detail" class="quiet" disabled>Export JSON ↓</button></div><dl class="binding-list" id="bindings"></dl><pre id="receipt-text" class="code-block" tabindex="0">No rehearsal receipt yet.</pre></div>
+      </section>
+      <div class="error-banner" id="error" role="alert" hidden></div>
+    </section>
+
+    <aside class="proof-column" aria-label="Advisory and witness requirements">
+      <section class="advisory-card panel">
+        <div class="panel-heading"><span class="eyebrow">03 / READ THE ADVISORY</span><span class="synthetic-badge">GRADE S</span></div>
+        <h2>Attention can move.<br><em>Authority stays put.</em></h2>
+        <p id="question-text" class="question-text">A synthetic typed answer will be routed by the selected policy.</p>
+        <div class="advisory-choice"><span id="answer-choice">—</span><span class="probability-pill" id="answer-probability">p —</span></div>
+        <div id="route-card" class="route-card"><span class="route-arrow" aria-hidden="true">↗</span><div><strong id="route-label">Waiting for a rehearsal</strong><p id="route-reason">No model has been queried.</p></div></div>
+        <dl class="advisory-facts"><div><dt>Selected-option probability</dt><dd id="advisory-p">—</dd></div><div><dt>Concentration statistic</dt><dd id="advisory-confidence">—</dd></div><div><dt>Calibration on X3D</dt><dd class="unmeasured">Unmeasured</dd></div></dl>
+      </section>
+
+      <section class="witness-card panel">
+        <div class="panel-heading"><span class="eyebrow">04 / THE PROOF OBLIGATIONS</span><span class="count-token" id="required-token">—</span></div>
+        <h2>Required stays required.</h2>
+        <p class="witness-explainer">The queue may reorder. Its membership and missing evidence do not disappear. Order uses authored teaching weights, not measured risk.</p>
+        <ol id="witness-queue" class="witness-queue"><li class="empty">Reading the witness profile.</li></ol>
+        <div class="eligibility"><span aria-hidden="true">⊘</span><div><strong>Not eligible for acceptance</strong><p>This local rehearsal cannot mint production witness records.</p></div></div>
+      </section>
+
+      <section class="invariant-card panel">
+        <div class="panel-heading"><span class="eyebrow">NONINTERFERENCE CHECK</span><span class="invariant-symbol" id="invariant-symbol" aria-hidden="true">=</span></div>
+        <h2 id="invariant-title">Same obligations.<br>Different advice.</h2>
+        <p id="invariant-detail">The offline sweep checks that changing synthetic judgments leaves the required witness set and acceptance eligibility unchanged.</p>
+        <div class="invariant-bottom"><span id="invariant-cases">— cases</span><span id="invariant-state">Waiting</span></div>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="site-footer"><span>LOOM / OBSERVABLE BY CONSTRUCTION</span><p>JEV-inspired concepts. Local synthetic inputs. No vendor API, credentials or model output. <a href="/field-guide.html">Read the field guide ↗</a></p><span id="receipt-hash">REHEARSAL —</span></footer>
+
+  <dialog id="help-dialog" aria-labelledby="help-title"><div class="help-heading"><span class="eyebrow">A SMALL EXPERIMENT WITH A HARD BOUNDARY</span><button id="help-close" class="icon-button" aria-label="Close exploration guide">×</button></div><h2 id="help-title">Learn by changing<br><em>one thing at a time.</em></h2><ol class="help-steps"><li><strong>Choose a specimen.</strong><span>Inspect the authored X3D, local exact observations and the selected witness profile.</span></li><li><strong>Move the synthetic probability.</strong><span>Compare .20, .80 and .98. Watch the advisory route and witness queue. This is a policy rehearsal, not a calibration measurement.</span></li><li><strong>Watch what stays fixed.</strong><span>The candidate identity, required witness membership and ineligible acceptance status must survive the probability sweep.</span></li><li><strong>Inspect the seams.</strong><span>Open the state slice, source and receipt. A passing XML observation does not establish visibility, semantic correctness or a required instrument result.</span></li><li><strong>Keep the record.</strong><span>Export JSON to compare candidate, question, slice, policy and instrument identities. No record here is a Loom release receipt.</span></li></ol><p class="help-footer">No JEV API is needed. A future backend can supply typed answers only after its response contract and calibration are measured; it still cannot replace required witnesses.</p></dialog>
+</body>
+</html>

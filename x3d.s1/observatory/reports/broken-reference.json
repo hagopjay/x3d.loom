@@ -1,0 +1,420 @@
+{
+  "schema": "x3d.s1.rehearsal/1",
+  "hash_profile": "x3d.s1.rehearsal-c14n/1",
+  "mode": "synthetic",
+  "acceptance_eligible": false,
+  "model_calls": 0,
+  "candidate": {
+    "id": "broken-reference",
+    "title": "The missing bearing",
+    "sha256": "0ed5836be6cecba9430bcb0349597bf9f51824c36cbbbf71d16ddddf30e056a3",
+    "bytes": 18317,
+    "uri": "/scenes/broken-reference.x3d",
+    "synthetic": true
+  },
+  "profile": {
+    "id": "preview",
+    "label": "Preview rehearsal",
+    "scope": "Prospective rehearsal requirements; not a registered Loom release profile."
+  },
+  "inputs": {
+    "scene_id": "broken-reference",
+    "profile_id": "preview",
+    "p": 0.85,
+    "threshold": 0.8
+  },
+  "summary": {
+    "xml_parse": "passed",
+    "exact_count": 8,
+    "required_count": 3,
+    "outstanding_count": 3,
+    "advisory_route": "suspected_ok"
+  },
+  "observations": [
+    {
+      "id": "xml_parse",
+      "label": "XML parse",
+      "status": "pass",
+      "scope": "Well-formed X3D XML root only; not XSD conformance.",
+      "detail": "18,317 bytes parsed locally."
+    },
+    {
+      "id": "reference_inventory",
+      "label": "Source references",
+      "status": "fail",
+      "scope": "Document-order DEF/USE names and ROUTE node names; no PROTO scopes or field-signature validation.",
+      "detail": "2 finding(s); 24 DEF declarations, 35 USE declarations, 3 ROUTEs.",
+      "findings": [
+        {
+          "code": "missing_or_forward_use",
+          "ordinal": 186,
+          "name": "MissingBearingHousing"
+        },
+        {
+          "code": "missing_route_node",
+          "route": 2,
+          "field": "toNode",
+          "name": "MissingRotorController"
+        }
+      ]
+    },
+    {
+      "id": "text_separation",
+      "label": "Text boundary",
+      "status": "pass",
+      "scope": "Authored scene text is excluded from the synthetic question state; lint is a pattern screen, not an injection proof.",
+      "detail": "0 instruction-pattern field(s) observed; no free scene text sent to a model.",
+      "findings": []
+    }
+  ],
+  "declarations": {
+    "hidden_switches": 0,
+    "zero_scale_transforms": 0,
+    "geometry_declarations": 38,
+    "instruction_pattern_fields": 0
+  },
+  "exact_answers": [
+    {
+      "id": "scene.has_lights",
+      "class": "D",
+      "source": "exact",
+      "route": "resolve_by_code",
+      "twin": "state.lighting.light_count",
+      "noul": 1.0
+    },
+    {
+      "id": "scene.uses_remote_refs",
+      "class": "D",
+      "source": "exact",
+      "route": "resolve_by_code",
+      "twin": "state.refs.has_remote_refs",
+      "noul": 0.0
+    },
+    {
+      "id": "scene.has_viewpoint",
+      "class": "D",
+      "source": "exact",
+      "route": "resolve_by_code",
+      "twin": "state.view.viewpoints",
+      "noul": 1.0
+    },
+    {
+      "id": "scene.has_scripts",
+      "class": "D",
+      "source": "exact",
+      "route": "resolve_by_code",
+      "twin": "state.behavior.scripts",
+      "noul": 0.0
+    },
+    {
+      "id": "scene.is_animated",
+      "class": "D",
+      "source": "exact",
+      "route": "resolve_by_code",
+      "twin": "state.behavior.timers + interpolators",
+      "noul": 1.0
+    },
+    {
+      "id": "scene.material_model",
+      "class": "D",
+      "source": "exact",
+      "route": "resolve_by_code",
+      "twin": "state.appearance.material_model",
+      "choice": "classic",
+      "p": 1.0,
+      "confidence": 1.0
+    },
+    {
+      "id": "scene.size_class",
+      "class": "D",
+      "source": "exact",
+      "route": "resolve_by_code",
+      "twin": "state.census.size",
+      "choice": "small",
+      "p": 1.0,
+      "confidence": 1.0
+    },
+    {
+      "id": "scene.profile",
+      "class": "D",
+      "source": "exact",
+      "route": "resolve_by_code",
+      "twin": "state.header.profile",
+      "choice": "Immersive",
+      "p": 1.0,
+      "confidence": 1.0
+    }
+  ],
+  "required_witnesses": [
+    {
+      "id": "render_nonblank",
+      "label": "Rendered visibility",
+      "status": "not_run",
+      "reason": "A renderer instrument must capture a pinned camera/viewport and apply declared nonblank tests.",
+      "priority": 0.865,
+      "estimated_cost_units": 1.0,
+      "priority_scope": "Authored unitless teaching weights; not measured time or risk."
+    },
+    {
+      "id": "xsd",
+      "label": "X3D schema",
+      "status": "not_run",
+      "reason": "A complete pinned XSD validator must inspect these candidate bytes.",
+      "priority": 0.2,
+      "estimated_cost_units": 1.0,
+      "priority_scope": "Authored unitless teaching weights; not measured time or risk."
+    },
+    {
+      "id": "semantic",
+      "label": "X3D semantics",
+      "status": "not_run",
+      "reason": "Run the complete pinned semantic gate; this local reference inventory is narrower.",
+      "priority": 0.146667,
+      "estimated_cost_units": 1.5,
+      "priority_scope": "Authored unitless teaching weights; not measured time or risk."
+    }
+  ],
+  "advisory": {
+    "source": "synthetic",
+    "grade": "S",
+    "question": {
+      "id": "rehearsal.investigation_order",
+      "text": "Which investigation path should be considered first? This is an authored routing exercise, not a judgment of scene validity.",
+      "options": {
+        "continue": "Consider the visual inspection path first; all required witnesses remain required.",
+        "inspect": "Consider the structural inspection path first; all required witnesses remain required."
+      }
+    },
+    "synthetic_continue_probability": 0.85,
+    "answer": {
+      "choice": "continue",
+      "p": 0.85,
+      "probabilities": {
+        "continue": 0.85,
+        "inspect": 0.15000000000000002
+      },
+      "confidence": 0.7
+    },
+    "route": {
+      "outcome": "suspected_ok",
+      "reason": "p=0.850 meets the low-stakes bar 0.80",
+      "p": 0.85,
+      "bar": 0.8,
+      "floor": 0.5,
+      "option": "continue"
+    },
+    "calibration": "unmeasured",
+    "scope": "Authored counterfactual distribution. No Jev response, measured accuracy, gate verdict or release authorization."
+  },
+  "state_slice": {
+    "state": {
+      "header": {
+        "version": "4.0",
+        "profile": "Immersive",
+        "components": [],
+        "meta_keys": [
+          "generator"
+        ]
+      },
+      "census": {
+        "elements": 184,
+        "size": "small",
+        "distinct_types": 17,
+        "max_depth": 6,
+        "defs": 24,
+        "uses": 35,
+        "top_types": {
+          "Transform": 47,
+          "Shape": 40,
+          "Appearance": 39,
+          "Cylinder": 27,
+          "Box": 10,
+          "Material": 6,
+          "ROUTE": 3,
+          "DirectionalLight": 2,
+          "IndexedFaceSet": 2,
+          "WorldInfo": 1,
+          "Background": 1,
+          "NavigationInfo": 1
+        }
+      },
+      "geometry": {
+        "shapes": 40,
+        "geometry_types": {
+          "Box": 10,
+          "Cylinder": 27,
+          "IndexedFaceSet": 2
+        },
+        "vertices": 256,
+        "vertices_bucket": "small",
+        "geo_nodes": 0
+      },
+      "appearance": {
+        "material_model": "classic",
+        "materials": {
+          "Material": 6
+        },
+        "textures": {},
+        "shader_nodes": 0,
+        "transparent_materials": 0,
+        "diffuse_color_names": {
+          "black": 2,
+          "dark cyan": 2,
+          "orange": 1,
+          "green": 1
+        }
+      },
+      "lighting": {
+        "lights": {
+          "DirectionalLight": 2,
+          "PointLight": 1
+        },
+        "light_count": 3,
+        "headlight": false,
+        "has_scene_lights": true
+      },
+      "behavior": {
+        "routes": 3,
+        "scripts": 0,
+        "script_languages": {},
+        "protos": 0,
+        "timers": 1,
+        "interpolators": 1,
+        "sensors": 1,
+        "physics_nodes": 0,
+        "sequencers": 0
+      },
+      "refs": {
+        "url_refs": 0,
+        "url_schemes": {},
+        "has_remote_refs": false
+      },
+      "view": {
+        "viewpoints": 1,
+        "navigation_types": [
+          "ANY",
+          "EXAMINE"
+        ]
+      }
+    },
+    "meta": {
+      "facets": [
+        "header",
+        "census",
+        "geometry",
+        "appearance",
+        "lighting",
+        "behavior",
+        "refs",
+        "view"
+      ],
+      "bytes": 1098,
+      "raw_bytes": 18317,
+      "ratio": 16.68,
+      "scene_sha256": "0ed5836be6cecba9430bcb0349597bf9f51824c36cbbbf71d16ddddf30e056a3",
+      "untrusted_included": false,
+      "excluded_untrusted": [],
+      "dropped_for_budget": [],
+      "budget_bytes": 12000
+    }
+  },
+  "noninterference": {
+    "checked": true,
+    "cases": 11,
+    "requirements_unchanged": true,
+    "acceptance_eligible_unchanged": true,
+    "scope": "Counterfactual planner check; not a proof of the complete external Loom kit."
+  },
+  "bindings": {
+    "candidate_sha256": "0ed5836be6cecba9430bcb0349597bf9f51824c36cbbbf71d16ddddf30e056a3",
+    "question_sha256": "a5716e7d56adea502fb8d1a08ef15e6435361251fb1d2e95aa4489b30546a544",
+    "state_sha256": "119629941d6acf609975c6979c1f2810579c936aef51af2d0f575f36b278e357",
+    "policy_sha256": "5c2b0fe224235581cd83f86d91a34a9499c52dcc3427756ffb182783cba1eb85",
+    "instrument_sha256": "93c7a98d7e0b9109dd67b535d5b25c4a7b9b37489394fba262742dce48b2a1f3"
+  },
+  "instrument": {
+    "name": "offline declaration inspector and rehearsal planner",
+    "code_sha256": "93c7a98d7e0b9109dd67b535d5b25c4a7b9b37489394fba262742dce48b2a1f3",
+    "files": {
+      "observatory/rehearsal.py": "dd7a65244f4dd1022bbfc9d147b1b5e821cf7c26de681f29de810a87a0a45bf8",
+      "observatory/server.py": "61452b42ed621b0c7fa12f30893663759bd5695419af1b42f27a99c9cbd49b3d",
+      "x3d_s1/__init__.py": "635b658659a75a1c4d15455b84e423bc299d6bce76feb4baa79089747b39806c",
+      "x3d_s1/__main__.py": "bba1d664f0a9f243deba8e7f768973c300f7d4f64a3176f21143a7134aed67b9",
+      "x3d_s1/backends.py": "f1d31826cee820e34e492cb70c9aafd41db2aa558b0083ca3e6c3e25c1e55fd0",
+      "x3d_s1/buckets.py": "dbb15b239c5dc9e6d8070646e9cc70bc14882ce389b71af0b81577de3944522d",
+      "x3d_s1/calibration.py": "8d607cf13feda5e4231749a36519ac8f491ef0dc674b498028218b451753a75a",
+      "x3d_s1/confidence.py": "982f339fee6aa55ac4570dc97a1b94c5e1995a4826ea71b364a13e339830bc9d",
+      "x3d_s1/consistency.py": "9a777f5c44aa2c44aa3c9ac9a05138bf0f99715a16284ec650beb917fc690538",
+      "x3d_s1/decidable.py": "f580462d2d9d20265e8ef08475b7868eac2bca0578706fbcaca1a04c945f6432",
+      "x3d_s1/evidence.py": "4a2269c6aa1b781b52b6ad7a8dadb134df537525e4cd4bef9ebb2462035dd801",
+      "x3d_s1/hierarchy.py": "4002492259e6d5e725c8307a131181bfda3b16ab75f9d7b23bd76adeaea2bc15",
+      "x3d_s1/pipeline.py": "e89ea7f4657ae6afe836d9e9aa670c276f21b3a13c49b396d563541bb2ca35d6",
+      "x3d_s1/questions.py": "47f645f8a005b07512b8a8f4caded703c73b7ccd2f4da67e2b84f0b5c9cd36ec",
+      "x3d_s1/routing.py": "166dbfc5d02bb550add7c283e3a8baa3b5c6f6871bf3234210655a9eab452fe0",
+      "x3d_s1/state.py": "9156b122b4db50ae4a9cb2f8e3b7e32fab9f242dfb92ff164f0b7f130ad7e073",
+      "x3d_s1/untrusted.py": "046d8b79b3ab3b72ac24b39bc7237d3d4aada69d959cece6e166d932ba4666f1"
+    },
+    "runtime": "Python 3.13.18",
+    "scope": "Code identity and self-consistency, not authenticated instrument authority."
+  },
+  "policy": {
+    "profile_id": "preview",
+    "floor": 0.5,
+    "threshold": 0.8,
+    "actions": {
+      "continue": {
+        "action": "prioritize_continue",
+        "stakes": "low",
+        "min_p": 0.8,
+        "never_auto": false
+      },
+      "inspect": {
+        "action": "prioritize_inspect",
+        "stakes": "low",
+        "min_p": 0.8,
+        "never_auto": false
+      }
+    },
+    "required": [
+      "xsd",
+      "semantic",
+      "render_nonblank"
+    ]
+  },
+  "timeline": [
+    {
+      "stage": "01",
+      "label": "Bind candidate",
+      "status": "observed",
+      "detail": "Read fixture bytes once and bind all local observations to their full SHA-256."
+    },
+    {
+      "stage": "02",
+      "label": "Answer declarations",
+      "status": "observed",
+      "detail": "Answer D questions locally; inspect a narrower source-reference inventory."
+    },
+    {
+      "stage": "03",
+      "label": "Rehearse attention",
+      "status": "synthetic",
+      "detail": "Move authored probabilities to change advisory routing and witness order."
+    },
+    {
+      "stage": "04",
+      "label": "Collect actual witnesses",
+      "status": "not_run",
+      "detail": "Every prospective external witness remains outstanding."
+    }
+  ],
+  "limitations": [
+    "No model was called. The synthetic probabilities do not measure Jev or any other model.",
+    "All prospective witness requirements remain not_run. This record cannot certify an artifact.",
+    "Declarations are read from source XML; PROTO expansion, Inline resources, scripts and event execution are unresolved.",
+    "The browser viewport is an illustrative preview, not a candidate-bound render witness or a blank-frame measurement.",
+    "Authored scheduling weights are unitless teaching values, not measured latency or learned fault likelihood.",
+    "Full hashes and successful replay establish self-consistency, not authenticity or independent instrument provenance.",
+    "The attached corpus measurements and pull-request states are historical snapshots; this run does not refresh them."
+  ],
+  "receipt_sha256": "e18a9eb9a468acb12192db96f4bea51178644f99eb8d546babd4ca7bac2dd587"
+}

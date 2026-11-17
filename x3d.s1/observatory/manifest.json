@@ -1,0 +1,74 @@
+[
+  {
+    "id": "clean-rig",
+    "title": "The proof bench",
+    "description": "Authored teal ceramic and bronze mechanism with a slow wheel, local geometry and valid local references.",
+    "uri": "/scenes/clean-rig.x3d",
+    "expected": {
+      "xml_parse": true,
+      "reference_audit": "pass",
+      "visibility_lesson": "The bench is authored to be visible under the supplied camera and lights. A renderer must actually run before visibility can be recorded."
+    },
+    "synthetic": true
+  },
+  {
+    "id": "hidden-switch",
+    "title": "The hidden bench",
+    "description": "The same bench remains in the XML but all geometry is beneath a disabled Switch.",
+    "uri": "/scenes/hidden-switch.x3d",
+    "expected": {
+      "xml_parse": true,
+      "reference_audit": "pass",
+      "visibility_lesson": "The authored expectation is a uniform background: Switch whichChoice=-1 selects no geometry. XML parsing and local references alone cannot certify visibility."
+    },
+    "synthetic": true
+  },
+  {
+    "id": "zero-scale",
+    "title": "The collapsed bench",
+    "description": "The same bench sits under a transform whose three scale components are zero.",
+    "uri": "/scenes/zero-scale.x3d",
+    "expected": {
+      "xml_parse": true,
+      "reference_audit": "pass",
+      "visibility_lesson": "The authored expectation is no visible bench because all geometry is collapsed. Source nodes still exist; a real render witness is required."
+    },
+    "synthetic": true
+  },
+  {
+    "id": "broken-reference",
+    "title": "The missing bearing",
+    "description": "The bench has one dangling USE and one ROUTE to a missing DEF.",
+    "uri": "/scenes/broken-reference.x3d",
+    "expected": {
+      "xml_parse": true,
+      "reference_audit": "fail",
+      "visibility_lesson": "The XML is well formed, while a static local-reference audit should fail. Renderer recovery is unspecified; no render verdict is pre-recorded."
+    },
+    "synthetic": true
+  },
+  {
+    "id": "untrusted-notes",
+    "title": "The bench with counterfeit instructions",
+    "description": "The clean bench carries deliberately instruction-like MetadataString data. The text is inert scene data and should be excluded from default judgment slices.",
+    "uri": "/scenes/untrusted-notes.x3d",
+    "expected": {
+      "xml_parse": true,
+      "reference_audit": "pass",
+      "visibility_lesson": "The intended geometry is unchanged. The metadata text supplies no authority and may not influence witness requirements or acceptability."
+    },
+    "synthetic": true
+  },
+  {
+    "id": "empty-geometry",
+    "title": "The empty housing",
+    "description": "A Shape has an Appearance but no geometry; the document still parses.",
+    "uri": "/scenes/empty-geometry.x3d",
+    "expected": {
+      "xml_parse": true,
+      "reference_audit": "pass",
+      "visibility_lesson": "The authored expectation is no visible object. A well-formed XML document can contain no drawable geometry."
+    },
+    "synthetic": true
+  }
+]
