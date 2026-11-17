@@ -1,0 +1,110 @@
+{
+  "schema": "yantra-certificate/1",
+  "construction": "Concentric Huet-family selection",
+  "decimalDigits": 100,
+  "normalization": "Outer circumcircle radius R=1; center (0,0); vertical reflection axis x=0.",
+  "selection": "Fix XF=0.126, XA=0.187, YJ=0.398 in Huet unit-diameter frame; solve YQ and YP for concurrency and central incenter concentricity.",
+  "nonUniqueness": "The concurrent Huet/Chiodo family has four real degrees of freedom; imposing central incenter concentricity leaves three. Three fixed parameters select this local member. No universal unique perfect shape is claimed.",
+  "parametersDiameterFrame": {
+    "YQ": "0.6483805394503203479815604331828611374634751988733007786975762724446556182527291367523938395609923730",
+    "XF": "0.126",
+    "YP": "0.4392613844381596570894559885454988286303786009413925937102262538096003921795706538755364827763377321",
+    "XA": "0.187",
+    "YJ": "0.398"
+  },
+  "bounds": {
+    "float64MaxConstraintResidualR": 1e-12,
+    "float32QuantizedMaxConstraintResidualR": 1e-07,
+    "arrangementSnapR": 1e-10
+  },
+  "highPrecision": {
+    "concurrencyR": "1.693996799294156707325684625425234260700588697007841269006604412100083059390833396861581391841051721E-86",
+    "apexBaseIncidenceR": "0E-99",
+    "circumcircleR": "1E-100",
+    "reflectionR": "0E-100",
+    "centralIncenterOffsetR": "5.029031291556767665225311202894387809076145935107144108049605963403233318700430590585093054556414681E-87"
+  },
+  "float64": {
+    "concurrencyR": "6.103512323105808379610233547992207198829150527194309184324415754480265586633434631340211683802998679E-17",
+    "apexBaseIncidenceR": "0E-53",
+    "circumcircleR": "4.0285489707040488104243680706566237764900049557506977024115230800280231556847311478E-17",
+    "reflectionR": "0E-53",
+    "centralIncenterOffsetR": "3.047829080657586295349970560155135257085854805317624427667649125080409375420157615475048172045354668E-19"
+  },
+  "float32Quantized": {
+    "concurrencyR": "1.835595073727290580056899997002998688436311543496107519422977553776054201297707448252293223132008914E-8",
+    "apexBaseIncidenceR": "0E-24",
+    "circumcircleR": "3.6683829374834043266232668254832746900500486697486950098161629297808542375309884512401513100E-9",
+    "reflectionR": "0E-25",
+    "centralIncenterOffsetR": "1.086613126431238298614569367865153853236079682470112777649708947499326212151826635595950555308861280E-10"
+  },
+  "arrangement": {
+    "vertices": 69,
+    "edges": 142,
+    "components": 1,
+    "boundedFaces": 74,
+    "triangularFaces": 53,
+    "faceCornerHistogram": {
+      "3": 53,
+      "4": 21
+    },
+    "eulerConsistent": true,
+    "maximumSnapClusterDiameter": 4.996003610813204e-16
+  },
+  "activeChambers": 43,
+  "evenCoverageVoids": 31,
+  "activeRingCountsInnerToOuter": [
+    1,
+    8,
+    10,
+    10,
+    14
+  ],
+  "countMeaning": "43 odd-coverage triangular chambers. Full finite-segment arrangement also contains 31 even-coverage voids, including 10 triangular and 21 quadrilateral cells.",
+  "actualNativeGpuPrecision": "Float32 quantization is measured separately. Pixel coverage, raster line width and display/postprocessing are not high-precision geometry proofs.",
+  "newtonTrace": [
+    {
+      "iteration": 0,
+      "maxResidual": "0.0010299687204136120520556283975709671151784593885744908173325263965922087764414839763089074201303559"
+    },
+    {
+      "iteration": 1,
+      "maxResidual": "0.0000054908693827667602284310576106904324198660063685055455822525604252425967372291396473900835120995"
+    },
+    {
+      "iteration": 2,
+      "maxResidual": "2.58461122355969051384501705086088721015885114569506324040783679225228621123939714970285182E-11"
+    },
+    {
+      "iteration": 3,
+      "maxResidual": "5.396076466505450197531296754043774174991057027673416764837751503951481327207224E-22"
+    },
+    {
+      "iteration": 4,
+      "maxResidual": "2.370646540936525242555407269420158467299235252919234397773E-43"
+    },
+    {
+      "iteration": 5,
+      "maxResidual": "4.58585387323739E-86"
+    }
+  ],
+  "canonicalJsonSha256": "881c3481ec9bcaab149a6da32c1c719d71d2d30408617f67d8f1b8dda9b70c1d",
+  "sources": [
+    {
+      "author": "Gerard Huet",
+      "year": 2002,
+      "title": "Sri Yantra Geometry",
+      "doi": "10.1016/S0304-3975(02)00028-2",
+      "url": "https://sriyantraresearch.com/References/Gerard%20Huet.pdf",
+      "use": "Five-parameter line construction and four-dimensional concurrent family; appendix coordinate relations."
+    },
+    {
+      "author": "Alessandro Chiodo",
+      "year": 2021,
+      "title": "On the construction of the Sri Yantra",
+      "doi": "10.5802/crmath.163",
+      "url": "https://www.numdam.org/item/10.5802/crmath.163.pdf",
+      "use": "Section 1 conditions (i)-(iii): common circumcircle, seven apex/base incidences, twelve bilateral concurrency triples; non-uniqueness."
+    }
+  ]
+}

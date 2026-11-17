@@ -1,0 +1,33 @@
+{
+  "schema": "standalone-resource-adapter/1",
+  "runtime": "X_ITE16.8.0",
+  "originalRuntimeSHA256": "4acf35f87fdd90144feefc43a5c4cdad0035723bf01aae24203be39f9eaaef5b",
+  "standaloneRuntimeSHA256": "40b4e48a89f164bbc98ed46640568e66956e4f6e64fcb1928debcba28719ad94",
+  "changes": [
+    {
+      "from": "e=document.currentScript?.src??document.location.href",
+      "to": "e=document.currentScript?.src||document.location.href"
+    },
+    {
+      "from": "new URL(\"x_ite.css\",ao.getScriptURL())",
+      "to": "window.__sriAsset(\"x_ite.css\")"
+    },
+    {
+      "from": "new URL(`assets/fonts/${e}`,this.getScriptURL()).href",
+      "to": "window.__sriAsset(\"assets/fonts/\"+e)"
+    },
+    {
+      "from": "new URL(`assets/lib/${e}`,this.getScriptURL()).href",
+      "to": "window.__sriAsset(\"assets/lib/\"+e)"
+    },
+    {
+      "from": "sha384-LjqGCbHHyX6wENYgkRJ/9RmmFuv15OQ5a2tXJcy74LdX25w1zBhrgNBZCht6zgop",
+      "to": "sha384-H3hgrNXODXjNzlPjblOG63VHQv5Hj4Z4OxQBWm7Ic5yhBggQpSypyQ+Q6LQNYcZu"
+    }
+  ],
+  "scope": "Resource URL expressions, inline-script base URL fallback and rebuilt CSS integrity hash only. Geometry, shaders, numerical fields and rendering algorithms unchanged.",
+  "moduleCount": 8,
+  "embeddedAssetCount": 37,
+  "htmlBytes": 2172698,
+  "externalRuntimeRequests": 0
+}
