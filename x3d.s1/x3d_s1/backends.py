@@ -77,12 +77,18 @@ class StubBackend:
         return {qid: self.fn(qid, q, state) for qid, q in questions.items()}
 
 
+_ALIAS_WORDS = ("latest", "preview", "current", "stable", "nightly", "canary", "beta", "alpha")
+
+
 def _require_pinned_model(model: str) -> None:
     if not isinstance(model, str) or model != model.strip():
         raise ValueError("S1_MODEL_NOT_PINNED: model must be an exact non-empty versioned identifier")
     if not model or model.endswith("latest") or model.endswith("preview"):
         raise ValueError("S1_MODEL_NOT_PINNED: pin a versioned model id (for example jev-1.14.0): aliases move and answers change")
-    if re.search(r"(?:^|[-_.@])(?:latest|preview)(?:$|[-_.@])", model, re.I) or not re.search(r"\d+\.\d+", model):
+    # An alias word anywhere as a segment (or the start of one: "preview2") marks a moving target; a pin needs a dotted version or a date stamp.
+    if any(seg.startswith(_ALIAS_WORDS) for seg in re.split(r"[-_.@/:]", model.lower()) if seg):
+        raise ValueError("S1_MODEL_NOT_PINNED: moving aliases and unversioned identifiers are not reproducible")
+    if not (re.search(r"\d+\.\d+", model) or re.search(r"(?<!\d)(?:\d{8}|\d{4}-\d{2}-\d{2})(?!\d)", model)):
         raise ValueError("S1_MODEL_NOT_PINNED: moving aliases and unversioned identifiers are not reproducible")
 
 

@@ -122,7 +122,10 @@ class NoulAnswer:
 def _number(value, code: str, label: str, lo: float = 0.0, hi: float = 1.0) -> float:
     if isinstance(value, bool) or not isinstance(value, Real):
         raise AnswerSpaceError(code, f"{label} must be a JSON number")
-    value = float(value)
+    try:
+        value = float(value)
+    except OverflowError:
+        raise AnswerSpaceError(code, f"{label} is too large to be a number in range") from None
     if not math.isfinite(value) or not lo <= value <= hi:
         raise AnswerSpaceError(code, f"{label} must be finite and within [{lo}, {hi}]")
     return value

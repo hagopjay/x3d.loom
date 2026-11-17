@@ -63,3 +63,16 @@ def test_snapshot_identity_changes_when_test_or_instrument_changes(tmp_path):
     before = module.snapshot_hash(str(tmp_path))
     (tmp_path / "test.py").write_text("assert 2")
     assert module.snapshot_hash(str(tmp_path)) != before
+
+
+def test_every_mutant_has_named_tests_and_every_name_is_a_real_test():
+    import re
+    module = harness()
+    labels = [label for _, label, _, _ in module.MUTANTS]
+    assert len(labels) == len(set(labels)), "mutant labels must be unique"
+    assert set(labels) == set(module.EXPECTED_TESTS), "every mutant needs named tests, and no entry may be orphaned"
+    defined = set()
+    for path in (Path(__file__).resolve().parent).glob("test_*.py"):
+        defined.update(re.findall(r"^def (test_\w+)", path.read_text(encoding="utf-8"), flags=re.M))
+    stale = {name for names in module.EXPECTED_TESTS.values() for name in names if name not in defined}
+    assert stale == set(), f"EXPECTED_TESTS names that do not exist: {sorted(stale)}"

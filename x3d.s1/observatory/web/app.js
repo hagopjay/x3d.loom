@@ -213,7 +213,7 @@ async function start() {
     $$('#controls select,#controls input,#controls button').forEach(node=>node.disabled=false);
     updateReadings();setSceneDescription();
     await rehearse();
-  }catch(reason){error(reason.message||String(reason));$('scenario-description').textContent='Run python3 server.py from 04-observatory, then open its printed local address.';}
+  }catch(reason){error(reason.message||String(reason));$('scenario-description').textContent='Run python3 server.py from x3d.s1/observatory, then open its printed local address.';}
 }
 
 $('probability').addEventListener('input',deferRehearsal);

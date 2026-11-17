@@ -122,7 +122,7 @@ def triage(scene: Scene | str | bytes, qids: Sequence[str] | None = None, backen
     src = [e["source"] for e in entries]
     body = {
         "x3d_s1": __version__, "scene_sha256": sc.sha256, "scene_bytes": sc.raw_bytes,
-        "backend": getattr(backend, "model", None), "served_model": getattr(backend, "served_model", None),
+        "backend": getattr(backend, "model", None), "served_model": getattr(backend, "served_model", None) if calls else None,   # a run that made no call attests to no served model
         "policy": {"floor": policy.floor, "default_min_p": policy.default.min_p, "default": asdict(policy.default),
                    "actions": {k: asdict(v) for k, v in policy.actions.items()}, "noul_yes": yes, "noul_no": no},
         "allow_untrusted": allow_untrusted, "state_budget_bytes": budget_bytes,

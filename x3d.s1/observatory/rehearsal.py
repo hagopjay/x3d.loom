@@ -66,7 +66,11 @@ def digest(value) -> str:
 
 
 def number(value, name: str) -> float:
-    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= 1:
+    try:
+        ok = not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(value) and 0 <= value <= 1
+    except OverflowError:  # an integer too large for a float is out of range, not a crash
+        ok = False
+    if not ok:
         raise ValueError(f'{name} must be a finite number in [0, 1]')
     return float(value)
 
@@ -81,7 +85,10 @@ def strict_json(text: str):
                 raise ValueError(f'Duplicate JSON key {key!r}')
             out[key] = value
         return out
-    return json.loads(text, parse_constant=refuse, object_pairs_hook=unique)
+    try:
+        return json.loads(text, parse_constant=refuse, object_pairs_hook=unique)
+    except RecursionError:  # deeply nested arrays are a refusal, not a dropped connection
+        raise ValueError('JSON is nested too deeply') from None
 
 
 def scene_records() -> list[dict]:

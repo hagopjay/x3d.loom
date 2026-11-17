@@ -124,6 +124,14 @@ class RehearsalTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 r.rehearse(scene)
 
+    def test_integers_too_large_for_a_float_and_deep_nesting_are_refused_not_raised(self):
+        huge = int('9' * 400)
+        for kwargs in [{'p': huge}, {'threshold': huge}, {'p': -huge}]:
+            with self.subTest(kwargs=list(kwargs)), self.assertRaises(ValueError):
+                r.rehearse('clean-rig', **kwargs)
+        with self.assertRaisesRegex(ValueError, 'nested too deeply'):
+            r.strict_json('[' * 20000 + ']' * 20000)
+
     def test_nonfinite_and_duplicate_json_are_refused(self):
         for text in ['{"p":NaN}', '{"p":Infinity}', '{"p":0.1,"p":0.9}']:
             with self.assertRaises(ValueError):
@@ -137,7 +145,8 @@ class RehearsalTests(unittest.TestCase):
 
     def test_running_instrument_refuses_source_drift(self):
         drifted = dict(r._LOADED_SOURCE_HASHES)
-        drifted['04-observatory/rehearsal.py'] = '0' * 64
+        self.assertIn('observatory/rehearsal.py', drifted)
+        drifted['observatory/rehearsal.py'] = '0' * 64
         with patch.object(r, '_source_hashes', return_value=drifted):
             with self.assertRaisesRegex(ValueError, 'source changed'):
                 r.rehearse('clean-rig')
