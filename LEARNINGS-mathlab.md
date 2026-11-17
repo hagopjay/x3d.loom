@@ -23,3 +23,16 @@ Source: the `x3d.mathlab` distribution (six lessons: linear maps, derivative, in
 * Parity was measured at default parameters, not across the full parameter space.
 * The Manim video path was not run (needs a local Manim install); only its source generation was.
 * Pages itself becomes live only when the repository owner enables it (Settings, Pages, main, root); this note describes the files, not a deployment state.
+
+## 4. Second pass (17 Nov 2026, 12 lessons added: Aha Atlas + Insight Expeditions)
+
+Source: x3d.mathslab main after the cumulative "Insight-Complete" patch (104 files, applied cleanly to the six-lesson edition; the patch's tree equalled its zip's tree byte for byte). Instruments: CPython 3.13.18, mcp 2.3.0, SciPy 1.17.0, Node 22.23.4, Chromium 153.0.8010.12 via Playwright 1.63.0 (software GL), Pyodide 0.27.7, `x3d_mcp` b5c9956 (XSD 4.0 plus semantic checks).
+
+| # | Finding | Grade | Evidence |
+|---|---|---|---|
+| 6 | **"Not run" receipts are a work order, not a defect.** The authoring host could not run a browser (`browser_validation_status: not_run`) and said so. Re-running on a host with Chromium closed the gap: 18 of 18 lessons render natively on both transports with 0 console errors, on the live Pages site too. An honest `not_run` made the check cheap to finish. | C | `receipts/browser-smoke-pages-18.json`, `receipts/browser-smoke-server-18.json` |
+| 7 | **The cross-runtime float bound did not grow with the lesson count.** Over all 18 lessons, 7 are bit-identical native vs Pyodide and 11 differ by at most 4.44e-16 absolute (the same bound as the first six). Lessons using only +, *, sqrt are identical (bayes, least squares, refraction, integral, Lorenz, gradient, probability); lessons using sin/cos/exp differ at the ulp level. | C | `receipts/runtime-parity-18.json` |
+| 8 | **Gate coverage scaled with the curriculum.** The release check went from 5 instruments / 89 tests to 9 instruments / 148 Python tests plus 3 Node UI tests, with 18 worlds and 2 negative controls through the pinned x3d_mcp gate, all green in one fresh run. | C | `tools/check_release.py`, `receipts/release-checks.json`, `receipts/x3d-validation.json` |
+| 9 | **Keep the shipped version addressable.** Tag pushes were refused by the sandbox proxy, so the six-lesson edition is preserved on branch `archive-v0.1.1-six-lessons` instead (same commit, 24c9bbd). | C | `git ls-remote` |
+
+Not proved: a hardware GPU, non-Chromium browsers, parity beyond default parameters, Manim video rendering, and any learning outcome (the lesson guides themselves call outcomes a research question).
