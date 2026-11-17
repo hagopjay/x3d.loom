@@ -10,6 +10,7 @@ The X3D Loom, consolidated: one definition, its sources, what the other model's 
 | [SOURCES.md](SOURCES.md) | Every input, what it gave, how it was read, and the 14 places sources disagree, each with its resolution |
 | [LEARNINGS-from-patches.md](LEARNINGS-from-patches.md) | The seven patches and the Loomsong v1 → v4 history, turned into 25 reusable rules |
 | [LEARNINGS-mathlab.md](LEARNINGS-mathlab.md) | The Math Lab launch: a dependency major version, float-hash identity across runtimes, an overlay hiding a validated scene, Pyodide on a static host |
+| [LEARNINGS-shader-vulkan.md](LEARNINGS-shader-vulkan.md) | The Shader-Vulkan Fieldbook and the Vulkan Light Lab, re-run, plus a new X_ITE measurement (output encode is a 2.2 power: byte 186 where sRGB gives 188; which materials are encoded depends on `ColorSpace`; a white furnace on PhysicalMaterial; the same shader on another LLVM differs in 258 of 3,888,000 bytes). Record: `runs/shader-vulkan-20261117/` |
 | [GLOSSARY.md](GLOSSARY.md) | The words |
 | [REVIEW-loom2.md](REVIEW-loom2.md) | Review of the 4 Nov delivery: Cabinet of Worlds, Linked Observatory, Living Archive, Constellation 3 |
 | [REVIEW-scientific.md](REVIEW-scientific.md) | Review of the first x3d.STEM delivery, the Scientific Loom Observatory: measurements, six findings, the hardening patch, 13 lessons |
