@@ -12,6 +12,7 @@
   "visible_not_run": ["behaviour", "eyes", "host"],
   "limitations": [
     "Static profile: Behaviour (real browser), Eyes (frames + the user's eye) and Host (strict policy copy) did not run, so 'valid is not visible' still applies (law 2).",
+    "scorer_unchanged needs a declared closure (`foldback --scorer GLOB`, third review 18 Nov 2026): the name heuristic alone missed expected-data edits and `sh -c` wrappers, so undeclared is `unknown`, which this rule refuses.",
     "A patch that must change its own test (a real oracle fix) fails scorer_unchanged by design; it needs a reviewed record under a profile that names `reviewed`, not this one.",
     "A target-bound fold-back shows the patch applies to and keeps green one named base commit; it does not show the knowledge helps a later, independent task (that needs a held-out comparison).",
     "Unsigned receipt: it shows drift; it does not authenticate authorship. Origin typing closes the `loom record` path to a measured pass, not a hand-edited JSON file."

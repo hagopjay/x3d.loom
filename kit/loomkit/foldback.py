@@ -33,29 +33,36 @@ from pathlib import Path
 from .core import portable
 
 
+class PatchParseError(Exception):
+    pass
+
+
 def patch_files(patch: Path) -> list[dict]:
-    """List target files and whether each is an addition (old side /dev/null)."""
-    text = patch.read_text(encoding="utf-8", errors="replace")
-    if re.search(r"^diff --git ", text, re.M):  # git patches: one header per file, binary entries included
-        out = []
-        for block in re.split(r"^(?=diff --git )", text, flags=re.M)[1:]:
-            head = block.split("\n@@", 1)[0].split("GIT binary patch", 1)[0]
-            name = re.match(r"diff --git a/\S+ b/(\S+)", block).group(1)
-            out.append({"path": name, "added": "new file mode" in head})
-        return out
-    out = []
-    old = None
-    for line in text.splitlines():
-        if line.startswith("--- "):
-            old = line[4:].strip()
-        elif line.startswith("+++ ") and old is not None:
-            new = re.sub(r"^b/", "", line[4:].strip())
-            out.append({"path": new, "added": old == "/dev/null"})
-            old = None
-    if not out:  # binary-only git patches carry no ---/+++ pairs
-        for m in re.finditer(r"^diff --git a/(\S+) b/(\S+)\n(new file mode)?", text, re.M):
-            out.append({"path": m.group(2), "added": bool(m.group(3))})
-    return out
+    r"""List target files and whether each is an addition, from git's own parser (third review, 18 Nov 2026: a regex
+    over `diff --git a/\S+ b/(\S+)` crashed on `my scene.txt` and on C-quoted `café.txt`, which git applies fine).
+    `git apply --numstat -z` gives NUL-separated paths with no quoting; `--summary` names created files."""
+    with tempfile.TemporaryDirectory(prefix="loom-patch-parse-") as td:
+        num = subprocess.run(["git", "apply", "--numstat", "-z", str(Path(patch).resolve())], cwd=td, capture_output=True)
+        summ = subprocess.run(["git", "apply", "--summary", "-z", str(Path(patch).resolve())], cwd=td, capture_output=True)
+    if num.returncode != 0:
+        raise PatchParseError("git apply --numstat: " + num.stderr.decode("utf-8", "replace").strip()[-300:])
+    raw = num.stdout.decode("utf-8", "surrogateescape").split("\0")
+    paths, i = [], 0
+    while i < len(raw):
+        rec = raw[i]
+        if not rec:
+            i += 1; continue
+        cols = rec.split("\t", 2)
+        if len(cols) == 3 and cols[2] == "":        # rename/copy: the next two fields are old and new paths
+            paths.append(raw[i + 2]); i += 3
+        else:
+            paths.append(cols[2]); i += 1
+    created = set()
+    for line in summ.stdout.decode("utf-8", "surrogateescape").splitlines():
+        m = re.match(r"\s*create mode \d+ (.+)$", line)
+        if m:
+            created.add(m.group(1))
+    return [{"path": x, "added": x in created} for x in paths]
 
 
 def freeze(patch: Path, into: Path) -> tuple[Path, str]:
@@ -70,16 +77,51 @@ def freeze(patch: Path, into: Path) -> tuple[Path, str]:
     return snap, hashlib.sha256(data).hexdigest()
 
 
-def scorer_paths(files: list[dict], consumer_cmd: list[str]) -> list[str]:
-    """Patch paths that may change the oracle: test files, or a file the consumer command names."""
+SHELLS = {"sh", "bash", "zsh", "dash", "ksh", "env", "make", "npm", "npx", "node", "tox", "nox", "just"}
+
+
+def scorer_paths(files: list[dict], consumer_cmd: list[str], declared: list[str] | None = None) -> list[str]:
+    """Patch paths that may change the oracle: test-looking files, a file the consumer command names, or a file
+    matching a declared scorer glob (`--scorer`). Only the declared set can make an unchanged claim (see closure())."""
+    import fnmatch
     named = {Path(a).as_posix().lstrip("./") for a in consumer_cmd}
     out = []
     for f in files:
         parts = f["path"].split("/")
         if f["path"] in named or any(x in ("test", "tests") for x in parts[:-1]) or parts[-1].startswith("test_") \
-                or parts[-1].endswith(("_test.py", ".test.mjs", ".test.js")) or parts[-1] in ("conftest.py", "package.json"):
+                or parts[-1].endswith(("_test.py", ".test.mjs", ".test.js")) or parts[-1] in ("conftest.py", "package.json") \
+                or any(fnmatch.fnmatchcase(f["path"], g) for g in (declared or [])):
             out.append(f["path"])
     return sorted(set(out))
+
+
+def closure(files: list[dict], consumer_cmd: list[str], scorer: list[str], impl: list[str], repo: Path) -> dict:
+    """Is the oracle known to be unchanged? Third review, 18 Nov 2026, defect 2: an edited expected.json, or a check.py
+    run through `sh -c`, passed the name heuristic. Now `unchanged` is True only when the caller DECLARED the scorer
+    closure (`--scorer` globs: entry point, helpers, expected data, config), the patch touches none of it, and, when
+    `--impl` globs are given, every patch path is declared implementation. Undeclared means unknown, never unchanged.
+    The declared scorer files are hashed at the base so the record names the exact oracle bytes."""
+    import fnmatch, hashlib
+    hit = scorer_paths(files, consumer_cmd, scorer)
+    outside = [f["path"] for f in files if impl and not any(fnmatch.fnmatchcase(f["path"], g) for g in impl)]
+    wrapper = bool(consumer_cmd) and Path(consumer_cmd[0]).name in SHELLS
+    hashed = {}
+    for g in scorer:
+        for p in sorted(repo.glob(g)):
+            if p.is_file() and ".git" not in p.parts:
+                hashed[p.relative_to(repo).as_posix()] = hashlib.sha256(p.read_bytes()).hexdigest()
+    if not scorer:
+        state, why = "unknown", "no --scorer closure declared" + (" and the consumer is a wrapper (" + consumer_cmd[0] + ")" if wrapper else "")
+    elif not hashed:
+        state, why = "unknown", "the declared --scorer globs match no file at the base"
+    elif hit:
+        state, why = "changed", "patch edits scorer files: " + ", ".join(hit[:5])
+    elif outside:
+        state, why = "unknown", "patch edits files outside the declared --impl set: " + ", ".join(outside[:5])
+    else:
+        state, why = "unchanged", "patch touches no declared scorer file"
+    return {"state": state, "reason": why, "declared_scorer": scorer, "declared_impl": impl,
+            "scorer_files_at_base": hashed, "consumer_wrapper": wrapper, "changed": hit, "outside_impl": outside}
 
 
 def _run(cmd: list[str], cwd: Path, timeout: int) -> dict:
@@ -88,19 +130,32 @@ def _run(cmd: list[str], cwd: Path, timeout: int) -> dict:
             "stderr_tail": (p.stderr.strip().splitlines() or [""])[-1][:300]}
 
 
-def check_target(patch: Path, target: Path, base: str, consumer: str, timeout: int = 900) -> dict:
+def check_target(patch: Path, target: Path, base: str, consumer: str, timeout: int = 900,
+                 scorer: list[str] | None = None, impl: list[str] | None = None) -> dict:
     """Apply a fold-back patch to a clean clone of the real target at `base`; run the consumer's command before and after."""
     original, target = Path(patch).resolve(), Path(target).resolve()
     hold = tempfile.TemporaryDirectory(prefix="loom-foldback-patch-")
     patch, digest = freeze(original, Path(hold.name))
     try:
-        return _check_target(original, patch, digest, target, base, consumer, timeout)
+        return _check_target(original, patch, digest, target, base, consumer, timeout, list(scorer or []), list(impl or []))
     finally:
         hold.cleanup()
 
 
-def _check_target(original: Path, patch: Path, digest: str, target: Path, base: str, consumer: str, timeout: int) -> dict:
-    files = patch_files(patch)
+def _parse_or_error(patch: Path, original: Path, digest: str, target_bound: bool):
+    try:
+        return patch_files(patch), None
+    except PatchParseError as e:   # an instrument error is a witness record (status error), not a crash
+        return None, {"patch": portable(original), "patch_sha256": digest, "patch_frozen": True, "files": 0,
+                      "target_bound": target_bound, "smoke": [], "status": "error", "reason": str(e),
+                      "scorer_changed": [], "scorer_closure": {"state": "unknown", "reason": "patch did not parse"}}
+
+
+def _check_target(original: Path, patch: Path, digest: str, target: Path, base: str, consumer: str, timeout: int,
+                  scorer: list[str], impl: list[str]) -> dict:
+    files, err = _parse_or_error(patch, original, digest, True)
+    if err:
+        return err
     result = {"patch": portable(original), "patch_sha256": digest, "patch_frozen": True, "files": len(files),
               "additions_only": bool(files) and all(f["added"] for f in files), "target_bound": True,
               "target": target.name, "base_requested": base, "base_sha": None, "consumer": consumer,
@@ -116,7 +171,7 @@ def _check_target(original: Path, patch: Path, digest: str, target: Path, base: 
         return result
     result["base_sha"] = rev.stdout.strip()
     cmd = shlex.split(consumer)
-    result["scorer_changed"] = scorer_paths(files, cmd)
+    result["scorer_changed"] = scorer_paths(files, cmd, scorer)
     with tempfile.TemporaryDirectory(prefix="loom-foldback-target-") as td:
         repo = Path(td) / "t"
         subprocess.run(["git", "clone", "-q", "--no-hardlinks", "--no-checkout", str(target), str(repo)], check=True)
@@ -125,6 +180,7 @@ def _check_target(original: Path, patch: Path, digest: str, target: Path, base: 
         if head != result["base_sha"]:
             result.update(status="error", reason=f"clone is at {head}, not {result['base_sha']}")
             return result
+        result["scorer_closure"] = closure(files, cmd, scorer, impl, repo)
         result["consumer_before"] = _run(cmd, repo, timeout)
         # back to the pristine base: the before-run's outputs (a __pycache__ .pyc stamped in the same second as the
         # patched source masked a regression in this mode's own control) must not leak into the after-run
@@ -137,6 +193,12 @@ def _check_target(original: Path, patch: Path, digest: str, target: Path, base: 
             return result
         subprocess.run(["git", "-C", str(repo), "apply", str(patch)], check=True)
         result["consumer_after"] = _run(cmd, repo, timeout)
+        base_scorer = [x for x in result["scorer_closure"]["changed"] if x in result["scorer_closure"]["scorer_files_at_base"]]
+        if base_scorer:
+            # the patch moved the oracle: put the BASE scorer files back over the patched tree and score again, so
+            # the record also says how the patched system does against the oracle it was claimed to satisfy
+            subprocess.run(["git", "-C", str(repo), "checkout", "-q", result["base_sha"], "--", *base_scorer], check=True)
+            result["consumer_after_base_oracle"] = _run(cmd, repo, timeout)
         for smoke in sorted(repo.glob("tools/*/smoke.py")):
             if any(f["path"] == smoke.relative_to(repo).as_posix() for f in files):
                 for flags in ([], ["-O"]):
@@ -147,6 +209,11 @@ def _check_target(original: Path, patch: Path, digest: str, target: Path, base: 
     if result["scorer_changed"] and result["outcome"] in ("held", "improved"):
         # the patch edits the test or a file the consumer runs: green after may be a changed oracle, not a better system
         result["outcome"] += " (scorer changed: " + ", ".join(result["scorer_changed"][:5]) + ")"
+    replay = result.get("consumer_after_base_oracle")
+    if replay is not None and replay["exit_code"] != 0 and after == 0:
+        result["outcome"] += "; fails the base oracle"
+        result.update(status="fail", reason=f"green only under the patched scorer; the base scorer exits {replay['exit_code']}")
+        return result
     if after != 0:
         result.update(status="fail", reason=f"consumer exits {after} after the patch (before: {before}): {result['outcome']}")
     elif any(s["exit_code"] != 0 for s in result["smoke"]):
@@ -167,7 +234,9 @@ def check(patch: Path, python: str = sys.executable, timeout: int = 900) -> dict
 
 
 def _check_empty(original: Path, patch: Path, digest: str, python: str, timeout: int) -> dict:
-    files = patch_files(patch)
+    files, err = _parse_or_error(patch, original, digest, False)
+    if err:
+        return err
     result = {"patch": portable(original), "patch_sha256": digest, "patch_frozen": True, "files": len(files),
               "additions_only": bool(files) and all(f["added"] for f in files),
               "tool_dirs": sorted({"/".join(f["path"].split("/")[:2]) for f in files}),
