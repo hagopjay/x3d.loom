@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from .core import WITNESS_SCHEMA, GateError, candidate, need, sha256_file
+from .core import ORIGINS, WITNESS_SCHEMA, GateError, candidate, need, sha256_file
 
 PROFILE_SCHEMA = "loom.profile/1"
 
@@ -22,6 +22,14 @@ def load_profile(path: Path | str) -> dict:
     names = [r.get("witness") for r in profile["required"]]
     need(all(isinstance(n, str) and n for n in names), "PROFILE_WITNESS_NAME")
     need(len(names) == len(set(names)), "PROFILE_DUPLICATE_WITNESS")
+    for r in profile["required"]:
+        # a string here would be matched by substring ("declared" in "undeclared"): review round 2, 18 Nov 2026
+        if "origins" in r:
+            need(isinstance(r["origins"], list) and all(o in ORIGINS for o in r["origins"]), "PROFILE_ORIGINS",
+                 f"{r['witness']}: origins must be a list drawn from {list(ORIGINS)}")
+        if "instrument" in r:
+            need(isinstance(r["instrument"], str) or (isinstance(r["instrument"], list) and all(isinstance(x, str) for x in r["instrument"])),
+                 "PROFILE_INSTRUMENT", r["witness"])
     return profile
 
 

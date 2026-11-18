@@ -1,0 +1,19 @@
+{
+  "schema": "loom.profile/1",
+  "name": "x3d-static/v3",
+  "purpose": "x3d-static/v2 tightened by the second external review of 18 Nov 2026: the fold-back record must hash the exact bytes it applied (frozen private snapshot, so the patch file cannot change between hash and apply) and the patch must not edit the oracle (a test file or a file the consumer command names), so a green consumer after the patch is the system improving, not the scorer moving. Everything v2 requires still holds.",
+  "required": [
+    {"witness": "grammar", "instrument": "x3d_mcp fork (validate_xml + semantic_diagnostics)", "coverage": {"files": {"min": 1}}},
+    {"witness": "meaning", "instrument": "x3d_mcp fork (validate_xml + semantic_diagnostics)", "coverage": {"files": {"min": 1}}},
+    {"witness": "traps", "instrument": "loomkit.traps", "coverage": {"rules_include": ["shader-raw-source", "route-before-def", "route-undefined", "color-range", "color-emissive-white", "splat-bbox", "movie-not-still", "version-fits-nodes", "no-script-under-host", "metadata-containerfield", "glsl-reserved-active"]}},
+    {"witness": "truth", "instrument": "project gate (adapter)"},
+    {"witness": "foldback", "instrument": "loomkit.foldback", "coverage": {"target_bound": true, "consumer": true, "patch_frozen": true, "scorer_unchanged": true}}
+  ],
+  "visible_not_run": ["behaviour", "eyes", "host"],
+  "limitations": [
+    "Static profile: Behaviour (real browser), Eyes (frames + the user's eye) and Host (strict policy copy) did not run, so 'valid is not visible' still applies (law 2).",
+    "A patch that must change its own test (a real oracle fix) fails scorer_unchanged by design; it needs a reviewed record under a profile that names `reviewed`, not this one.",
+    "A target-bound fold-back shows the patch applies to and keeps green one named base commit; it does not show the knowledge helps a later, independent task (that needs a held-out comparison).",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship. Origin typing closes the `loom record` path to a measured pass, not a hand-edited JSON file."
+  ]
+}

@@ -30,7 +30,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from .core import portable, sha256_file
+from .core import portable
 
 
 def patch_files(patch: Path) -> list[dict]:
@@ -58,6 +58,30 @@ def patch_files(patch: Path) -> list[dict]:
     return out
 
 
+def freeze(patch: Path, into: Path) -> tuple[Path, str]:
+    """Read the patch ONCE, write a private copy and return (copy, sha256 of those bytes). Every later step (listing,
+    apply --check, apply) reads the copy, so the hash on the record is the hash of the bytes applied, even if the
+    original file changes while the consumer runs (review round 2, 18 Nov 2026, defect 1: hash A, apply B)."""
+    import hashlib
+    data = Path(patch).read_bytes()
+    snap = Path(into) / "frozen.patch"
+    snap.write_bytes(data)
+    snap.chmod(0o400)
+    return snap, hashlib.sha256(data).hexdigest()
+
+
+def scorer_paths(files: list[dict], consumer_cmd: list[str]) -> list[str]:
+    """Patch paths that may change the oracle: test files, or a file the consumer command names."""
+    named = {Path(a).as_posix().lstrip("./") for a in consumer_cmd}
+    out = []
+    for f in files:
+        parts = f["path"].split("/")
+        if f["path"] in named or any(x in ("test", "tests") for x in parts[:-1]) or parts[-1].startswith("test_") \
+                or parts[-1].endswith(("_test.py", ".test.mjs", ".test.js")) or parts[-1] in ("conftest.py", "package.json"):
+            out.append(f["path"])
+    return sorted(set(out))
+
+
 def _run(cmd: list[str], cwd: Path, timeout: int) -> dict:
     p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
     return {"exit_code": p.returncode, "stdout_tail": (p.stdout.strip().splitlines() or [""])[-1][:300],
@@ -66,9 +90,18 @@ def _run(cmd: list[str], cwd: Path, timeout: int) -> dict:
 
 def check_target(patch: Path, target: Path, base: str, consumer: str, timeout: int = 900) -> dict:
     """Apply a fold-back patch to a clean clone of the real target at `base`; run the consumer's command before and after."""
-    patch, target = Path(patch).resolve(), Path(target).resolve()
+    original, target = Path(patch).resolve(), Path(target).resolve()
+    hold = tempfile.TemporaryDirectory(prefix="loom-foldback-patch-")
+    patch, digest = freeze(original, Path(hold.name))
+    try:
+        return _check_target(original, patch, digest, target, base, consumer, timeout)
+    finally:
+        hold.cleanup()
+
+
+def _check_target(original: Path, patch: Path, digest: str, target: Path, base: str, consumer: str, timeout: int) -> dict:
     files = patch_files(patch)
-    result = {"patch": portable(patch), "patch_sha256": sha256_file(patch), "files": len(files),
+    result = {"patch": portable(original), "patch_sha256": digest, "patch_frozen": True, "files": len(files),
               "additions_only": bool(files) and all(f["added"] for f in files), "target_bound": True,
               "target": target.name, "base_requested": base, "base_sha": None, "consumer": consumer,
               "consumer_before": None, "consumer_after": None, "apply_check": None, "outcome": None,
@@ -83,6 +116,7 @@ def check_target(patch: Path, target: Path, base: str, consumer: str, timeout: i
         return result
     result["base_sha"] = rev.stdout.strip()
     cmd = shlex.split(consumer)
+    result["scorer_changed"] = scorer_paths(files, cmd)
     with tempfile.TemporaryDirectory(prefix="loom-foldback-target-") as td:
         repo = Path(td) / "t"
         subprocess.run(["git", "clone", "-q", "--no-hardlinks", "--no-checkout", str(target), str(repo)], check=True)
@@ -110,6 +144,9 @@ def check_target(patch: Path, target: Path, base: str, consumer: str, timeout: i
                     result["smoke"].append({"smoke": smoke.relative_to(repo).as_posix(), "optimized": bool(flags), **r})
     before, after = result["consumer_before"]["exit_code"], result["consumer_after"]["exit_code"]
     result["outcome"] = {(0, 0): "held", (1, 0): "improved"}.get((min(before, 1), after), "regressed" if before == 0 else "still failing")
+    if result["scorer_changed"] and result["outcome"] in ("held", "improved"):
+        # the patch edits the test or a file the consumer runs: green after may be a changed oracle, not a better system
+        result["outcome"] += " (scorer changed: " + ", ".join(result["scorer_changed"][:5]) + ")"
     if after != 0:
         result.update(status="fail", reason=f"consumer exits {after} after the patch (before: {before}): {result['outcome']}")
     elif any(s["exit_code"] != 0 for s in result["smoke"]):
@@ -120,9 +157,18 @@ def check_target(patch: Path, target: Path, base: str, consumer: str, timeout: i
 
 
 def check(patch: Path, python: str = sys.executable, timeout: int = 900) -> dict:
-    patch = Path(patch).resolve()
+    original = Path(patch).resolve()
+    hold = tempfile.TemporaryDirectory(prefix="loom-foldback-patch-")
+    patch, digest = freeze(original, Path(hold.name))
+    try:
+        return _check_empty(original, patch, digest, python, timeout)
+    finally:
+        hold.cleanup()
+
+
+def _check_empty(original: Path, patch: Path, digest: str, python: str, timeout: int) -> dict:
     files = patch_files(patch)
-    result = {"patch": portable(patch), "patch_sha256": sha256_file(patch), "files": len(files),
+    result = {"patch": portable(original), "patch_sha256": digest, "patch_frozen": True, "files": len(files),
               "additions_only": bool(files) and all(f["added"] for f in files),
               "tool_dirs": sorted({"/".join(f["path"].split("/")[:2]) for f in files}),
               "apply_check": None, "smoke": [], "status": None, "reason": "", "target_bound": False}
