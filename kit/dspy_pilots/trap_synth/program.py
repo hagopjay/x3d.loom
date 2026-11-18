@@ -50,7 +50,7 @@ def make_metric(cases, split):
         r = bench.run_rule(strip_fences(pred.rule_code), cut(c[f"pos_{split}"]), cut(c[f"neg_{split}"]), cut(c[f"twin_{split}"]))
         fb = (f"score {r['score']} = recall {r['tpr']} x clean-scene specificity {r['tnr']} x lawful-twin specificity {r['tnr_twin']}. "
               + (f"Rule error: {r['error']}. " if r["error"] else "")
-              + (f"Missed scenes with the trap: {r['missed']}. " if r["missed"] else "")
+              + (f"Missed scenes with the trap: {r['missed']}. Offending XML in the first misses: {r['missed_xml']}. " if r["missed"] else "")
               + (f"Fired on scenes without the trap: {r['false_alarms']}. " if r["false_alarms"] else "")
               + "Twins are the same scene with the same edit done lawfully (or left alone): the rule must be silent on them.")
         return dspy.Prediction(score=r["score"], feedback=fb)

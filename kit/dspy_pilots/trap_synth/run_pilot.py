@@ -16,18 +16,35 @@ import bench
 OUT = Path(__file__).with_name("out"); OUT.mkdir(exist_ok=True)
 
 
+def degenerates(c):
+    d = dict(bench.DEGENERATE)
+    d["stateful-count"] = bench.stateful_source(len(c["pos_held"]))
+    d["mutation-fingerprint"] = bench.fingerprint_source(c)
+    return d
+
+
 def audit():
+    """Exit status gates promotion: oracle must be 1.0 on positives, clean scenes AND twins; every degenerate must stay
+    below 0.5; no scene content may cross partitions; every covered rule needs a sealed variant."""
     cases = bench.build()
     rows = []
     for rid, c in cases.items():
+        o = bench.oracle_rows(c, "held")
         row = {"rule": rid, "pos_held": len(c["pos_held"]), "neg_held": len(c["neg_held"]), "twin_held": len(c["twin_held"]),
-               "oracle": round(bench.oracle_rows(c, "held")["score"], 3)}
-        for n, src in bench.DEGENERATE.items():
+               "sealed_variants": c["sealed_variants"], "oracle": round(o["score"], 3)}
+        for n, src in degenerates(c).items():
             row[n] = bench.run_rule(src, c["pos_held"], c["neg_held"], c["twin_held"])["score"]
         rows.append(row)
-    worst = max(max(v for k, v in r.items() if k in bench.DEGENERATE) for r in rows)
+    names = set(degenerates(next(iter(cases.values()))))
+    worst = max(max(v for k, v in r.items() if k in names) for r in rows)
+    leak = 0
+    for c in cases.values():
+        sets = {g: {bench.ckey(x) for _, x in c[f"neg_{g}"]} for g in ("show", "train", "held")}
+        leak += len(sets["show"] & sets["train"]) + len(sets["show"] & sets["held"]) + len(sets["train"] & sets["held"])
     res = {"rules_covered": list(cases), "not_covered": bench.NOT_COVERED, "rows": rows,
-           "oracle_all_one": all(r["oracle"] == 1.0 for r in rows), "worst_degenerate": worst, "pass": worst < 0.5}
+           "oracle_all_one": all(r["oracle"] == 1.0 for r in rows), "worst_degenerate": worst,
+           "content_leaks_across_partitions": leak, "all_rules_have_sealed_variant": all(r["sealed_variants"] >= 1 for r in rows)}
+    res["pass"] = res["oracle_all_one"] and worst < 0.5 and leak == 0 and res["all_rules_have_sealed_variant"]
     (OUT / "audit.json").write_text(json.dumps(res, indent=1))
     print(json.dumps({k: v for k, v in res.items() if k != "rows"}, indent=1))
     return res
@@ -46,6 +63,8 @@ def plan(k_train, calls_per_rule):
 def run(args):
     if not args.ok_spend:
         sys.exit("refusing: pass --ok-spend only after the owner has typed a yes for this model and this budget")
+    if not audit()["pass"]:
+        sys.exit("refusing: the metric audit did not pass; fix the benchmark before spending on an optimiser")
     import dspy
     from program import WriteTrap, examples, make_metric
     lm_name = os.environ.get("X3D_DSPY_LM")
