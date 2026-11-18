@@ -14,8 +14,20 @@ Fold-back from x3d.demo `docs/demos/math-concept-graph/v1/`. Fetched live 18 Nov
 | MO-8 | **The graded-claim pattern ports from heritage to math unchanged:** one mapping list emits X3D `MetadataSet` per claim and JSON-LD (skos match + x3d:grade). SPARQL over it: Suspected links by lesson gave waves 2, svd 2, lagrange 1, aliasing 1, vector_field 1. | rdflib 7.6.0 | C |
 | MO-9 | **False friends exist and should be recorded:** `E1041 Fermat number` for refraction (Fermat principle), `E2698 Vector function` for vector field, PhySH `Nonlinear waves` for linear superposition. | mapping.py grade S | S |
 
+## Iteration 2 (v2, same day): full private crawl
+Source data (OntoMathPro 3,449 class pages, 206 OpenMath CDs, OEIS 402,048 names, arXiv 2,974 papers, PhySH 562 concepts) was fetched into a private quarantine outside every repo, on HagopJay's instruction to take licence-restricted sources and keep them from becoming public. Only ids, grades, counts and short labels reach the repos; `leak_check.py` (7-9 word shingles of the quarantined text against the repo trees) found 0 suspected leaks.
+
+| ID | Lesson | Evidence | Grade |
+|---|---|---|---|
+| MO-10 | **Search every language label before declaring a gap.** The class listing shows one label per class; v1 gap regexes saw English only. The crawl has 2,717 English and 3,434 Russian labels (731 Russian-only), and refuted one v1 gap (waves: E1931 Oscillation equation) and showed two weak matches (vector field E246, Riemann integral E2865). | omp-graph.json, scout.py | C |
+| MO-11 | **A second pass pays.** Lessons with a Confirmed OntoMathPro link went 11 to 14 of 18; every lesson now has at least one OntoMathPro link; links 69 to 90 (40 C, 39 L, 11 S). | coverage.json | C |
+| MO-12 | **False friends are common in bilingual math ontologies:** wavelet for wave, Fermat number for Fermat principle, Kotelnikov-Shannon wavelet for the sampling theorem. Record them as S rows so nobody re-links them. | mapping.py | C |
+| MO-13 | **OEIS fits number lessons only:** two links (A007318, A000984) for the coin-count lesson; none of the other 17 lessons has a sequence. | names.gz, 402,048 names | C |
+| MO-14 | **arXiv title hits are a crude demand signal:** waves 93, heat 33, integral 29, linear 27, lorenz 16 of 2,974 papers (physics.ed-ph, math.HO, physics.class-ph, 2023-09-25 to 2026-11-17); aliasing 1, complex 1, probability 1. Title regex only. | arxiv-hits.json | C count, S meaning |
+| MO-15 | **OntoMathPro superclass chains are shallow and generic** (derivative E3040 sits under 'Element of mathematical analysis' under 'Mathematical knowledge object'), so they help navigation, not matching. | omp-graph.json | C |
+
 ## Gobbler ingest, ranked
-1. PhySH (CC0, JSON). 2. OEIS (CC BY-SA 4.0 read at oeis.org/LICENSE; `search?q=id:A000045&fmt=json` returned the Fibonacci record). 3. OpenMath symbols and CDs. 4. arXiv API (200 for physics.ed-ph and math.HO; metadata only, per-paper licence for figures: S). 5. OntoMathPro listing (licence unknown: S). 6. Open textbooks (CC BY 4.0 published, not re-opened: L).
+1. PhySH (CC0, JSON). 2. OEIS (CC BY-SA 4.0 read at oeis.org/LICENSE; `search?q=id:A000045&fmt=json` returned the Fibonacci record). 3. OpenMath symbols and CDs. 4. arXiv API (200 for physics.ed-ph and math.HO; metadata only, per-paper licence for figures: S). 5. OntoMathPro listing (licence unknown: S; quarantined crawl held privately). 6. Open textbooks (CC BY 4.0 published, not re-opened: L).
 
 ## Next (proposed)
 Link Math Lab lessons to Wikidata Q-ids (CC0); add a Russian-reader check of the 12 Russian-only labels; extend to physics lessons (Ten Minute Physics ports) against PhySH and the OpenMath SI/units CDs (`SI_DerivedQuantities1:heat` exists).
