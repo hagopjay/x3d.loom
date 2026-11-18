@@ -26,12 +26,17 @@ Fold-back from x3d.demo `docs/demos/medical-provenance/v1/`. Educational proof o
 | MP-20 | **A global fit cannot model posture.** 17 of 100 structures are 'far' (limbs with raised arms, neck vessels, iliac arteries 263 mm, whole-body skin vs trunk CT); spine is 10.8 mm median. The articulated v4 joints are the next fit. Chamfer distance between two people measures difference, not error. | v5 `data/metrics.json` | C |
 | MP-21 | **Mesh licences can contradict their own files.** BodyParts3D OBJ headers: CC BY-SA 2.1 Japan; lic.html (2025/02/27): CC BY 4.0. The derived meshes ship under the stricter reading in a separate file with a notice. Pin the source zip by sha256, never commit it (65 MB), and decimate for the page (vertex clustering, 148 k faces, 952 KB gzip). | v5 `NOTICE-BP3D.md` | C |
 | MP-22 | **Inline nodes are reachable through IMPORT/EXPORT, not through the SAI node.** In X_ITE 16.6.0 `Inline` exposes only its fields (no `getInternalScene`); EXPORT the materials in the inlined file, IMPORT them in the parent, then `scene.getImportedNode`. The validator accepts both. | v5 page and scenes | C |
+| MP-23 | **The XSD and X_ITE disagree on volume children.** `OpacityMapVolumeStyle.transferFunction` cannot be written in XML that passes x3d_mcp `validate_xml` (the PixelTexture containerField enumeration omits it). Ship styles that need no texture child (ComposedVolumeStyle, ShadedVolumeStyle) or accept a validator exception for colour-by-density. |
+| MP-24 | **Volume children need explicit containerField.** `ImageTexture3D` under `VolumeData` needs `containerField="voxels"` (and `segmentIdentifiers` for SegmentedVolumeData); without it X_ITE files it under `texture` and silently draws nothing useful. A MetadataSet as first child of the Transform needs `containerField="metadata"`, and only one is allowed, so nest source, processing and segments sets inside one wrapper. |
+| MP-25 | **(R,S,A) is a mirror image.** Axes x = patient right, y = superior, z = anterior are left-handed. Use x = left (DICOM LPS columns map straight through), y superior, z anterior, and read the in-plane direction from ImageOrientationPatient: this series has rows running toward anterior, so it displays upside down if the header is ignored. |
+| MP-26 | **Check orientation on an image, not on one statistic.** A bone-centroid test passed or failed on contrast-filled bowel; an axial slice shows spine, kidneys and table at the low-z side at a glance. Grade the left/right claim L when it rests on the header alone. |
+| MP-27 | **HU bands are not segments.** Four ids by threshold inside a flood-fill body mask are cheap and honest if graded S; the FMA term offered for a band can be wrong in a given scan (gas band = bowel gas, not Lung). Keep the real organ link for a labelled dataset (TotalSegmentator, CC BY 4.0). Software GL draws the segmented shader very slowly: do not quote timings. |
 
 ## Open sources, ranked for the next step
 | Rank | Source | State |
 |---|---|---|
 | 1 | BodyParts3D meshes keyed by FMA id (112 of 120 classes listed) | lists fetched, meshes not downloaded; CC BY 4.0 per newer page |
-| 2 | TCIA DICOM for a VolumeData demo (156 collections, API answers) | licence per collection unread |
+| 2 | TCIA DICOM for a VolumeData demo (156 collections, API answers) | used in v6: Pancreas-CT, CC BY 3.0 read per series from the API |
 | 3 | NIH 3D | per-model licences unread; no API path found |
 | 4 | SNOMED CT proper | needs an affiliate licence; ids only today |
 
