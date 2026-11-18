@@ -27,6 +27,16 @@ Fold-back from x3d.demo `docs/demos/heritage-geo/v1/` (x3d.demo PR #61, candidat
 | 6 | OSM Overpass | Needs a route that works from this container | not reached |
 | 7 | buildingSMART IFC samples | Repository outside this session's GitHub scope | not run |
 
+## v2 additions (x3d.demo PR #63, heritage-geo v2)
+
+| ID | Lesson | Evidence | Grade |
+|---|---|---|---|
+| HG-9 | **Coordinates typed from memory are not evidence; read them from a gazetteer.** v1 put Khafre 208.3 m and Menkaure 64.1 m from their Pleiades points (Great Pyramid 4.7 m, Sphinx 4.3 m). v2 reads the points from the Pleiades dump and puts the Pleiades id on each claim (CRM P87 is identified by). | Pleiades dump dated 17 Nov 2026, 42,542 rows, sha256 75f620a7...; `data/pleiades-giza.json` | C |
+| HG-10 | **Compare like with like before calling a datum conflict.** EPQS 627.175 m at one point versus the Drillfield's 617 m tile reference looked like a 10 m disagreement. Over 140 points at 30 m spacing the median of EPQS minus (617 + DSM) is +0.03 m, and tile ground spans 619.8 to 632.9 m, so 627.175 m was one slope point. Caveats: tile centre assumed, correlation 0.51, DSM includes buildings and trees (min difference -24.2 m). | USGS EPQS 1 m, `reconcile_elevation.py` | C numbers, S interpretation |
+| HG-11 | **Check the model before promising a placement.** `confluence-ifc` model.ifc has IFCSITE with every placement and lat/lon field null and no IFCMAPCONVERSION or IFCPROJECTEDCRS, in millimetres. The placement row (EPSG:32617, Scale 0.001) is authored here and graded S. | grep over 2,030 lines | C file, S placement |
+| HG-12 | **Test the orientation hypothesis both ways.** The Drillfield DSM matches EPQS with z increasing southward (corr 0.51) and not northward (-0.40). | 140 samples each | C |
+| HG-13 | **A new version of a squash-merged branch needs the base merged in**, or the PR re-lists the earlier version's files. Merging main into the branch cut the PR diff to the new folder. | git, x3d.demo #63 | C |
+
 ## Next builds (proposed)
 1. `GeoElevationGrid` for the Drillfield from a 3DEP tile, with the 627.175 vs 617 m question answered.
 2. Run `model.ifc` through the Confluence path and place it with a documented IfcMapConversion row.
