@@ -1,0 +1,150 @@
+{
+ "color-emissive-white": {
+  "held": {
+   "tpr": 1.0,
+   "tnr": 0.972,
+   "tnr_twin": 0.964,
+   "score": 0.937,
+   "error": null,
+   "missed": [],
+   "false_alarms": [
+    "x3d.loom/x3d.threejs/bridge/fixtures/FogCoordinate.x3d",
+    "x3d.loom/x3d.threejs/bridge/fixtures/GeoProximitySensor.x3d",
+    "x3d.loom/x3d.threejs/bridge/fixtures/GeoViewpoint.x3d",
+    "x3d.loom/x3d.threejs/bridge/fixtures/LocalFog.x3d",
+    "x3d.loom/x3d.threejs/bridge/fixtures/FogCoordinate.x3d (unmutated twin)",
+    "x3d.loom/x3d.threejs/bridge/fixtures/FogCoordinate.x3d (near-miss)",
+    "x3d.loom/x3d.threejs/bridge/fixtures/GeoProximitySensor.x3d (unmutated twin)",
+    "x3d.loom/x3d.threejs/bridge/fixtures/GeoViewpoint.x3d (unmutated twin)"
+   ]
+  },
+  "code": "def trap(root):\n    for el in root.iter():\n        tag = el.tag\n        if '}' in tag:\n            tag = tag.rsplit('}', 1)[-1]\n        if tag != 'Material':\n            continue\n        diff = el.get('diffuseColor')\n        emis = el.get('emissiveColor')\n        if diff is None or emis is None:\n            continue\n        diff_parts = diff.strip().split()\n        emis_parts = emis.strip().split()\n        if len(diff_parts) != 3 or len(emis_parts) != 3:\n            continue\n        if emis_parts == ['1', '1', '1'] and diff_parts != ['1', '1', '1']:\n            return True\n    return False"
+ },
+ "color-range": {
+  "held": {
+   "tpr": 1.0,
+   "tnr": 1.0,
+   "tnr_twin": 1.0,
+   "score": 1.0,
+   "error": null,
+   "missed": [],
+   "false_alarms": []
+  },
+  "code": "def trap(root):\n    for elem in root.iter():\n        tag = elem.tag\n        local = tag.rsplit('}', 1)[-1] if '}' in tag else tag\n        if local == 'Material':\n            for color_attr in ('diffuseColor', 'emissiveColor', 'specularColor', 'transparencyColor'):\n                val = elem.get(color_attr)\n                if val is not None:\n                    for part in val.split():\n                        try:\n                            if float(part) > 1.0:\n                                return True\n                        except ValueError:\n                            pass\n    return False"
+ },
+ "glsl-reserved-active": {
+  "held": {
+   "tpr": 1.0,
+   "tnr": 1.0,
+   "tnr_twin": 1.0,
+   "score": 1.0,
+   "error": null,
+   "missed": [],
+   "false_alarms": []
+  },
+  "code": "def trap(root):\n    for elem in root.iter():\n        tag = elem.tag.rsplit('}', 1)[-1] if '}' in elem.tag else elem.tag\n        if tag == 'ShaderPart':\n            if elem.text and 'uniform float active;' in elem.text:\n                return True\n    return False"
+ },
+ "metadata-containerfield": {
+  "held": {
+   "tpr": 0.0,
+   "tnr": 0.0,
+   "tnr_twin": 0.0,
+   "score": 0.0,
+   "error": "syntax error: expected an indented block after function definition on line 1 (line 1)",
+   "missed": [
+    "x3d.loom/x3d.s1/fixtures/adversarial.x3d",
+    "x3d.loom/x3d.webgpu/bridge/fixtures/ProtoInstance.x3d",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1m9o.x3d",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1ubd.x3d"
+   ],
+   "false_alarms": [
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1m9o.x3d",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1ubd.x3d",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1zaa.x3d",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/2k1p.x3d",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1m9o.x3d (unmutated twin)",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1m9o.x3d (near-miss)",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1ubd.x3d (unmutated twin)",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1ubd.x3d (near-miss)"
+   ]
+  },
+  "code": "def trap(root):"
+ },
+ "movie-not-still": {
+  "held": {
+   "tpr": 1.0,
+   "tnr": 1.0,
+   "tnr_twin": 0.5,
+   "score": 0.5,
+   "error": null,
+   "missed": [],
+   "false_alarms": [
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1m9o.x3d (near-miss)",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1ubd.x3d (near-miss)",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1zaa.x3d (near-miss)",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/2k1p.x3d (near-miss)"
+   ]
+  },
+  "code": "def trap(root):\n    for elem in root.iter():\n        tag = elem.tag\n        local = tag.rsplit('}', 1)[-1] if '}' in tag else tag\n        if local == 'MovieTexture':\n            url = elem.get('url')\n            if url is not None and url.startswith('\"') and url.endswith('\"'):\n                return True\n    return False"
+ },
+ "route-before-def": {
+  "held": {
+   "score": 0.0,
+   "error": "AdapterParseError: The LM returned an empty or null response.\n\nAdapter JSONAdapter failed to parse the LM response. \n\nLM Response:  \n\nExpected to find output fields in the LM resp"
+  },
+  "code": ""
+ },
+ "route-undefined": {
+  "held": {
+   "tpr": 1.0,
+   "tnr": 1.0,
+   "tnr_twin": 1.0,
+   "score": 1.0,
+   "error": null,
+   "missed": [],
+   "false_alarms": []
+  },
+  "code": "def trap(root):\n    defined = set()\n    for elem in root.iter():\n        if 'DEF' in elem.attrib:\n            defined.add(elem.attrib['DEF'])\n    for elem in root.iter():\n        tag = elem.tag.rsplit('}', 1)[-1] if '}' in elem.tag else elem.tag\n        if tag == 'ROUTE':\n            for attr in ('fromNode', 'toNode'):\n                if attr in elem.attrib:\n                    ref = elem.attrib[attr]\n                    if ref not in defined:\n                        return True\n    return False"
+ },
+ "shader-raw-source": {
+  "held": {
+   "score": 0.0,
+   "error": "AdapterParseError: The LM returned an empty or null response.\n\nAdapter JSONAdapter failed to parse the LM response. \n\nLM Response:  \n\nExpected to find output fields in the LM resp"
+  },
+  "code": ""
+ },
+ "splat-bbox": {
+  "held": {
+   "tpr": 0.0,
+   "tnr": 1.0,
+   "tnr_twin": 1.0,
+   "score": 0.0,
+   "error": null,
+   "missed": [
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1m9o.x3d",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1ubd.x3d",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1zaa.x3d",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/2k1p.x3d"
+   ],
+   "false_alarms": []
+  },
+  "code": "def trap(root):\n    for elem in root.iter():\n        tag = elem.tag\n        local = tag.rsplit('}', 1)[-1] if '}' in tag else tag\n        if local == 'GaussianSplat':\n            if 'bboxSize' not in elem.attrib or 'bboxCenter' not in elem.attrib:\n                return True\n    return False"
+ },
+ "version-fits-nodes": {
+  "held": {
+   "tpr": 1.0,
+   "tnr": 1.0,
+   "tnr_twin": 0.5,
+   "score": 0.5,
+   "error": null,
+   "missed": [],
+   "false_alarms": [
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1m9o.x3d (near-miss)",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1ubd.x3d (near-miss)",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/1zaa.x3d (near-miss)",
+    "x3d.loom/runs/zinc-scenes-20261106/candidate/scenes/2k1p.x3d (near-miss)"
+   ]
+  },
+  "code": "def trap(root):\n    _t = {\"GaussianSplats\", \"FontLibrary\", \"HAnimPose\", \"InlineGeometry\", \"RenderedTexture\"}\n    for e in root.iter():\n        t = e.tag.rsplit(\"}\", 1)[-1] if \"}\" in e.tag else e.tag\n        if t in _t:\n            return True\n    return False"
+ }
+}

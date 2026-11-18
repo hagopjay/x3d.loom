@@ -19,7 +19,7 @@ Impact is what changes if it works. Effort is agent days. "Metric" says whether 
 
 | # | Area | Impact | Effort | Data in hand | Metric (who decides) | Pilot | State |
 |---|---|---|---|---|---|---|---|
-| 1 | **Rule synthesis (flywheel step 4)**: incident to a trap rule or two-sided test | Highest. Turns the Loom's core loop from hand work to proposed-and-witnessed | M | 10 shipped rules, 4 more not yet covered, 451 clean scenes, 10 mutators plus near-miss mutators | Deterministic: recall x clean specificity x twin specificity; a human still merges | `kit/dspy_pilots/trap_synth/` | Built, audited, seed baseline in section 4 |
+| 1 | **Rule synthesis (flywheel step 4)**: incident to a trap rule or two-sided test | Highest. Turns the Loom's core loop from hand work to proposed-and-witnessed | M | 10 shipped rules, 4 more not yet covered, 451 clean scenes, 10 mutators plus near-miss mutators | Deterministic: recall x clean specificity x twin specificity; a human still merges | `kit/dspy_pilots/trap_synth/` | Built, audited; free-tier seed baseline mean 0.494, 3 of 10 perfect (section 3.3) |
 | 2 | **Evaluate the evaluators**: degenerate battery, twin negatives, held-out by base, validator pin on every metric | High. Every other row is only as good as its metric | S | Picture-judge audit (17 Oct), trap metric, `scene_metric.py` | Deterministic | Battery inside pilot 1 (`test_dspy_trap_synth.py`) | Built for the trap metric; not yet applied to the picture judge or Loom witness metrics |
 | 3 | **Writer prompt for X3D**, metric = delivered (valid + placed + types + draws) | High, already measured: 34.4 to 63.9% first-try (Full barred), 74.3% (Full open), transferred to stronger models (d5598c4) | S | 61 prompts, 17 Oct run, cached answers | Deterministic validator + X_ITE render; judge only screens | `x3d.onto` branch `claude/dspy-agent-wvxa5n`, `dspy/run_onto_gepa.py` (27 Oct A/B) | Done once; refresh on the new fork and a delivered metric |
 | 4 | **Ontology mapping with verifier-graded claims** (FMA, CIDOC, OntoMathPro, OpenMath, PhySH, IFC) | High and new: three ontology demos in 3 days did the mapping by hand | M | 120 FMA attempts, 18 lessons x 4 ontologies, 202 cached fetches, SHACL tools | Existence is Confirmed by a fetch; meaning stays Suspected and is never auto-graded | Design only (section 4.3) | Not built |
@@ -64,7 +64,16 @@ Reading: the biggest first-answer killers are knowledge the prompt can carry (PB
 
 ### 3.3 Seed baseline on a free-tier model
 
-SEED_BASELINE_PLACEHOLDER
+One call per rule, no optimiser, `nvidia/nemotron-3.5-lightning-30b-a3b` on the free NVIDIA endpoint (a reasoning model; `max_tokens` 6000; 10 calls, about 6 minutes, 0 USD billed; per-call tokens and seconds in `out/calls.jsonl`). Scored on held-out scenes with the audited metric (C, `seed_baseline.py`).
+
+| Held-out score | Rules |
+|---|---|
+| 1.0 (3 of 10) | `color-range`, `glsl-reserved-active`, `route-undefined` |
+| 0.937 | `color-emissive-white` (3.6% false alarms on clean scenes and twins) |
+| 0.5 (2) | `movie-not-still`, `version-fits-nodes`: caught every positive but fired on half the lawful near-misses (a `.mp4` movie, a 4.1 file), which is the keyword mistake the twin term exists to catch |
+| 0.0 (4) | `splat-bbox` (rule never fired on the positives), `metadata-containerfield` (syntax error), `route-before-def` and `shader-raw-source` (empty reply: reasoning used all 6000 tokens) |
+
+**Mean held-out score 0.494; 3 of 10 perfect.** Two of the four zeros are a token budget, not a capability, so treat the mean as a floor for this model (S). The useful reading is that the benchmark separates: it passes three rules outright, and its twin term fires exactly on the two keyword-style answers. That is headroom for GEPA with feedback naming the false alarms. It is one sample per rule on one small model; it is not an estimate of what GEPA or a stronger writer would score.
 
 ## 4. Area notes
 
@@ -122,7 +131,7 @@ No paid call has been made. The only model calls this session went to a free-tie
 
 ## 7. Order of work and decisions
 
-1. Run the seed baseline on the free tier (in progress) and read it.
+1. Seed baseline on the free tier: done (section 3.3). Next, rerun the two empty replies with a larger token budget.
 2. Row 1 GEPA run on gemini-3.8-flash, about $0.6 expected and $2.50 at most, only on his typed yes.
 3. Apply the battery to the picture judge and the Loom fidelity metrics (row 2), $0.
 4. Replay-first ontology pilot (row 4) from the cached fetches.
