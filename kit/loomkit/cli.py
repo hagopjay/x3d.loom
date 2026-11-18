@@ -119,7 +119,7 @@ def cmd_foldback(a) -> dict:
     subject = candidate(root)["sha256"]
     if a.target:
         need(a.base, "FOLDBACK_NEEDS_BASE", "--target needs --base SHA: the commit the patch is claimed to apply to")
-        res = foldback.check_target(Path(a.patch), Path(a.target), a.base, a.consumer)
+        res = foldback.check_target(Path(a.patch), Path(a.target), a.base, a.consumer, scorer=a.scorer, impl=a.impl)
         where, lim = f"clean clone of {Path(a.target).name} at {res['base_sha'] or a.base}", [
             "The consumer command is the target's own regression; it shows the patch holds there, not that it helps a later task."]
     else:
@@ -133,7 +133,9 @@ def cmd_foldback(a) -> dict:
                                                      "target_bound": res["target_bound"],
                                                      "consumer": bool(res.get("consumer_after")),
                                                      "patch_frozen": bool(res.get("patch_frozen")),
-                                                     "scorer_unchanged": res["target_bound"] and not res.get("scorer_changed")},
+                                                     # True only for a DECLARED scorer closure the patch leaves alone
+                                                     "scorer_unchanged": res["target_bound"] and res.get("scorer_closure", {}).get("state") == "unchanged",
+                                                     "scorer_closure": res.get("scorer_closure", {}).get("state", "unknown")},
                          limitations=lim, reason=res["reason"] if res["status"] != "pass" else "")
 
 
@@ -294,36 +296,99 @@ def cmd_accept(a) -> dict:
     return acc.accept(a.root, a.evidence, acc.load_profile(a.profile))
 
 
+MANIFEST_SCHEMA = Path(__file__).resolve().parents[1] / "templates" / "evidence-manifest-v2.schema.json"
+
+
+def manifest_path(dest: Path) -> Path:
+    """The manifest is versioned WITH its receipt: receipt.json -> evidence-manifest.json (the v1 name, kept),
+    receipt-v2.json -> receipt-v2.evidence-manifest.json. A successor never collides with its predecessor's manifest."""
+    return dest.parent / ("evidence-manifest.json" if dest.name == "receipt.json" else f"{dest.stem}.evidence-manifest.json")
+
+
+def check_manifest(m: dict) -> None:
+    """Validate generated manifest bytes against the shipped v2 schema before anything is published (third review,
+    18 Nov 2026, defect 10: a failed optional witness was written into not_run, whose enum excludes fail). jsonschema
+    when installed; otherwise the same rules checked by hand, so CI without it still refuses a bad manifest."""
+    schema = json.loads(MANIFEST_SCHEMA.read_text())
+    try:
+        import jsonschema
+    except ImportError:
+        jsonschema = None
+    if jsonschema is not None:
+        errs = sorted(jsonschema.Draft202012Validator(schema).iter_errors(m), key=lambda x: list(x.path))
+        need(not errs, "MANIFEST_SCHEMA", "; ".join(f"{list(x.path)}: {x.message}" for x in errs[:3]))
+        return
+    need(all(k in m for k in schema["required"]), "MANIFEST_SCHEMA", "missing required key")
+    for key in ("not_run", "failed"):
+        enum = schema["properties"][key]["items"]["properties"]["status"]["enum"]
+        for row in m[key]:
+            need(row["status"] in enum and row.get("reason"), "MANIFEST_SCHEMA", f"{key}: {row}")
+
+
 def cmd_receipt(a) -> dict:
+    """Accept, then publish the receipt and its evidence manifest TOGETHER (third review, 18 Nov 2026, defect 9: the
+    receipt was written, then the manifest collided and the command exited 1 with a new receipt beside an old manifest).
+    Both destinations are checked first, both documents are built and validated in memory, both are staged as hidden
+    temp files in the destination folder, and only then are they renamed into place; a failure removes what this run
+    staged or placed and nothing else."""
+    import os, tempfile as _tf
     profile = acc.load_profile(a.profile)
+    profile_sha = sha256_file(Path(a.profile))
     result = acc.accept(a.root, a.evidence, profile)
     cand = candidate(a.root)
-    not_run = []
+    dest = Path(a.out)
+    mpath = manifest_path(dest)
+    for d in (dest, mpath):
+        need(a.force or not d.exists(), "RECEIPT_EXISTS", f"{d} exists; write a new version or pass --force")
+    visible = []
     for name in profile.get("visible_not_run", []):
         p = Path(a.evidence) / f"{name}.json"
         rec = json.loads(p.read_text()) if p.exists() else {"status": "not_run", "reason": "no record"}
-        not_run.append({"witness": name, "status": rec["status"], "reason": rec.get("reason", "")})
+        visible.append({"witness": name, "status": rec["status"], "reason": rec.get("reason") or f"recorded {rec['status']} with no reason"})
     tools = {}
     for row in result["witnesses"]:
         rec = json.loads((Path(a.evidence) / f"{row['witness']}.json").read_text())
         tools[row["witness"]] = {k: rec["instrument"][k] for k in ("tool", "commit") if k in rec["instrument"]}
     r = receipt.build(a.subject, result, cand["files"], [Path(o) for o in a.outputs], tools,
-                      inputs={"candidate_sha256": cand["sha256"]}, not_run=not_run, model_calls=[],
+                      inputs={"candidate_sha256": cand["sha256"], "profile_sha256": profile_sha},
+                      not_run=visible, model_calls=[],
                       budget={"paid_calls": 0, "cloud_resources": 0}, prev=Path(a.prev) if a.prev else None,
                       limitations=profile.get("limitations", []))
-    dest = receipt.write(r, Path(a.out), force=a.force)
+    rbytes = (json.dumps(r, sort_keys=True, indent=2) + "\n").encode()
     ev = Path(a.evidence)
     roles = {".json": "witness-record", ".log": "log", ".png": "frame", ".jpg": "frame", ".wav": "audio"}
-    manifest = {"schema": "loom.evidence-manifest/1", "subject": a.subject, "candidate_sha256": cand["sha256"],
-                "profile": profile["name"], "receipt": {"path": dest.name, "sha256": sha256_file(dest)},
+    manifest = {"schema": "loom.evidence-manifest/2", "subject": a.subject, "candidate_sha256": cand["sha256"],
+                "profile": profile["name"], "profile_sha256": profile_sha,
+                "receipt": {"path": dest.name, "sha256": hashlib.sha256(rbytes).hexdigest()},
                 "files": [{"path": p.relative_to(ev).as_posix(), "sha256": sha256_file(p), "bytes": p.stat().st_size,
                            "role": roles.get(p.suffix, "other")} for p in sorted(ev.rglob("*")) if p.is_file()],
-                "not_run": [n for n in not_run if n["status"] != "pass"]}
-    mpath = dest.parent / "evidence-manifest.json"
-    need(a.force or not mpath.exists(), "RECEIPT_EXISTS", str(mpath))
-    mpath.write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n")
+                "not_run": [n for n in visible if n["status"] not in ("pass", "fail")],
+                "failed": [n for n in visible if n["status"] == "fail"]}
+    check_manifest(manifest)
+    mbytes = (json.dumps(manifest, sort_keys=True, indent=2) + "\n").encode()
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    staged, placed = [], []
+    try:
+        for final, data in ((dest, rbytes), (mpath, mbytes)):
+            fd, tmp = _tf.mkstemp(prefix="." + final.name + ".", suffix=".staged", dir=final.parent)
+            with os.fdopen(fd, "wb") as fh:
+                fh.write(data)
+            staged.append((Path(tmp), final))
+        for tmp, final in staged:
+            need(a.force or not final.exists(), "RECEIPT_EXISTS", f"{final} appeared while staging")
+            os.replace(tmp, final)
+            placed.append(final)
+    except BaseException:
+        for tmp, final in staged:
+            if tmp.exists():
+                tmp.unlink()
+        if not a.force:
+            for final in placed:   # only files this run created: without --force none of them existed before
+                final.unlink()
+        raise
     return {"receipt": str(dest), "sha256": r["sha256"], "candidate_sha256": r["candidate_sha256"],
-            "evidence_manifest": str(mpath), "evidence_files": len(manifest["files"])}
+            "profile_sha256": profile_sha, "evidence_manifest": str(mpath), "evidence_files": len(manifest["files"]),
+            "visible_failed": [n["witness"] for n in manifest["failed"]]}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -342,6 +407,8 @@ def main(argv: list[str] | None = None) -> int:
     p = common("grammar"); p.add_argument("--files", required=True); p.add_argument("--fork", default=str(grammar.DEFAULT_FORK))
     p = common("foldback"); p.add_argument("--patch", required=True)
     p.add_argument("--target", default=""); p.add_argument("--base", default=""); p.add_argument("--consumer", default="")
+    p.add_argument("--scorer", action="append", default=[], help="glob (repeatable) of the oracle closure in the target: scorer code, helpers, expected data, config")
+    p.add_argument("--impl", action="append", default=[], help="glob (repeatable) of files the patch may change; anything else makes the closure unknown")
     p = common("sci"); p.add_argument("--profile", required=True)
     p = common("metalsite"); p.add_argument("--files", required=True); p.add_argument("--spec", required=True)
     p.add_argument("--name", default="metal-site")

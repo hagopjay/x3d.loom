@@ -46,8 +46,10 @@ kit/loom command  PROJECT --evidence RUN/evidence --name truth -- python3 -m you
 ```
 ```bash
 kit/loom foldback PROJECT --evidence RUN/evidence --patch PROJECT/integration/your.patch \
-    --target ~/src/the-real-repo --base 1a2b3c4 --consumer "python3 -m pytest -q tests"
+    --target ~/src/the-real-repo --base 1a2b3c4 --consumer "python3 -m pytest -q tests" \
+    --scorer 'tests/**' --scorer 'tests/expected/*.json' --impl 'src/**'
 ```
+`--scorer` declares the oracle closure (scorer code, helpers, expected data, config); its files are hashed at the base. `scorer_unchanged` is true only when that closure is declared and the patch leaves it alone (and, with `--impl`, touches nothing outside the declared implementation). No declaration means `unknown`, which `x3d-static/v3` refuses. When the patch does edit the declared scorer, the base scorer is put back over the patched tree and run again; green only under the patched scorer is a fail.
 Publication fold-backs are target-bound: the patch is frozen and hashed once, applied to a clean clone of the target at `--base`, and the target's own command runs before and after. A patch that edits the oracle (a test file, or a file the consumer names) is marked `scorer changed`. Without `--target` the patch goes into an empty repository and the record says `target_bound: false`; `x3d-static/v2` and `/v3` refuse that.
 ```bash
 kit/loom play     PROJECT --evidence RUN/evidence --tapes 'tapes/*.tape.json' --levels 'levels/*.x3d' --runner tools/replay.mjs

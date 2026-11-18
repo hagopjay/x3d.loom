@@ -828,10 +828,115 @@ def review_controls() -> list[dict]:
     return rows
 
 
+def review3_controls() -> list[dict]:
+    """Third external review, 18 Nov 2026: scorer closure (defect 2), receipt/manifest transaction (9), manifest
+    schema (10), git paths with spaces and Unicode. Each case is the reviewer's counterexample shape."""
+    from loomkit import foldback
+    rows = []
+    loom = KIT / "loom"
+    with tempfile.TemporaryDirectory(prefix="loomkit-review3-") as d:
+        d = Path(d)
+        tgt = d / "target"; tgt.mkdir()
+        (tgt / "lib.py").write_text("VALUE = 1\n")
+        (tgt / "expected.json").write_text("1\n")
+        (tgt / "check.py").write_text("import json, lib, sys\nsys.exit(0 if lib.VALUE == json.load(open('expected.json')) else 1)\n")
+        (tgt / "my scene.txt").write_text("a\n"); (tgt / "café.txt").write_text("a\n")
+        g = lambda *a: subprocess.run(["git", "-C", str(tgt), *a], check=True, capture_output=True, text=True).stdout.strip()
+        g("init", "-q"); g("add", "."); g("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "base")
+        base = g("rev-parse", "HEAD")
+        def diff(edits):
+            for f, txt in edits.items():
+                (tgt / f).write_text(txt)
+            out = subprocess.run(["git", "-C", str(tgt), "diff"], check=True, capture_output=True).stdout
+            g("checkout", "--", ".")
+            return out
+        oracle = d / "oracle.patch"; oracle.write_bytes(diff({"lib.py": "VALUE = 2\n", "expected.json": "2\n"}))
+        py = "python3 -E -s check.py"
+        v3 = acc.load_profile(KIT / "profiles/x3d-static-v3.json")
+        rule = next(r for r in v3["required"] if r["witness"] == "foldback")
+        def cover(res):
+            return {"coverage": {"target_bound": True, "consumer": True, "patch_frozen": True,
+                                 "scorer_unchanged": res["scorer_closure"]["state"] == "unchanged"}}
+        # (a) expected-data edit, no declared closure: unknown, and v3 refuses it
+        res = foldback.check_target(oracle, tgt, base, py)
+        if res["scorer_closure"]["state"] != "unknown":
+            raise RuntimeError(f"SURVIVING_CONTROL: expected.json edit read as {res['scorer_closure']}")
+        rows.append({"case": "R3-2: lib.py and expected.json both moved, no --scorer declared", "expected": "closure unknown",
+                     "caught": res["scorer_closure"]["state"]})
+        rows.append({"case": "R3-2: x3d-static/v3 refuses an unknown scorer closure", **expect("COVERAGE_REQUIRED",
+                     lambda: [acc.coverage_ok("foldback", k, w, cover(res)) for k, w in rule["coverage"].items()])})
+        # (b) the same patch with the closure declared: changed, and the base oracle replay fails it
+        res = foldback.check_target(oracle, tgt, base, py, scorer=["check.py", "expected.json"])
+        if res["scorer_closure"]["state"] != "changed" or res["status"] != "fail" or res["consumer_after_base_oracle"]["exit_code"] == 0:
+            raise RuntimeError(f"SURVIVING_CONTROL: declared closure: {res['status']} {res['outcome']}")
+        rows.append({"case": "R3-2: same patch, --scorer check.py expected.json: base oracle replayed over the patched tree",
+                     "expected": "fail (green only under the patched scorer)", "caught": res["outcome"]})
+        # (c) shell-wrapped scorer edit, no declared closure
+        wrap = d / "wrap.patch"; wrap.write_bytes(diff({"lib.py": "VALUE = 2\n", "check.py": "import lib, sys\nsys.exit(0 if lib.VALUE == 2 else 1)\n"}))
+        res = foldback.check_target(wrap, tgt, base, f"sh -c '{py}'")
+        if res["scorer_closure"]["state"] != "unknown" or not res["scorer_closure"]["consumer_wrapper"]:
+            raise RuntimeError(f"SURVIVING_CONTROL: sh -c wrapper read as {res['scorer_closure']}")
+        rows.append({"case": "R3-2: check.py edited and run through sh -c, no --scorer", "expected": "closure unknown (wrapper)", "caught": "unknown"})
+        res = foldback.check_target(wrap, tgt, base, f"sh -c '{py}'", scorer=["check.py", "expected.json"])
+        if res["status"] != "fail":
+            raise RuntimeError("SURVIVING_CONTROL: declared closure under a wrapper")
+        rows.append({"case": "R3-2: same, with --scorer declared", "expected": "fail under the base oracle", "caught": res["outcome"]})
+        # (d) an honest implementation fix with the closure declared stays unchanged, and --impl bounds the patch
+        honest = d / "honest.patch"; honest.write_bytes(diff({"lib.py": "VALUE = 1  # same value, comment only\n"}))
+        res = foldback.check_target(honest, tgt, base, py, scorer=["check.py", "expected.json"], impl=["lib.py"])
+        if res["scorer_closure"]["state"] != "unchanged" or res["status"] != "pass" or len(res["scorer_closure"]["scorer_files_at_base"]) != 2:
+            raise RuntimeError(f"FALSE_REFUSAL: honest patch {res['scorer_closure']} {res['status']}")
+        rows.append({"case": "R3-2: implementation-only patch with the closure declared (2 scorer files hashed at base)", "result": "pass, unchanged"})
+        odd = d / "odd.patch"; odd.write_bytes(diff({"lib.py": "VALUE = 1\n#x\n", "my scene.txt": "b\n"}))
+        res = foldback.check_target(odd, tgt, base, py, scorer=["check.py", "expected.json"], impl=["lib.py"])
+        if res["scorer_closure"]["state"] != "unknown":
+            raise RuntimeError("SURVIVING_CONTROL: path outside --impl")
+        rows.append({"case": "R3-2: patch touches a file outside --impl", "expected": "closure unknown", "caught": "unknown"})
+        # (e) git paths with a space and with Unicode (git C-quotes it): parsed, applied, a record is written
+        paths = d / "paths.patch"; paths.write_bytes(diff({"my scene.txt": "b\n", "café.txt": "b\n"}))
+        res = foldback.check_target(paths, tgt, base, py)
+        if sorted(f for f in ("my scene.txt", "café.txt")) != sorted(foldback.patch_files(paths)[i]["path"] for i in range(2)) or res["status"] != "pass":
+            raise RuntimeError(f"SURVIVING_CONTROL: space/Unicode paths: {res['status']} {res['reason']}")
+        rows.append({"case": "R3: patch for `my scene.txt` and C-quoted `café.txt`", "expected": "parsed and applied (old: INSTRUMENT_CRASH)", "caught": "pass"})
+        junk = d / "junk.patch"; junk.write_text("diff --git a/x b/x\n@@ nonsense\n")
+        r = foldback.check_target(junk, tgt, base, py)
+        if r["status"] != "error":
+            raise RuntimeError("SURVIVING_CONTROL: unparseable patch")
+        rows.append({"case": "R3: unparseable patch", "expected": "error record, not a crash", "caught": "error"})
+        # (f) receipt + manifest: a successor gets its own manifest; a collision leaves nothing behind; failed is not not_run
+        root, ev, s = fixture(d / "rc")
+        write_witness(ev, root, s, "eyes", "fail", "L", {"tool": "synthetic"}, reason="frame looked wrong")
+        prof = d / "prof.json"; prof.write_text(json.dumps(PROFILE))
+        out = d / "rc/receipts"
+        run = lambda name, *extra: subprocess.run([str(loom), "receipt", str(root), "--evidence", str(ev), "--profile", str(prof),
+                                                   "--subject", "s", "--out", str(out / name), *extra], capture_output=True, text=True)
+        r1 = run("receipt.json")
+        man = json.loads((out / "evidence-manifest.json").read_text())
+        if r1.returncode != 0 or man["schema"] != "loom.evidence-manifest/2" or [x["witness"] for x in man["failed"]] != ["eyes"] or man["not_run"]:
+            raise RuntimeError(f"SURVIVING_CONTROL: failed visible witness in manifest: {r1.stdout[:200]} {man.get('failed')} {man.get('not_run')}")
+        rows.append({"case": "R3-10: optional eyes=fail goes to `failed`, not `not_run`; manifest v2 validated before writing", "result": "failed: [eyes]"})
+        r2 = run("receipt-v2.json")
+        if r2.returncode != 0 or not (out / "receipt-v2.evidence-manifest.json").exists():
+            raise RuntimeError(f"SURVIVING_CONTROL: successor receipt: {r2.stdout[:300]}")
+        rows.append({"case": "R3-9: receipt-v2 is published with its own manifest; v1's pair is untouched", "result": "pair written"})
+        before = sorted(x.name for x in out.iterdir())
+        (out / "receipt-v3.evidence-manifest.json").write_text("{}")   # a stray manifest where v3's would go
+        r3 = run("receipt-v3.json")
+        after = sorted(x.name for x in out.iterdir())
+        if r3.returncode == 0 or (out / "receipt-v3.json").exists() or after != sorted(before + ["receipt-v3.evidence-manifest.json"]):
+            raise RuntimeError(f"SURVIVING_CONTROL: partial publication: {after}")
+        rows.append({"case": "R3-9: manifest destination taken: no receipt-v3 written, no staged file left", "expected": "RECEIPT_EXISTS, nothing new", "caught": "nothing new"})
+        rec = json.loads((out / "receipt.json").read_text())
+        if rec["inputs"].get("profile_sha256") != sha256_file(prof):
+            raise RuntimeError("SURVIVING_CONTROL: receipt does not bind the profile bytes")
+        rows.append({"case": "R3: receipt names the exact profile bytes (profile_sha256)", "result": "bound"})
+    return rows
+
+
 def run_all() -> dict:
     return {"acceptance": acceptance_controls(), "traps": trap_controls(),
             "picture": picture_controls(), "receipt": receipt_controls(), "sweep": sweep_controls(), "sci": sci_controls(),
-            "pagetraps": page_controls(), "play": play_controls(), "physics": physics_controls(), "cli": cli_controls(), "cli_subprocess": cli_subprocess_controls(), "review": review_controls(), "optimized": bool(sys.flags.optimize)}
+            "pagetraps": page_controls(), "play": play_controls(), "physics": physics_controls(), "cli": cli_controls(), "cli_subprocess": cli_subprocess_controls(), "review": review_controls(), "review3": review3_controls(), "optimized": bool(sys.flags.optimize)}
 
 
 if __name__ == "__main__":
@@ -845,7 +950,7 @@ if __name__ == "__main__":
             print(p.stdout, p.stderr, file=sys.stderr)
             sys.exit(1)
         res = json.loads(p.stdout)
-        negatives = sum(1 for k in ("acceptance", "picture", "receipt", "sweep", "sci", "play", "physics", "cli", "review") for row in res[k] if "caught" in row)
+        negatives = sum(1 for k in ("acceptance", "picture", "receipt", "sweep", "sci", "play", "physics", "cli", "review", "review3") for row in res[k] if "caught" in row)
         report["modes"].append({"optimized": res["optimized"], "negative_controls_caught": negatives,
                                 "trap_rules_two_sided": len(res["traps"]),
                                 "page_trap_rules_two_sided": sum(1 for r in res["pagetraps"] if "rule" in r and "form" not in r),

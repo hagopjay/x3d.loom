@@ -673,6 +673,69 @@
             "expected": "COVERAGE_REQUIRED"
           }
         ],
+        "review3": [
+          {
+            "case": "R3-2: lib.py and expected.json both moved, no --scorer declared",
+            "caught": "unknown",
+            "expected": "closure unknown"
+          },
+          {
+            "case": "R3-2: x3d-static/v3 refuses an unknown scorer closure",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          },
+          {
+            "case": "R3-2: same patch, --scorer check.py expected.json: base oracle replayed over the patched tree",
+            "caught": "held (scorer changed: expected.json); fails the base oracle",
+            "expected": "fail (green only under the patched scorer)"
+          },
+          {
+            "case": "R3-2: check.py edited and run through sh -c, no --scorer",
+            "caught": "unknown",
+            "expected": "closure unknown (wrapper)"
+          },
+          {
+            "case": "R3-2: same, with --scorer declared",
+            "caught": "held (scorer changed: check.py); fails the base oracle",
+            "expected": "fail under the base oracle"
+          },
+          {
+            "case": "R3-2: implementation-only patch with the closure declared (2 scorer files hashed at base)",
+            "result": "pass, unchanged"
+          },
+          {
+            "case": "R3-2: patch touches a file outside --impl",
+            "caught": "unknown",
+            "expected": "closure unknown"
+          },
+          {
+            "case": "R3: patch for `my scene.txt` and C-quoted `caf\u00e9.txt`",
+            "caught": "pass",
+            "expected": "parsed and applied (old: INSTRUMENT_CRASH)"
+          },
+          {
+            "case": "R3: unparseable patch",
+            "caught": "error",
+            "expected": "error record, not a crash"
+          },
+          {
+            "case": "R3-10: optional eyes=fail goes to `failed`, not `not_run`; manifest v2 validated before writing",
+            "result": "failed: [eyes]"
+          },
+          {
+            "case": "R3-9: receipt-v2 is published with its own manifest; v1's pair is untouched",
+            "result": "pair written"
+          },
+          {
+            "case": "R3-9: manifest destination taken: no receipt-v3 written, no staged file left",
+            "caught": "nothing new",
+            "expected": "RECEIPT_EXISTS, nothing new"
+          },
+          {
+            "case": "R3: receipt names the exact profile bytes (profile_sha256)",
+            "result": "bound"
+          }
+        ],
         "sci": [
           {
             "case": "synthetic case bank",
@@ -843,7 +906,7 @@
           }
         ]
       },
-      "negative_controls_caught": 106,
+      "negative_controls_caught": 115,
       "optimized": false,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,
@@ -1522,6 +1585,69 @@
             "expected": "COVERAGE_REQUIRED"
           }
         ],
+        "review3": [
+          {
+            "case": "R3-2: lib.py and expected.json both moved, no --scorer declared",
+            "caught": "unknown",
+            "expected": "closure unknown"
+          },
+          {
+            "case": "R3-2: x3d-static/v3 refuses an unknown scorer closure",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          },
+          {
+            "case": "R3-2: same patch, --scorer check.py expected.json: base oracle replayed over the patched tree",
+            "caught": "held (scorer changed: expected.json); fails the base oracle",
+            "expected": "fail (green only under the patched scorer)"
+          },
+          {
+            "case": "R3-2: check.py edited and run through sh -c, no --scorer",
+            "caught": "unknown",
+            "expected": "closure unknown (wrapper)"
+          },
+          {
+            "case": "R3-2: same, with --scorer declared",
+            "caught": "held (scorer changed: check.py); fails the base oracle",
+            "expected": "fail under the base oracle"
+          },
+          {
+            "case": "R3-2: implementation-only patch with the closure declared (2 scorer files hashed at base)",
+            "result": "pass, unchanged"
+          },
+          {
+            "case": "R3-2: patch touches a file outside --impl",
+            "caught": "unknown",
+            "expected": "closure unknown"
+          },
+          {
+            "case": "R3: patch for `my scene.txt` and C-quoted `caf\u00e9.txt`",
+            "caught": "pass",
+            "expected": "parsed and applied (old: INSTRUMENT_CRASH)"
+          },
+          {
+            "case": "R3: unparseable patch",
+            "caught": "error",
+            "expected": "error record, not a crash"
+          },
+          {
+            "case": "R3-10: optional eyes=fail goes to `failed`, not `not_run`; manifest v2 validated before writing",
+            "result": "failed: [eyes]"
+          },
+          {
+            "case": "R3-9: receipt-v2 is published with its own manifest; v1's pair is untouched",
+            "result": "pair written"
+          },
+          {
+            "case": "R3-9: manifest destination taken: no receipt-v3 written, no staged file left",
+            "caught": "nothing new",
+            "expected": "RECEIPT_EXISTS, nothing new"
+          },
+          {
+            "case": "R3: receipt names the exact profile bytes (profile_sha256)",
+            "result": "bound"
+          }
+        ],
         "sci": [
           {
             "case": "synthetic case bank",
@@ -1692,7 +1818,7 @@
           }
         ]
       },
-      "negative_controls_caught": 106,
+      "negative_controls_caught": 115,
       "optimized": true,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,
