@@ -26,6 +26,16 @@ Source data (OntoMathPro 3,449 class pages, 206 OpenMath CDs, OEIS 402,048 names
 | MO-14 | **arXiv title hits are a crude demand signal:** waves 93, heat 33, integral 29, linear 27, lorenz 16 of 2,974 papers (physics.ed-ph, math.HO, physics.class-ph, 2023-09-25 to 2026-11-17); aliasing 1, complex 1, probability 1. Title regex only. | arxiv-hits.json | C count, S meaning |
 | MO-15 | **OntoMathPro superclass chains are shallow and generic** (derivative E3040 sits under 'Element of mathematical analysis' under 'Mathematical knowledge object'), so they help navigation, not matching. | omp-graph.json | C |
 
+## Iteration 3 (v3): Wikidata cross-references and a Russian-label check
+Wikidata (CC0) via `wbsearchentities` + `wbgetentities`, 18 Nov 2026 from the build container. The API answered "too many requests" as a plain-text body with HTTP 200-class transport, so a JSON parse failure is the rate-limit signal; lookups ran at about 1 per 10 s with backoff.
+
+| ID | Lesson | Evidence | Grade |
+|---|---|---|---|
+| MO-16 | **Wikidata labels in Russian are an independent check on a model's Russian reading.** Of 50 cited OntoMathPro terms with Russian labels, Wikidata agrees on 19 (ru label equal or en label equal), gives a search hit only on 7 and nothing on 24; 12 terms are Russian-only and 4 of those (E1523, E2021, E2855, E2924) still need a human reader. | data/wikidata-xref.json | C |
+| MO-17 | **All 18 lessons have a Wikidata Q-id** (15 exactMatch, 3 closeMatch: waves Q136980, refraction Q208391, probability Q185547). Wikidata also confirms two v2 false friends as distinct items: wavelet Q831390 and Fermat number Q207264. | wbgetentities | C |
+| MO-18 | **Wikidata "Уравнение колебаний" resolves to wave equation (Q193846),** which supports reading OntoMathPro E1931 as a wave-type closeMatch rather than a gap. | wbsearchentities | L |
+| MO-19 | **Search hits are not ground truth.** Ru query 'Производная' returned SI derived unit and derivative work; the right item (Q29175) only appeared via the longer label 'Производная функции'. Compare against every label of the class. | wd.log | C |
+
 ## Gobbler ingest, ranked
 1. PhySH (CC0, JSON). 2. OEIS (CC BY-SA 4.0 read at oeis.org/LICENSE; `search?q=id:A000045&fmt=json` returned the Fibonacci record). 3. OpenMath symbols and CDs. 4. arXiv API (200 for physics.ed-ph and math.HO; metadata only, per-paper licence for figures: S). 5. OntoMathPro listing (licence unknown: S; quarantined crawl held privately). 6. Open textbooks (CC BY 4.0 published, not re-opened: L).
 
