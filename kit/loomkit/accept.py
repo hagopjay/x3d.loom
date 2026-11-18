@@ -11,7 +11,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from .core import ORIGINS, WITNESS_SCHEMA, GateError, candidate, need, sha256_file
+from .core import ORIGINS, WITNESS_SCHEMA, GateError, candidate, contained, need, safe_name, sha256_file
 
 PROFILE_SCHEMA = "loom.profile/1"
 
@@ -41,6 +41,8 @@ def parse_profile(data: bytes, label: str = "profile") -> dict:
     need(isinstance(profile.get("required"), list) and profile["required"], "EMPTY_PROFILE", label)
     names = [r.get("witness") for r in profile["required"]]
     need(all(isinstance(n, str) and n for n in names), "PROFILE_WITNESS_NAME")
+    for n in names + list(profile.get("visible_not_run", [])):
+        safe_name(n)
     need(len(names) == len(set(names)), "PROFILE_DUPLICATE_WITNESS")
     for r in profile["required"]:
         need(isinstance(r.get("coverage", {}), dict) and isinstance(r.get("allow", []), list), "PROFILE_SCHEMA", f"{r['witness']}: coverage must be an object, allow a list")
@@ -129,20 +131,24 @@ def binding_problem(record, name: str, subject_sha256: str, evidence_dir: Path) 
     if record.get("development") is not False:
         return "development record"
     for item in record.get("evidence", []):
-        p = Path(evidence_dir) / item.get("path", "")
+        try:
+            p = contained(evidence_dir, item.get("path"))
+        except GateError:
+            return f"evidence {item.get('path')!r} lies outside the evidence folder"
         if not (p.is_file() and sha256_file(p) == item.get("sha256")):
             return f"evidence {item.get('path')} changed or missing"
     return ""
 
 
-def accept(candidate_root: Path | str, evidence_dir: Path | str, profile: dict) -> dict:
-    """Return an acceptance summary or raise GateError with a stable code."""
-    subject = candidate(candidate_root)
+def accept(candidate_root: Path | str, evidence_dir: Path | str, profile: dict, subject: dict | None = None) -> dict:
+    """Return an acceptance summary or raise GateError with a stable code. `subject` lets a caller judge and publish ONE
+    candidate generation it computed itself (final external scan, defect 2)."""
+    subject = subject or candidate(candidate_root)
     evidence_dir = Path(evidence_dir)
     rows = []
     for rule in profile["required"]:
-        name = rule["witness"]
-        path = evidence_dir / f"{name}.json"
+        name = safe_name(rule["witness"])
+        path = contained(evidence_dir, f"{name}.json")
         need(path.is_file(), "MISSING_WITNESS", name)
         raw = path.read_bytes()   # read once: the bytes parsed are the bytes hashed into the summary
         try:
@@ -161,7 +167,7 @@ def accept(candidate_root: Path | str, evidence_dir: Path | str, profile: dict) 
         for key, expected in rule.get("coverage", {}).items():
             coverage_ok(name, key, expected, record)
         for item in record.get("evidence", []):
-            p = evidence_dir / item["path"]
+            p = contained(evidence_dir, item.get("path"))
             need(p.is_file() and sha256_file(p) == item["sha256"], "EVIDENCE_DRIFT", f"{name}: {item['path']}")
         rows.append({"witness": name, "status": record["status"], "grade": record["grade"], "origin": record_origin(record),
                      "record_sha256": hashlib.sha256(raw).hexdigest()})

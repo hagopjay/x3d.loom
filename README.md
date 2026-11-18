@@ -74,6 +74,7 @@ Exit codes: 0 passed, 1 contract violation (a stable code is printed), 2 instrum
 ## Publishing (law 16)
 
 `kit/loom sweep . DEST --rules kit/profiles/public-sweep.json` writes a public copy: model and vendor names become neutral labels, costs and Drive ids are withheld, and the copy fails if any forbidden pattern survives (`SWEEP-REPORT.json`). The rules file stays private, since it lists the names it removes.
+DEST must be disjoint from the source in both directions (the same folder, a parent of it, or a folder inside it is refused before anything is touched). The copy is staged beside DEST: a clean copy replaces DEST; a copy with residue is left at `DEST.sweep-failed` and DEST is kept as it was.
 
 ## Check that the kit works
 

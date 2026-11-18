@@ -1097,6 +1097,103 @@ def review4_controls() -> list[dict]:
     return rows
 
 
+def review5_controls() -> list[dict]:
+    """Final external scan, 18 Nov 2026: the reviewer's counterexamples, each beside its healthy contrast."""
+    from loomkit import foldback
+    rows = []
+    rules = {"schema": "loom.sweep-rules/1", "replace": [{"pattern": "PRIVATE", "with": "PUBLIC"}], "forbid": ["PRIVATE"]}
+    # --- 1. sweep never touches what exists until a complete, clean copy is ready ---
+    with tempfile.TemporaryDirectory(prefix="loomkit-review5-") as d:
+        d = Path(d); src = d / "work/src"; src.mkdir(parents=True); (src / "a.md").write_text("PRIVATE\n")
+        sib = d / "work/sibling.txt"; sib.write_text("keep\n")
+        for label, dest, code in (("destination is the source", src, "SWEEP_OVERLAP"), ("destination is the source's parent", d / "work", "SWEEP_OVERLAP"),
+                                  ("destination inside the source", src / "out", "SWEEP_DEST_INSIDE_SRC")):
+            rows.append({"case": f"R5-1: sweep, {label} (old: rmtree deleted the source{' and its sibling' if 'parent' in label else ''})", **expect(code, lambda: sweep.sweep(src, dest, rules, set()))})
+            if (src / "a.md").read_text() != "PRIVATE\n" or sib.read_text() != "keep\n":
+                raise RuntimeError(f"SURVIVING_CONTROL: sweep changed existing bytes ({label})")
+        pub = d / "public"; pub.mkdir(); (pub / "old.md").write_text("previous snapshot\n")
+        (src / "b.md").write_text("PRIVATE but unredactable: " + "PRIV" + "ATE".lower().upper() + "\n")
+        rules_strict = dict(rules, replace=[])
+        rep = sweep.sweep(src, pub, rules_strict, set())
+        if rep["status"] != "fail" or (pub / "old.md").read_text() != "previous snapshot\n" or not Path(rep["placed"]).name.endswith(".sweep-failed"):
+            raise RuntimeError(f"SURVIVING_CONTROL: failed sweep replaced the destination: {rep.get('placed')}")
+        rows.append({"case": "R5-1: a sweep with residue leaves the previous destination as it was", "expected": "DEST kept, copy at DEST.sweep-failed", "caught": "kept"})
+        rep = sweep.sweep(src, pub, rules, set())
+        if rep["status"] != "pass" or (pub / "old.md").exists() or (pub / "a.md").read_text() != "PUBLIC\n" or (src / "a.md").read_text() != "PRIVATE\n":
+            raise RuntimeError("FALSE_REFUSAL: sibling sweep")
+        rows.append({"case": "R5-1: sibling destination: redacted copy placed, source bytes unchanged", "result": "pass"})
+    # --- 4 and 10. physics: every replay trial judged; a finite zero is a value ---
+    with tempfile.TemporaryDirectory(prefix="loomkit-review5-") as d:
+        root, run = physics_run(Path(d))
+        bad = {"host": "firefox", "steps": 40, "engine_version": "1.0", "mismatches": 3, "first_mismatch": 7}
+        for label, order in (("failed then passing", lambda r: r["replays"].insert(0, bad)), ("passing then failed", lambda r: r["replays"].append(bad))):
+            r = copy.deepcopy(run); order(r)
+            rows.append({"case": f"R5-4: firefox replayed twice, {label} (old: the later entry overwrote the earlier)", **expect("PHYS_DUPLICATE_REPLAY", lambda: physics.check_run(r, root))})
+        r = copy.deepcopy(run)
+        r["tolerances"] = [{"id": "floor", "observed": 0.0, "limit": 1.0, "declared_limit": 1.0, "rule": "at least", "status": "accepted_failure",
+                            "waiver": {"owner": "o", "date": "2026-11-18", "reason": "synthetic", "observed": 0.0, "limit": 1.0}}]
+        res = physics.check_run(r, root, max_waivers=1)
+        if len(res["waivers"]) != 1:
+            raise RuntimeError("FALSE_REFUSAL: zero-valued waiver")
+        rows.append({"case": "R5-10: waiver restating observed 0.0 (old: 'lacks observed')", "result": "pass, 1 waiver"})
+        r["tolerances"][0]["waiver"].pop("observed")
+        rows.append({"case": "R5-10: the same waiver without observed", **expect("PHYS_WAIVER_INCOMPLETE", lambda: physics.check_run(r, root, max_waivers=1))})
+    # --- 5. one decoder for every spelling of a PNG ---
+    png = tiny_png(); broken = png[:8] + png[-12:]
+    with tempfile.TemporaryDirectory(prefix="loomkit-review5-") as d:
+        import hashlib
+        for name, data, want in (("frame.PNG", broken, "SCI_PUBLICATION_UNDECODABLE"), ("frame.dat", broken, "SCI_PUBLICATION_UNDECODABLE"), ("frame.PNG", png, None)):
+            f = Path(d) / name; f.write_bytes(data)
+            case = {"id": "c", "frames": [{"file": name, "time": 0.0, "sha256": hashlib.sha256(data).hexdigest()}]}
+            if want:
+                rows.append({"case": f"R5-5: malformed PNG bytes named {name} (old: .PNG skipped the decoder)", **expect(want, lambda: sci.frames(case, Path(d), False, 1.0))})
+            elif sci.frames(case, Path(d), False, 1.0)["payloads"] != {"decoded": 1, "hash_only": 0}:
+                raise RuntimeError("FALSE_REFUSAL: valid frame.PNG")
+        rows.append({"case": "R5-5: valid PNG named frame.PNG decodes", "result": "pass"})
+    # --- 3. a declared scorer file behind a directory symlink ---
+    with tempfile.TemporaryDirectory(prefix="loomkit-review5-fb-") as d:
+        d = Path(d); tgt = d / "t"; (tgt / "oracle").mkdir(parents=True)
+        (tgt / "lib.py").write_text("VALUE = 1\n"); (tgt / "oracle/data.json").write_text('{"expected": 1}\n'); (tgt / "expected").symlink_to("oracle")
+        (tgt / "check.py").write_text("import json, sys\nfrom lib import VALUE\nsys.exit(0 if VALUE == json.load(open('expected/data.json'))['expected'] else 1)\n")
+        g = lambda *a: subprocess.run(["git", "-C", str(tgt), *a], check=True, capture_output=True, text=True).stdout.strip()
+        g("init", "-q"); g("add", "."); g("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "base"); base = g("rev-parse", "HEAD")
+        (tgt / "lib.py").write_text("VALUE = 2\n"); (tgt / "oracle/data.json").write_text('{"expected": 2}\n')
+        pt = d / "p.patch"; pt.write_bytes(subprocess.run(["git", "-C", str(tgt), "diff"], check=True, capture_output=True).stdout); g("checkout", "--", ".")
+        for decl in (["check.py", "expected/data.json"], ["check.py", "expected/**"]):
+            res = foldback.check_target(pt, tgt, base, "python3 -E -s -B check.py", scorer=decl)
+            if res["scorer_closure"]["state"] != "changed" or res["status"] != "fail":
+                raise RuntimeError(f"SURVIVING_CONTROL: dir-symlink scorer {decl}: {res['scorer_closure']['state']} {res['status']}")
+            rows.append({"case": f"R5-3: --scorer {decl[1]} behind expected -> oracle; patch edits oracle/data.json (old: omitted, unchanged, pass)",
+                         "expected": "changed; base oracle fails it", "caught": res["outcome"]})
+        res = foldback.check_target(pt, tgt, base, "python3 -E -s -B check.py", scorer=["check.py", "expected/nothing.json"])
+        if res["scorer_closure"]["state"] != "unknown":
+            raise RuntimeError("SURVIVING_CONTROL: a declaration matching nothing")
+        rows.append({"case": "R5-3: a declared --scorer entry that matches no file", "expected": "closure unknown", "caught": "unknown"})
+    # --- 9 and 2. evidence stays in its bundle; one candidate generation per receipt ---
+    with tempfile.TemporaryDirectory(prefix="loomkit-review5-rc-") as d:
+        d = Path(d); root, ev, s = fixture(d / "rc")
+        rows.append({"case": "R5-9: witness named ../outside-truth (old: genuine record written outside --evidence)",
+                     **expect("WITNESS_NAME_UNSAFE", lambda: write_witness(ev, root, s, "../outside-truth", "pass", "C", {"tool": "synthetic"}))})
+        bad = copy.deepcopy(PROFILE); bad["required"].append({"witness": "../outside-truth"})
+        rows.append({"case": "R5-9: a profile requiring ../outside-truth", **expect("WITNESS_NAME_UNSAFE", lambda: acc.parse_profile(json.dumps(bad).encode()))})
+        (d / "outside.log").write_text("x\n")
+        rows.append({"case": "R5-9: a record citing ../outside.log", **expect("EVIDENCE_OUTSIDE_BUNDLE",
+                     lambda: write_witness(ev, root, s, "extra", "pass", "C", {"tool": "synthetic"}, evidence=[{"path": "../outside.log", "sha256": sha256_file(d / "outside.log")}]))})
+        prof = d / "prof.json"; prof.write_text(json.dumps(dict(PROFILE, visible_not_run=[])))
+        real = acc.accept
+        def accept_then_edit(*a, **k):
+            out = real(*a, **k); (root / "world.x3d").write_text("<X3D version='4.0'><Scene><Group/></Scene></X3D>\n"); return out
+        acc.accept = accept_then_edit
+        try:
+            rows.append({"case": "R5-2: candidate edited between acceptance and publication (old: receipt named A and B)",
+                         **expect("CANDIDATE_CHANGED_DURING_RECEIPT", lambda: cli.cmd_receipt(cli_args(root, ev, prof, d / "out/receipt.json")))})
+        finally:
+            acc.accept = real
+        if (d / "out/receipt.json").exists():
+            raise RuntimeError("SURVIVING_CONTROL: receipt placed for a changed candidate")
+    return rows
+
+
 def cli_args(root, ev, prof, out, prev=None, force=False):
     import argparse
     return argparse.Namespace(root=str(root), evidence=str(ev), profile=str(prof), subject="s", out=str(out), outputs=[], prev=str(prev) if prev else None, force=force)
@@ -1105,7 +1202,7 @@ def cli_args(root, ev, prof, out, prev=None, force=False):
 def run_all() -> dict:
     return {"acceptance": acceptance_controls(), "traps": trap_controls(),
             "picture": picture_controls(), "receipt": receipt_controls(), "sweep": sweep_controls(), "sci": sci_controls(),
-            "pagetraps": page_controls(), "play": play_controls(), "physics": physics_controls(), "cli": cli_controls(), "cli_subprocess": cli_subprocess_controls(), "review": review_controls(), "review3": review3_controls(), "review4": review4_controls(), "optimized": bool(sys.flags.optimize)}
+            "pagetraps": page_controls(), "play": play_controls(), "physics": physics_controls(), "cli": cli_controls(), "cli_subprocess": cli_subprocess_controls(), "review": review_controls(), "review3": review3_controls(), "review4": review4_controls(), "review5": review5_controls(), "optimized": bool(sys.flags.optimize)}
 
 
 if __name__ == "__main__":
@@ -1119,7 +1216,7 @@ if __name__ == "__main__":
             print(p.stdout, p.stderr, file=sys.stderr)
             sys.exit(1)
         res = json.loads(p.stdout)
-        negatives = sum(1 for k in ("acceptance", "picture", "receipt", "sweep", "sci", "play", "physics", "cli", "review", "review3", "review4") for row in res[k] if "caught" in row)
+        negatives = sum(1 for k in ("acceptance", "picture", "receipt", "sweep", "sci", "play", "physics", "cli", "review", "review3", "review4", "review5") for row in res[k] if "caught" in row)
         report["modes"].append({"optimized": res["optimized"], "negative_controls_caught": negatives,
                                 "trap_rules_two_sided": len(res["traps"]),
                                 "page_trap_rules_two_sided": sum(1 for r in res["pagetraps"] if "rule" in r and "form" not in r),

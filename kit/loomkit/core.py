@@ -104,6 +104,26 @@ def candidate(root: Path | str, extra_exclude_dirs: set[str] | None = None) -> d
     return {"schema": CANDIDATE_SCHEMA, "files": files, "sha256": sha256_bytes(canonical(files))}
 
 
+_NAME = __import__("re").compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
+
+
+def safe_name(name) -> str:
+    """A witness name is one plain path segment (final external scan, 18 Nov 2026, defect 9: `../outside-truth` wrote a
+    genuine passing record outside --evidence, and the receipt's manifest inventoried nothing)."""
+    need(isinstance(name, str) and _NAME.fullmatch(name) and ".." not in name, "WITNESS_NAME_UNSAFE",
+         f"{name!r}: letters, digits, '.', '_' and '-' only, one path segment")
+    return name
+
+
+def contained(base: Path | str, rel) -> Path:
+    """`base/rel`, refused unless it resolves inside base."""
+    b = Path(base).resolve()
+    need(isinstance(rel, str) and rel, "EVIDENCE_OUTSIDE_BUNDLE", f"{rel!r}")
+    p = (b / rel).resolve()
+    need(b in p.parents, "EVIDENCE_OUTSIDE_BUNDLE", f"{rel} resolves outside {base}")
+    return p
+
+
 def write_witness(
     evidence_dir: Path | str,
     candidate_root: Path | str,
@@ -121,6 +141,9 @@ def write_witness(
     origin: str = "executed",
 ) -> dict:
     """Write one immutable witness record. Refuses if the candidate changed while the witness ran."""
+    safe_name(name)
+    for item in evidence or []:
+        contained(evidence_dir, item.get("path"))
     need(status in STATUSES, "UNKNOWN_STATUS", status)
     need(grade in GRADES, "UNKNOWN_GRADE", grade)
     need(origin in ORIGINS, "UNKNOWN_ORIGIN", origin)

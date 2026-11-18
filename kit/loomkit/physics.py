@@ -24,6 +24,7 @@ contract has a stable code (law 19), checked in this order; the first broken one
                             commit is missing or not an ancestor of HEAD, its bytes are not the sha256 stated, or a declared limit
                             appears nowhere in that committed file (law 44)
   PHYS_TRACE_TAMPERED       the recorded per-step hashes do not hash to the trace_sha256 the record states
+  PHYS_DUPLICATE_REPLAY     a host appears in more than one replay (each trial must be judged, not overwritten)
   PHYS_REPLAY_MISSING       a required host has no replay (cross-engine determinism is claimed per host, law 42)
   PHYS_REPLAY_STEPS         a replay ran a different number of steps than the recording
   PHYS_ENGINE_DRIFT         a replay used another engine version than the recording
@@ -178,7 +179,13 @@ def check_run(run: dict, root: Path | None = None, required_hosts: list[str] | N
     # 3. every required host replayed the whole run to the same state at every step (law 42)
     hosts = required_hosts if required_hosts is not None else run.get("required_hosts", [])
     need(hosts or run["replays"], "PHYS_NO_RUNS", f"{rid}: no replay and no required host")
-    by_host = {r.get("host"): r for r in run["replays"] if isinstance(r, dict)}
+    # one replay per host: a dict keyed by host let a later passing entry overwrite an earlier failing one, so the verdict
+    # depended on order (final external scan, 18 Nov 2026, defect 4). Every trial is kept and judged, and a host twice is refused.
+    need(all(isinstance(r, dict) and isinstance(r.get("host"), str) and r["host"] for r in run["replays"]), "PHYS_SCHEMA", f"{rid}: every replay needs a host")
+    seen_hosts = [r["host"] for r in run["replays"]]
+    dup = sorted({h for h in seen_hosts if seen_hosts.count(h) > 1})
+    need(not dup, "PHYS_DUPLICATE_REPLAY", f"{rid}: {dup} replayed more than once; record one trial per host, or one run record per trial")
+    by_host = {r["host"]: r for r in run["replays"]}
     for h in hosts:
         need(h in by_host, "PHYS_REPLAY_MISSING", f"{rid}: no replay in {h}")
     for host, r in by_host.items():
@@ -212,7 +219,8 @@ def check_run(run: dict, root: Path | None = None, required_hosts: list[str] | N
             continue
         w = it.get("waiver")
         need(isinstance(w, dict) and it.get("status") == "accepted_failure", "PHYS_TOLERANCE_FAIL", f"{rid}: {it['id']} {it['observed']} exceeds {it['limit']} and no waiver covers it")
-        missing = [f for f in WAIVER_FIELDS if not w.get(f)]
+        # presence, then type: a finite 0.0 is a value, not a missing field (final external scan, defect 10)
+        missing = [f for f in WAIVER_FIELDS if not (_num(w.get(f)) if f in ("observed", "limit") else (isinstance(w.get(f), str) and w[f].strip()))]
         need(not missing, "PHYS_WAIVER_INCOMPLETE", f"{rid}: waiver for {it['id']} lacks {missing}")
         need(w["observed"] == it["observed"] and w["limit"] == it["limit"], "PHYS_WAIVER_INCOMPLETE", f"{rid}: waiver for {it['id']} states other numbers than the measurement")
         waived.append({"id": it["id"], "observed": it["observed"], "limit": it["limit"], "owner": w["owner"], "reason": w["reason"]})
