@@ -15,6 +15,8 @@ Fold-back from x3d.demo `docs/demos/medical-provenance/v1/`. Educational proof o
 | MP-9 | **Licence texts on one site can disagree.** BodyParts3D info page says CC-BY SA 2.1 JP; lic.html (2025/02/27) says CC BY 4.0. FMA: OBO registry CUSTOM (inactive), OLS none. Follow the newer text, flag the conflict, ship ids only. | pages read 18 Nov 2026 | C |
 | MP-10 | **Dataset licence upgrade.** Zenodo 10047292 (TotalSegmentator, 117 structures, 1228 CT) states cc-by-4.0; the earlier torso notice said Likely. Subject s1397 membership and the pyvista copy stay L. Zenodo answered from the container this time (an earlier note said blocked). | record JSON | C |
 | MP-11 | **Small structures are voxel-limited.** One 3 mm voxel is 0.027 mL; structures under 5 mL (adrenals, ribs 11 and 12) carry S on their volume. | 4 claims | C |
+| MP-12 | **Ontology ancestors make the mapping queryable.** FMA is-a ancestors via OLS4 hierarchicalAncestors for all 120 mapped shapes (120 C claims): 108 distinct non-generic classes (Organ 77, Bone organ 60, Long bone 30, Vertebra 25, Rib 24). "Select every Rib" is one filter, not 24 name matches. Labels can carry stray whitespace ('Arterial tree' + newline): trim. | v2 `claims.json` kind `isa` | C |
+| MP-13 | **The scene can check itself against the claim file.** The page reads each shape's MetadataSet back from the running X3D scene and compares grade, FMA id, SNOMED id and claim ids with structures.json: 111 of 111 agree; editing one grade in memory is caught (110 of 111, shape named). Self-consistency only: an editor who changes both files defeats it, so a hash or signature is the next step. | headless Chromium, X_ITE 16.6.0 | C |
 
 ## Open sources, ranked for the next step
 | Rank | Source | State |
