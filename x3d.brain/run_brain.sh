@@ -129,7 +129,7 @@ json.dump(j, open(side, "w"), indent=1)
 PYEOF
 "$LOOM" grammar "$WORK2" --evidence "$CEV" --files 'scenes/*.x3d' --fork "$FORK" > /dev/null
 "$LOOM" traps "$WORK2" --evidence "$CEV" --files 'scenes/*.x3d' --host strict > /dev/null
-"$LOOM" command "$WORK2" --evidence "$CEV" --name data-true -- python3 -I -B tools/brain_scene_truth.py --strict --glob 'scenes/*.x3d' > /dev/null
+"$LOOM" command "$WORK2" --evidence "$CEV" --name data-true -- python3 -I -B tools/brain_scene_truth.py --strict --glob 'scenes/*.x3d' > /dev/null || [ $? -eq 1 ]  # expected-fail control: a fail record exits 1 since 18 Nov 2026; its status is checked next
 if ! $PY - "$CEV" > "$RUN/control-oit.json" <<'PYEOF'
 import json, sys
 ev = sys.argv[1]

@@ -3,41 +3,14 @@
   "name": "x3d-stem-chirp/v1",
   "purpose": "Chirp (x3d.STEM flagship 4). Accepting under it means: the scene is grammatical and meaningful on the fork with no known trap; every inspiral declares its model and limits; the integration closes its energy budget and is stable under refinement; the orbit follows Peters' decay laws, the chirp law, Kepler's law and the quadrupole luminosity within declared limits; the published audio crosses zero exactly as the computed strain says, with a negative control that fails; payloads inflate to their recorded bytes; the builder and integrator are the shipped ones; and a browser reproduced the builder's wave heights, played both tracks with the picture locked to the sound, and ran slow-motion playback through the scene's TimeSensor.",
   "required": [
-    {
-      "witness": "grammar"
-    },
-    {
-      "witness": "meaning"
-    },
-    {
-      "witness": "traps",
-      "coverage": {
-        "rules": 11
-      }
-    },
-    {
-      "witness": "page-traps",
-      "coverage": {
-        "rules": 6
-      }
-    },
-    {
-      "witness": "science",
-      "coverage": {
-        "kinds": 1
-      }
-    },
-    {
-      "witness": "behaviour"
-    }
+    {"witness": "grammar"},
+    {"witness": "meaning"},
+    {"witness": "traps", "coverage": {"rules_include": ["shader-raw-source", "route-before-def", "route-undefined", "color-range", "color-emissive-white", "splat-bbox", "movie-not-still", "version-fits-nodes", "no-script-under-host", "metadata-containerfield", "glsl-reserved-active"]}, "instrument": "loomkit.traps"},
+    {"witness": "page-traps", "coverage": {"rules_include": ["xite-callback-unguarded", "xite-browser-currenttime", "nav-before-scene", "window-global-shadow", "js-syntax", "loadurl-unbudgeted"]}, "instrument": "loomkit.pagetraps"},
+    {"witness": "science", "coverage": {"kinds": 1}},
+    {"witness": "behaviour"}
   ],
-  "visible_not_run": [
-    "eyes",
-    "host",
-    "gpu-location",
-    "paired-visual-review",
-    "listening-test"
-  ],
+  "visible_not_run": ["eyes", "host", "gpu-location", "paired-visual-review", "listening-test"],
   "science": {
     "min_cases": 3,
     "min_witnesses": 9,

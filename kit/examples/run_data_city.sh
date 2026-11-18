@@ -43,6 +43,6 @@ if "$LOOM" accept "$WORK" --evidence "$EV" --profile "$PROFILE" > "$RUN/control-
 cat "$RUN/control-stale.json"
 echo "--- control: plant a colour above 1 -> traps fail"
 sed -i '' 's/diffuseColor="\([^"]*\)"/diffuseColor="1.5 0 0"/' "$WORK/runs/baseline/world.x3d"
-"$LOOM" traps "$WORK" --evidence "$RUN/control-evidence" --files 'runs/*/world.x3d' --host strict > /dev/null
+"$LOOM" traps "$WORK" --evidence "$RUN/control-evidence" --files 'runs/*/world.x3d' --host strict > /dev/null || [ $? -eq 1 ]  # expected-fail control: a fail record exits 1 since 18 Nov 2026; its status is checked next
 python3 -I -c "import json,sys; r=json.load(open(sys.argv[1])); print({'status': r['status'], 'errors': r['measurements']['errors']}); sys.exit(0 if r['status']=='fail' else 1)" "$RUN/control-evidence/traps.json"
 echo "done: $RUN"

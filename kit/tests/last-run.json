@@ -102,21 +102,25 @@
         "cli_subprocess": [
           {
             "command": "traps",
+            "exit": 0,
             "fixture": "clean",
             "status": "pass"
           },
           {
             "command": "traps",
+            "exit": 1,
             "fixture": "trap",
             "status": "fail"
           },
           {
             "command": "pagetraps",
+            "exit": 0,
             "fixture": "clean",
             "status": "pass"
           },
           {
             "command": "pagetraps",
+            "exit": 1,
             "fixture": "trap",
             "status": "fail"
           }
@@ -565,6 +569,90 @@
             "expected": "RECEIPT_OUTPUTS"
           }
         ],
+        "review": [
+          {
+            "case": "D1: traps status=fail exits 1 and the record is written first",
+            "caught": "exit 1",
+            "expected": "exit 1"
+          },
+          {
+            "case": "D3: `record --grade C` refused (C means an instrument measured it)",
+            "caught": "DECLARED_NOT_MEASURED",
+            "expected": "DECLARED_NOT_MEASURED"
+          },
+          {
+            "case": "D3: a declared pass cannot satisfy a measured witness",
+            "caught": "DECLARED_NOT_MEASURED",
+            "expected": "DECLARED_NOT_MEASURED"
+          },
+          {
+            "case": "D3: a pre-18-Nov hand record (no origin, tool declared, grade C) is read as declared",
+            "caught": "DECLARED_NOT_MEASURED",
+            "expected": "DECLARED_NOT_MEASURED"
+          },
+          {
+            "case": "D3: a reviewed record must name the files looked at",
+            "caught": "REVIEW_NEEDS_EVIDENCE",
+            "expected": "REVIEW_NEEDS_EVIDENCE"
+          },
+          {
+            "case": "D3: a reviewed pass is refused where the rule does not name `reviewed`",
+            "caught": "DECLARED_NOT_MEASURED",
+            "expected": "DECLARED_NOT_MEASURED"
+          },
+          {
+            "case": "D3: the same reviewed pass is admitted where the rule names `reviewed` and its evidence hash holds",
+            "result": "accepted"
+          },
+          {
+            "case": "D3: the reviewed file changed after the review",
+            "caught": "EVIDENCE_DRIFT",
+            "expected": "EVIDENCE_DRIFT"
+          },
+          {
+            "case": "D3: a pass from an instrument the rule does not name",
+            "caught": "WRONG_INSTRUMENT",
+            "expected": "WRONG_INSTRUMENT"
+          },
+          {
+            "case": "D4: every shipped profile's traps/page-traps rule (29) accepts a fresh witness from today's tools",
+            "result": "accepted"
+          },
+          {
+            "case": "D4: a tool that dropped a rule the profile names",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          },
+          {
+            "case": "D4: coverage {min: n} below n",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          },
+          {
+            "case": "D10: a patch applied to a clean clone at the base SHA; consumer green before and after",
+            "result": "pass, held"
+          },
+          {
+            "case": "D10: a patch that turns the consumer red",
+            "caught": "fail regressed",
+            "expected": "fail regressed"
+          },
+          {
+            "case": "D10: a base SHA that is not in the target",
+            "caught": "error",
+            "expected": "error"
+          },
+          {
+            "case": "D10: target-bound mode without an independent consumer command",
+            "caught": "fail",
+            "expected": "fail"
+          },
+          {
+            "case": "D10: x3d-static/v2 refuses an empty-repository fold-back",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          }
+        ],
         "sci": [
           {
             "case": "synthetic case bank",
@@ -735,7 +823,7 @@
           }
         ]
       },
-      "negative_controls_caught": 88,
+      "negative_controls_caught": 102,
       "optimized": false,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,
@@ -843,21 +931,25 @@
         "cli_subprocess": [
           {
             "command": "traps",
+            "exit": 0,
             "fixture": "clean",
             "status": "pass"
           },
           {
             "command": "traps",
+            "exit": 1,
             "fixture": "trap",
             "status": "fail"
           },
           {
             "command": "pagetraps",
+            "exit": 0,
             "fixture": "clean",
             "status": "pass"
           },
           {
             "command": "pagetraps",
+            "exit": 1,
             "fixture": "trap",
             "status": "fail"
           }
@@ -1306,6 +1398,90 @@
             "expected": "RECEIPT_OUTPUTS"
           }
         ],
+        "review": [
+          {
+            "case": "D1: traps status=fail exits 1 and the record is written first",
+            "caught": "exit 1",
+            "expected": "exit 1"
+          },
+          {
+            "case": "D3: `record --grade C` refused (C means an instrument measured it)",
+            "caught": "DECLARED_NOT_MEASURED",
+            "expected": "DECLARED_NOT_MEASURED"
+          },
+          {
+            "case": "D3: a declared pass cannot satisfy a measured witness",
+            "caught": "DECLARED_NOT_MEASURED",
+            "expected": "DECLARED_NOT_MEASURED"
+          },
+          {
+            "case": "D3: a pre-18-Nov hand record (no origin, tool declared, grade C) is read as declared",
+            "caught": "DECLARED_NOT_MEASURED",
+            "expected": "DECLARED_NOT_MEASURED"
+          },
+          {
+            "case": "D3: a reviewed record must name the files looked at",
+            "caught": "REVIEW_NEEDS_EVIDENCE",
+            "expected": "REVIEW_NEEDS_EVIDENCE"
+          },
+          {
+            "case": "D3: a reviewed pass is refused where the rule does not name `reviewed`",
+            "caught": "DECLARED_NOT_MEASURED",
+            "expected": "DECLARED_NOT_MEASURED"
+          },
+          {
+            "case": "D3: the same reviewed pass is admitted where the rule names `reviewed` and its evidence hash holds",
+            "result": "accepted"
+          },
+          {
+            "case": "D3: the reviewed file changed after the review",
+            "caught": "EVIDENCE_DRIFT",
+            "expected": "EVIDENCE_DRIFT"
+          },
+          {
+            "case": "D3: a pass from an instrument the rule does not name",
+            "caught": "WRONG_INSTRUMENT",
+            "expected": "WRONG_INSTRUMENT"
+          },
+          {
+            "case": "D4: every shipped profile's traps/page-traps rule (29) accepts a fresh witness from today's tools",
+            "result": "accepted"
+          },
+          {
+            "case": "D4: a tool that dropped a rule the profile names",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          },
+          {
+            "case": "D4: coverage {min: n} below n",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          },
+          {
+            "case": "D10: a patch applied to a clean clone at the base SHA; consumer green before and after",
+            "result": "pass, held"
+          },
+          {
+            "case": "D10: a patch that turns the consumer red",
+            "caught": "fail regressed",
+            "expected": "fail regressed"
+          },
+          {
+            "case": "D10: a base SHA that is not in the target",
+            "caught": "error",
+            "expected": "error"
+          },
+          {
+            "case": "D10: target-bound mode without an independent consumer command",
+            "caught": "fail",
+            "expected": "fail"
+          },
+          {
+            "case": "D10: x3d-static/v2 refuses an empty-repository fold-back",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          }
+        ],
         "sci": [
           {
             "case": "synthetic case bank",
@@ -1476,7 +1652,7 @@
           }
         ]
       },
-      "negative_controls_caught": 88,
+      "negative_controls_caught": 102,
       "optimized": true,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,

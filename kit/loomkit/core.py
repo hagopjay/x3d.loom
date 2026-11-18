@@ -22,6 +22,12 @@ CANDIDATE_SCHEMA = "loom.candidate/1"
 # Status says what happened; grade says how far the claim can be leaned on. They are orthogonal.
 STATUSES = ("pass", "fail", "error", "not_run", "not_applicable", "deferred")
 GRADES = ("C", "L", "S")
+# Where a record came from (review 18 Nov 2026, defect 3): `executed` = a loomkit witness or a project gate ran and
+# measured; `declared` = an operator wrote the status by hand (`loom record`); `reviewed` = a person looked at named
+# evidence files (`loom record --origin reviewed --file F`). Only `executed` records may carry grade C, and a profile
+# admits a non-executed pass only where its rule names that origin. Unsigned records can still be hand-edited: the
+# origin closes the CLI path, not a forger (receipts show drift; they do not authenticate).
+ORIGINS = ("executed", "declared", "reviewed")
 
 # Never part of a candidate: evidence (avoids a self-referential digest), caches, VCS and archives.
 DEFAULT_EXCLUDE_DIRS = {"evidence", ".git", "node_modules", ".venv", "__pycache__", "receipts", "runs-local", ".work"}  # .work: scratch, never shipped
@@ -112,10 +118,14 @@ def write_witness(
     evidence: list[dict] | None = None,
     development: bool = False,
     reason: str = "",
+    origin: str = "executed",
 ) -> dict:
     """Write one immutable witness record. Refuses if the candidate changed while the witness ran."""
     need(status in STATUSES, "UNKNOWN_STATUS", status)
     need(grade in GRADES, "UNKNOWN_GRADE", grade)
+    need(origin in ORIGINS, "UNKNOWN_ORIGIN", origin)
+    need(origin == "executed" or grade != "C", "DECLARED_NOT_MEASURED",
+         f"{name}: a {origin} record cannot carry grade C (C means an instrument measured it)")
     need(status not in ("deferred", "not_applicable") or reason, "STATUS_NEEDS_REASON", f"{name}: {status}")
     now = candidate(candidate_root)["sha256"]
     need(now == subject_sha256, "CANDIDATE_CHANGED_DURING_WITNESS", name)
@@ -124,6 +134,7 @@ def write_witness(
         "witness": name,
         "status": status,
         "grade": grade,
+        "origin": origin,
         "subject_sha256": subject_sha256,
         "instrument": instrument,
         "measurements": measurements or {},

@@ -19,7 +19,7 @@ IDS="$(python3 -I "$V1/kit/examples/zinc_structures.py" "$CAND" $FETCH)"
 
 for id in $IDS; do
   "$LOOM" metalsite "$CAND" --evidence "$EV" --files "structures/pdb$id.ent.gz" --spec "$CAND/specs/$id.json" \
-    --name "metal-site-$id" > /dev/null
+    --name "metal-site-$id" > /dev/null || [ $? -eq 1 ]  # some structures are expected to fail (the full-set control below); a fail exits 1 since 18 Nov 2026
 done
 python3 -I -c "
 import json, sys

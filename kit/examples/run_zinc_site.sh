@@ -44,7 +44,7 @@ cat "$RUN/control-stale.json"
 echo "--- control: zinc has lost a cysteine (3.6 angstrom) -> SITE_INTACT_FRACTION, acceptance rejects"
 rm -rf "$WORK"; mkdir -p "$WORK"
 $FIX "$WORK" --drifted
-"$LOOM" metalsite "$WORK" --evidence "$RUN/control-evidence" --files 'structures/*.pdb' --spec "$WORK/metal-site-spec.json" > /dev/null
+"$LOOM" metalsite "$WORK" --evidence "$RUN/control-evidence" --files 'structures/*.pdb' --spec "$WORK/metal-site-spec.json" > /dev/null || [ $? -eq 1 ]  # expected-fail control: a fail record exits 1 since 18 Nov 2026; its status is checked next
 python3 -I -c "import json,sys; r=json.load(open(sys.argv[1])); print({'status': r['status'], 'reason': r['reason']}); sys.exit(0 if r['status']=='fail' and r['reason'].startswith('SITE_INTACT_FRACTION: ZN A101: intact in 0 of 20 frames') and 'first failure at frame 0: SITE_COORDINATION' in r['reason'] else 1)" "$RUN/control-evidence/metal-site.json"
 if "$LOOM" accept "$WORK" --evidence "$RUN/control-evidence" --profile "$PROFILE" > "$RUN/control-drifted.json"; then echo "SURVIVING_CONTROL drifted"; exit 1; fi
 cat "$RUN/control-drifted.json"
