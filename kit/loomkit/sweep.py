@@ -26,11 +26,56 @@ def load_rules(path: Path) -> dict:
     return rules
 
 
+def _overlap(src: Path, dest: Path) -> str | None:
+    if src == dest:
+        return "destination is the source"
+    if dest in src.parents:
+        return "destination contains the source"
+    if src in dest.parents:
+        return "destination is inside the source"
+    return None
+
+
 def sweep(src: Path, dest: Path, rules: dict, exclude: set[str]) -> dict:
+    """Copy, redact and check. Nothing that exists is touched until the complete copy is written and checked (final
+    external scan, 18 Nov 2026, defect 1: the only guard was `dest inside src`, so src == dest or dest = src's parent
+    reached rmtree(dest) and deleted the source, and its siblings, before exiting 2). The copy is staged beside the
+    destination; a clean copy replaces the destination, a copy with residue is left at DEST.sweep-failed and the
+    previous destination is kept."""
+    import os, tempfile
     src, dest = Path(src).resolve(), Path(dest).resolve()
-    need(not str(dest).startswith(str(src) + "/"), "SWEEP_DEST_INSIDE_SRC")
-    if dest.exists():
-        shutil.rmtree(dest)
+    need(src.is_dir(), "SWEEP_SRC_MISSING", f"{src} is not a directory")
+    why = _overlap(src, dest)
+    need(why is None, "SWEEP_DEST_INSIDE_SRC" if why == "destination is inside the source" else "SWEEP_OVERLAP", f"{why}: {src} / {dest}")
+    need(not dest.exists() or dest.is_dir(), "SWEEP_OVERLAP", f"{dest} exists and is not a directory")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    stage = Path(tempfile.mkdtemp(prefix="." + dest.name + ".", suffix=".staged", dir=dest.parent))
+    try:
+        report = _copy_and_check(src, stage, rules, exclude)
+    except BaseException:
+        shutil.rmtree(stage, ignore_errors=True)
+        raise
+    if report["status"] == "pass":
+        old = None
+        if dest.exists():
+            old = Path(tempfile.mkdtemp(prefix="." + dest.name + ".", suffix=".previous", dir=dest.parent)); old.rmdir()
+            os.replace(dest, old)
+        os.replace(stage, dest)
+        if old is not None:
+            shutil.rmtree(old)
+        report["placed"] = str(dest)
+    else:
+        failed = dest.with_name(dest.name + ".sweep-failed")
+        need(_overlap(src, failed) is None, "SWEEP_OVERLAP", f"{failed} overlaps the source")
+        if failed.exists():
+            shutil.rmtree(failed)
+        os.replace(stage, failed)
+        report["placed"] = str(failed)
+        report["destination_kept"] = dest.exists()
+    return report
+
+
+def _copy_and_check(src: Path, dest: Path, rules: dict, exclude: set[str]) -> dict:
     changed: dict[str, int] = {}
     for p in sorted(src.rglob("*")):
         rel = p.relative_to(src)

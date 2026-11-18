@@ -86,3 +86,21 @@ Instrument for every "now" column: the reviewer's round-4 probe scripts (`policy
 | R4 | committed-limit metric identity: a limit file number is matched by value, not by which metric it belongs to | **L** | — | documented limit | still open: name metrics in the limits file |
 
 Lesson: every set the Loom vouches for (the profile, the scorer, the runs, the visible witnesses) must be read once, keyed by full identity, and closed; an open set or a second read is where a wrong pass gets in.
+
+## Final scan, 18 Nov 2026 (Loom items)
+
+Instrument for "now": the reviewer's final-scan probes (`independent-sweep-probes.py`, `policy-final-boundaries.py`, `foldback-new-boundaries.py`, `math-final-boundaries.py`, plus the round-4 replays) against this branch, Python 3.13.18, Linux CPU; "old" is main at 3cc2cb3. `review5_controls`: 16 new negative controls, 151 caught in all, plain and `-O`.
+
+| # | Finding | Grade (ours) | Old | Now | Fix |
+|---|---|---|---|---|---|
+| F1 | `sweep SRC SRC` and `sweep SRC PARENT` deleted the source (and siblings) before exit 2 | **C** | source gone | `SWEEP_OVERLAP`, bytes unchanged | disjoint in both directions before any mutation; staged copy; residue never replaces DEST |
+| F2 | a concurrent edit during acceptance gave a receipt naming candidate A and B | **C** | exit 0, mixed | `CANDIDATE_CHANGED_DURING_RECEIPT` in 3 of 3 races | one candidate generation passed to `accept`, re-hashed before placement |
+| F3 | a declared scorer file behind a directory symlink was not inventoried | **C** | unchanged, pass | changed; base oracle fails | inventory walks directory links under their logical path (cycle-safe); each declaration must match a file |
+| F4 | a passing replay overwrote a failing one for the same host | **C** | order-dependent pass | `PHYS_DUPLICATE_REPLAY` either order | one trial per host per record |
+| F5 | `.PNG` skipped the decoder | **C** | pass | `SCI_PUBLICATION_UNDECODABLE` | dispatch on lower-cased type and on PNG signature; result counts decoded vs hash-only payloads |
+| F9 | witness `../outside-truth` wrote evidence outside the bundle; manifest listed nothing | **C** | exit 0 | `WITNESS_NAME_UNSAFE` / `EVIDENCE_OUTSIDE_BUNDLE` | one-segment names; contained evidence paths; every accepted record and cited file must be in the manifest |
+| F10 | a waiver restating observed 0.0 was "missing observed" | **C** | false refusal | pass; absent field still refused | presence and finite-number checks separated |
+
+Known limit, kept visible: payload types with no decoder (csv, ply, obj, vti, raw .bin without `decoded_sha256`) are bound by size and hash only; the science result now counts them (`payloads.hash_only`) instead of refusing them, because the STEM banks use them.
+
+Lesson: refuse before you mutate, and judge every trial; a dictionary keyed by an identity you did not check for uniqueness is a silent overwrite.

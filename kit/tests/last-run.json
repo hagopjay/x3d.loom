@@ -854,6 +854,100 @@
             "expected": "both originals restored, no spare files"
           }
         ],
+        "review5": [
+          {
+            "case": "R5-1: sweep, destination is the source (old: rmtree deleted the source)",
+            "caught": "SWEEP_OVERLAP",
+            "expected": "SWEEP_OVERLAP"
+          },
+          {
+            "case": "R5-1: sweep, destination is the source's parent (old: rmtree deleted the source and its sibling)",
+            "caught": "SWEEP_OVERLAP",
+            "expected": "SWEEP_OVERLAP"
+          },
+          {
+            "case": "R5-1: sweep, destination inside the source (old: rmtree deleted the source)",
+            "caught": "SWEEP_DEST_INSIDE_SRC",
+            "expected": "SWEEP_DEST_INSIDE_SRC"
+          },
+          {
+            "case": "R5-1: a sweep with residue leaves the previous destination as it was",
+            "caught": "kept",
+            "expected": "DEST kept, copy at DEST.sweep-failed"
+          },
+          {
+            "case": "R5-1: sibling destination: redacted copy placed, source bytes unchanged",
+            "result": "pass"
+          },
+          {
+            "case": "R5-4: firefox replayed twice, failed then passing (old: the later entry overwrote the earlier)",
+            "caught": "PHYS_DUPLICATE_REPLAY",
+            "expected": "PHYS_DUPLICATE_REPLAY"
+          },
+          {
+            "case": "R5-4: firefox replayed twice, passing then failed (old: the later entry overwrote the earlier)",
+            "caught": "PHYS_DUPLICATE_REPLAY",
+            "expected": "PHYS_DUPLICATE_REPLAY"
+          },
+          {
+            "case": "R5-10: waiver restating observed 0.0 (old: 'lacks observed')",
+            "result": "pass, 1 waiver"
+          },
+          {
+            "case": "R5-10: the same waiver without observed",
+            "caught": "PHYS_WAIVER_INCOMPLETE",
+            "expected": "PHYS_WAIVER_INCOMPLETE"
+          },
+          {
+            "case": "R5-5: malformed PNG bytes named frame.PNG (old: .PNG skipped the decoder)",
+            "caught": "SCI_PUBLICATION_UNDECODABLE",
+            "expected": "SCI_PUBLICATION_UNDECODABLE"
+          },
+          {
+            "case": "R5-5: malformed PNG bytes named frame.dat (old: .PNG skipped the decoder)",
+            "caught": "SCI_PUBLICATION_UNDECODABLE",
+            "expected": "SCI_PUBLICATION_UNDECODABLE"
+          },
+          {
+            "case": "R5-5: valid PNG named frame.PNG decodes",
+            "result": "pass"
+          },
+          {
+            "case": "R5-3: --scorer expected/data.json behind expected -> oracle; patch edits oracle/data.json (old: omitted, unchanged, pass)",
+            "caught": "held (scorer changed: expected/data.json); fails the base oracle",
+            "expected": "changed; base oracle fails it"
+          },
+          {
+            "case": "R5-3: --scorer expected/** behind expected -> oracle; patch edits oracle/data.json (old: omitted, unchanged, pass)",
+            "caught": "held (scorer changed: expected/data.json); fails the base oracle",
+            "expected": "changed; base oracle fails it"
+          },
+          {
+            "case": "R5-3: a declared --scorer entry that matches no file",
+            "caught": "unknown",
+            "expected": "closure unknown"
+          },
+          {
+            "case": "R5-9: witness named ../outside-truth (old: genuine record written outside --evidence)",
+            "caught": "WITNESS_NAME_UNSAFE",
+            "expected": "WITNESS_NAME_UNSAFE"
+          },
+          {
+            "case": "R5-9: a profile requiring ../outside-truth",
+            "caught": "WITNESS_NAME_UNSAFE",
+            "expected": "WITNESS_NAME_UNSAFE"
+          },
+          {
+            "case": "R5-9: a record citing ../outside.log",
+            "caught": "EVIDENCE_OUTSIDE_BUNDLE",
+            "expected": "EVIDENCE_OUTSIDE_BUNDLE"
+          },
+          {
+            "case": "R5-2: candidate edited between acceptance and publication (old: receipt named A and B)",
+            "caught": "CANDIDATE_CHANGED_DURING_RECEIPT",
+            "expected": "CANDIDATE_CHANGED_DURING_RECEIPT"
+          }
+        ],
         "sci": [
           {
             "case": "synthetic case bank",
@@ -1024,7 +1118,7 @@
           }
         ]
       },
-      "negative_controls_caught": 135,
+      "negative_controls_caught": 151,
       "optimized": false,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,
@@ -1884,6 +1978,100 @@
             "expected": "both originals restored, no spare files"
           }
         ],
+        "review5": [
+          {
+            "case": "R5-1: sweep, destination is the source (old: rmtree deleted the source)",
+            "caught": "SWEEP_OVERLAP",
+            "expected": "SWEEP_OVERLAP"
+          },
+          {
+            "case": "R5-1: sweep, destination is the source's parent (old: rmtree deleted the source and its sibling)",
+            "caught": "SWEEP_OVERLAP",
+            "expected": "SWEEP_OVERLAP"
+          },
+          {
+            "case": "R5-1: sweep, destination inside the source (old: rmtree deleted the source)",
+            "caught": "SWEEP_DEST_INSIDE_SRC",
+            "expected": "SWEEP_DEST_INSIDE_SRC"
+          },
+          {
+            "case": "R5-1: a sweep with residue leaves the previous destination as it was",
+            "caught": "kept",
+            "expected": "DEST kept, copy at DEST.sweep-failed"
+          },
+          {
+            "case": "R5-1: sibling destination: redacted copy placed, source bytes unchanged",
+            "result": "pass"
+          },
+          {
+            "case": "R5-4: firefox replayed twice, failed then passing (old: the later entry overwrote the earlier)",
+            "caught": "PHYS_DUPLICATE_REPLAY",
+            "expected": "PHYS_DUPLICATE_REPLAY"
+          },
+          {
+            "case": "R5-4: firefox replayed twice, passing then failed (old: the later entry overwrote the earlier)",
+            "caught": "PHYS_DUPLICATE_REPLAY",
+            "expected": "PHYS_DUPLICATE_REPLAY"
+          },
+          {
+            "case": "R5-10: waiver restating observed 0.0 (old: 'lacks observed')",
+            "result": "pass, 1 waiver"
+          },
+          {
+            "case": "R5-10: the same waiver without observed",
+            "caught": "PHYS_WAIVER_INCOMPLETE",
+            "expected": "PHYS_WAIVER_INCOMPLETE"
+          },
+          {
+            "case": "R5-5: malformed PNG bytes named frame.PNG (old: .PNG skipped the decoder)",
+            "caught": "SCI_PUBLICATION_UNDECODABLE",
+            "expected": "SCI_PUBLICATION_UNDECODABLE"
+          },
+          {
+            "case": "R5-5: malformed PNG bytes named frame.dat (old: .PNG skipped the decoder)",
+            "caught": "SCI_PUBLICATION_UNDECODABLE",
+            "expected": "SCI_PUBLICATION_UNDECODABLE"
+          },
+          {
+            "case": "R5-5: valid PNG named frame.PNG decodes",
+            "result": "pass"
+          },
+          {
+            "case": "R5-3: --scorer expected/data.json behind expected -> oracle; patch edits oracle/data.json (old: omitted, unchanged, pass)",
+            "caught": "held (scorer changed: expected/data.json); fails the base oracle",
+            "expected": "changed; base oracle fails it"
+          },
+          {
+            "case": "R5-3: --scorer expected/** behind expected -> oracle; patch edits oracle/data.json (old: omitted, unchanged, pass)",
+            "caught": "held (scorer changed: expected/data.json); fails the base oracle",
+            "expected": "changed; base oracle fails it"
+          },
+          {
+            "case": "R5-3: a declared --scorer entry that matches no file",
+            "caught": "unknown",
+            "expected": "closure unknown"
+          },
+          {
+            "case": "R5-9: witness named ../outside-truth (old: genuine record written outside --evidence)",
+            "caught": "WITNESS_NAME_UNSAFE",
+            "expected": "WITNESS_NAME_UNSAFE"
+          },
+          {
+            "case": "R5-9: a profile requiring ../outside-truth",
+            "caught": "WITNESS_NAME_UNSAFE",
+            "expected": "WITNESS_NAME_UNSAFE"
+          },
+          {
+            "case": "R5-9: a record citing ../outside.log",
+            "caught": "EVIDENCE_OUTSIDE_BUNDLE",
+            "expected": "EVIDENCE_OUTSIDE_BUNDLE"
+          },
+          {
+            "case": "R5-2: candidate edited between acceptance and publication (old: receipt named A and B)",
+            "caught": "CANDIDATE_CHANGED_DURING_RECEIPT",
+            "expected": "CANDIDATE_CHANGED_DURING_RECEIPT"
+          }
+        ],
         "sci": [
           {
             "case": "synthetic case bank",
@@ -2054,7 +2242,7 @@
           }
         ]
       },
-      "negative_controls_caught": 135,
+      "negative_controls_caught": 151,
       "optimized": true,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,

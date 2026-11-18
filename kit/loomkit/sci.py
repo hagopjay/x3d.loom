@@ -155,6 +155,7 @@ def frames(case: dict, root: Path, evolving: bool, quant_limit: float) -> dict:
     need(all(_finite(t) for t in times), "SCI_TIME_NONFINITE", case.get("id", ""))
     if evolving:
         need(all(b > a for a, b in zip(times, times[1:])), "SCI_TIME_ORDER", case.get("id", ""))
+    checks = {"decoded": 0, "hash_only": 0}
     for f in fs:
         need(f.get("clipped_values", 0) == 0, "SCI_DISPLAY_CLIPPING", f"{case.get('id')}: {f.get('file')}")
         if "quantization_max" in f:
@@ -167,7 +168,11 @@ def frames(case: dict, root: Path, evolving: bool, quant_limit: float) -> dict:
                 need(p.stat().st_size == item["bytes"], "SCI_PAYLOAD_SIZE", item["file"])
             need(sha256_file(p) == item.get("sha256"), "SCI_PAYLOAD_HASH", item["file"])
             data = p.read_bytes()
-            if p.suffix == ".png":
+            kind = p.suffix.lower()
+            # dispatch on the lower-cased type AND the bytes: `.PNG` skipped the decoder (final external scan, 18 Nov 2026,
+            # defect 5), and a PNG under another name is still a PNG
+            if kind == ".png" or data[:8] == b"\x89PNG\r\n\x1a\n":
+                checks["decoded"] += 1
                 try:
                     item_info = decode_png(data)
                 except ValueError as e:
@@ -176,18 +181,22 @@ def frames(case: dict, root: Path, evolving: bool, quant_limit: float) -> dict:
                     need((item.get("width"), item.get("height")) == (item_info["width"], item_info["height"]),
                          "SCI_PAYLOAD_SIZE", f"{item['file']}: declared {item.get('width')}x{item.get('height')}, decoded {item_info['width']}x{item_info['height']}")
             elif "decoded_sha256" in item:
+                checks["decoded"] += 1
                 import zlib
                 try:
                     raw = zlib.decompress(data)
                 except zlib.error:
                     raise GateError("SCI_PUBLICATION_UNDECODABLE", item["file"]) from None
                 need(sha256_bytes(raw) == item["decoded_sha256"], "SCI_PUBLICATION_UNDECODABLE", f"{item['file']}: decoded hash")
-            elif p.suffix == ".json":
+            elif kind == ".json":
+                checks["decoded"] += 1
                 try:
                     json.loads(data)
                 except ValueError:
                     raise GateError("SCI_PUBLICATION_UNDECODABLE", item["file"]) from None
-    return {"frames": len(fs), "first_time": times[0], "last_time": times[-1]}
+            else:
+                checks["hash_only"] += 1   # no decoder for this type: bound by size and hash only, and the result says so
+    return {"frames": len(fs), "first_time": times[0], "last_time": times[-1], "payloads": checks}
 
 
 def builder(case: dict, root: Path, builders: dict) -> str:

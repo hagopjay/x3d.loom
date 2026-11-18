@@ -29,7 +29,7 @@ from pathlib import Path
 
 from . import accept as acc
 from . import foldback, grammar, hepevent, metalsite, pagetraps, physics, picture, play, receipt, sci, sweep, traps
-from .core import GateError, InstrumentError, candidate, need, portable, sha256_file, write_witness
+from .core import GateError, InstrumentError, candidate, contained, need, portable, safe_name, sha256_file, write_witness
 
 
 def _files(root: Path, pattern: str) -> list[Path]:
@@ -264,7 +264,7 @@ def cmd_command(a) -> dict:
     p = subprocess.run(cmd, cwd=root, capture_output=True, text=True, timeout=1800)
     status = {0: "pass", 1: "fail"}.get(p.returncode, "error")
     log = (p.stdout + "\n--- stderr ---\n" + p.stderr).encode()
-    log_name = f"{a.name}.log"
+    log_name = f"{safe_name(a.name)}.log"
     Path(a.evidence).mkdir(parents=True, exist_ok=True)
     (Path(a.evidence) / log_name).write_bytes(log)
     return write_witness(a.evidence, root, subject, a.name, status, "C",
@@ -371,8 +371,11 @@ def cmd_receipt(a) -> dict:
     staged or placed and nothing else."""
     import os, tempfile as _tf
     profile, profile_sha = acc.read_profile(a.profile)   # one read: the bytes evaluated are the bytes attested
-    result = acc.accept(a.root, a.evidence, profile)
+    # ONE candidate generation is judged and published (final external scan, 18 Nov 2026, defect 2: accept() hashed A,
+    # then candidate() hashed B after a concurrent edit, and the receipt named both). The tree is hashed again just
+    # before anything is placed; a change in between is refused.
     cand = candidate(a.root)
+    result = acc.accept(a.root, a.evidence, profile, subject=cand)
     dest = Path(a.out)
     mpath = manifest_path(dest)
     ev_root = Path(a.evidence).resolve()
@@ -424,6 +427,15 @@ def cmd_receipt(a) -> dict:
                 "failed": [n for n in visible if n["status"] == "fail"]}
     check_manifest(manifest)
     mbytes = (json.dumps(manifest, sort_keys=True, indent=2) + "\n").encode()
+    # every accepted record and every file it cites must be inside the evidence folder AND in this manifest (defect 9)
+    listed = {f["path"] for f in manifest["files"]}
+    for row in result["witnesses"]:
+        rec_rel = f"{row['witness']}.json"
+        need(rec_rel in listed, "EVIDENCE_OUTSIDE_BUNDLE", f"{rec_rel} is not in the evidence inventory")
+        for item in json.loads(contained(ev, rec_rel).read_text()).get("evidence", []):
+            need(contained(ev, item["path"]).relative_to(ev.resolve()).as_posix() in listed, "EVIDENCE_OUTSIDE_BUNDLE", f"{item['path']} is not in the evidence inventory")
+    need(candidate(a.root)["sha256"] == cand["sha256"], "CANDIDATE_CHANGED_DURING_RECEIPT",
+         f"the tree changed while the receipt was being built (judged {cand['sha256'][:12]})")
     dest.parent.mkdir(parents=True, exist_ok=True)
     staged, placed, backups = [], [], {}
     try:
@@ -513,7 +525,7 @@ def main(argv: list[str] | None = None) -> int:
         elif a.cmd_name == "sweep":
             rules = sweep.load_rules(Path(a.rules)); rules["_path"] = a.rules
             out = sweep.sweep(Path(a.src), Path(a.dest), rules, set(a.exclude))
-            (Path(a.dest) / "SWEEP-REPORT.json").write_text(json.dumps({k: v for k, v in out.items()}, indent=2, sort_keys=True) + "\n")
+            (Path(out["placed"]) / "SWEEP-REPORT.json").write_text(json.dumps({k: v for k, v in out.items()}, indent=2, sort_keys=True) + "\n")
             need(out["status"] == "pass", "LEAK_RESIDUE", json.dumps(out["residue"][:5]))
         elif a.cmd_name == "picture":
             out = picture.validate(json.loads(Path(a.review).read_text()), a.subject, json.loads(Path(a.frames).read_text()))

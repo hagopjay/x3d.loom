@@ -109,25 +109,46 @@ def inventory(repo: Path, globs: list[str]) -> dict:
     inv = {}
     if not globs:
         return inv
-    for dirpath, dirnames, filenames in os.walk(repo, followlinks=False):
-        dirnames[:] = [d for d in dirnames if d != ".git" and not os.path.islink(os.path.join(dirpath, d))]
-        names = filenames + [d for d in os.listdir(dirpath) if os.path.islink(os.path.join(dirpath, d)) and d not in filenames]
-        for n in names:
+    root_real = repo.resolve()
+    # directory symlinks are walked too, under their logical path, so a declared expected/data.json behind
+    # expected -> oracle is inventoried with the bytes a reader gets (final external scan, 18 Nov 2026, defect 3);
+    # the link itself is a row, and a directory reached twice (a cycle) is walked once
+    seen = set()
+    for dirpath, dirnames, filenames in os.walk(repo, followlinks=True):
+        real = os.path.realpath(dirpath)
+        if real in seen:
+            dirnames[:] = []
+            continue
+        seen.add(real)
+        dirnames[:] = [d for d in dirnames if d != ".git"]
+        for n in filenames + [d for d in dirnames if os.path.islink(os.path.join(dirpath, d))]:
             full = Path(dirpath) / n
             rel = full.relative_to(repo).as_posix()
-            if ".git" in rel.split("/") or not matches(rel, globs):
+            if ".git" in rel.split("/"):
                 continue
-            row = {"type": "symlink" if full.is_symlink() else "file"}
+            is_dir_link = full.is_symlink() and full.is_dir()
+            if not (matches(rel, globs) or (is_dir_link and any(g.startswith(rel + "/") or matches(rel, globs) for g in globs))):
+                continue
+            row = {"type": "dir-symlink" if is_dir_link else ("symlink" if full.is_symlink() else "file")}
             if full.is_symlink():
                 row["link"] = os.readlink(full)
+            ancestors = [a for a in full.parents if a != repo and repo in a.parents and a.is_symlink()]
+            if ancestors:
+                row["via"] = [a.relative_to(repo).as_posix() + " -> " + os.readlink(a) for a in ancestors]
             try:
-                real = full.resolve(strict=True)
-                row["sha256"] = hashlib.sha256(real.read_bytes()).hexdigest() if real.is_file() else "not-a-file"
-                row["resolves_inside"] = repo.resolve() in real.parents or real == repo.resolve()
+                target = full.resolve(strict=True)
+                row["sha256"] = hashlib.sha256(target.read_bytes()).hexdigest() if target.is_file() else ("directory" if target.is_dir() else "not-a-file")
+                row["resolves_inside"] = root_real in target.parents or target == root_real
             except (OSError, RuntimeError):
                 row["sha256"] = "dangling"
             inv[rel] = row
     return inv
+
+
+def unmatched(inv: dict, globs: list[str]) -> list[str]:
+    """Declared globs that matched no file: each declaration is accounted for, not silently dropped."""
+    files = [k for k, v in inv.items() if v["type"] != "dir-symlink"]
+    return [g for g in globs if not any(matches(k, [g]) for k in files)]
 
 
 SHELLS = {"sh", "bash", "zsh", "dash", "ksh", "env", "make", "npm", "npx", "node", "tox", "nox", "just"}
@@ -162,6 +183,8 @@ def closure(files: list[dict], consumer_cmd: list[str], scorer: list[str], impl:
         state, why = "unknown", "no --scorer closure declared" + (" and the consumer is a wrapper (" + consumer_cmd[0] + ")" if wrapper else "")
     elif not hashed:
         state, why = "unknown", "the declared --scorer globs match no file at the base"
+    elif unmatched(inv, scorer):
+        state, why = "unknown", "declared --scorer entries match no file at the base: " + ", ".join(unmatched(inv, scorer)[:5])
     elif hit:
         state, why = "changed", "patch edits scorer files: " + ", ".join(hit[:5])
     elif outside:
@@ -169,7 +192,7 @@ def closure(files: list[dict], consumer_cmd: list[str], scorer: list[str], impl:
     else:
         state, why = "unchanged", "patch touches no declared scorer file"
     return {"state": state, "reason": why, "declared_scorer": scorer, "declared_impl": impl,
-            "scorer_files_at_base": hashed, "inventory_at_base": inv, "consumer_wrapper": wrapper, "changed": hit, "outside_impl": outside}
+            "scorer_files_at_base": hashed, "inventory_at_base": inv, "unmatched_declarations": unmatched(inv, scorer), "consumer_wrapper": wrapper, "changed": hit, "outside_impl": outside}
 
 
 def _run(cmd: list[str], cwd: Path, timeout: int) -> dict:
@@ -264,11 +287,12 @@ def _check_target(original: Path, patch: Path, digest: str, target: Path, base: 
                                          capture_output=True, check=True).stdout.decode("utf-8", "surrogateescape").split("\0"))
             targets = set()
             for k, row in before_inv.items():   # a declared symlink's target is part of the oracle it reads
-                if row["type"] == "symlink" and row.get("resolves_inside"):
+                # a file symlink, or a file reached through a symlinked directory (final external scan, defect 3)
+                if (row["type"] == "symlink" or row.get("via")) and row.get("resolves_inside") and row["type"] != "dir-symlink":
                     real = (repo / k).resolve()
                     if repo.resolve() in real.parents:
                         targets.add(real.relative_to(repo.resolve()).as_posix())
-            restore = sorted((set(before_inv) | targets) & tracked)
+            restore = sorted((set(k for k, r in before_inv.items() if not r.get("via")) | targets) & tracked)
             if restore:
                 subprocess.run(["git", "-C", str(rp), "checkout", "-q", result["base_sha"], "--", *restore], check=True)
             if inventory(rp, scorer) != before_inv:
