@@ -50,13 +50,16 @@ def run(args):
     from program import WriteTrap, examples, make_metric
     lm_name = os.environ.get("X3D_DSPY_LM")
     if not lm_name: sys.exit("set X3D_DSPY_LM (a LiteLLM model id); the key comes from your environment, never from this repo")
-    lm = dspy.LM(lm_name, model_type="chat", temperature=0.7, max_tokens=900); dspy.configure(lm=lm)
+    kw = dict(model_type="chat", api_base=os.environ.get("X3D_DSPY_BASE"), api_key=os.environ.get("X3D_DSPY_KEY", "x"), cache=False, num_retries=2, timeout=300)
+    mt = int(os.environ.get("X3D_DSPY_MAXTOK", "10000"))
+    lm = dspy.LM(lm_name, temperature=0.5, max_tokens=mt, **kw); dspy.configure(lm=lm)
     cases = bench.build(); ids = sorted(cases)
     rng = __import__("random").Random(7); rng.shuffle(ids)
     tr, te = ids[:args.k_train], ids[args.k_train:]
     prog = dspy.Predict(WriteTrap)
     gepa = dspy.GEPA(metric=make_metric(cases, "train"), max_metric_calls=args.k_train * args.calls_per_rule,
-                     reflection_lm=dspy.LM(os.environ.get("X3D_DSPY_REFLECT", lm_name), model_type="chat", temperature=1.0, max_tokens=2000))
+                     num_threads=int(os.environ.get("X3D_DSPY_THREADS", "4")),
+                     reflection_lm=dspy.LM(os.environ.get("X3D_DSPY_REFLECT", lm_name), temperature=1.0, max_tokens=mt, **kw))
     learned = gepa.compile(prog, trainset=examples(cases, tr), valset=examples(cases, tr))
     ev = lambda p, name: [(g.case_id, make_metric(cases, "held")(g, p(**g.inputs())).score) for g in examples(cases, te)]  # noqa: E731
     res = {"train": tr, "test": te, "seed": ev(prog, "seed"), "learned": ev(learned, "learned"),
