@@ -11,6 +11,7 @@ The X3D Loom, consolidated: one definition, its sources, what the other model's 
 | [LEARNINGS-from-patches.md](LEARNINGS-from-patches.md) | The seven patches and the Loomsong v1 → v4 history, turned into 25 reusable rules |
 | [LEARNINGS-mathlab.md](LEARNINGS-mathlab.md) | The Math Lab launch: a dependency major version, float-hash identity across runtimes, an overlay hiding a validated scene, Pyodide on a static host |
 | [LEARNINGS-blender-scivis.md](LEARNINGS-blender-scivis.md) | The Blender sci-vis integration review: a `re.sub` template bug in provenance JSON, precision as a budget at stored magnitude, native splat transform loss, evidence vs activity, hash chain is not a signature |
+| [LEARNINGS-gobbler-flyte.md](LEARNINGS-gobbler-flyte.md) | Gobbler.flyte, the 24/7 four-organ LangGraph loop: "x3d" namesakes on the open web, accretion finding 1 still open and what it costs an agent, refusal codes as feedback, one interrupt per cycle, three flywheel counters kept apart |
 | [GLOSSARY.md](GLOSSARY.md) | The words |
 | [REVIEW-loom2.md](REVIEW-loom2.md) | Review of the 4 Nov delivery: Cabinet of Worlds, Linked Observatory, Living Archive, Constellation 3 |
 | [REVIEW-scientific.md](REVIEW-scientific.md) | Review of the first x3d.STEM delivery, the Scientific Loom Observatory: measurements, six findings, the hardening patch, 13 lessons |
