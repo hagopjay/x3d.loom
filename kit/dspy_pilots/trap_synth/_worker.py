@@ -9,16 +9,11 @@ SAFE = {k: __builtins__.__dict__[k] if hasattr(__builtins__, "__dict__") else __
                   "isinstance reversed map filter ValueError Exception True False None").split()}
 ns = {"__builtins__": SAFE, "ET": ET, "re": re, "math": math, "colorsys": colorsys}
 err, results = None, []
-try:
-    exec(job["src"], ns)
-    fn = ns["trap"]
-except Exception as e:  # noqa: BLE001
-    fn, err = None, f"{type(e).__name__}: {e}"
-for x in job["xmls"]:
-    if fn is None:
-        results.append(None); continue
+for x in job["xmls"]:                       # fresh namespace per scene: no state survives from one scene to the next
+    ns = {"__builtins__": SAFE, "ET": ET, "re": re, "math": math, "colorsys": colorsys}
     try:
-        results.append(bool(fn(ET.fromstring(x))))
+        exec(job["src"], ns)
+        results.append(bool(ns["trap"](ET.fromstring(x))))
     except Exception as e:  # noqa: BLE001
         results.append(None); err = err or f"{type(e).__name__}: {e}"
 print(json.dumps({"results": results, "error": err}))

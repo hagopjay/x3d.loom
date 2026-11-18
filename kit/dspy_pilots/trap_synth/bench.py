@@ -46,159 +46,124 @@ def _shape_with(tag, text="", **attrs):
     return sh, ET.SubElement(ap, tag, attrs)
 
 
-# --- mutators: each returns the element it changed (or None when the base cannot take it) ---------------------------
-def m_route_undefined(root, rnd):
+# --- mutators ---------------------------------------------------------------------------------------------------------
+# Each mutator is f(root, lawful) -> element or None. lawful=False plants the trap; lawful=True makes the same structural
+# edit correctly (the near-miss). A rule has a DEV mutator (used for show and train) and SEALED variants that only the
+# held-out split sees, so a rule that memorised the dev mutation's exact literal loses on held-out (external review, 18 Nov).
+def _mat(root):
+    m = els(root, "Material")
+    return m[0] if m else None
+
+
+def _add_shape(root, tag, **attrs):
+    sc = _scene(root)
+    if sc is None: return None
+    sh, el = _shape_with(tag, **attrs); sc.append(sh); return el
+
+
+def _shader(root, text):
+    sc = _scene(root)
+    if sc is None: return None
+    sh, cs = _shape_with("ComposedShader", language="GLSL")
+    sp = ET.SubElement(cs, "ShaderPart", {"type": "FRAGMENT"}); sp.text = text; sc.append(sh); return sp
+
+
+def route_undefined(root, lawful, end="toNode"):
     r = els(root, "ROUTE")
     if not r: return None
-    r[0].set("toNode", "NoSuchNode"); return r[0]
+    if not lawful: r[0].set(end, "NoSuchNode")
+    return r[0]
 
 
-def m_route_before_def(root, rnd):
+def route_before_def(root, lawful, pos=0):
     sc = _scene(root)
     for r in els(root, "ROUTE"):
         if sc is not None and r in list(sc):
-            sc.remove(r); sc.insert(0, r); return r
+            sc.remove(r); sc.insert(pos if not lawful else len(list(sc)), r); return r
     return None
 
 
-def m_color_range(root, rnd):
-    m = els(root, "Material")
-    if not m: return None
-    m[0].set("diffuseColor", "1.5 0.2 0.2"); return m[0]
+def color(root, lawful, val="1.5 0.2 0.2", ok="0.9 0.2 0.2", attr="diffuseColor"):
+    m = _mat(root)
+    if m is None: return None
+    m.set(attr, ok if lawful else val); return m
 
 
-def m_emissive_white(root, rnd):
-    m = els(root, "Material")
-    if not m: return None
-    m[0].set("emissiveColor", "1 1 1"); m[0].set("diffuseColor", "1 0 0"); return m[0]
+def color_pbr(root, lawful):
+    return _add_shape(root, "PhysicalMaterial", baseColor="0.9 0.2 0.2" if lawful else "1.2 0.2 0.2")
 
 
-def m_splat_bbox(root, rnd):
+def emissive_white(root, lawful, diffuse="1 0 0"):
+    m = _mat(root)
+    if m is None: return None
+    m.set("emissiveColor", "1 1 1"); m.set("diffuseColor", "1 1 1" if lawful else diffuse); return m
+
+
+def splat(root, lawful, only_size=False):
     sc = _scene(root)
     if sc is None: return None
-    e = ET.SubElement(sc, "GaussianSplats", {"url": '"a.splat"'}); return e
+    at = {"url": '"a.splat"'}
+    if lawful: at.update({"bboxSize": "2 2 2", "bboxCenter": "0 0 0"})
+    elif only_size: at["bboxSize"] = "2 2 2"
+    return ET.SubElement(sc, "GaussianSplats", at)
 
 
-def m_movie_still(root, rnd):
+def movie(root, lawful, url='"poster.png"'):
+    return _add_shape(root, "MovieTexture", url='"clip.mp4"' if lawful else url)
+
+
+def version(root, lawful, node="InlineGeometry"):
     sc = _scene(root)
     if sc is None: return None
-    sh, mt = _shape_with("MovieTexture", url='"poster.png"'); sc.append(sh); return mt
+    root.set("version", "4.1" if lawful else "4.0"); return ET.SubElement(sc, node, {"url": '"a.x3d"'})
 
 
-def m_version(root, rnd):
-    sc = _scene(root)
-    if sc is None: return None
-    root.set("version", "4.0"); return ET.SubElement(sc, "InlineGeometry", {"url": '"a.x3d"'})
-
-
-def m_metadata(root, rnd):
+def metadata(root, lawful, tag="MetadataString"):
     sh = els(root, "Shape")
     if not sh: return None
-    return ET.SubElement(sh[0], "MetadataString", {"name": "note", "value": '"x"'})
+    at = {"name": "note", "value": '"x"'}
+    if lawful: at["containerField"] = "metadata"
+    return ET.SubElement(sh[0], tag, at)
 
 
-def m_glsl_active(root, rnd):
-    sc = _scene(root)
-    if sc is None: return None
-    sh, cs = _shape_with("ComposedShader", language="GLSL")
-    sp = ET.SubElement(cs, "ShaderPart", {"type": "FRAGMENT"}); sp.text = "uniform float active;\nvoid f(){}"
-    sc.append(sh); return sp
+def glsl_active(root, lawful, decl="uniform float active;"):
+    return _shader(root, ("uniform float actives;" if lawful else decl) + "\nvoid f(){}")
 
 
-def m_shader_raw(root, rnd):
-    sc = _scene(root)
-    if sc is None: return None
-    sh, cs = _shape_with("ComposedShader", language="GLSL")
-    sp = ET.SubElement(cs, "ShaderPart", {"type": "FRAGMENT"}); sp.text = "#version 300 es\nvoid main() { }"
-    sc.append(sh); return sp
+def shader_raw(root, lawful, body="#version 300 es\nvoid main() { }"):
+    return _shader(root, ("data:text/plain," + body) if lawful else body)
 
 
-MUTATORS = {
-    "route-undefined": m_route_undefined, "route-before-def": m_route_before_def, "color-range": m_color_range,
-    "color-emissive-white": m_emissive_white, "splat-bbox": m_splat_bbox, "movie-not-still": m_movie_still,
-    "version-fits-nodes": m_version, "metadata-containerfield": m_metadata, "glsl-reserved-active": m_glsl_active,
-    "shader-raw-source": m_shader_raw,
+P = __import__("functools").partial
+# rule -> [dev, sealed...]
+VARIANTS = {
+    "route-undefined": [route_undefined, P(route_undefined, end="fromNode")],
+    "route-before-def": [route_before_def, P(route_before_def, pos=1)],
+    "color-range": [color, P(color, val="-0.1 0.2 0.2", ok="0.0 0.2 0.2"), color_pbr,
+                    P(color, val="1.5,0.2,0.2", ok="0.9,0.2,0.2"), P(color, attr="specularColor", val="0.2 1.4 0.2")],
+    "color-emissive-white": [emissive_white, P(emissive_white, diffuse="0 0 1"), P(emissive_white, diffuse="0.2 0.9 0.2")],
+    "splat-bbox": [splat, P(splat, only_size=True)],
+    "movie-not-still": [movie, P(movie, url='"poster.jpg"'), P(movie, url='"Frame.PNG?v=2"')],
+    "version-fits-nodes": [version, P(version, node="FontLibrary"), P(version, node="HAnimPose")],
+    "metadata-containerfield": [metadata, P(metadata, tag="MetadataDouble"), P(metadata, tag="MetadataInteger")],
+    "glsl-reserved-active": [glsl_active, P(glsl_active, decl="uniform vec3 active;"),
+                             P(glsl_active, decl="uniform   float   active;"), P(glsl_active, decl="in vec2 active;")],
+    "shader-raw-source": [shader_raw, P(shader_raw, body="void main() { }\n#version 300 es"), P(shader_raw, body="#version 300 es\nprecision highp float;\nvoid main(){}")],
 }
-
-# --- near-misses: the same edit, done lawfully. A rule that cannot tell these from the mutants has learned a keyword. ---
-def n_route_undefined(root, rnd):
-    r = els(root, "ROUTE")
-    if not r: return None
-    r[0].set("toNode", r[0].get("toNode")); return r[0]          # untouched: a ROUTE to a DEF that exists
-
-
-def n_route_before_def(root, rnd):
-    sc = _scene(root)
-    for r in els(root, "ROUTE"):
-        if sc is not None and r in list(sc):
-            sc.remove(r); sc.append(r); return r                  # ROUTE moved to the end, after every DEF
-    return None
-
-
-def n_color_range(root, rnd):
-    m = els(root, "Material")
-    if not m: return None
-    m[0].set("diffuseColor", "0.9 0.2 0.2"); return m[0]
-
-
-def n_emissive_white(root, rnd):
-    m = els(root, "Material")
-    if not m: return None
-    m[0].set("emissiveColor", "1 1 1"); m[0].set("diffuseColor", "1 1 1"); return m[0]   # white on white is fine
-
-
-def n_splat_bbox(root, rnd):
-    sc = _scene(root)
-    if sc is None: return None
-    return ET.SubElement(sc, "GaussianSplats", {"url": '"a.splat"', "bboxSize": "2 2 2", "bboxCenter": "0 0 0"})
-
-
-def n_movie_still(root, rnd):
-    sc = _scene(root)
-    if sc is None: return None
-    sh, mt = _shape_with("MovieTexture", url='"clip.mp4"'); sc.append(sh); return mt
-
-
-def n_version(root, rnd):
-    sc = _scene(root)
-    if sc is None: return None
-    root.set("version", "4.1"); return ET.SubElement(sc, "InlineGeometry", {"url": '"a.x3d"'})
-
-
-def n_metadata(root, rnd):
-    sh = els(root, "Shape")
-    if not sh: return None
-    return ET.SubElement(sh[0], "MetadataString", {"name": "note", "value": '"x"', "containerField": "metadata"})
-
-
-def n_glsl_active(root, rnd):
-    sc = _scene(root)
-    if sc is None: return None
-    sh, cs = _shape_with("ComposedShader", language="GLSL")
-    sp = ET.SubElement(cs, "ShaderPart", {"type": "FRAGMENT"}); sp.text = "uniform float actives;\nvoid f(){}"
-    sc.append(sh); return sp
-
-
-def n_shader_raw(root, rnd):
-    sc = _scene(root)
-    if sc is None: return None
-    sh, cs = _shape_with("ComposedShader", language="GLSL")
-    sp = ET.SubElement(cs, "ShaderPart", {"type": "FRAGMENT"}); sp.text = "data:text/plain,#version 300 es\nvoid main() { }"
-    sc.append(sh); return sp
-
-
-NEAR = {"route-undefined": n_route_undefined, "route-before-def": n_route_before_def, "color-range": n_color_range,
-        "color-emissive-white": n_emissive_white, "splat-bbox": n_splat_bbox, "movie-not-still": n_movie_still,
-        "version-fits-nodes": n_version, "metadata-containerfield": n_metadata, "glsl-reserved-active": n_glsl_active,
-        "shader-raw-source": n_shader_raw}
 NATURAL_ONLY = ["loop-seam"]            # no mutator; real hits in the corpus are the positives
 NOT_COVERED = {"color-keys-sparse": "needs a night-sky colour interpolator pair the mutators do not build",
                "xite-light-zero-pop": "needs a light fade through a ROUTE graph", "xite-transparent-shadow": "same",
                "no-script-under-host": "depends on a host profile, not on the file alone"}
 
 
-def group(path: str) -> str:
-    h = int(hashlib.sha1(path.encode()).hexdigest(), 16) % 10
+def ckey(text: str) -> str:
+    """Partition key: identical scene bytes always share a group, whatever their path (review finding: 31 duplicate groups
+    crossed the path-hash split)."""
+    return hashlib.sha1(text.encode("utf-8", "replace")).hexdigest()
+
+
+def group(key: str) -> str:
+    h = int(hashlib.sha1(key.encode()).hexdigest(), 16) % 10
     return "show" if h < 1 else "train" if h < 5 else "held"
 
 
@@ -215,10 +180,28 @@ def corpus():
             except Exception:  # noqa: BLE001
                 continue
             out.append((os.path.relpath(f, base.parent), b.decode("utf-8", "replace"), [h.rule for h in hits]))
-    return out
+    seen, uniq = set(), []                      # one row per distinct content: duplicates would otherwise multiply a scene
+    for p, x, h in out:
+        k = ckey(x)
+        if k in seen: continue
+        seen.add(k); uniq.append((p, x, h))
+    return uniq
 
 
 def _ser(el): return ET.tostring(el, encoding="unicode")
+
+
+def _fires(rid, xml):
+    return rid in [h.rule for h in traps.check(xml.encode())]
+
+
+def _facts(root):
+    """(tag, attribute, value) and (tag, '#text', text) triples: what a scene literally says."""
+    out = set()
+    for e in root.iter():
+        for k, v in e.attrib.items(): out.add((local(e.tag), local(k), v))
+        if (e.text or "").strip(): out.add((local(e.tag), "#text", e.text.strip()))
+    return out
 
 
 def build():
@@ -227,62 +210,87 @@ def build():
     cases = {}
     for rid, rule in traps.RULES.items():
         if rid in NOT_COVERED: continue
-        pos, twins = [], {}
+        pos, twins, fp = [], {}, set()
         for p, x, h in cs:
-            if rid in h: pos.append((p, x, "natural", None))
-        if rid in MUTATORS:
-            for p, x in clean:
-                try: root = ET.fromstring(x)
-                except ET.ParseError: continue
-                el = MUTATORS[rid](root, random.Random(p))
-                if el is None: continue
-                mx = _ser(root)
-                if rid in [h.rule for h in traps.check(mx.encode())]:        # the oracle must see the mutant
-                    par = {c: pp for pp in root.iter() for c in pp}
-                    ctx = _ser(par.get(el, el))[:700]
-                    pos.append((p, mx, "mutant", ctx)); twins[p] = x
-                    nroot = ET.fromstring(x)
-                    if NEAR[rid](nroot, random.Random(p)) is not None:
-                        nx = _ser(nroot)
-                        if rid not in [h.rule for h in traps.check(nx.encode())]:
-                            twins[p + " (near-miss)"] = nx
+            if rid in h: pos.append((p, x, None, "natural", ckey(x)))
+        for p, x in clean:
+            k = ckey(x); g = group(k); vs = VARIANTS.get(rid)
+            if not vs: continue
+            vi = 0 if g != "held" or len(vs) == 1 else 1 + int(k, 16) % (len(vs) - 1)
+            try: root = ET.fromstring(x)
+            except ET.ParseError: continue
+            el = vs[vi](root, False)
+            if el is None: continue
+            mx = _ser(root)
+            if not _fires(rid, mx): continue                           # the oracle must see the mutant
+            par = {c: pp for pp in root.iter() for c in pp}
+            pos.append((p, mx, _ser(par.get(el, el))[:700], f"mutant-v{vi}", k)); twins[p] = (x, k)
+            if vi == 0 and not fp: fp = _facts(root) - _facts(ET.fromstring(x))
+            nroot = ET.fromstring(x)
+            if vs[vi](nroot, True) is not None:
+                nx = _ser(nroot)
+                if not _fires(rid, nx): twins[p + " (near-miss)"] = (nx, k)
         if len(pos) < 6: continue
-        c = {"rule": rid, "incident": rule.origin, "runtime": rule.runtime, "severity": rule.severity}
+        c = {"rule": rid, "incident": rule.origin, "runtime": rule.runtime, "severity": rule.severity,
+             "sealed_variants": max(0, len(VARIANTS.get(rid, [])) - 1), "fingerprint": sorted(fp)[:12]}
         for g in ("show", "train", "held"):
-            c[f"pos_{g}"] = [(p, x, ctx) for p, x, k, ctx in pos if group(p) == g]
-            c[f"neg_{g}"] = [(p, x) for p, x in clean if group(p) == g]
-            c[f"twin_{g}"] = [(p, x) for p, x in twins.items() if group(p.split(' ')[0]) == g]
+            c[f"pos_{g}"] = [(p, x, ctx) for p, x, ctx, kind, k in pos if group(k) == g]
+            c[f"neg_{g}"] = [(p, x) for p, x in clean if group(ckey(x)) == g]
+            c[f"twin_{g}"] = [(p, x) for p, (x, k) in twins.items() if group(k) == g]
         if c["pos_held"] and c["pos_train"]:
             cases[rid] = c
     return cases
 
 
-def run_rule(src, pos, neg, twin=(), runner=None):
-    """score = recall on positives x specificity on clean scenes x specificity on the unmutated twins of the positives.
-    The twin term closes a leak the first audit found: a rule that only asks 'does the file have a ROUTE?' passed
-    because mutants came from route-bearing scenes and most clean scenes have none."""
+def _eval(src, items, seed, runner):
+    import random as _r
+    order = list(range(len(items))); _r.Random(seed).shuffle(order)
+    res, err = runner(src, [items[i][2] for i in order])
+    back = [None] * len(items)
+    for pos_, i in enumerate(order): back[i] = res[pos_]
+    return back, err
+
+
+def run_rule(src, pos, neg, twin=(), runner=None, seeds=(0, 1)):
+    """score = recall on positives x specificity on clean scenes x specificity on twins and lawful near-misses.
+    Hardening after the 18 Nov external review: every scene is run in a fresh namespace (no state can carry a count or an
+    order), evaluation order is shuffled under several seeds and the WORST seed is scored, and the feedback carries the
+    offending XML so a reflection model sees why, not only which file."""
     from sandbox import run
     runner = runner or run
-    xs = [x for _, x, *_ in pos] + [x for _, x in neg] + [x for _, x in twin]
-    res, err = runner(src, xs)
-    a, b = len(pos), len(pos) + len(neg)
-    rp, rn, rt = res[:a], res[a:b], res[b:]
-    tpr = sum(1 for r in rp if r is True) / max(1, len(pos))
-    tnr = sum(1 for r in rn if r is False) / max(1, len(neg))
-    tnt = sum(1 for r in rt if r is False) / len(twin) if twin else 1.0
-    fn = [pos[i][0] for i, r in enumerate(rp) if r is not True][:4]
-    fp = [neg[i][0] for i, r in enumerate(rn) if r is not False][:4] + [twin[i][0] + ("" if "near-miss" in twin[i][0] else " (unmutated twin)") for i, r in enumerate(rt) if r is not False][:4]
-    return {"tpr": round(tpr, 3), "tnr": round(tnr, 3), "tnr_twin": round(tnt, 3), "score": round(tpr * tnr * tnt, 3),
-            "error": err, "missed": fn, "false_alarms": fp}
+    items = [("pos", p, x, ctx) for p, x, ctx in pos] + [("neg", p, x, None) for p, x in neg] + [("twin", p, x, None) for p, x in twin]
+    worst = None
+    for sd in seeds:
+        back, err = _eval(src, [(k, p, x) for k, p, x, _ in items], sd, runner)
+        P = [(i, r) for i, (k, *_r) in enumerate(items) for kk, r in [(k, back[i])] if k == "pos"]
+        tpr = sum(1 for i, r in P if r is True) / max(1, len(pos))
+        N = [back[i] for i, it in enumerate(items) if it[0] == "neg"]; T = [back[i] for i, it in enumerate(items) if it[0] == "twin"]
+        tnr = sum(1 for r in N if r is False) / max(1, len(neg))
+        tw_idx = [i for i, it in enumerate(items) if it[0] == "twin"]
+        parts = []                                   # unmutated twins and near-misses are scored separately; the worse one counts
+        for want in (False, True):
+            sel = [back[i] for i in tw_idx if ("near-miss" in items[i][1]) == want]
+            if sel: parts.append(sum(1 for r in sel if r is False) / len(sel))
+        tnt = min(parts) if parts else 1.0
+        row = {"tpr": round(tpr, 3), "tnr": round(tnr, 3), "tnr_twin": round(tnt, 3), "score": round(tpr * tnr * tnt, 3), "error": err}
+        row["_back"] = back
+        if worst is None or row["score"] < worst["score"]: worst = row
+    back = worst.pop("_back")
+    missed = [(items[i][1], items[i][3]) for i, it in enumerate(items) if it[0] == "pos" and back[i] is not True][:3]
+    fps = [items[i][1] for i, it in enumerate(items) if it[0] != "pos" and back[i] is not False][:4]
+    worst["missed"] = [m[0] for m in missed]; worst["missed_xml"] = [(m[1] or "")[:400] for m in missed]
+    worst["false_alarms"] = fps
+    return worst
 
 
 def oracle_rows(case, split):
-    """The shipped witness, as the reference rule (must be 1.0): fires iff traps.check reports this rule."""
+    """The shipped witness as the reference rule (must be 1.0 on positives, clean scenes AND twins/near-misses)."""
     rid = case["rule"]
-    f = lambda x: rid in [h.rule for h in traps.check(x.encode())]  # noqa: E731
-    pos, neg = case[f"pos_{split}"], case[f"neg_{split}"]
+    f = lambda x: _fires(rid, x)  # noqa: E731
+    pos, neg, tw = case[f"pos_{split}"], case[f"neg_{split}"], case[f"twin_{split}"]
     tp = sum(f(x) for _, x, *_ in pos) / len(pos); tn = sum(not f(x) for _, x in neg) / len(neg)
-    return {"tpr": tp, "tnr": tn, "score": tp * tn}
+    tt = sum(not f(x) for _, x in tw) / len(tw) if tw else 1.0
+    return {"tpr": tp, "tnr": tn, "tnr_twin": tt, "score": tp * tn * tt}
 
 
 DEGENERATE = {
@@ -293,3 +301,16 @@ DEGENERATE = {
     "big-scene": "def trap(root):\n    return len(list(root.iter())) > 60\n",
     "has-metadata": "def trap(root):\n    return any('Metadata' in e.tag for e in root.iter())\n",
 }
+
+
+def stateful_source(n):
+    """Cheats by call count: true for the first n scenes it sees. Harmless once every scene runs in a fresh namespace."""
+    return f"calls = [0]\ndef trap(root):\n    calls[0] += 1\n    return calls[0] <= {n}\n"
+
+
+def fingerprint_source(case):
+    """Memorises the exact (tag, attribute, value) the dev mutator planted. Must lose on sealed variants."""
+    fp = sorted(case["fingerprint"])
+    return (f"FP = {fp!r}\ndef trap(root):\n    for e in root.iter():\n        t = e.tag.rsplit('}}', 1)[-1]\n"
+            "        for k, v in e.attrib.items():\n            if [t, k.rsplit('}', 1)[-1], v] in FP or (t, k, v) in FP:\n                return True\n"
+            "        if e.text and e.text.strip() and [t, '#text', e.text.strip()] in FP:\n            return True\n    return False\n")
