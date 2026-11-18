@@ -1,0 +1,326 @@
+{
+  "schema": "sri-harp-browser/1",
+  "created_utc": "2026-11-18T00:19:11.743Z",
+  "browser": "153.0.8010.12",
+  "renderer": "SwiftShader (software WebGL2 via ANGLE); real GPUs were not available to this gate",
+  "targets": [
+    {
+      "target": "source",
+      "url": "http://localhost/index.html",
+      "checks": [
+        {
+          "name": "boots with native audit, 43 chamber lights and a TouchSensor",
+          "pass": true,
+          "detail": {
+            "error": null,
+            "audit": true,
+            "residual": 1.835595076440116e-8,
+            "lights": true,
+            "touch": true,
+            "software": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "bloomOn": false
+          }
+        },
+        {
+          "name": "bloom defaults off on a software renderer",
+          "pass": true,
+          "detail": {
+            "software": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "bloomOn": false
+          }
+        },
+        {
+          "name": "real pointer clicks strike the chamber under the cursor and light it (TouchSensor -> locate)",
+          "pass": true,
+          "detail": [
+            {
+              "id": "Chamber_33",
+              "screen": [
+                640,
+                520
+              ],
+              "struck": 1,
+              "index": 32,
+              "transparency": 0.3684375,
+              "sparks": 4,
+              "ok": true
+            },
+            {
+              "id": "Chamber_40",
+              "screen": [
+                640,
+                267
+              ],
+              "struck": 2,
+              "index": 39,
+              "transparency": 0.43562500000000004,
+              "sparks": 6,
+              "ok": true
+            },
+            {
+              "id": "Chamber_25",
+              "screen": [
+                710,
+                363
+              ],
+              "struck": 3,
+              "index": 24,
+              "transparency": 0.43562500000000004,
+              "sparks": 6,
+              "ok": true
+            },
+            {
+              "id": "Chamber_12",
+              "screen": [
+                640,
+                451
+              ],
+              "struck": 4,
+              "index": 11,
+              "transparency": 0.3684375,
+              "sparks": 9,
+              "ok": true
+            },
+            {
+              "id": "Chamber_01",
+              "screen": [
+                640,
+                400
+              ],
+              "struck": 5,
+              "index": 0,
+              "transparency": 0.38187499999999996,
+              "sparks": 32,
+              "ok": true
+            }
+          ]
+        },
+        {
+          "name": "a strike launches sparks from the chamber",
+          "pass": true,
+          "detail": [
+            4,
+            6,
+            6,
+            9,
+            32
+          ]
+        },
+        {
+          "name": "a void between chambers explains even coverage and does not strike",
+          "pass": true,
+          "detail": {
+            "struck": 5,
+            "message": "BETWEEN CHAMBERS · EVEN COVERAGE 8 · ONLY ODD COVERAGE MAKES ONE OF THE 43"
+          }
+        },
+        {
+          "name": "key 4 sounds ring 3 (10 chambers)",
+          "pass": true,
+          "detail": {
+            "delta": 10
+          }
+        },
+        {
+          "name": "Resonance (Space) cascades light through the chambers and bursts the bindu",
+          "pass": true,
+          "detail": {
+            "live": 58,
+            "lit": 21
+          }
+        },
+        {
+          "name": "the transport spiral keeps chambers lit while running",
+          "pass": true,
+          "detail": {
+            "lit": 42,
+            "beat": 6.03495
+          }
+        },
+        {
+          "name": "bloom overlay copies the native frame when enabled",
+          "pass": true,
+          "detail": {
+            "w": 128,
+            "h": 80,
+            "mean": 11.051627604166667,
+            "hidden": false,
+            "governed": false
+          }
+        },
+        {
+          "name": "canonical YantraCoordinates unchanged after every interaction",
+          "pass": true,
+          "detail": {
+            "bytes": 109
+          }
+        },
+        {
+          "name": "zero page errors, HTTP failures and external requests",
+          "pass": true,
+          "detail": []
+        }
+      ]
+    },
+    {
+      "target": "standalone",
+      "url": "file://<x3d.mandala>/dist/Sri-Yantra-Resonance-Loom.html",
+      "checks": [
+        {
+          "name": "boots with native audit, 43 chamber lights and a TouchSensor",
+          "pass": true,
+          "detail": {
+            "error": null,
+            "audit": true,
+            "residual": 1.835595076440116e-8,
+            "lights": true,
+            "touch": true,
+            "software": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "bloomOn": false
+          }
+        },
+        {
+          "name": "bloom defaults off on a software renderer",
+          "pass": true,
+          "detail": {
+            "software": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "bloomOn": false
+          }
+        },
+        {
+          "name": "real pointer clicks strike the chamber under the cursor and light it (TouchSensor -> locate)",
+          "pass": true,
+          "detail": [
+            {
+              "id": "Chamber_33",
+              "screen": [
+                640,
+                520
+              ],
+              "struck": 1,
+              "index": 32,
+              "transparency": 0.3684375,
+              "sparks": 4,
+              "ok": true
+            },
+            {
+              "id": "Chamber_40",
+              "screen": [
+                640,
+                267
+              ],
+              "struck": 2,
+              "index": 39,
+              "transparency": 0.38187499999999996,
+              "sparks": 6,
+              "ok": true
+            },
+            {
+              "id": "Chamber_25",
+              "screen": [
+                710,
+                363
+              ],
+              "struck": 3,
+              "index": 24,
+              "transparency": 0.40875000000000006,
+              "sparks": 7,
+              "ok": true
+            },
+            {
+              "id": "Chamber_12",
+              "screen": [
+                640,
+                451
+              ],
+              "struck": 4,
+              "index": 11,
+              "transparency": 0.43562500000000004,
+              "sparks": 9,
+              "ok": true
+            },
+            {
+              "id": "Chamber_01",
+              "screen": [
+                640,
+                400
+              ],
+              "struck": 5,
+              "index": 0,
+              "transparency": 0.3684375,
+              "sparks": 30,
+              "ok": true
+            }
+          ]
+        },
+        {
+          "name": "a strike launches sparks from the chamber",
+          "pass": true,
+          "detail": [
+            4,
+            6,
+            7,
+            9,
+            30
+          ]
+        },
+        {
+          "name": "a void between chambers explains even coverage and does not strike",
+          "pass": true,
+          "detail": {
+            "struck": 5,
+            "message": "BETWEEN CHAMBERS · EVEN COVERAGE 8 · ONLY ODD COVERAGE MAKES ONE OF THE 43"
+          }
+        },
+        {
+          "name": "key 4 sounds ring 3 (10 chambers)",
+          "pass": true,
+          "detail": {
+            "delta": 10
+          }
+        },
+        {
+          "name": "Resonance (Space) cascades light through the chambers and bursts the bindu",
+          "pass": true,
+          "detail": {
+            "live": 45,
+            "lit": 26
+          }
+        },
+        {
+          "name": "the transport spiral keeps chambers lit while running",
+          "pass": true,
+          "detail": {
+            "lit": 38,
+            "beat": 5.979870000000042
+          }
+        },
+        {
+          "name": "bloom overlay copies the native frame when enabled",
+          "pass": true,
+          "detail": {
+            "w": 128,
+            "h": 80,
+            "mean": 11.12548828125,
+            "hidden": false,
+            "governed": false
+          }
+        },
+        {
+          "name": "canonical YantraCoordinates unchanged after every interaction",
+          "pass": true,
+          "detail": {
+            "bytes": 109
+          }
+        },
+        {
+          "name": "zero page errors, HTTP failures and external requests",
+          "pass": true,
+          "detail": []
+        }
+      ]
+    }
+  ],
+  "status": "pass",
+  "failures": 0
+}

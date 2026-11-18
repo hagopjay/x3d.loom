@@ -1,0 +1,136 @@
+{
+  "schema": "resonance-geometry-reproduction/1",
+  "python": "3.12.14",
+  "pass": true,
+  "matches": {
+    "yantra.json": {
+      "identical": true,
+      "sha256": "881c3481ec9bcaab149a6da32c1c719d71d2d30408617f67d8f1b8dda9b70c1d"
+    },
+    "geometry-certificate.json": {
+      "identical": true,
+      "sha256": "4b00f7437dfff637e0925d85a97dc4fe4bd5b42df796cff32f658158aae6b055"
+    },
+    "geometry-high-precision.json": {
+      "identical": true,
+      "sha256": "48d0cf032363e57c11716d6147ec05a9199911e6195dfaae08dd510d0cc66940"
+    },
+    "geometry-measurements.csv": {
+      "identical": true,
+      "sha256": "29f4404eaf15c202cbd1b5a294c60b519993c5881cfb88ca3f14a6de9b43e9c2"
+    },
+    "arrangement-audit.json": {
+      "identical": true,
+      "sha256": "6df91aec171c81e8d6e3c82eb1af4584c37d32c758f79c5d3b8a8cd5fe8d2444"
+    }
+  },
+  "javascriptModuleIdentical": true,
+  "selfTest": {
+    "singleTriangle": true,
+    "disconnectedTriangles": true,
+    "starOfDavidSixTipsAndHexagon": true,
+    "orientationAndOrderInvariant": true
+  },
+  "controls": {
+    "scope": "Independent standard-library geometric audit; normalized source units",
+    "cases": [
+      {
+        "kind": "canonical",
+        "snapTolerance": 1e-06,
+        "oddChambers": 43,
+        "countsOutsideIn": [
+          14,
+          10,
+          10,
+          8,
+          1
+        ],
+        "boundedFaces": 74,
+        "euler": true
+      },
+      {
+        "kind": "canonical",
+        "snapTolerance": 1e-08,
+        "oddChambers": 43,
+        "countsOutsideIn": [
+          14,
+          10,
+          10,
+          8,
+          1
+        ],
+        "boundedFaces": 74,
+        "euler": true
+      },
+      {
+        "kind": "canonical",
+        "snapTolerance": 1e-10,
+        "oddChambers": 43,
+        "countsOutsideIn": [
+          14,
+          10,
+          10,
+          8,
+          1
+        ],
+        "boundedFaces": 74,
+        "euler": true
+      },
+      {
+        "kind": "canonical",
+        "snapTolerance": 1e-12,
+        "oddChambers": 43,
+        "countsOutsideIn": [
+          14,
+          10,
+          10,
+          8,
+          1
+        ],
+        "boundedFaces": 74,
+        "euler": true
+      },
+      {
+        "kind": "reflection_fault",
+        "delta": 0.0001,
+        "oddChambers": 34,
+        "oddFaces": 43,
+        "oddCornerHistogram": {
+          "3": 34,
+          "4": 6,
+          "5": 3
+        },
+        "boundedFaces": 78,
+        "multilinePoints": 27
+      },
+      {
+        "kind": "symmetric_width_fault",
+        "delta": 0.0001,
+        "oddChambers": 26,
+        "oddFaces": 43,
+        "oddCornerHistogram": {
+          "3": 26,
+          "4": 10,
+          "5": 7
+        },
+        "boundedFaces": 82,
+        "multilinePoints": 23
+      },
+      {
+        "kind": "binary32_quantization",
+        "snapTolerance": 1e-06,
+        "oddChambers": 43,
+        "countsOutsideIn": [
+          14,
+          10,
+          10,
+          8,
+          1
+        ],
+        "boundedFaces": 74
+      }
+    ],
+    "float64WorstIncidenceLineDistance": 1.1102230246251565e-16,
+    "binary32WorstIncidenceLineDistance": 7.595149398298418e-09
+  }
+}

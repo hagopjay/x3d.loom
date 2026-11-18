@@ -1,0 +1,219 @@
+{
+  "status": "pass",
+  "target": "standalone file://",
+  "artifactSha256": "d378552d0845c4d281a85c6a32210f13f337a929e687d420d58366097b608afc",
+  "browser": "153.0.8010.12",
+  "locale": "en-US",
+  "scope": "Native Web Audio graph, sampled signal and transport behavior in headless Chromium. Playwright mutes hardware output; no human listening, sound-pressure, perceptual-latency or acoustic-quality claim. X3D uses SwiftShader.",
+  "checks": [
+    {
+      "name": "native X3D instrument is ready",
+      "pass": true,
+      "observed": null
+    },
+    {
+      "name": "instrument has no AudioContext or scheduled notes before a user gesture",
+      "pass": true,
+      "observed": {
+        "sound": {
+          "enabled": false,
+          "muted": true,
+          "contextState": "not-created",
+          "transportState": "running",
+          "clock": "performance",
+          "bpm": 54,
+          "rootHz": 110,
+          "volume": 0.48,
+          "maxMasterGain": 0.22,
+          "activeVoices": 0,
+          "strikeVoices": 0,
+          "struckNotes": 0,
+          "voicing": "authored",
+          "scheduledNotes": 0,
+          "skippedSubdivisions": 0,
+          "lastScheduledBeat": null,
+          "disposed": false
+        },
+        "beat": 3.4474500000000003,
+        "phase": 3.2630400000000837
+      }
+    },
+    {
+      "name": "explicit gesture creates a running native audio graph",
+      "pass": true,
+      "observed": {
+        "enabled": true,
+        "muted": false,
+        "contextState": "running",
+        "transportState": "running",
+        "clock": "audio",
+        "bpm": 54,
+        "rootHz": 110,
+        "volume": 0.48,
+        "maxMasterGain": 0.22,
+        "activeVoices": 2,
+        "strikeVoices": 0,
+        "struckNotes": 0,
+        "voicing": "authored",
+        "scheduledNotes": 2,
+        "skippedSubdivisions": 0,
+        "lastScheduledBeat": 6,
+        "disposed": false
+      }
+    },
+    {
+      "name": "native audio graph produces nonzero sampled output",
+      "pass": true,
+      "observed": {
+        "rms": 0.008135564313112449,
+        "maxAbs": 0.01607583276927471
+      }
+    },
+    {
+      "name": "visual state samples the shared audio-clock phase",
+      "pass": true,
+      "observed": {
+        "transportBeat": 6.127551632653104,
+        "visualBeat": 5.973429183673511,
+        "allowedFrameObservationLagBeats": 0.3
+      }
+    },
+    {
+      "name": "live tempo change preserves current beat and transport time",
+      "pass": true,
+      "observed": {
+        "before": {
+          "time": 6.9825403628118385,
+          "beat": 6.284286326530655
+        },
+        "after": {
+          "time": 6.9825403628118385,
+          "beat": 6.284286326530655
+        },
+        "bpm": 72
+      }
+    },
+    {
+      "name": "pause freezes the actual common audiovisual transport",
+      "pass": true,
+      "observed": {
+        "before": {
+          "time": 8.526667346938822,
+          "beat": 8.137238707483036,
+          "state": "paused"
+        },
+        "after": {
+          "time": 8.526667346938822,
+          "beat": 8.137238707483036,
+          "state": "paused"
+        }
+      }
+    },
+    {
+      "name": "tempo slider reaches the native scheduler",
+      "pass": true,
+      "observed": null
+    },
+    {
+      "name": "tuning and level controls reach the bounded sound graph",
+      "pass": true,
+      "observed": {
+        "root": 108,
+        "volume": 1,
+        "limit": 0.22
+      }
+    },
+    {
+      "name": "native pluck voices stay inside the allocation bound",
+      "pass": true,
+      "observed": {
+        "observedPeakActiveVoices": 4,
+        "voiceCap": 12
+      }
+    },
+    {
+      "name": "mute changes clock ownership without a phase reset",
+      "pass": true,
+      "observed": {
+        "before": {
+          "time": 10.46553356009075,
+          "beat": 11.36868239606958
+        },
+        "after": {
+          "time": 10.46563356009061,
+          "beat": 11.368849062736016
+        },
+        "clock": "performance"
+      }
+    },
+    {
+      "name": "muting silences the graph while the visual phase advances",
+      "pass": true,
+      "observed": {
+        "mutedRms": 5.608449296563885e-06,
+        "initialRms": 0.008135564313112449,
+        "beatAdvanced": 1.0131666666668977
+      }
+    },
+    {
+      "name": "sound button resumes audio clock at the advancing visual phase",
+      "pass": true,
+      "observed": {
+        "before": {
+          "time": 11.216033560090748,
+          "beat": 12.619515729402911,
+          "wall": 19.987
+        },
+        "after": {
+          "time": 12.960312698412606,
+          "beat": 15.526647626606009,
+          "wall": 21.72509999999986,
+          "clock": "audio",
+          "muted": false
+        },
+        "wallVsTransportTransitionErrorSeconds": 0.006179138321996902
+      }
+    },
+    {
+      "name": "dispose closes the actual audio context",
+      "pass": true,
+      "observed": null
+    },
+    {
+      "name": "no page or console errors",
+      "pass": true,
+      "observed": []
+    },
+    {
+      "name": "standalone sound uses no external network assets",
+      "pass": true,
+      "observed": []
+    }
+  ],
+  "nativeSignal": {
+    "rms": 0.008135564313112449,
+    "maxAbs": 0.01607583276927471
+  },
+  "peakActiveVoices": 4,
+  "finalSoundStats": {
+    "enabled": true,
+    "muted": false,
+    "contextState": "running",
+    "transportState": "running",
+    "clock": "audio",
+    "bpm": 100,
+    "rootHz": 108,
+    "volume": 1,
+    "maxMasterGain": 0.22,
+    "activeVoices": 0,
+    "strikeVoices": 0,
+    "struckNotes": 0,
+    "voicing": "authored",
+    "scheduledNotes": 13,
+    "skippedSubdivisions": 3,
+    "lastScheduledBeat": 11.5,
+    "disposed": false
+  },
+  "errors": [],
+  "externalRequests": []
+}
