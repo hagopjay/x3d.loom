@@ -615,7 +615,7 @@
             "expected": "WRONG_INSTRUMENT"
           },
           {
-            "case": "D4: every shipped profile's traps/page-traps rule (30) accepts a fresh witness from today's tools",
+            "case": "D4: every shipped profile's traps/page-traps rule (31) accepts a fresh witness from today's tools",
             "result": "accepted"
           },
           {
@@ -646,6 +646,26 @@
             "case": "D10: target-bound mode without an independent consumer command",
             "caught": "fail",
             "expected": "fail"
+          },
+          {
+            "case": "R2-D1: patch file replaced by a regressing one during the baseline run; the hashed bytes are the applied bytes",
+            "caught": "held, sha256 of the original",
+            "expected": "held, sha256 of the original"
+          },
+          {
+            "case": "R2-D1: a patch that breaks lib.py and edits check.py to accept it",
+            "caught": "held (scorer changed: check.py)",
+            "expected": "held (scorer changed: check.py)"
+          },
+          {
+            "case": "R2-D1: x3d-static/v3 refuses a fold-back that changed its own scorer",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          },
+          {
+            "case": "R2: a profile whose `origins` is a string, not a list",
+            "caught": "PROFILE_ORIGINS",
+            "expected": "PROFILE_ORIGINS"
           },
           {
             "case": "D10: x3d-static/v2 refuses an empty-repository fold-back",
@@ -823,7 +843,7 @@
           }
         ]
       },
-      "negative_controls_caught": 102,
+      "negative_controls_caught": 106,
       "optimized": false,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,
@@ -1444,7 +1464,7 @@
             "expected": "WRONG_INSTRUMENT"
           },
           {
-            "case": "D4: every shipped profile's traps/page-traps rule (30) accepts a fresh witness from today's tools",
+            "case": "D4: every shipped profile's traps/page-traps rule (31) accepts a fresh witness from today's tools",
             "result": "accepted"
           },
           {
@@ -1475,6 +1495,26 @@
             "case": "D10: target-bound mode without an independent consumer command",
             "caught": "fail",
             "expected": "fail"
+          },
+          {
+            "case": "R2-D1: patch file replaced by a regressing one during the baseline run; the hashed bytes are the applied bytes",
+            "caught": "held, sha256 of the original",
+            "expected": "held, sha256 of the original"
+          },
+          {
+            "case": "R2-D1: a patch that breaks lib.py and edits check.py to accept it",
+            "caught": "held (scorer changed: check.py)",
+            "expected": "held (scorer changed: check.py)"
+          },
+          {
+            "case": "R2-D1: x3d-static/v3 refuses a fold-back that changed its own scorer",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          },
+          {
+            "case": "R2: a profile whose `origins` is a string, not a list",
+            "caught": "PROFILE_ORIGINS",
+            "expected": "PROFILE_ORIGINS"
           },
           {
             "case": "D10: x3d-static/v2 refuses an empty-repository fold-back",
@@ -1652,7 +1692,7 @@
           }
         ]
       },
-      "negative_controls_caught": 102,
+      "negative_controls_caught": 106,
       "optimized": true,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,

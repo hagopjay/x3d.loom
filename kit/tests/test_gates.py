@@ -790,6 +790,35 @@ def review_controls() -> list[dict]:
         if foldback.check_target(good, tgt, base, "")["status"] != "fail":
             raise RuntimeError("SURVIVING_CONTROL: target-bound fold-back with no consumer")
         rows.append({"case": "D10: target-bound mode without an independent consumer command", "expected": "fail", "caught": "fail"})
+        # round 2, defect 1: the patch file is swapped while the baseline consumer runs (hash A, apply B)
+        import hashlib
+        good_bytes = good.read_bytes()
+        racer = f"sh -c 'cp {bad} {good}; python3 -E -s check.py'"
+        try:
+            res = foldback.check_target(good, tgt, base, racer)
+        finally:
+            good.write_bytes(good_bytes)
+        if res["patch_sha256"] != hashlib.sha256(good_bytes).hexdigest() or res["outcome"] != "held" or not res["patch_frozen"]:
+            raise RuntimeError(f"SURVIVING_CONTROL: mutated patch: hash {res['patch_sha256'][:12]} outcome {res['outcome']}")
+        rows.append({"case": "R2-D1: patch file replaced by a regressing one during the baseline run; the hashed bytes are the applied bytes",
+                     "expected": "held, sha256 of the original", "caught": "held, sha256 of the original"})
+        # round 2, defect 1: the patch breaks lib AND rewrites the oracle to accept the break
+        cheat = Path(d) / "cheat.patch"
+        cheat.write_text(bad.read_text() + "diff --git a/check.py b/check.py\n--- a/check.py\n+++ b/check.py\n@@ -1,2 +1,2 @@\n"
+                         " import lib, sys\n-sys.exit(0 if lib.f() == 1 else 1)\n+sys.exit(0 if lib.f() == 2 else 1)\n")
+        res = foldback.check_target(cheat, tgt, base, "python3 -E -s check.py")
+        if res["scorer_changed"] != ["check.py"] or "scorer changed" not in res["outcome"]:
+            raise RuntimeError(f"SURVIVING_CONTROL: oracle-editing patch read as {res['outcome']}")
+        rows.append({"case": "R2-D1: a patch that breaks lib.py and edits check.py to accept it", "expected": "held (scorer changed: check.py)", "caught": res["outcome"]})
+        cheat_rec = {"coverage": {"target_bound": True, "consumer": True, "patch_frozen": True, "scorer_unchanged": False}}
+        v3 = acc.load_profile(KIT / "profiles/x3d-static-v3.json")
+        rule3 = next(r for r in v3["required"] if r["witness"] == "foldback")
+        rows.append({"case": "R2-D1: x3d-static/v3 refuses a fold-back that changed its own scorer", **expect("COVERAGE_REQUIRED",
+                     lambda: [acc.coverage_ok("foldback", k, w, cheat_rec) for k, w in rule3["coverage"].items()])})
+        # round 2: `origins` written as a string matched by substring ("declared" in "undeclared")
+        sp = Path(d) / "string-origins.json"
+        sp.write_text(json.dumps({"schema": "loom.profile/1", "name": "synthetic/str", "required": [{"witness": "truth", "origins": "undeclared"}]}))
+        rows.append({"case": "R2: a profile whose `origins` is a string, not a list", **expect("PROFILE_ORIGINS", lambda: acc.load_profile(sp))})
         empty = {"schema": "loom.witness/1", "witness": "foldback", "status": "pass", "grade": "C", "origin": "executed",
                  "instrument": {"tool": "loomkit.foldback"}, "coverage": {"modes": [False, True], "target_bound": False, "consumer": False}}
         v2 = acc.load_profile(KIT / "profiles/x3d-static-v2.json")

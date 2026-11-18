@@ -131,7 +131,9 @@ def cmd_foldback(a) -> dict:
                          {"tool": "loomkit.foldback", "git_apply": where, "python": portable(sys.executable)},
                          measurements=res, coverage={"modes": sorted({s["optimized"] for s in res["smoke"]}),
                                                      "target_bound": res["target_bound"],
-                                                     "consumer": bool(res.get("consumer_after"))},
+                                                     "consumer": bool(res.get("consumer_after")),
+                                                     "patch_frozen": bool(res.get("patch_frozen")),
+                                                     "scorer_unchanged": res["target_bound"] and not res.get("scorer_changed")},
                          limitations=lim, reason=res["reason"] if res["status"] != "pass" else "")
 
 

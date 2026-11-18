@@ -45,8 +45,10 @@ kit/loom traps    PROJECT --evidence RUN/evidence --files 'path/*.x3d' --host st
 kit/loom command  PROJECT --evidence RUN/evidence --name truth -- python3 -m your.gate args
 ```
 ```bash
-kit/loom foldback PROJECT --evidence RUN/evidence --patch PROJECT/integration/your.patch
+kit/loom foldback PROJECT --evidence RUN/evidence --patch PROJECT/integration/your.patch \
+    --target ~/src/the-real-repo --base 1a2b3c4 --consumer "python3 -m pytest -q tests"
 ```
+Publication fold-backs are target-bound: the patch is frozen and hashed once, applied to a clean clone of the target at `--base`, and the target's own command runs before and after. A patch that edits the oracle (a test file, or a file the consumer names) is marked `scorer changed`. Without `--target` the patch goes into an empty repository and the record says `target_bound: false`; `x3d-static/v2` and `/v3` refuse that.
 ```bash
 kit/loom play     PROJECT --evidence RUN/evidence --tapes 'tapes/*.tape.json' --levels 'levels/*.x3d' --runner tools/replay.mjs
 ```
@@ -57,11 +59,12 @@ kit/loom physics  PROJECT --evidence RUN/evidence --runs 'runs/*.physics.json' -
 kit/loom record   PROJECT --evidence RUN/evidence --name eyes --status not_run --reason "why"
 ```
 ```bash
-kit/loom accept   PROJECT --evidence RUN/evidence --profile kit/profiles/x3d-static.json
+kit/loom accept   PROJECT --evidence RUN/evidence --profile kit/profiles/x3d-static-v3.json
 ```
 ```bash
-kit/loom receipt  PROJECT --evidence RUN/evidence --profile kit/profiles/x3d-static.json --subject "name" --out RUN/receipt.json
+kit/loom receipt  PROJECT --evidence RUN/evidence --profile kit/profiles/x3d-static-v3.json --subject "name" --out RUN/receipt.json
 ```
+Use `x3d-static-v3.json` for anything published. `x3d-static.json` (v1) is LEGACY: it accepts hand-declared passes and an empty-repository fold-back, and stays only so old receipts can be re-checked against the profile they named.
 
 Exit codes: 0 passed, 1 contract violation (a stable code is printed), 2 instrument or input error. Set `LOOM_PYFLAGS=-O` to run everything optimised; the gates still hold. Grammar and Meaning use the x3d_mcp fork at `~/Projects/x3d/x3d_mcp`, or `--fork` / `LOOM_FORK` to point elsewhere.
 
