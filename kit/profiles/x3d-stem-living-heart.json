@@ -3,40 +3,14 @@
   "name": "x3d-stem-living-heart/v1",
   "purpose": "Living Heart (x3d.STEM flagship 5). Accepting under it means: the scene is grammatical and meaningful on the fork with no known trap; every case declares its model and limits; the solver converges to the exact Nagumo front speed at second order and a resting mode decays at the exact discrete rate; conduction, spiral and scroll-wave periods are consistent and stable under refinement; the no-flux walls conserve exactly; payloads inflate to their recorded bytes; the builder and solver are the shipped ones; and a browser matched the builder's excited-cell counts on every frame, meshed the wall to the builder's reference, and played through the scene's own route.",
   "required": [
-    {
-      "witness": "grammar"
-    },
-    {
-      "witness": "meaning"
-    },
-    {
-      "witness": "traps",
-      "coverage": {
-        "rules": 11
-      }
-    },
-    {
-      "witness": "page-traps",
-      "coverage": {
-        "rules": 6
-      }
-    },
-    {
-      "witness": "science",
-      "coverage": {
-        "kinds": 1
-      }
-    },
-    {
-      "witness": "behaviour"
-    }
+    {"witness": "grammar"},
+    {"witness": "meaning"},
+    {"witness": "traps", "coverage": {"rules_include": ["shader-raw-source", "route-before-def", "route-undefined", "color-range", "color-emissive-white", "splat-bbox", "movie-not-still", "version-fits-nodes", "no-script-under-host", "metadata-containerfield", "glsl-reserved-active"]}, "instrument": "loomkit.traps"},
+    {"witness": "page-traps", "coverage": {"rules_include": ["xite-callback-unguarded", "xite-browser-currenttime", "nav-before-scene", "window-global-shadow", "js-syntax", "loadurl-unbudgeted"]}, "instrument": "loomkit.pagetraps"},
+    {"witness": "science", "coverage": {"kinds": 1}},
+    {"witness": "behaviour"}
   ],
-  "visible_not_run": [
-    "eyes",
-    "host",
-    "gpu-location",
-    "paired-visual-review"
-  ],
+  "visible_not_run": ["eyes", "host", "gpu-location", "paired-visual-review"],
   "science": {
     "min_cases": 3,
     "min_witnesses": 7,

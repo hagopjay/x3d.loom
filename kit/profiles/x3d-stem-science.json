@@ -5,20 +5,62 @@
   "required": [
     {"witness": "grammar"},
     {"witness": "meaning"},
-    {"witness": "traps", "coverage": {"rules": 11}},
+    {"witness": "traps", "coverage": {"rules_include": ["shader-raw-source", "route-before-def", "route-undefined", "color-range", "color-emissive-white", "splat-bbox", "movie-not-still", "version-fits-nodes", "no-script-under-host", "metadata-containerfield", "glsl-reserved-active"]}, "instrument": "loomkit.traps"},
     {"witness": "science", "coverage": {"kinds": 4}}
   ],
   "visible_not_run": ["behaviour", "eyes", "host", "gpu-location", "paired-visual-review", "topology-convergence", "full-bz-gap"],
   "science": {
     "min_cases": 9,
     "min_witnesses": 5,
-    "quantization_max": 0.0019607843137254902,
-    "builders": {"vortex": "tools/vortex.py", "kerr": "tools/kerr.py", "matter": "tools/matter.py", "phononic": "tools/phononic.py"},
+    "quantization_max": 0.00196078431372549,
+    "builders": {
+      "vortex": "tools/vortex.py",
+      "kerr": "tools/kerr.py",
+      "matter": "tools/matter.py",
+      "phononic": "tools/phononic.py"
+    },
     "kinds": {
-      "vortex": {"evolving": true, "required_witnesses": ["particle-number", "Hamiltonian", "phase winding", "reversibility", "temporal refinement", "clipping"]},
-      "kerr": {"evolving": false, "required_witnesses": ["unresolved rays", "constraint", "Schwarzschild analytic capture", "refined ray", "clipping"]},
-      "matter": {"evolving": true, "required_witnesses": ["mean composition drift", "free-energy", "conduction linear residual", "uniform conduction reference", "clipping"]},
-      "phononic": {"evolving": false, "required_witnesses": ["Hermitian", "generalized eigen residual", "mass orthogonality", "homogeneous continuum", "Gamma rigid-body"]}
+      "vortex": {
+        "evolving": true,
+        "required_witnesses": [
+          "particle-number",
+          "Hamiltonian",
+          "phase winding",
+          "reversibility",
+          "temporal refinement",
+          "clipping"
+        ]
+      },
+      "kerr": {
+        "evolving": false,
+        "required_witnesses": [
+          "unresolved rays",
+          "constraint",
+          "Schwarzschild analytic capture",
+          "refined ray",
+          "clipping"
+        ]
+      },
+      "matter": {
+        "evolving": true,
+        "required_witnesses": [
+          "mean composition drift",
+          "free-energy",
+          "conduction linear residual",
+          "uniform conduction reference",
+          "clipping"
+        ]
+      },
+      "phononic": {
+        "evolving": false,
+        "required_witnesses": [
+          "Hermitian",
+          "generalized eigen residual",
+          "mass orthogonality",
+          "homogeneous continuum",
+          "Gamma rigid-body"
+        ]
+      }
     }
   },
   "gate_map": {

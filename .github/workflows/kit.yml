@@ -1,0 +1,52 @@
+# x3d.loom/.github/workflows/kit.yml
+# The core kit (kit/loomkit, kit/profiles, kit/tests): acceptance, witness exit codes, evidence origins, profile/rule
+# binding and fold-back. Added after the external accountability review of 18 Nov 2026 found that kit and profile
+# changes were covered by no path-filtered workflow, so a profile could fall out of step with its tool unseen
+# (11 trap rules required, 15 emitted). Standard library + git only; no browser, no model, no key.
+name: kit
+
+on:
+  push:
+    paths: ['kit/loomkit/**', 'kit/profiles/**', 'kit/tests/**', 'kit/loom', 'kit/examples/*.sh', 'x3d.brain/run_brain.sh', '.github/workflows/kit.yml']
+  pull_request:
+    paths: ['kit/loomkit/**', 'kit/profiles/**', 'kit/tests/**', 'kit/loom', 'kit/examples/*.sh', 'x3d.brain/run_brain.sh', '.github/workflows/kit.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kit-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  kit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Shell scripts parse
+        run: for f in kit/examples/*.sh x3d.brain/run_brain.sh; do sh -n "$f"; done
+      - name: Every shipped profile loads
+        run: python -I -c "import sys,pathlib; sys.path.insert(0,'kit'); from loomkit import accept as a; [a.load_profile(p) for p in sorted(pathlib.Path('kit/profiles').glob('*.json')) if p.name != 'public-sweep.json']; print('profiles ok')"
+      - name: Gate controls (normal and -O; includes the 18 Nov review controls D1, D3, D4, D10)
+        run: python -I kit/tests/test_gates.py
+      - name: Hep-event controls
+        run: python -I kit/tests/test_hepevent.py
+      - name: Metal-site controls
+        run: python -I kit/tests/test_metalsite.py
+      - name: Receipt
+        run: |
+          echo "commit: $GITHUB_SHA"
+          echo "runner: $(uname -sr)"
+          python --version; git --version; node --version

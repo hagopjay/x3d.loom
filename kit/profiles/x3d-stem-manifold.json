@@ -5,8 +5,8 @@
   "required": [
     {"witness": "grammar"},
     {"witness": "meaning"},
-    {"witness": "traps", "coverage": {"rules": 11}},
-    {"witness": "page-traps", "coverage": {"rules": 6}},
+    {"witness": "traps", "coverage": {"rules_include": ["shader-raw-source", "route-before-def", "route-undefined", "color-range", "color-emissive-white", "splat-bbox", "movie-not-still", "version-fits-nodes", "no-script-under-host", "metadata-containerfield", "glsl-reserved-active"]}, "instrument": "loomkit.traps"},
+    {"witness": "page-traps", "coverage": {"rules_include": ["xite-callback-unguarded", "xite-browser-currenttime", "nav-before-scene", "window-global-shadow", "js-syntax", "loadurl-unbudgeted"]}, "instrument": "loomkit.pagetraps"},
     {"witness": "science", "coverage": {"kinds": 1}},
     {"witness": "behaviour"}
   ],
@@ -16,11 +16,22 @@
     "min_witnesses": 10,
     "quantization_max": 5e-05,
     "case_glob": "cases/*/case.json",
-    "builders": {"manifold": "tools/manifold.py"},
+    "builders": {
+      "manifold": "tools/manifold.py"
+    },
     "kinds": {
       "manifold": {
         "evolving": false,
-        "required_witnesses": ["curvature_general_metric", "gauss_bonnet", "geodesic_formulation", "geodesic_rk4_order", "geodesic_rk4_error", "clairaut", "heights_match_page_js", "curvature_matches_page_js"]
+        "required_witnesses": [
+          "curvature_general_metric",
+          "gauss_bonnet",
+          "geodesic_formulation",
+          "geodesic_rk4_order",
+          "geodesic_rk4_error",
+          "clairaut",
+          "heights_match_page_js",
+          "curvature_matches_page_js"
+        ]
       }
     }
   },

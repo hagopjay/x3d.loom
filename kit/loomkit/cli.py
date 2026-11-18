@@ -1,16 +1,17 @@
-"""loomkit command line. Exit 0 = passed; 1 = candidate contract violation (stable code on stdout);
-2 = instrument or input error. Same convention as the Data City gate kit, and it survives `python -O`.
+"""loomkit command line. Exit 0 = passed; 1 = candidate contract violation (stable code on stdout, or a witness
+record with status fail); 2 = instrument or input error (or a witness record with status error). Witness commands
+write their record first and then exit by its status. Same convention as the Data City gate kit, and it survives `python -O`.
 
   python -m loomkit candidate ROOT
   python -m loomkit traps     ROOT --evidence DIR --files GLOB [--host strict]
   python -m loomkit grammar   ROOT --evidence DIR --files GLOB [--fork PATH]
-  python -m loomkit foldback  ROOT --evidence DIR --patch FILE
+  python -m loomkit foldback  ROOT --evidence DIR --patch FILE [--target REPO --base SHA --consumer CMD]
   python -m loomkit sci       ROOT --evidence DIR --profile kit/profiles/x3d-stem-science.json
   python -m loomkit play      ROOT --evidence DIR --tapes GLOB --levels GLOB --runner FILE [--repeats 2]
   python -m loomkit hepevent  ROOT --evidence DIR --events GLOB --spec FILE
   python -m loomkit physics   ROOT --evidence DIR --runs GLOB [--hosts chromium,firefox,webkit,node] [--max-waivers N] [--require-takeover]
   python -m loomkit command   ROOT --evidence DIR --name NAME -- CMD ...
-  python -m loomkit record    ROOT --evidence DIR --name NAME --status not_run --reason TEXT
+  python -m loomkit record    ROOT --evidence DIR --name NAME --status not_run --reason TEXT [--origin reviewed --file F ...]
   python -m loomkit accept    ROOT --evidence DIR --profile FILE
   python -m loomkit receipt   ROOT --evidence DIR --profile FILE --subject TEXT --out FILE [--outputs F ...] [--prev FILE]
   python -m loomkit verify-receipt FILE
@@ -116,12 +117,22 @@ def cmd_grammar(a) -> list[dict]:
 def cmd_foldback(a) -> dict:
     root = Path(a.root)
     subject = candidate(root)["sha256"]
-    res = foldback.check(Path(a.patch))
+    if a.target:
+        need(a.base, "FOLDBACK_NEEDS_BASE", "--target needs --base SHA: the commit the patch is claimed to apply to")
+        res = foldback.check_target(Path(a.patch), Path(a.target), a.base, a.consumer)
+        where, lim = f"clean clone of {Path(a.target).name} at {res['base_sha'] or a.base}", [
+            "The consumer command is the target's own regression; it shows the patch holds there, not that it helps a later task."]
+    else:
+        res = foldback.check(Path(a.patch))
+        where, lim = "empty temporary repository", [
+            "Applied to an empty repository only; compatibility with an existing checkout is not tested (target_bound: false).",
+            "The smoke tests are the patch author's own code, not an independent consumer."]
     return write_witness(a.evidence, root, subject, "foldback", res["status"], "C",
-                         {"tool": "loomkit.foldback", "git_apply": "empty temporary repository", "python": portable(sys.executable)},
-                         measurements=res, coverage={"modes": sorted({s["optimized"] for s in res["smoke"]})},
-                         limitations=["Applied to an empty repository only; compatibility with an existing checkout is not tested."],
-                         reason=res["reason"] if res["status"] != "pass" else "")
+                         {"tool": "loomkit.foldback", "git_apply": where, "python": portable(sys.executable)},
+                         measurements=res, coverage={"modes": sorted({s["optimized"] for s in res["smoke"]}),
+                                                     "target_bound": res["target_bound"],
+                                                     "consumer": bool(res.get("consumer_after"))},
+                         limitations=lim, reason=res["reason"] if res["status"] != "pass" else "")
 
 
 def cmd_sci(a) -> dict:
@@ -260,9 +271,21 @@ def cmd_command(a) -> dict:
 
 
 def cmd_record(a) -> dict:
+    """A hand-written record: origin `declared`, or `reviewed` when a person looked at named evidence files.
+    It never carries grade C, and a profile admits its pass only where the rule names its origin (review 18 Nov 2026)."""
     root = Path(a.root)
+    need(a.origin in ("declared", "reviewed"), "UNKNOWN_ORIGIN", a.origin)
+    need(a.grade != "C", "DECLARED_NOT_MEASURED", f"{a.name}: `record` writes what a person says, so it cannot be grade C")
+    evidence = []
+    if a.origin == "reviewed":
+        need(a.file, "REVIEW_NEEDS_EVIDENCE", f"{a.name}: --origin reviewed needs --file for what was looked at")
+        ev = Path(a.evidence).resolve()
+        for f in a.file:
+            fp = Path(f).resolve()
+            need(fp.is_file() and fp.is_relative_to(ev), "REVIEW_EVIDENCE_OUTSIDE", f"{f}: must be a file inside --evidence")
+            evidence.append({"path": fp.relative_to(ev).as_posix(), "sha256": sha256_file(fp)})
     return write_witness(a.evidence, root, candidate(root)["sha256"], a.name, a.status, a.grade,
-                         {"tool": "declared", "by": a.by}, reason=a.reason)
+                         {"tool": a.origin, "by": a.by}, reason=a.reason, evidence=evidence, origin=a.origin)
 
 
 def cmd_accept(a) -> dict:
@@ -316,6 +339,7 @@ def main(argv: list[str] | None = None) -> int:
     p = common("pagetraps"); p.add_argument("--files", required=True)
     p = common("grammar"); p.add_argument("--files", required=True); p.add_argument("--fork", default=str(grammar.DEFAULT_FORK))
     p = common("foldback"); p.add_argument("--patch", required=True)
+    p.add_argument("--target", default=""); p.add_argument("--base", default=""); p.add_argument("--consumer", default="")
     p = common("sci"); p.add_argument("--profile", required=True)
     p = common("metalsite"); p.add_argument("--files", required=True); p.add_argument("--spec", required=True)
     p.add_argument("--name", default="metal-site")
@@ -327,6 +351,7 @@ def main(argv: list[str] | None = None) -> int:
     p = common("command"); p.add_argument("--name", required=True)
     p = common("record"); p.add_argument("--name", required=True); p.add_argument("--status", required=True)
     p.add_argument("--grade", default="L"); p.add_argument("--reason", required=True); p.add_argument("--by", default="operator")
+    p.add_argument("--origin", default="declared"); p.add_argument("--file", nargs="*", default=[])
     p = common("accept"); p.add_argument("--profile", required=True)
     p = common("receipt"); p.add_argument("--profile", required=True); p.add_argument("--subject", required=True)
     p.add_argument("--out", required=True); p.add_argument("--outputs", nargs="*", default=[])
@@ -369,4 +394,13 @@ def main(argv: list[str] | None = None) -> int:
     def brief(o):  # a witness record prints as its name and status; anything else prints whole
         return {"witness": o["witness"], "status": o["status"], "reason": o["reason"]} if "schema" in o and "witness" in o else o
     print(json.dumps([brief(o) for o in out] if isinstance(out, list) else brief(out), indent=2, default=str))
-    return 0
+    return witness_exit(out)
+
+
+def witness_exit(out) -> int:
+    """Exit status follows the records written (review 18 Nov 2026, defect 1: `traps` printed status=fail and exited 0,
+    so CI and `set -e` scripts read a failed check as success). Evidence is written first; then any `error` record
+    exits 2 (instrument), any `fail` exits 1 (violation), and everything else, including not_run, exits 0."""
+    recs = [o for o in (out if isinstance(out, list) else [out]) if isinstance(o, dict) and "schema" in o and "witness" in o]
+    statuses = {o["status"] for o in recs}
+    return 2 if "error" in statuses else 1 if "fail" in statuses else 0

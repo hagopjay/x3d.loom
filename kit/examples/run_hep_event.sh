@@ -58,7 +58,7 @@ t2, n = re.subn(r"<Shape DEF='trk_7'>.*?</Shape>\n", "", t, count=1, flags=re.S)
 if n != 1: raise SystemExit("control could not find trk_7")
 open(p, "w").write(t2)
 PY
-"$LOOM" hepevent "$WORK" --evidence "$RUN/control-evidence" --events 'events/*.event.json' --spec "$WORK/hep-demo-spec.json" > /dev/null
+"$LOOM" hepevent "$WORK" --evidence "$RUN/control-evidence" --events 'events/*.event.json' --spec "$WORK/hep-demo-spec.json" > /dev/null || [ $? -eq 1 ]  # expected-fail control: a fail record exits 1 since 18 Nov 2026; its status is checked next
 python3 -I -c "import json,sys; r=json.load(open(sys.argv[1])); print({'status': r['status'], 'reason': r['reason']}); sys.exit(0 if r['status']=='fail' and r['reason'].startswith('EVT_SCENE_BIJECTION: event tracks not drawn: trk_7') else 1)" "$RUN/control-evidence/hep-event.json"
 "$LOOM" traps "$WORK" --evidence "$RUN/control-evidence" --files 'events/*.x3d' --host strict > /dev/null
 if "$LOOM" accept "$WORK" --evidence "$RUN/control-evidence" --profile "$PROFILE" > "$RUN/control-deleted.json"; then echo "SURVIVING_CONTROL deleted"; exit 1; fi
@@ -90,7 +90,7 @@ for f in (c for c in g if c.tag == "FloatVertexAttribute"):
 g.set("stripCount", " ".join(str(c) for n, c in enumerate(counts) if n != j))
 ET.ElementTree(root).write(p, encoding="unicode", xml_declaration=True)
 PY
-"$LOOM" hepevent "$WORK" --evidence "$RUN/control-evidence-v2" --events 'events/*.event.json,events-v2/*.event.json' --spec "$WORK/hep-demo-spec.json" > /dev/null
+"$LOOM" hepevent "$WORK" --evidence "$RUN/control-evidence-v2" --events 'events/*.event.json,events-v2/*.event.json' --spec "$WORK/hep-demo-spec.json" > /dev/null || [ $? -eq 1 ]  # expected-fail control: a fail record exits 1 since 18 Nov 2026; its status is checked next
 python3 -I -c "import json,sys; r=json.load(open(sys.argv[1])); print({'status': r['status'], 'reason': r['reason']}); sys.exit(0 if r['status']=='fail' and r['reason'].startswith('EVT_SCENE_BIJECTION: event tracks not drawn: trk_7') else 1)" "$RUN/control-evidence-v2/hep-event.json"
 "$LOOM" traps "$WORK" --evidence "$RUN/control-evidence-v2" --files 'events/*.x3d,events-v2/*.x3d' --host strict > /dev/null
 if "$LOOM" accept "$WORK" --evidence "$RUN/control-evidence-v2" --profile "$PROFILE" > "$RUN/control-deleted-v2.json"; then echo "SURVIVING_CONTROL deleted v2"; exit 1; fi

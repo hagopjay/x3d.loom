@@ -411,12 +411,15 @@ def cli_subprocess_controls() -> list[dict]:
             for label, text, want in (("clean", good, "pass"), ("trap", bad, "fail")):
                 (root / rel).write_text(text)
                 r = subprocess.run([str(loom), cmd, str(root), "--evidence", str(ev), "--files", glob], capture_output=True, text=True)
-                if r.returncode != 0:
-                    raise RuntimeError(f"CLI_CRASH {cmd}: {r.stderr.strip().splitlines()[-1] if r.stderr.strip() else r.returncode}")
+                want_exit = {"pass": 0, "fail": 1}[want]  # review 18 Nov 2026 defect 1: a fail record used to exit 0
+                if r.returncode != want_exit:
+                    raise RuntimeError(f"CLI_EXIT {cmd} {label}: exit {r.returncode}, expected {want_exit}: {r.stderr.strip()[-200:]}")
                 got = json.loads(r.stdout)["status"]
                 if got != want:
                     raise RuntimeError(f"CLI_STATUS {cmd} {label}: {got}, expected {want}")
-                rows.append({"command": cmd, "fixture": label, "status": got})
+                if not json.loads((ev / f"{'page-traps' if cmd == 'pagetraps' else cmd}.json").read_text())["status"] == want:
+                    raise RuntimeError(f"CLI_EVIDENCE {cmd} {label}: the record must be written before the exit")
+                rows.append({"command": cmd, "fixture": label, "status": got, "exit": r.returncode})
             (root / rel).unlink()
     return rows
 
@@ -655,7 +658,8 @@ def physics_controls() -> list[dict]:
         run["tolerances"] = []
         run["replays"][0]["mismatches"] = 2
         (root / "run.json").write_text(json.dumps(run))
-        quiet_cli(base)
+        if quiet_cli(base) != 1:
+            raise RuntimeError("CLI_EXIT: a physics fail record must exit 1")
         rec = json.loads((ev / "physics.json").read_text())
         if rec["status"] != "fail" or "PHYS_HASH_DRIFT" not in rec["reason"]:
             raise RuntimeError(f"CLI_PHYSICS: a hash drift must be a witness fail, got {rec['status']} {rec['reason']}")
@@ -691,10 +695,114 @@ def cli_controls() -> list[dict]:
     return rows
 
 
+def review_controls() -> list[dict]:
+    """Controls for the external accountability review of 18 Nov 2026 (defects 1, 3, 4 and 10). Each reproduces the
+    reviewer's probe first, then shows the fix catches it with its intended code."""
+    from loomkit import foldback
+    rows = []
+    loom = KIT / "loom"
+    with tempfile.TemporaryDirectory(prefix="loomkit-review-") as d:
+        root, ev = Path(d) / "cand", Path(d) / "ev"
+        root.mkdir()
+        # defect 1: the reviewer's out-of-range material colour; the record says fail and now the process does too
+        (root / "bad.x3d").write_text("<X3D version='4.0'><Scene><Shape><Appearance><Material diffuseColor='2 0 0'/></Appearance></Shape></Scene></X3D>\n")
+        r = subprocess.run([str(loom), "traps", str(root), "--evidence", str(ev), "--files", "*.x3d"], capture_output=True, text=True)
+        rec = json.loads((ev / "traps.json").read_text())
+        if r.returncode != 1 or rec["status"] != "fail":
+            raise RuntimeError(f"SURVIVING_CONTROL: failed traps exited {r.returncode} with status {rec['status']}")
+        rows.append({"case": "D1: traps status=fail exits 1 and the record is written first", "expected": "exit 1", "caught": "exit 1"})
+        (root / "bad.x3d").write_text("<X3D version='4.0'><Scene/></X3D>\n")
+        # defect 3: the reviewer's `record --status pass --grade C` with no measurement
+        r = subprocess.run([str(loom), "record", str(root), "--evidence", str(ev), "--name", "truth", "--status", "pass",
+                            "--grade", "C", "--reason", "architecture review: no witness executed"], capture_output=True, text=True)
+        if r.returncode != 1 or json.loads(r.stdout).get("rejected") != "DECLARED_NOT_MEASURED":
+            raise RuntimeError(f"SURVIVING_CONTROL: declared grade C accepted by record: exit {r.returncode} {r.stdout[:200]}")
+        rows.append({"case": "D3: `record --grade C` refused (C means an instrument measured it)", "expected": "DECLARED_NOT_MEASURED", "caught": "DECLARED_NOT_MEASURED"})
+        prof = {"schema": "loom.profile/1", "name": "synthetic/review", "required": [{"witness": "truth"}]}
+        s = candidate(root)["sha256"]
+        write_witness(ev, root, s, "truth", "pass", "L", {"tool": "declared", "by": "operator"}, reason="said so", origin="declared")
+        rows.append({"case": "D3: a declared pass cannot satisfy a measured witness", **expect("DECLARED_NOT_MEASURED", lambda: acc.accept(root, ev, prof))})
+        legacy = {"schema": "loom.witness/1", "witness": "truth", "status": "pass", "grade": "C", "subject_sha256": s,
+                  "instrument": {"tool": "declared", "by": "operator"}, "development": False, "evidence": [], "coverage": {}}
+        (ev / "truth.json").write_text(json.dumps(legacy))
+        rows.append({"case": "D3: a pre-18-Nov hand record (no origin, tool declared, grade C) is read as declared", **expect("DECLARED_NOT_MEASURED", lambda: acc.accept(root, ev, prof))})
+        r = subprocess.run([str(loom), "record", str(root), "--evidence", str(ev), "--name", "eyes", "--status", "pass",
+                            "--origin", "reviewed", "--reason", "looked"], capture_output=True, text=True)
+        if r.returncode != 1 or json.loads(r.stdout).get("rejected") != "REVIEW_NEEDS_EVIDENCE":
+            raise RuntimeError(f"SURVIVING_CONTROL: reviewed record without evidence: {r.stdout[:200]}")
+        rows.append({"case": "D3: a reviewed record must name the files looked at", "expected": "REVIEW_NEEDS_EVIDENCE", "caught": "REVIEW_NEEDS_EVIDENCE"})
+        (ev / "frame.png").write_bytes(b"synthetic frame")
+        r = subprocess.run([str(loom), "record", str(root), "--evidence", str(ev), "--name", "eyes", "--status", "pass",
+                            "--origin", "reviewed", "--file", str(ev / "frame.png"), "--reason", "frame looked at"], capture_output=True, text=True)
+        if r.returncode != 0:
+            raise RuntimeError(f"REVIEW_RECORD: {r.stdout[:200]}")
+        eyes = {"schema": "loom.profile/1", "name": "synthetic/eyes", "required": [{"witness": "eyes"}]}
+        rows.append({"case": "D3: a reviewed pass is refused where the rule does not name `reviewed`", **expect("DECLARED_NOT_MEASURED", lambda: acc.accept(root, ev, eyes))})
+        eyes["required"][0]["origins"] = ["reviewed"]
+        acc.accept(root, ev, eyes)
+        rows.append({"case": "D3: the same reviewed pass is admitted where the rule names `reviewed` and its evidence hash holds", "result": "accepted"})
+        (ev / "frame.png").write_bytes(b"swapped frame")
+        rows.append({"case": "D3: the reviewed file changed after the review", **expect("EVIDENCE_DRIFT", lambda: acc.accept(root, ev, eyes))})
+        write_witness(ev, root, s, "truth", "pass", "C", {"tool": "someone else's script"})
+        prof["required"][0]["instrument"] = "project gate (adapter)"
+        rows.append({"case": "D3: a pass from an instrument the rule does not name", **expect("WRONG_INSTRUMENT", lambda: acc.accept(root, ev, prof))})
+        # defect 4: shipped profiles against the tool as it is today, with a fresh witness on a clean fixture
+        quiet_cli(["traps", str(root), "--evidence", str(ev), "--files", "*.x3d"])
+        (root / "app.js").write_text(CLEAN_PAGE)
+        quiet_cli(["pagetraps", str(root), "--evidence", str(ev), "--files", "app.js"])
+        fresh = {"traps": json.loads((ev / "traps.json").read_text()), "page-traps": json.loads((ev / "page-traps.json").read_text())}
+        checked = 0
+        for pf in sorted((KIT / "profiles").glob("*.json")):
+            if pf.name == "public-sweep.json":
+                continue
+            profile = acc.load_profile(pf)
+            for rule in profile["required"]:
+                if rule["witness"] in fresh:
+                    for key, want in rule.get("coverage", {}).items():
+                        acc.coverage_ok(f"{pf.name}:{rule['witness']}", key, want, fresh[rule["witness"]])
+                    acc.origin_ok(rule, fresh[rule["witness"]])
+                    checked += 1
+        rows.append({"case": f"D4: every shipped profile's traps/page-traps rule ({checked}) accepts a fresh witness from today's tools", "result": "accepted"})
+        gone = copy.deepcopy(fresh["traps"]); gone["instrument"]["rules"].remove("color-range")
+        rows.append({"case": "D4: a tool that dropped a rule the profile names", **expect("COVERAGE_REQUIRED", lambda: acc.coverage_ok("traps", "rules_include", ["color-range"], gone))})
+        rows.append({"case": "D4: coverage {min: n} below n", **expect("COVERAGE_REQUIRED", lambda: acc.coverage_ok("grammar", "files", {"min": 3}, {"coverage": {"files": 2}}))})
+        # defect 10: target-bound fold-back
+        tgt = Path(d) / "target"; tgt.mkdir()
+        (tgt / "lib.py").write_text("def f():\n    return 1\n")
+        (tgt / "check.py").write_text("import lib, sys\nsys.exit(0 if lib.f() == 1 else 1)\n")
+        g = lambda *a: subprocess.run(["git", "-C", str(tgt), *a], check=True, capture_output=True, text=True).stdout.strip()
+        g("init", "-q"); g("add", "."); g("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "base")
+        base = g("rev-parse", "HEAD")
+        good = Path(d) / "good.patch"; bad = Path(d) / "bad.patch"
+        good.write_text("diff --git a/notes.md b/notes.md\nnew file mode 100644\n--- /dev/null\n+++ b/notes.md\n@@ -0,0 +1 @@\n+learned\n")
+        bad.write_text("diff --git a/lib.py b/lib.py\n--- a/lib.py\n+++ b/lib.py\n@@ -1,2 +1,2 @@\n def f():\n-    return 1\n+    return 2\n")
+        res = foldback.check_target(good, tgt, base, "python3 -E -s check.py")
+        if res["status"] != "pass" or res["outcome"] != "held" or res["base_sha"] != base:
+            raise RuntimeError(f"FOLDBACK_TARGET: clean patch {res['status']} {res['reason']}")
+        rows.append({"case": "D10: a patch applied to a clean clone at the base SHA; consumer green before and after", "result": "pass, held"})
+        res = foldback.check_target(bad, tgt, base, "python3 -E -s check.py")
+        if res["status"] != "fail" or res["outcome"] != "regressed":
+            raise RuntimeError(f"SURVIVING_CONTROL: regressing fold-back {res['status']}")
+        rows.append({"case": "D10: a patch that turns the consumer red", "expected": "fail regressed", "caught": "fail regressed"})
+        if foldback.check_target(good, tgt, "0" * 40, "python3 -E -s check.py")["status"] != "error":
+            raise RuntimeError("SURVIVING_CONTROL: unknown base SHA")
+        rows.append({"case": "D10: a base SHA that is not in the target", "expected": "error", "caught": "error"})
+        if foldback.check_target(good, tgt, base, "")["status"] != "fail":
+            raise RuntimeError("SURVIVING_CONTROL: target-bound fold-back with no consumer")
+        rows.append({"case": "D10: target-bound mode without an independent consumer command", "expected": "fail", "caught": "fail"})
+        empty = {"schema": "loom.witness/1", "witness": "foldback", "status": "pass", "grade": "C", "origin": "executed",
+                 "instrument": {"tool": "loomkit.foldback"}, "coverage": {"modes": [False, True], "target_bound": False, "consumer": False}}
+        v2 = acc.load_profile(KIT / "profiles/x3d-static-v2.json")
+        rule = next(r for r in v2["required"] if r["witness"] == "foldback")
+        rows.append({"case": "D10: x3d-static/v2 refuses an empty-repository fold-back", **expect("COVERAGE_REQUIRED",
+                     lambda: [acc.coverage_ok("foldback", k, w, empty) for k, w in rule["coverage"].items()])})
+    return rows
+
+
 def run_all() -> dict:
     return {"acceptance": acceptance_controls(), "traps": trap_controls(),
             "picture": picture_controls(), "receipt": receipt_controls(), "sweep": sweep_controls(), "sci": sci_controls(),
-            "pagetraps": page_controls(), "play": play_controls(), "physics": physics_controls(), "cli": cli_controls(), "cli_subprocess": cli_subprocess_controls(), "optimized": bool(sys.flags.optimize)}
+            "pagetraps": page_controls(), "play": play_controls(), "physics": physics_controls(), "cli": cli_controls(), "cli_subprocess": cli_subprocess_controls(), "review": review_controls(), "optimized": bool(sys.flags.optimize)}
 
 
 if __name__ == "__main__":
@@ -708,7 +816,7 @@ if __name__ == "__main__":
             print(p.stdout, p.stderr, file=sys.stderr)
             sys.exit(1)
         res = json.loads(p.stdout)
-        negatives = sum(1 for k in ("acceptance", "picture", "receipt", "sweep", "sci", "play", "physics", "cli") for row in res[k] if "caught" in row)
+        negatives = sum(1 for k in ("acceptance", "picture", "receipt", "sweep", "sci", "play", "physics", "cli", "review") for row in res[k] if "caught" in row)
         report["modes"].append({"optimized": res["optimized"], "negative_controls_caught": negatives,
                                 "trap_rules_two_sided": len(res["traps"]),
                                 "page_trap_rules_two_sided": sum(1 for r in res["pagetraps"] if "rule" in r and "form" not in r),

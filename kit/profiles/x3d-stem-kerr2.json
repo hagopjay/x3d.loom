@@ -1,42 +1,16 @@
 {
   "schema": "loom.profile/1",
   "name": "x3d-stem-kerr2/v1",
-  "purpose": "Kerr 2 \u00b7 The Photon Ring (x3d.STEM flagship 1). Accepting under it means: the scene is grammatical and meaningful on the fork with no known trap; every case declares its model and limits; the analytic critical curve, sub-ring refinement, constraint, unresolved-ray, colour and clipping witnesses are present, consistent and green; payloads decode; and each bank was produced by the shipped builder. Eyes: a browser frame of every case matches the offline render of the same payloads (correlation at least 0.98, mean difference at most 4/255) with a signal floor and a flipped negative control that must fail. Behaviour, GPU location and paired visual review stay visible as not run.",
+  "purpose": "Kerr 2 · The Photon Ring (x3d.STEM flagship 1). Accepting under it means: the scene is grammatical and meaningful on the fork with no known trap; every case declares its model and limits; the analytic critical curve, sub-ring refinement, constraint, unresolved-ray, colour and clipping witnesses are present, consistent and green; payloads decode; and each bank was produced by the shipped builder. Eyes: a browser frame of every case matches the offline render of the same payloads (correlation at least 0.98, mean difference at most 4/255) with a signal floor and a flipped negative control that must fail. Behaviour, GPU location and paired visual review stay visible as not run.",
   "required": [
-    {
-      "witness": "grammar"
-    },
-    {
-      "witness": "meaning"
-    },
-    {
-      "witness": "traps",
-      "coverage": {
-        "rules": 11
-      }
-    },
-    {
-      "witness": "page-traps",
-      "coverage": {
-        "rules": 6
-      }
-    },
-    {
-      "witness": "science",
-      "coverage": {
-        "kinds": 1
-      }
-    },
-    {
-      "witness": "eyes"
-    }
+    {"witness": "grammar"},
+    {"witness": "meaning"},
+    {"witness": "traps", "coverage": {"rules_include": ["shader-raw-source", "route-before-def", "route-undefined", "color-range", "color-emissive-white", "splat-bbox", "movie-not-still", "version-fits-nodes", "no-script-under-host", "metadata-containerfield", "glsl-reserved-active"]}, "instrument": "loomkit.traps"},
+    {"witness": "page-traps", "coverage": {"rules_include": ["xite-callback-unguarded", "xite-browser-currenttime", "nav-before-scene", "window-global-shadow", "js-syntax", "loadurl-unbudgeted"]}, "instrument": "loomkit.pagetraps"},
+    {"witness": "science", "coverage": {"kinds": 1}},
+    {"witness": "eyes"}
   ],
-  "visible_not_run": [
-    "behaviour",
-    "host",
-    "gpu-location",
-    "paired-visual-review"
-  ],
+  "visible_not_run": ["behaviour", "host", "gpu-location", "paired-visual-review"],
   "science": {
     "min_cases": 3,
     "min_witnesses": 6,
