@@ -35,3 +35,12 @@ Grades: **C** = a named tool ran, **L** = read or reasoned, **S** = suspected. E
 * No Haiku call ran. Model quality, real token counts and real spend are **S** until he types an allowance.
 * GitHub release atoms (403) and Reddit (404) were unreachable from the build container; those rows are labelled SYNTHETIC.
 * Reuse is 0. Nothing here shows that the world or the drafts help later work yet.
+
+## 4. After a second model's review (18 Nov, x3d.gobbler PR #2)
+
+| # | Finding | Grade | Evidence | Rule it suggests |
+|---|---|---|---|---|
+| 8 | **"Confirmed" from structure plus path existence overstated the turn.** The review capped the loop's grade at Likely and split it into facets: candidate structure, source, target presence, admission, human, render and reuse. Re-running the same simulated day gives the same counts; only the labels changed (31 Confirmed became 31 Likely). | C | `flyte/runs/sim-2026-11-18-r2/summary.json` | Name the facet a gate tests. A broad grade never stands in for unrun facets. |
+| 9 | **A green receipt from a host that could not launch the browser is `not_run`, not pass.** On a host that could, the observatory passed 15/15. The single-file export failed 2/15: X_ITE fetched its logo (from its SRI-pinned stylesheet) and its PT Sans font (`getFontsURL`) from the page origin. | C | `receipts/review-browser-standalone.json` | Every single-file X_ITE export inlines CSS `url(assets/...)` and fonts too, not only components and wasm. If you change a pinned stylesheet, re-pin its SRI to the bytes you serve. |
+| 10 | **A retry is not a return, and that holds in the browser.** The Intervention Lab's 12 rules hold natively. Retrying the same consumption 3 times counts 1, a new input and target counts 2, and an always-accept guard does not qualify. | C | `tools/lab_browser_check.cjs`, `receipts/review-lab-browser.json` | Count distinct (guard, target, input digest) tuples; keep failing controls in every guard test. |
+| 11 | **A durable graph checkpoint does not make side effects atomic.** A tick that crashed after the world append re-ran the same cycle. A per-cycle operation key in the world entry, plus one ledger row per cycle, made the retry find its entry instead of admitting twice. | C | `CrashRecovery` tests (fault injected) | Give every side effect an operation key and reconcile with the store before writing. A lock rejects overlapping ticks. |
