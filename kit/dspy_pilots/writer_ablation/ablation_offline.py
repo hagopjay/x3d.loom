@@ -77,6 +77,7 @@ tot = lambda k: sum(v[k] for v in res["per_model"].values() if v[k] is not None)
 res["all"] = {"A_first_delivered": sum(r["A_delivered"] for r in out), "B_first_delivered": sum(r["B_delivered"] for r in out),
               "ladder_made_valid": tot("ladder_made_valid"), "valid_but_unfulfilled_after_ladder": tot("valid_but_unfulfilled_after_ladder"),
               "scene_shrunk_over_10pct": tot("scene_shrunk_over_10pct"), "recorded_repair_calls_avoidable": tot("recorded_repair_calls_those_chains_used")}
-res["rungs_used"] = collections.Counter(x for r in out for x in r.get("B_rungs", [])).most_common()
+_rc = collections.Counter(x for r in out for x in r.get("B_rungs", []))
+res["rungs_used"] = sorted(_rc.items(), key=lambda kv: (-kv[1], kv[0]))
 (HERE / "ablation_offline.json").write_text(json.dumps({"summary": res, "rows": out}, indent=1))
 print(json.dumps(res, indent=1))

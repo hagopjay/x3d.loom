@@ -71,11 +71,12 @@ out["final_valid_blank"] = sum(1 for r in final if r["valid"] and draws(r) is Fa
 fail = [r for r in first if not r["valid"]]
 cnt = collections.Counter()
 for r in fail:
-    for c in {cls(x) for x in r["xsd_errors"] + r["sem_errors"]}: cnt[c] += 1
+    for c in sorted({cls(x) for x in r["xsd_errors"] + r["sem_errors"]}): cnt[c] += 1
 solo = sum(1 for r in fail if len({cls(x) for x in r["xsd_errors"] + r["sem_errors"]}) == 1)
 out["first_failures"] = len(fail); out["first_failures_single_class"] = solo
-out["top_classes"] = cnt.most_common(12)
-top = [c for c, _ in cnt.most_common(5)]
+ranked = sorted(cnt.items(), key=lambda kv: (-kv[1], kv[0]))  # ties broken by name: deterministic across hash seeds
+out["top_classes"] = [list(kv) for kv in ranked[:12]]
+top = [c for c, _ in ranked[:5]]
 out["first_failures_cleared_if_top5_classes_never_happened"] = sum(
     1 for r in fail if {cls(x) for x in r["xsd_errors"] + r["sem_errors"]} <= set(top))
 
