@@ -27,3 +27,11 @@ fs.writeFileSync('pack.x3d', sc.toString());
 ```
 
 Live mode: name each Transform (`T(pos, kids, { def: 'N' + i })`) and the line Coordinate (`lines(..., { coordDef: 'EC' })`), run d3-force-3d in the page, and on each tick set `Transform.translation` and `Coordinate.point` through the X_ITE SAI. See the demo's `index.html` (`startLive`).
+
+## v2 additions (18 Nov 2026, from x3d.demo d3-bridge/v2)
+
+- **Label declutter.** `label()` now registers each label with the Scene. `toString()` projects every label through the first viewpoint (field of view and an aspect ratio of 1.4), keeps them greedily by `pri`, and wraps the losers in an `LOD` so they appear when the camera is within reach. `sc.stats` reports `overlapPairsBefore` and `overlapPairsAfter`. Use `keep: true` to force a label, and `raw: true` for labels that sit inside a moving Transform, since those positions are local and cannot be projected.
+- **Patterns proven in v2** (see that demo's `tools/build2.mjs`):
+  - Per-arch TouchSensors with their own Material DEFs, so the page can isolate an arch.
+  - Bead loops: a TimeSensor and a PositionInterpolator per bead, with a duplicate key at the wrap so a phase-shifted bead jumps instead of streaking.
+  - A time slab made of a ClipPlane in a Transform that moves with the slab, wrapping content in a counter-moving Transform. The plane moves and the content stays still, so no script runs.

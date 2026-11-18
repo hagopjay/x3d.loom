@@ -50,7 +50,7 @@ export function lookAt(pos, target, up = [0, 1, 0]) {
 
 // --- appearance cache (DEF once, USE after) per scene
 export class Scene {
-  constructor(opts) { this.o = opts; this.apps = new Map(); this.n = 0; this.body = []; this.meta = opts.meta || {}; }
+  constructor(opts) { this.o = opts; this.apps = new Map(); this.n = 0; this.body = []; this.meta = opts.meta || {}; this.labels = []; this.stats = null; }
   app(color, { rough = 0.55, metal = 0.0, emissive = null, transp = 0, unlit = false, lineWidth = 0, point = 0 } = {}) {
     const c = rgb(color);
     const key = [c.map(x => x.toFixed(3)), rough, metal, emissive, transp, unlit, lineWidth, point].join('|');
@@ -64,8 +64,24 @@ export class Scene {
     return `<Appearance DEF='${id}'>${m}${lp}${pp}</Appearance>`;
   }
   add(...s) { this.body.push(...s); return this; }
+  declutter() {
+    // project every registered label through the default viewpoint; greedy keep by priority; the rest go to a distance LOD
+    const w = (this.o.views || [])[0]; const L = this.labels; if (!w || !L.length) return;
+    const pos = w.pos, at = w.at || [0, 0, 0], fw = norm(sub(at, pos)), r = norm(cross(fw, [0, 1, 0])), u = cross(r, fw);
+    const tf = Math.tan((w.fov || 0.7854) / 2), aspect = 1.4;
+    const rect = l => { const d = sub(l.pos, pos), z = dot(d, fw); if (z <= 0.1) return null; const x = dot(d, r) / (z * tf * aspect), y = dot(d, u) / (z * tf);
+      const hw = String(l.text).length * l.size * 0.3 / (z * tf * aspect), hh = l.size * 0.62 / (z * tf);
+      const off = l.justify === 'BEGIN' ? hw : l.justify === 'END' ? -hw : 0; return { x0: x + off - hw, x1: x + off + hw, y0: y - hh, y1: y + hh, z }; };
+    const R = L.map(rect); const hit = (a, b) => a && b && a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1;
+    let before = 0; for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) if (hit(R[i], R[j])) before++;
+    const order = L.map((l, i) => i).sort((a, b) => L[b].pri - L[a].pri || a - b); const kept = [];
+    for (const i of order) { if (!R[i] || L[i].keep || !kept.some(k => hit(R[k], R[i]))) { kept.push(i); L[i].show = true; } else { L[i].show = false; L[i].range = Math.max(2.5, R[i].z * 0.45); } }
+    let after = 0; const K = kept.filter(i => R[i]); for (let a = 0; a < K.length; a++) for (let b = a + 1; b < K.length; b++) if (hit(R[K[a]], R[K[b]])) after++;
+    this.stats = { labels: L.length, shownAtDefaultView: L.filter(l => l.show).length, overlapPairsBefore: before, overlapPairsAfter: after };
+  }
   toString() {
-    const o = this.o;
+    const o = this.o; this.declutter();
+    const fill = s => s.replace(/<!--L(\d+)-->/g, (m, i) => { const l = this.labels[+i]; return l.show ? l.xml : `<LOD range='${f(l.range)}' center='${v(l.pos)}'>${l.xml}<Group/></LOD>`; });
     const metas = Object.entries({ title: o.title, description: o.desc, generator: 'd3-x3d bridge v1 (tools/build.mjs)', ...this.meta })
       .map(([k, x]) => `<meta name='${esc(k)}' content='${esc(x)}'/>`).join('\n    ');
     const vps = (o.views || []).map((w, i) => {
@@ -91,7 +107,7 @@ export class Scene {
     <Background skyColor='${sky.map(c => v(c)).join(', ')}' ${skyAng} groundColor='${gr.map(c => v(c)).join(', ')}' ${grAng}/>
     ${vps}
     ${lights}
-    ${this.body.join('\n    ')}
+    ${fill(this.body.join('\n    '))}
   </Scene>
 </X3D>
 `;
@@ -114,7 +130,11 @@ export const sphere = r => `<Sphere radius='${f(Math.max(r, 0.001))}'/>`;
 export const cyl = (r, h) => `<Cylinder radius='${f(Math.max(r, 0.001))}' height='${f(Math.max(h, 0.001))}'/>`;
 
 // Billboarded text label (screen-aligned)
-export function label(sc, text, pos, { size = 0.22, color = '#d8deea', justify = 'MIDDLE', yalign = 'MIDDLE' } = {}) {
+export function label(sc, text, pos, { size = 0.22, color = '#d8deea', justify = 'MIDDLE', yalign = 'MIDDLE', pri = 0, keep = false, raw = false } = {}) {
+  const xml = labelXml(sc, text, pos, { size, color, justify, yalign }); if (raw) return xml;
+  sc.labels.push({ text: [].concat(text).join(' '), pos, size, justify, pri, keep, xml }); return `<!--L${sc.labels.length - 1}-->`;
+}
+function labelXml(sc, text, pos, { size, color, justify, yalign }) {
   return T(pos, `<Billboard axisOfRotation='0 0 0'><Shape>${sc.app(color, { unlit: true })}<Text string='${esc(mfs([].concat(text)))}' solid='false'><FontStyle family='"SANS"' size='${f(size)}' justify='"${justify}" "${yalign}"'/></Text></Shape></Billboard>`);
 }
 // Flat text lying on/along a plane (not billboarded)
