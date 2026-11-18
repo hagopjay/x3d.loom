@@ -78,6 +78,74 @@ def witnesses(case: dict, required: list[str], min_count: int) -> list[dict]:
     return rows
 
 
+PNG_CHANNELS = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}
+PNG_DEPTHS = {0: (1, 2, 4, 8, 16), 2: (8, 16), 3: (1, 2, 4, 8), 4: (8, 16), 6: (8, 16)}
+
+
+def decode_png(data: bytes, max_pixels: int = 64 * 1024 * 1024) -> dict:
+    """Decode a PNG far enough to know a viewer can (fourth review, 18 Nov 2026, defect 8: signature + IEND was called
+    "decodable"; a 20-byte file with no IHDR or IDAT passed). Stdlib only, bounded: every chunk CRC, IHDR first with
+    legal width/height/depth/colour/interlace, PLTE where colour type 3 needs it, at least one IDAT, IEND last; the
+    IDAT stream inflated with a size cap to exactly the byte count IHDR implies, and every row filter byte in 0..4.
+    It does not render colours or apply gamma; that is the eyes witness."""
+    import struct, zlib
+    if data[:8] != b"\x89PNG\r\n\x1a\n":
+        raise ValueError("no PNG signature")
+    pos, chunks = 8, []
+    while pos < len(data):
+        if pos + 12 > len(data):
+            raise ValueError("truncated chunk")
+        n, kind = struct.unpack(">I4s", data[pos:pos + 8])
+        body = data[pos + 8:pos + 8 + n]
+        if len(body) != n or pos + 12 + n > len(data):
+            raise ValueError(f"truncated {kind!r}")
+        (crc,) = struct.unpack(">I", data[pos + 8 + n:pos + 12 + n])
+        if zlib.crc32(kind + body) & 0xFFFFFFFF != crc:
+            raise ValueError(f"bad CRC in {kind!r}")
+        chunks.append((kind, body))
+        pos += 12 + n
+        if kind == b"IEND":
+            break
+    kinds = [k for k, _ in chunks]
+    if not kinds or kinds[0] != b"IHDR" or len(chunks[0][1]) != 13:
+        raise ValueError("IHDR must be the first chunk")
+    if kinds[-1] != b"IEND" or pos != len(data):
+        raise ValueError("IEND must be the last chunk")
+    w, h, depth, ctype, comp, filt, inter = struct.unpack(">IIBBBBB", chunks[0][1])
+    if not (0 < w < 2 ** 31 and 0 < h < 2 ** 31) or w * h > max_pixels:
+        raise ValueError(f"size {w}x{h} out of bounds")
+    if ctype not in PNG_DEPTHS or depth not in PNG_DEPTHS[ctype] or comp != 0 or filt != 0 or inter not in (0, 1):
+        raise ValueError("illegal IHDR fields")
+    if ctype == 3 and b"PLTE" not in kinds:
+        raise ValueError("palette image without PLTE")
+    idat = [b for k, b in chunks if k == b"IDAT"]
+    if not idat:
+        raise ValueError("no IDAT")
+    bpp_bits = depth * PNG_CHANNELS[ctype]
+    def rows(pw, ph):
+        return [] if pw == 0 or ph == 0 else [(pw * bpp_bits + 7) // 8] * ph
+    if inter == 0:
+        layout = rows(w, h)
+    else:   # Adam7: seven reduced images, each with its own rows
+        layout = []
+        for x0, y0, dx, dy in ((0, 0, 8, 8), (4, 0, 8, 8), (0, 4, 4, 8), (2, 0, 4, 4), (0, 2, 2, 4), (1, 0, 2, 2), (0, 1, 1, 2)):
+            layout += rows((w - x0 + dx - 1) // dx, (h - y0 + dy - 1) // dy)
+    want = sum(r + 1 for r in layout)
+    d = zlib.decompressobj()
+    try:
+        raw = d.decompress(b"".join(idat), want + 1)
+    except zlib.error as e:
+        raise ValueError(f"IDAT does not inflate: {e}") from None
+    if len(raw) != want or not d.eof:
+        raise ValueError(f"IDAT inflates to {len(raw)} bytes{'' if d.eof else ' (stream incomplete)'}, IHDR implies {want}")
+    at = 0
+    for r in layout:
+        if raw[at] > 4:
+            raise ValueError(f"row filter {raw[at]} at byte {at}")
+        at += r + 1
+    return {"width": w, "height": h, "bit_depth": depth, "colour_type": ctype, "interlaced": bool(inter)}
+
+
 def frames(case: dict, root: Path, evolving: bool, quant_limit: float) -> dict:
     """SCI-DISPLAY-RANGE and SCI-PUBLICATION: no clipping, bounded quantisation, increasing time,
     and every payload present, the declared size, the declared hash, and decodable."""
@@ -100,8 +168,13 @@ def frames(case: dict, root: Path, evolving: bool, quant_limit: float) -> dict:
             need(sha256_file(p) == item.get("sha256"), "SCI_PAYLOAD_HASH", item["file"])
             data = p.read_bytes()
             if p.suffix == ".png":
-                need(data[:8] == b"\x89PNG\r\n\x1a\n" and data[-12:-8] == b"\x00\x00\x00\x00" and data[-8:-4] == b"IEND",
-                     "SCI_PUBLICATION_UNDECODABLE", item["file"])
+                try:
+                    item_info = decode_png(data)
+                except ValueError as e:
+                    raise GateError("SCI_PUBLICATION_UNDECODABLE", f"{item['file']}: {e}") from None
+                if "width" in item or "height" in item:
+                    need((item.get("width"), item.get("height")) == (item_info["width"], item_info["height"]),
+                         "SCI_PAYLOAD_SIZE", f"{item['file']}: declared {item.get('width')}x{item.get('height')}, decoded {item_info['width']}x{item_info['height']}")
             elif "decoded_sha256" in item:
                 import zlib
                 try:

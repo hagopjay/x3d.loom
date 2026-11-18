@@ -77,20 +77,72 @@ def freeze(patch: Path, into: Path) -> tuple[Path, str]:
     return snap, hashlib.sha256(data).hexdigest()
 
 
+def glob_re(g: str):
+    """ONE glob language for --scorer/--impl, independent of the Python version (fourth review: Path.glob('tests/**')
+    matched only directories on 3.12 and files too on 3.13). Paths are repo-relative POSIX; `**` spans directories,
+    `*` and `?` stay inside one path segment; a pattern ending in `/**` matches every file below that directory."""
+    import re as _re
+    out, i = "", 0
+    while i < len(g):
+        if g.startswith("**/", i):
+            out += "(?:.*/)?"; i += 3
+        elif g.startswith("**", i):
+            out += ".*"; i += 2
+        elif g[i] == "*":
+            out += "[^/]*"; i += 1
+        elif g[i] == "?":
+            out += "[^/]"; i += 1
+        else:
+            out += _re.escape(g[i]); i += 1
+    return _re.compile(out + r"\Z")
+
+
+def matches(path: str, globs: list[str]) -> bool:
+    return any(glob_re(g).match(path) for g in globs)
+
+
+def inventory(repo: Path, globs: list[str]) -> dict:
+    """The EFFECTIVE scorer: every path under the repo (not .git) that a declared glob matches, with its type, the
+    symlink text and the bytes a reader of it gets (fourth review, defects 2 and 3: a declared expected.json that is a
+    symlink kept its own bytes while its target changed; a renamed-away case file just stopped being discovered)."""
+    import hashlib, os
+    inv = {}
+    if not globs:
+        return inv
+    for dirpath, dirnames, filenames in os.walk(repo, followlinks=False):
+        dirnames[:] = [d for d in dirnames if d != ".git" and not os.path.islink(os.path.join(dirpath, d))]
+        names = filenames + [d for d in os.listdir(dirpath) if os.path.islink(os.path.join(dirpath, d)) and d not in filenames]
+        for n in names:
+            full = Path(dirpath) / n
+            rel = full.relative_to(repo).as_posix()
+            if ".git" in rel.split("/") or not matches(rel, globs):
+                continue
+            row = {"type": "symlink" if full.is_symlink() else "file"}
+            if full.is_symlink():
+                row["link"] = os.readlink(full)
+            try:
+                real = full.resolve(strict=True)
+                row["sha256"] = hashlib.sha256(real.read_bytes()).hexdigest() if real.is_file() else "not-a-file"
+                row["resolves_inside"] = repo.resolve() in real.parents or real == repo.resolve()
+            except (OSError, RuntimeError):
+                row["sha256"] = "dangling"
+            inv[rel] = row
+    return inv
+
+
 SHELLS = {"sh", "bash", "zsh", "dash", "ksh", "env", "make", "npm", "npx", "node", "tox", "nox", "just"}
 
 
 def scorer_paths(files: list[dict], consumer_cmd: list[str], declared: list[str] | None = None) -> list[str]:
     """Patch paths that may change the oracle: test-looking files, a file the consumer command names, or a file
     matching a declared scorer glob (`--scorer`). Only the declared set can make an unchanged claim (see closure())."""
-    import fnmatch
     named = {Path(a).as_posix().lstrip("./") for a in consumer_cmd}
     out = []
     for f in files:
         parts = f["path"].split("/")
         if f["path"] in named or any(x in ("test", "tests") for x in parts[:-1]) or parts[-1].startswith("test_") \
                 or parts[-1].endswith(("_test.py", ".test.mjs", ".test.js")) or parts[-1] in ("conftest.py", "package.json") \
-                or any(fnmatch.fnmatchcase(f["path"], g) for g in (declared or [])):
+                or matches(f["path"], declared or []):
             out.append(f["path"])
     return sorted(set(out))
 
@@ -101,15 +153,11 @@ def closure(files: list[dict], consumer_cmd: list[str], scorer: list[str], impl:
     closure (`--scorer` globs: entry point, helpers, expected data, config), the patch touches none of it, and, when
     `--impl` globs are given, every patch path is declared implementation. Undeclared means unknown, never unchanged.
     The declared scorer files are hashed at the base so the record names the exact oracle bytes."""
-    import fnmatch, hashlib
     hit = scorer_paths(files, consumer_cmd, scorer)
-    outside = [f["path"] for f in files if impl and not any(fnmatch.fnmatchcase(f["path"], g) for g in impl)]
+    outside = [f["path"] for f in files if impl and not matches(f["path"], impl)]
     wrapper = bool(consumer_cmd) and Path(consumer_cmd[0]).name in SHELLS
-    hashed = {}
-    for g in scorer:
-        for p in sorted(repo.glob(g)):
-            if p.is_file() and ".git" not in p.parts:
-                hashed[p.relative_to(repo).as_posix()] = hashlib.sha256(p.read_bytes()).hexdigest()
+    inv = inventory(repo, scorer)
+    hashed = {k: v["sha256"] for k, v in inv.items()}
     if not scorer:
         state, why = "unknown", "no --scorer closure declared" + (" and the consumer is a wrapper (" + consumer_cmd[0] + ")" if wrapper else "")
     elif not hashed:
@@ -121,7 +169,7 @@ def closure(files: list[dict], consumer_cmd: list[str], scorer: list[str], impl:
     else:
         state, why = "unchanged", "patch touches no declared scorer file"
     return {"state": state, "reason": why, "declared_scorer": scorer, "declared_impl": impl,
-            "scorer_files_at_base": hashed, "consumer_wrapper": wrapper, "changed": hit, "outside_impl": outside}
+            "scorer_files_at_base": hashed, "inventory_at_base": inv, "consumer_wrapper": wrapper, "changed": hit, "outside_impl": outside}
 
 
 def _run(cmd: list[str], cwd: Path, timeout: int) -> dict:
@@ -192,13 +240,41 @@ def _check_target(original: Path, patch: Path, digest: str, target: Path, base: 
             result.update(status="fail", reason=f"git apply --check failed on base {result['base_sha'][:12]}: " + chk.stderr.strip()[-400:])
             return result
         subprocess.run(["git", "-C", str(repo), "apply", str(patch)], check=True)
+        sc = result["scorer_closure"]
+        before_inv, after_inv = sc["inventory_at_base"], inventory(repo, scorer)
+        moved = sorted(k for k in set(before_inv) | set(after_inv) if before_inv.get(k) != after_inv.get(k))
+        sc["inventory_after_patch"] = after_inv
+        sc["inventory_changed"] = moved
+        if moved:   # compared by effect, not by patch path names: symlink targets, renames, deletions, new files
+            sc["changed"] = sorted(set(sc["changed"]) | set(moved))
+            if sc["state"] in ("unchanged", "unknown") and sc["declared_scorer"]:
+                sc["state"], sc["reason"] = "changed", "the declared scorer inventory differs after the patch: " + ", ".join(moved[:5])
+            result["scorer_changed"] = sorted(set(result["scorer_changed"]) | set(moved))
         result["consumer_after"] = _run(cmd, repo, timeout)
-        base_scorer = [x for x in result["scorer_closure"]["changed"] if x in result["scorer_closure"]["scorer_files_at_base"]]
-        if base_scorer:
-            # the patch moved the oracle: put the BASE scorer files back over the patched tree and score again, so
-            # the record also says how the patched system does against the oracle it was claimed to satisfy
-            subprocess.run(["git", "-C", str(repo), "checkout", "-q", result["base_sha"], "--", *base_scorer], check=True)
-            result["consumer_after_base_oracle"] = _run(cmd, repo, timeout)
+        if sc["state"] == "changed" and sc["declared_scorer"]:
+            # the patch moved the oracle: score the patched implementation with the BASE scorer, in a FRESH clone
+            # (fourth review: replaying in the after-run's tree imported its cached, patched bytecode)
+            rp = Path(td) / "replay"
+            subprocess.run(["git", "clone", "-q", "--no-hardlinks", "--no-checkout", str(target), str(rp)], check=True)
+            subprocess.run(["git", "-C", str(rp), "checkout", "-q", "--detach", result["base_sha"]], check=True)
+            subprocess.run(["git", "-C", str(rp), "apply", str(patch)], check=True)
+            for k in sorted(set(after_inv) - set(before_inv)):   # scorer files the patch added: not part of the base oracle
+                (rp / k).unlink()
+            tracked = set(subprocess.run(["git", "-C", str(rp), "ls-tree", "-r", "--name-only", "-z", result["base_sha"]],
+                                         capture_output=True, check=True).stdout.decode("utf-8", "surrogateescape").split("\0"))
+            targets = set()
+            for k, row in before_inv.items():   # a declared symlink's target is part of the oracle it reads
+                if row["type"] == "symlink" and row.get("resolves_inside"):
+                    real = (repo / k).resolve()
+                    if repo.resolve() in real.parents:
+                        targets.add(real.relative_to(repo.resolve()).as_posix())
+            restore = sorted((set(before_inv) | targets) & tracked)
+            if restore:
+                subprocess.run(["git", "-C", str(rp), "checkout", "-q", result["base_sha"], "--", *restore], check=True)
+            if inventory(rp, scorer) != before_inv:
+                result.update(status="error", reason="could not restore the base scorer inventory for the replay")
+                return result
+            result["consumer_after_base_oracle"] = _run(cmd, rp, timeout)
         for smoke in sorted(repo.glob("tools/*/smoke.py")):
             if any(f["path"] == smoke.relative_to(repo).as_posix() for f in files):
                 for flags in ([], ["-O"]):

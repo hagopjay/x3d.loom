@@ -326,12 +326,20 @@ def sweep_controls() -> list[dict]:
     return rows
 
 
+def tiny_png(w: int = 2, h: int = 2) -> bytes:
+    import struct, zlib
+    def chunk(k, b):
+        return struct.pack(">I", len(b)) + k + b + struct.pack(">I", zlib.crc32(k + b) & 0xFFFFFFFF)
+    raw = b"".join(b"\x00" + bytes([(x * 80 + y * 40) % 256 for x in range(w) for _ in range(3)]) for y in range(h))
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0)) + chunk(b"IDAT", zlib.compress(raw)) + chunk(b"IEND", b"")
+
+
 def sci_bank(td: Path) -> tuple[Path, dict]:
     """A synthetic two-frame 'wave' case bank (labelled synthetic) in loom.scientific-case/1 form."""
     import hashlib
     root = td / "bank"; (root / "cases/wave/a").mkdir(parents=True); (root / "tools").mkdir()
     (root / "tools/wave.py").write_text("# synthetic builder\n")
-    png = b"\x89PNG\r\n\x1a\n" + b"synthetic" + b"\x00\x00\x00\x00IEND\xaeB`\x82"
+    png = tiny_png()   # a real 2x2 RGB PNG (the old fixture was signature + IEND, which no decoder accepts: fourth review)
     frames = []
     for i in range(2):
         f = root / f"cases/wave/a/frame-{i}.png"; f.write_bytes(png)
@@ -640,7 +648,7 @@ def physics_controls() -> list[dict]:
         if quiet_cli(base) != 0 or json.loads((ev / "physics.json").read_text())["status"] != "pass":
             raise RuntimeError("CLI_PHYSICS: the clean fixture must pass through the CLI")
         w = json.loads((ev / "physics.json").read_text())
-        if w["coverage"] != {"runs": 1, "max_waivers": 0, "require_takeover": False}:
+        if w["coverage"] != {"runs": 1, "max_waivers": 0, "waivers_total": 0, "require_takeover": False}:
             raise RuntimeError(f"CLI_PHYSICS: the profile can only bind the waiver cap if the witness records it: {w['coverage']}")
         rows.append({"case": "CLI: clean fixture; the witness records the waiver cap it ran with", "result": "exit 0, witness pass"})
         # the profile binds the waiver cap: a witness run with a looser cap than the profile names is not accepted
@@ -933,10 +941,171 @@ def review3_controls() -> list[dict]:
     return rows
 
 
+def review4_controls() -> list[dict]:
+    """Fourth external review, 18 Nov 2026: each case is the reviewer's counterexample shape, run on the real predicate."""
+    from loomkit import foldback
+    rows = []
+    loom = KIT / "loom"
+    # --- physics: comparator, non-finite numbers, empty controls, basename keying, the total waiver cap ---
+    with tempfile.TemporaryDirectory(prefix="loomkit-review4-") as d:
+        d = Path(d)
+        root, run = physics_run(d)
+        r = copy.deepcopy(run); r["references"][0]["rule"] = "at mots"
+        rows.append({"case": "R4-5: comparator typo `at mots` (old: read as at least, passed)", **expect("PHYS_SCHEMA", lambda: physics.check_run(r, root))})
+        r = copy.deepcopy(run); r["references"][0]["declared_limit"] = float("nan")
+        rows.append({"case": "R4: declared_limit NaN in memory (old: skipped the widening check)", **expect("PHYS_SCHEMA", lambda: physics.check_run(r, root))})
+        nanfile = d / "nan.json"; nanfile.write_text(json.dumps(run).replace('"declared_limit": 1e-05', '"declared_limit": NaN', 1))
+        try:
+            physics.load(nanfile)
+            raise RuntimeError("SURVIVING_CONTROL: NaN parsed from a run record")
+        except InstrumentError:
+            rows.append({"case": "R4: `NaN` in a run record file", "expected": "instrument error (strict JSON)", "caught": "InstrumentError"})
+        for label, ctl in (("empty list", []), ("missing", None)):
+            r = copy.deepcopy(run)
+            if ctl is None:
+                r.pop("controls")
+            else:
+                r["controls"] = ctl
+            rows.append({"case": f"R4-6: negative controls {label} (old: all() over nothing passed)", **expect("PHYS_NO_CONTROLS", lambda: physics.check_run(r, root))})
+        w = {"owner": "o", "date": "2026-11-18", "reason": "synthetic", "observed": 0.4, "limit": 0.2}
+        tols = [{"id": f"t{i}", "observed": 0.4, "limit": 0.2, "declared_limit": 0.2, "rule": "at most", "status": "accepted_failure", "waiver": dict(w)} for i in range(3)]
+        paths = []
+        for sub, rid in (("a", "toy/a"), ("b", "toy/b")):
+            (root / sub).mkdir(); r = copy.deepcopy(run); r["id"] = rid; r["tolerances"] = copy.deepcopy(tols)
+            r["model"]["path"] = "model.x3d"
+            (root / sub / "run.json").write_text(json.dumps(r)); paths.append(root / sub / "run.json")
+        rows.append({"case": "R4-7/9: a/run.json and b/run.json, 3 waivers each, cap 3 total (old: one kept, read as 3)",
+                     **expect("PHYS_WAIVERS_OVER_CAP", lambda: physics.check(paths, root, max_waivers=3))})
+        one = physics.check(paths[:1], root, max_waivers=3)
+        if one["waivers"] != 3 or one["waiver_cap_unit"] != "total across runs":
+            raise RuntimeError(f"FALSE_REFUSAL: one run at the cap: {one}")
+        rows.append({"case": "R4-9: one run with 3 waivers under cap 3", "result": "pass, 3 total"})
+        r = json.loads(paths[1].read_text()); r["id"] = "toy/a"; paths[1].write_text(json.dumps(r))
+        rows.append({"case": "R4-7: two records share run id toy/a", **expect("PHYS_DUPLICATE_RUN", lambda: physics.check(paths, root, max_waivers=9))})
+    # --- science: a PNG signature with no IHDR, and the declared size against the decoded one ---
+    png = tiny_png()
+    info = sci.decode_png(png)
+    if (info["width"], info["height"]) != (2, 2):
+        raise RuntimeError(f"FALSE_REFUSAL: decoder on a real 2x2 PNG: {info}")
+    rows.append({"case": "R4-8: a real 2x2 RGB PNG decodes", "result": "2x2"})
+    for label, data in (("signature + IEND, no IHDR", png[:8] + png[-12:]), ("IDAT truncated", png[:33] + png[-12:]),
+                        ("CRC flipped", png[:29] + bytes([png[29] ^ 1]) + png[30:])):
+        try:
+            sci.decode_png(data)
+            raise RuntimeError(f"SURVIVING_CONTROL: PNG {label}")
+        except ValueError:
+            rows.append({"case": f"R4-8: PNG {label}", "expected": "SCI_PUBLICATION_UNDECODABLE", "caught": "undecodable"})
+    # --- foldback: one glob language; a symlinked scorer; a renamed scorer data file ---
+    for path, globs, want in (("c.py", ["**/*.py"], True), ("a/b/c.py", ["**/*.py"], True), ("a/c.py", ["*.py"], False),
+                              ("tests/data/x.json", ["tests/**"], True), ("README", ["README"], True), ("READMEx", ["README"], False)):
+        if foldback.matches(path, globs) != want:
+            raise RuntimeError(f"GLOB: {path} {globs} expected {want}")
+    rows.append({"case": "R4: one glob language (`**/` any depth, `*` one segment) on 6 paths", "result": "as documented"})
+    with tempfile.TemporaryDirectory(prefix="loomkit-review4-fb-") as d:
+        d = Path(d); tgt = d / "t"; (tgt / "real").mkdir(parents=True)
+        (tgt / "lib.py").write_text("VALUE = 1\n")
+        (tgt / "real/score.py").write_text("import sys\nsys.path.insert(0, '.')  # a symlinked script's sys.path[0] is its real folder\nimport lib\nsys.exit(0 if lib.VALUE == 1 else 1)\n")
+        (tgt / "check.py").symlink_to("real/score.py")
+        (tgt / "expected.json").write_text("1\n")
+        g = lambda *a: subprocess.run(["git", "-C", str(tgt), *a], check=True, capture_output=True, text=True).stdout.strip()
+        g("init", "-q"); g("add", "."); g("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "base"); base = g("rev-parse", "HEAD")
+        def diff(edits):
+            for f, txt in edits.items():
+                (tgt / f).write_text(txt)
+            out = subprocess.run(["git", "-C", str(tgt), "diff"], check=True, capture_output=True).stdout
+            g("checkout", "--", ".")
+            return out
+        py = "python3 -E -s check.py"
+        pt = d / "sym.patch"; pt.write_bytes(diff({"lib.py": "VALUE = 2\n", "real/score.py": "import sys\nsys.path.insert(0, '.')  # a symlinked script's sys.path[0] is its real folder\nimport lib\nsys.exit(0 if lib.VALUE == 2 else 1)\n"}))
+        res = foldback.check_target(pt, tgt, base, py, scorer=["check.py"])
+        if res["scorer_closure"]["state"] != "changed" or res["status"] != "fail":
+            raise RuntimeError(f"SURVIVING_CONTROL: symlinked scorer: {res['scorer_closure'].get('state')} {res['status']}")
+        rows.append({"case": "R4-2: --scorer check.py is a symlink; patch edits its target real/score.py (old: unchanged, pass)",
+                     "expected": "changed; base oracle fails it", "caught": res["outcome"]})
+        honest = d / "honest.patch"; honest.write_bytes(diff({"lib.py": "VALUE = 1  # comment\n"}))
+        res = foldback.check_target(honest, tgt, base, py, scorer=["check.py"])
+        if res["scorer_closure"]["state"] != "unchanged" or res["status"] != "pass":
+            raise RuntimeError(f"FALSE_REFUSAL: honest patch beside a symlinked scorer: {res['scorer_closure'].get('state')} {res['status']}")
+        rows.append({"case": "R4-2: implementation-only patch beside the symlinked scorer; replay in a fresh clone", "result": "pass, unchanged"})
+        g("mv", "expected.json", "expected-old.json"); (tgt / "expected.json").write_text("2\n"); g("add", "-A")
+        ren = subprocess.run(["git", "-C", str(tgt), "diff", "--cached", "-M"], check=True, capture_output=True).stdout
+        g("reset", "-q", "--hard")
+        rp = d / "ren.patch"; rp.write_bytes(ren)
+        res = foldback.check_target(rp, tgt, base, py, scorer=["check.py", "expected*.json"])
+        if res["scorer_closure"]["state"] != "changed":
+            raise RuntimeError(f"SURVIVING_CONTROL: renamed scorer data: {res['scorer_closure'].get('state')}")
+        rows.append({"case": "R4-3: scorer data renamed and replaced by a new file under the same declared glob", "expected": "changed", "caught": "changed"})
+    # --- profiles and receipts ---
+    rows.append({"case": "R4: profile name 42 (old: accepted, then the manifest schema refused it under jsonschema only)",
+                 **expect("PROFILE_SCHEMA", lambda: acc.parse_profile(b'{"schema":"loom.profile/1","name":42,"required":[]}'))})
+    rows.append({"case": "R4: profile `NaN` coverage value", **expect("PROFILE_SCHEMA",
+                 lambda: acc.parse_profile(b'{"schema":"loom.profile/1","name":"n","required":[{"witness":"t","coverage":{"k":NaN}}]}'))})
+    rows.append({"case": "R4: expected-null coverage key absent from the record (old: missing read as null)",
+                 **expect("COVERAGE_REQUIRED", lambda: acc.coverage_ok("t", "never_measured", None, {"coverage": {}}))})
+    errs = cli._schema_errors(json.loads(cli.MANIFEST_SCHEMA.read_text()), {"schema": "loom.evidence-manifest/2", "profile": 42}, "$")
+    if not errs:
+        raise RuntimeError("SURVIVING_CONTROL: stdlib manifest validator accepted profile 42")
+    rows.append({"case": "R4: stdlib manifest validator (no jsonschema) on profile 42 and missing fields", "expected": "errors", "caught": f"{len(errs)} errors"})
+    with tempfile.TemporaryDirectory(prefix="loomkit-review4-rc-") as d:
+        d = Path(d)
+        root, ev, s = fixture(d / "rc")
+        write_witness(ev, root, s, "eyes", "pass", "L", {"tool": "synthetic"})
+        prof = d / "prof.json"; prof.write_text(json.dumps(PROFILE))
+        pr, sha = acc.read_profile(prof)
+        if sha != sha256_file(prof) or pr["name"] != PROFILE["name"]:
+            raise RuntimeError("PROFILE_READ: digest is not of the bytes parsed")
+        (root / "world.x3d").write_text("<X3D version='4.0'><Scene><Group/></Scene></X3D>\n")   # eyes now describes the old candidate
+        s2 = candidate(root)["sha256"]
+        for n in ("grammar", "traps"):
+            write_witness(ev, root, s2, n, "pass", "C", {"tool": "synthetic"})
+        write_witness(ev, root, s2, "behaviour", "deferred", "L", {"tool": "synthetic"}, reason="static profile")
+        write_witness(ev, root, s2, "truth", "pass", "C", {"tool": "synthetic"}, coverage={"rows": True},
+                      evidence=[{"path": "truth.log", "sha256": sha256_file(ev / "truth.log")}])
+        out = d / "out"
+        def receipt_cli(name, *extra):
+            return quiet_cli(["receipt", str(root), "--evidence", str(ev), "--profile", str(prof), "--subject", "s", "--out", str(name), *extra])
+        if receipt_cli(out / "receipt.json") != 0:
+            raise RuntimeError("FALSE_REFUSAL: clean receipt")
+        man = json.loads((out / "evidence-manifest.json").read_text())
+        if [(n["witness"], n["status"]) for n in man["not_run"]] != [("eyes", "stale")]:
+            raise RuntimeError(f"SURVIVING_CONTROL: optional eyes from another candidate: {man['not_run']}")
+        rows.append({"case": "R4-4: optional eyes=pass recorded for the previous candidate", "expected": "stale, not pass", "caught": "stale"})
+        junk = d / "prev.txt"; junk.write_text("ordinary text\n")
+        rows.append({"case": "R4: --prev is not a receipt", **expect("PREV_NOT_RECEIPT", lambda: cli.cmd_receipt(cli_args(root, ev, prof, out / "r2.json", prev=junk)))})
+        rows.append({"case": "R4-10: receipt published inside the evidence folder",
+                     **expect("RECEIPT_INSIDE_EVIDENCE", lambda: cli.cmd_receipt(cli_args(root, ev, prof, ev / "receipt.json")))})
+        before = {f.name: f.read_bytes() for f in (out / "receipt.json", out / "evidence-manifest.json")}
+        real = cli._replace
+        def fail_manifest(src, dst):
+            if Path(dst).name == "evidence-manifest.json":
+                raise OSError("controlled manifest rename failure")
+            return real(src, dst)
+        cli._replace = fail_manifest
+        try:
+            try:
+                cli.cmd_receipt(cli_args(root, ev, prof, out / "receipt.json", force=True))
+                raise RuntimeError("SURVIVING_CONTROL: injected manifest failure did not surface")
+            except OSError:
+                pass
+        finally:
+            cli._replace = real
+        after = {f.name: f.read_bytes() for f in (out / "receipt.json", out / "evidence-manifest.json")}
+        left = sorted(x.name for x in out.iterdir())
+        if after != before or left != ["evidence-manifest.json", "receipt.json"]:
+            raise RuntimeError(f"SURVIVING_CONTROL: forced pair after a manifest failure: {left}")
+        rows.append({"case": "R4: --force pair, manifest rename fails after the receipt is placed", "expected": "both originals restored, no spare files", "caught": "restored"})
+    return rows
+
+
+def cli_args(root, ev, prof, out, prev=None, force=False):
+    import argparse
+    return argparse.Namespace(root=str(root), evidence=str(ev), profile=str(prof), subject="s", out=str(out), outputs=[], prev=str(prev) if prev else None, force=force)
+
+
 def run_all() -> dict:
     return {"acceptance": acceptance_controls(), "traps": trap_controls(),
             "picture": picture_controls(), "receipt": receipt_controls(), "sweep": sweep_controls(), "sci": sci_controls(),
-            "pagetraps": page_controls(), "play": play_controls(), "physics": physics_controls(), "cli": cli_controls(), "cli_subprocess": cli_subprocess_controls(), "review": review_controls(), "review3": review3_controls(), "optimized": bool(sys.flags.optimize)}
+            "pagetraps": page_controls(), "play": play_controls(), "physics": physics_controls(), "cli": cli_controls(), "cli_subprocess": cli_subprocess_controls(), "review": review_controls(), "review3": review3_controls(), "review4": review4_controls(), "optimized": bool(sys.flags.optimize)}
 
 
 if __name__ == "__main__":
@@ -950,7 +1119,7 @@ if __name__ == "__main__":
             print(p.stdout, p.stderr, file=sys.stderr)
             sys.exit(1)
         res = json.loads(p.stdout)
-        negatives = sum(1 for k in ("acceptance", "picture", "receipt", "sweep", "sci", "play", "physics", "cli", "review", "review3") for row in res[k] if "caught" in row)
+        negatives = sum(1 for k in ("acceptance", "picture", "receipt", "sweep", "sci", "play", "physics", "cli", "review", "review3", "review4") for row in res[k] if "caught" in row)
         report["modes"].append({"optimized": res["optimized"], "negative_controls_caught": negatives,
                                 "trap_rules_two_sided": len(res["traps"]),
                                 "page_trap_rules_two_sided": sum(1 for r in res["pagetraps"] if "rule" in r and "form" not in r),

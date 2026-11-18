@@ -59,3 +59,30 @@ Lesson: a hash only binds evidence if the hashed bytes are the bytes used. Freez
 | R3 | receipt named the profile but not its bytes | **C** | reviewer | `profile_sha256` in receipt inputs and manifest | 1 case |
 
 Lesson: "unchanged" can only be claimed about a set someone wrote down. Anything undeclared is unknown, and unknown must not pass.
+
+## Fourth review, 18 Nov 2026 (Loom items)
+
+Instrument for every "now" column: the reviewer's round-4 probe scripts (`policy-probes.py`, `policy-failure-probes.py`, `policy-profile-race-probe.py`, the physics, science and foldback probes) run against this branch on Python 3.13.18, git 2.x, jsonschema 4.26.0, Linux CPU; "old" is main at 3da026a. `kit/tests/test_gates.py` `review4_controls`: 20 new negative controls, 135 caught in all, plain and `-O`.
+
+| # | Finding | Grade (ours) | Old | Now | Fix |
+|---|---|---|---|---|---|
+| R4-1 | profile read twice: the hash attested was not of the bytes evaluated (race) | **C** | reviewer race probe | receipt hash = evaluated bytes in 3 of 3 swaps | `read_profile` parses and hashes one read |
+| R4-2 | a symlinked `--scorer` hid an edit to its target | **C** | unchanged, pass | changed, base oracle fails | inventory records link text and resolved sha256 |
+| R4-3 | a renamed scorer data file escaped the base hash | **C** | unchanged | changed | inventory of the tree matched against the globs, before and after the patch |
+| R4-4 | an optional pass recorded for another candidate was shown as pass | **C** | `eyes: pass` | `eyes: stale` | `binding_problem` on every visible witness; manifest enum gains `stale` |
+| R4-5 | comparator typo `at mots` read as at least | **C** | accepted | `PHYS_SCHEMA` | closed rule set |
+| R4-6 | empty or missing controls passed (`all([])`) | **C** | pass | `PHYS_NO_CONTROLS` | at least one control required |
+| R4-7 | runs keyed by basename: `a/run.json` overwrote `b/run.json` | **C** | 2 runs read as 1 | `PHYS_WAIVERS_OVER_CAP` 6 of 3 | keyed by relative path; ids distinct (`PHYS_DUPLICATE_RUN`) |
+| R4-8 | a PNG of signature + IEND passed "decodable" | **C** | pass | `SCI_PUBLICATION_UNDECODABLE` | stdlib bounded decoder (CRC, IHDR first, IDAT size, filters, IEND last) |
+| R4-9 | waiver cap applied per run, profile says total | **C** | 6 waivers under cap 3 | refused | cap counted across runs; unit recorded |
+| R4-10 | `--force` receipt inside the evidence folder inventoried itself | **C** | stale on placement | `RECEIPT_INSIDE_EVIDENCE` | destination may not be inside evidence |
+| R4 | NaN `declared_limit` skipped the widening check | **C** | accepted | refused | strict JSON + finite check |
+| R4 | `--prev` accepted any file | **C** | stored its hash | `PREV_NOT_RECEIPT` / `RECEIPT_SCHEMA` | predecessor must verify |
+| R4 | `--force` pair: manifest rename failed after the receipt was replaced | **C** | new receipt, old manifest; then manifest lost | both originals byte-identical, no spare files | originals copied aside, atomic replace, restore only what this run replaced |
+| R4 | stdlib schema fallback accepted `profile.name: 42` | **C** | manifest written | `PROFILE_SCHEMA` before acceptance; fallback validator covers every keyword the schema uses | typed profile parse |
+| R4 | glob meaning changed between Python 3.12 and 3.13 | **C** | directory-only on 3.12 | one Loom glob language | `glob_re` / `matches` |
+| R4 | absent coverage key read as an expected `null` | **C** | pass | `COVERAGE_REQUIRED` | key must be present |
+| R4 | cached bytecode let a patched scorer replay | **C** | pass | fail | replay in a fresh clone, base scorer restored, consumer run there |
+| R4 | committed-limit metric identity: a limit file number is matched by value, not by which metric it belongs to | **L** | — | documented limit | still open: name metrics in the limits file |
+
+Lesson: every set the Loom vouches for (the profile, the scorer, the runs, the visible witnesses) must be read once, keyed by full identity, and closed; an open set or a second read is where a wrong pass gets in.

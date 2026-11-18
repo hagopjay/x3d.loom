@@ -7,6 +7,7 @@ then let a receipt be written. Missing, stale, failed, errored, development or u
 """
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -16,13 +17,33 @@ PROFILE_SCHEMA = "loom.profile/1"
 
 
 def load_profile(path: Path | str) -> dict:
-    profile = json.loads(Path(path).read_text())
-    need(profile.get("schema") == PROFILE_SCHEMA, "PROFILE_SCHEMA", str(path))
-    need(isinstance(profile.get("required"), list) and profile["required"], "EMPTY_PROFILE", str(path))
+    return parse_profile(Path(path).read_bytes(), str(path))
+
+
+def read_profile(path: Path | str) -> tuple[dict, str]:
+    """Read the profile file ONCE and return (profile, sha256 of exactly those bytes). Fourth review, 18 Nov 2026,
+    defect 1: the receipt parsed the file, then hashed it with a second read, so a file replaced in between was
+    evaluated as A and attested as B."""
+    import hashlib
+    data = Path(path).read_bytes()
+    return parse_profile(data, str(path)), hashlib.sha256(data).hexdigest()
+
+
+def parse_profile(data: bytes, label: str = "profile") -> dict:
+    try:
+        profile = json.loads(data.decode("utf-8"), parse_constant=lambda c: (_ for _ in ()).throw(ValueError(c)))
+    except (UnicodeDecodeError, ValueError) as e:
+        raise GateError("PROFILE_SCHEMA", f"{label}: not strict JSON: {e}") from None
+    need(isinstance(profile, dict) and profile.get("schema") == PROFILE_SCHEMA, "PROFILE_SCHEMA", label)
+    need(isinstance(profile.get("name"), str) and profile["name"], "PROFILE_SCHEMA", f"{label}: name must be a non-empty string")
+    need(isinstance(profile.get("visible_not_run", []), list) and all(isinstance(v, str) and v for v in profile.get("visible_not_run", [])),
+         "PROFILE_SCHEMA", f"{label}: visible_not_run must be a list of witness names")
+    need(isinstance(profile.get("required"), list) and profile["required"], "EMPTY_PROFILE", label)
     names = [r.get("witness") for r in profile["required"]]
     need(all(isinstance(n, str) and n for n in names), "PROFILE_WITNESS_NAME")
     need(len(names) == len(set(names)), "PROFILE_DUPLICATE_WITNESS")
     for r in profile["required"]:
+        need(isinstance(r.get("coverage", {}), dict) and isinstance(r.get("allow", []), list), "PROFILE_SCHEMA", f"{r['witness']}: coverage must be an object, allow a list")
         # a string here would be matched by substring ("declared" in "undeclared"): review round 2, 18 Nov 2026
         if "origins" in r:
             need(isinstance(r["origins"], list) and all(o in ORIGINS for o in r["origins"]), "PROFILE_ORIGINS",
@@ -79,7 +100,8 @@ def coverage_ok(rule_name: str, key: str, expected, record: dict) -> None:
         need(isinstance(got, (int, float)) and not isinstance(got, bool) and got >= expected["min"],
              "COVERAGE_REQUIRED", f"{rule_name}.{key}: {got} < {expected['min']}")
     else:
-        need(cov.get(key) == expected, "COVERAGE_REQUIRED", f"{rule_name}.{key}")
+        # the key must be PRESENT: an absent key read as None used to satisfy an expected null (fourth review)
+        need(key in cov and cov[key] == expected, "COVERAGE_REQUIRED", f"{rule_name}.{key}" + ("" if key in cov else " not recorded"))
 
 
 def origin_ok(rule: dict, record: dict) -> None:
@@ -97,6 +119,22 @@ def origin_ok(rule: dict, record: dict) -> None:
              f"{name}: {record.get('instrument', {}).get('tool')} not in {want}")
 
 
+def binding_problem(record, name: str, subject_sha256: str, evidence_dir: Path) -> str:
+    """Why a record cannot speak for this candidate, or "" if it can. Used for OPTIONAL (visible) witnesses too, so a
+    pass recorded for candidate A is not shown as a pass on candidate B (fourth review, 18 Nov 2026, defect 4)."""
+    if not isinstance(record, dict) or record.get("schema") != WITNESS_SCHEMA or record.get("witness") != name:
+        return "not a loom.witness/1 record for this witness"
+    if record.get("subject_sha256") != subject_sha256:
+        return f"recorded for candidate {str(record.get('subject_sha256'))[:12]}, not {subject_sha256[:12]}"
+    if record.get("development") is not False:
+        return "development record"
+    for item in record.get("evidence", []):
+        p = Path(evidence_dir) / item.get("path", "")
+        if not (p.is_file() and sha256_file(p) == item.get("sha256")):
+            return f"evidence {item.get('path')} changed or missing"
+    return ""
+
+
 def accept(candidate_root: Path | str, evidence_dir: Path | str, profile: dict) -> dict:
     """Return an acceptance summary or raise GateError with a stable code."""
     subject = candidate(candidate_root)
@@ -106,9 +144,10 @@ def accept(candidate_root: Path | str, evidence_dir: Path | str, profile: dict) 
         name = rule["witness"]
         path = evidence_dir / f"{name}.json"
         need(path.is_file(), "MISSING_WITNESS", name)
+        raw = path.read_bytes()   # read once: the bytes parsed are the bytes hashed into the summary
         try:
-            record = json.loads(path.read_text())
-        except json.JSONDecodeError as e:
+            record = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as e:
             raise GateError("MALFORMED_WITNESS", f"{name}: {e}") from None
         need(record.get("schema") == WITNESS_SCHEMA, "WITNESS_SCHEMA", name)
         need(record.get("witness") == name, "WRONG_WITNESS_NAME", name)
@@ -125,6 +164,6 @@ def accept(candidate_root: Path | str, evidence_dir: Path | str, profile: dict) 
             p = evidence_dir / item["path"]
             need(p.is_file() and sha256_file(p) == item["sha256"], "EVIDENCE_DRIFT", f"{name}: {item['path']}")
         rows.append({"witness": name, "status": record["status"], "grade": record["grade"], "origin": record_origin(record),
-                     "record_sha256": sha256_file(path)})
+                     "record_sha256": hashlib.sha256(raw).hexdigest()})
     return {"status": "accepted", "profile": profile["name"], "subject_sha256": subject["sha256"],
             "witnesses": rows, "visible_not_run": profile.get("visible_not_run", [])}

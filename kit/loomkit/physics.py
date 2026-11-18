@@ -65,8 +65,19 @@ def _num(x) -> bool:
     return isinstance(x, (int, float)) and not isinstance(x, bool) and x == x and abs(x) != float("inf")
 
 
+RULES = ("at most", "at least")
+
+
+def _rule(item: dict) -> str:
+    """A closed comparator set (fourth review, 18 Nov 2026, defect 5: "at most " with a trailing space fell through
+    to >= and accepted 0.1 against 0.01). Absent means "at most"; anything else is a schema error, never a guess."""
+    r = item.get("rule", "at most")
+    need(r in RULES, "PHYS_SCHEMA", f"{item.get('id')}: rule {r!r} is not one of {list(RULES)}")
+    return r
+
+
 def _holds(item: dict) -> bool:
-    return item["observed"] <= item["limit"] if item.get("rule", "at most") == "at most" else item["observed"] >= item["limit"]
+    return item["observed"] <= item["limit"] if _rule(item) == "at most" else item["observed"] >= item["limit"]
 
 
 def _numbers(x) -> set:
@@ -121,10 +132,16 @@ def check_limits(run: dict, root: Path) -> None:
                 need(d in nums, "PHYS_LIMITS_UNPROVEN", f"{rid}: {it.get('id')} declares limit {d}, which is not in the committed {lim['path']}")
 
 
+def _nonfinite(name: str):
+    raise ValueError(f"{name} is not a JSON number")
+
+
 def load(path: Path) -> dict:
     try:
-        return json.loads(Path(path).read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as e:
+        # strict JSON (RFC 8259 has no NaN or Infinity): Python's extension let a NaN declared_limit skip the
+        # widening check (fourth review)
+        return json.loads(Path(path).read_text(encoding="utf-8"), parse_constant=_nonfinite)
+    except (OSError, json.JSONDecodeError, ValueError) as e:
         raise InstrumentError(f"cannot read the physics run record {Path(path).name}: {e}") from None
 
 
@@ -178,8 +195,9 @@ def check_run(run: dict, root: Path | None = None, required_hosts: list[str] | N
     need(refs, "PHYS_NO_REFERENCE", f"{rid}: a physics run needs at least one exact reference")
     for it in refs + (run.get("tolerances") or []):
         need(isinstance(it, dict) and it.get("id") and _num(it.get("observed")) and _num(it.get("limit")), "PHYS_SCHEMA", f"{rid}: reference or tolerance {it.get('id') if isinstance(it, dict) else it!r} needs id, observed, limit")
-        if it.get("declared_limit") is not None:
-            loose = (it["limit"] > it["declared_limit"]) if it.get("rule", "at most") == "at most" else (it["limit"] < it["declared_limit"])
+        if "declared_limit" in it:
+            need(_num(it["declared_limit"]), "PHYS_SCHEMA", f"{rid}: {it['id']} declared_limit {it['declared_limit']!r} is not a finite number")
+            loose = (it["limit"] > it["declared_limit"]) if _rule(it) == "at most" else (it["limit"] < it["declared_limit"])
             need(not loose, "PHYS_LIMIT_WIDENED", f"{rid}: {it['id']} limit {it['limit']} is looser than the declared {it['declared_limit']}")
     for it in refs:
         need(not (it.get("status") == "pass" and not _holds(it)), "PHYS_FALSE_GREEN", f"{rid}: {it['id']} is marked pass at {it['observed']} against {it['limit']}")
@@ -200,8 +218,11 @@ def check_run(run: dict, root: Path | None = None, required_hosts: list[str] | N
         waived.append({"id": it["id"], "observed": it["observed"], "limit": it["limit"], "owner": w["owner"], "reason": w["reason"]})
     need(len(waived) <= max_waivers, "PHYS_WAIVERS_OVER_CAP", f"{rid}: {len(waived)} waivers, the profile allows {max_waivers}")
 
-    # 6. negative controls must fail
-    for c in run.get("controls") or []:
+    # 6. negative controls must exist, and must fail (an all() over an empty list is vacuously true: fourth review)
+    controls = run.get("controls")
+    need(isinstance(controls, list) and controls, "PHYS_NO_CONTROLS", f"{rid}: a run record needs at least one negative control (playbook pattern 7)")
+    for c in controls:
+        need(isinstance(c, dict) and c.get("id"), "PHYS_SCHEMA", f"{rid}: a control needs an id")
         need(c.get("expect") == "fail" and c.get("observed_failed") is True, "PHYS_CONTROL_SURVIVED", f"{rid}: control {c.get('id')} did not fail")
 
     # 7. the takeover proof (law 41)
@@ -230,8 +251,20 @@ def check_run(run: dict, root: Path | None = None, required_hosts: list[str] | N
 
 
 def check(paths: list[Path], root: Path | None = None, **kw) -> dict:
+    """Every record is kept under its path relative to the root (fourth review, defect 7: keying by basename let
+    runs/a/run.json overwrite runs/b/run.json, so 2 runs read as 1 and 6 waivers as 3). Run ids must be distinct,
+    and max_waivers caps the TOTAL across the set, as the PhysX profile says ("at most three waivers"), defect 9."""
     need(paths, "PHYS_NO_RUNS", "no run record matched")
-    rows = {}
+    rows, ids = {}, {}
     for p in paths:
-        rows[p.name] = check_run(load(p), root, **kw)
-    return {"runs": rows, "waivers": sum(len(r["waivers"]) for r in rows.values())}
+        key = Path(p).resolve().relative_to(Path(root).resolve()).as_posix() if root else Path(p).as_posix()
+        need(key not in rows, "PHYS_DUPLICATE_RUN", f"{key} listed twice")
+        rows[key] = check_run(load(p), root, **kw)
+        rid = rows[key]["id"]
+        need(rid not in ids, "PHYS_DUPLICATE_RUN", f"run id {rid} appears in {ids.get(rid)} and {key}")
+        ids[rid] = key
+    need(len(rows) == len(paths), "PHYS_DUPLICATE_RUN", f"{len(paths)} records given, {len(rows)} kept")
+    total = sum(len(r["waivers"]) for r in rows.values())
+    cap = kw.get("max_waivers", 0)
+    need(total <= cap, "PHYS_WAIVERS_OVER_CAP", f"{total} waivers across {len(rows)} runs, the profile allows {cap} in total")
+    return {"runs": rows, "waivers": total, "waiver_cap_unit": "total across runs"}
