@@ -1,0 +1,35 @@
+{
+  "schema": "loom.profile/1",
+  "name": "x3d-blender-fidelity/v1",
+  "purpose": "Acceptance profile for a Blender scene exported to X3D by x3d-blender-io (the blenderizer). Accepting under it means: the exported file is grammatical and meaningful, carries no known trap, lost no vertices (zero vertex loss against the Blender mesh), and a paired render of the Blender original and of the X3D in a named browser stays inside the colour and structure gates (mean delta-E 2000 below 2.0, SSIM above 0.95). The three numbers are the PRD fidelity gates from the 6-month-old x3d.adv.technicals note; this profile makes them acceptance gates instead of aspirations.",
+  "required": [
+    {"witness": "grammar"},
+    {"witness": "meaning"},
+    {"witness": "traps", "coverage": {"rules": 11}},
+    {"witness": "vertex-loss"},
+    {"witness": "colour-delta"},
+    {"witness": "structure-ssim"}
+  ],
+  "visible_not_run": ["behaviour", "real-gpu", "eyes"],
+  "gate_map": {
+    "BLENDER-GRAMMAR": "grammar: XSD validity of the exported .x3d (xmllint against x3d-4.0.xsd, or x3d.py 4.0.65.8 validate_with_x3d_py)",
+    "BLENDER-MEANING": "meaning: the fork's semantic checks on the export (ROUTE order, DEF before USE, components declared)",
+    "BLENDER-TRAPS": "traps: the kit's 11 portable trap rules",
+    "BLENDER-VERTEX-LOSS": "vertex-loss: for every mesh, vertex count and position (after the declared coordinate-frame change) of the X3D equal the Blender evaluated mesh; lost vertices must be exactly 0. A comparator that counts only triangles is not this witness.",
+    "BLENDER-COLOUR": "colour-delta: mean CIE delta-E 2000 between the Blender render and the X3D render of the same fixed camera, size and background, below 2.0. Name the Blender engine, the browser, the X_ITE version and whether GL is software (SwiftShader) or a real GPU.",
+    "BLENDER-STRUCTURE": "structure-ssim: SSIM of the same pair above 0.95 (greyscale; name the window). Render the pair unlit or with the baked-light recipe, never Cycles light against an X3D headlight.",
+    "BLENDER-BEHAVIOUR, BLENDER-REAL-GPU, BLENDER-EYES": "not in this profile; recorded as not_run in the receipt (visible_not_run)"
+  },
+  "thresholds": {
+    "vertex_loss_max": 0,
+    "delta_e_2000_mean_max": 2.0,
+    "ssim_min": 0.95
+  },
+  "limitations": [
+    "The kit has no comparator for vertex-loss, colour-delta or structure-ssim yet. This profile fixes the contract and thresholds; a project must supply the witness records. Until one does, acceptance refuses by design: a missing required witness fails.",
+    "Thresholds are the PRD's, not measured by the Loom. Record the first real pair back here with its tools named and correct the thresholds if unreachable (a gate fixed like code, law 8).",
+    "delta-E and SSIM depend on the render pair (engine, lights, tone mapping, size). A pass says the pair agreed, not that the scenes match under other lighting.",
+    "Valid is not visible (law 2): behaviour, eyes and real-gpu did not run under this profile.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ]
+}
