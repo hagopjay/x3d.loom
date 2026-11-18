@@ -35,3 +35,7 @@ Live mode: name each Transform (`T(pos, kids, { def: 'N' + i })`) and the line C
   - Per-arch TouchSensors with their own Material DEFs, so the page can isolate an arch.
   - Bead loops: a TimeSensor and a PositionInterpolator per bead, with a duplicate key at the wrap so a phase-shifted bead jumps instead of streaking.
   - A time slab made of a ClipPlane in a Transform that moves with the slab, wrapping content in a counter-moving Transform. The plane moves and the content stays still, so no script runs.
+
+## DEF hygiene (v2.2)
+
+`hygiene.mjs` exports `defHygiene(xml, pageNames)`. Run it on the finished scene. It keeps a DEF only when the file USEs it, a ROUTE names it, or `pageNames` matches it (names the page reaches through SAI). It declares page names with `<EXPORT localDEF AS>` and replaces an empty `<Group/>` LOD far level with a `WorldInfo`. On the 16 d3-bridge scenes, the x3d_mcp semantic receipt went from 64 warnings and 1,305 info notes to 0 and 0, and nothing renders differently (headless check, 0 console errors). Keep `pageNames` in step with the page: a missed name loses its DEF, and `getNamedNode` then throws.
