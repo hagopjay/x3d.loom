@@ -113,13 +113,16 @@ def inventory(repo: Path, globs: list[str]) -> dict:
     # directory symlinks are walked too, under their logical path, so a declared expected/data.json behind
     # expected -> oracle is inventoried with the bytes a reader gets (final external scan, 18 Nov 2026, defect 3);
     # the link itself is a row, and a directory reached twice (a cycle) is walked once
-    seen = set()
     for dirpath, dirnames, filenames in os.walk(repo, followlinks=True):
-        real = os.path.realpath(dirpath)
-        if real in seen:
+        # a cycle is a directory whose real path is also the real path of one of its own logical ancestors; the same
+        # real folder reached by two different names (oracle/ and expected/ -> oracle) is walked under both, in any
+        # listing order (CI on 3.12 listed oracle/ first and the old "seen once" rule skipped expected/)
+        d = Path(dirpath)
+        chain = [d] + [a for a in d.parents if a == repo or repo in a.parents]
+        reals = [os.path.realpath(a) for a in chain]
+        if reals[0] in reals[1:]:
             dirnames[:] = []
             continue
-        seen.add(real)
         dirnames[:] = [d for d in dirnames if d != ".git"]
         for n in filenames + [d for d in dirnames if os.path.islink(os.path.join(dirpath, d))]:
             full = Path(dirpath) / n
