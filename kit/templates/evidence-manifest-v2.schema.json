@@ -2,7 +2,7 @@
  "$schema": "https://json-schema.org/draft/2020-12/schema",
  "$id": "loom.evidence-manifest/2",
  "title": "Loom evidence manifest",
- "description": "v2 (third external review, 18 Nov 2026): failed visible witnesses get their own `failed` list instead of being written into `not_run`; the profile's exact bytes are named by `profile_sha256`; the manifest is published together with its receipt. Lists every evidence file of one accepted run with its hash, so a reader can check the release after extraction (Loomsong v4 check_release.py; LS1 section 8). Evidence is excluded from the candidate and hashed here instead, which avoids a self-referential digest.",
+ "description": "v2 (third external review; `stale` added in the fourth: an optional record for another candidate or with drifted evidence, 18 Nov 2026): failed visible witnesses get their own `failed` list instead of being written into `not_run`; the profile's exact bytes are named by `profile_sha256`; the manifest is published together with its receipt. Lists every evidence file of one accepted run with its hash, so a reader can check the release after extraction (Loomsong v4 check_release.py; LS1 section 8). Evidence is excluded from the candidate and hashed here instead, which avoids a self-referential digest.",
  "type": "object",
  "required": [
   "schema",
@@ -104,7 +104,8 @@
        "not_run",
        "deferred",
        "not_applicable",
-       "error"
+       "error",
+       "stale"
       ]
      },
      "reason": {

@@ -248,7 +248,7 @@ def cmd_physics(a) -> dict:
     return write_witness(a.evidence, root, subject, "physics", status, "C",
                          {"tool": "loomkit.physics", "rules_sha256": sha256_file(Path(physics.__file__)), "hosts": hosts or "as each record names them",
                           "max_waivers": a.max_waivers, "require_takeover": a.require_takeover},
-                         measurements=res, coverage={"runs": len(runs), "max_waivers": a.max_waivers, "require_takeover": bool(a.require_takeover)},
+                         measurements=res, coverage={"runs": len(res["runs"]) if "runs" in res else len(runs), "max_waivers": a.max_waivers, "waivers_total": res.get("waivers"), "require_takeover": bool(a.require_takeover)},
                          limitations=["Determinism is shown on the hosts and the machine the record names; another machine or another engine build needs its own replay (law 42).",
                                       "A passing record shows the run answers to its references and hashes; it does not show the engine's model is right where no exact reference exists.",
                                       "The witness reads the record a project's own harness wrote; the harness is trusted to have replayed what it says (the project's browser evidence is the behaviour witness)."],
@@ -318,11 +318,49 @@ def check_manifest(m: dict) -> None:
         errs = sorted(jsonschema.Draft202012Validator(schema).iter_errors(m), key=lambda x: list(x.path))
         need(not errs, "MANIFEST_SCHEMA", "; ".join(f"{list(x.path)}: {x.message}" for x in errs[:3]))
         return
-    need(all(k in m for k in schema["required"]), "MANIFEST_SCHEMA", "missing required key")
-    for key in ("not_run", "failed"):
-        enum = schema["properties"][key]["items"]["properties"]["status"]["enum"]
-        for row in m[key]:
-            need(row["status"] in enum and row.get("reason"), "MANIFEST_SCHEMA", f"{key}: {row}")
+    errs = _schema_errors(schema, m, "$")   # the keywords this schema uses, all of them, so parity holds without jsonschema
+    need(not errs, "MANIFEST_SCHEMA", "; ".join(errs[:3]))
+
+
+def _schema_errors(s: dict, v, at: str) -> list:
+    import re as _re
+    out = []
+    types = {"object": dict, "array": list, "string": str, "boolean": bool}
+    ty = s.get("type")
+    if ty == "integer":
+        if not (isinstance(v, int) and not isinstance(v, bool)):
+            return [f"{at}: not an integer"]
+    elif ty and not isinstance(v, types[ty]):
+        return [f"{at}: not {ty}"]
+    if "const" in s and v != s["const"]:
+        out.append(f"{at}: != {s['const']!r}")
+    if "enum" in s and v not in s["enum"]:
+        out.append(f"{at}: {v!r} not in {s['enum']}")
+    if isinstance(v, str):
+        if "pattern" in s and not _re.search(s["pattern"], v):
+            out.append(f"{at}: does not match {s['pattern']}")
+        if len(v) < s.get("minLength", 0):
+            out.append(f"{at}: shorter than {s['minLength']}")
+    if isinstance(v, int) and not isinstance(v, bool) and "minimum" in s and v < s["minimum"]:
+        out.append(f"{at}: below {s['minimum']}")
+    if isinstance(v, dict):
+        out += [f"{at}.{k}: required" for k in s.get("required", []) if k not in v]
+        for k, sub in s.get("properties", {}).items():
+            if k in v:
+                out += _schema_errors(sub, v[k], f"{at}.{k}")
+    if isinstance(v, list) and "items" in s:
+        for i, x in enumerate(v):
+            out += _schema_errors(s["items"], x, f"{at}[{i}]")
+    unknown = set(s) - {"$schema", "$id", "title", "description", "type", "required", "properties", "items", "const", "enum", "pattern", "minLength", "minimum"}
+    if unknown:
+        out.append(f"{at}: validator does not implement {sorted(unknown)}")
+    return out
+
+
+def _replace(src, dst):
+    """os.replace, behind a name the transaction control can fault-inject."""
+    import os
+    os.replace(src, dst)
 
 
 def cmd_receipt(a) -> dict:
@@ -332,19 +370,39 @@ def cmd_receipt(a) -> dict:
     temp files in the destination folder, and only then are they renamed into place; a failure removes what this run
     staged or placed and nothing else."""
     import os, tempfile as _tf
-    profile = acc.load_profile(a.profile)
-    profile_sha = sha256_file(Path(a.profile))
+    profile, profile_sha = acc.read_profile(a.profile)   # one read: the bytes evaluated are the bytes attested
     result = acc.accept(a.root, a.evidence, profile)
     cand = candidate(a.root)
     dest = Path(a.out)
     mpath = manifest_path(dest)
+    ev_root = Path(a.evidence).resolve()
     for d in (dest, mpath):
         need(a.force or not d.exists(), "RECEIPT_EXISTS", f"{d} exists; write a new version or pass --force")
+        # a receipt or manifest inside the evidence folder would inventory itself (or its predecessor) and be stale
+        # the moment it is placed (fourth review, defect 10)
+        need(ev_root not in d.resolve().parents, "RECEIPT_INSIDE_EVIDENCE", f"{d} is inside {a.evidence}; publish beside it")
+    if a.prev:
+        try:
+            json.loads(Path(a.prev).read_bytes())
+        except ValueError:
+            raise GateError("PREV_NOT_RECEIPT", f"{a.prev} is not JSON, so it cannot be a receipt")
+        receipt.verify(Path(a.prev))   # a predecessor must be a receipt that verifies, not any file
     visible = []
     for name in profile.get("visible_not_run", []):
         p = Path(a.evidence) / f"{name}.json"
-        rec = json.loads(p.read_text()) if p.exists() else {"status": "not_run", "reason": "no record"}
-        visible.append({"witness": name, "status": rec["status"], "reason": rec.get("reason") or f"recorded {rec['status']} with no reason"})
+        if not p.exists():
+            visible.append({"witness": name, "status": "not_run", "reason": "no record"})
+            continue
+        try:
+            rec = json.loads(p.read_text())
+        except (OSError, ValueError) as e:
+            visible.append({"witness": name, "status": "error", "reason": f"unreadable record: {e}"})
+            continue
+        why = acc.binding_problem(rec, name, cand["sha256"], Path(a.evidence))
+        if why:   # never project another candidate's (or a drifted) result onto this one
+            visible.append({"witness": name, "status": "stale", "reason": why})
+            continue
+        visible.append({"witness": name, "status": rec.get("status", "error"), "reason": rec.get("reason") or f"recorded {rec.get('status')} with no reason"})
     tools = {}
     for row in result["witnesses"]:
         rec = json.loads((Path(a.evidence) / f"{row['witness']}.json").read_text())
@@ -367,7 +425,7 @@ def cmd_receipt(a) -> dict:
     check_manifest(manifest)
     mbytes = (json.dumps(manifest, sort_keys=True, indent=2) + "\n").encode()
     dest.parent.mkdir(parents=True, exist_ok=True)
-    staged, placed = [], []
+    staged, placed, backups = [], [], {}
     try:
         for final, data in ((dest, rbytes), (mpath, mbytes)):
             fd, tmp = _tf.mkstemp(prefix="." + final.name + ".", suffix=".staged", dir=final.parent)
@@ -376,16 +434,27 @@ def cmd_receipt(a) -> dict:
             staged.append((Path(tmp), final))
         for tmp, final in staged:
             need(a.force or not final.exists(), "RECEIPT_EXISTS", f"{final} appeared while staging")
-            os.replace(tmp, final)
+            if final.exists():   # --force: copy the original aside; the atomic replace below leaves it in place until then
+                fd, bak = _tf.mkstemp(prefix="." + final.name + ".", suffix=".backup", dir=final.parent)
+                with os.fdopen(fd, "wb") as fh:
+                    fh.write(final.read_bytes())
+                backups[final] = Path(bak)
+            _replace(tmp, final)
             placed.append(final)
     except BaseException:
         for tmp, final in staged:
             if tmp.exists():
                 tmp.unlink()
-        if not a.force:
-            for final in placed:   # only files this run created: without --force none of them existed before
+        for final in placed:          # only the files this run replaced are touched: originals come back, new ones go
+            if final in backups:
+                os.replace(backups.pop(final), final)
+            elif final.exists():
                 final.unlink()
+        for bak in backups.values():  # a file never replaced still holds its original; drop the spare copy
+            bak.unlink()
         raise
+    for bak in backups.values():
+        bak.unlink()
     return {"receipt": str(dest), "sha256": r["sha256"], "candidate_sha256": r["candidate_sha256"],
             "profile_sha256": profile_sha, "evidence_manifest": str(mpath), "evidence_files": len(manifest["files"]),
             "visible_failed": [n["witness"] for n in manifest["failed"]]}

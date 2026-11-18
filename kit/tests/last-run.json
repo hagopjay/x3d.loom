@@ -736,6 +736,124 @@
             "result": "bound"
           }
         ],
+        "review4": [
+          {
+            "case": "R4-5: comparator typo `at mots` (old: read as at least, passed)",
+            "caught": "PHYS_SCHEMA",
+            "expected": "PHYS_SCHEMA"
+          },
+          {
+            "case": "R4: declared_limit NaN in memory (old: skipped the widening check)",
+            "caught": "PHYS_SCHEMA",
+            "expected": "PHYS_SCHEMA"
+          },
+          {
+            "case": "R4: `NaN` in a run record file",
+            "caught": "InstrumentError",
+            "expected": "instrument error (strict JSON)"
+          },
+          {
+            "case": "R4-6: negative controls empty list (old: all() over nothing passed)",
+            "caught": "PHYS_NO_CONTROLS",
+            "expected": "PHYS_NO_CONTROLS"
+          },
+          {
+            "case": "R4-6: negative controls missing (old: all() over nothing passed)",
+            "caught": "PHYS_NO_CONTROLS",
+            "expected": "PHYS_NO_CONTROLS"
+          },
+          {
+            "case": "R4-7/9: a/run.json and b/run.json, 3 waivers each, cap 3 total (old: one kept, read as 3)",
+            "caught": "PHYS_WAIVERS_OVER_CAP",
+            "expected": "PHYS_WAIVERS_OVER_CAP"
+          },
+          {
+            "case": "R4-9: one run with 3 waivers under cap 3",
+            "result": "pass, 3 total"
+          },
+          {
+            "case": "R4-7: two records share run id toy/a",
+            "caught": "PHYS_DUPLICATE_RUN",
+            "expected": "PHYS_DUPLICATE_RUN"
+          },
+          {
+            "case": "R4-8: a real 2x2 RGB PNG decodes",
+            "result": "2x2"
+          },
+          {
+            "case": "R4-8: PNG signature + IEND, no IHDR",
+            "caught": "undecodable",
+            "expected": "SCI_PUBLICATION_UNDECODABLE"
+          },
+          {
+            "case": "R4-8: PNG IDAT truncated",
+            "caught": "undecodable",
+            "expected": "SCI_PUBLICATION_UNDECODABLE"
+          },
+          {
+            "case": "R4-8: PNG CRC flipped",
+            "caught": "undecodable",
+            "expected": "SCI_PUBLICATION_UNDECODABLE"
+          },
+          {
+            "case": "R4: one glob language (`**/` any depth, `*` one segment) on 6 paths",
+            "result": "as documented"
+          },
+          {
+            "case": "R4-2: --scorer check.py is a symlink; patch edits its target real/score.py (old: unchanged, pass)",
+            "caught": "held (scorer changed: check.py); fails the base oracle",
+            "expected": "changed; base oracle fails it"
+          },
+          {
+            "case": "R4-2: implementation-only patch beside the symlinked scorer; replay in a fresh clone",
+            "result": "pass, unchanged"
+          },
+          {
+            "case": "R4-3: scorer data renamed and replaced by a new file under the same declared glob",
+            "caught": "changed",
+            "expected": "changed"
+          },
+          {
+            "case": "R4: profile name 42 (old: accepted, then the manifest schema refused it under jsonschema only)",
+            "caught": "PROFILE_SCHEMA",
+            "expected": "PROFILE_SCHEMA"
+          },
+          {
+            "case": "R4: profile `NaN` coverage value",
+            "caught": "PROFILE_SCHEMA",
+            "expected": "PROFILE_SCHEMA"
+          },
+          {
+            "case": "R4: expected-null coverage key absent from the record (old: missing read as null)",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          },
+          {
+            "case": "R4: stdlib manifest validator (no jsonschema) on profile 42 and missing fields",
+            "caught": "8 errors",
+            "expected": "errors"
+          },
+          {
+            "case": "R4-4: optional eyes=pass recorded for the previous candidate",
+            "caught": "stale",
+            "expected": "stale, not pass"
+          },
+          {
+            "case": "R4: --prev is not a receipt",
+            "caught": "PREV_NOT_RECEIPT",
+            "expected": "PREV_NOT_RECEIPT"
+          },
+          {
+            "case": "R4-10: receipt published inside the evidence folder",
+            "caught": "RECEIPT_INSIDE_EVIDENCE",
+            "expected": "RECEIPT_INSIDE_EVIDENCE"
+          },
+          {
+            "case": "R4: --force pair, manifest rename fails after the receipt is placed",
+            "caught": "restored",
+            "expected": "both originals restored, no spare files"
+          }
+        ],
         "sci": [
           {
             "case": "synthetic case bank",
@@ -906,7 +1024,7 @@
           }
         ]
       },
-      "negative_controls_caught": 115,
+      "negative_controls_caught": 135,
       "optimized": false,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,
@@ -1648,6 +1766,124 @@
             "result": "bound"
           }
         ],
+        "review4": [
+          {
+            "case": "R4-5: comparator typo `at mots` (old: read as at least, passed)",
+            "caught": "PHYS_SCHEMA",
+            "expected": "PHYS_SCHEMA"
+          },
+          {
+            "case": "R4: declared_limit NaN in memory (old: skipped the widening check)",
+            "caught": "PHYS_SCHEMA",
+            "expected": "PHYS_SCHEMA"
+          },
+          {
+            "case": "R4: `NaN` in a run record file",
+            "caught": "InstrumentError",
+            "expected": "instrument error (strict JSON)"
+          },
+          {
+            "case": "R4-6: negative controls empty list (old: all() over nothing passed)",
+            "caught": "PHYS_NO_CONTROLS",
+            "expected": "PHYS_NO_CONTROLS"
+          },
+          {
+            "case": "R4-6: negative controls missing (old: all() over nothing passed)",
+            "caught": "PHYS_NO_CONTROLS",
+            "expected": "PHYS_NO_CONTROLS"
+          },
+          {
+            "case": "R4-7/9: a/run.json and b/run.json, 3 waivers each, cap 3 total (old: one kept, read as 3)",
+            "caught": "PHYS_WAIVERS_OVER_CAP",
+            "expected": "PHYS_WAIVERS_OVER_CAP"
+          },
+          {
+            "case": "R4-9: one run with 3 waivers under cap 3",
+            "result": "pass, 3 total"
+          },
+          {
+            "case": "R4-7: two records share run id toy/a",
+            "caught": "PHYS_DUPLICATE_RUN",
+            "expected": "PHYS_DUPLICATE_RUN"
+          },
+          {
+            "case": "R4-8: a real 2x2 RGB PNG decodes",
+            "result": "2x2"
+          },
+          {
+            "case": "R4-8: PNG signature + IEND, no IHDR",
+            "caught": "undecodable",
+            "expected": "SCI_PUBLICATION_UNDECODABLE"
+          },
+          {
+            "case": "R4-8: PNG IDAT truncated",
+            "caught": "undecodable",
+            "expected": "SCI_PUBLICATION_UNDECODABLE"
+          },
+          {
+            "case": "R4-8: PNG CRC flipped",
+            "caught": "undecodable",
+            "expected": "SCI_PUBLICATION_UNDECODABLE"
+          },
+          {
+            "case": "R4: one glob language (`**/` any depth, `*` one segment) on 6 paths",
+            "result": "as documented"
+          },
+          {
+            "case": "R4-2: --scorer check.py is a symlink; patch edits its target real/score.py (old: unchanged, pass)",
+            "caught": "held (scorer changed: check.py); fails the base oracle",
+            "expected": "changed; base oracle fails it"
+          },
+          {
+            "case": "R4-2: implementation-only patch beside the symlinked scorer; replay in a fresh clone",
+            "result": "pass, unchanged"
+          },
+          {
+            "case": "R4-3: scorer data renamed and replaced by a new file under the same declared glob",
+            "caught": "changed",
+            "expected": "changed"
+          },
+          {
+            "case": "R4: profile name 42 (old: accepted, then the manifest schema refused it under jsonschema only)",
+            "caught": "PROFILE_SCHEMA",
+            "expected": "PROFILE_SCHEMA"
+          },
+          {
+            "case": "R4: profile `NaN` coverage value",
+            "caught": "PROFILE_SCHEMA",
+            "expected": "PROFILE_SCHEMA"
+          },
+          {
+            "case": "R4: expected-null coverage key absent from the record (old: missing read as null)",
+            "caught": "COVERAGE_REQUIRED",
+            "expected": "COVERAGE_REQUIRED"
+          },
+          {
+            "case": "R4: stdlib manifest validator (no jsonschema) on profile 42 and missing fields",
+            "caught": "8 errors",
+            "expected": "errors"
+          },
+          {
+            "case": "R4-4: optional eyes=pass recorded for the previous candidate",
+            "caught": "stale",
+            "expected": "stale, not pass"
+          },
+          {
+            "case": "R4: --prev is not a receipt",
+            "caught": "PREV_NOT_RECEIPT",
+            "expected": "PREV_NOT_RECEIPT"
+          },
+          {
+            "case": "R4-10: receipt published inside the evidence folder",
+            "caught": "RECEIPT_INSIDE_EVIDENCE",
+            "expected": "RECEIPT_INSIDE_EVIDENCE"
+          },
+          {
+            "case": "R4: --force pair, manifest rename fails after the receipt is placed",
+            "caught": "restored",
+            "expected": "both originals restored, no spare files"
+          }
+        ],
         "sci": [
           {
             "case": "synthetic case bank",
@@ -1818,7 +2054,7 @@
           }
         ]
       },
-      "negative_controls_caught": 115,
+      "negative_controls_caught": 135,
       "optimized": true,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 8,
