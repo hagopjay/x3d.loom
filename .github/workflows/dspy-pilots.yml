@@ -1,0 +1,96 @@
+# x3d.loom/.github/workflows/dspy-pilots.yml
+# The DSPy pilots (kit/dspy_pilots): the rule-synthesis benchmark and its metric audit, the 17 Oct replay and the writer
+# ablation. Added because PR 132 ran no CI (kit/dspy_pilots/ was covered by no path-filtered workflow) and the
+# trap-synthesis audit in kit/tests/ was never run by kit.yml, which lists its test scripts by name.
+#
+# Scope, stated the way the Loom wants it:
+#   tests   : required. Metric audit (oracle = 1.0, degenerate rules below 0.5, no content leaks, sealed variants, the
+#             saved overfit rules fail) on the x3d.loom corpus alone, and the constraint checker. Standard library plus
+#             lxml. No model, no optimiser, no key.
+#   replay  : exploratory until it has run green a few times. Re-runs the saved-run replay and the offline ablation
+#             against pinned x3d_mcp and x3d.ML commits and fails if the committed result JSON changes. It cannot fail
+#             the workflow yet. A difference means the validator or its dependencies moved, which is the point.
+# Nothing here calls a model or an optimiser.
+name: dspy-pilots
+
+on:
+  push:
+    paths: ['kit/dspy_pilots/**', 'kit/tests/test_dspy_trap_synth.py', 'kit/loomkit/traps.py', '.github/workflows/dspy-pilots.yml']
+  pull_request:
+    paths: ['kit/dspy_pilots/**', 'kit/tests/test_dspy_trap_synth.py', 'kit/loomkit/traps.py', '.github/workflows/dspy-pilots.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dspy-pilots-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  X3D_MCP_SHA: 39c6e94b96f5211ac05408c64d28ea008f9df24a   # the validator the committed replays were produced on
+  X3D_ML_SHA: ef946503dfe9cd613404c27d7d6bcaa07056b560      # the saved 17 Oct run
+
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'lxml>=5,<7'
+      - name: Metric audit and sandbox tests (x3d.loom corpus only)
+        env:
+          MCP_ROOT: /nonexistent
+        run: python -I kit/tests/test_dspy_trap_synth.py
+      - name: Constraint checker tests
+        run: python -I kit/dspy_pilots/writer_ablation/test_fulfil.py
+
+  replay:
+    needs: tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    continue-on-error: true      # exploratory: see the header
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: hagopjay/x3d_mcp
+          ref: ${{ env.X3D_MCP_SHA }}
+          path: deps/x3d_mcp
+      - uses: actions/checkout@v4
+        with:
+          repository: hagopjay/x3d.ML
+          ref: ${{ env.X3D_ML_SHA }}
+          path: deps/x3d.ML
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'lxml>=5,<7' xmlschema jsonschema rdflib
+      - name: Replay the 17 Oct run on the pinned validator
+        env:
+          ML_ROOT: ${{ github.workspace }}/deps/x3d.ML
+          MCP_ROOT: ${{ github.workspace }}/deps/x3d_mcp
+        run: python kit/dspy_pilots/chain_replay/replay_17oct.py > /dev/null
+      - name: Offline writer ablation, arms A and B
+        env:
+          ML_ROOT: ${{ github.workspace }}/deps/x3d.ML
+          X3D_MCP_TREE: ${{ github.workspace }}/deps/x3d_mcp
+          X3D_NO_FULL: '1'
+        run: python kit/dspy_pilots/writer_ablation/ablation_offline.py > /dev/null
+      - name: Committed results must not change
+        run: git diff --exit-code -- kit/dspy_pilots/chain_replay/replay_17oct.json kit/dspy_pilots/writer_ablation/ablation_offline.json
+      - name: Receipt
+        if: always()
+        run: |
+          echo "commit: $GITHUB_SHA"
+          echo "x3d_mcp: $X3D_MCP_SHA"
+          echo "x3d.ML: $X3D_ML_SHA"
+          echo "runner: $(uname -sr)"; python --version
+          python -m pip list 2>/dev/null | grep -iE '^(lxml|xmlschema|jsonschema|rdflib) '
