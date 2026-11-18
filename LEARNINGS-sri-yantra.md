@@ -14,3 +14,18 @@ The [Resonance Loom application](x3d.mandala/) turns the supplied radial-mandala
 | Make standalone packaging inspectable | A hashed X_ITE 16.8.0 source inventory feeds a bounded resource-URL adapter and embedded assets. | Preserve original vendor bytes, record derived changes and verify runtime requests separately. |
 
 The detailed mechanisms, counterexamples and control locations are in [x3d.mandala/docs/FOLDBACK.md](x3d.mandala/docs/FOLDBACK.md). The construction and primary mathematical references are in [GEOMETRY.md](x3d.mandala/docs/GEOMETRY.md). The original attachment is reviewed in [ATTACHMENT-REVIEW.md](x3d.mandala/docs/ATTACHMENT-REVIEW.md). These extend the Loom's existing separation of claims, witnesses and display; they do not introduce a new repository-wide certification profile.
+
+## Edition 2.0 · what the Chamber Harp adds (18 Nov 2026)
+
+| Lesson | Concrete boundary | Reusable rule |
+|---|---|---|
+| Make the invariant playable | 43 chamber lights, 9 triangle lights and 60 sparks animate only materials and transforms; the browser gate compares the live `YantraCoordinates` before and after every click. | When a figure is measured, add interaction as new appearance nodes beside it. Re-check the measured field after interaction, not only at load. |
+| One sensor plus a pure locator | A single `TouchSensor` reports hits in the layer's local units. `locate()` resolves chambers by point-in-triangle, and all 43 independent interior samples land in their own chamber. | Keep picking geometry-agnostic and test the locator against independent data. An invisible plate makes gaps pickable so the UI can explain them. |
+| Teach with every touch | A strike lights the triangles that cover it (9 for the bindu, 1 for the outer ring). A gap reports its even coverage. | Map interaction to the claim's own vocabulary (coverage depth, odd/even), so playing is also reading the witness. |
+| Let symmetry pick the tuning | 26 bilateral classes share pitches, rising toward the bindu. | Derive sonification from the figure's structure, and label it as authored. |
+| Deterministic time-driven light | The spiral light is a pure function of the musical beat; the spark poses are closed-form in time. | Pure functions of the shared clock are testable without a browser and survive tempo changes and pauses. |
+| Post effects need a governor | X_ITE 16.8.0 has no bloom. A 2D-canvas copy of the frame costs 7.2 → 3.0 fps on SwiftShader. Bloom starts off on software GL and switches itself off above a 30 ms median frame. | Detect the renderer, measure, and switch off. Log the cost on real GPUs as an open receipt. |
+| Check the runtime bundle before choosing a node | The ParticleSystem component loads lazily from a file the vendored runtime does not include. It 404'd in the browser, so the sparks became a transform pool. | Probe the pinned runtime for the component, not the spec. Lazy components need vendoring and adapter edits for an offline standalone. |
+| Name the receipts by edition | 1.0 receipts stay in git history; 2.0 writes `harp-browser-2.0.json` beside the refreshed upstream witnesses. | Never overwrite a frozen release; a new edition gets new receipts and a new frozen path. |
+
+Detail: [x3d.mandala/docs/CHAMBER-HARP.md](x3d.mandala/docs/CHAMBER-HARP.md), gaps: [HARP-GAPS.md](x3d.mandala/docs/HARP-GAPS.md).

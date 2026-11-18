@@ -11,12 +11,22 @@ const xyz=(p,z=0)=>[Number(p[0]),Number(p[1]),Number(p[2]??z)];
 const polar=(r,a,z=0)=>[r*Math.cos(a),r*Math.sin(a),z];
 const hash=n=>{const x=Math.sin(n*127.1+311.7)*43758.5453123;return x-Math.floor(x);};
 const mix=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);
+const pad=n=>String(n).padStart(2,'0');
+export const CHAMBER_COUNT=43;
+export const SPARK_COUNT=60;
+export const sparkName=i=>'Spark'+pad(i);
+export const chamberLightName=i=>'ChamberLight'+pad(i+1);
+export const triangleLightName=i=>'TriangleLight'+(i+1);
 
 export const SCENE_BINDINGS=Object.freeze({
   root:'SanctuaryStage',viewpoint:'SanctuaryCamera',yantraFront:'YantraFront',yantraBack:'YantraBack',
   frontSwitch:'YantraFrontSwitch',backSwitch:'YantraBackSwitch',
   petalGroups:['LotusEight','LotusSixteen','CelestialPetals','FiligreeRotor'],
   rings:['BreathHaloA','BreathHaloB','BreathHaloC'],
+  chamberTouch:'ChamberTouch',
+  sparks:Array.from({length:60},(_,i)=>'Spark'+String(i).padStart(2,'0')),
+  chamberLights:Array.from({length:43},(_,i)=>'ChamberLight'+String(i+1).padStart(2,'0')),
+  triangleLights:Array.from({length:9},(_,i)=>'TriangleLight'+(i+1)),
   materials:['YantraGold','YantraGlow','YantraAura','YantraBackGold','YantraBackGlow','YantraFill','YantraFill1','YantraFill2','YantraFill3','YantraFill4',
     'LotusEightFill','LotusEightEdge','LotusEightGlow','LotusEightVein','LotusSixteenFill','LotusSixteenEdge','LotusSixteenGlow','LotusSixteenVein',
     'CelestialFill','CelestialEdge','CelestialGlow','CelestialVein','FiligreeGold','GuillocheGold','GuillocheGlow','PearlGold','PearlCyan','FrameGold','HaloGold','HaloRose','HaloCyan','BinduGold']
@@ -151,7 +161,7 @@ export function buildScene(yantra,{quality='high'}={}){
   const chamberRings=Array.from({length:5},()=>[]);
   for(const f of yantra.faces||[])if(Array.isArray(f.vertices)&&f.vertices.length>=3){const ring=Number.isInteger(f.ring)?clamp(f.ring,0,4):0;chamberRings[ring].push([...f.vertices.map(v=>xyz(v)),xyz(f.vertices[0])]);}
   const all=[];
-  all.push(`<?xml version="1.0" encoding="UTF-8"?>\n<X3D profile="Interchange" version="4.0"><head><component name="Navigation" level="3"/><component name="Rendering" level="3"/><component name="Shape" level="5"/><component name="Grouping" level="2"/><meta name="title" content="Sri Yantra - Resonance Loom"/><meta name="description" content="Native X3D mandala. Canonical nine-triangle Sri Yantra is supplied by the separately audited construction; artistic ornament is authored. No shader-painted geometry."/><meta name="geometryContract" content="sri-resonance-native-x3d/1"/></head><Scene>`);
+  all.push(`<?xml version="1.0" encoding="UTF-8"?>\n<X3D profile="Interchange" version="4.0"><head><component name="Navigation" level="3"/><component name="Rendering" level="3"/><component name="Shape" level="5"/><component name="Grouping" level="2"/><component name="PointingDeviceSensor" level="1"/><meta name="title" content="Sri Yantra - Resonance Loom"/><meta name="description" content="Native X3D mandala. Canonical nine-triangle Sri Yantra is supplied by the separately audited construction; artistic ornament is authored. No shader-painted geometry."/><meta name="geometryContract" content="sri-resonance-native-x3d/1"/></head><Scene>`);
   all.push(`<WorldInfo title="Sri Yantra - Resonance Loom"><MetadataString containerField="metadata" name="construction" value="${mf(yantra.construction??'Audited nine-triangle construction')}"/></WorldInfo>`);
   all.push(`<NavigationInfo type='"NONE"' headlight="false"/><Background skyColor="0.005 0.008 0.021"/><OrthoViewpoint DEF="SanctuaryCamera" position="0 0 18" fieldOfView="-5.62 -5.62 5.62 5.62" description="Frontal sanctuary"/><DirectionalLight direction="-0.35 -0.5 -1" intensity="0.5" color="1 0.82 0.62"/><DirectionalLight direction="0.4 0.25 -1" intensity="0.25" color="0.4 0.65 1"/>`);
   all.push(`<Transform DEF="SanctuaryStage">`);
@@ -172,15 +182,32 @@ export function buildScene(yantra,{quality='high'}={}){
   all.push(shape(coreGlow,'YantraGlow',[.94,.47,.20],.83));
   all.push(shape(coreAura,'YantraAura',[.82,.29,.19],.97));
   for(let ring=0;ring<5;ring++)all.push(shape(fillGeometry(chamberRings[ring],-.008),'YantraFill'+(ring||''),[[.72,.45,.19],[.57,.23,.20],[.55,.25,.11],[.4,.17,.34],[.12,.38,.40]][ring],.56+ring*.025));
+  // Chamber harp: one light per canonical chamber and one per triangle. They
+  // are derived ornament at rest-transparent; the canonical point field is
+  // untouched. A single TouchSensor reports hits in yantra units (R = 1).
+  for(let t=0;t<9;t++)all.push(`<Shape><Appearance>${material(triangleLightName(t),[1,.86,.6],1)}</Appearance>${ribbonGeometry([canonical[t]],.0062,.004)}</Shape>`);
+  facePaths.forEach((path,i)=>all.push(`<Shape><Appearance>${material(chamberLightName(i),[1,.8,.5],1)}</Appearance>${fillGeometry([path],-.005)}</Shape>`));
+  // An invisible plate (R = 1) behind the chambers makes voids pickable too,
+  // so a touch between chambers can explain why it is not one of the 43.
+  all.push(`<Shape><Appearance><Material DEF="HarpPlate" transparency="1"/></Appearance>${fillGeometry([circle(1,96)],-.014)}</Shape>`);
+  all.push(`<TouchSensor DEF="ChamberTouch" description="Strike a chamber of the Sri Yantra"/>`);
   all.push(`</Transform></Switch>`);
   all.push(`<Switch DEF="YantraBackSwitch" whichChoice="0"><Transform DEF="YantraBack" scale="2.45575 2.45575 2.45575" translation="0 0 -.18"><Shape><Appearance>${material('YantraBackGold',[.43,.16,.29],.68)}</Appearance>${lineGeometry(canonical,{coordinateUse:'YantraCoordinates'})}</Shape><Shape><Appearance>${material('YantraBackGlow',[.42,.13,.29],.94)}</Appearance><IndexedTriangleSet USE="YantraGlowMesh"/></Shape></Transform></Switch>`);
-  all.push(`<Transform DEF="Bindu" translation="0 0 .12"><Shape><Appearance>${material('BinduGold',[1,.82,.48],0)}</Appearance><IndexedTriangleSet solid="false" index="0 1 2 0 2 3 0 3 4 0 4 1 5 2 1 5 3 2 5 4 3 5 1 4"><Coordinate point="0 0 .035 .03 0 0 0 .03 0 -.03 0 0 0 -.03 0 0 0 -.025"/></IndexedTriangleSet></Shape></Transform>`);
+  all.push(`<Transform DEF="Bindu" translation="0 0 .12"><TouchSensor DEF="BinduTouch" description="Strike the bindu"/><Shape><Appearance>${material('BinduGold',[1,.82,.48],0)}</Appearance><IndexedTriangleSet solid="false" index="0 1 2 0 2 3 0 3 4 0 4 1 5 2 1 5 3 2 5 4 3 5 1 4"><Coordinate point="0 0 .035 .03 0 0 0 .03 0 -.03 0 0 0 -.03 0 0 0 -.025"/></IndexedTriangleSet></Shape></Transform>`);
+  // Bindu sparks: a pool of tiny gems (the pearl octahedron), one DEF'd shape
+  // per colour and USE'd by every slot. Each slot is a Transform, so sparks
+  // obey the same rule as the rest of the scene: only transforms and
+  // materials move; no coordinate field is ever written.
+  all.push(`<Transform DEF="SparkField" translation="0 0 .16">`);
+  for(let i=0;i<SPARK_COUNT;i++){const c=i%3,first=i<3,name=['Gold','Rose','Cyan'][c];
+    all.push(`<Transform DEF="${sparkName(i)}" scale="0.0001 0.0001 0.0001">${first?`<Shape DEF="SparkGem${name}"><Appearance>${material('Spark'+name,[[1,.86,.55],[1,.46,.5],[.45,.85,1]][c],0)}</Appearance>${pearlGeometry(1,0,1,0)}</Shape>`:`<Shape USE="SparkGem${name}"/>`}</Transform>`);}
+  all.push(`</Transform>`);
   all.push(`</Transform></Scene></X3D>`);
   const xml=all.join('\n');
   const defs=[...xml.matchAll(/\bDEF="([^"]+)"/g)].map(m=>m[1]);
   if(new Set(defs).size!==defs.length)throw Error('SCENE_DUPLICATE_DEF');
   return {xml,bindings:SCENE_BINDINGS,stats:{quality:high?'high':'balanced',triangles:9,canonicalVertices:27,canonicalLineVertices:36,
-    suppliedChambers:facePaths.length,lotusPetals:[8,16],authoredOuterPetals:32,dustPoints:dustCount,
+    suppliedChambers:facePaths.length,chamberLights:facePaths.length,triangleLights:9,touchSensors:2,sparkSlots:SPARK_COUNT,lotusPetals:[8,16],authoredOuterPetals:32,dustPoints:dustCount,
     chamberRingCounts:chamberRings.map(p=>p.length),authoredPearls:high?240:160,
     circleSegments:ringSegments,circleRelativeChordError:1-Math.cos(Math.PI/ringSegments),
     coordinateNodes:(xml.match(/<Coordinate\b/g)||[]).length,shapes:(xml.match(/<Shape>/g)||[]).length,
@@ -192,8 +219,8 @@ const caches=new WeakMap();
 function handles(scene){
   if(caches.has(scene))return caches.get(scene);
   const names=[SCENE_BINDINGS.root,SCENE_BINDINGS.yantraFront,SCENE_BINDINGS.yantraBack,
-    SCENE_BINDINGS.frontSwitch,SCENE_BINDINGS.backSwitch,...SCENE_BINDINGS.petalGroups,...SCENE_BINDINGS.rings,...SCENE_BINDINGS.materials];
-  const h=Object.fromEntries(names.map(name=>[name,scene.getNamedNode(name)]));caches.set(scene,h);return h;
+    SCENE_BINDINGS.frontSwitch,SCENE_BINDINGS.backSwitch,...SCENE_BINDINGS.sparks,...SCENE_BINDINGS.chamberLights,...SCENE_BINDINGS.triangleLights,...SCENE_BINDINGS.petalGroups,...SCENE_BINDINGS.rings,...SCENE_BINDINGS.materials];
+  const h=Object.fromEntries(names.map(name=>{try{return [name,scene.getNamedNode(name)];}catch{return [name,null];}}));h.__last=new Map();caches.set(scene,h);return h;
 }
 export function applySceneState(scene,X3D,state={}){
   const h=handles(scene),time=Number.isFinite(state.time)?state.time:0,motion=clamp(state.motion??1);
@@ -233,5 +260,15 @@ export function applySceneState(scene,X3D,state={}){
   h.FiligreeRotor.rotation=rotation(-motion*beat*TAU/1024);
   SCENE_BINDINGS.rings.forEach((name,i)=>similarity(name,1+motion*(.003+i*.002)*Math.sin(beat*TAU/(8+i*4)+i)));
   h.SanctuaryStage.rotation=new X3D.SFRotation(1,0,0,clamp(state.tilt??0,-.7,.7));
-  return {beat,pulse,breath,frontOpacity:front,backOpacity:back,geometryMutated:false};
+  // Chamber and triangle lights: write a material only when its quantized
+  // intensity changes, so a quiet field costs no field events.
+  const lit=(name,c,v,peak)=>{const q=Math.round(clamp(v)*64);if(!h[name]||h.__last.get(name)===q)return;h.__last.set(name,q);const k=q/64;
+    h[name].emissiveColor=new X3D.SFColor(...c.map(x=>clamp(x*(.55+.75*k))));h[name].transparency=1-peak*k;};
+  const chambers=state.chamberLight,triangles=state.triangleLight,warm=mix(gold,[1,.95,.82],.45),ringTint=[mix(warm,[1,1,1],.4),mix(gold,primary,.35),mix([1,.55,.25],primary,.3),mix(primary,secondary,.4),mix(secondary,gold,.25)].map(c=>mix(c,[1,.84,.56],.45));
+  let litCount=0;
+  if(chambers)SCENE_BINDINGS.chamberLights.forEach((name,i)=>{const v=chambers[i]??0;if(v>.02)litCount++;lit(name,ringTint[state.chamberRings?.[i]??0],v,.86);});
+  if(triangles)SCENE_BINDINGS.triangleLights.forEach((name,i)=>lit(name,warm,triangles[i]??0,.95));
+  if(state.sparks)SCENE_BINDINGS.sparks.forEach((name,i)=>{const p=state.sparks[i];if(!p||!h[name])return;const key=p[2]>0?p.map(v=>v.toFixed(4)).join():'off';if(h.__last.get(name)===key)return;h.__last.set(name,key);
+    const k=Math.max(1e-4,p[2]);h[name].translation=vec(p[0],p[1],0);h[name].scale=vec(k,k,k);h[name].rotation=new X3D.SFRotation(.3,.5,.8,p[3]??0);});
+  return {beat,pulse,breath,frontOpacity:front,backOpacity:back,litChambers:litCount,geometryMutated:false};
 }

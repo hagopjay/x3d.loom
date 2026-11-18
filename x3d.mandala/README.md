@@ -4,6 +4,14 @@ A native X3D mandala and harmonic instrument built around a measured, concentric
 
 This is a separate application under `x3d.mandala/`. It translates the supplied Babylon mandala design into native X3D geometry, an auditable mathematical construction and optional Web Audio. It does not run a Babylon or Three scene behind an X3D export.
 
+## Edition 2.0 · The Chamber Harp
+
+Touch any of the 43 chambers and it rings, glows and lights the triangles that cover it. Mirror chambers share a pitch, and the scale rises toward the bindu. Keys **1–5** sound a whole ring. While the transport runs, light walks an inward spiral and sparks rise when it reaches the bindu. Halo bloom, gem sparks and a centred immersive view are new too. The canonical coordinates are unchanged and checked after every interaction. See [docs/CHAMBER-HARP.md](docs/CHAMBER-HARP.md) for the design and numbers, and [docs/HARP-GAPS.md](docs/HARP-GAPS.md) for what is still open.
+
+![Edition 2.0](docs/media/harp-2.0-strikes.png)
+
+Live frozen editions: [2.0.0](https://hagopjay.github.io/x3d.mathslab/yantra/releases/2.0.0/) and [1.0.0 as delivered](https://hagopjay.github.io/x3d.mathslab/yantra/releases/1.0.0/).
+
 ## Open the instrument
 
 The downloadable release ZIP includes `dist/Sri-Yantra-Resonance-Loom.html`: a standalone HTML containing the application, pinned X_ITE runtime, required assets and field guide. Generated `dist/` files are excluded from the source patch; in a source checkout, first run `node tools/build.mjs` to create them. Open it in a modern browser with WebGL 2. Audio starts only after **Awaken sound**. If local-file restrictions prevent it from opening, serve the application instead.
@@ -26,7 +34,9 @@ The source edition uses the vendored runtime and local files. The standalone is 
 | **Space** / **Resonance** | Add a shared-phase visual and musical accent |
 | **P** / transport button | Pause or resume the shared audiovisual transport |
 | **M** / **Sound** | Enable or mute optional sound |
-| **H** / **Immersive** | Hide or restore the interface |
+| **H** / **Immersive** | Hide or restore the interface; the yantra recentres |
+| **Touch a chamber** | Strike it: bell, light, covering triangles, sparks |
+| **1–5** | Strike a whole ring, bindu to outer ring |
 | **Escape** | Close the studio; modal dialogs retain normal browser Escape handling |
 | **Geometry witness** | Inspect numerical bounds, chamber counts and the actual native point-field audit |
 | **Stillness mode** | Hold layer motion while retaining gentle color and optional sound |

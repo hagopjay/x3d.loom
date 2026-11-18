@@ -36,6 +36,21 @@ The automated browser is Chromium 153.0.8010.0, locale `en-US`, with SwiftShader
 
 The sound check samples the native Web Audio graph. Playwright mutes hardware output, so this establishes synthesis and scheduling behavior rather than human listening quality, acoustic sound pressure or perceptual audio/display latency. An enabled audio context is the shared master clock; while muted the phase-continuous transport uses the performance clock. Rendering can lag a scheduled audio event by a browser frame or more. No fixed hardware frame-rate promise is made.
 
+## Edition 2.0 · Chamber Harp
+
+The 2.0 checks, numbers and their instruments are tabulated in [CHAMBER-HARP.md](CHAMBER-HARP.md#numbers-each-names-its-instrument). In short, on 18 Nov 2026 with Chromium 153.0.8010.12 (SwiftShader) the results were:
+
+- 25 of 25 Node tests and 5 of 5 Python tests passed.
+- The pinned x3d_mcp gate passed both the built scene (XSD 4.0) and the live browser export (XSD 4.1), with 0 errors and 0 warnings.
+- The upstream UI and audio witnesses passed again.
+- The new harp gate passed 22 of 22 checks, using real pointer clicks through the TouchSensor on the source page and the standalone.
+
+Receipts are `native-validation.json`, `browser-validation.json`, `audio-browser-validation.json` and `harp-browser-2.0.json`. The 1.0 receipts are kept in the git history (commit "Sri Yantra Resonance Loom 1.0 as delivered"). Bloom starts off on software renderers, so the audio witness measures the page without the frame copy. The harp gate switches bloom on and checks that the overlay carries the frame. Open gaps are in [HARP-GAPS.md](HARP-GAPS.md).
+
+```bash
+node tools/check_harp_browser.mjs --chromium /path/to/chrome   # needs Playwright importable from this folder
+```
+
 ## Reproduce
 
 From `x3d.mandala/`:

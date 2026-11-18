@@ -4,7 +4,7 @@
 const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const finite=(x,label)=>{if(typeof x!=='number'||!Number.isFinite(x))throw new TypeError(label+' must be finite.');return x;};
 const wallNow=()=>performance.now()/1000;
-export const AUDIO_LIMITS=Object.freeze({minBpm:24,maxBpm:100,minRootHz:55,maxRootHz:440,maxMasterGain:.22,maxPluckVoices:12,lookaheadSeconds:.12});
+export const AUDIO_LIMITS=Object.freeze({minBpm:24,maxBpm:100,minRootHz:55,maxRootHz:440,maxMasterGain:.22,maxPluckVoices:12,maxStrikeVoices:10,lookaheadSeconds:.12});
 
 export class PulseTransport {
   constructor({bpm=54,now=wallNow,paused=false}={}){
@@ -38,6 +38,7 @@ export class ResonanceAudio {
     this.context=null;this.muted=true;this.volume=.48;this.rootHz=110;this.disposed=false;
     this.texture={energy:.5,coherence:.7,pulse:0};this._voices=new Set();this._pads=[];
     this._timer=null;this._nextStep=null;this._lastTempo=transport.bpm;this._lastBeat=transport.beat();
+    this._strikes=new Set();this._struck=0;this.voicing='authored';this.chamberVoices=null;this.spiral=null;
     this._gate=false;this._scheduled=0;this._skipped=0;this._lastScheduledBeat=null;
   }
   async enable(){
@@ -62,6 +63,7 @@ export class ResonanceAudio {
     this.compressor.threshold.value=-15;this.compressor.knee.value=18;this.compressor.ratio.value=4;
     this.compressor.attack.value=.012;this.compressor.release.value=.22;
     this.master.connect(this.compressor).connect(c.destination);
+    if(c.createAnalyser){this.analyser=c.createAnalyser();this.analyser.fftSize=512;this.analyser.smoothingTimeConstant=.6;this.master.connect(this.analyser);this._levelBuffer=new Float32Array(this.analyser.fftSize);}
     this.dry=c.createGain();this.dry.gain.value=.76;this.filter.connect(this.dry).connect(this.master);
     this.delays=[];
     for(const [pan,division,feedback] of [[-.62,.75,.22],[.62,1.125,.18]]){
@@ -124,8 +126,9 @@ export class ResonanceAudio {
     if(this._voices.size>=AUDIO_LIMITS.maxPluckVoices){this._skipped++;return;}
     const c=this.context,ratios=[1,1.5,1.25,2,1.125,1.5,5/3,1.25],ratio=ratios[Math.floor(step/2)%ratios.length];
     const oscillator=c.createOscillator(),gain=c.createGain(),panner=c.createStereoPanner();
-    oscillator.type=step%4===0?'triangle':'sine';oscillator.frequency.value=this.rootHz*ratio*(step%8===0?1:2);
-    panner.pan.value=Math.sin(step*2.399963229728653)*.64;
+    const chamber=this.voicing==='chambers'&&this.spiral&&this.chamberVoices?this.chamberVoices[this.spiral[step%this.spiral.length]]:null;
+    oscillator.type=step%4===0?'triangle':'sine';oscillator.frequency.value=chamber?this.rootHz*2*chamber.ratio:this.rootHz*ratio*(step%8===0?1:2);
+    panner.pan.value=chamber?chamber.pan:Math.sin(step*2.399963229728653)*.64;
     const strength=(step%4===0?.075:.043)*(.6+this.texture.energy*.4)*(1+this.texture.pulse*.18),duration=step%4===0?1.45:.9;
     gain.gain.setValueAtTime(.00001,when);gain.gain.exponentialRampToValueAtTime(strength,when+.024);
     gain.gain.exponentialRampToValueAtTime(.00001,when+duration);
@@ -133,6 +136,28 @@ export class ResonanceAudio {
     const voice={oscillator,gain,panner,when,beat,cancelled:false};this._voices.add(voice);
     oscillator.onended=()=>{this._voices.delete(voice);oscillator.disconnect();gain.disconnect();panner.disconnect();};
     oscillator.start(when);oscillator.stop(when+duration+.04);this._scheduled++;this._lastScheduledBeat=beat;
+  }
+  // A struck chamber: a soft bell (fundamental plus the 2.756 inharmonic
+  // partial of a free plate), routed through the same filter, delays and
+  // reverb as the transport, and inside the same master-gain ceiling.
+  strike(hz,{pan=0,strength=1}={}){
+    if(!this.context||!this._gate)return false;
+    if(this._strikes.size>=AUDIO_LIMITS.maxStrikeVoices){this._skipped++;return false;}
+    const c=this.context,when=c.currentTime+.005,gain=c.createGain(),panner=c.createStereoPanner(),nodes=[];
+    const f=clamp(finite(hz,'Strike frequency'),40,4000),peak=.09*clamp(strength,0,1.5),duration=2.6;
+    panner.pan.value=clamp(pan,-1,1);
+    for(const [ratio,level] of [[1,1],[2.756,.22],[5.404,.06]]){const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f*ratio;g.gain.value=level;o.connect(g).connect(gain);nodes.push(o,g);}
+    gain.gain.setValueAtTime(.00001,when);gain.gain.exponentialRampToValueAtTime(peak,when+.008);gain.gain.exponentialRampToValueAtTime(.00001,when+duration);
+    gain.connect(panner).connect(this.input);
+    const voice={when,nodes,gain,panner};this._strikes.add(voice);
+    const head=nodes[0];head.onended=()=>{this._strikes.delete(voice);for(const n of nodes)n.disconnect();gain.disconnect();panner.disconnect();};
+    for(let i=0;i<nodes.length;i+=2){nodes[i].start(when);nodes[i].stop(when+duration+.05);}
+    this._struck++;return true;
+  }
+  level(){
+    if(!this.analyser||!this._gate)return 0;
+    this.analyser.getFloatTimeDomainData(this._levelBuffer);let sum=0;for(const v of this._levelBuffer)sum+=v*v;
+    return Math.sqrt(sum/this._levelBuffer.length);
   }
   tick(){
     if(!this.context||this.disposed)return;
@@ -157,7 +182,7 @@ export class ResonanceAudio {
   }
   stats(){return {enabled:!!this.context,muted:this.muted,contextState:this.context?.state??'not-created',transportState:this.transport.state,clock:this.transport.clock,
     bpm:this.transport.bpm,rootHz:this.rootHz,volume:this.volume,maxMasterGain:AUDIO_LIMITS.maxMasterGain,
-    activeVoices:this._voices.size,scheduledNotes:this._scheduled,skippedSubdivisions:this._skipped,lastScheduledBeat:this._lastScheduledBeat,disposed:this.disposed};}
+    activeVoices:this._voices.size,strikeVoices:this._strikes.size,struckNotes:this._struck,voicing:this.voicing,scheduledNotes:this._scheduled,skippedSubdivisions:this._skipped,lastScheduledBeat:this._lastScheduledBeat,disposed:this.disposed};}
   async dispose(){
     if(this.disposed)return;this.disposed=true;
     if(this._timer){clearInterval(this._timer);this._timer=null;}
@@ -165,6 +190,7 @@ export class ResonanceAudio {
     if(this.context){
       const now=this.context.currentTime;this.master.gain.cancelScheduledValues(now);this.master.gain.setValueAtTime(0,now);
       for(const voice of this._voices){try{voice.oscillator.stop(now);}catch{}}
+      for(const s of this._strikes)for(let i=0;i<s.nodes.length;i+=2){try{s.nodes[i].stop(now);}catch{}}
       for(const pad of this._pads){try{pad.oscillator.stop(now);}catch{}}
       await this.context.close();this._voices.clear();
     }
