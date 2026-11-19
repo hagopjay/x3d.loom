@@ -17,6 +17,8 @@ DEFAULT_FORK = Path(os.environ.get("LOOM_FORK", str(Path.home() / "Projects/x3d/
 _CHILD = r"""
 import json, sys
 sys.path.insert(0, sys.argv[1])
+# the fork (39c6e94 on) imports its own packages as top-level "validation": its src folder must be on the path too
+sys.path.insert(1, sys.argv[1] + "/src")
 from src.validation.validate import validate_xml
 from src.validation.semantic import semantic_diagnostics
 out = {}
