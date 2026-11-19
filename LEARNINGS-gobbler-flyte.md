@@ -57,3 +57,15 @@ He sent an outside "X3D Agentic Flywheels" package (LangGraph, 33 tests, a memor
 | 15 | **The inner loop already makes lawful twins.** A refusal followed by an admission in the same cycle is the pair (counterexample, lawful twin) that the package's transport schema has a slot for. Gobbler.flyte exports them as v1 transport records: 44 records, 0 schema errors, ids verify with the package's own builder. | C | `transport.py`, `runs/sim-2026-11-18-r3/memory-transport-validation.json` | Export refusals with the fix that followed; a refusal alone teaches less. |
 
 Not adopted: the package's 17 prompts (other lanes), its mandatory review step (conflicts with the 4 h timeout rule) and its tenancy, Neo4j and LangChain layers (single tenant, no server). Its ranking is lexical only. Honest scale: the simulated day has only 3 distinct counterexamples, because scripted replies repeat.
+
+## 6. The Assayer: AI engineering theses as running checks (19 Nov, x3d.gobbler PR #4)
+
+He supplied the AI Engineering Atlas (an agent-written catalogue of Chip Huyen's *AI Engineering* and the aie-book repo; rev 28, 13 theses) as the content for an AI Engineering agent. In Gobbler.flyte that agent is a fifth organ that tests every cycle against the theses.
+
+| # | Finding | Grade | Evidence | Rule it suggests |
+|---|---|---|---|---|
+| 16 | **A thesis is only useful as a check that can fail.** 9 of the 13 theses became per-cycle checks, 1 became a daily report and 1 a halt rule. 2 (judge validity, swarms) have no subject in the loop yet and are listed as untested rather than passed. | C | `flyte/organs/assayer.py`, `ATLAS-MAP.md` | Map each rule to an instrument, or write down why it cannot be tested yet. |
+| 17 | **A canary must fail on its own mistakes.** The first "known-bad" canary fragment was admitted by the gate, so the canary reported not held instead of passing quietly. | C | `Assayer.test_canary_holds_on_the_pinned_instruments` | Feed graders fixed known-bad and known-good bytes daily, and check the exact refusal codes, not just "failed". |
+| 18 | **Judge the fetch, not the link.** An egress check that also judged an item's own http link stopped the simulated day at cycle 19, which halved admissions (18 instead of 35). Scout had fetched from the configured https API; the link is data. | C | sim r4 vs the stopped run; DESIGN §16 | Egress is where the agent fetched from. Links inside fetched data are untrusted text. |
+| 19 | **Read outcomes from the system of record.** The Assayer checks every turn against the world store by its operation key. A turn whose hash disagrees, or a world entry with no turn, stops the line. | C | `Assayer.test_state_of_record_catches_a_turn_that_lies` | Never let an organ's own report stand as the outcome. |
+| 20 | **Keep knowledge apart from experience.** The Atlas lives in a separate library store that only the Assayer reads, so 400-odd library rows never crowd the generator's context. | C | `Assayer.test_library_seed_is_idempotent_cited_and_hidden_from_weaver` | One store per ontology; readers decide who sees what. |
