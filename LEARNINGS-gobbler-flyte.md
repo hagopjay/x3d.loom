@@ -69,3 +69,17 @@ He supplied the AI Engineering Atlas (an agent-written catalogue of Chip Huyen's
 | 18 | **Judge the fetch, not the link.** An egress check that also judged an item's own http link stopped the simulated day at cycle 19, which halved admissions (18 instead of 35). Scout had fetched from the configured https API; the link is data. | C | sim r4 vs the stopped run; DESIGN §16 | Egress is where the agent fetched from. Links inside fetched data are untrusted text. |
 | 19 | **Read outcomes from the system of record.** The Assayer checks every turn against the world store by its operation key. A turn whose hash disagrees, or a world entry with no turn, stops the line. | C | `Assayer.test_state_of_record_catches_a_turn_that_lies` | Never let an organ's own report stand as the outcome. |
 | 20 | **Keep knowledge apart from experience.** The Atlas lives in a separate library store that only the Assayer reads, so 400-odd library rows never crowd the generator's context. | C | `Assayer.test_library_seed_is_idempotent_cited_and_hidden_from_weaver` | One store per ontology; readers decide who sees what. |
+
+## 7. Second external review: what an adversary found (19 Nov, x3d.gobbler PR #5)
+
+We sent the reviewer a prompt that named our own weak spots. The reply had 26 findings, each with a probe that fails at baseline. This thread re-ran all 26 on its own host, and they held 26 of 26 (`receipts/review2-reproduction.json`).
+
+| # | Finding | Grade | Rule it suggests |
+|---|---|---|---|
+| 21 | **The prompt is the boundary, not the context packet.** The compiler excluded a sealed refusal correctly, but the immediate retry text carried the same validator message straight back in. | C | Every path that adds text to a prompt goes through one admission function, and the final prompt is hash-bound. |
+| 22 | **A validator can echo the model.** A gate error repeated an instruction-shaped node name from the fragment, and it reached a later prompt raw. A zero-width character also hid a keyword during lint, and normalization rebuilt it afterwards. | C | Treat diagnostics as model-origin text: quote or withhold them, and lint after normalization. |
+| 23 | **Delete a checkpoint only after the scheduler has saved.** A crash in between wedged the next tick (KeyError). | C | Make the terminal state durable, then clean up. |
+| 24 | **Silence during a stop is not consent.** A cleared long stop let overdue questions take the timeout pick at once. | C | Pause the clocks while the line is stopped, and reopen a full response window. |
+| 25 | **A green transport can still lie.** Catalogue rows exported as executed C failures, and a tampered hash validated after silent repair. | C | Export conservatively, check supplied hashes as given, and say `restorable: false` until the references resolve. |
+| 26 | **Check that CI runs every test.** 21 of 94 tests were pytest functions, and `unittest discover` skipped them silently. | C | Run the suite the tests were written for, and compare the counts. |
+| 27 | **Name the estimand.** "pass@1 0.574" was 35/61 adaptive attempts; first-attempt task admission is 18/35. A combination ratio over different tasks is not pass^k. | C | Write the denominator into the field name; leave same-signal reliability null until it is measured. |
