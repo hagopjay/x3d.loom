@@ -56,7 +56,7 @@ def build(subject: str, candidate_root: Path | str, evidence_dir: Path | str, pr
         instrument = record.get("instrument") if isinstance(record.get("instrument"), dict) else {}
         rows.append({"witness": name, "verdict": "refused", "failure_class": code, "detail": detail,
                      "status": record.get("status"), "grade": record.get("grade"), "reason": record.get("reason") or None,
-                     "instrument": {k: instrument[k] for k in ("tool", "commit", "rules_sha256") if k in instrument},
+                     "instrument": {k: instrument[k] for k in ("tool", "commit", "rules_sha256", "kit_sha256", "kit_commit", "kit_dirty") if k in instrument},
                      "locus": _locus(record),
                      "record_sha256": sha256_file(path) if path.is_file() else None})
     refused = [r for r in rows if r["verdict"] == "refused"]

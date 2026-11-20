@@ -2,7 +2,7 @@
 
 Source: the second ontology engineering review of 20 Nov 2026 (25 ranked findings, F1 to F25). This file records what each fix did when it was built, with the instrument behind every number. Grades: **Confirmed** (measured here), **Likely**, **Suspected**.
 
-Instruments unless a row says otherwise: x3d_mcp fork PR #28 (commits 02b02b1 and 10c5540 on main 39c6e94), XSD 4.1 and X3DUOM 4.1 as bundled there, rdflib 7.6.0, pyshacl 0.40.2, Python 3.13.18; x3d.loom main a8cd55e, Node v22, sharp 0.35.5; a container with no GPU.
+Instruments unless a row says otherwise: x3d_mcp fork PR #28 (merged as bbd773f) and PR #29 (commits fab568c and 935b72b), XSD 4.1 and X3DUOM 4.1 as bundled there, rdflib 7.6.0, pyshacl 0.40.2, Python 3.13.18; x3d.loom main a8cd55e, Node v22, sharp 0.35.5; a container with no GPU.
 
 ## F1. An SFNode field held two nodes and nothing said so
 
@@ -75,6 +75,41 @@ Rule: **a grade scale has one axis.** The Giza atlas mixed evidence strength (Co
 
 Limit: the demo files are unchanged, because a demo version is never overwritten. Each demo should write through this shape in its next version. The other 10 space-holding ids sit on lesson nodes, not claims.
 
+## F5 to F7. The SPARQL tools: memory, and what "stable" means (x3d_mcp #29)
+
+| Measurement | Before | After | Grade |
+|---|---|---|---|
+| 872-character query, 26 string doublings | passes the guard, builds 1 GiB in 3.3 s | stopped in 0.82 s by a cap on the worker's address space (default 1024 MB above the server's size at the fork) | Confirmed, Linux |
+| ORDER BY inside a subquery | outer rows unsorted, labelled `order: "query"`; 3 hash seeds gave 3 row orders | only the outermost modifiers are read; same hash on 3 seeds | Confirmed |
+| LIMIT 5 with no ORDER BY | 3 seeds gave 3 different row sets behind a hash that looked reproducible | answered with `stable: false` and a warning | Confirmed |
+
+Rule: **a sorted page is not a repeatable page.** Sorting fixes the order of the rows that came back, not which rows came back. Any tool that hashes a page must know whether membership was cut before the sort. Limit: the cap needs `/proc` and `RLIMIT_AS`; on the owner's Windows PC the deadline is still the only bound, and concurrent workers are not capped.
+
+## F15. The gate that answered from one source (x3d_mcp #29)
+
+`where_can_place` read the X3DUOM alone. Of its 6,509 rows for X3D 4.1 the XSD accepts 4,879, rejects 740 (11.4%) and 890 are inconclusive (`verified-containment.json`, built from the XSD by `evaluation/build_verified_containment.py`). Each row now carries the verdict, and `verified_only` keeps the accepted ones. Rule: **when two normative sources disagree, show both verdicts on the row; do not pick one silently.**
+
+## F23. Latitude 137 (x3d_mcp #29)
+
+New check `geo-coordinate-range`: 5 of 5 planted faults caught, 5 of 5 legal controls quiet, 0 flagged in 2,214 distinct `.x3d` files from the project repositories. Limit: a swap where both numbers are under 90 cannot be seen by a range test, and the corpus holds no real out-of-range value, so there is no field catch yet (Confirmed for the counts).
+
+## F18. The glTF semantic spec said "any host"
+
+Measured on `formats/gltf/semantic/fixtures/metadata-host-probe.x3d`: Metadata on Material, WorldInfo and TimeSensor does not travel (3 of 5 trees, 3 of 6 nodes), because those hosts are not glTF nodes. S1 and S2 fail, so the loss is reported. SPEC section 5 now lists the hosts that travel, and the probe is a test. Not built: carrying Metadata for non-node hosts (it would need material-level and asset-level packets).
+
+## F20. Witness runs that named no version
+
+78 of 116 witness runs named a tool with no version. `write_witness` now stamps every record with `kit_sha256` (sha256 over loomkit's own source files), `kit_commit` and `kit_dirty`; receipts and rejections copy them. Existing receipts are not rewritten, so the 78 stay as they are and the figure only improves with new runs.
+
+## Closed without a build, and why
+
+| Finding | Decision | Reason |
+|---|---|---|
+| F16 ontology IRIs change with every release (0 of 2,469 subject IRIs shared between 4.0 and 4.1) | no new code | x3d_mcp already writes its shapes against 4.1 only and maps versions in one place; the stable-IRI question belongs to the ontology's publisher |
+| F17 no Turtle to X3D converter | do not build | XML stays the master and RDF a derived view; a general reverse converter would make two sources of truth |
+| F19 Blender round-trip audit skips Metadata | deferred | graded Likely from a code read; Blender is not on this machine, so a fix could not be verified. It belongs to the Blender lane |
+| F21 render-and-score ran on 2 of 25 artifact receipts | deferred | large; the glTF harness is the model to port to X3D subjects |
+
 ## What carries over
 
 | Rule | From |
@@ -85,3 +120,7 @@ Limit: the demo files are unchanged, because a demo version is never overwritten
 | A fail without a class, a place and a rule link is not data | F4 |
 | One grade axis, one verdict axis; refuse a value on no known scale | F8 |
 | Hash the claim where it is written, and list every id repair | F9 |
+| A sorted page is not a repeatable page: know whether membership was cut | F6 |
+| Two normative sources that disagree both go on the row | F15 |
+| A spec line about coverage needs a fixture that measures it | F18 |
+| Stamp the instrument's own content hash into every record | F20 |

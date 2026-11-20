@@ -50,6 +50,17 @@ class Rules(unittest.TestCase):
         for f in (TWIN, GIZA):
             self.assertTrue(all(run(f).values()), f)
 
+    def test_metadata_on_a_host_that_is_no_gltf_node_is_lost_and_reported(self):
+        # review 20 Nov 2026: the spec said "any host". Material, WorldInfo and TimeSensor are not glTF nodes, so their
+        # Metadata does not travel. What matters is that the witness says so: S1 and S2 fail, the rest hold.
+        probe = Path(__file__).resolve().parent / "fixtures" / "metadata-host-probe.x3d"
+        a = x3dsem.semantics(probe)
+        d = Path(tempfile.mkdtemp())
+        x3dsem.x3d_to_gltf(probe, d / "a.gltf"); x3dsem.gltf_to_x3d(d / "a.gltf", d / "a.back.x3d")
+        rs = {r["id"]: r for r in x3dsem.rules(a, x3dsem.semantics(d / "a.back.x3d"), json.loads((d / "a.gltf").read_text()))}
+        self.assertEqual({k: v["pass"] for k, v in rs.items()}, {"S0": True, "S1": False, "S2": False, "S3": True, "S4": True, "S5": True, "S6": True})
+        self.assertEqual((rs["S1"]["expected"], rs["S1"]["got"], rs["S2"]["expected"], rs["S2"]["got"]), (5, 2, 6, 3))
+
     def test_twin_has_24_ifc_ids(self):
         ifc = [n for n in find(json.loads(json.dumps(x3dsem.semantics(TWIN)["hosts"])), lambda n: n.get("name") == "GlobalId")]
         self.assertEqual(len(ifc), 24)

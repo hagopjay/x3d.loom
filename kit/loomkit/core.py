@@ -124,6 +124,34 @@ def contained(base: Path | str, rel) -> Path:
     return p
 
 
+_KIT_STAMP: dict | None = None
+
+
+def kit_stamp() -> dict:
+    """Which loomkit spoke: sha256 over its own source files (always), and the git commit when the kit sits in a
+    checkout (review 20 Nov 2026: 78 of 116 witness runs named a tool with no version). The content hash is the
+    exact one; the commit is a convenience and is None for a copied kit. `kit_dirty` is True when the kit folder has
+    uncommitted changes, so a commit is never claimed for code that differs from it."""
+    global _KIT_STAMP
+    if _KIT_STAMP is None:
+        import subprocess
+        pkg = Path(__file__).resolve().parent
+        h = hashlib.sha256()
+        for f in sorted(pkg.glob("*.py")):
+            h.update(f.name.encode() + b"\0" + f.read_bytes() + b"\0")
+        commit = dirty = None
+        try:
+            r = subprocess.run(["git", "-C", str(pkg), "rev-parse", "HEAD"], capture_output=True, text=True, timeout=10)
+            if r.returncode == 0:
+                commit = r.stdout.strip()
+                s = subprocess.run(["git", "-C", str(pkg), "status", "--porcelain", "--", "."], capture_output=True, text=True, timeout=10)
+                dirty = bool(s.stdout.strip()) if s.returncode == 0 else None
+        except (OSError, subprocess.SubprocessError):
+            pass
+        _KIT_STAMP = {"kit_sha256": h.hexdigest(), "kit_commit": commit, "kit_dirty": dirty}
+    return dict(_KIT_STAMP)
+
+
 def write_witness(
     evidence_dir: Path | str,
     candidate_root: Path | str,
@@ -159,7 +187,7 @@ def write_witness(
         "grade": grade,
         "origin": origin,
         "subject_sha256": subject_sha256,
-        "instrument": instrument,
+        "instrument": {**kit_stamp(), **instrument},
         "measurements": measurements or {},
         "coverage": coverage or {},
         "limitations": limitations or [],

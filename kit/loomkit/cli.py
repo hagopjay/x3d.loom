@@ -422,7 +422,7 @@ def cmd_receipt(a) -> dict:
     tools = {}
     for row in result["witnesses"]:
         rec = json.loads((Path(a.evidence) / f"{row['witness']}.json").read_text())
-        tools[row["witness"]] = {k: rec["instrument"][k] for k in ("tool", "commit") if k in rec["instrument"]}
+        tools[row["witness"]] = {k: rec["instrument"][k] for k in ("tool", "commit", "rules_sha256", "kit_sha256", "kit_commit", "kit_dirty") if k in rec["instrument"]}
     r = receipt.build(a.subject, result, cand["files"], [Path(o) for o in a.outputs], tools,
                       inputs={"candidate_sha256": cand["sha256"], "profile_sha256": profile_sha},
                       not_run=visible, model_calls=[],

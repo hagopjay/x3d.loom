@@ -69,7 +69,7 @@ Verdict thresholds v0 (hand-set, not calibrated; **Suspected** until a calibrati
 
 | X3D | glTF | Notes |
 |---|---|---|
-| any `Metadata*` node on any host (Transform, Group, HAnim*, Shape, ...) | `KHR_xmp_json_ld` packet on the host's glTF node | Shape metadata goes on the node that carries the mesh |
+| a `Metadata*` node whose host becomes a glTF node: Transform, Group, HAnim*, Collision, Anchor, Billboard, LOD, Switch, GeoLocation, Shape | `KHR_xmp_json_ld` packet on the host's glTF node | Shape metadata goes on the node that carries the mesh. **Metadata on any other host is not carried** (Material, Appearance, WorldInfo, sensors, interpolators, lights, viewpoints): measured on `semantic/fixtures/metadata-host-probe.x3d`, 3 of 5 trees and 3 of 6 nodes are dropped. The loss is not silent: S1 and S2 fail and the verdict is `fail` |
 | MetadataSet / String / Double / Float / Integer / Boolean | JSON-LD `@type x3d:Metadata*`, `x3d:name`, `x3d:reference`, `x3d:value {"@list": [...]}` (ordered), nested sets, metadata-on-metadata | `@list` because JSON-LD arrays are unordered |
 | `reference` = CIDOC-CRM class IRI | kept verbatim + `@type crm:E22...` | queryable without knowing X3D |
 | MetadataSet `IFC` with `GlobalId`, `IfcClass` | kept verbatim + `loom:ifcGlobalId`, `@type ifc:IfcBeam` | |
