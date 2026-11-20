@@ -171,6 +171,7 @@ PAGE_CASES = {
     "loadurl-unbudgeted": CLEAN_PAGE.replace(_LOAD, "  await B.load" + "URL(u);\n"),
     "js-syntax": CLEAN_PAGE.replace("console.error(e); } });", "console.error(e); } }););"),
     "sim-nonportable-math": "// loom" + ":sim\n" + CLEAN_PAGE.replace("const t = B.getCurrentTime();", "const t = Math." + "sin(B.getCurrentTime());"),
+    "xite-update-auto-resume": CLEAN_PAGE.replace("const t = B.getCurrentTime();", "const t = B.getCurrentTime();\n  canvas.setAttribute(\"update\", \"false\");\n  canvas.setAttribute(\"upd" + "ate\", \"auto\");"),
     "anchor-download-hosted": CLEAN_PAGE.replace("const t = B.getCurrentTime();", "const t = B.getCurrentTime();\n  const a = document.createElement('a'); a.href = url; a." + "download = 'still.png'; a.click();"),
 }
 
