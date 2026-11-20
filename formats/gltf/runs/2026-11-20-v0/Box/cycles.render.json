@@ -1,0 +1,51 @@
+{
+  "engine": {
+    "name": "Blender Cycles",
+    "id": "cycles",
+    "version": "5.3.0",
+    "build_hash": "02f0899d78e3"
+  },
+  "host": {
+    "kind": "native",
+    "name": "bpy wheel (Blender as a Python module)",
+    "python": "3.13.18"
+  },
+  "gpu": {
+    "api": "none (Cycles CPU)",
+    "adapter": "CPU",
+    "backend": "Cycles CPU",
+    "device_type": "Cpu",
+    "driver": null,
+    "driver_info": null
+  },
+  "settings": {
+    "samples": 64,
+    "denoise": "OpenImageDenoise",
+    "seed": 0,
+    "view_transform": "Standard",
+    "light_import_mode": "COMPAT",
+    "sun_angle": 0.0,
+    "world_strength": 0.0,
+    "film_transparent": true,
+    "composite": "straight alpha over #20242c in display space"
+  },
+  "lights": [
+    {
+      "name": "loom-key",
+      "type": "SUN",
+      "energy": 2.5
+    }
+  ],
+  "camera": {
+    "name": "loom-camera",
+    "angle_y": 0.7853999733924866
+  },
+  "timing": {
+    "import_s": 0.09,
+    "render_s": 6.09
+  },
+  "png_sha256": "8607436f1ec8db022e829cbe2c320d5caada3f69acc0270bff0c54bda3402815",
+  "notes": [
+    "path tracer: shadows and inter-reflection are present; raster engines in this run draw no shadows"
+  ]
+}

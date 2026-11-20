@@ -1,0 +1,91 @@
+{
+  "schema": "loom.semantic/1",
+  "converter": "loom-gltf x3dsem 0.1.0",
+  "source": {
+    "file": "giza-provenance-twin.x3d",
+    "sha256": "831a19670ded75fa4d8f781d2bc7fda45d111792d74e18cae256856547501963"
+  },
+  "gltf": {
+    "file": "giza-provenance-twin.gltf",
+    "sha256": "5a8386299072652ce58c06463b5978b683a212dfba651a9437c280d6b1ce9459",
+    "packets": 5,
+    "nodes": 12,
+    "meshes": 4
+  },
+  "back": {
+    "file": "giza-provenance-twin.back.x3d",
+    "sha256": "361a6399267d3367c4dea409590cfc5d08e5496c91fc38f556b6ed3cfb8a69f8"
+  },
+  "hosts": 4,
+  "metadata_nodes": 66,
+  "conversion": {
+    "converted": {
+      "GeoLocation": 4,
+      "Transform": 4,
+      "IndexedFaceSet": 4,
+      "Shape": 4
+    },
+    "skipped": {
+      "NavigationInfo": 1,
+      "Background": 1,
+      "DirectionalLight": 1,
+      "GeoViewpoint": 1,
+      "TouchSensor": 4
+    },
+    "use_copies": 0
+  },
+  "rules": [
+    {
+      "id": "S0",
+      "rule": "KHR_xmp_json_ld structure: declared in extensionsUsed, every packet has @context, every reference is in range (the Khronos validator 2.0.0-dev.3.10 does not check this extension)",
+      "packets": 5,
+      "references": 5,
+      "bad": 0,
+      "pass": true
+    },
+    {
+      "id": "S1",
+      "rule": "every Metadata tree returns X3D -> glTF -> X3D on the same host type and DEF, in document order, value for value",
+      "expected": 4,
+      "got": 4,
+      "missing": 0,
+      "pass": true
+    },
+    {
+      "id": "S2",
+      "rule": "Metadata node count is unchanged (no node dropped, none invented)",
+      "expected": 66,
+      "got": 66,
+      "pass": true
+    },
+    {
+      "id": "S3",
+      "rule": "every IFC GlobalId survives once per element, is queryable in the glTF JSON-LD (loom:ifcGlobalId), and its host Shape keeps the same triangle count",
+      "expected": 0,
+      "got": 0,
+      "queryable_in_gltf": 0,
+      "pass": true
+    },
+    {
+      "id": "S4",
+      "rule": "every CIDOC-CRM class reference survives and is typed in JSON-LD (@type crm:E..)",
+      "expected": 9,
+      "got": 9,
+      "typed_in_gltf": 9,
+      "pass": true
+    },
+    {
+      "id": "S5",
+      "rule": "<head> meta list survives in order",
+      "expected": 3,
+      "got": 3,
+      "pass": true
+    },
+    {
+      "id": "S6",
+      "rule": "glTF asset packet carries PROV-O: prov:wasDerivedFrom = sha256 of the source X3D, prov:wasGeneratedBy = the converter",
+      "pass": true
+    }
+  ],
+  "verdict": "pass"
+}
