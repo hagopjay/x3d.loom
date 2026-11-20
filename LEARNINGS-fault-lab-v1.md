@@ -55,3 +55,33 @@ All rows are Confirmed on the rig named; the faults are our own, so rates descri
 - A second-source check for coordinates (gazetteer or the twin's own record) to close the Giza swap.
 - Run the same ten faults through other X3D to glTF and X3D to USD converters; the erased/carried split is a property of
   the converter, and only x3dsem 0.1.0 and the lab's own USD writer were measured.
+
+## Update, same day: the Blender gap is closed (Fault Lab v2, x3d-blender-io #70)
+
+| Blender row (3 trees, 6 Metadata nodes) | add-on 1040830 | add-on f68adbd |
+|---|---|---|
+| Held after Import | 0 trees | 3 trees |
+| Blender to X3D 4.0 | 0 of 6 | 6 of 6, value for value (x3dsem); XSD valid, 0 semantic errors (x3d_mcp 8205047) |
+| Blender to glTF, extras on | 0 of 6 | 6 of 6 as plain extras (node, material, scene) |
+| Blender to USD | 0 of 6 | 0 of 6 |
+
+Rig: Blender 5.3.0 bpy wheel. Add-on suite 918 tests, 0 failures. Item 6 above is now history.
+
+What carries over:
+
+8. **Give meaning a home on the thing that stands for its host, and a ledger for the rest.** A Transform's tree rides on
+   the object that owns that Transform, a material's on the material. A host with no counterpart (a Group, a Viewpoint)
+   goes on a scene-level list and the export names each one it could not write. "Kept but not written, and said so" is
+   a different grade from "dropped".
+9. **Carried is not the same as findable.** Blender's glTF exporter now carries all 6 nodes, but as extras in the
+   importer's own nested shape. A JSON-LD tool sees nothing. The Loom glTF profile should accept such extras as input
+   and lift them into KHR_xmp_json_ld packets.
+10. **Blender's USD exporter writes only simple custom properties.** Nested trees vanish. A USD leg from Blender needs
+    the tree flattened to a string property or an export hook.
+
+Two more rig traps, both found because a screenshot looked wrong:
+
+- A test server that sends `x_ite.css` as `application/octet-stream` makes X_ITE draw nothing, with no console error.
+  Serve `text/css`.
+- "The canvas has more than N colours" passed on a black canvas because a caption with anti-aliased text sat over it.
+  Count colours only where the scene is drawn, and look at one screenshot by eye before trusting the count.
