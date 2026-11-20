@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0">
+ <head>
+  <component name="Geospatial" level="1" />
+  <meta name="title" content="Burruss Drillfield with reconciled elevation and an IFC footprint marker (heritage-geo v3)" />
+  <meta name="attribution" content="Imagery and data: Google (Drillfield world, academic proof of concept only)" />
+ </head>
+ <Scene>
+  <Group DEF="gl_drillfield">
+   <Transform DEF="t_drillfield" />
+  </Group>
+  <Group DEF="gl_ifc_marker">
+   <Transform DEF="t_ifc">
+    <MetadataSet name="ifc_placement" containerField="metadata">
+     <MetadataString name="label" containerField="value" value="&quot;Illustrative marker: footprint of the Confluence IFC gallery pavilion, not Burruss Hall and not a real site&quot;" />
+     <MetadataString name="ifc_source" containerField="value" value="&quot;docs/demos/confluence-ifc/v1/snapshot/model.ifc sha256 32dc72111d14d91964ba523f8f04ef65e0b6909fd161d5e068ab0cfb5ceef0fb&quot;" />
+     <MetadataString name="ifc_project_globalid" containerField="value" value="&quot;0mF5c0HZTIqPqOOn9j7JEG&quot;" />
+     <MetadataString name="crs" containerField="value" value="&quot;EPSG:32617 UTM 17N (proposed IfcProjectedCRS)&quot;" />
+     <MetadataString name="eastings_m" containerField="value" value="&quot;551240.049&quot;" />
+     <MetadataString name="northings_m" containerField="value" value="&quot;4120366.277&quot;" />
+     <MetadataString name="orthogonal_height_m" containerField="value" value="&quot;621.900&quot;" />
+     <MetadataString name="grade" containerField="value" value="&quot;S: placement is authored here; the IFC file carries no IfcMapConversion&quot;" />
+    </MetadataSet>
+    <Shape>
+     <Appearance>
+      <PhysicalMaterial baseColor="0.85 0.35 0.25" metallic="0.0" roughness="1.0" transparency="0.35" />
+     </Appearance>
+     <IndexedTriangleSet solid="false" index="0 1 3 0 3 2 4 6 7 4 7 5 0 4 5 0 5 1 2 3 7 2 7 6 0 2 6 0 6 4 1 5 7 1 7 3">
+      <Coordinate point="-12.0 -2.200000047683716 -8.0 -12.0 -2.200000047683716 8.0 -12.0 2.200000047683716 -8.0 -12.0 2.200000047683716 8.0 12.0 -2.200000047683716 -8.0 12.0 -2.200000047683716 8.0 12.0 2.200000047683716 -8.0 12.0 2.200000047683716 8.0" />
+     </IndexedTriangleSet>
+    </Shape>
+   </Transform>
+  </Group>
+ </Scene>
+</X3D>

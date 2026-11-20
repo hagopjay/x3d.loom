@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "loom.render-receipt/1",
+  "title": "Loom render receipt v1 (format-agnostic: X3D, glTF, any scene format)",
+  "description": "One receipt per subject file per run. Shared by the X3D Loom, the glTF Loom and x3d.wgpu (its x3d-wgpu-conformance/1 'adapter' block is this schema's 'gpu' block). Unrun witnesses stay visible with status not_run and a reason. Unsigned: sha256 shows drift, it does not prove authorship.",
+  "type": "object",
+  "required": ["schema", "format", "subject", "gate", "harness", "reference", "runs", "verdict", "host_machine", "written_at", "sha256"],
+  "properties": {
+    "schema": { "const": "loom.render-receipt/1" },
+    "format": {
+      "type": "object", "required": ["name", "version", "correct_is_pinned_by"],
+      "properties": {
+        "name": { "enum": ["gltf", "x3d"] },
+        "version": { "type": "string" },
+        "correct_is_pinned_by": { "type": "string", "description": "the normative text that defines the right picture (e.g. 'glTF 2.0 Appendix B BRDF + KHR_lights_punctual' or 'ISO/IEC 19775-1:2023 lighting model')" }
+      }
+    },
+    "subject": {
+      "type": "object", "required": ["id", "file", "bytes", "sha256"],
+      "properties": {
+        "id": { "type": "string" }, "file": { "type": "string" }, "bytes": { "type": "integer" }, "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "corpus": { "type": "object", "properties": { "name": { "type": "string" }, "repo": { "type": "string" }, "commit": { "type": "string" }, "path": { "type": "string" } } }
+      }
+    },
+    "gate": {
+      "type": "object", "required": ["validator", "verdict", "counts"],
+      "properties": {
+        "validator": { "type": "object", "required": ["name", "version"], "properties": { "name": { "type": "string" }, "version": { "type": "string" }, "commit": { "type": ["string", "null"] } } },
+        "verdict": { "enum": ["pass", "fail"] },
+        "counts": { "type": "object", "required": ["errors", "warnings", "infos", "hints"], "properties": { "errors": { "type": "integer" }, "warnings": { "type": "integer" }, "infos": { "type": "integer" }, "hints": { "type": "integer" } } },
+        "issues": { "type": "array" },
+        "harnessed_counts": { "type": ["object", "null"] }
+      }
+    },
+    "harness": { "type": "object", "description": "what was added to the subject so every renderer sees the same camera and light" },
+    "reference": {
+      "type": "object", "required": ["engine_id", "kind", "why"],
+      "properties": { "engine_id": { "type": "string" }, "kind": { "enum": ["spec-reference-renderer", "path-traced", "measured-table"] }, "why": { "type": "string" }, "png_sha256": { "type": ["string", "null"] } }
+    },
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["engine", "status"],
+        "properties": {
+          "engine": { "type": "object", "required": ["id", "name", "version"], "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "version": { "type": ["string", "null"] } } },
+          "status": { "enum": ["pass", "warn", "fail", "error", "not_run", "reference"] },
+          "reason": { "type": ["string", "null"] },
+          "host": { "type": ["object", "null"], "properties": { "kind": { "enum": ["browser", "native"] }, "name": { "type": "string" }, "version": { "type": ["string", "null"] }, "user_agent": { "type": ["string", "null"] } } },
+          "gpu": {
+            "type": ["object", "null"], "description": "same field names as x3d-wgpu-conformance/1 'adapter' (wgpu AdapterInfo), plus api",
+            "properties": { "api": { "type": "string" }, "adapter": { "type": ["string", "null"] }, "backend": { "type": ["string", "null"] }, "device_type": { "type": ["string", "null"] }, "driver": { "type": ["string", "null"] }, "driver_info": { "type": ["string", "null"] } }
+          },
+          "api_validation": {
+            "type": ["object", "null"], "description": "graphics-API validation layer result; field names are x3d.wgpu docs/RECEIPT-SCHEMA.md (x3d-wgpu-conformance/2, main) one for one. Vulkan: layer VK_LAYER_KHRONOS_validation. WebGL: layer null, errors = GL errors seen on the console.",
+            "properties": { "layer": { "type": ["string", "null"] }, "layer_version": { "type": ["string", "null"] }, "layer_version_source": { "type": ["string", "null"] },
+              "mode": { "type": "string", "description": "x3d.wgpu X3D_VVL: Off | On | Require" }, "requested": { "type": "boolean" }, "enabled": { "type": "boolean" },
+              "errors": { "type": ["integer", "null"] }, "unexpected_errors": { "type": ["integer", "null"] }, "warnings": { "type": ["integer", "null"] },
+              "message_ids": { "type": "array", "items": { "type": "string" } }, "messages": { "type": "array" }, "known_errors": { "type": "array" }, "suppressed_by_engine": { "type": "array" },
+              "log_sha256": { "type": ["string", "null"] }, "attribution": { "type": ["string", "null"] } }
+          },
+          "encode": { "type": ["string", "null"], "description": "how the engine turns linear light into 8-bit output: srgb-piecewise | gamma-2.2 | unknown" },
+          "output": { "type": ["object", "null"], "properties": { "png": { "type": "string" }, "sha256": { "type": "string" }, "size": { "type": "array" } } },
+          "score": { "type": ["object", "null"] },
+          "console": { "type": ["object", "null"] },
+          "timing_ms": { "type": ["object", "null"] }
+        }
+      }
+    },
+    "thresholds": { "type": "object" },
+    "consensus": { "type": "object", "description": "candidates scored against each other; reference_suspect when they agree and fail the reference" },
+    "semantic": { "type": ["object", "null"], "description": "loom.semantic/1 result when the subject carries X3D meaning" },
+    "verdict": { "type": "object", "required": ["subject"], "properties": { "subject": { "enum": ["pass", "warn", "fail", "gate-fail", "reference-suspect"] }, "semantic": { "enum": ["pass", "fail", "not_applicable"] } } },
+    "host_machine": { "type": "object" },
+    "tools": { "type": "object" },
+    "grade": { "enum": ["Confirmed", "Likely", "Suspected"] },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "written_at": { "type": "string" },
+    "prev": { "type": ["string", "null"] },
+    "signed": { "const": false },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

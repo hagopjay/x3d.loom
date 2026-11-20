@@ -1,0 +1,621 @@
+{
+  "schema": "loom.render-receipt/1",
+  "format": {
+    "name": "gltf",
+    "version": "2.0",
+    "correct_is_pinned_by": "glTF 2.0 spec Appendix B (BRDF) + KHR_lights_punctual (lux, inverse-square); display encode undefined by glTF, matched to the reference before judging"
+  },
+  "subject": {
+    "id": "NormalTangentMirrorTest",
+    "file": "NormalTangentMirrorTest.glb",
+    "bytes": 1567084,
+    "sha256": "31ce5f3c873fc55531a17ccacf001e3d1d482a508695aa826fa79cc196e0ce78",
+    "corpus": {
+      "name": "loom-gltf-corpus-v0",
+      "repo": "KhronosGroup/glTF-Sample-Assets",
+      "commit": "f0920f5b32d172a30efe3f9257e965918831e6ea",
+      "path": "Models/NormalTangentMirrorTest/glTF-Binary/NormalTangentMirrorTest.glb"
+    }
+  },
+  "semantic": null,
+  "gate": {
+    "validator": {
+      "name": "Khronos glTF-Validator (npm gltf-validator)",
+      "version": "2.0.0-dev.3.10",
+      "commit": null
+    },
+    "verdict": "pass",
+    "counts": {
+      "errors": 0,
+      "warnings": 0,
+      "infos": 0,
+      "hints": 0
+    },
+    "issues": [],
+    "extensions_used": [],
+    "harnessed_counts": {
+      "errors": 0,
+      "warnings": 0,
+      "infos": 0,
+      "hints": 0
+    }
+  },
+  "harness": {
+    "camera": {
+      "position": [
+        1.978456,
+        1.185812,
+        3.64221
+      ],
+      "target": [
+        -0.005372,
+        -0.076624,
+        0.03525
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ],
+      "fov": 0.7854,
+      "near": 0.043057,
+      "far": 430.574915
+    },
+    "cameraIndex": 0,
+    "light": {
+      "type": "directional",
+      "color": [
+        1,
+        1,
+        1
+      ],
+      "intensity_lux": 2.5,
+      "travels_along": [
+        0.095089,
+        -0.814727,
+        -0.571995
+      ]
+    },
+    "added": {
+      "nodes": 2,
+      "cameras": 1,
+      "lights": 1
+    },
+    "before": {
+      "nodes": 1,
+      "cameras": 0,
+      "lights": 0
+    },
+    "bytes": 1567308,
+    "file": "NormalTangentMirrorTest.harnessed.glb",
+    "sha256": "ca1c883f4264970e025c4c27e4522adb113e4e67e9ba23bfb57c0e1b0b90b9ee",
+    "rule": "no IBL, no generated lights, no ambient, tone map none, exposure 1, clear #20242c, square frame, MSAA on"
+  },
+  "reference": {
+    "engine_id": "khronos",
+    "kind": "spec-reference-renderer",
+    "why": "Khronos publishes it as the sample implementation of the glTF 2.0 BRDF; it is NOT normative (it encodes with gamma 2.2). Cycles is run as a second, path-traced witness.",
+    "png_sha256": "31d703405dbb16e42beb6176cdda0b1accb79b9ced00e187841b80db0af2999a",
+    "agreement": {
+      "witness": "cycles",
+      "ssim": 0.9563,
+      "psnr_fg_db": 27.26
+    }
+  },
+  "runs": [
+    {
+      "engine": {
+        "id": "khronos",
+        "name": "Khronos glTF Sample Renderer",
+        "version": "1.1.0"
+      },
+      "status": "reference",
+      "reason": null,
+      "host": {
+        "kind": "browser",
+        "name": "Chromium headless",
+        "version": "157.0.8103.78",
+        "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.8103.78 Safari/537.36"
+      },
+      "gpu": {
+        "api": "WebGL 2.0",
+        "adapter": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "backend": "ANGLE -> Vulkan",
+        "device_type": "Cpu",
+        "driver": "SwiftShader",
+        "driver_info": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+      },
+      "api_validation": {
+        "layer": null,
+        "layer_version": null,
+        "mode": "Off",
+        "requested": false,
+        "enabled": false,
+        "unexpected_errors": null,
+        "attribution": "WebGL has no validation layer; errors = GL errors on the browser console",
+        "errors": 0,
+        "warnings": null,
+        "message_ids": [],
+        "log_sha256": null
+      },
+      "encode": "gamma-2.2",
+      "output": {
+        "png": "khronos.png",
+        "sha256": "31d703405dbb16e42beb6176cdda0b1accb79b9ced00e187841b80db0af2999a",
+        "size": [
+          512,
+          512
+        ]
+      },
+      "score": null,
+      "console": {
+        "errors": [],
+        "benign": 1,
+        "warnings": 0
+      },
+      "timing_ms": {
+        "load": 92,
+        "settle": 47723,
+        "total": 47995
+      },
+      "notes": [
+        "environment = black 16x8 HDR with IBL off (intensity forced 0); sheen-E LUT is a 1x1 black stub, so KHR_materials_sheen is NOT reference-grade here"
+      ]
+    },
+    {
+      "engine": {
+        "id": "three",
+        "name": "three.js",
+        "version": "0.187.0"
+      },
+      "host": {
+        "kind": "browser",
+        "name": "Chromium headless",
+        "version": "157.0.8103.78",
+        "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.8103.78 Safari/537.36"
+      },
+      "gpu": {
+        "api": "WebGL 2.0",
+        "adapter": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "backend": "ANGLE -> Vulkan",
+        "device_type": "Cpu",
+        "driver": "SwiftShader",
+        "driver_info": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+      },
+      "api_validation": {
+        "layer": null,
+        "layer_version": null,
+        "mode": "Off",
+        "requested": false,
+        "enabled": false,
+        "unexpected_errors": null,
+        "attribution": "WebGL has no validation layer; errors = GL errors on the browser console",
+        "errors": 0,
+        "warnings": null,
+        "message_ids": [],
+        "log_sha256": null
+      },
+      "lighting": {
+        "source": "glb",
+        "glbLights": 1,
+        "headlight": null,
+        "ambient": null
+      },
+      "console": {
+        "errors": [],
+        "warnings": 0
+      },
+      "timing_ms": {
+        "load": 87.5,
+        "settle": 547.7,
+        "total": 873
+      },
+      "status": "warn",
+      "reason": null,
+      "encode": "srgb-piecewise",
+      "output": {
+        "png": "three.png",
+        "sha256": "0cf7382535db870298ebe17d168c369ccf094c1e910d8d5d2dcee6eb1cc7dba8",
+        "size": [
+          512,
+          512
+        ]
+      },
+      "score": {
+        "vs": "khronos",
+        "raw": {
+          "psnr_db": 34.31,
+          "psnr_fg_db": 28.82,
+          "ssim": 0.9809,
+          "mean_abs": 0.359,
+          "over16": 0.0036,
+          "coverage_iou": 1,
+          "fg_pixels": 73935,
+          "size": [
+            512,
+            512
+          ]
+        },
+        "encode_matched": {
+          "psnr_db": 33.99,
+          "psnr_fg_db": 28.5,
+          "ssim": 0.9762,
+          "mean_abs": 0.435,
+          "over16": 0.0051,
+          "coverage_iou": 1,
+          "fg_pixels": 73935,
+          "size": [
+            512,
+            512
+          ]
+        },
+        "judged_on": "encode_matched"
+      }
+    },
+    {
+      "engine": {
+        "id": "babylon",
+        "name": "Babylon.js",
+        "version": "9.32.0"
+      },
+      "host": {
+        "kind": "browser",
+        "name": "Chromium headless",
+        "version": "157.0.8103.78",
+        "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.8103.78 Safari/537.36"
+      },
+      "gpu": {
+        "api": "WebGL 2.0",
+        "adapter": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "backend": "ANGLE -> Vulkan",
+        "device_type": "Cpu",
+        "driver": "SwiftShader",
+        "driver_info": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+      },
+      "api_validation": {
+        "layer": null,
+        "layer_version": null,
+        "mode": "Off",
+        "requested": false,
+        "enabled": false,
+        "unexpected_errors": null,
+        "attribution": "WebGL has no validation layer; errors = GL errors on the browser console",
+        "errors": 0,
+        "warnings": null,
+        "message_ids": [],
+        "log_sha256": null
+      },
+      "lighting": {
+        "source": "glb",
+        "glbLights": 1,
+        "headlight": null,
+        "ambient": null
+      },
+      "console": {
+        "errors": [],
+        "warnings": 0
+      },
+      "timing_ms": {
+        "load": 188.7,
+        "settle": 471.4,
+        "total": 1317
+      },
+      "status": "fail",
+      "reason": null,
+      "encode": "gamma-2.2",
+      "output": {
+        "png": "babylon.png",
+        "sha256": "e5f4243b106e3bfd8317d8f7961921ad6e7d4ba15214a2c1d977f86ba21456e4",
+        "size": [
+          512,
+          512
+        ]
+      },
+      "score": {
+        "vs": "khronos",
+        "raw": {
+          "psnr_db": 25.3,
+          "psnr_fg_db": 19.8,
+          "ssim": 0.915,
+          "mean_abs": 1.995,
+          "over16": 0.0305,
+          "coverage_iou": 1,
+          "fg_pixels": 73935,
+          "size": [
+            512,
+            512
+          ]
+        },
+        "encode_matched": {
+          "psnr_db": 25.3,
+          "psnr_fg_db": 19.8,
+          "ssim": 0.915,
+          "mean_abs": 1.995,
+          "over16": 0.0305,
+          "coverage_iou": 1,
+          "fg_pixels": 73935,
+          "size": [
+            512,
+            512
+          ]
+        },
+        "judged_on": "encode_matched"
+      }
+    },
+    {
+      "engine": {
+        "id": "xite",
+        "name": "X_ITE (glTF via X3D 4.0 Inline)",
+        "version": "16.7.1"
+      },
+      "host": {
+        "kind": "browser",
+        "name": "Chromium headless",
+        "version": "157.0.8103.78",
+        "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.8103.78 Safari/537.36"
+      },
+      "gpu": {
+        "api": "WebGL 2.0",
+        "adapter": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "backend": "ANGLE -> Vulkan",
+        "device_type": "Cpu",
+        "driver": "SwiftShader",
+        "driver_info": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+      },
+      "api_validation": {
+        "layer": null,
+        "layer_version": null,
+        "mode": "Off",
+        "requested": false,
+        "enabled": false,
+        "unexpected_errors": null,
+        "attribution": "WebGL has no validation layer; errors = GL errors on the browser console",
+        "errors": 0,
+        "warnings": null,
+        "message_ids": [],
+        "log_sha256": null
+      },
+      "lighting": {
+        "source": "glb",
+        "glbLights": 1,
+        "headlight": false,
+        "ambient": null
+      },
+      "console": {
+        "errors": [],
+        "warnings": 0
+      },
+      "timing_ms": {
+        "load": 934.8,
+        "settle": 523.7,
+        "total": 3092
+      },
+      "status": "pass",
+      "reason": null,
+      "encode": "gamma-2.2",
+      "output": {
+        "png": "xite.png",
+        "sha256": "273013b53d65c38195b852caeefbb2b3fc2d20d7fd6be887f615f59ac2dbf19c",
+        "size": [
+          512,
+          512
+        ]
+      },
+      "score": {
+        "vs": "khronos",
+        "raw": {
+          "psnr_db": 37.04,
+          "psnr_fg_db": 31.54,
+          "ssim": 0.9891,
+          "mean_abs": 0.451,
+          "over16": 0.0073,
+          "coverage_iou": 1,
+          "fg_pixels": 73935,
+          "size": [
+            512,
+            512
+          ]
+        },
+        "encode_matched": {
+          "psnr_db": 37.04,
+          "psnr_fg_db": 31.54,
+          "ssim": 0.9891,
+          "mean_abs": 0.451,
+          "over16": 0.0073,
+          "coverage_iou": 1,
+          "fg_pixels": 73935,
+          "size": [
+            512,
+            512
+          ]
+        },
+        "judged_on": "encode_matched"
+      }
+    },
+    {
+      "engine": {
+        "id": "cycles",
+        "name": "Blender Cycles",
+        "version": "5.3.0"
+      },
+      "host": {
+        "kind": "native",
+        "name": "bpy wheel (Blender as a Python module)",
+        "version": "3.13.18",
+        "user_agent": null
+      },
+      "gpu": {
+        "api": "none (Cycles CPU)",
+        "adapter": "CPU",
+        "backend": "Cycles CPU",
+        "device_type": "Cpu",
+        "driver": null,
+        "driver_info": null
+      },
+      "api_validation": {
+        "layer": null,
+        "layer_version": null,
+        "mode": "Off",
+        "requested": false,
+        "enabled": false,
+        "unexpected_errors": null,
+        "attribution": "Cycles CPU uses no graphics API",
+        "errors": null,
+        "warnings": null,
+        "message_ids": [],
+        "log_sha256": null
+      },
+      "settings": {
+        "samples": 64,
+        "denoise": "OpenImageDenoise",
+        "seed": 0,
+        "view_transform": "Standard",
+        "light_import_mode": "COMPAT",
+        "sun_angle": 0,
+        "world_strength": 0,
+        "film_transparent": true,
+        "composite": "straight alpha over #20242c in display space"
+      },
+      "timing_ms": {
+        "total": 3630
+      },
+      "notes": [
+        "path tracer: shadows and inter-reflection are present; raster engines in this run draw no shadows"
+      ],
+      "encode": "srgb-piecewise",
+      "output": {
+        "png": "cycles.png",
+        "sha256": "fc76b61b00ac9a39774da09ac713f4fa54538174633b6e102fcb77ba5562c643",
+        "size": [
+          512,
+          512
+        ]
+      },
+      "score": {
+        "vs": "khronos",
+        "raw": {
+          "psnr_db": 32.72,
+          "psnr_fg_db": 27.49,
+          "ssim": 0.9717,
+          "mean_abs": 0.948,
+          "over16": 0.0108,
+          "coverage_iou": 0.941,
+          "fg_pixels": 78569,
+          "size": [
+            512,
+            512
+          ]
+        },
+        "encode_matched": {
+          "psnr_db": 32.49,
+          "psnr_fg_db": 27.26,
+          "ssim": 0.9563,
+          "mean_abs": 1.175,
+          "over16": 0.0137,
+          "coverage_iou": 0.941,
+          "fg_pixels": 78569,
+          "size": [
+            512,
+            512
+          ]
+        },
+        "judged_on": "encode_matched"
+      },
+      "status": "warn"
+    },
+    {
+      "engine": {
+        "id": "wgpu",
+        "name": "x3d.wgpu (Rust + wgpu)",
+        "version": "0.5.1"
+      },
+      "status": "not_run",
+      "encode": "unknown",
+      "reason": "x3d.wgpu 0.5.1 parses X3D only and has no glTF loader; route: X3D Inline of a glb (as X_ITE does) via the gltf crate. Its receipts already carry this schema's gpu block (x3d-wgpu-conformance/1 adapter) and gain api_validation from the VVL lane."
+    }
+  ],
+  "thresholds": {
+    "basis": "encode-matched score vs the reference; v0 values, set by hand on 20 Nov 2026 before any calibration (grade: Suspected)",
+    "pass": {
+      "ssim_min": 0.98,
+      "psnr_fg_db_min": 30
+    },
+    "warn": {
+      "ssim_min": 0.95,
+      "psnr_fg_db_min": 25
+    }
+  },
+  "verdict": {
+    "semantic": "not_applicable",
+    "subject": "fail",
+    "counts": {
+      "pass": 1,
+      "warn": 2,
+      "fail": 1,
+      "error": 0,
+      "not_run": 1
+    }
+  },
+  "host_machine": {
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cores": 4,
+    "ram_gb": 15.7,
+    "os": "Linux 6.18.44-fc-v653",
+    "arch": "x64",
+    "node": "v22.23.5",
+    "chromium": "157.0.8103.78",
+    "gpu": "none (container without a GPU; WebGL through ANGLE on SwiftShader)"
+  },
+  "tools": {
+    "loom_commit": "bada8433c328a16791ea563094a86f4f74633b4e",
+    "loom_dirty": true,
+    "gltf_validator": "2.0.0-dev.3.10",
+    "khronos_sample_renderer": "1.1.0",
+    "three": "0.187.0",
+    "babylonjs": "9.32.0",
+    "x_ite": "16.7.1",
+    "gltf_transform": "4.5.1",
+    "blender_bpy": "5.3.0",
+    "playwright": "1.63.0"
+  },
+  "grade": "Confirmed",
+  "limitations": [
+    "no GPU: every WebGL number is ANGLE on SwiftShader (software Vulkan); a real-GPU run may differ",
+    "raster engines draw no shadows; Cycles does. Self-shadowing assets score lower against Cycles by construction",
+    "thresholds are v0 hand-set values, not calibrated"
+  ],
+  "written_at": "2026-11-20T00:41:58.748Z",
+  "prev": null,
+  "signed": false,
+  "consensus": {
+    "pairs": [
+      {
+        "a": "three",
+        "b": "babylon",
+        "ssim": 0.9258,
+        "psnr_fg_db": 21.08,
+        "verdict": "fail"
+      },
+      {
+        "a": "three",
+        "b": "xite",
+        "ssim": 0.9652,
+        "psnr_fg_db": 26.75,
+        "verdict": "warn"
+      },
+      {
+        "a": "babylon",
+        "b": "xite",
+        "ssim": 0.9044,
+        "psnr_fg_db": 19.52,
+        "verdict": "fail"
+      }
+    ],
+    "candidates_agree": false,
+    "candidates_failing_reference": 1,
+    "reference_suspect": false,
+    "rule": "R-GLTF-8: all raster candidates pass against each other and >= 2 fail against the reference -> the reference is the suspect"
+  },
+  "timing_ms": 58919,
+  "sha256": "f4c26e5afd95d30b85947c368f313c57ff9fdd588e1d1340950a208bb00103fa"
+}

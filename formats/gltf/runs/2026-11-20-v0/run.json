@@ -1,0 +1,1376 @@
+{
+  "schema": "loom.gltf-run/1",
+  "written_at": "2026-11-20T00:45:04.638Z",
+  "size": 512,
+  "cycles_samples": 64,
+  "host_machine": {
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cores": 4,
+    "ram_gb": 15.7,
+    "os": "Linux 6.18.44-fc-v653",
+    "arch": "x64",
+    "node": "v22.23.5",
+    "chromium": "157.0.8103.78",
+    "gpu": "none (container without a GPU; WebGL through ANGLE on SwiftShader)"
+  },
+  "tools": {
+    "loom_commit": "bada8433c328a16791ea563094a86f4f74633b4e",
+    "loom_dirty": true,
+    "gltf_validator": "2.0.0-dev.3.10",
+    "khronos_sample_renderer": "1.1.0",
+    "three": "0.187.0",
+    "babylonjs": "9.32.0",
+    "x_ite": "16.7.1",
+    "gltf_transform": "4.5.1",
+    "blender_bpy": "5.3.0",
+    "playwright": "1.63.0"
+  },
+  "thresholds": {
+    "basis": "encode-matched score vs the reference; v0 values, set by hand on 20 Nov 2026 before any calibration (grade: Suspected)",
+    "pass": {
+      "ssim_min": 0.98,
+      "psnr_fg_db_min": 30
+    },
+    "warn": {
+      "ssim_min": 0.95,
+      "psnr_fg_db_min": 25
+    }
+  },
+  "corpus": {
+    "name": "loom-gltf-corpus-v0",
+    "repo": "KhronosGroup/glTF-Sample-Assets",
+    "commit": "f0920f5b32d172a30efe3f9257e965918831e6ea"
+  },
+  "assets": [
+    {
+      "id": "Box",
+      "consensus": {
+        "agree": true,
+        "reference_suspect": false,
+        "pairs": [
+          {
+            "a": "three",
+            "b": "babylon",
+            "ssim": 0.9996,
+            "psnr_fg_db": 52.2,
+            "verdict": "pass"
+          },
+          {
+            "a": "three",
+            "b": "xite",
+            "ssim": 0.9996,
+            "psnr_fg_db": 48.1,
+            "verdict": "pass"
+          },
+          {
+            "a": "babylon",
+            "b": "xite",
+            "ssim": 0.9999,
+            "psnr_fg_db": 51.39,
+            "verdict": "pass"
+          }
+        ]
+      },
+      "semantic": null,
+      "gate": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 0,
+        "hints": 0
+      },
+      "harnessed": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 0,
+        "hints": 0
+      },
+      "verdict": "pass",
+      "runs": [
+        {
+          "id": "khronos",
+          "version": "1.1.0",
+          "status": "reference",
+          "raw": null,
+          "matched": null,
+          "ms": 48137
+        },
+        {
+          "id": "three",
+          "version": "0.187.0",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 39.23,
+            "psnr_fg_db": 35.83,
+            "ssim": 0.9993,
+            "mean_abs": 1.487,
+            "over16": 0,
+            "coverage_iou": 1,
+            "fg_pixels": 119801,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 51.51,
+            "psnr_fg_db": 48.1,
+            "ssim": 0.9996,
+            "mean_abs": 0.311,
+            "over16": 0,
+            "coverage_iou": 1,
+            "fg_pixels": 119801,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 778
+        },
+        {
+          "id": "babylon",
+          "version": "9.32.0",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 54.79,
+            "psnr_fg_db": 51.39,
+            "ssim": 0.9999,
+            "mean_abs": 0.216,
+            "over16": 0,
+            "coverage_iou": 1,
+            "fg_pixels": 119801,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 54.79,
+            "psnr_fg_db": 51.39,
+            "ssim": 0.9999,
+            "mean_abs": 0.216,
+            "over16": 0,
+            "coverage_iou": 1,
+            "fg_pixels": 119801,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 930
+        },
+        {
+          "id": "xite",
+          "version": "16.7.1",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 107.09,
+            "psnr_fg_db": 103.69,
+            "ssim": 1,
+            "mean_abs": 0,
+            "over16": 0,
+            "coverage_iou": 1,
+            "fg_pixels": 119801,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 107.09,
+            "psnr_fg_db": 103.69,
+            "ssim": 1,
+            "mean_abs": 0,
+            "over16": 0,
+            "coverage_iou": 1,
+            "fg_pixels": 119801,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 1292
+        },
+        {
+          "id": "cycles",
+          "version": "5.3.0",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 38.21,
+            "psnr_fg_db": 34.84,
+            "ssim": 0.9971,
+            "mean_abs": 1.675,
+            "over16": 0.0034,
+            "coverage_iou": 0.9931,
+            "fg_pixels": 120637,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 42.94,
+            "psnr_fg_db": 39.57,
+            "ssim": 0.9887,
+            "mean_abs": 0.635,
+            "over16": 0.0038,
+            "coverage_iou": 0.9931,
+            "fg_pixels": 120637,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 6180
+        },
+        {
+          "id": "wgpu",
+          "version": "0.5.1",
+          "status": "not_run",
+          "raw": null,
+          "matched": null,
+          "ms": null
+        }
+      ]
+    },
+    {
+      "id": "BoxTextured",
+      "consensus": {
+        "agree": true,
+        "reference_suspect": false,
+        "pairs": [
+          {
+            "a": "three",
+            "b": "babylon",
+            "ssim": 0.9997,
+            "psnr_fg_db": 52.9,
+            "verdict": "pass"
+          },
+          {
+            "a": "three",
+            "b": "xite",
+            "ssim": 0.9968,
+            "psnr_fg_db": 37.42,
+            "verdict": "pass"
+          },
+          {
+            "a": "babylon",
+            "b": "xite",
+            "ssim": 0.9971,
+            "psnr_fg_db": 37.57,
+            "verdict": "pass"
+          }
+        ]
+      },
+      "semantic": null,
+      "gate": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 0,
+        "hints": 0
+      },
+      "harnessed": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 0,
+        "hints": 0
+      },
+      "verdict": "pass",
+      "runs": [
+        {
+          "id": "khronos",
+          "version": "1.1.0",
+          "status": "reference",
+          "raw": null,
+          "matched": null,
+          "ms": 48038
+        },
+        {
+          "id": "three",
+          "version": "0.187.0",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 40.78,
+            "psnr_fg_db": 37.38,
+            "ssim": 0.997,
+            "mean_abs": 0.618,
+            "over16": 0.0057,
+            "coverage_iou": 1,
+            "fg_pixels": 119801,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 41.56,
+            "psnr_fg_db": 38.16,
+            "ssim": 0.9969,
+            "mean_abs": 0.264,
+            "over16": 0.0057,
+            "coverage_iou": 1,
+            "fg_pixels": 119801,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 369
+        },
+        {
+          "id": "babylon",
+          "version": "9.32.0",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 41.69,
+            "psnr_fg_db": 38.29,
+            "ssim": 0.9971,
+            "mean_abs": 0.212,
+            "over16": 0.0057,
+            "coverage_iou": 1,
+            "fg_pixels": 119801,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 41.69,
+            "psnr_fg_db": 38.29,
+            "ssim": 0.9971,
+            "mean_abs": 0.212,
+            "over16": 0.0057,
+            "coverage_iou": 1,
+            "fg_pixels": 119801,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 761
+        },
+        {
+          "id": "xite",
+          "version": "16.7.1",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 48.96,
+            "psnr_fg_db": 45.56,
+            "ssim": 0.9999,
+            "mean_abs": 0.243,
+            "over16": 0.0015,
+            "coverage_iou": 1,
+            "fg_pixels": 119801,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 48.96,
+            "psnr_fg_db": 45.56,
+            "ssim": 0.9999,
+            "mean_abs": 0.243,
+            "over16": 0.0015,
+            "coverage_iou": 1,
+            "fg_pixels": 119801,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 1241
+        },
+        {
+          "id": "cycles",
+          "version": "5.3.0",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 39.3,
+            "psnr_fg_db": 35.93,
+            "ssim": 0.9963,
+            "mean_abs": 0.987,
+            "over16": 0.0038,
+            "coverage_iou": 0.9931,
+            "fg_pixels": 120637,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 39.48,
+            "psnr_fg_db": 36.11,
+            "ssim": 0.9878,
+            "mean_abs": 0.815,
+            "over16": 0.0044,
+            "coverage_iou": 0.9931,
+            "fg_pixels": 120637,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 4370
+        },
+        {
+          "id": "wgpu",
+          "version": "0.5.1",
+          "status": "not_run",
+          "raw": null,
+          "matched": null,
+          "ms": null
+        }
+      ]
+    },
+    {
+      "id": "Duck",
+      "consensus": {
+        "agree": true,
+        "reference_suspect": false,
+        "pairs": [
+          {
+            "a": "three",
+            "b": "babylon",
+            "ssim": 0.9995,
+            "psnr_fg_db": 50.35,
+            "verdict": "pass"
+          },
+          {
+            "a": "three",
+            "b": "xite",
+            "ssim": 0.9992,
+            "psnr_fg_db": 40.6,
+            "verdict": "pass"
+          },
+          {
+            "a": "babylon",
+            "b": "xite",
+            "ssim": 0.9995,
+            "psnr_fg_db": 40.9,
+            "verdict": "pass"
+          }
+        ]
+      },
+      "semantic": null,
+      "gate": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 0,
+        "hints": 0
+      },
+      "harnessed": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 0,
+        "hints": 0
+      },
+      "verdict": "fail",
+      "runs": [
+        {
+          "id": "khronos",
+          "version": "1.1.0",
+          "status": "reference",
+          "raw": null,
+          "matched": null,
+          "ms": 48295
+        },
+        {
+          "id": "three",
+          "version": "0.187.0",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 42.75,
+            "psnr_fg_db": 36.75,
+            "ssim": 0.9993,
+            "mean_abs": 0.661,
+            "over16": 0.0003,
+            "coverage_iou": 1,
+            "fg_pixels": 65891,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 50.36,
+            "psnr_fg_db": 44.37,
+            "ssim": 0.9994,
+            "mean_abs": 0.143,
+            "over16": 0.0003,
+            "coverage_iou": 1,
+            "fg_pixels": 65891,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 340
+        },
+        {
+          "id": "babylon",
+          "version": "9.32.0",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 51.44,
+            "psnr_fg_db": 45.44,
+            "ssim": 0.9997,
+            "mean_abs": 0.088,
+            "over16": 0.0003,
+            "coverage_iou": 1,
+            "fg_pixels": 65891,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 51.44,
+            "psnr_fg_db": 45.44,
+            "ssim": 0.9997,
+            "mean_abs": 0.088,
+            "over16": 0.0003,
+            "coverage_iou": 1,
+            "fg_pixels": 65891,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 813
+        },
+        {
+          "id": "xite",
+          "version": "16.7.1",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 47.65,
+            "psnr_fg_db": 41.65,
+            "ssim": 0.9996,
+            "mean_abs": 0.075,
+            "over16": 0.0003,
+            "coverage_iou": 1,
+            "fg_pixels": 65891,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 47.65,
+            "psnr_fg_db": 41.65,
+            "ssim": 0.9996,
+            "mean_abs": 0.075,
+            "over16": 0.0003,
+            "coverage_iou": 1,
+            "fg_pixels": 65891,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 1502
+        },
+        {
+          "id": "cycles",
+          "version": "5.3.0",
+          "status": "fail",
+          "raw": {
+            "psnr_db": 26.62,
+            "psnr_fg_db": 20.67,
+            "ssim": 0.9736,
+            "mean_abs": 2.464,
+            "over16": 0.0362,
+            "coverage_iou": 0.9889,
+            "fg_pixels": 66630,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 26.86,
+            "psnr_fg_db": 20.91,
+            "ssim": 0.9726,
+            "mean_abs": 2.001,
+            "over16": 0.0352,
+            "coverage_iou": 0.9889,
+            "fg_pixels": 66630,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 3890
+        },
+        {
+          "id": "wgpu",
+          "version": "0.5.1",
+          "status": "not_run",
+          "raw": null,
+          "matched": null,
+          "ms": null
+        }
+      ]
+    },
+    {
+      "id": "MetalRoughSpheresNoTextures",
+      "consensus": {
+        "agree": false,
+        "reference_suspect": false,
+        "pairs": [
+          {
+            "a": "three",
+            "b": "babylon",
+            "ssim": 0.9929,
+            "psnr_fg_db": 31.86,
+            "verdict": "pass"
+          },
+          {
+            "a": "three",
+            "b": "xite",
+            "ssim": 0.9881,
+            "psnr_fg_db": 28,
+            "verdict": "warn"
+          },
+          {
+            "a": "babylon",
+            "b": "xite",
+            "ssim": 0.9906,
+            "psnr_fg_db": 28.31,
+            "verdict": "warn"
+          }
+        ]
+      },
+      "semantic": null,
+      "gate": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 0,
+        "hints": 0
+      },
+      "harnessed": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 0,
+        "hints": 0
+      },
+      "verdict": "fail",
+      "runs": [
+        {
+          "id": "khronos",
+          "version": "1.1.0",
+          "status": "reference",
+          "raw": null,
+          "matched": null,
+          "ms": 50874
+        },
+        {
+          "id": "three",
+          "version": "0.187.0",
+          "status": "warn",
+          "raw": {
+            "psnr_db": 33.11,
+            "psnr_fg_db": 27.26,
+            "ssim": 0.9875,
+            "mean_abs": 1.623,
+            "over16": 0.0324,
+            "coverage_iou": 1,
+            "fg_pixels": 68194,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 33.17,
+            "psnr_fg_db": 27.32,
+            "ssim": 0.9856,
+            "mean_abs": 1.567,
+            "over16": 0.0332,
+            "coverage_iou": 1,
+            "fg_pixels": 68194,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 2397
+        },
+        {
+          "id": "babylon",
+          "version": "9.32.0",
+          "status": "warn",
+          "raw": {
+            "psnr_db": 33.33,
+            "psnr_fg_db": 27.48,
+            "ssim": 0.9878,
+            "mean_abs": 1.105,
+            "over16": 0.0251,
+            "coverage_iou": 1,
+            "fg_pixels": 68194,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 33.33,
+            "psnr_fg_db": 27.48,
+            "ssim": 0.9878,
+            "mean_abs": 1.105,
+            "over16": 0.0251,
+            "coverage_iou": 1,
+            "fg_pixels": 68194,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 3805
+        },
+        {
+          "id": "xite",
+          "version": "16.7.1",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 41.7,
+            "psnr_fg_db": 35.86,
+            "ssim": 0.9976,
+            "mean_abs": 0.122,
+            "over16": 0.0028,
+            "coverage_iou": 1,
+            "fg_pixels": 68194,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 41.7,
+            "psnr_fg_db": 35.86,
+            "ssim": 0.9976,
+            "mean_abs": 0.122,
+            "over16": 0.0028,
+            "coverage_iou": 1,
+            "fg_pixels": 68194,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 22626
+        },
+        {
+          "id": "cycles",
+          "version": "5.3.0",
+          "status": "fail",
+          "raw": {
+            "psnr_db": 25.35,
+            "psnr_fg_db": 19.81,
+            "ssim": 0.9055,
+            "mean_abs": 4.371,
+            "over16": 0.0931,
+            "coverage_iou": 0.9324,
+            "fg_pixels": 73141,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 25.31,
+            "psnr_fg_db": 19.77,
+            "ssim": 0.9013,
+            "mean_abs": 4.42,
+            "over16": 0.0966,
+            "coverage_iou": 0.9324,
+            "fg_pixels": 73141,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 6790
+        },
+        {
+          "id": "wgpu",
+          "version": "0.5.1",
+          "status": "not_run",
+          "raw": null,
+          "matched": null,
+          "ms": null
+        }
+      ]
+    },
+    {
+      "id": "NormalTangentMirrorTest",
+      "consensus": {
+        "agree": false,
+        "reference_suspect": false,
+        "pairs": [
+          {
+            "a": "three",
+            "b": "babylon",
+            "ssim": 0.9258,
+            "psnr_fg_db": 21.08,
+            "verdict": "fail"
+          },
+          {
+            "a": "three",
+            "b": "xite",
+            "ssim": 0.9652,
+            "psnr_fg_db": 26.75,
+            "verdict": "warn"
+          },
+          {
+            "a": "babylon",
+            "b": "xite",
+            "ssim": 0.9044,
+            "psnr_fg_db": 19.52,
+            "verdict": "fail"
+          }
+        ]
+      },
+      "semantic": null,
+      "gate": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 0,
+        "hints": 0
+      },
+      "harnessed": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 0,
+        "hints": 0
+      },
+      "verdict": "fail",
+      "runs": [
+        {
+          "id": "khronos",
+          "version": "1.1.0",
+          "status": "reference",
+          "raw": null,
+          "matched": null,
+          "ms": 47995
+        },
+        {
+          "id": "three",
+          "version": "0.187.0",
+          "status": "warn",
+          "raw": {
+            "psnr_db": 34.31,
+            "psnr_fg_db": 28.82,
+            "ssim": 0.9809,
+            "mean_abs": 0.359,
+            "over16": 0.0036,
+            "coverage_iou": 1,
+            "fg_pixels": 73935,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 33.99,
+            "psnr_fg_db": 28.5,
+            "ssim": 0.9762,
+            "mean_abs": 0.435,
+            "over16": 0.0051,
+            "coverage_iou": 1,
+            "fg_pixels": 73935,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 873
+        },
+        {
+          "id": "babylon",
+          "version": "9.32.0",
+          "status": "fail",
+          "raw": {
+            "psnr_db": 25.3,
+            "psnr_fg_db": 19.8,
+            "ssim": 0.915,
+            "mean_abs": 1.995,
+            "over16": 0.0305,
+            "coverage_iou": 1,
+            "fg_pixels": 73935,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 25.3,
+            "psnr_fg_db": 19.8,
+            "ssim": 0.915,
+            "mean_abs": 1.995,
+            "over16": 0.0305,
+            "coverage_iou": 1,
+            "fg_pixels": 73935,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 1317
+        },
+        {
+          "id": "xite",
+          "version": "16.7.1",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 37.04,
+            "psnr_fg_db": 31.54,
+            "ssim": 0.9891,
+            "mean_abs": 0.451,
+            "over16": 0.0073,
+            "coverage_iou": 1,
+            "fg_pixels": 73935,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 37.04,
+            "psnr_fg_db": 31.54,
+            "ssim": 0.9891,
+            "mean_abs": 0.451,
+            "over16": 0.0073,
+            "coverage_iou": 1,
+            "fg_pixels": 73935,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 3092
+        },
+        {
+          "id": "cycles",
+          "version": "5.3.0",
+          "status": "warn",
+          "raw": {
+            "psnr_db": 32.72,
+            "psnr_fg_db": 27.49,
+            "ssim": 0.9717,
+            "mean_abs": 0.948,
+            "over16": 0.0108,
+            "coverage_iou": 0.941,
+            "fg_pixels": 78569,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 32.49,
+            "psnr_fg_db": 27.26,
+            "ssim": 0.9563,
+            "mean_abs": 1.175,
+            "over16": 0.0137,
+            "coverage_iou": 0.941,
+            "fg_pixels": 78569,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 3630
+        },
+        {
+          "id": "wgpu",
+          "version": "0.5.1",
+          "status": "not_run",
+          "raw": null,
+          "matched": null,
+          "ms": null
+        }
+      ]
+    },
+    {
+      "id": "AlphaBlendModeTest",
+      "consensus": {
+        "agree": false,
+        "reference_suspect": false,
+        "pairs": [
+          {
+            "a": "three",
+            "b": "babylon",
+            "ssim": 0.9986,
+            "psnr_fg_db": 39.93,
+            "verdict": "pass"
+          },
+          {
+            "a": "three",
+            "b": "xite",
+            "ssim": 0.9568,
+            "psnr_fg_db": 22.68,
+            "verdict": "fail"
+          },
+          {
+            "a": "babylon",
+            "b": "xite",
+            "ssim": 0.9581,
+            "psnr_fg_db": 22.73,
+            "verdict": "fail"
+          }
+        ]
+      },
+      "semantic": null,
+      "gate": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8,
+        "hints": 0
+      },
+      "harnessed": {
+        "errors": 0,
+        "warnings": 0,
+        "infos": 8,
+        "hints": 0
+      },
+      "verdict": "fail",
+      "runs": [
+        {
+          "id": "khronos",
+          "version": "1.1.0",
+          "status": "reference",
+          "raw": null,
+          "matched": null,
+          "ms": 49376
+        },
+        {
+          "id": "three",
+          "version": "0.187.0",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 46.22,
+            "psnr_fg_db": 39.03,
+            "ssim": 0.9986,
+            "mean_abs": 0.312,
+            "over16": 0.0003,
+            "coverage_iou": 1,
+            "fg_pixels": 50042,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 47.07,
+            "psnr_fg_db": 39.88,
+            "ssim": 0.9986,
+            "mean_abs": 0.195,
+            "over16": 0.0003,
+            "coverage_iou": 1,
+            "fg_pixels": 50042,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 1127
+        },
+        {
+          "id": "babylon",
+          "version": "9.32.0",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 68.91,
+            "psnr_fg_db": 61.72,
+            "ssim": 1,
+            "mean_abs": 0.007,
+            "over16": 0,
+            "coverage_iou": 1,
+            "fg_pixels": 50042,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 68.91,
+            "psnr_fg_db": 61.72,
+            "ssim": 1,
+            "mean_abs": 0.007,
+            "over16": 0,
+            "coverage_iou": 1,
+            "fg_pixels": 50042,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 1794
+        },
+        {
+          "id": "xite",
+          "version": "16.7.1",
+          "status": "fail",
+          "raw": {
+            "psnr_db": 29.92,
+            "psnr_fg_db": 22.73,
+            "ssim": 0.9581,
+            "mean_abs": 1.514,
+            "over16": 0.0314,
+            "coverage_iou": 1,
+            "fg_pixels": 50042,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 29.92,
+            "psnr_fg_db": 22.73,
+            "ssim": 0.9581,
+            "mean_abs": 1.514,
+            "over16": 0.0314,
+            "coverage_iou": 1,
+            "fg_pixels": 50042,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 4202
+        },
+        {
+          "id": "cycles",
+          "version": "5.3.0",
+          "status": "fail",
+          "raw": {
+            "psnr_db": 28.51,
+            "psnr_fg_db": 21.37,
+            "ssim": 0.9663,
+            "mean_abs": 2.464,
+            "over16": 0.0454,
+            "coverage_iou": 0.988,
+            "fg_pixels": 50652,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 28.73,
+            "psnr_fg_db": 21.59,
+            "ssim": 0.9663,
+            "mean_abs": 2.334,
+            "over16": 0.0423,
+            "coverage_iou": 0.988,
+            "fg_pixels": 50652,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 4330
+        },
+        {
+          "id": "wgpu",
+          "version": "0.5.1",
+          "status": "not_run",
+          "raw": null,
+          "matched": null,
+          "ms": null
+        }
+      ]
+    },
+    {
+      "id": "DamagedHelmet",
+      "consensus": {
+        "agree": false,
+        "reference_suspect": false,
+        "pairs": [
+          {
+            "a": "three",
+            "b": "babylon",
+            "ssim": 0.9879,
+            "psnr_fg_db": 31.2,
+            "verdict": "pass"
+          },
+          {
+            "a": "three",
+            "b": "xite",
+            "ssim": 0.9684,
+            "psnr_fg_db": 25.79,
+            "verdict": "warn"
+          },
+          {
+            "a": "babylon",
+            "b": "xite",
+            "ssim": 0.9684,
+            "psnr_fg_db": 25.36,
+            "verdict": "warn"
+          }
+        ]
+      },
+      "semantic": null,
+      "gate": {
+        "errors": 0,
+        "warnings": 1,
+        "infos": 0,
+        "hints": 0
+      },
+      "harnessed": {
+        "errors": 0,
+        "warnings": 1,
+        "infos": 0,
+        "hints": 0
+      },
+      "verdict": "fail",
+      "runs": [
+        {
+          "id": "khronos",
+          "version": "1.1.0",
+          "status": "reference",
+          "raw": null,
+          "matched": null,
+          "ms": 47993
+        },
+        {
+          "id": "three",
+          "version": "0.187.0",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 36.7,
+            "psnr_fg_db": 29.99,
+            "ssim": 0.9686,
+            "mean_abs": 1.117,
+            "over16": 0.0049,
+            "coverage_iou": 1,
+            "fg_pixels": 55994,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 37.88,
+            "psnr_fg_db": 31.17,
+            "ssim": 0.9893,
+            "mean_abs": 0.581,
+            "over16": 0.006,
+            "coverage_iou": 1,
+            "fg_pixels": 55994,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 1308
+        },
+        {
+          "id": "babylon",
+          "version": "9.32.0",
+          "status": "pass",
+          "raw": {
+            "psnr_db": 36.76,
+            "psnr_fg_db": 30.05,
+            "ssim": 0.9891,
+            "mean_abs": 0.349,
+            "over16": 0.0056,
+            "coverage_iou": 1,
+            "fg_pixels": 55994,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 36.76,
+            "psnr_fg_db": 30.05,
+            "ssim": 0.9891,
+            "mean_abs": 0.349,
+            "over16": 0.0056,
+            "coverage_iou": 1,
+            "fg_pixels": 55994,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 1707
+        },
+        {
+          "id": "xite",
+          "version": "16.7.1",
+          "status": "warn",
+          "raw": {
+            "psnr_db": 34.06,
+            "psnr_fg_db": 27.36,
+            "ssim": 0.9783,
+            "mean_abs": 1.016,
+            "over16": 0.016,
+            "coverage_iou": 1,
+            "fg_pixels": 55994,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 34.06,
+            "psnr_fg_db": 27.36,
+            "ssim": 0.9783,
+            "mean_abs": 1.016,
+            "over16": 0.016,
+            "coverage_iou": 1,
+            "fg_pixels": 55994,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 5520
+        },
+        {
+          "id": "cycles",
+          "version": "5.3.0",
+          "status": "fail",
+          "raw": {
+            "psnr_db": 30.65,
+            "psnr_fg_db": 23.99,
+            "ssim": 0.9329,
+            "mean_abs": 2.053,
+            "over16": 0.0275,
+            "coverage_iou": 0.9897,
+            "fg_pixels": 56575,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "matched": {
+            "psnr_db": 31.19,
+            "psnr_fg_db": 24.54,
+            "ssim": 0.9539,
+            "mean_abs": 1.476,
+            "over16": 0.0266,
+            "coverage_iou": 0.9897,
+            "fg_pixels": 56575,
+            "size": [
+              512,
+              512
+            ]
+          },
+          "ms": 5550
+        },
+        {
+          "id": "wgpu",
+          "version": "0.5.1",
+          "status": "not_run",
+          "raw": null,
+          "matched": null,
+          "ms": null
+        }
+      ]
+    }
+  ]
+}
