@@ -4,7 +4,9 @@
 
 What travels (the MEANING layer, lossless by rule S1):
   * every X3D Metadata node (MetadataSet / String / Double / Float / Integer / Boolean), with name, reference, typed values,
-    nesting, and metadata-on-metadata, on whatever node hosts it (Transform, Group, HAnim*, Shape, ...);
+    nesting, and metadata-on-metadata, when its host becomes a glTF node (the grouping nodes listed below, and Shape).
+    Metadata on any other host (Material, Appearance, WorldInfo, sensors, ...) is NOT carried; S1 and S2 then fail, so
+    the loss is reported, never silent (fixtures/metadata-host-probe.x3d);
   * the <head> <meta> list, as the asset-level packet;
   * domain URIs (CIDOC-CRM, IFC, PROV-O, Pleiades, ...) kept verbatim in `reference` / string values and ALSO lifted into JSON-LD
     (@type IRIs, loom:ifcGlobalId) so a JSON-LD tool can query them without knowing X3D.

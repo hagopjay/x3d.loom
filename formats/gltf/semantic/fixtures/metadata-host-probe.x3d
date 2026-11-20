@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+<head><meta name='title' content='probe'/></head>
+<Scene>
+<WorldInfo title='w'><MetadataString name='w' value='"on worldinfo"'/></WorldInfo>
+<Transform DEF='A'><MetadataSet DEF='M1' name='IFC' reference='https://example.org/ifc'><MetadataString name='GlobalId' value='"2cgQFXl$D6rxIEBTAreS7b"'/></MetadataSet>
+ <Shape DEF='S1'><Appearance><Material DEF='Mat' diffuseColor='1 0 0'><MetadataString name='onMaterial' value='"paint spec 7"'/></Material></Appearance><Box/></Shape></Transform>
+<Transform DEF='B'><MetadataSet USE='M1'/><Shape USE='S1'/></Transform>
+<TimeSensor DEF='T'><MetadataString name='onSensor' value='"clock"'/></TimeSensor>
+<ROUTE fromNode='T' fromField='fraction_changed' toNode='T' toField='set_startTime'/>
+</Scene></X3D>

@@ -1217,6 +1217,10 @@ def rejection_controls() -> list[dict]:
         if not ok:
             raise RuntimeError(f"REJECTION_SHAPE: {json.dumps(r)[:900]}")
         rows.append({"case": "a rejection names every refused witness, its class, reason and locus", "result": "2 refused, 2 accepted"})
+        stamp = by["traps"]["instrument"]
+        if not (len(stamp.get("kit_sha256", "")) == 64 and "kit_commit" in stamp and stamp["tool"] == "synthetic"):
+            raise RuntimeError(f"KIT_STAMP_MISSING: {stamp}")
+        rows.append({"case": "every witness record names the kit that wrote it (content hash, and commit when in a checkout)", "result": "stamped"})
         dest = Path(d) / "out" / "REJECTION.json"
         rejection.write(r, dest)
         if rejection.verify(dest)["sha256"] != r["sha256"]:
