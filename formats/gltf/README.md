@@ -23,6 +23,7 @@ node bin/loom-gltf.mjs run --out runs/my-run                      # ~6 min on 4 
 node bin/loom-gltf.mjs run --x3d a.x3d,b.x3d --out runs/my-sem    # semantic round trip + visual Loom on the converted glb
 node tools/contact-sheet.mjs runs/my-run
 python3 -I tools/check_receipts.py runs/my-run                    # schema + seal of every receipt
+node tools/failures.mjs runs/my-run                               # why each warn or fail: floor missed, image region, class, rule (failures.json)
 npm test && python3 -I semantic/test_x3dsem.py                    # 7 + 11 tests, every witness must be able to say no
 ```
 

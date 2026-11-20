@@ -1,0 +1,282 @@
+{
+ "@context": {
+  "@version": 1.1,
+  "loom": "urn:loom:core:",
+  "prov": "http://www.w3.org/ns/prov#",
+  "dct": "http://purl.org/dc/terms/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#",
+  "Claim": "loom:Claim",
+  "Evidence": "loom:Evidence",
+  "Receipt": "loom:Receipt",
+  "grade": {
+   "@id": "loom:grade",
+   "@type": "@vocab"
+  },
+  "gradeNative": "loom:gradeNative",
+  "verdict": {
+   "@id": "loom:verdict",
+   "@type": "@vocab"
+  },
+  "statement": "loom:statement",
+  "about": {
+   "@id": "loom:about",
+   "@type": "@id"
+  },
+  "source": "dct:source",
+  "instrument": "loom:instrument",
+  "derivedFrom": {
+   "@id": "prov:wasDerivedFrom",
+   "@type": "@id"
+  },
+  "part": {
+   "@id": "loom:part",
+   "@type": "@id"
+  },
+  "locator": "loom:locator",
+  "dialect": "loom:dialect",
+  "sha256": "loom:sha256",
+  "normalizedFrom": "loom:normalizedFrom",
+  "C": "loom:grade:C",
+  "L": "loom:grade:L",
+  "S": "loom:grade:S",
+  "supported": "loom:verdict:supported",
+  "refuted": "loom:verdict:refuted",
+  "untested": "loom:verdict:untested"
+ },
+ "normalizedFrom": {
+  "file": "heritage.jsonld",
+  "sha256": "10f090b21f8319179da79892c4d6d3779ccc75ce7137f08335e3c4e8761e88f3",
+  "commit": "7a8c0ba",
+  "dialect": "heritage-crm"
+ },
+ "@graph": [
+  {
+   "@id": "urn:x3d:heritage-geo:c1",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "a6910cf4f211680704e701cf8a3250f061f2303a178753d5f8693a892015e611",
+   "grade": "L",
+   "statement": "Built in the 4th Dynasty, c. 2560 BCE.",
+   "source": "Published chronology; not re-opened here",
+   "about": "urn:x3d:heritage-geo:site:khufu"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:c2",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "5b3d9b8c13fa8162501d97503d9176411ea08ce32cd794da24249354ab229802",
+   "grade": "L",
+   "statement": "Commissioned by Khufu.",
+   "source": "Published consensus; not re-opened here",
+   "about": "urn:x3d:heritage-geo:site:khufu"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:c3",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "ec51f709586997d9f8bd0e7d6522ee896caa3c63f61eb04564968cee41858045",
+   "grade": "C",
+   "statement": "Placed at the Pleiades representative point 29.97916 N, 31.13422 E.",
+   "source": "Pleiades dump of 17 Nov 2026 read here (locationPrecision: precise); that the monument is there is L",
+   "about": "urn:x3d:heritage-geo:site:khufu"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:c4",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "2c3f6741e4cfcbbb81134e1ff55ce82bd658c769ef6a8a63038b4d8fd9138a00",
+   "grade": "L",
+   "statement": "Attributed to Khafre, son of Khufu.",
+   "source": "Published consensus",
+   "about": "urn:x3d:heritage-geo:site:khafre"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:c5",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "d3f5f7902d84e4edde3f8cc70b37c562a7369424683706512728283221501157",
+   "grade": "S",
+   "statement": "Sphinx attributed to Khafre's reign; the attribution is argued, not proven.",
+   "source": "Contested literature; see GIZA-EVIDENCE-ATLAS GZ-1",
+   "about": "urn:x3d:heritage-geo:site:sphinx"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:c6",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "9d3f3eafa0c901a929f748ead60de05a71c4f677d2f738e2cc479da995f97aeb",
+   "grade": "L",
+   "statement": "Base about 102 m, height about 65 m; drawn here as a schematic box-pyramid.",
+   "source": "Published figures; geometry status is schematic (GZ-1)",
+   "about": "urn:x3d:heritage-geo:site:menkaure"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:c7",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "be4b4920f009e0b0775be159ff52e1cf7cc1260afd14017aa660d8d49355e592",
+   "grade": "C",
+   "statement": "Each claim is an E13 Attribute Assignment carrying its grade, so the grade is queryable.",
+   "source": "claims.jsonld built and parsed here",
+   "about": "urn:x3d:heritage-geo:site:khufu"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:c8",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "f020f1d805af0f02547d51290c156cab01a4e36150004687e606b5fdaecf0603",
+   "grade": "C",
+   "statement": "v1 placed Khafre 208 m from its Pleiades point (and Menkaure 64 m); v2 uses the Pleiades points.",
+   "source": "Offsets computed in data/pleiades-giza.json; v1 coordinates were typed from memory, not read from a source",
+   "about": "urn:x3d:heritage-geo:site:khafre"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:c9",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "11fad101521e3a0152c439ce79b557d0bc0608e7126e2b753b76d34f146be29a",
+   "grade": "C",
+   "statement": "Sphinx point from Pleiades 536839380 (v1 differed by 4.3 m).",
+   "source": "Pleiades dump read here",
+   "about": "urn:x3d:heritage-geo:site:sphinx"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:finding:elevation:e1",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "8de786d91e8d92dffe27d0178e02a3ce063e2487a5a50f709e05fe7006995b24",
+   "grade": "C",
+   "statement": "Median of EPQS minus (617 + DSM) is +0.03 m over 140 points at 30 m spacing.",
+   "source": "USGS EPQS 1 m, 18 Nov 2026; reconcile_elevation.py"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:finding:elevation:e2",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "e9f73346837e4a2ee771f8efa5b76febc020b3dcd0da1cc6b016d0e32073dde8",
+   "grade": "C",
+   "statement": "Ground across the 400 x 300 m tile spans 619.8 to 632.9 m in EPQS, so 627.175 m is one point on the slope.",
+   "source": "USGS EPQS 1 m, 18 Nov 2026"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:finding:elevation:e3",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "dcefa6aaa641e67284ddf7c433dbf2e302424dccf9e433deef88514a84bee7eb",
+   "grade": "S",
+   "statement": "The tile centre (37.2284, -80.4234) and z-southward orientation are assumptions (correlation 0.51 vs -0.40).",
+   "source": "reconcile_elevation.py fit; not surveyed"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:finding:elevation:e4",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "521db3317bcb25721d32404886c4ba390195bde0ba019d0eb53468689a8e9157",
+   "grade": "S",
+   "statement": "Therefore 627 vs 617 m is not a datum conflict: 617 m is the right reference for the DSM.",
+   "source": "interpretation that rests on e1-e3"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:finding:elevation",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "f6621eb2cf1a7cad8ffa2fef321dc1ca079896742ae5616194ef3dadcc7e4980",
+   "grade": "S",
+   "statement": "Elevation 627 vs 617 m: measured residual near zero; the 'not a datum conflict' reading depends on an assumed tile centre.",
+   "part": [
+    "urn:x3d:heritage-geo:finding:elevation:e1",
+    "urn:x3d:heritage-geo:finding:elevation:e2",
+    "urn:x3d:heritage-geo:finding:elevation:e3",
+    "urn:x3d:heritage-geo:finding:elevation:e4"
+   ]
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:finding:pleiades:p1",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "0ff49af170d47c1825bb9597a48146c217e278c1907a2f1919c55a1832ea43fa",
+   "grade": "C",
+   "statement": "v1 put Khafre 208 m and Menkaure 64 m from their Pleiades points (typed from memory); v2 and v3 use the Pleiades points.",
+   "source": "Pleiades dump 17 Nov 2026"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:finding:pleiades",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "61894768682975fa3217658aa0c40f6d15364a7605f80308c90e843e55b3ad75",
+   "grade": "C",
+   "statement": "Correction: Khafre and Menkaure moved to their Pleiades points.",
+   "part": [
+    "urn:x3d:heritage-geo:finding:pleiades:p1"
+   ]
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:finding:ifc:i1",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "f27869c4f0ea8ecb3edf7ffb902899b28e166ce6a29db2994bc964ee8796f411",
+   "grade": "C",
+   "statement": "The confluence-ifc model.ifc has no site placement and no IfcMapConversion.",
+   "source": "grep of model.ifc (2,030 lines)"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:finding:ifc:i2",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "3bc3207acfcbd3df2072be9c27533fdf24e1faa9ee60fa1216320834b5414fb9",
+   "grade": "S",
+   "statement": "The placement shown here is authored, not read from the file.",
+   "source": "authored in build.py"
+  },
+  {
+   "@id": "urn:x3d:heritage-geo:finding:ifc",
+   "@type": "Claim",
+   "dialect": "heritage-crm",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "099e643f31270abe9185dece1c42b35d4a8ee05642987251a9d32907af90dabb",
+   "grade": "S",
+   "statement": "IFC model carries no placement; the placement here is authored.",
+   "part": [
+    "urn:x3d:heritage-geo:finding:ifc:i1",
+    "urn:x3d:heritage-geo:finding:ifc:i2"
+   ]
+  }
+ ]
+}

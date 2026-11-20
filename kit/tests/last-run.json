@@ -574,6 +574,40 @@
             "expected": "RECEIPT_OUTPUTS"
           }
         ],
+        "rejection": [
+          {
+            "case": "an acceptable candidate gets no rejection",
+            "caught": "REJECTION_OF_ACCEPTED",
+            "expected": "REJECTION_OF_ACCEPTED"
+          },
+          {
+            "case": "accept stops at the first refusal",
+            "caught": "WITNESS_NOT_PASS",
+            "expected": "WITNESS_NOT_PASS"
+          },
+          {
+            "case": "a rejection names every refused witness, its class, reason and locus",
+            "result": "2 refused, 2 accepted"
+          },
+          {
+            "case": "a rejection is never overwritten",
+            "caught": "REJECTION_EXISTS",
+            "expected": "REJECTION_EXISTS"
+          },
+          {
+            "case": "an edited rejection no longer verifies",
+            "caught": "REJECTION_DRIFT",
+            "expected": "REJECTION_DRIFT"
+          },
+          {
+            "case": "a missing witness is a refusal with no record",
+            "result": "MISSING_WITNESS"
+          },
+          {
+            "case": "cli: rejection written (exit 0), refused inside the evidence folder (exit 1), verifies (exit 0)",
+            "result": "0, 1, 0"
+          }
+        ],
         "review": [
           {
             "case": "D1: traps status=fail exits 1 and the record is written first",
@@ -1701,6 +1735,40 @@
             "case": "the same output listed twice",
             "caught": "RECEIPT_OUTPUTS",
             "expected": "RECEIPT_OUTPUTS"
+          }
+        ],
+        "rejection": [
+          {
+            "case": "an acceptable candidate gets no rejection",
+            "caught": "REJECTION_OF_ACCEPTED",
+            "expected": "REJECTION_OF_ACCEPTED"
+          },
+          {
+            "case": "accept stops at the first refusal",
+            "caught": "WITNESS_NOT_PASS",
+            "expected": "WITNESS_NOT_PASS"
+          },
+          {
+            "case": "a rejection names every refused witness, its class, reason and locus",
+            "result": "2 refused, 2 accepted"
+          },
+          {
+            "case": "a rejection is never overwritten",
+            "caught": "REJECTION_EXISTS",
+            "expected": "REJECTION_EXISTS"
+          },
+          {
+            "case": "an edited rejection no longer verifies",
+            "caught": "REJECTION_DRIFT",
+            "expected": "REJECTION_DRIFT"
+          },
+          {
+            "case": "a missing witness is a refusal with no record",
+            "result": "MISSING_WITNESS"
+          },
+          {
+            "case": "cli: rejection written (exit 0), refused inside the evidence folder (exit 1), verifies (exit 0)",
+            "result": "0, 1, 0"
           }
         ],
         "review": [

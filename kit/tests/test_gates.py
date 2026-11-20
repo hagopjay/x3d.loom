@@ -21,7 +21,7 @@ KIT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(KIT))
 
 from loomkit import accept as acc  # noqa: E402
-from loomkit import cli, pagetraps, physics, picture, play, receipt, sci, sweep, traps  # noqa: E402
+from loomkit import cli, pagetraps, physics, picture, play, receipt, rejection, sci, sweep, traps  # noqa: E402
 from loomkit.core import GateError, InstrumentError, candidate, sha256_file, write_witness  # noqa: E402
 
 PROFILE = {"schema": "loom.profile/1", "name": "synthetic/test", "required": [
@@ -1195,6 +1195,54 @@ def review5_controls() -> list[dict]:
     return rows
 
 
+def rejection_controls() -> list[dict]:
+    """A refusal leaves a record (20 Nov 2026 review: receipts hold only survivors, so nothing could be mined)."""
+    rows = []
+    with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
+        root, ev, s = fixture(Path(d))
+        rows.append({"case": "an acceptable candidate gets no rejection", **expect("REJECTION_OF_ACCEPTED", lambda: rejection.build("s", root, ev, PROFILE, "0" * 64))})
+        # two faults at once: accept() names the first, the rejection names both, with the place the witness recorded
+        edit(ev, "traps", status="fail", reason="1 error", measurements={"hits": {"world.x3d": [
+            {"rule": "T-SYNTH", "severity": "error", "where": "line 1", "detail": "synthetic"},
+            {"rule": "T-WARN", "severity": "warning", "where": "line 1", "detail": "listed only"}]}})
+        (ev / "truth.log").write_text("edited\n")
+        rows.append({"case": "accept stops at the first refusal", **expect("WITNESS_NOT_PASS", lambda: acc.accept(root, ev, PROFILE))})
+        r = rejection.build("s", root, ev, PROFILE, "0" * 64)
+        by = {w["witness"]: w for w in r["witnesses"]}
+        ok = (r["schema"] == "loom.rejection/1" and r["refused"] == 2 and r["failure_classes"] == ["EVIDENCE_DRIFT", "WITNESS_NOT_PASS"]
+              and r["candidate_sha256"] == s and by["grammar"]["verdict"] == "accepted" and by["behaviour"]["verdict"] == "accepted"
+              and by["traps"]["failure_class"] == "WITNESS_NOT_PASS" and by["traps"]["status"] == "fail" and by["traps"]["reason"] == "1 error"
+              and by["traps"]["locus"] == [{"file": "world.x3d", "rule": "T-SYNTH", "where": "line 1", "severity": "error", "detail": "synthetic"}]
+              and by["truth"]["failure_class"] == "EVIDENCE_DRIFT" and by["truth"]["locus"] is None)
+        if not ok:
+            raise RuntimeError(f"REJECTION_SHAPE: {json.dumps(r)[:900]}")
+        rows.append({"case": "a rejection names every refused witness, its class, reason and locus", "result": "2 refused, 2 accepted"})
+        dest = Path(d) / "out" / "REJECTION.json"
+        rejection.write(r, dest)
+        if rejection.verify(dest)["sha256"] != r["sha256"]:
+            raise RuntimeError("REJECTION_VERIFY")
+        rows.append({"case": "a rejection is never overwritten", **expect("REJECTION_EXISTS", lambda: rejection.write(r, dest))})
+        j = json.loads(dest.read_text()); j["refused"] = 0; dest.write_text(json.dumps(j))
+        rows.append({"case": "an edited rejection no longer verifies", **expect("REJECTION_DRIFT", lambda: rejection.verify(dest))})
+        (ev / "grammar.json").unlink()
+        r2 = rejection.build("s", root, ev, PROFILE, "0" * 64)
+        g = next(w for w in r2["witnesses"] if w["witness"] == "grammar")
+        if not (g["failure_class"] == "MISSING_WITNESS" and g["status"] is None and g["record_sha256"] is None and r2["refused"] == 3):
+            raise RuntimeError("REJECTION_MISSING_WITNESS")
+        rows.append({"case": "a missing witness is a refusal with no record", "result": "MISSING_WITNESS"})
+        # the CLI writes it, exits 0, and refuses a place inside the evidence folder
+        prof = Path(d) / "p.json"; prof.write_text(json.dumps(PROFILE))
+        out = Path(d) / "out" / "REJECTION-2.json"
+        with contextlib.redirect_stdout(io.StringIO()):
+            code = cli.main(["rejection", str(root), "--evidence", str(ev), "--profile", str(prof), "--subject", "s", "--out", str(out)])
+            inside = cli.main(["rejection", str(root), "--evidence", str(ev), "--profile", str(prof), "--subject", "s", "--out", str(ev / "R.json")])
+            intact = cli.main(["verify-rejection", str(out)])
+        if (code, inside, intact) != (0, 1, 0) or (ev / "R.json").exists():
+            raise RuntimeError(f"REJECTION_CLI: {(code, inside, intact)}")
+        rows.append({"case": "cli: rejection written (exit 0), refused inside the evidence folder (exit 1), verifies (exit 0)", "result": "0, 1, 0"})
+    return rows
+
+
 def cli_args(root, ev, prof, out, prev=None, force=False):
     import argparse
     return argparse.Namespace(root=str(root), evidence=str(ev), profile=str(prof), subject="s", out=str(out), outputs=[], prev=str(prev) if prev else None, force=force)
@@ -1203,7 +1251,7 @@ def cli_args(root, ev, prof, out, prev=None, force=False):
 def run_all() -> dict:
     return {"acceptance": acceptance_controls(), "traps": trap_controls(),
             "picture": picture_controls(), "receipt": receipt_controls(), "sweep": sweep_controls(), "sci": sci_controls(),
-            "pagetraps": page_controls(), "play": play_controls(), "physics": physics_controls(), "cli": cli_controls(), "cli_subprocess": cli_subprocess_controls(), "review": review_controls(), "review3": review3_controls(), "review4": review4_controls(), "review5": review5_controls(), "optimized": bool(sys.flags.optimize)}
+            "pagetraps": page_controls(), "play": play_controls(), "physics": physics_controls(), "cli": cli_controls(), "cli_subprocess": cli_subprocess_controls(), "review": review_controls(), "review3": review3_controls(), "review4": review4_controls(), "review5": review5_controls(), "rejection": rejection_controls(), "optimized": bool(sys.flags.optimize)}
 
 
 if __name__ == "__main__":

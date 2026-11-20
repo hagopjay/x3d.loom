@@ -1,0 +1,239 @@
+{
+  "schema": "loom.failure/1",
+  "receipt": {
+    "file": "receipt.json",
+    "sha256": "f4c26e5afd95d30b85947c368f313c57ff9fdd588e1d1340950a208bb00103fa"
+  },
+  "subject": {
+    "id": "NormalTangentMirrorTest",
+    "sha256": "31ce5f3c873fc55531a17ccacf001e3d1d482a508695aa826fa79cc196e0ce78"
+  },
+  "failures": [
+    {
+      "engine": "three",
+      "status": "warn",
+      "reason": "warn: ssim 0.9762 is under the pass floor 0.98; psnr_fg_db 28.5 is under the pass floor 30",
+      "misses": [
+        {
+          "metric": "ssim",
+          "value": 0.9762,
+          "floor": 0.98,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 28.5,
+          "floor": 30,
+          "level": "pass"
+        }
+      ],
+      "failure_class": "tone-shift",
+      "locus": {
+        "space": "image, origin top-left, 0..1",
+        "grid": 8,
+        "bbox_over16": [
+          0.211,
+          0.211,
+          0.9,
+          0.748
+        ],
+        "over16_pixels": 1324,
+        "over16_where": {
+          "silhouette": 0,
+          "interior": 1,
+          "background": 0
+        },
+        "worst_tiles": [
+          {
+            "col": 4,
+            "row": 3,
+            "share": 0.123
+          },
+          {
+            "col": 4,
+            "row": 2,
+            "share": 0.121
+          },
+          {
+            "col": 4,
+            "row": 4,
+            "share": 0.116
+          }
+        ],
+        "top6_tile_share": 0.599,
+        "luma_bias": 1.418,
+        "luma_bias_ratio": 0.872,
+        "direction": "candidate brighter"
+      },
+      "rule_id": null,
+      "rule_why": null,
+      "rule_status": "unexplained",
+      "subject_features": {
+        "validator_codes": [],
+        "extensions_used": []
+      },
+      "class_cuts": {
+        "basis": "v0, set by hand on 20 Nov 2026 (grade: Suspected)",
+        "silhouette_iou_max": 0.97,
+        "silhouette_share_min": 0.5,
+        "tone_bias_ratio_min": 0.8,
+        "local_top6_share_min": 0.5
+      }
+    },
+    {
+      "engine": "babylon",
+      "status": "fail",
+      "reason": "fail: ssim 0.915 is under the warn floor 0.95; psnr_fg_db 19.8 is under the warn floor 25",
+      "misses": [
+        {
+          "metric": "ssim",
+          "value": 0.915,
+          "floor": 0.98,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 19.8,
+          "floor": 30,
+          "level": "pass"
+        },
+        {
+          "metric": "ssim",
+          "value": 0.915,
+          "floor": 0.95,
+          "level": "warn"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 19.8,
+          "floor": 25,
+          "level": "warn"
+        }
+      ],
+      "failure_class": "tone-shift",
+      "locus": {
+        "space": "image, origin top-left, 0..1",
+        "grid": 8,
+        "bbox_over16": [
+          0.223,
+          0.211,
+          0.93,
+          0.793
+        ],
+        "over16_pixels": 7995,
+        "over16_where": {
+          "silhouette": 0,
+          "interior": 1,
+          "background": 0
+        },
+        "worst_tiles": [
+          {
+            "col": 6,
+            "row": 4,
+            "share": 0.092
+          },
+          {
+            "col": 6,
+            "row": 5,
+            "share": 0.092
+          },
+          {
+            "col": 5,
+            "row": 5,
+            "share": 0.072
+          }
+        ],
+        "top6_tile_share": 0.46,
+        "luma_bias": 7.587,
+        "luma_bias_ratio": 0.997,
+        "direction": "candidate brighter"
+      },
+      "rule_id": null,
+      "rule_why": null,
+      "rule_status": "unexplained",
+      "subject_features": {
+        "validator_codes": [],
+        "extensions_used": []
+      },
+      "class_cuts": {
+        "basis": "v0, set by hand on 20 Nov 2026 (grade: Suspected)",
+        "silhouette_iou_max": 0.97,
+        "silhouette_share_min": 0.5,
+        "tone_bias_ratio_min": 0.8,
+        "local_top6_share_min": 0.5
+      }
+    },
+    {
+      "engine": "cycles",
+      "status": "warn",
+      "reason": "warn: ssim 0.9563 is under the pass floor 0.98; psnr_fg_db 27.26 is under the pass floor 30",
+      "misses": [
+        {
+          "metric": "ssim",
+          "value": 0.9563,
+          "floor": 0.98,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 27.26,
+          "floor": 30,
+          "level": "pass"
+        }
+      ],
+      "failure_class": "silhouette",
+      "locus": {
+        "space": "image, origin top-left, 0..1",
+        "grid": 8,
+        "bbox_over16": [
+          0.184,
+          0.166,
+          0.955,
+          0.807
+        ],
+        "over16_pixels": 3593,
+        "over16_where": {
+          "silhouette": 0.06,
+          "interior": 0.94,
+          "background": 0
+        },
+        "worst_tiles": [
+          {
+            "col": 1,
+            "row": 2,
+            "share": 0.082
+          },
+          {
+            "col": 2,
+            "row": 2,
+            "share": 0.052
+          },
+          {
+            "col": 5,
+            "row": 3,
+            "share": 0.047
+          }
+        ],
+        "top6_tile_share": 0.315,
+        "luma_bias": 0.85,
+        "luma_bias_ratio": 0.222,
+        "direction": "candidate brighter"
+      },
+      "rule_id": "R-GLTF-4",
+      "rule_why": "a path tracer draws shadows and bounce light the raster reference does not: witness, not candidate",
+      "rule_status": "explained",
+      "subject_features": {
+        "validator_codes": [],
+        "extensions_used": []
+      },
+      "class_cuts": {
+        "basis": "v0, set by hand on 20 Nov 2026 (grade: Suspected)",
+        "silhouette_iou_max": 0.97,
+        "silhouette_share_min": 0.5,
+        "tone_bias_ratio_min": 0.8,
+        "local_top6_share_min": 0.5
+      }
+    }
+  ],
+  "sha256": "647f223684cc61c5f14c9f94b57c25cc32028e12b75198264356ccf485a5876f"
+}

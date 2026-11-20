@@ -84,3 +84,55 @@ test('receipt seal detects a changed number', () => {
   const t = structuredClone(r); t.runs[0].score.ssim = 0.999;
   assert.equal(verify(t), false);
 });
+
+// ---- failure records (src/failure.mjs) ------------------------------------------------------------------------------------
+import { locate, classify, misses, reasonText, ruleFor } from '../src/failure.mjs';
+import { spawnSync } from 'node:child_process';
+
+async function picture(file, paint) {
+  const w = 64, h = 64, buf = Buffer.alloc(w * h * 3);
+  for (let i = 0; i < w * h; i++) { const c = paint(i % w, Math.floor(i / w)) ?? BG; buf[3 * i] = c[0]; buf[3 * i + 1] = c[1]; buf[3 * i + 2] = c[2]; }
+  await sharp(buf, { raw: { width: w, height: h, channels: 3 } }).png().toFile(file); return file;
+}
+const disc = (x, y, r = 20) => (x - 32) ** 2 + (y - 32) ** 2 < r * r;
+
+test('a failure names the floor it missed, the region and the class', async () => {
+  const ref = await picture(path.join(tmp, 'f-ref.png'), (x, y) => (disc(x, y) ? [120, 120, 120] : null));
+  // brighter everywhere on the object: tone-shift, candidate brighter
+  const bright = await picture(path.join(tmp, 'f-bright.png'), (x, y) => (disc(x, y) ? [170, 170, 170] : null));
+  let l = await locate(bright, ref); let s = await score(bright, ref);
+  assert.equal(classify(s, l), 'tone-shift'); assert.equal(l.direction, 'candidate brighter'); assert.equal(l.over16_where.interior, 1);
+  // a smaller object: silhouette
+  const small = await picture(path.join(tmp, 'f-small.png'), (x, y) => (disc(x, y, 14) ? [120, 120, 120] : null));
+  l = await locate(small, ref); s = await score(small, ref);
+  assert.equal(classify(s, l), 'silhouette'); assert.equal(l.over16_where.silhouette, 1);
+  // one dark patch in the top-left of the object: local-shading, and the bbox sits where the patch is
+  const patch = await picture(path.join(tmp, 'f-patch.png'), (x, y) => (disc(x, y) ? (x < 30 && y < 30 ? [(x + y) % 2 ? 40 : 200, 120, 120] : [120, 120, 120]) : null));
+  l = await locate(patch, ref); s = await score(patch, ref);
+  assert.equal(classify(s, l), 'local-shading'); assert.ok(l.bbox_over16[2] <= 0.47 && l.bbox_over16[3] <= 0.47);
+  // identical pictures have no locus
+  l = await locate(ref, ref); assert.equal(l.bbox_over16, null); assert.equal(l.over16_pixels, 0);
+  const th = { pass: { ssim_min: 0.98, psnr_fg_db_min: 30 }, warn: { ssim_min: 0.95, psnr_fg_db_min: 25 } };
+  const m = misses({ ssim: 0.96, psnr_fg_db: 20 }, th);
+  assert.deepEqual(m.map((x) => `${x.metric}:${x.level}`), ['ssim:pass', 'psnr_fg_db:pass', 'psnr_fg_db:warn']);
+  assert.equal(reasonText('fail', m), 'fail: psnr_fg_db 20 is under the warn floor 25');
+  assert.equal(ruleFor({ engineId: 'three', consensus: { reference_suspect: true } }).rule_id, 'R-GLTF-8');
+  assert.equal(ruleFor({ engineId: 'cycles', consensus: { reference_suspect: false } }).rule_id, 'R-GLTF-4');
+  assert.equal(ruleFor({ engineId: 'three', consensus: {}, gateIssueCodes: [] }).rule_id, null);
+});
+
+test('every committed run has a failures.json that the tool reproduces, and no failure lacks a reason', () => {
+  const runs = fs.readdirSync(new URL('../runs/', import.meta.url)).map((d) => new URL(`../runs/${d}`, import.meta.url).pathname);
+  const r = spawnSync(process.execPath, [new URL('../tools/failures.mjs', import.meta.url).pathname, '--check', ...runs], { encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  let n = 0;
+  for (const d of runs) for (const s of fs.readdirSync(d)) {
+    const f = path.join(d, s, 'failures.json'); if (!fs.existsSync(f)) continue;
+    const j = JSON.parse(fs.readFileSync(f, 'utf8'));
+    const rec = JSON.parse(fs.readFileSync(path.join(d, s, 'receipt.json'), 'utf8'));
+    assert.equal(j.receipt.sha256, rec.sha256);
+    assert.equal(j.failures.length, rec.runs.filter((x) => ['warn', 'fail', 'error'].includes(x.status)).length);
+    for (const x of j.failures) { n++; assert.ok(x.reason && x.failure_class && x.rule_status, `${f} ${x.engine}`); }
+  }
+  assert.ok(n >= 19);
+});

@@ -45,6 +45,18 @@
           "engine": { "type": "object", "required": ["id", "name", "version"], "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "version": { "type": ["string", "null"] } } },
           "status": { "enum": ["pass", "warn", "fail", "error", "not_run", "reference"] },
           "reason": { "type": ["string", "null"] },
+          "failure": {
+            "type": "object", "description": "present on a scored run that is warn or fail (added 20 Nov 2026; older receipts carry the same block in failures.json, schema loom.failure/1)",
+            "required": ["reason", "misses", "failure_class", "locus", "rule_id", "rule_status"],
+            "properties": {
+              "reason": { "type": "string" },
+              "misses": { "type": "array", "items": { "type": "object", "required": ["metric", "value", "floor", "level"] } },
+              "failure_class": { "enum": ["silhouette", "tone-shift", "local-shading", "broad-shading", "engine-error"] },
+              "locus": { "type": ["object", "null"], "description": "image region, not a scene node" },
+              "rule_id": { "type": ["string", "null"] },
+              "rule_status": { "enum": ["explained", "unexplained"] }
+            }
+          },
           "host": { "type": ["object", "null"], "properties": { "kind": { "enum": ["browser", "native"] }, "name": { "type": "string" }, "version": { "type": ["string", "null"] }, "user_agent": { "type": ["string", "null"] } } },
           "gpu": {
             "type": ["object", "null"], "description": "same field names as x3d-wgpu-conformance/1 'adapter' (wgpu AdapterInfo), plus api",

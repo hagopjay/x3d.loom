@@ -1,0 +1,91 @@
+{
+  "schema": "loom.failure/1",
+  "receipt": {
+    "file": "receipt.json",
+    "sha256": "77c6469c0946ec36a7b4adc62fdfe5e70bb51dc55445255daf2af5592cf5f534"
+  },
+  "subject": {
+    "id": "Duck",
+    "sha256": "65bf938f54d6073e619e76e007820bbf980cdc3dc0daec0d94830ffc4ae54ab5"
+  },
+  "failures": [
+    {
+      "engine": "cycles",
+      "status": "fail",
+      "reason": "fail: psnr_fg_db 20.91 is under the warn floor 25",
+      "misses": [
+        {
+          "metric": "ssim",
+          "value": 0.9726,
+          "floor": 0.98,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 20.91,
+          "floor": 30,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 20.91,
+          "floor": 25,
+          "level": "warn"
+        }
+      ],
+      "failure_class": "local-shading",
+      "locus": {
+        "space": "image, origin top-left, 0..1",
+        "grid": 8,
+        "bbox_over16": [
+          0.217,
+          0.211,
+          0.836,
+          0.834
+        ],
+        "over16_pixels": 9215,
+        "over16_where": {
+          "silhouette": 0.014,
+          "interior": 0.986,
+          "background": 0
+        },
+        "worst_tiles": [
+          {
+            "col": 4,
+            "row": 4,
+            "share": 0.232
+          },
+          {
+            "col": 5,
+            "row": 4,
+            "share": 0.208
+          },
+          {
+            "col": 3,
+            "row": 4,
+            "share": 0.096
+          }
+        ],
+        "top6_tile_share": 0.725,
+        "luma_bias": 3.156,
+        "luma_bias_ratio": 0.337,
+        "direction": "candidate brighter"
+      },
+      "rule_id": "R-GLTF-4",
+      "rule_why": "a path tracer draws shadows and bounce light the raster reference does not: witness, not candidate",
+      "rule_status": "explained",
+      "subject_features": {
+        "validator_codes": [],
+        "extensions_used": []
+      },
+      "class_cuts": {
+        "basis": "v0, set by hand on 20 Nov 2026 (grade: Suspected)",
+        "silhouette_iou_max": 0.97,
+        "silhouette_share_min": 0.5,
+        "tone_bias_ratio_min": 0.8,
+        "local_top6_share_min": 0.5
+      }
+    }
+  ],
+  "sha256": "bfd152f509373ec081f64258d002982eda2e3146a4da54839fd176e16ddba2c8"
+}

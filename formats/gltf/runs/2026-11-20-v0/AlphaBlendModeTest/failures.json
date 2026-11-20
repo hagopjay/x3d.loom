@@ -1,0 +1,168 @@
+{
+  "schema": "loom.failure/1",
+  "receipt": {
+    "file": "receipt.json",
+    "sha256": "c1147e292313b57a13710f9d8e188eebd332db92c5588e2ea0cd197a6214647c"
+  },
+  "subject": {
+    "id": "AlphaBlendModeTest",
+    "sha256": "37c3577d143071b42dd46e9d942b157837eb25c6340112171d7faecaa987b14e"
+  },
+  "failures": [
+    {
+      "engine": "xite",
+      "status": "fail",
+      "reason": "fail: psnr_fg_db 22.73 is under the warn floor 25",
+      "misses": [
+        {
+          "metric": "ssim",
+          "value": 0.9581,
+          "floor": 0.98,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 22.73,
+          "floor": 30,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 22.73,
+          "floor": 25,
+          "level": "warn"
+        }
+      ],
+      "failure_class": "local-shading",
+      "locus": {
+        "space": "image, origin top-left, 0..1",
+        "grid": 8,
+        "bbox_over16": [
+          0.188,
+          0.363,
+          0.93,
+          0.701
+        ],
+        "over16_pixels": 8237,
+        "over16_where": {
+          "silhouette": 0,
+          "interior": 1,
+          "background": 0
+        },
+        "worst_tiles": [
+          {
+            "col": 4,
+            "row": 4,
+            "share": 0.118
+          },
+          {
+            "col": 3,
+            "row": 4,
+            "share": 0.115
+          },
+          {
+            "col": 2,
+            "row": 3,
+            "share": 0.114
+          }
+        ],
+        "top6_tile_share": 0.619,
+        "luma_bias": -1.351,
+        "luma_bias_ratio": 0.201,
+        "direction": "candidate darker"
+      },
+      "rule_id": null,
+      "rule_why": null,
+      "rule_status": "unexplained",
+      "subject_features": {
+        "validator_codes": [],
+        "extensions_used": []
+      },
+      "class_cuts": {
+        "basis": "v0, set by hand on 20 Nov 2026 (grade: Suspected)",
+        "silhouette_iou_max": 0.97,
+        "silhouette_share_min": 0.5,
+        "tone_bias_ratio_min": 0.8,
+        "local_top6_share_min": 0.5
+      }
+    },
+    {
+      "engine": "cycles",
+      "status": "fail",
+      "reason": "fail: psnr_fg_db 21.59 is under the warn floor 25",
+      "misses": [
+        {
+          "metric": "ssim",
+          "value": 0.9663,
+          "floor": 0.98,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 21.59,
+          "floor": 30,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 21.59,
+          "floor": 25,
+          "level": "warn"
+        }
+      ],
+      "failure_class": "local-shading",
+      "locus": {
+        "space": "image, origin top-left, 0..1",
+        "grid": 8,
+        "bbox_over16": [
+          0.16,
+          0.346,
+          0.938,
+          0.723
+        ],
+        "over16_pixels": 11100,
+        "over16_where": {
+          "silhouette": 0.013,
+          "interior": 0.987,
+          "background": 0
+        },
+        "worst_tiles": [
+          {
+            "col": 4,
+            "row": 4,
+            "share": 0.137
+          },
+          {
+            "col": 5,
+            "row": 4,
+            "share": 0.129
+          },
+          {
+            "col": 2,
+            "row": 3,
+            "share": 0.098
+          }
+        ],
+        "top6_tile_share": 0.64,
+        "luma_bias": 1.911,
+        "luma_bias_ratio": 0.155,
+        "direction": "mixed"
+      },
+      "rule_id": "R-GLTF-4",
+      "rule_why": "a path tracer draws shadows and bounce light the raster reference does not: witness, not candidate",
+      "rule_status": "explained",
+      "subject_features": {
+        "validator_codes": [],
+        "extensions_used": []
+      },
+      "class_cuts": {
+        "basis": "v0, set by hand on 20 Nov 2026 (grade: Suspected)",
+        "silhouette_iou_max": 0.97,
+        "silhouette_share_min": 0.5,
+        "tone_bias_ratio_min": 0.8,
+        "local_top6_share_min": 0.5
+      }
+    }
+  ],
+  "sha256": "d232ab98180795126d5afb0c412bab9223f76cfb4f1980f6936f8b8049d43f12"
+}

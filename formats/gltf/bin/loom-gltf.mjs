@@ -18,6 +18,7 @@ import { renderKhronos, KHRONOS_VERSION } from '../src/reference-khronos.mjs';
 import { score } from '../src/score.mjs';
 import { ENCODE, reencodeTable } from '../src/encode.mjs';
 import { seal, write, sha256, SCHEMA } from '../src/receipt.mjs';
+import { failureOf } from '../src/failure.mjs';
 import { ROOT, LOOM } from '../src/paths.mjs';
 import { renderGlb } from '../../../x3d.gltf/render/render.mjs';
 import { launchChromium, pkgVersion } from '../../../x3d.gltf/render/browser.mjs';
@@ -175,6 +176,12 @@ export async function run(opts) {
       const vsRefFails = raster.filter((r) => r.status === 'fail').length;
       receipt.consensus = { pairs, candidates_agree: agree, candidates_failing_reference: vsRefFails,
         reference_suspect: agree && vsRefFails >= 2, rule: 'R-GLTF-8: all raster candidates pass against each other and >= 2 fail against the reference -> the reference is the suspect' };
+      // FAILURE: every warn or fail says which floor it missed, where in the frame, and which rule (if any) explains it
+      for (const row of receipt.runs.filter((r) => ['warn', 'fail'].includes(r.status) && r.score)) {
+        row.failure = await failureOf({ row, candidatePng: path.join(dir, row.output.png), referencePng: refPng, table: reencodeTable(ENCODE[row.engine.id], ENCODE.khronos),
+          thresholds: THRESHOLDS, consensus: receipt.consensus, gate });
+        row.reason = row.failure.reason;
+      }
       // second witness: how far the two references are from each other
       const cyc = receipt.runs.find((r) => r.engine.id === 'cycles' && r.score);
       receipt.reference.agreement = cyc ? { witness: 'cycles', ssim: cyc.score.encode_matched.ssim, psnr_fg_db: cyc.score.encode_matched.psnr_fg_db } : null;
