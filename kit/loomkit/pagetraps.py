@@ -64,6 +64,11 @@ RULES = {
     "loadurl-unbudgeted": Rule("loadurl-unbudgeted", "warning", "X_ITE 16.6.1 (source reading)",
         "replaceWorld can leave its promise pending when an internal wait rejects (X_ITE teardown F01, L2; not reproduced here, failure mode 89). "
         "Give the world load a time budget (Promise.race with a timeout)."),
+    "xite-update-auto-resume": Rule("xite-update-auto-resume", "warning", "X_ITE 16.7.1",
+        "A page paused its canvas with update=\"false\" while off screen and resumed with update=\"auto\". The scene drew again, but a "
+        "ProximitySensor kept reporting the pose from before the pause, so a star layer that copied it showed the old sky over the new "
+        "ground with no error (Giza v5 as delivered, found in the v6 rig, 20 Nov 2026). Resuming with \"true\" followed the camera again. "
+        "A unit test with a fake sensor passed the faulty value."),
     "anchor-download-hosted": Rule("anchor-download-hosted", "warning", "sandboxed hosted pages",
         "A 4K still button made the image and saved nothing: the hosting sandbox ignores a link's download attribute "
         "(7 Nov, failure mode 113). Where the host offers a save capability, call it on the viewer's click and handle a refusal."),
@@ -199,6 +204,11 @@ def patterns(src: str, path: str = "<page>", globals_shared: bool = True) -> lis
         if re.search(r"\.click\s*\(", src[m.end():m.end() + 400]):
             hits.append(Hit("anchor-download-hosted", "warning", f"{path}:{_line(src, m.start())}",
                             "link download + click: a sandboxed host saves nothing; use its save capability"))
+    # 7. an X_ITE canvas paused with update "false" and resumed with "auto"
+    if re.search(r"""setAttribute\(\s*["']update["']\s*,\s*["']false["']""", src):
+        for m in re.finditer(r"""setAttribute\(\s*["']update["']\s*,\s*["']auto["']""", src):
+            hits.append(Hit("xite-update-auto-resume", "warning", f"{path}:{_line(src, m.start())}",
+                            'update "false" then "auto": the sensor may stay stale; resume with "true" and check in a browser'))
     return hits
 
 
