@@ -140,36 +140,40 @@ def binding_problem(record, name: str, subject_sha256: str, evidence_dir: Path) 
     return ""
 
 
+def judge(rule: dict, subject: dict, evidence_dir: Path) -> dict:
+    """One required witness against one candidate: its summary row, or GateError with a stable code. `accept` stops at
+    the first refusal; `rejection.build` calls this for every rule so a rejection names all of them."""
+    name = safe_name(rule["witness"])
+    path = contained(evidence_dir, f"{name}.json")
+    need(path.is_file(), "MISSING_WITNESS", name)
+    raw = path.read_bytes()   # read once: the bytes parsed are the bytes hashed into the summary
+    try:
+        record = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as e:
+        raise GateError("MALFORMED_WITNESS", f"{name}: {e}") from None
+    need(record.get("schema") == WITNESS_SCHEMA, "WITNESS_SCHEMA", name)
+    need(record.get("witness") == name, "WRONG_WITNESS_NAME", name)
+    need(record.get("subject_sha256") == subject["sha256"], "STALE_WITNESS", name)
+    need(record.get("development") is False, "DEVELOPMENT_WITNESS", name)
+    status_acceptable(rule, record)
+    origin_ok(rule, record)
+    if record.get("status") == "pass":
+        need(record.get("grade") == "C" or (record_origin(record) != "executed" and record_origin(record) in rule.get("origins", [])),
+             "UNMEASURED_REQUIRED_WITNESS", f"{name}: grade {record.get('grade')}")
+    for key, expected in rule.get("coverage", {}).items():
+        coverage_ok(name, key, expected, record)
+    for item in record.get("evidence", []):
+        p = contained(evidence_dir, item.get("path"))
+        need(p.is_file() and sha256_file(p) == item["sha256"], "EVIDENCE_DRIFT", f"{name}: {item['path']}")
+    return {"witness": name, "status": record["status"], "grade": record["grade"], "origin": record_origin(record),
+            "record_sha256": hashlib.sha256(raw).hexdigest()}
+
+
 def accept(candidate_root: Path | str, evidence_dir: Path | str, profile: dict, subject: dict | None = None) -> dict:
     """Return an acceptance summary or raise GateError with a stable code. `subject` lets a caller judge and publish ONE
     candidate generation it computed itself (final external scan, defect 2)."""
     subject = subject or candidate(candidate_root)
     evidence_dir = Path(evidence_dir)
-    rows = []
-    for rule in profile["required"]:
-        name = safe_name(rule["witness"])
-        path = contained(evidence_dir, f"{name}.json")
-        need(path.is_file(), "MISSING_WITNESS", name)
-        raw = path.read_bytes()   # read once: the bytes parsed are the bytes hashed into the summary
-        try:
-            record = json.loads(raw.decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError) as e:
-            raise GateError("MALFORMED_WITNESS", f"{name}: {e}") from None
-        need(record.get("schema") == WITNESS_SCHEMA, "WITNESS_SCHEMA", name)
-        need(record.get("witness") == name, "WRONG_WITNESS_NAME", name)
-        need(record.get("subject_sha256") == subject["sha256"], "STALE_WITNESS", name)
-        need(record.get("development") is False, "DEVELOPMENT_WITNESS", name)
-        status_acceptable(rule, record)
-        origin_ok(rule, record)
-        if record.get("status") == "pass":
-            need(record.get("grade") == "C" or (record_origin(record) != "executed" and record_origin(record) in rule.get("origins", [])),
-                 "UNMEASURED_REQUIRED_WITNESS", f"{name}: grade {record.get('grade')}")
-        for key, expected in rule.get("coverage", {}).items():
-            coverage_ok(name, key, expected, record)
-        for item in record.get("evidence", []):
-            p = contained(evidence_dir, item.get("path"))
-            need(p.is_file() and sha256_file(p) == item["sha256"], "EVIDENCE_DRIFT", f"{name}: {item['path']}")
-        rows.append({"witness": name, "status": record["status"], "grade": record["grade"], "origin": record_origin(record),
-                     "record_sha256": hashlib.sha256(raw).hexdigest()})
+    rows = [judge(rule, subject, evidence_dir) for rule in profile["required"]]
     return {"status": "accepted", "profile": profile["name"], "subject_sha256": subject["sha256"],
             "witnesses": rows, "visible_not_run": profile.get("visible_not_run", [])}

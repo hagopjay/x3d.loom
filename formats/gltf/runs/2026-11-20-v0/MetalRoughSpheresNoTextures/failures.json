@@ -1,0 +1,227 @@
+{
+  "schema": "loom.failure/1",
+  "receipt": {
+    "file": "receipt.json",
+    "sha256": "81602e45f7b5dc97a14a5ec97817cd8fdd1a5c816a4069ace22d302528aa51e6"
+  },
+  "subject": {
+    "id": "MetalRoughSpheresNoTextures",
+    "sha256": "5e677f260ec0f366967a6e9545de2f3dab2a160e307b9bcb9d050cd2028f63f8"
+  },
+  "failures": [
+    {
+      "engine": "three",
+      "status": "warn",
+      "reason": "warn: psnr_fg_db 27.32 is under the pass floor 30",
+      "misses": [
+        {
+          "metric": "psnr_fg_db",
+          "value": 27.32,
+          "floor": 30,
+          "level": "pass"
+        }
+      ],
+      "failure_class": "tone-shift",
+      "locus": {
+        "space": "image, origin top-left, 0..1",
+        "grid": 8,
+        "bbox_over16": [
+          0.15,
+          0.17,
+          0.857,
+          0.928
+        ],
+        "over16_pixels": 8701,
+        "over16_where": {
+          "silhouette": 0,
+          "interior": 1,
+          "background": 0
+        },
+        "worst_tiles": [
+          {
+            "col": 5,
+            "row": 2,
+            "share": 0.091
+          },
+          {
+            "col": 5,
+            "row": 1,
+            "share": 0.083
+          },
+          {
+            "col": 4,
+            "row": 1,
+            "share": 0.065
+          }
+        ],
+        "top6_tile_share": 0.412,
+        "luma_bias": 6.049,
+        "luma_bias_ratio": 0.969,
+        "direction": "candidate brighter"
+      },
+      "rule_id": null,
+      "rule_why": null,
+      "rule_status": "unexplained",
+      "subject_features": {
+        "validator_codes": [],
+        "extensions_used": []
+      },
+      "class_cuts": {
+        "basis": "v0, set by hand on 20 Nov 2026 (grade: Suspected)",
+        "silhouette_iou_max": 0.97,
+        "silhouette_share_min": 0.5,
+        "tone_bias_ratio_min": 0.8,
+        "local_top6_share_min": 0.5
+      }
+    },
+    {
+      "engine": "babylon",
+      "status": "warn",
+      "reason": "warn: psnr_fg_db 27.48 is under the pass floor 30",
+      "misses": [
+        {
+          "metric": "psnr_fg_db",
+          "value": 27.48,
+          "floor": 30,
+          "level": "pass"
+        }
+      ],
+      "failure_class": "tone-shift",
+      "locus": {
+        "space": "image, origin top-left, 0..1",
+        "grid": 8,
+        "bbox_over16": [
+          0.15,
+          0.17,
+          0.857,
+          0.928
+        ],
+        "over16_pixels": 6581,
+        "over16_where": {
+          "silhouette": 0,
+          "interior": 1,
+          "background": 0
+        },
+        "worst_tiles": [
+          {
+            "col": 5,
+            "row": 2,
+            "share": 0.125
+          },
+          {
+            "col": 5,
+            "row": 1,
+            "share": 0.118
+          },
+          {
+            "col": 1,
+            "row": 1,
+            "share": 0.077
+          }
+        ],
+        "top6_tile_share": 0.513,
+        "luma_bias": 4.407,
+        "luma_bias_ratio": 0.995,
+        "direction": "candidate brighter"
+      },
+      "rule_id": null,
+      "rule_why": null,
+      "rule_status": "unexplained",
+      "subject_features": {
+        "validator_codes": [],
+        "extensions_used": []
+      },
+      "class_cuts": {
+        "basis": "v0, set by hand on 20 Nov 2026 (grade: Suspected)",
+        "silhouette_iou_max": 0.97,
+        "silhouette_share_min": 0.5,
+        "tone_bias_ratio_min": 0.8,
+        "local_top6_share_min": 0.5
+      }
+    },
+    {
+      "engine": "cycles",
+      "status": "fail",
+      "reason": "fail: ssim 0.9013 is under the warn floor 0.95; psnr_fg_db 19.77 is under the warn floor 25",
+      "misses": [
+        {
+          "metric": "ssim",
+          "value": 0.9013,
+          "floor": 0.98,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 19.77,
+          "floor": 30,
+          "level": "pass"
+        },
+        {
+          "metric": "ssim",
+          "value": 0.9013,
+          "floor": 0.95,
+          "level": "warn"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 19.77,
+          "floor": 25,
+          "level": "warn"
+        }
+      ],
+      "failure_class": "silhouette",
+      "locus": {
+        "space": "image, origin top-left, 0..1",
+        "grid": 8,
+        "bbox_over16": [
+          0.15,
+          0.172,
+          0.859,
+          0.928
+        ],
+        "over16_pixels": 25333,
+        "over16_where": {
+          "silhouette": 0.014,
+          "interior": 0.986,
+          "background": 0
+        },
+        "worst_tiles": [
+          {
+            "col": 4,
+            "row": 4,
+            "share": 0.058
+          },
+          {
+            "col": 4,
+            "row": 2,
+            "share": 0.055
+          },
+          {
+            "col": 5,
+            "row": 2,
+            "share": 0.052
+          }
+        ],
+        "top6_tile_share": 0.313,
+        "luma_bias": 9.651,
+        "luma_bias_ratio": 0.546,
+        "direction": "candidate brighter"
+      },
+      "rule_id": "R-GLTF-4",
+      "rule_why": "a path tracer draws shadows and bounce light the raster reference does not: witness, not candidate",
+      "rule_status": "explained",
+      "subject_features": {
+        "validator_codes": [],
+        "extensions_used": []
+      },
+      "class_cuts": {
+        "basis": "v0, set by hand on 20 Nov 2026 (grade: Suspected)",
+        "silhouette_iou_max": 0.97,
+        "silhouette_share_min": 0.5,
+        "tone_bias_ratio_min": 0.8,
+        "local_top6_share_min": 0.5
+      }
+    }
+  ],
+  "sha256": "199e116386dcaf8ba451b7ac742652d9a4f28a314480a7b26b1c9dabdb6fdd8c"
+}

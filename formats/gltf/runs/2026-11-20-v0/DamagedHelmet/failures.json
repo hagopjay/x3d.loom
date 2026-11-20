@@ -1,0 +1,166 @@
+{
+  "schema": "loom.failure/1",
+  "receipt": {
+    "file": "receipt.json",
+    "sha256": "6e084dcaa7c88eb3ffa751afcff6f6e78e2dae37a1dc8938f4538e96fa9ff8d5"
+  },
+  "subject": {
+    "id": "DamagedHelmet",
+    "sha256": "a1e3b04de97b11de564ce6e53b95f02954a297f0008183ac63a4f5974f6b32d8"
+  },
+  "failures": [
+    {
+      "engine": "xite",
+      "status": "warn",
+      "reason": "warn: ssim 0.9783 is under the pass floor 0.98; psnr_fg_db 27.36 is under the pass floor 30",
+      "misses": [
+        {
+          "metric": "ssim",
+          "value": 0.9783,
+          "floor": 0.98,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 27.36,
+          "floor": 30,
+          "level": "pass"
+        }
+      ],
+      "failure_class": "local-shading",
+      "locus": {
+        "space": "image, origin top-left, 0..1",
+        "grid": 8,
+        "bbox_over16": [
+          0.293,
+          0.256,
+          0.771,
+          0.816
+        ],
+        "over16_pixels": 4203,
+        "over16_where": {
+          "silhouette": 0,
+          "interior": 1,
+          "background": 0
+        },
+        "worst_tiles": [
+          {
+            "col": 3,
+            "row": 3,
+            "share": 0.177
+          },
+          {
+            "col": 3,
+            "row": 4,
+            "share": 0.138
+          },
+          {
+            "col": 2,
+            "row": 4,
+            "share": 0.106
+          }
+        ],
+        "top6_tile_share": 0.614,
+        "luma_bias": -2.464,
+        "luma_bias_ratio": 0.515,
+        "direction": "candidate darker"
+      },
+      "rule_id": "R-GLTF-7",
+      "rule_why": "the validator warned that tangents are generated; engines generate them differently",
+      "rule_status": "explained",
+      "subject_features": {
+        "validator_codes": [
+          "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE"
+        ],
+        "extensions_used": []
+      },
+      "class_cuts": {
+        "basis": "v0, set by hand on 20 Nov 2026 (grade: Suspected)",
+        "silhouette_iou_max": 0.97,
+        "silhouette_share_min": 0.5,
+        "tone_bias_ratio_min": 0.8,
+        "local_top6_share_min": 0.5
+      }
+    },
+    {
+      "engine": "cycles",
+      "status": "fail",
+      "reason": "fail: psnr_fg_db 24.54 is under the warn floor 25",
+      "misses": [
+        {
+          "metric": "ssim",
+          "value": 0.9539,
+          "floor": 0.98,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 24.54,
+          "floor": 30,
+          "level": "pass"
+        },
+        {
+          "metric": "psnr_fg_db",
+          "value": 24.54,
+          "floor": 25,
+          "level": "warn"
+        }
+      ],
+      "failure_class": "local-shading",
+      "locus": {
+        "space": "image, origin top-left, 0..1",
+        "grid": 8,
+        "bbox_over16": [
+          0.283,
+          0.256,
+          0.793,
+          0.826
+        ],
+        "over16_pixels": 6975,
+        "over16_where": {
+          "silhouette": 0,
+          "interior": 1,
+          "background": 0
+        },
+        "worst_tiles": [
+          {
+            "col": 5,
+            "row": 4,
+            "share": 0.166
+          },
+          {
+            "col": 4,
+            "row": 5,
+            "share": 0.143
+          },
+          {
+            "col": 5,
+            "row": 3,
+            "share": 0.108
+          }
+        ],
+        "top6_tile_share": 0.653,
+        "luma_bias": -2.069,
+        "luma_bias_ratio": 0.301,
+        "direction": "candidate darker"
+      },
+      "rule_id": "R-GLTF-4",
+      "rule_why": "a path tracer draws shadows and bounce light the raster reference does not: witness, not candidate",
+      "rule_status": "explained",
+      "subject_features": {
+        "validator_codes": [
+          "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE"
+        ],
+        "extensions_used": []
+      },
+      "class_cuts": {
+        "basis": "v0, set by hand on 20 Nov 2026 (grade: Suspected)",
+        "silhouette_iou_max": 0.97,
+        "silhouette_share_min": 0.5,
+        "tone_bias_ratio_min": 0.8,
+        "local_top6_share_min": 0.5
+      }
+    }
+  ],
+  "sha256": "1586729a61f9cf2cc07dbac06da6cf6b17582f639ab32032623edf1d0d59a877"
+}

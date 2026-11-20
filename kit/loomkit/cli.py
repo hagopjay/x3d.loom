@@ -28,7 +28,7 @@ import sys
 from pathlib import Path
 
 from . import accept as acc
-from . import foldback, grammar, hepevent, metalsite, pagetraps, physics, picture, play, receipt, sci, sweep, traps
+from . import foldback, grammar, hepevent, metalsite, pagetraps, physics, picture, play, receipt, rejection, sci, sweep, traps
 from .core import GateError, InstrumentError, candidate, contained, need, portable, safe_name, sha256_file, write_witness
 
 
@@ -296,6 +296,19 @@ def cmd_accept(a) -> dict:
     return acc.accept(a.root, a.evidence, acc.load_profile(a.profile))
 
 
+def cmd_rejection(a) -> dict:
+    """The record of a refusal: every required witness judged, each refusal with its class, reason and locus. Exit 0
+    means the rejection was written; a candidate that would be accepted is refused with REJECTION_OF_ACCEPTED."""
+    profile, profile_sha = acc.read_profile(a.profile)
+    dest = Path(a.out)
+    need(Path(a.evidence).resolve() not in dest.resolve().parents, "RECEIPT_INSIDE_EVIDENCE", f"{dest} is inside {a.evidence}; write it beside")
+    if a.prev:
+        rejection.verify(Path(a.prev))
+    r = rejection.build(a.subject, a.root, a.evidence, profile, profile_sha, prev=Path(a.prev) if a.prev else None)
+    rejection.write(r, dest)
+    return {"rejection": str(dest), "refused": r["refused"], "failure_classes": r["failure_classes"], "sha256": r["sha256"]}
+
+
 MANIFEST_SCHEMA = Path(__file__).resolve().parents[1] / "templates" / "evidence-manifest-v2.schema.json"
 
 
@@ -506,6 +519,9 @@ def main(argv: list[str] | None = None) -> int:
     p = common("receipt"); p.add_argument("--profile", required=True); p.add_argument("--subject", required=True)
     p.add_argument("--out", required=True); p.add_argument("--outputs", nargs="*", default=[])
     p.add_argument("--prev"); p.add_argument("--force", action="store_true")
+    p = common("rejection"); p.add_argument("--profile", required=True); p.add_argument("--subject", required=True)
+    p.add_argument("--out", required=True); p.add_argument("--prev")
+    sub.add_parser("verify-rejection").add_argument("file")
     sub.add_parser("verify-receipt").add_argument("file")
     p = sub.add_parser("sweep"); p.add_argument("src"); p.add_argument("dest"); p.add_argument("--rules", required=True)
     p.add_argument("--exclude", nargs="*", default=[".git", ".scratch", ".work", "__pycache__", "public-sweep.json"])
@@ -522,6 +538,8 @@ def main(argv: list[str] | None = None) -> int:
             c = candidate(a.root); out = {"sha256": c["sha256"], "files": len(c["files"])}
         elif a.cmd_name == "verify-receipt":
             r = receipt.verify(Path(a.file)); out = {"receipt": "intact", "sha256": r["sha256"]}
+        elif a.cmd_name == "verify-rejection":
+            r = rejection.verify(Path(a.file)); out = {"rejection": "intact", "sha256": r["sha256"], "refused": r["refused"]}
         elif a.cmd_name == "sweep":
             rules = sweep.load_rules(Path(a.rules)); rules["_path"] = a.rules
             out = sweep.sweep(Path(a.src), Path(a.dest), rules, set(a.exclude))
@@ -531,7 +549,7 @@ def main(argv: list[str] | None = None) -> int:
             out = picture.validate(json.loads(Path(a.review).read_text()), a.subject, json.loads(Path(a.frames).read_text()))
         else:
             out = {"sci": cmd_sci, "metalsite": cmd_metalsite, "hepevent": cmd_hepevent, "play": cmd_play, "physics": cmd_physics, "pagetraps": cmd_pagetraps, "traps": cmd_traps, "grammar": cmd_grammar, "foldback": cmd_foldback, "command": cmd_command,
-                   "record": cmd_record, "accept": cmd_accept, "receipt": cmd_receipt}[a.cmd_name](a)
+                   "record": cmd_record, "accept": cmd_accept, "receipt": cmd_receipt, "rejection": cmd_rejection}[a.cmd_name](a)
     except GateError as e:
         print(json.dumps({"rejected": e.code, "detail": e.detail}))
         return 1
