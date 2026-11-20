@@ -1,0 +1,19 @@
+# loom-core claim shapes: what every normalized claim must carry. Run: python3 kit/loomcore/normalize.py --check
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix loom: <urn:loom:core:> .
+@prefix lcs: <urn:loom:core:shape:> .
+
+lcs:Claim a sh:NodeShape ; sh:targetClass loom:Claim ;
+  sh:nodeKind sh:IRI ;
+  sh:property [ sh:path loom:sha256 ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^[0-9a-f]{64}$" ;
+                sh:message "a claim carries exactly one sha256 of its source object (canonical JSON)" ] ;
+  sh:property [ sh:path loom:dialect ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "a claim names the dialect it was read from" ] ;
+  sh:property [ sh:path loom:grade ; sh:maxCount 1 ; sh:in ( loom:grade:C loom:grade:L loom:grade:S ) ;
+                sh:message "grade is one of C (Confirmed), L (Likely), S (Suspected)" ] ;
+  sh:property [ sh:path loom:verdict ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( loom:verdict:supported loom:verdict:refuted loom:verdict:untested ) ;
+                sh:message "verdict is supported, refuted or untested" ] ;
+  sh:or ( [ sh:path loom:grade ; sh:minCount 1 ] [ sh:path loom:verdict ; sh:hasValue loom:verdict:untested ] [ sh:path loom:verdict ; sh:hasValue loom:verdict:refuted ] ) ;
+  sh:or ( [ sh:path dct:source ; sh:minCount 1 ] [ sh:path loom:instrument ; sh:minCount 1 ] [ sh:path loom:part ; sh:minCount 1 ]
+          [ sh:path <http://www.w3.org/ns/prov#wasDerivedFrom> ; sh:minCount 1 ] ) .

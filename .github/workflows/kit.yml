@@ -7,9 +7,9 @@ name: kit
 
 on:
   push:
-    paths: ['kit/loomkit/**', 'kit/profiles/**', 'kit/tests/**', 'kit/loom', 'kit/examples/*.sh', 'x3d.brain/run_brain.sh', '.github/workflows/kit.yml']
+    paths: ['kit/loomkit/**', 'kit/loomcore/**', 'kit/profiles/**', 'kit/tests/**', 'kit/loom', 'kit/examples/*.sh', 'x3d.brain/run_brain.sh', '.github/workflows/kit.yml']
   pull_request:
-    paths: ['kit/loomkit/**', 'kit/profiles/**', 'kit/tests/**', 'kit/loom', 'kit/examples/*.sh', 'x3d.brain/run_brain.sh', '.github/workflows/kit.yml']
+    paths: ['kit/loomkit/**', 'kit/loomcore/**', 'kit/profiles/**', 'kit/tests/**', 'kit/loom', 'kit/examples/*.sh', 'x3d.brain/run_brain.sh', '.github/workflows/kit.yml']
   workflow_dispatch:
 
 permissions:
@@ -41,6 +41,8 @@ jobs:
         run: python -I -c "import sys,pathlib; sys.path.insert(0,'kit'); from loomkit import accept as a; [a.load_profile(p) for p in sorted(pathlib.Path('kit/profiles').glob('*.json')) if p.name != 'public-sweep.json']; print('profiles ok')"
       - name: Gate controls (normal and -O; includes the 18 Nov review controls D1, D3, D4, D10)
         run: python -I kit/tests/test_gates.py
+      - name: loom-core controls (one claim shape over every demo dialect)
+        run: python -I kit/tests/test_loomcore.py
       - name: Hep-event controls
         run: python -I kit/tests/test_hepevent.py
       - name: Metal-site controls

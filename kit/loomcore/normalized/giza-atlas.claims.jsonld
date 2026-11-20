@@ -1,0 +1,930 @@
+{
+ "@context": {
+  "@version": 1.1,
+  "loom": "urn:loom:core:",
+  "prov": "http://www.w3.org/ns/prov#",
+  "dct": "http://purl.org/dc/terms/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#",
+  "Claim": "loom:Claim",
+  "Evidence": "loom:Evidence",
+  "Receipt": "loom:Receipt",
+  "grade": {
+   "@id": "loom:grade",
+   "@type": "@vocab"
+  },
+  "gradeNative": "loom:gradeNative",
+  "verdict": {
+   "@id": "loom:verdict",
+   "@type": "@vocab"
+  },
+  "statement": "loom:statement",
+  "about": {
+   "@id": "loom:about",
+   "@type": "@id"
+  },
+  "source": "dct:source",
+  "instrument": "loom:instrument",
+  "derivedFrom": {
+   "@id": "prov:wasDerivedFrom",
+   "@type": "@id"
+  },
+  "part": {
+   "@id": "loom:part",
+   "@type": "@id"
+  },
+  "locator": "loom:locator",
+  "dialect": "loom:dialect",
+  "sha256": "loom:sha256",
+  "normalizedFrom": "loom:normalizedFrom",
+  "C": "loom:grade:C",
+  "L": "loom:grade:L",
+  "S": "loom:grade:S",
+  "supported": "loom:verdict:supported",
+  "refuted": "loom:verdict:refuted",
+  "untested": "loom:verdict:untested"
+ },
+ "normalizedFrom": {
+  "file": "atlas.json",
+  "sha256": "9bc445a4437895c7fd7285e7d0f0d9a9a3e86731c427a165e77f4c30927214cf",
+  "commit": "7a8c0ba",
+  "dialect": "giza-atlas"
+ },
+ "@graph": [
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_base",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Designed"
+   },
+   "sha256": "1c721bf6288679da790d6c31c38600323941eed0ddc015d92cdb20d091913b95",
+   "grade": "C",
+   "statement": "Each side of the Great Pyramid is 756 feet long.",
+   "source": "v1 receipt (verify_numbers.py): dash, petrie, lehner"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_height",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Suspected",
+    "design": "Coincidence"
+   },
+   "sha256": "07f148efb0a750ac6c93bcff6cdd060f9c1cca1dd3da638ae0977edd2fe2b09a",
+   "grade": "S",
+   "statement": "Without its capstone it stood 480 feet: one eleventh of a mile.",
+   "source": "v1 receipt (verify_numbers.py): petrie, dash, lehner"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_ratio711",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Designed"
+   },
+   "sha256": "e8e62ffbea2b245a65f62a8023f52a4b728d199df61b37ae03adbc41998502c6",
+   "grade": "C",
+   "statement": "Height to base is 7 to 11, a ratio you can count on your fingers.",
+   "source": "v1 receipt (verify_numbers.py): petrie, lehner"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_acres",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "20166db9f32f7705b59cca5dfe69df651706d0fb42e4bb29a4a7dfe8ad15db49",
+   "grade": "C",
+   "statement": "The base covers thirteen acres.",
+   "source": "v1 receipt (verify_numbers.py): dash"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_blocks",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Unknown"
+   },
+   "sha256": "54828bf98dde2d89c697709cd6c1208ee2acaad564c5594bd5b49ad590df5314",
+   "grade": "L",
+   "statement": "Two million three hundred thousand blocks.",
+   "source": "v1 receipt (verify_numbers.py): lehner"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_pi",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Possible"
+   },
+   "sha256": "78c24a90bf4978b11f5526bb4e2f0fe4579d00359586f9888e1fcd0be5c0d876",
+   "grade": "C",
+   "statement": "Walk around the base, divide by twice the height: π.",
+   "source": "v1 receipt (verify_numbers.py): petrie, dash, lehner"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_tau",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Possible"
+   },
+   "sha256": "2f9f2076456cff472a151476fabce7332c3382d9d6012bb93226749b1803a659",
+   "grade": "C",
+   "statement": "The perimeter divided by the height is 2π: the pyramid is a squared circle.",
+   "source": "v1 receipt (verify_numbers.py): petrie, dash"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_phi",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Possible"
+   },
+   "sha256": "41a50721cc578ff06b847fa1961155753debdef247001c5a2895fd99230faeb4",
+   "grade": "L",
+   "statement": "The sloping face divided by half the base is the golden ratio.",
+   "source": "v1 receipt (verify_numbers.py): petrie, dash"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:khafre_345",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Designed"
+   },
+   "sha256": "cc7daf57fdc22e03c993c39ba57d9a75bd9ad1f08e261429294ad76a68c8dfa9",
+   "grade": "C",
+   "statement": "Half the base, the height and the sloping face of the second pyramid stand as 3 : 4 : 5, the first Pythagorean triple.",
+   "source": "Petrie 1883 s.66 (base mean 8474.9 in), s.67 (53°10′ ± 4′; height 5,664 ± 13 in)"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:menkaure_slope",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Possible"
+   },
+   "sha256": "73671b3af05ebc2a2888ff2a1b9bc90e27f63c9dc804ae665262cc082a2e0e19",
+   "grade": "L",
+   "statement": "The third pyramid rises at the same 51° and a fraction as the first: the π slope, a third of the size.",
+   "source": "Petrie 1883 s.80 (base mean 4153.6 in), s.81 (51°0′ ± 10′; height 2564 ± 15 in)"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:seked",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Designed"
+   },
+   "sha256": "2dae76636f47538a14ecb98bf0b4f02287e23da4fc507707a89eeaf8d48ed260",
+   "grade": "C",
+   "statement": "Rise one cubit, run five and a half palms. One rule, repeated for every casing stone, makes the whole shape.",
+   "source": "Petrie 1883 s.25 (51°52′ ± 2′); Rhind Mathematical Papyrus problems 56-60 for the seked"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:pi_phi_identity",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "5e3ca04288d85f7edef64f6483e614212c5390a16674686aac99b5e3be242208",
+   "grade": "C",
+   "statement": "The same triangle gives the circle's number and the golden number. Two of the deepest constants in one pile of stone.",
+   "source": "Arithmetic; Petrie 1883 s.25"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:herodotus_face",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Possible"
+   },
+   "sha256": "000d02e8b1a4af9fd39b5cb6cc217036f520949714d9a8aebf42880533cd59c6",
+   "grade": "L",
+   "statement": "Said to come from Herodotus: the square on the height equals a face.",
+   "source": "Dash 2015 base, Petrie slope; attribution not re-read: Suspected"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:khafre_137",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "c226cc3115129be937a608be5babfa8b435d21c3849ba75f43c72f6607a6d2cb",
+   "grade": "C",
+   "statement": "Its base is 411 cubits: three times 137. Its height is 274: twice 137. And 137 is the fine-structure number that governs light and matter.",
+   "source": "Petrie 1883 s.66, s.136; CODATA 1/α. An invented claim, made here to show how easy they are"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:cubit_pi6",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "6691ad40c02468757d8a80e8195dda6a4df0c501d74d78e204370bd2f0a7df41",
+   "grade": "C",
+   "statement": "Divide π by six and you get 0.5236. That is the royal cubit in metres, a unit defined in France in 1791.",
+   "source": "Petrie 1883 s.136 (20.620 ± .005), s.52 (20.632 ± .004 in the King's Chamber)"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:cubits_440_280",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Designed"
+   },
+   "sha256": "c3939dec5c40abf20f93c60359aa6d15a531250ffd15849b2ecd243fb5979e78",
+   "grade": "C",
+   "statement": "In the builders' own unit the pyramid is two round numbers.",
+   "source": "Petrie 1883 s.21, s.25, s.136, s.143, s.157"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:perimeter_1760",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "f257cc525ea0af7971e48bc91953466c6aaa1604f047c69aa47ec5bf8cae510c",
+   "grade": "C",
+   "statement": "Walk around the pyramid: 1,760 cubits. Walk a mile: 1,760 yards.",
+   "source": "Arithmetic; statute mile of 1593"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:pyramid_inch_year",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "refuted",
+   "gradeNative": {
+    "grade": "False",
+    "design": "Coincidence"
+   },
+   "sha256": "a078c665f28159d276926ea4567f1694831d9491bf8ebb0316fe6d613c739b30",
+   "statement": "Piazzi Smyth, Astronomer Royal for Scotland, 1864: the side of the base counts the days of the year.",
+   "source": "Petrie 1883 s.21, s.143, s.150"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:perimeter_36524",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "refuted",
+   "gradeNative": {
+    "grade": "False",
+    "design": "Coincidence"
+   },
+   "sha256": "29bc69e96c9df94fef9f5e93eebcfcc839e799e725942bd7bd369c71902a913c",
+   "statement": "A calendar in stone.",
+   "source": "Petrie 1883 s.21"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:kings_chamber",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Possible"
+   },
+   "sha256": "34f2664f08ffceef776473bdc14167f27ccf0016faed60f71d0fe5a9357c1ba0",
+   "grade": "C",
+   "statement": "The room is 10 by 20 cubits. Its height is 5√5 cubits, so the end-wall diagonal is 15, the floor is 20 long, and the diagonal through the room is 25: a 3-4-5 triangle scaled by five.",
+   "source": "Petrie 1883 s.155 (206.12, 412.24, 230.09 ± .15 in; floor raised 5.11 ± .12 in above the wall base), s.55 and s.64 (levels)"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:kc_half_area",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Possible"
+   },
+   "sha256": "48fcfa61fa80c4ff19bc3ed24734ac3733222d7816d07a1f40cead943aadaa88",
+   "grade": "C",
+   "statement": "Cut the pyramid level with the chamber floor: the slice is exactly half the area of the base.",
+   "source": "Petrie 1883 s.25 (height), s.55 and s.64 (floor level)"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:qc_half_level",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Possible"
+   },
+   "sha256": "9b6fda19def42f7c3bc238c0f2d70b5acb4f3d1cdd1dbad7de1ba9e64a1bbb68",
+   "grade": "L",
+   "statement": "One chamber exactly halfway up to the other.",
+   "source": "Petrie 1883 s.40, s.41, s.64"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:qc_midplane",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Designed"
+   },
+   "sha256": "73a462591648e4f87855fff7579ce9650d6a8c224a662f4352ef892d03220d95",
+   "grade": "C",
+   "statement": "The roof ridge of the Queen's Chamber lies in the east-west plane through the apex.",
+   "source": "Petrie 1883 s.41, s.55, s.64"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:passage_1_in_2",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Designed"
+   },
+   "sha256": "4d1c2e341d06bf7173dd703005fc869b8d789b0f243ae9f8b62cf5d296c7df22",
+   "grade": "C",
+   "statement": "Down into the rock for a hundred metres, one unit down for every two along.",
+   "source": "Petrie 1883 s.36, s.38, s.45, s.151"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:coffer_double",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Possible"
+   },
+   "sha256": "2fcc99c7af2a70537b7668bdecfb3a5296952877b075ce7571a2f004df2e0751",
+   "grade": "L",
+   "statement": "The granite box in the King's Chamber: its outer volume is exactly double what it holds.",
+   "source": "Petrie 1883 s.59, s.61"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_level",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Designed"
+   },
+   "sha256": "8b17e8660c337f2c114895620a9bd492f4fd24c5b2e31ecd50ac4ff449531d27",
+   "grade": "L",
+   "statement": "The whole base is level to the width of a thumb.",
+   "source": "v1 receipt (verify_numbers.py): lehner, petrie"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_joints",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Designed"
+   },
+   "sha256": "0d7c7345441f0ce30a66b9eaeb14bd259ded717bf457410cb5a543ecced18db5",
+   "grade": "C",
+   "statement": "The casing joints are thinner than a fingernail.",
+   "source": "v1 receipt (verify_numbers.py): petrie"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_north",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Designed"
+   },
+   "sha256": "3b3418cf297e0f2d0be06253ddb80b9e00f8db486f1b7939458c491236f0ed0b",
+   "grade": "C",
+   "statement": "It faces true north more exactly than the Greenwich observatory was built.",
+   "source": "v1 receipt (verify_numbers.py): cole, petrie"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:square_sides",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Designed"
+   },
+   "sha256": "21aeafdbf5bc08992a8681a739002f34cdd687a80f13c8ff6deeaaa192ffeb76",
+   "grade": "C",
+   "statement": "Four sides of 230 metres that differ by less than the width of your hand.",
+   "source": "Petrie 1883 s.21"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:giza_diagonal",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Possible"
+   },
+   "sha256": "c7d24040b245389a7421c5d2acf5f4e7253e7bbb709ba9d34889dc4998156c4e",
+   "grade": "L",
+   "statement": "A ruler laid on the south-east corners of all three pyramids touches each one, and points to Heliopolis.",
+   "source": "Petrie 1883 s.92 (centres), s.21, s.66, s.80 (bases)"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:khufu_diagonal",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Possible"
+   },
+   "sha256": "c61bd119c33b5f1d1e197fc020cc4b15fd38de1ad088d34976d990bf14824751",
+   "grade": "L",
+   "statement": "Extend the diagonal of the first pyramid to the south-west and it runs through the heart of the second.",
+   "source": "Petrie 1883 s.92"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:eight_sides",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Suspected",
+    "design": "Unknown"
+   },
+   "sha256": "b1b68b3e34fde967b168ddaacd0bc1773aeef27cb8a4b691b3ade80db56b21a6",
+   "grade": "S",
+   "statement": "At dawn on the equinox a shadow line splits each face in two: the faces are dished, and the pyramid has eight sides, not four.",
+   "source": "Petrie 1883 (hollowing of the core faces), not re-read here"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_latitude",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "refuted",
+   "gradeNative": {
+    "grade": "False",
+    "design": "Coincidence"
+   },
+   "sha256": "3c3bcb81a1755507e84de59a7a6d89111792419f066a325d4ad3e107426af124",
+   "statement": "The latitude of the Great Pyramid is 29.9792458° N. The speed of light is 299,792,458 m/s.",
+   "source": "v1 receipt (verify_numbers.py): aera_gpmp, wgs84, si"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:scale_43200_perimeter",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Coincidence"
+   },
+   "sha256": "c58a0d6d0df877f085375cfdb2687f4a752fa47a9139a67fd76f53ff3c29507c",
+   "grade": "L",
+   "statement": "43,200 is half the seconds in a day. Multiply the perimeter by it and you get the Earth's equator.",
+   "source": "Dash 2015 base; WGS84 equator"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:scale_43200_height",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Coincidence"
+   },
+   "sha256": "6d78abd3b51c58c37af18d91fb722c5f7b3e50d2948dab041af14bd1ca155a59",
+   "grade": "L",
+   "statement": "Multiply the height by the same 43,200 and you get the distance from the Earth's centre to the pole.",
+   "source": "Petrie slope 51°52′; WGS84 polar radius"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:circles_light",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "084f1aee5d7bd06afd764058d6034877194e3969f23b29fe6cac363848f35dc6",
+   "grade": "C",
+   "statement": "Draw one circle around the base and one inside it. Subtract their lengths: 299.79 metres. Light: 299.79 million metres a second.",
+   "source": "Dash 2015 base 230.363 ± 0.07 m; SI"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:mass_earth",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Suspected",
+    "design": "Coincidence"
+   },
+   "sha256": "70ab6af539939f993c022db10c7df03e64c16ffd335807fc715f874bbc69cb1f",
+   "grade": "S",
+   "statement": "5.97 million tonnes of stone. The Earth: 5.97 million million million million kilograms.",
+   "source": "Dash 2015 base, Petrie slope; IAU Earth mass"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:latitude_30",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Possible"
+   },
+   "sha256": "60c27e358d199934380068e2f72559b978ac8874c2a029511e1ddbc9b55d83f2",
+   "grade": "L",
+   "statement": "Latitude thirty: a third of the way up the world.",
+   "source": "WGS84 centre (v1 receipt)"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:land_centre",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "untested",
+   "gradeNative": {
+    "grade": "Untested",
+    "design": "Unknown"
+   },
+   "sha256": "04c15297ace39a83335b76852d8be6a0eea9f1765c660081432676962e7eec36",
+   "statement": "Its parallel and its meridian cross more dry land than any others on Earth.",
+   "source": "No measurement in this session"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_day",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "1f79abb79ea55c4a32952de1488d744dd45693771c0e102e5141a02deb88ec93",
+   "grade": "C",
+   "statement": "A day has 86,400 seconds.",
+   "source": "v1 receipt (verify_numbers.py): si"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_sun",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "ee38cf9d51ddbf37186686b57ccb0205f76b517fcd817aa4af377fa956006e90",
+   "grade": "C",
+   "statement": "The Sun is 864,000 miles across: the day's number, times ten.",
+   "source": "v1 receipt (verify_numbers.py): iau"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_sun_r",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "6fe53077ce33ab1125fb93cec355f3ce5a6063977644b19879630c462bf51ef5",
+   "grade": "C",
+   "statement": "The Sun's radius is 432,000 miles.",
+   "source": "v1 receipt (verify_numbers.py): iau"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_moon_r",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "e6a89377aabb639b16065d46736e47b259cb0ca8231669ded1d16747c2db947c",
+   "grade": "C",
+   "statement": "The Moon's radius is 1,080 miles.",
+   "source": "v1 receipt (verify_numbers.py): iau"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_sun_earth",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Coincidence"
+   },
+   "sha256": "4ec6de1de3b6cbc345fb4f425022fc2d162ac6d1211a5a7e03f1840047d8cbaa",
+   "grade": "L",
+   "statement": "108 Earths fit across the Sun.",
+   "source": "v1 receipt (verify_numbers.py): iau"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_sun_dist",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Coincidence"
+   },
+   "sha256": "b1d5893849e5fcecf5ad107eb3eb1adc412d74cd3fc423341cbc39e9e4171e2b",
+   "grade": "L",
+   "statement": "The Sun stands 108 of its own diameters away.",
+   "source": "v1 receipt (verify_numbers.py): iau"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_meridian",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "62369417b089503d7efb31d5d39cf855aa09f32fe3e4131c8db73b91f274654b",
+   "grade": "C",
+   "statement": "A meridian through the poles is 40,000 km.",
+   "source": "v1 receipt (verify_numbers.py): si"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_canon_size",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "72c5a80c666d9677c3ca4cd7cfedd8d862a178a1c8f5aede0f2732f579840b1f",
+   "grade": "C",
+   "statement": "The Moon is 400 times smaller than the Sun…",
+   "source": "v1 receipt (verify_numbers.py): iau"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_canon_dist",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Coincidence"
+   },
+   "sha256": "48f7e738f31fbf939600ec72534e790c870170d8beb11e7c359711fe482a47d4",
+   "grade": "L",
+   "statement": "…and 400 times nearer, so they look the same size.",
+   "source": "v1 receipt (verify_numbers.py): iau"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_canon_spin",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "refuted",
+   "gradeNative": {
+    "grade": "False",
+    "design": "Coincidence"
+   },
+   "sha256": "77966cdd50aec0aec5b559f2b19c93341acb980d471111af9cd0ea12d6d28e43",
+   "statement": "…and the Earth turns 400 times faster than the Moon.",
+   "source": "v1 receipt (verify_numbers.py): iau"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:height_au",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "ac55fd37041c9ffa47221a473259f92d17586c41bf4d94101bac98624989af1b",
+   "grade": "C",
+   "statement": "Stack a thousand million Great Pyramids and you reach the Sun.",
+   "source": "IAU 2012 astronomical unit"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:earth_moon_triangle",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Coincidence"
+   },
+   "sha256": "d4178f875e31cf526f29bbad6876521b3de022b8100416e9034b00ce218615f8",
+   "grade": "C",
+   "statement": "Earth's radius for the half-base, Earth plus Moon for the height: the triangle has the pyramid's slope.",
+   "source": "IUGG mean Earth radius 6,371.0088 km; Moon 1,737.4 km"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:radii_5040",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Coincidence"
+   },
+   "sha256": "528084d4d97625aff85f4193ba6db7307c427d118f8c344f976a3ee587dbd41f",
+   "grade": "L",
+   "statement": "Plato's perfect number of citizens, written in the sky.",
+   "source": "IUGG, IAU; statute mile"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:earth_7920",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Coincidence"
+   },
+   "sha256": "01e3f5a69f7c0279e7e66fc3bf9d5a2ee1ca918dd0ce55c34a91c8c8efc778a6",
+   "grade": "L",
+   "statement": "And 7,920 is 720 × 11.",
+   "source": "IUGG; statute mile"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:orion_belt",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Possible"
+   },
+   "sha256": "5330faa25d251b3e6c2c4c761b33439a39a26d8384b02cd214efacf6811c462e",
+   "grade": "L",
+   "statement": "Three stars in a slightly bent row, the third one fainter and off the line. Three pyramids in a slightly bent row, the third one smaller and off the line.",
+   "source": "Petrie 1883 s.92 centre offsets (13931.6, 13165.8; 15170.4, 9450.2 in; the transcription flags the derived distances of this table as needing correction); HYG v4.1 with space motion; ERFA ltp"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:shaft_stars",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Possible"
+   },
+   "sha256": "2b09c9b799fcaf505c2e34a2377be4623892be8ca25758bb00cb0fda79f6a325",
+   "grade": "L",
+   "statement": "From the King's Chamber one shaft points at Orion's belt and one at the pole star of the age. From the Queen's Chamber, one at Sirius and one at the Little Dipper. All four, in the century the pyramid was built.",
+   "source": "Shaft angles: Gantenbrink 1993 as commonly cited (not re-read in this session: Likely); Petrie 1883 s.56 (31°33′, 45°13′40″), s.44 (37°28′, 38°28′). Sky: HYG v4.1 space motion + ERFA ltp; geometric altitudes, no refraction"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:thuban_pole",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Unknown"
+   },
+   "sha256": "b012e3a32d50599465236727d6a17c8311d8252cf7b38a49bac7ab4e6df4990b",
+   "grade": "C",
+   "statement": "When the pyramid was built the sky turned around Thuban, in the Dragon, not around Polaris.",
+   "source": "HYG v4.1 + ERFA ltp"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:diagonals_precession",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "refuted",
+   "gradeNative": {
+    "grade": "False",
+    "design": "Coincidence"
+   },
+   "sha256": "7756589b9bb09d07886ecf45e31587f35b40d82821f3117e26997a6fa3d161f9",
+   "statement": "25,827 pyramid inches across the diagonals: the Great Year, the slow wobble of the Earth's axis.",
+   "source": "Petrie 1883 s.21; IAU 2006 precession rate 50.288″ per year"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:passage_thuban",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Suspected",
+    "design": "Coincidence"
+   },
+   "sha256": "c1936546cfb0ee230b8cd50f7b0683fef7a9ecef966ba657c6d30e395e7e0457",
+   "grade": "S",
+   "statement": "Sir John Herschel, 1836: from the bottom of the passage the old pole star Thuban shone straight down it, in 2170 BC.",
+   "source": "Petrie 1883 s.36; HYG v4.1 + ERFA ltp; Herschel's date as commonly cited"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:leo_10500",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Unknown"
+   },
+   "sha256": "80deaec997470f1ecdec9da7127810426019a3d5e2d6ed8983fcebc01dfb8c98",
+   "grade": "L",
+   "statement": "A lion, facing due east. On the spring equinox of 10,500 BC the constellation of the Lion rose before the Sun.",
+   "source": "HYG v4.1 + ERFA ltp and ltpecl (ecliptic of date)"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:orion_lowest",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Confirmed",
+    "design": "Unknown"
+   },
+   "sha256": "55d66f573b55650f61076487743fc51889d390bc978ff9d304f334a306ee151b",
+   "grade": "C",
+   "statement": "The belt swings up and down over 26,000 years. The pyramids mark the bottom of the swing: the First Time.",
+   "source": "HYG v4.1 + ERFA ltp (Vondrak 2011, valid over this span)"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:spence_alignment",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Possible"
+   },
+   "sha256": "6825004c5c0a141bf5a2162c2382e2139ffd678c3f010714c7db8017f3509a37",
+   "grade": "L",
+   "statement": "Kate Spence, 2000: hang a plumb line, wait until Kochab stands exactly over Mizar, and the line is north. It was true only around 2467 BC.",
+   "source": "HYG v4.1 + ERFA ltp; Spence 2000 (Nature) as commonly cited, not re-read here"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_greaves",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Likely",
+    "design": "Unknown"
+   },
+   "sha256": "2d92605f5369a9fb7b41911f8f0d0ce58d29e62ab2bfd4eca5666af04b8c1837",
+   "grade": "L",
+   "statement": "John Greaves measured it with instruments in 1637.",
+   "source": "v1 receipt (verify_numbers.py): greaves"
+  },
+  {
+   "@id": "urn:x3d:giza-atlas:v4:claim:v1_greaves_foot",
+   "@type": "Claim",
+   "dialect": "giza-atlas",
+   "verdict": "supported",
+   "gradeNative": {
+    "grade": "Suspected",
+    "design": "Unknown"
+   },
+   "sha256": "5fa68d69f80989606cc75e55e361c9966d0ceda7a23c7e6b792cbc023eced7c2",
+   "grade": "S",
+   "statement": "He cut one English foot into the King's Chamber wall for those who would come after.",
+   "source": "v1 receipt (verify_numbers.py): greaves"
+  }
+ ]
+}

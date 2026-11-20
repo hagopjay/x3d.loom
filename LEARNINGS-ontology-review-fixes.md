@@ -59,6 +59,22 @@ Each record has: the floor it missed, an image-space locus (bounding box of diff
 
 Limits: the locus is a picture region, not a glTF node (that needs an id pass per engine). The class cut-offs are v0 values set by hand. A class describes the difference and does not prove a cause.
 
+## F8 and F9. Five dialects for one idea, no hash, 29 bad ids
+
+Before: four grade predicates and three scales, 0 of 144 claims hashed, 20 `@id` values with a space and 9 relative. New: `kit/loomcore/` (context, SHACL shapes, `normalize.py`, normalized copies of five demo files from x3d.demo @ 7a8c0ba).
+
+| Measurement | Result | Grade |
+|---|---|---|
+| Claims read through one shape | 369 in 5 dialects (the review counted 144 in 3; Gobbler adds 162, the Giza atlas 63) | Confirmed |
+| Conform to `claims.shacl.ttl` (rdflib 7.6.0, pyshacl 0.40.2) | 369 of 369 | Confirmed |
+| Carry a sha256 of their source object | 369 of 369 (was 0) | Confirmed |
+| One query, grades across every dialect | C 167, L 72, S 124; 5 refuted and 1 untested carry no grade | Confirmed |
+| Id repairs, all listed in `REPORT.json` | 19: 9 relative (medical), 10 with a space (math claims) | Confirmed |
+
+Rule: **a grade scale has one axis.** The Giza atlas mixed evidence strength (Confirmed, Likely, Suspected) with outcome (False, Untested); a refuted claim is a verdict, not a low grade. A value on no known scale stops the run instead of being guessed.
+
+Limit: the demo files are unchanged, because a demo version is never overwritten. Each demo should write through this shape in its next version. The other 10 space-holding ids sit on lesson nodes, not claims.
+
 ## What carries over
 
 | Rule | From |
@@ -67,3 +83,5 @@ Limits: the locus is a picture region, not a glTF node (that needs an id pass pe
 | Give every comparison shape a "could not compare" sibling | F2 |
 | Write the refusal down with the same care as the acceptance | F3 |
 | A fail without a class, a place and a rule link is not data | F4 |
+| One grade axis, one verdict axis; refuse a value on no known scale | F8 |
+| Hash the claim where it is written, and list every id repair | F9 |

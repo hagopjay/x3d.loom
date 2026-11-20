@@ -1,0 +1,1836 @@
+{
+ "@context": {
+  "@version": 1.1,
+  "loom": "urn:loom:core:",
+  "prov": "http://www.w3.org/ns/prov#",
+  "dct": "http://purl.org/dc/terms/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#",
+  "Claim": "loom:Claim",
+  "Evidence": "loom:Evidence",
+  "Receipt": "loom:Receipt",
+  "grade": {
+   "@id": "loom:grade",
+   "@type": "@vocab"
+  },
+  "gradeNative": "loom:gradeNative",
+  "verdict": {
+   "@id": "loom:verdict",
+   "@type": "@vocab"
+  },
+  "statement": "loom:statement",
+  "about": {
+   "@id": "loom:about",
+   "@type": "@id"
+  },
+  "source": "dct:source",
+  "instrument": "loom:instrument",
+  "derivedFrom": {
+   "@id": "prov:wasDerivedFrom",
+   "@type": "@id"
+  },
+  "part": {
+   "@id": "loom:part",
+   "@type": "@id"
+  },
+  "locator": "loom:locator",
+  "dialect": "loom:dialect",
+  "sha256": "loom:sha256",
+  "normalizedFrom": "loom:normalizedFrom",
+  "C": "loom:grade:C",
+  "L": "loom:grade:L",
+  "S": "loom:grade:S",
+  "supported": "loom:verdict:supported",
+  "refuted": "loom:verdict:refuted",
+  "untested": "loom:verdict:untested"
+ },
+ "normalizedFrom": {
+  "file": "mathlab.jsonld",
+  "sha256": "a8c6702e0eb87a7219603b5e89a7a46a7ca9820d53d9eb89ecc2d79e9ff162cd",
+  "commit": "7a8c0ba",
+  "dialect": "mathlab"
+ },
+ "@graph": [
+  {
+   "@id": "urn:x3d:math-concept-graph:link:0",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "583af50a06d704dee0c0b00033f52f3fc65b31cff198b70aaccfdca6fe2f56bc",
+   "grade": "C",
+   "statement": "Matrix | матрица",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:linear",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1703"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:1",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "67de054b0e08536ec441789fdf713e6723d1ddbbe6d48e1311510a3d04c2b4bd",
+   "grade": "L",
+   "statement": "Linear mapping | линейное отображение",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:linear",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1403"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:2",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "ac1bf1e1bf74944e0f878fcd564bc62576995befd3068067894cc8e08f9e6187",
+   "grade": "C",
+   "statement": "linalg2:matrix",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:linear",
+   "derivedFrom": [
+    "https://openmath.org/cd/linalg2.ocd#matrix"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:3",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "695ac869ab0431a5ed0f079aeef732530b0100c94794bfd23498a322ee4c1cf0",
+   "grade": "C",
+   "statement": "linalg1:determinant",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:linear",
+   "derivedFrom": [
+    "https://openmath.org/cd/linalg1.ocd#determinant"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:4",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "e68a7a867a898b3ae0eab5ae064421987d35bc909ba54e478ddc3d659a85c4bc",
+   "grade": "C",
+   "statement": "linalg4:eigenvector",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:linear",
+   "derivedFrom": [
+    "https://openmath.org/cd/linalg4.ocd#eigenvector"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:5",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "ace4d3b2b30deb4837fdc228432ca11f2ff0614109447435c6c8f04734b88eca",
+   "grade": "C",
+   "statement": "linalg4:eigenvalue",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:linear",
+   "derivedFrom": [
+    "https://openmath.org/cd/linalg4.ocd#eigenvalue"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:6",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "1369417c92c9dc547af902c463ebeb8983d54f29f20b584892e59462e52f5052",
+   "grade": "C",
+   "statement": "<determinant/> (3 occurrences in ch.4)",
+   "source": "MathML 3 content",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:linear",
+   "derivedFrom": [
+    "https://www.w3.org/TR/MathML3/chapter4.html"
+   ],
+   "locator": [
+    "(element determinant)"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:7",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "cc0d0f14f0662a73fc80544ffc942a34cec14719a4ef8a725b1c15a4b637b255",
+   "grade": "C",
+   "statement": "<matrix/> (6 occurrences in ch.4)",
+   "source": "MathML 3 content",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:linear",
+   "derivedFrom": [
+    "https://www.w3.org/TR/MathML3/chapter4.html"
+   ],
+   "locator": [
+    "(element matrix)"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:8",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "b51e09a5b60b91434c8979c1d6ab3e2a481f5c642f791c2ddc367844160310fd",
+   "grade": "C",
+   "statement": "Производная | Производная функции",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:derivative",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E3040"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:9",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "275b7b39c98cfea29f4ffa57b5105b52f9d3cbf262b49a96f35069674e82f9b9",
+   "grade": "C",
+   "statement": "calculus1:diff",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:derivative",
+   "derivedFrom": [
+    "https://openmath.org/cd/calculus1.ocd#diff"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:10",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "7c5491810bd1fc289202cd2833638b5ff7f03eba2b267637bed5d5f7db96b979",
+   "grade": "C",
+   "statement": "<diff/> (11 occurrences in ch.4)",
+   "source": "MathML 3 content",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:derivative",
+   "derivedFrom": [
+    "https://www.w3.org/TR/MathML3/chapter4.html"
+   ],
+   "locator": [
+    "(element diff)"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:11",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "bf06a7749aec9eae2cc034143a61179e7ccdb2bfc5a98c6a1b08c6d03b73f9ef",
+   "grade": "L",
+   "statement": "limit1:limit",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:derivative",
+   "derivedFrom": [
+    "https://openmath.org/cd/limit1.ocd#limit"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:12",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "5a6aa2ea12600ecf329dd32ab812301d0bc22d27f6f4f28aa971f7e6d1b76579",
+   "grade": "L",
+   "statement": "интеграл Дарбу",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:integral",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2856"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:13",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "1317fc772db99f3f445a66acfd8bda01604603f5a155ab874a1bde2a9dc653e2",
+   "grade": "C",
+   "statement": "calculus1:defint",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:integral",
+   "derivedFrom": [
+    "https://openmath.org/cd/calculus1.ocd#defint"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:14",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "511603caa4c3d5586d8043fef4b58f25eadd2fb4853c0a756c5c1ad465ef4dca",
+   "grade": "L",
+   "statement": "calculus2:integrand",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:integral",
+   "derivedFrom": [
+    "https://openmath.org/cd/calculus2.ocd#integrand"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:15",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "400a080445a350ea5bc53f14362a06bc7119068a3b3aadfdb64877e5d70797be",
+   "grade": "C",
+   "statement": "<int/> (16 occurrences in ch.4)",
+   "source": "MathML 3 content",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:integral",
+   "derivedFrom": [
+    "https://www.w3.org/TR/MathML3/chapter4.html"
+   ],
+   "locator": [
+    "(element int)"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:16",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "00a885b88628a96fc001424608748079b54731d1f0e38c37a1f92826cb4578f3",
+   "grade": "C",
+   "statement": "Ряд Фурье",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:fourier",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E3079"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:17",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "e2eb54bed8b369a5b34fa4b4cc85aa12ba917ae48f94ceb8e5d6751f40aebda6",
+   "grade": "L",
+   "statement": "Fourier transformation | преобразование Фурье",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:fourier",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2975"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:18",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "199daa194e67a9f74fb61c97f5b9a1f3da6923978a8e1ead25cef49256a02ece",
+   "grade": "C",
+   "statement": "Runge-Kutta method | Метод Рунге-Кутта",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lorenz",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E598"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:19",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "bf20bac26501f0261b4d3ebf48f659ea25ed4a73d08619703ff69d786db1ed86",
+   "grade": "L",
+   "statement": "Ordinary differential equation  | дифференциальное уравнение обыкновенное",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lorenz",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1897"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:20",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "a24a7e31adc4efdf172e5455b95966fb2669cf46a07356c09706f907f0562d8e",
+   "grade": "L",
+   "statement": "Dynamical system | система динамическая",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lorenz",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2811"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:21",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "ef6b17ce73ca53e63cb116df16539fbe1b06fa3d1c4882949e7230b8cdfb27fc",
+   "grade": "C",
+   "statement": "Chaos",
+   "source": "PhySH",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lorenz",
+   "derivedFrom": [
+    "https://doi.org/10.29172/bb2351de-d2a6-4d4c-a33e-9396bc991c32"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:22",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "002f406ae75dac322d7e3f37638e994bb7bc481b39f2f83a15955d6b2eecfb76",
+   "grade": "L",
+   "statement": "Chaos & nonlinear dynamics",
+   "source": "PhySH",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lorenz",
+   "derivedFrom": [
+    "https://doi.org/10.29172/1ec03196-e8d2-40b7-891a-fc8e4a1cbbdb"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:23",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "4b8df0fd03d8e4bbb40a7fca84c125b8d58ccb894c609cc5d3acced7f6456b03",
+   "grade": "C",
+   "statement": "Gradient descent method | метод градиентного спуска",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:gradient",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E472"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:24",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "0fef890d5e0b740c8b5ff4e899726c82d58f4c1d354b810e0c7e1f8f5654b6af",
+   "grade": "L",
+   "statement": "Gradient | градиент",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:gradient",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1700"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:25",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "74f0eeb242c45abd4c1670ed2220ab97b5ed4b657a5b3d930eb8b02a00ca25d9",
+   "grade": "C",
+   "statement": "veccalc1:grad",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:gradient",
+   "derivedFrom": [
+    "https://openmath.org/cd/veccalc1.ocd#grad"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:26",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "992f5109b052f5f14f66003e656abd217eec4f7050bd8ace6abacd0eacde302d",
+   "grade": "C",
+   "statement": "<grad/> (4 occurrences in ch.4)",
+   "source": "MathML 3 content",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:gradient",
+   "derivedFrom": [
+    "https://www.w3.org/TR/MathML3/chapter4.html"
+   ],
+   "locator": [
+    "(element grad)"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:27",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "2cf6dd0fed352dad6187c2b5f109ba784be6b629cf796939c057bacbc853ec82",
+   "grade": "L",
+   "statement": "Optimization problems",
+   "source": "PhySH",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:gradient",
+   "derivedFrom": [
+    "https://doi.org/10.29172/b96ba7a9-cce1-470c-b80c-6dadb2c6b8e9"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:28",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "d056b6910f2d7aac02974d8097c4d0a67e6f469d7e63ed4bd07eaf340df70038",
+   "grade": "C",
+   "statement": "Complex number | Комплексное число",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:complex",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2127"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:29",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "30b9b236ed4b50bc3944949942c351ec6f89260973bd6d41157b6630553a257d",
+   "grade": "L",
+   "statement": "Argument value | Значение аргумента",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:complex",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1662"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:30",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "561c46731568c4f1eacc5009e9ebbc74c5c518e6eb60323c18800346594cbab9",
+   "grade": "C",
+   "statement": "complex1:complex_polar",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:complex",
+   "derivedFrom": [
+    "https://openmath.org/cd/complex1.ocd#complex_polar"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:31",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "576154a7f2eac76cc3a43db5364f7e1f317e8acb6d1c613c90f23c7597353bdd",
+   "grade": "C",
+   "statement": "complex1:argument",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:complex",
+   "derivedFrom": [
+    "https://openmath.org/cd/complex1.ocd#argument"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:32",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "45d5190df7ce9dda9ce80546d423e02909388b545279f3141d1d9aab2f3ce21f",
+   "grade": "C",
+   "statement": "<arg/> (3 occurrences in ch.4)",
+   "source": "MathML 3 content",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:complex",
+   "derivedFrom": [
+    "https://www.w3.org/TR/MathML3/chapter4.html"
+   ],
+   "locator": [
+    "(element arg)"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:33",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "9f0d1fbc0fd1aae4d2cb562f8f156c3d2a962cbd40b84326623773b3c9642866",
+   "grade": "C",
+   "statement": "Ряд Тейлора",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:taylor",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E3071"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:34",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "1dc5e6a88c7aa08577e9c2a88496e8d8d7fec464154a081bdbc14e1193ef783d",
+   "grade": "L",
+   "statement": "Многочлен Тейлора",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:taylor",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2924"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:35",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "26ecde8d25a861abd8096ee51c4a5034cbd4a76068fb06cc345aa71ab4132956",
+   "grade": "L",
+   "statement": "Формула Тейлора",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:taylor",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2021"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:36",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "e4494b9a84a2645fcf81eeabc7c163e8e7cfa625c71102043dc8d1e39e97b73b",
+   "grade": "S",
+   "statement": "Singular number | сингулярное число",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:svd",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E3303"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:37",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "738f295dc346b3d9b60f5acf28de07e2ea4070ca3a59fca7bd696ff5397af191",
+   "grade": "L",
+   "statement": "Matrix | матрица",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:svd",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1703"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:38",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "4140820134d294ebbca6d632006ac223a4caa5095f04465f68bf393505bccc22",
+   "grade": "S",
+   "statement": "linalg4:rank",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:svd",
+   "derivedFrom": [
+    "https://openmath.org/cd/linalg4.ocd#rank"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:39",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "ccf5e01e1ea4acbf2b336b3d55801ad722b0f6840fe0a0f9fb53b4a0c91177b2",
+   "grade": "C",
+   "statement": "Bayes theorem | теорема Байеса",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:bayes",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1836"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:40",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "e2e51457f8efaf02317f5c8773facc4db6a82bee1bd2c8c1a7e894e88cb2ce29",
+   "grade": "L",
+   "statement": "Conditional probability | вероятность условная",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:bayes",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2419"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:41",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "60943c727df86e6532de9f0e5d0eb16c717810af4069280830a5b0c254a89189",
+   "grade": "L",
+   "statement": "A posteriori probability | вероятность апостериорная",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:bayes",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2412"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:42",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "d8c94e134b80b6dd313ff7739fd3971d5c959fa8d3429f841b3fa0c5d88591a4",
+   "grade": "L",
+   "statement": "Lagrange function | функция Лагранжа",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lagrange",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1621"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:43",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "195093c6098672fd9a390d875893d000a55b4a786423a35e09a280e0ef3fa23a",
+   "grade": "L",
+   "statement": "Экстремум",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lagrange",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E3128"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:44",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "17b8a627a13c1b03da1a27b44476fa467213a8df3baf6111673db9e058e27515",
+   "grade": "S",
+   "statement": "Lagrange method of modified function | Метод модифицированных функций Лагранжа",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lagrange",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E684"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:45",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "7eb120b16ae11b72675c15210714e087842c37e20fa3037d96d2eda1902822d2",
+   "grade": "L",
+   "statement": "minmax1:min",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lagrange",
+   "derivedFrom": [
+    "https://openmath.org/cd/minmax1.ocd#min"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:46",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "e1de612da154b8f85722204a87fd2de52914990f814dd9968294de184084966c",
+   "grade": "L",
+   "statement": "Optimization problems",
+   "source": "PhySH",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lagrange",
+   "derivedFrom": [
+    "https://doi.org/10.29172/b96ba7a9-cce1-470c-b80c-6dadb2c6b8e9"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:47",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "1bba66de40760b958f4d367f2955df948626ff96f342965204346afec4b87993",
+   "grade": "L",
+   "statement": "Kotel'nikov frequency | Частота Котельникова",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:aliasing",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E3406"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:48",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "19e0add6e4832dffff1ab3a63317520d80664767efffea7ada1bb026035533f8",
+   "grade": "S",
+   "statement": "Discretization error | Погрешность дискретизации",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:aliasing",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E3378"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:49",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "9465a7c43301d582b60d15248e8845cc19fb582117ac1ee15015ee92891f39ad",
+   "grade": "C",
+   "statement": "Уравнение теплопроводности",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:heat",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1921"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:50",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "421915eafc8a8a38e86903e61f6f2ac17f540b880eb9d6fea6a9d5a2c4b72a36",
+   "grade": "L",
+   "statement": "Diffusion equation",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:heat",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1930"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:51",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "68a4370708c31bbf6f6288bc86d0cc6979e095b190ac79c523ea169996c474e0",
+   "grade": "L",
+   "statement": "Diffusion & random walks",
+   "source": "PhySH",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:heat",
+   "derivedFrom": [
+    "https://doi.org/10.29172/cbf5d6c2-2523-4ba3-abb5-133219e2ce5a"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:52",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "9ba9e387a59b43a8836ca83d0e13236d16a342dd476c458e4fca943590e5117a",
+   "grade": "L",
+   "statement": "Optics & lasers",
+   "source": "PhySH",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:refraction",
+   "derivedFrom": [
+    "https://doi.org/10.29172/23cdcd6b-ae22-4b6d-92cd-24a9a8bd0577"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:53",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "0a225bf9ccf33be0522ae79e202786400160eb6b3bd6c03ecd81229004500a68",
+   "grade": "C",
+   "statement": "Binomial distribution | распределение биномиальное",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:probability",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2498"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:54",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "28e91c7f3d873c51f29cf862556626968b3a55a81380515898452eb4797f9e57",
+   "grade": "C",
+   "statement": "Integral de Moivre Laplace theorem | теорема интегральная Муавра-Лапласа",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:probability",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1847"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:55",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "9486d2a657ea2b63023a5b8703cbd83e10c34d74d2d4db48faee0bc14b2065d0",
+   "grade": "C",
+   "statement": "Normal distribution | распределение нормальное",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:probability",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2514"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:56",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "0a9471d497572fbc164080bdf5809e9556628a3984ad52974050fcb8a236138f",
+   "grade": "L",
+   "statement": "s_dist1:mean",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:probability",
+   "derivedFrom": [
+    "https://openmath.org/cd/s_dist1.ocd#mean"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:57",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "638ab2625a77082142b88cbf9c385ecc13d0938672cd471117885f347e05b023",
+   "grade": "L",
+   "statement": "s_dist1:variance",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:probability",
+   "derivedFrom": [
+    "https://openmath.org/cd/s_dist1.ocd#variance"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:58",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "de1e8c5ba9b55aa5d450b50ba385f54c1ff8f1f87ef9ef1b267f3aa7140ccb15",
+   "grade": "L",
+   "statement": "<mean/> (5 occurrences in ch.4)",
+   "source": "MathML 3 content",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:probability",
+   "derivedFrom": [
+    "https://www.w3.org/TR/MathML3/chapter4.html"
+   ],
+   "locator": [
+    "(element mean)"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:59",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "75768e75cc8c1a7a6e0b2378a158be6c572c8e1f7e35edee1655f449f3d7dffc",
+   "grade": "L",
+   "statement": "<variance/> (4 occurrences in ch.4)",
+   "source": "MathML 3 content",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:probability",
+   "derivedFrom": [
+    "https://www.w3.org/TR/MathML3/chapter4.html"
+   ],
+   "locator": [
+    "(element variance)"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:60",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "e3a9e34caa7af81d53d9aecb7686ba32ea2a4f4d4f58d08c9898d36a2afcd70d",
+   "grade": "C",
+   "statement": "Least square method | Метод наименьших квадратов",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:least_squares",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E690"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:61",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "b21d053985565b443892d3d6ec7d3beb195d29cebaa3daa4161caab79e4fe0b9",
+   "grade": "C",
+   "statement": "veccalc1:divergence",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:vector_field",
+   "derivedFrom": [
+    "https://openmath.org/cd/veccalc1.ocd#divergence"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:62",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "34e62e80a2be4c4443ecc3d71103b611b223f73820fc65c76f12e2492afe106c",
+   "grade": "C",
+   "statement": "veccalc1:curl",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:vector_field",
+   "derivedFrom": [
+    "https://openmath.org/cd/veccalc1.ocd#curl"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:63",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "91526c2b176ee06d004c43c33d74dec3d8123ff12ee446d5aaac375dad2c4d6f",
+   "grade": "C",
+   "statement": "<divergence/> (5 occurrences in ch.4)",
+   "source": "MathML 3 content",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:vector_field",
+   "derivedFrom": [
+    "https://www.w3.org/TR/MathML3/chapter4.html"
+   ],
+   "locator": [
+    "(element divergence)"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:64",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "4b0dcca4dd5703bd6f3532f590d1bb3334f95be5adcf60a3b969e0376efa24df",
+   "grade": "C",
+   "statement": "<curl/> (3 occurrences in ch.4)",
+   "source": "MathML 3 content",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:vector_field",
+   "derivedFrom": [
+    "https://www.w3.org/TR/MathML3/chapter4.html"
+   ],
+   "locator": [
+    "(element curl)"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:65",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "2955706aaadf0b41f9dd1d59154829d2a90f779a0fc04ac2788407cef6a320b6",
+   "grade": "C",
+   "statement": "интеграл Римана",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:integral",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2865"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:66",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "fbab37e079878b5a8af7898c02279672693559067a823194787f54423b1bdefe",
+   "grade": "L",
+   "statement": "интеграл",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:integral",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2855"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:67",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "72fb94a847bf3fe83cea2413c2afd074e2a9572f9b6d289a368c712568d3ab6f",
+   "grade": "C",
+   "statement": "Field of vectors | векторное поле",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:vector_field",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E246"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:68",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "95fe7055729100f630ab92767e14a3dfba8c795841fe7e9ab1db3b6af3ee5c6a",
+   "grade": "L",
+   "statement": "Killing field of vectors | векторное поле Киллинга",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:vector_field",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E247"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:69",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "64856c5d907671b954416fe7cb3368d7730a1dceb232c85aa1514214bdd90d15",
+   "grade": "C",
+   "statement": "linalgeig2:eigenvalue",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:linear",
+   "derivedFrom": [
+    "https://openmath.org/cd/linalgeig2.ocd#eigenvalue"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:70",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "68fada28bba055683d14824e5d16a52a7b5d762222cc79ca587711f0791dd0ea",
+   "grade": "C",
+   "statement": "linalgeig2:eigenvector",
+   "source": "OpenMath",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:linear",
+   "derivedFrom": [
+    "https://openmath.org/cd/linalgeig2.ocd#eigenvector"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:71",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "9dc2bfdd12d5bc1a9dbd131b3f6d08a1d5681dd967bc4f235564e27ff2760b86",
+   "grade": "L",
+   "statement": "Trigonometrical Fourier constant | коэффициенты Фурье тригонометрические",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:fourier",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2132"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:72",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "ddcc0c36416e1ab051bc7419a39e66d4b792ae2042351e9e213cef8d35898db9",
+   "grade": "L",
+   "statement": "Runge-Kutta four-termed formula | Четырехчленная формула Рунге-Кутта",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lorenz",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2070"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:73",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "d32dd03e9fd2e07c2e2da9b5ba1fc8f8cbf3c92003d838b46b3349fcb146ac2e",
+   "grade": "L",
+   "statement": "Method of steepest descent | Метод наискорейшего спуска",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:gradient",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E691"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:74",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "68c84e0c69779e241aafa978222dd952a98c525e5448bc9f5549f34e7138a45b",
+   "grade": "L",
+   "statement": "ряд Маклорена",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:taylor",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E3072"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:75",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "4f2e8b395dd6f26993af7be434ff23673df15b03959e6818aaa72e029dfc991f",
+   "grade": "L",
+   "statement": "Oscillation equation | Уравнение колебаний",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:waves",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1931"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:76",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "08fe760be032e116a07776042f9ad973adf58b4d365f8719d7802b1adde0f9c3",
+   "grade": "S",
+   "statement": "ondelette | wavelet | вейвлет | всплеск | вэйвлет",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:waves",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1520"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:77",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "c8fb5cb936f5c597bcdd602129a36b80f1efd83c42a77a0655e09489f32625d6",
+   "grade": "S",
+   "statement": "Nonlinear waves",
+   "source": "PhySH",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:waves",
+   "derivedFrom": [
+    "https://doi.org/10.29172/2375c1d2-a3fc-4d5b-8fde-4f9029004962"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:78",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "4f6252cd72fd0759f599981ed7e869cb7ffc58d183320f6e53dd53b6dd439244",
+   "grade": "C",
+   "statement": "Bayesian formula | формула Байеса",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:bayes",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2000"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:79",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "d15d733c31e8226930e3bc2a95469e72462792dad37fad5c599535ae12f9d087",
+   "grade": "C",
+   "statement": "Langrangian multiplier | множитель Лагранжа",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lagrange",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2722"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:80",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "f1d498d4966088c70276921fc2bae9cb49264a39037371f5551bd65399d0e2eb",
+   "grade": "S",
+   "statement": "Lagrangian | Лагранжиан | функция Лагранжа",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lagrange",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E3239"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:81",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "5118755df433f12ba78a4a7eb5882c9ac7bbc1cbafff7487aa3a0c8452d44eaa",
+   "grade": "S",
+   "statement": "Euler-Lagrange equation | Уравнение Эйлера-Лагранжа",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:lagrange",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1920"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:82",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "5d1f4d743ebf097861aa14c9522c3ba6f85f8cb3407c77c60e4e0eb6a119186a",
+   "grade": "S",
+   "statement": "вейвлет Котельникова-Шеннона",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:aliasing",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1523"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:83",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "2b10f1b72e62c638ede4a3471be7786c493eed4c748df0070539cf8cee5da4b4",
+   "grade": "S",
+   "statement": "Fermat number | число Ферма",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:refraction",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1041"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:84",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:S",
+   "sha256": "6e3133d64a5c493500dca1af452108687b2847713e2dcd31c4f51346a3fb917c",
+   "grade": "S",
+   "statement": "Variational problem | задача вариационная",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:refraction",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E370"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:85",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "13e0d6998e41cc4e50456b6dcdb57650af27db65bc7dbee42124649145bebd91",
+   "grade": "C",
+   "statement": "Central limit theorem | теорема центральная предельная",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:probability",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1856"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:86",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "2603f253f55de243c86fe6a6c4a08616dd3560cf8b6728a57a8105b22b584bfa",
+   "grade": "L",
+   "statement": "Linear regression | регрессия линейная",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:least_squares",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E2624"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:87",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "b5e7208e7fe7db2fbbdc4cef2244589f7a7c794a612aaf46613a4bc850d4672d",
+   "grade": "L",
+   "statement": "Projection | проекция",
+   "source": "OntoMathPro",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:least_squares",
+   "derivedFrom": [
+    "http://ontomathpro.org/ontology/E1450"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:88",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "ddab9b2f96efd2dd8620515b1d511387c8451eb8a462efadeb481947d04f7a8c",
+   "grade": "L",
+   "statement": "Pascal's triangle read by rows: C(n,k) = binomial(n,k) = n!/(k!*(n-k)!), 0 <= k <= n.",
+   "source": "OEIS",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:probability",
+   "derivedFrom": [
+    "https://oeis.org/A007318"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:link:89",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:L",
+   "sha256": "b14d1a93914e4d15d0bef3da42f801aae089f8a97ba7395baf8bddd6e477da58",
+   "grade": "L",
+   "statement": "Central binomial coefficients: binomial(2*n,n) = (2*n)!/(n!)^2.",
+   "source": "OEIS",
+   "instrument": "tools/scout.py (live fetch) + tools/mapping.py (hand-authored)",
+   "about": "urn:x3d:mathlab:lesson:probability",
+   "derivedFrom": [
+    "https://oeis.org/A000984"
+   ]
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:0",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "b3b51f312cada5afedfbab28318e40263ba5be257e150fe2e30791e156fe4a07",
+   "grade": "C",
+   "statement": "no Fourier or transform symbol",
+   "source": "OpenMath",
+   "about": "urn:x3d:mathlab:lesson:fourier"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:1",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "e96cf80f558a1c56036e1119d5b3504108b3d31b150226d76dcfa79702af3b68",
+   "grade": "C",
+   "statement": "no Fourier element",
+   "source": "MathML 3 content",
+   "about": "urn:x3d:mathlab:lesson:fourier"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:2",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "b438ec6fc8aaf2a9bc3e5f3b2277b040ae20003932c823e8246fc5842daa02b7",
+   "grade": "C",
+   "statement": "no Taylor or series symbol",
+   "source": "OpenMath",
+   "about": "urn:x3d:mathlab:lesson:taylor"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:3",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "aadf4949b7c10ed4162d53b1f49e7acad77e9ae3bac58747b553f9a598f91b84",
+   "grade": "C",
+   "statement": "no <taylor/>",
+   "source": "MathML 3 content",
+   "about": "urn:x3d:mathlab:lesson:taylor"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:4",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "dc74d6ae9e46da7d91b1efa068d676830fc94aa53fd154bee3d8a9dc6b91ad98",
+   "grade": "C",
+   "statement": "no wave symbol",
+   "source": "OpenMath",
+   "about": "urn:x3d:mathlab:lesson:waves"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:5",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "6331c18149ec657d5d3ea3e1a3a6a3a80088efbe2ae2e45a96cfba2391755bae",
+   "grade": "C",
+   "statement": "no wave element",
+   "source": "MathML 3 content",
+   "about": "urn:x3d:mathlab:lesson:waves"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:6",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "b860afcc7f64a27a14ffd3b258d5a98d7b612155f4ec50a061d45a060c1ce503",
+   "grade": "C",
+   "statement": "no SVD or singular value symbol",
+   "source": "OpenMath",
+   "about": "urn:x3d:mathlab:lesson:svd"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:7",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "a603f86d3022428463fa79031d91be28e0717eafdeae6b8faf9e7452e5b770f7",
+   "grade": "C",
+   "statement": "no SVD element",
+   "source": "MathML 3 content",
+   "about": "urn:x3d:mathlab:lesson:svd"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:8",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "3d996f18408be75e8e9e87482874bbdfd253b4592232c7e446cdc8252a854fa5",
+   "grade": "C",
+   "statement": "no probability or Bayes symbol (prob1, stats1 CDs also 404)",
+   "source": "OpenMath",
+   "about": "urn:x3d:mathlab:lesson:bayes"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:9",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "01297cf14b3dce9d4c70f725c2c54fcc8125f2073697383f4a9cf9d0a8504470",
+   "grade": "C",
+   "statement": "no Bayes element",
+   "source": "MathML 3 content",
+   "about": "urn:x3d:mathlab:lesson:bayes"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:10",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "7bcb78b6b0d794ab41ae2352f1152b2e218f0527425ffa58549cf5cc35486087",
+   "grade": "C",
+   "statement": "no constrained optimisation element",
+   "source": "MathML 3 content",
+   "about": "urn:x3d:mathlab:lesson:lagrange"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:11",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "c45963942b41b40d0033d2b35c2c76d5927b299819a22c1b32a482536b0129d9",
+   "grade": "C",
+   "statement": "no multiplier or optimisation symbol (only minmax1)",
+   "source": "OpenMath",
+   "about": "urn:x3d:mathlab:lesson:lagrange"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:12",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "bc20cf724dcf688912f4c905503879b87cc291d8d7e29d499a80661bd8e6bc2c",
+   "grade": "C",
+   "statement": "no sampling symbol",
+   "source": "OpenMath",
+   "about": "urn:x3d:mathlab:lesson:aliasing"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:13",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "7c8bb55f1d7b41a5ff287a1c92446901281943595694003181d5c2d96ec75a25",
+   "grade": "C",
+   "statement": "no sampling element",
+   "source": "MathML 3 content",
+   "about": "urn:x3d:mathlab:lesson:aliasing"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:14",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "9f9a7eef1fe73455929594e71a82e09ac2bea9829701ec46f8898910df7d63cd",
+   "grade": "C",
+   "statement": "no sampling concept in the listed 544",
+   "source": "PhySH",
+   "about": "urn:x3d:mathlab:lesson:aliasing"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:15",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "af7f4e513b7e6da80fbee67c035155fdce079725a1c725285dffd959b37ede1f",
+   "grade": "C",
+   "statement": "no heat equation symbol (SI_DerivedQuantities1:heat is a unit-quantity, not the PDE)",
+   "source": "OpenMath",
+   "about": "urn:x3d:mathlab:lesson:heat"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:16",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "9230b933a81efc45fe64c18f08b7d466226b39f37430387242b09ec8f73793ae",
+   "grade": "C",
+   "statement": "no heat equation element",
+   "source": "MathML 3 content",
+   "about": "urn:x3d:mathlab:lesson:heat"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:17",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "988606672bc844e265f6fffb7434c0d00f2db5652b056099b3f5e94687dda067",
+   "grade": "C",
+   "statement": "no Snell, refraction or Fermat principle class (E1041 'Fermat number' is a false friend)",
+   "source": "OntoMathPro",
+   "about": "urn:x3d:mathlab:lesson:refraction"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:18",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "67c29f7d41a67b53f540056da8014a4ff3173e6b8c14c9309e7d210218cfd7c0",
+   "grade": "C",
+   "statement": "no optics symbol",
+   "source": "OpenMath",
+   "about": "urn:x3d:mathlab:lesson:refraction"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:19",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "a1a94619f12377234436e736bc6e0474ad419a1130f3dc207a1e18572257172b",
+   "grade": "C",
+   "statement": "no optics element",
+   "source": "MathML 3 content",
+   "about": "urn:x3d:mathlab:lesson:refraction"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:20",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "c2a34f50160b1c6ab88994a89dbd578d604ea6721435d76c4eaa27df4b59c5d4",
+   "grade": "C",
+   "statement": "no ODE solver symbol",
+   "source": "OpenMath",
+   "about": "urn:x3d:mathlab:lesson:lorenz"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:21",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "4d84271da9cfe25e19be72255bba8c25357230d64db3bf54c29423a92e8514da",
+   "grade": "C",
+   "statement": "no ODE element",
+   "source": "MathML 3 content",
+   "about": "urn:x3d:mathlab:lesson:lorenz"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:22",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "9dc15369422904f81a8729984688a75e2a442ef02d2c8f859f767814d13dbac8",
+   "grade": "C",
+   "statement": "no regression symbol",
+   "source": "OpenMath",
+   "about": "urn:x3d:mathlab:lesson:least_squares"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:23",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "eed005b62d4df069d833c8950b93d26de8a3d558f243b96e2205a97e3fed6d02",
+   "grade": "C",
+   "statement": "no regression element",
+   "source": "MathML 3 content",
+   "about": "urn:x3d:mathlab:lesson:least_squares"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:24",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "cddd618c07588be0fe226c878c6400338727a62d36ded5a951acd3f03f03bfb9",
+   "grade": "C",
+   "statement": "no probability concept in the listed 544",
+   "source": "PhySH",
+   "about": "urn:x3d:mathlab:lesson:probability"
+  },
+  {
+   "@id": "urn:x3d:math-concept-graph:gap:25",
+   "@type": "Claim",
+   "dialect": "mathlab",
+   "verdict": "supported",
+   "gradeNative": "urn:x3d:grade:C",
+   "sha256": "a5dd8479d2a2eed860ccaa410d2453fcc901e71488f6a0dc1d782a345e7666fa",
+   "grade": "C",
+   "statement": "no vector field concept",
+   "source": "PhySH",
+   "about": "urn:x3d:mathlab:lesson:vector_field"
+  }
+ ]
+}
