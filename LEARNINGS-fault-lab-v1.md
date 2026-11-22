@@ -85,3 +85,29 @@ Two more rig traps, both found because a screenshot looked wrong:
   Serve `text/css`.
 - "The canvas has more than N colours" passed on a black canvas because a caption with anti-aliased text sat over it.
   Count colours only where the scene is drawn, and look at one screenshot by eye before trusting the count.
+
+## Update, 22 Nov 2026: carried becomes findable (Fault Lab v3, the extras lift)
+
+Item 9 is built: `formats/gltf/semantic/blender_extras.py` lifts the add-on's extras into KHR_xmp_json_ld packets.
+
+| Blender glTF, clean twin (3 trees, 6 Metadata nodes) | as exported | after the lift |
+|---|---|---|
+| Metadata nodes as JSON-LD packets | 0 of 6 | 6 of 6 (node, material and scene hosts) |
+| "Which crm:E25 features are deeper than 9 m?" | 0 answers | 1 answer |
+| Rules L0 to L6 against the source X3D | not applicable | 7 of 7 pass |
+| glTF-Validator 2.0.0-dev.3.10 | 0 errors | 0 errors |
+| Binary chunk | reference | byte-identical |
+
+Rig: Blender 5.3.0 bpy wheel, x3d-blender-io f68adbd, lifter 0.1.0, Python stdlib; one scene. 17 mutation tests.
+
+What carries over:
+
+11. **A second road can beat the first.** The Loom's own X3D to glTF converter carries 1 of 3 trees because only glTF
+    nodes get packets. The road through Blender plus the lift carries 3 of 3, because the lift puts packets on
+    materials and scenes too. KHR_xmp_json_ld always allowed that; the first converter just never used it.
+12. **Typing is the difference between data and an answer.** The extras held `"9.62"` as text. One typed number and
+    one `@type` turned a file that answers nothing into a file that answers a plain question.
+13. **A lift should only add, and prove it.** Rule L5 strips the extension from the output and compares the rest with
+    the input. That makes the step safe to put after any exporter.
+14. **When the input cannot say something, compare by what it can say.** The extras do not record the material node
+    type, so the rule compares host kind and states that in its text instead of guessing a type.
