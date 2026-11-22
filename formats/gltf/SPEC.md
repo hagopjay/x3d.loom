@@ -92,6 +92,33 @@ Rules (each has a mutation test that makes it fail, `semantic/test_x3dsem.py`, 1
 
 Results are in section 6b. The semantic verdict is a separate field of the same receipt (`verdict.semantic`), next to the visual scores.
 
+### 5b. The extras lift (Blender glTF extras into packets)
+
+`semantic/blender_extras.py` (stdlib only) reads a glTF or glb that Blender's exporter wrote with custom properties on, after an import through x3d-blender-io 2.6.5 or later, and turns each Metadata tree it finds in `extras` into a `KHR_xmp_json_ld` packet on the same glTF object. It only adds: extras, geometry and the binary chunk stay as they were.
+
+| extras key | on | packet goes on | host kind |
+|---|---|---|---|
+| `x3d_transform_metadata` | node | the node | `node:Transform`, DEF = last segment of `x3d_def_path` |
+| `x3d_metadata` | node | the node | `node:Shape` |
+| `x3d_metadata` | material | the material | `material` (the extras do not say which material node type) |
+| `x3d_scene_metadata[]` | scene | the scene | the entry's `host` (WorldInfo, sensors, ...) |
+
+Material and scene packets are the two hosts x3dsem 0.1.0 does not carry (section 5, first row); through this path they arrive.
+
+| Rule | Checks |
+|---|---|
+| L0 | KHR_xmp_json_ld declared, every packet has `@context`, every packet index in range |
+| L1 | every Metadata tree of the source X3D is a packet on the same kind of host with the same DEF, value for value |
+| L2 | Metadata node count equals the source's |
+| L3 | every CIDOC-CRM class reference of the source is typed `crm:E..` in JSON-LD |
+| L4 | numbers in numeric Metadata packets are JSON numbers, booleans JSON booleans (extras hold X3D text) |
+| L5 | additive: the output without the extension equals the input |
+| L6 | asset packet carries PROV-O (sha256 of the input glTF, the lifter) |
+
+L1 to L3 need the source X3D; without it they report "not run", never pass. Each rule has a mutation test (`semantic/test_blender_extras.py`, 17/17 pass).
+
+First result, **Confirmed** on one scene (Fault Lab clean twin, Blender 5.3.0 `bpy`, x3d-blender-io f68adbd; fixture `semantic/fixtures/blender-twin.glb`): 3 of 3 trees and 6 of 6 Metadata nodes lifted, L0 to L6 pass, binary chunk byte-identical, glTF-Validator 2.0.0-dev.3.10 reports 0 errors and 0 warnings before and after (one more info line, `UNSUPPORTED_EXTENSION`), Babylon.js 9.32.0 loads 12 meshes from both files. Shown in x3d.demo `fault-lab/v3`. Not handled: metadata-on-metadata (the add-on does not keep it; L1 and L2 fail on it).
+
 ## 6. First run (runs/2026-11-20-v0, 7 assets x 4 engines = 28 scored runs)
 
 Encode-matched SSIM / PSNR-fg (dB), verdict:

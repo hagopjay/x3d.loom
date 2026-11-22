@@ -13,6 +13,7 @@
 | engines | three.js r187, Babylon.js 9.32.0, X_ITE 16.7.1 (glb via X3D `Inline`), Blender 5.3.0 Cycles (`bpy` wheel); x3d.wgpu listed `not_run` | reused: `../../x3d.gltf/render/`; `blender/cycles_render.py` |
 | score | PSNR, PSNR-fg, SSIM, IoU after matching the display encode; consensus across engines | `src/score.mjs`, `src/encode.mjs` |
 | semantic | X3D → glTF (KHR_xmp_json_ld) → X3D, rules S0-S7 | `semantic/x3dsem.py` |
+| extras lift | Blender glTF `extras` (x3d-blender-io Metadata trees) → KHR_xmp_json_ld packets, rules L0-L6 | `semantic/blender_extras.py` |
 | receipt | `loom.render-receipt/1`, sealed sha256, never overwritten | `schema/`, `src/receipt.mjs`, `tools/check_receipts.py` |
 
 ```bash
@@ -24,7 +25,9 @@ node bin/loom-gltf.mjs run --x3d a.x3d,b.x3d --out runs/my-sem    # semantic rou
 node tools/contact-sheet.mjs runs/my-run
 python3 -I tools/check_receipts.py runs/my-run                    # schema + seal of every receipt
 node tools/failures.mjs runs/my-run                               # why each warn or fail: floor missed, image region, class, rule (failures.json)
-npm test && python3 -I semantic/test_x3dsem.py                    # 7 + 11 tests, every witness must be able to say no
+npm test && python3 -I semantic/test_x3dsem.py                    # 7 + 12 tests, every witness must be able to say no
+python3 -I semantic/test_blender_extras.py                        # 17 tests for the extras lift
+python3 -I semantic/blender_extras.py lift in.glb out.glb src.x3d # lift Blender's extras into packets, check against the source X3D
 ```
 
 Set `LOOM_BPY_PYTHON` to a Python that has `bpy`, `numpy` and `PIL` if it is not `python3`.
