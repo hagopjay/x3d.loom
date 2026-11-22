@@ -39,3 +39,15 @@ version per number): every number above names its Blender build.
 * The receipt's 195-of-195 suite agreement (decision 2) is not measured; the sidecar stays opt-in.
 * The same-renderer tolerances were calibrated on Chromium 157; CI's Playwright Chromium may differ.
 * The importer side has no sweep yet (Gate 3, out of scope).
+
+## Addendum: fortifying 2.7.1 (x3d-blender-io PR #73)
+
+Three cheap exporter fixes taken from findings 6 and 1 above: the active camera's Viewpoint is written first, an ORTHO
+camera becomes an OrthoViewpoint that the import reads back, and light temperature folds into the colour.
+
+| # | Finding | Grade | Evidence | Rule it suggests |
+|---|---|---|---|---|
+| 13 | **A judge's budget is a to-do list.** R3's budget (1 of 12 scenes) and the first-trip budget's `Viewpoint fieldOfView` group (1 per profile) each pointed at one fix; both went to 0 and the test now asserts 0. | C | `test_r3`, `first_trip_budget.json` | When a fix lands, shrink the budget in the same change so the gain cannot slip back. |
+| 14 | **A new node can trip a validator's own bug.** The first OrthoViewpoint made the Web3D Schematron report 7 Viewpoints per file as needing Navigation level 3, which the head declared. The rule's `count(preceding::OrthoViewpoint) > 0` sits outside its parentheses (.sch line 2495); a two-node file shows it (1 error with the OrthoViewpoint first, 0 second). | C | repro, `disagreements.json` | Reduce every unexplained validator error to a minimal file before changing the export to satisfy it. |
+| 15 | **Fixing one loss moves other numbers too.** Carrying three properties raised the sweep's carried count from 54 to 63. The rows for a light's `use_temperature` switch moved with it, and the file gained a Navigation component level. | C | sweep on 4 versions, `x3d_fields.json` | Regenerate the whole contract (rows, fields, parity, golden, budgets) in the PR that changes the export. |
+| 16 | **Views ignore Transform scale, so view lengths need the export's scale.** Under a global scale of 2, the OrthoViewpoint extents double, as the clip distances already did; metamorphic R4 had to learn that a view's own lengths change. | C | `test_r4` | A scale relation lists the fields that scale with the scene even though they sit outside its Transform. |
