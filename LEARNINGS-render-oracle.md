@@ -29,3 +29,9 @@ Widen to six engines (Babylon via x3d.webgpu, Castle via x3d.castle castle-rende
 * **Lesson: fixing one defect exposed the next.** The black spheres hid a second, independent X_ITE behaviour (gamma on indirect light only). A differ's FAR count can be dominated by one cause; re-run after every fix.
 * **Lesson: a plausible cause can be wrong.** The bridge's own note said X_ITE adds "a default environment glow". Trying it broke the `headlight=false` controls: the 186 on `exp2_c` is the headlight. Controls decided it; the note was corrected.
 * Remaining: `exp2_c_physical_default` (three.js 128 vs 186). Suspected, unproven: X_ITE curves the headlight on a PhysicalMaterial.
+
+## Update: five engines (Babylon and Blender added)
+* Babylon (x3d.webgpu bridge, Babylon.js 9.32.0) and Blender (x3d-blender-io 0eb4809, bpy 5.3.0, Cycles) now run on the same 29 scenes. Babylon vs X_ITE 14 FAR, Blender vs X_ITE 14 FAR. Causes in README Result 6: Blender importer ignores Background and EnvironmentLight (20 scenes; Likely), Babylon bridge draws metals black under an EnvironmentLight (11; cause Suspected), Babylon unlit default 255 vs 128 (1), three.js alone is dark on the headlit PhysicalMaterial (1).
+* **Lesson: an outside engine needs its camera checked before its pixels are believed.** The importer's 16:9 camera made Blender's first run FAR on scenes the others agreed on; fixing the camera (vertical fit) turned it to AGREE/NEAR. The Loom already held this trap for Cycles (three-gpu-pathtracer lane); a rig script now carries it.
+* **Lesson: majority vote localises the odd engine.** On `exp2_c_physical_default` four of five engines write 186 to 188, so the three.js 128 is the outlier, not a shared convention. This corrects my own earlier guess (headlight not curved).
+* **Castle not done.** The pinned bundle (sha256 4b8935a4...) no longer matches the snapshot at the same URL (moving snapshot). I stopped rather than drop the check; needs his call.
