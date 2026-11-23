@@ -1,0 +1,22 @@
+{
+ "node": "EnvironmentLight",
+ "mode": "scene",
+ "note": "EnvironmentLight: uniform white cube map 0.8 on three PhysicalMaterial spheres; the cube is scene.environment, X_ITE curves the indirect light by 1/2.2",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.95,
+   "mad": 3,
+   "fg": 8
+  }
+ },
+ "lookNote": "Fixture found by the render oracle (x3d.render-oracle): without the node the spheres were black (21 of 29 conformance scenes FAR). Bounds are the measured picture plus slack; the receipt holds the numbers."
+}

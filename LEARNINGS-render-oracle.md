@@ -23,3 +23,9 @@ Rig: 128x128, Chromium 157.0.8103.78 on ANGLE/SwiftShader; X_ITE 16.6.0; x3d.thr
 
 ## Next
 Widen to six engines (Babylon via x3d.webgpu, Castle via x3d.castle castle-render, Blender via the add-on) on a scene set with asymmetric lit coloured objects (Demo 57 coverage-board nodes); add FLIP as a second held-out judge; fix or document the three.js EnvironmentLight gap and re-run (the oracle should then show 21 FAR fall).
+
+## Update, same day: the three.js fix (his order: "fix threejs first")
+* `src/nodes/EnvironmentLight.js` + a 1/2.2 power on a PhysicalMaterial's indirect light (in `src/body-three.js`). X_ITE vs three.js FAR 21 to 1 of 29, held-out rows 8 to 28 of 29, 135 of 135 bridge fixture runs pass, new fixture EnvironmentLight (mad 0.22). Confirmed (x3d.render-oracle, X_ITE 16.6.0, three r187, Chromium 157 / 153 SwiftShader).
+* **Lesson: fixing one defect exposed the next.** The black spheres hid a second, independent X_ITE behaviour (gamma on indirect light only). A differ's FAR count can be dominated by one cause; re-run after every fix.
+* **Lesson: a plausible cause can be wrong.** The bridge's own note said X_ITE adds "a default environment glow". Trying it broke the `headlight=false` controls: the 186 on `exp2_c` is the headlight. Controls decided it; the note was corrected.
+* Remaining: `exp2_c_physical_default` (three.js 128 vs 186). Suspected, unproven: X_ITE curves the headlight on a PhysicalMaterial.

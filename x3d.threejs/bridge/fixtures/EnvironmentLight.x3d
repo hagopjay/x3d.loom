@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Full" version="4.1">
+  <head><meta name="title" content="EnvironmentLight"/><meta name="description" content="Uniform white EnvironmentLight 0.8 on a rough dielectric (base 0.5), a smooth metal and a dark dielectric; derived from x3d.wgpu conformance/scenes/half_*"/></head>
+  <Scene>
+    <NavigationInfo headlight="false" type='"NONE"'/>
+    <Background skyColor="0 0 0"/>
+    <Viewpoint position="0 0 9" fieldOfView="0.7854"/>
+    <EnvironmentLight intensity="0.8">
+          <ComposedCubeMapTexture containerField="diffuseTexture">
+            <ImageTexture containerField="frontTexture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4////fwAJ+wP9lhmlBQAAAABJRU5ErkJggg=="'/>
+            <ImageTexture containerField="backTexture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4////fwAJ+wP9lhmlBQAAAABJRU5ErkJggg=="'/>
+            <ImageTexture containerField="leftTexture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4////fwAJ+wP9lhmlBQAAAABJRU5ErkJggg=="'/>
+            <ImageTexture containerField="rightTexture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4////fwAJ+wP9lhmlBQAAAABJRU5ErkJggg=="'/>
+            <ImageTexture containerField="topTexture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4////fwAJ+wP9lhmlBQAAAABJRU5ErkJggg=="'/>
+            <ImageTexture containerField="bottomTexture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4////fwAJ+wP9lhmlBQAAAABJRU5ErkJggg=="'/>
+          </ComposedCubeMapTexture>
+          <ComposedCubeMapTexture containerField="specularTexture">
+            <ImageTexture containerField="frontTexture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4////fwAJ+wP9lhmlBQAAAABJRU5ErkJggg=="'/>
+            <ImageTexture containerField="backTexture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4////fwAJ+wP9lhmlBQAAAABJRU5ErkJggg=="'/>
+            <ImageTexture containerField="leftTexture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4////fwAJ+wP9lhmlBQAAAABJRU5ErkJggg=="'/>
+            <ImageTexture containerField="rightTexture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4////fwAJ+wP9lhmlBQAAAABJRU5ErkJggg=="'/>
+            <ImageTexture containerField="topTexture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4////fwAJ+wP9lhmlBQAAAABJRU5ErkJggg=="'/>
+            <ImageTexture containerField="bottomTexture" url='"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4XmP4////fwAJ+wP9lhmlBQAAAABJRU5ErkJggg=="'/>
+          </ComposedCubeMapTexture>
+    </EnvironmentLight>
+    <Transform translation="-2.4 0 0"><Shape><Appearance><PhysicalMaterial baseColor="0.5 0.5 0.5" metallic="0" roughness="1"/></Appearance><Sphere radius="1"/></Shape></Transform>
+    <Transform translation="0 0 0"><Shape><Appearance><PhysicalMaterial baseColor="1 1 1" metallic="1" roughness="0.5"/></Appearance><Sphere radius="1"/></Shape></Transform>
+    <Transform translation="2.4 0 0"><Shape><Appearance><PhysicalMaterial baseColor="0.2 0.2 0.2" metallic="0" roughness="1"/></Appearance><Sphere radius="1"/></Shape></Transform>
+  </Scene>
+</X3D>

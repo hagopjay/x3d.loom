@@ -36,7 +36,7 @@ All five are one cause. Ties at 250.6 mean the picture is all-or-nothing:
 | half_m0_r0_c0.5 | 141.1 | 138 | 0 | 140 |
 | ctrl_intensity05_m0_r1_c0.5 (and half_m0_r1_c0.5) | 135.7 | 137 | 0 | 138 |
 
-**Cause (Likely, not yet fixed): the three.js bridge draws no `EnvironmentLight`.** Every scene whose only light is an environment renders black. `exp2_c_physical_default` (no light, PhysicalMaterial) is the same class: three.js 128 vs X_ITE 186 vs wgpu 188 (MAE 56.5). This is the already-listed gap "X_ITE lights PhysicalMaterial with a default environment glow that three.js has no counterpart for", now measured as 21 of 29 scenes.
+**Cause (Confirmed by the fix in Result 5): the three.js bridge drew no `EnvironmentLight`.** Every scene whose only light is an environment renders black. `exp2_c_physical_default` is a different cause (headlight on a PhysicalMaterial, see Result 5).
 
 **The only gap between two engines that both draw the scene: X_ITE vs x3d.wgpu, max MAE 3.87** (`furnace_m0_r0_c0.5`, IoU 0.982), 0 FAR. wgpu runs 1 to 2 grey levels brighter in the centre (188 vs 186, 190 vs 189): small, systematic, on the rim as well (`top5_wgpu_vs_xite.png`).
 
@@ -66,6 +66,21 @@ Planted on all 29 X_ITE pictures (`oracle.json: controls`), plus real scene muta
 * **Blind spots, Confirmed**: a 10% gain error on dark objects and a vertical flip of a symmetric sphere pass as AGREE. These scenes are uniform spheres, so the differ cannot see orientation or colour-channel mistakes; the next scene set needs asymmetric, coloured, lit objects.
 * three.js is blind to material changes under no environment (it draws black either way): that is the engine gap, not the differ.
 * Determinism: two full runs per engine, max MAE 0.000 in all three engines.
+
+## Result 5: the three.js bridge fixed (same day, same rig; x3d.loom branch of this PR)
+The oracle's finding was acted on first, as asked. `EnvironmentLight` is now drawn by the three.js bridge (`src/nodes/EnvironmentLight.js`: the cube map becomes `scene.environment`, intensity is `environmentIntensity`) and a second finding came out of the re-run: **X_ITE curves the indirect light a PhysicalMaterial gets from an EnvironmentLight by 1/2.2 after the material has multiplied it** (white light 0.5 on base colour 1 reads 186 = 255 x 0.5^(1/2.2); on base colour 0.5 it reads 137 = 255 x 0.25^(1/2.2)), and direct lights are not curved (a global curve moved the PhysicalMaterial fixture's foreground mean from 86 to 110 and broke its bounds). The bridge now puts the power on the indirect term only.
+
+| pair | before AGREE / NEAR / FAR | after |
+|---|---|---|
+| X_ITE vs three.js | 2 / 6 / **21** | 19 / 9 / **1** |
+| three.js vs x3d.wgpu | 8 / 0 / **21** | 18 / 10 / **1** |
+| X_ITE vs x3d.wgpu | 10 / 19 / 0 | unchanged |
+
+* Held-out record: three.js 8 of 29 rows in tolerance before, **28 of 29** after (X_ITE and wgpu 29 of 29, both times). Determinism: two runs per engine, max MAE 0.000.
+* **Remaining FAR, 1 of 29: `exp2_c_physical_default`** (PhysicalMaterial, headline only, no EnvironmentLight): three.js 128, X_ITE 186, x3d.wgpu 188. The same scene with `headlight="false"` is black in every engine, so the 186 comes from the headlight, not a default environment (Confirmed by the `ctrl_noenv` rows). A default white environment at 0.5 was tried, broke the headlight=false controls (MAE 133 to 181) and the PhysicalMaterial fixture, and was reverted. Cause Suspected: X_ITE curves the headlight on a PhysicalMaterial too, but not an explicit DirectionalLight (fixture). Open.
+* The residual 2.4 to 3.2 NEAR rows are rim pixels on the smooth dielectric (three.js IBL vs X_ITE), not fitted.
+* Regression: all 135 three.js bridge fixture runs pass after the change (X_ITE 16.6.0, Chromium 153.0.8010.12 SwiftShader, the bridge's own rig); one new fixture `EnvironmentLight` (mad 0.22, IoU 0.99 against X_ITE).
+* Files: `results/2026-11-23-conformance29-three-fixed/`.
 
 ## Limits (say them before anyone else does)
 * The 29 scenes collapse to **10 distinct X_ITE pictures, 10 wgpu, 2 three.js**: they are furnace probes, built to test one thing. They cannot reveal geometry, texture or light-model differences. Widening the scene set is the next step, not a detail.
