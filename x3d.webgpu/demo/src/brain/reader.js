@@ -379,7 +379,7 @@ Object.assign(DEFS.IndexedTriangleSet, { texCoord: ['SFNode', IO, null] });
 Object.assign(DEFS.IndexedFaceSet, { texCoord: ['SFNode', IO, null] });
 Object.assign(CONTAINER, { ImageTexture: 'texture', TextureCoordinate: 'texCoord', IndexedLineSet: 'geometry', Text: 'geometry', LineProperties: 'lineProperties', FontStyle: 'fontStyle',
   AudioClip: 'source', ComposedCubeMapTexture: 'specularTexture', MetadataString: 'metadata' });
-for (const t of ['Appearance','Shape','Group','Switch','Transform','Billboard','Viewpoint','NavigationInfo','Material','PhysicalMaterial']) DEFS[t].metadata = ['SFNode', IO, null];
+for (const t of ['Appearance','Shape','Group','Switch','Transform','Billboard','Viewpoint','NavigationInfo','Material','PhysicalMaterial','GaussianSplats']) DEFS[t].metadata = ['SFNode', IO, null];
 Object.assign(DEFS.Shape, {});
 const R_NOTE = new Set(['MetadataString']);
 
