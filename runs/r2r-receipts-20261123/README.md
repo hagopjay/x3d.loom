@@ -10,6 +10,10 @@ Everything the three sealed R2R runs read, so they can be checked and repeated. 
 | `sweep/<version>-import.jsonl`, `-reexport.jsonl`, `-x3dpy.jsonl` for 2.7.1 and 2.7.3 | 514 real `.x3d` files from the project's repositories through each instrument, one verdict per line | `kit/loomkit/r2r/drivers/blender_io.py` |
 | `manifests/blender-io-2.7.1.json`, `blender-io-2.7.3.json`, `fault-lab-v1.json` | The manifests of the three runs (`loom.r2r-manifest/1`) | by hand |
 | `replay-271-rules-on-273.json` | The 2.7.1 run's rules asked of add-on 2.7.3 (`loom.r2r-replay/1`) | `kit/loom r2r replay` |
+| `sweep/2.7.4-import.jsonl`, `-reexport.jsonl`, `-x3dpy.jsonl` | The same 514 files through add-on **2.7.4** (main 0eb4809, source tree 92a942d) | the same driver |
+| `manifests/blender-io-2.7.4.json` | A manifest for 2.7.4: the sweep and the three instruments, no chaos round, for `r2r replay` | by hand |
+| `replay-271-rules-on-274.json`, `replay-273-rules-on-274.json` | The rules of the 2.7.1 run and of the 2.7.3 run asked of add-on 2.7.4 | `kit/loom r2r replay` |
+| `hand-274/` | 19 hand-written files for the three rules that had under 5 files, with verdicts on 2.7.3 and 2.7.4 | by hand, the same driver |
 | `selftest.json` | The engine's own test on the day (`loom.r2r-selftest/1`) | `kit/loom r2r selftest --json` |
 
 **Judges of a chaos row:** the add-on's own validator, x3d.py 4.0.65.8, xmllint (libxml 20914) with `x3d-4.0.xsd` from
@@ -27,6 +31,7 @@ R2R used the importer, the re-export and "did x3d.py crash" as instruments. x3d.
 |---|---:|---:|---:|---:|---:|---:|
 | 2.7.1 | 3,840 | 158 | 11 | 60 | 2 of 514 | 1 of 512 |
 | 2.7.3 | 1,920 | 0 | 0 | 0 | 2 of 514 | 1 of 512 |
+| 2.7.4 | not run here | – | – | – | 0 of 514 | 0 of 514 |
 
 The 60 x3d.py crashes are a `RecursionError` on files nested 1,200 deep, raised where add-on 2.7.1 walks the scene
 for x3d.py; 2.7.3 walks with an explicit stack and has none. x3d.py passed all 514 swept files through both versions.
@@ -40,6 +45,12 @@ still live and 1 is partly closed (`replay-271-rules-on-273.json`). The reading 
 **These are the second set of runs.** The first set was made by a kit that counted a rule twice when it explained two
 signatures, and whose replay could count one file twice (LOOM-v1 failure modes 196 and 197). Both were fixed and every
 run here was made again; nothing of the first set is in the repository.
+
+**Added later on 23 Nov: add-on 2.7.4.** The Blender lane fixed what was still live (x3d-blender-io #77). Put to
+2.7.4, the 28 rules of the 2.7.1 run are 25 closed, 0 still live, 1 partly closed (the export gate, designed) and 2
+that pass every file but have under 5 files. The sweep has 0 failures in 514 on each instrument. Of the 19 hand
+files, 15 fail on 2.7.3 and 0 on 2.7.4 (C; loomkit.r2r 0.1.0, the same source sha256 as the sealed runs). The chaos
+rounds on 2.7.4 are in the add-on's repository, not here. Nothing was changed in the three sealed run folders.
 
 ## Repeat a run
 

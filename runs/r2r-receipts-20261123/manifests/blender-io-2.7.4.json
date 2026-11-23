@@ -1,0 +1,130 @@
+{
+ "schema": "loom.r2r-manifest/1",
+ "title": "x3d-blender-io 2.7.4 in bpy 5.3.0: a sweep of 514 real files",
+ "notes": [
+  "Instruments: the x3d-blender-io add-on at 2.7.4 (commit c6063cb, merged to main as 0eb4809 by x3d-blender-io #77; the source tree is 92a942d at both) inside bpy 5.3.0 (Python 3.13): its importer, and its import followed by its export. Third instrument: x3d.py 4.0.65.8 as the add-on's validate.py at 2.7.4 calls it; a crash there is a crash of that pair, not of x3d.py alone.",
+  "The judge is the same as for 2.7.1 and 2.7.3: kit/loomkit/r2r/drivers/blender_io.py with tools/chaos of x3d-blender-io at 8e56437, the add-on source pinned to 2.7.4, under a 10 GB address-space cap. Cloud machine, 15 GB, 4 cores.",
+  "No chaos round is listed here. The chaos rounds on 2.7.4 belong to the add-on's own repository (docs/CHAOS.md, third round). This manifest exists so that the rules of earlier runs can be put to 2.7.4 with `r2r replay`.",
+  "Sweep: the same 514 files as for 2.7.1 and 2.7.3 (every .x3d under the project's repositories on 23 Nov 2026 that is at most 2 MB), named as repos:<repository>/<path>. Machine paths in the messages were replaced by <addon>/, <site-packages>/ and <x3d-blender-io>/; nothing else was changed.",
+  "To repeat: check the repositories out side by side, and give --root bpyenv=... (a venv with bpy 5.3.0 and x3d.py) and --root addon-src=... (the add-on source at each version under <version>/source). Rebuilding the probes of the 2.7.1 run also needs ../chaos unpacked from ../chaos-*.tar.xz."
+ ],
+ "roots": {
+  "chaos": "../chaos",
+  "sweep": "../sweep",
+  "repos": "../../../..",
+  "bpyenv": "../../../../r2r-bpy-venv",
+  "addon-src": "../../../../r2r-addon-src"
+ },
+ "receipts": [
+  {
+   "adapter": "verdicts",
+   "path": "sweep:2.7.4-import.jsonl",
+   "instrument": "x3d-blender-io 2.7.4 importer (bpy 5.3.0)",
+   "family": "natural-sweep",
+   "split": "by-hash",
+   "fail_split": "train",
+   "what": "514 real project files through the 2.7.4 importer"
+  },
+  {
+   "adapter": "verdicts",
+   "path": "sweep:2.7.4-reexport.jsonl",
+   "instrument": "x3d-blender-io 2.7.4 import then export (bpy 5.3.0)",
+   "family": "natural-sweep",
+   "split": "by-hash",
+   "fail_split": "train",
+   "what": "the same 514 files, import then export, add-on 2.7.4"
+  },
+  {
+   "adapter": "verdicts",
+   "path": "sweep:2.7.4-x3dpy.jsonl",
+   "instrument": "x3d.py 4.0.65.8 through x3d-blender-io 2.7.4 validate.py (does it crash?)",
+   "family": "natural-sweep",
+   "split": "by-hash",
+   "fail_split": "train",
+   "what": "the same 514 files through x3d.py 4.0.65.8 as add-on 2.7.4 calls it"
+  }
+ ],
+ "oracles": [
+  {
+   "instrument": "x3d-blender-io 2.7.4 importer (bpy 5.3.0)",
+   "argv": [
+    "{root:bpyenv}/bin/python",
+    "{driver:blender_io}",
+    "--repo",
+    "{root:repos}/x3d-blender-io",
+    "--addon-source",
+    "{root:addon-src}/2.7.4/source",
+    "--instrument",
+    "import",
+    "--files-from",
+    "{files}",
+    "--out",
+    "{out}",
+    "--mem-gb",
+    "10"
+   ],
+   "hosts": {
+    "family": "natural-sweep",
+    "split": "train",
+    "max_bytes": 60000,
+    "cap": 120
+   }
+  },
+  {
+   "instrument": "x3d-blender-io 2.7.4 import then export (bpy 5.3.0)",
+   "argv": [
+    "{root:bpyenv}/bin/python",
+    "{driver:blender_io}",
+    "--repo",
+    "{root:repos}/x3d-blender-io",
+    "--addon-source",
+    "{root:addon-src}/2.7.4/source",
+    "--instrument",
+    "reexport",
+    "--files-from",
+    "{files}",
+    "--out",
+    "{out}",
+    "--mem-gb",
+    "10"
+   ],
+   "hosts": {
+    "family": "natural-sweep",
+    "split": "train",
+    "max_bytes": 60000,
+    "cap": 120
+   }
+  },
+  {
+   "instrument": "x3d.py 4.0.65.8 through x3d-blender-io 2.7.4 validate.py (does it crash?)",
+   "argv": [
+    "{root:bpyenv}/bin/python",
+    "{driver:blender_io}",
+    "--repo",
+    "{root:repos}/x3d-blender-io",
+    "--addon-source",
+    "{root:addon-src}/2.7.4/source",
+    "--instrument",
+    "x3dpy",
+    "--files-from",
+    "{files}",
+    "--out",
+    "{out}",
+    "--mem-gb",
+    "10"
+   ],
+   "hosts": {
+    "family": "natural-sweep",
+    "split": "train",
+    "max_bytes": 60000,
+    "cap": 120
+   }
+  }
+ ],
+ "settings": {
+  "rounds": 3,
+  "seed": 1,
+  "max_generations": 1,
+  "min_failures": 1
+ }
+}
