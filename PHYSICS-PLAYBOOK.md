@@ -114,6 +114,18 @@ The restitution test found a limit cycle (failure mode 125): below minBounceSpee
 
 **32. Keep the display's scale and precision faithful to a sub-unit goal.** A 0.35-second prompt completed numerically but its bar used a maximum of 1 and its label rounded the result to 0.3; the older 0.8-second challenge had the same underfilled-bar problem. Use the actual positive target as the bar maximum and sufficient decimal places for its authored unit. Exercise the real binding functions with both fractional targets, not only objectives greater than one. (`test/presentation.test.mjs`; failure mode 182.)
 
+*Patterns 33 to 37 come from Giza Fall v4, Summit Duel (23 Nov 2026): two active H-Anim ragdolls on Rapier 0.21's deterministic build, with a hand-written controller, projectiles, an omen deck and branching rewind (x3d.demo `docs/demos/blender-giza-fall/v4/`, [LEARNINGS-giza-summit-duel.md](LEARNINGS-giza-summit-duel.md)). One machine; read by the building thread, so Likely under law 44.*
+
+**33. Integrate a rotation as a rotation, and keep the explicit twin.** A magnetic step written as v += (q/m)(v × B) dt grows speed by √(1 + (ωdt)²) per step: 7.8 % in 60 steps at ωdt = 0.05. Rotating the velocity by ω dt with portable sine and cosine keeps the speed (drift 0 within float) and turns by (q/m) B dt to 1.3e-15 rad. Gate both, and keep the explicit step as the control that must fail. (Failure mode 205.)
+
+**34. A portable function is measured where the simulation calls it.** A shifted sine used as a cosine is worst at small angles, the case a per-step rotation uses most. Degree 11 failed a 1e-9 limit (1.8e-9) and degree 17 passed (1.3e-15). Raise the order, not the limit. Compare against the built-ins only in tests, and keep the five simulation files free of them; `kit/loom pagetraps` counted 5 sim units, and its one-`Math.sin` twin failed. (Failure mode 206.)
+
+**35. Fields that change time or velocity act on whole articulated units, and flags are booleans.** Scale every part of a jointed figure together, by one membership test. A `null` flag compared with `===` multiplied velocities by 4 every step. A round-outcome gate (fall drop, peak speed) catches that class on its first run. (Failure modes 207, 208.)
+
+**36. When the simulation is a game, gate the game.** Every seed must end under a cap written before the run, both sides must win at least a written minimum, and the median length must lie in a written band. Stalls are fixed in the design, not the cap. Agents update in alternating order; a side imbalance on few seeds is Suspected. (Failure modes 209 to 211.)
+
+**37. An engine with its own snapshot still needs the whole state checkpointed, and the viewer's session is replayable.** The checkpoint is the engine's snapshot plus every controller, scheduled event, projectile, paint state, the RNG and the step. A restore is proven by the continuation hash and by one incomplete-restore twin per domain. Director inputs are logged by the step that applies them, so a page can re-simulate the whole session, branches included, from the seed and that log, and compare a hash every second (19 of 19 here). (Failure mode 212.)
+
 ## 4. The run record: `loom.physics-run/1`
 
 One JSON file per run. `kit/loom physics ROOT --evidence DIR --runs 'runs/*.physics.json' [--hosts a,b,c] [--max-waivers N] [--require-takeover]`. Exit 0 pass, 1 a contract violation with its code, 2 an unreadable record. Standard library only; every gate raises, none asserts, so it holds under `python -O` (law 18).
@@ -152,6 +164,20 @@ A pass says: these hashes replayed unchanged in these hosts on this machine; thi
 **Browsers** (C): WebKit's `createX3DFromString` can stall (watchdog and one retry); headless Firefox ran at about a third of real time on the barrage and at 4 fps in the worst scene; headless WebKit drew the ragdoll page at 17 fps; Chromium's headless shell has no WebGL (use the `chromium` channel); a Playwright Firefox context without a `locale` has `navigator.language` undefined and X_ITE throws "invalid language tag"; a source edit during a run reloads the page under the dev server.
 
 **A hand-written XPBD contact solver** (L, Flop Lab): run friction as its own pass after every push of the iteration; solve the two corners of a face together and pull friction once at the middle of the face; solve a hinge's two axes together (one distance along the error ran a pendulum 3 % slow); cap each push at the substep's approach plus a slow bleed (2 m/s here; 0.8 with one iteration collapsed a stack); give every joint two bodies, a static one if need be (x3d_mcp warns otherwise, and X_ITE needs both); keep the simulation free of clocks, and lend the profiler one from the page; an X3D export that rounds to four decimals erases a compliance of 1e-5, so keep significant digits and test the text round trip; a `Shape` inside `CollidableShape` needs `containerField='shape'`.
+
+**Rapier 0.21, JavaScript, deterministic-compat build** (C, Summit Duel):
+- Node 22 and Chromium 153 gave the same per-step hashes over 3,600 steps when every line of JavaScript in the simulation used portable math.
+- Spherical joints have per-axis motors but no limits in JavaScript; revolute joints have `limits`.
+- A ray hit carries `timeOfImpact` (`toi` in older builds).
+- `World.restoreSnapshot` returns a new World: free the old one; handles survive.
+- A snapshot is 150 to 167 KB for 22 bodies and 347 colliders.
+- Friction and restitution combine rules are per collider: the default average turns 0.035 ice into 0.47 under a 0.9 boot.
+- The compat build inlines its wasm (4.4 MB).
+
+**three.js 0.187** (C, Summit Duel):
+- `PCFSoftShadowMap` is removed (it warns and uses PCF).
+- `MeshBasicMaterial`'s vertex stage has no `objectNormal`; use `normal` in `onBeforeCompile`.
+- `build/` has `three.module.js` and `three.core.js` and no minified files.
 
 **Process** (C): `Object.assign` of functions onto page state overwrote the page's own methods, twice (guard `expose()`); an import sanitiser can change the model; clocks must follow physics when it lags; a 60 fps claim needs a measurement (52.6 median under load).
 
