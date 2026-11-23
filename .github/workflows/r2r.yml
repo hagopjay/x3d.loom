@@ -46,7 +46,9 @@ jobs:
         run: |
           set -euo pipefail
           for run in runs/r2r-blender-io-271-20261123 runs/r2r-blender-io-273-20261123 runs/r2r-fault-lab-20261123; do
-            kit/loom r2r show "$run" | head -n 3
+            # To a file first: with pipefail, `show | head` ends the reader early and the writer exits 120.
+            kit/loom r2r show "$run" > "$RUNNER_TEMP/show.txt"
+            head -n 3 "$RUNNER_TEMP/show.txt"
           done
           mkdir -p "$RUNNER_TEMP/chaos"
           for f in runs/r2r-receipts-20261123/chaos-*.tar.xz; do tar -xJf "$f" -C "$RUNNER_TEMP/chaos"; done
