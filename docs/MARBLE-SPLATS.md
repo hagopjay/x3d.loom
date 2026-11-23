@@ -36,3 +36,7 @@ Real GPU timings; SH above degree 0 (every public example is SH0); v4 (zstd) fil
 ## 4. Destinations
 
 Rules 1 to 4 and 6 are candidate gates for a splat study card (frame check, header check, clip and renormalise). Rule 3 applies to any scene-grounding witness. Rules 7 and 8 apply to any X_ITE loading check.
+
+## 5. Update, 23 Nov 2026: Atlas
+
+World Labs' next API is Atlas (opened 12 Nov 2026). Its poses, anchors and regions are stated in Three.js coordinates, which are X3D's, so rule 1's Rx(π) wrapper applies to raw Marble API splats only, not to Atlas output (cameras C, SPZ L). See [../LEARNINGS-marble-atlas.md](../LEARNINGS-marble-atlas.md) and failure modes 224 to 228.
