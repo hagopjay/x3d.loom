@@ -1,0 +1,679 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "2 audit probe(s) and 0+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "C",
+  "grade_word": "Confirmed",
+  "missed_seen": 2,
+  "reasons": [
+   "20 audit probe(s) confirmed, 0 refuted",
+   "0 false alarms in 1962 known-good files"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-ac96dfe7dbc3",
+ "instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "v:below_min",
+    "failures_explained_without_it": 31,
+    "false_alarms_without_it": 452,
+    "role": "test"
+   },
+   {
+    "dropped": "ntok:1",
+    "failures_explained_without_it": 31,
+    "false_alarms_without_it": 10,
+    "role": "context"
+   },
+   {
+    "dropped": "(the list of 7 places)",
+    "failures_explained_without_it": 31,
+    "false_alarms_without_it": 31,
+    "role": "fence"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "le:ntok:1",
+      "v:below_min"
+     ],
+     "any": [
+      "at:Cone@bottomRadius",
+      "at:Cone@height",
+      "at:GeoViewpoint@fieldOfView",
+      "at:PointLight@radius",
+      "at:Sphere@radius",
+      "at:SpotLight@radius",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: the number of tokens is at most 1 and a component is below the minimum the X3DUOM declares, at one of 7 places (Cone bottomRadius, Cone height, GeoViewpoint fieldOfView, PointLight radius, Sphere radius, SpotLight radius, Viewpoint fieldOfView)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:out_of_range",
+      "ntok:1"
+     ],
+     "any": [
+      "at:Cone@bottomRadius",
+      "at:Cone@height",
+      "at:GeoViewpoint@fieldOfView",
+      "at:PointLight@radius",
+      "at:Sphere@radius",
+      "at:SpotLight@radius",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 1 token(s): a component is outside the range the X3DUOM declares, at one of 7 places (Cone bottomRadius, Cone height, GeoViewpoint fieldOfView, PointLight radius, Sphere radius, SpotLight radius, Viewpoint fieldOfView)."
+   },
+   {
+    "rule": {
+     "all": [
+      "le:ntok:1",
+      "v:out_of_range"
+     ],
+     "any": [
+      "at:Cone@bottomRadius",
+      "at:Cone@height",
+      "at:GeoViewpoint@fieldOfView",
+      "at:PointLight@radius",
+      "at:Sphere@radius",
+      "at:SpotLight@radius",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: the number of tokens is at most 1 and a component is outside the range the X3DUOM declares, at one of 7 places (Cone bottomRadius, Cone height, GeoViewpoint fieldOfView, PointLight radius, Sphere radius, SpotLight radius, Viewpoint fieldOfView)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:below_min",
+      "!v:lexical_invalid"
+     ],
+     "any": [
+      "at:Cone@bottomRadius",
+      "at:Cone@height",
+      "at:GeoViewpoint@fieldOfView",
+      "at:PointLight@radius",
+      "at:Sphere@radius",
+      "at:SpotLight@radius",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: a component is below the minimum the X3DUOM declares, at one of 7 places (Cone bottomRadius, Cone height, GeoViewpoint fieldOfView, PointLight radius, Sphere radius, SpotLight radius, Viewpoint fieldOfView), unless the value does not have the written form its field type requires."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:below_min",
+      "!v:arity_mismatch"
+     ],
+     "any": [
+      "at:Cone@bottomRadius",
+      "at:Cone@height",
+      "at:GeoViewpoint@fieldOfView",
+      "at:PointLight@radius",
+      "at:Sphere@radius",
+      "at:SpotLight@radius",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: a component is below the minimum the X3DUOM declares, at one of 7 places (Cone bottomRadius, Cone height, GeoViewpoint fieldOfView, PointLight radius, Sphere radius, SpotLight radius, Viewpoint fieldOfView), unless the value has the wrong number of components for its field type."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:out_of_range",
+      "!v:lexical_invalid"
+     ],
+     "any": [
+      "at:Cone@bottomRadius",
+      "at:Cone@height",
+      "at:GeoViewpoint@fieldOfView",
+      "at:PointLight@radius",
+      "at:Sphere@radius",
+      "at:SpotLight@radius",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: a component is outside the range the X3DUOM declares, at one of 7 places (Cone bottomRadius, Cone height, GeoViewpoint fieldOfView, PointLight radius, Sphere radius, SpotLight radius, Viewpoint fieldOfView), unless the value does not have the written form its field type requires."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:out_of_range",
+      "!v:arity_mismatch"
+     ],
+     "any": [
+      "at:Cone@bottomRadius",
+      "at:Cone@height",
+      "at:GeoViewpoint@fieldOfView",
+      "at:PointLight@radius",
+      "at:Sphere@radius",
+      "at:SpotLight@radius",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: a component is outside the range the X3DUOM declares, at one of 7 places (Cone bottomRadius, Cone height, GeoViewpoint fieldOfView, PointLight radius, Sphere radius, SpotLight radius, Viewpoint fieldOfView), unless the value has the wrong number of components for its field type."
+   },
+   {
+    "rule": {
+     "all": [
+      "le:max:-1",
+      "!v:lexical_invalid"
+     ],
+     "any": [
+      "at:Cone@bottomRadius",
+      "at:Cone@height",
+      "at:GeoViewpoint@fieldOfView",
+      "at:PointLight@radius",
+      "at:Sphere@radius",
+      "at:SpotLight@radius",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: the largest component is at most -1, at one of 7 places (Cone bottomRadius, Cone height, GeoViewpoint fieldOfView, PointLight radius, Sphere radius, SpotLight radius, Viewpoint fieldOfView), unless the value does not have the written form its field type requires."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 20,
+   "missed": 2,
+   "missed_examples": [
+    "near: GeoViewpoint@fieldOfView <- '  -1  ,  -1  ' (live: '  -1  ' failed here)",
+    "near: Cone@bottomRadius <- '  -1  ,  -1  ' (live: '  -1  ' failed here)"
+   ],
+   "other_failure": 76,
+   "probes": 183,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 85
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 31
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 572,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1409
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1962
+  },
+  "normative_reading": [
+   {
+    "literal": "v:below_min",
+    "means": "a component is below the minimum the X3DUOM declares",
+    "passing_files_with_it_inside_the_fence": 10
+   },
+   {
+    "literal": "v:out_of_range",
+    "means": "a component is outside the range the X3DUOM declares",
+    "passing_files_with_it_inside_the_fence": 11
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 17,
+    "round": 1,
+    "rules_tested": [
+     "attr[v:ext:html & at:Anchor@url]"
+    ],
+    "tally": {
+     "confirm/refuted": 1,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 26,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:below_min & at:PointLight@radius]"
+    ],
+    "tally": {
+     "confirm/confirmed": 2,
+     "near/silent-ok": 2,
+     "value/confirmed": 2,
+     "value/refuted": 4,
+     "widen/missed": 5,
+     "widen/silent-ok": 11
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 44,
+    "round": 3,
+    "rules_tested": [
+     "attr[v:below_min & ntok:1 & (at:Cone@bottomRadius | at:Cone@height | at:GeoViewpoint@fieldOfView | at:PointLight@radius | at:Sphere@radius | at:SpotLight@radius)]"
+    ],
+    "tally": {
+     "confirm/confirmed": 10,
+     "near/silent-ok": 8,
+     "value/confirmed": 10,
+     "widen/missed": 1,
+     "widen/silent-ok": 15
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 44,
+    "round": "audit",
+    "rules_tested": [
+     "attr[v:below_min & ntok:1 & (at:Cone@bottomRadius | at:Cone@height | at:GeoViewpoint@fieldOfView | at:PointLight@radius | at:Sphere@radius | at:SpotLight@radius | at:Viewpoint@fieldOfView)]"
+    ],
+    "tally": {
+     "confirm/confirmed": 10,
+     "near/missed": 2,
+     "near/silent-ok": 6,
+     "value/confirmed": 10,
+     "widen/silent-ok": 16
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "v:below_min",
+    "ntok:1"
+   ],
+   "any": [
+    "at:Cone@bottomRadius",
+    "at:Cone@height",
+    "at:GeoViewpoint@fieldOfView",
+    "at:PointLight@radius",
+    "at:Sphere@radius",
+    "at:SpotLight@radius",
+    "at:Viewpoint@fieldOfView"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-ac96dfe7dbc3",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Cone@bottomRadius",
+   "Cone@height",
+   "GeoViewpoint@fieldOfView",
+   "PointLight@radius",
+   "Sphere@radius",
+   "SpotLight@radius",
+   "Viewpoint@fieldOfView"
+  ],
+  "sentence": "At one attribute where the value has 1 token(s): a component is below the minimum the X3DUOM declares, at one of 7 places (Cone bottomRadius, Cone height, GeoViewpoint fieldOfView, PointLight radius, Sphere radius, SpotLight radius, Viewpoint fieldOfView).",
+  "signature": "ValueError at export_x3d.py:2111 _modern_writer",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 31,
+   "explained_by_this_rule": 31,
+   "failures": 32,
+   "families": {
+    "chaos-differential": 1,
+    "natural-sweep": 1,
+    "r2r-probe": 30
+   },
+   "observed_by": {
+    "tool": 32
+   },
+   "with_known_good_twin": 31
+  },
+  "strays": {},
+  "tier": 1,
+  "trace": [
+   "seed v:below_min, fenced to 7 place(s): explains 31, false alarms 10",
+   "+ ntok:1: explains 31, false alarms 0 (gain 12.50)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 31,
+   "rule": {
+    "all": [
+     "v:below_min",
+     "ntok:1"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "v:below_min",
+   "ntok:1"
+  ],
+  "any": [
+   "at:Cone@bottomRadius",
+   "at:Cone@height",
+   "at:GeoViewpoint@fieldOfView",
+   "at:PointLight@radius",
+   "at:Sphere@radius",
+   "at:SpotLight@radius",
+   "at:Viewpoint@fieldOfView"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the value has 1 token(s): a component is below the minimum the X3DUOM declares, at one of 7 places (Cone bottomRadius, Cone height, GeoViewpoint fieldOfView, PointLight radius, Sphere radius, SpotLight radius, Viewpoint fieldOfView).",
+ "signature": "ValueError at export_x3d.py:2111 _modern_writer",
+ "sources": [
+  {
+   "event": "ev-79f084b6b938",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/four_lights__045__num_extreme.x3d",
+   "note": "num_extreme: X3D/Scene/Transform#OB_Point/PointLight#LA_Point radius: token 0 40 -> -1",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 205
+   },
+   "sha256": "4f6ca6b6a1cb380b45e48c0ff7a2c3ae47b6569b1eac3dc158434f3805aff424",
+   "twin": "repos:x3d-blender-io/tests/golden/four_lights.c14n.x3d"
+  },
+  {
+   "event": "ev-95cdf01993db",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round2-f158c9031314.x3d",
+   "note": "confirm: PointLight@radius <- '-1'",
+   "receipt": null,
+   "sha256": "f158c9031314ac1b4771eba6b05e38cf5744caeeda09f60e7222c4efa8c2ca1a",
+   "twin": "work:c007/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-f319f317c3db",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round2-e57c2320121b.x3d",
+   "note": "confirm: PointLight@radius <- '-1'",
+   "receipt": null,
+   "sha256": "e57c2320121b5c9f9627707fec0e91703ac622d4a2cafa38962282e54691ba93",
+   "twin": "work:c007/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-58c416da17b5",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round2-512e6606ce66.x3d",
+   "note": "widen: SpotLight@radius <- '-1'",
+   "receipt": null,
+   "sha256": "512e6606ce6685eada328f696d3a6e5902c015921575fd40499a9749b458c5b8",
+   "twin": "work:c007/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-4baadcd50b42",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round2-19f5f46c21d8.x3d",
+   "note": "widen: Sphere@radius <- '-1'",
+   "receipt": null,
+   "sha256": "19f5f46c21d803809840100a0c35cdf45c554e8dacdcbbbbdedb7f4b33abdfe2",
+   "twin": "work:c007/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-a164cb97e8da",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round2-5152c1705a42.x3d",
+   "note": "widen: Cone@height <- '-1'",
+   "receipt": null,
+   "sha256": "5152c1705a421dcaec8f659dfbd6bae485b6179b34d29ef5ab85829e6a149482",
+   "twin": "work:c007/twins/558c63f2d489.x3d"
+  },
+  {
+   "event": "ev-5f36a38e5789",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round2-c42547274144.x3d",
+   "note": "widen: Cone@bottomRadius <- '-1'",
+   "receipt": null,
+   "sha256": "c42547274144139d878663fefb183248893b233da1c8485eebd0ef7e7fe35dba",
+   "twin": "work:c007/twins/8b933aff1e1d.x3d"
+  },
+  {
+   "event": "ev-20f64bc818f6",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round2-a04d9b48a7e8.x3d",
+   "note": "widen: GeoViewpoint@fieldOfView <- '-1'",
+   "receipt": null,
+   "sha256": "a04d9b48a7e8ca5a8d278cdc26598365ad2c7573c3f8544dac89012bb91a09ef",
+   "twin": "work:c007/twins/346ee0c0a28c.x3d"
+  },
+  {
+   "event": "ev-8fde4d6dc550",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round2-f2aee7e81474.x3d",
+   "note": "value: PointLight@radius <- ' -1 ' (live: '-1' failed here)",
+   "receipt": null,
+   "sha256": "f2aee7e81474cf3762ad9e140690c2e938251d5de9a23724cc2e7d6c4df4efc9",
+   "twin": "work:c007/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-74597df9aae4",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round2-a697b856df5f.x3d",
+   "note": "value: PointLight@radius <- ' -1 ' (live: '-1' failed here)",
+   "receipt": null,
+   "sha256": "a697b856df5fe9b81daab39ce80d308cd881a2e4421312c1a92261fae7066a64",
+   "twin": "work:c007/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-b0adff6e68b3",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-946822128518.x3d",
+   "note": "confirm: Sphere@radius <- '-1'",
+   "receipt": null,
+   "sha256": "94682212851872ee3f6cfb741faf441da3840a6b7b179e21d7d7181a6a65a176",
+   "twin": "work:c007/twins/0e37dd6662f2.x3d"
+  },
+  {
+   "event": "ev-05a2a861782c",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-ae1d629145b7.x3d",
+   "note": "confirm: Cone@height <- '-1'",
+   "receipt": null,
+   "sha256": "ae1d629145b7d7aad9b70d2eb299dac22873c6c86ce9b2e006b97655bf0df228",
+   "twin": "work:c007/twins/a0501ac0fcb0.x3d"
+  },
+  {
+   "event": "ev-3a7fbc774fd2",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-388fa1af1d3e.x3d",
+   "note": "confirm: GeoViewpoint@fieldOfView <- '-1'",
+   "receipt": null,
+   "sha256": "388fa1af1d3e275b6f7ba3ed78742a3a3b0e37f3b6439de954884a5009b41864",
+   "twin": "work:c007/twins/346ee0c0a28c.x3d"
+  },
+  {
+   "event": "ev-f85cfbb59994",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-2be1f2840c3f.x3d",
+   "note": "confirm: Cone@bottomRadius <- ' -1 '",
+   "receipt": null,
+   "sha256": "2be1f2840c3faea7bf1b15efe256818ec9be29c061285efcaea15c1cdbb083ef",
+   "twin": "work:c007/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-914b770fce3a",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-690e4fa5fbeb.x3d",
+   "note": "confirm: SpotLight@radius <- ' -1 '",
+   "receipt": null,
+   "sha256": "690e4fa5fbeb8affe3537f41fe63260c82a8cd92f51f87fb001e4e8435515acd",
+   "twin": "work:c007/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-7d02cbe9a27e",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-1315499533f0.x3d",
+   "note": "confirm: Sphere@radius <- '-1'",
+   "receipt": null,
+   "sha256": "1315499533f0717942fe728d2107764787efdb774914cdf06a98a6551210ad3d",
+   "twin": "work:c007/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-3b76737f829b",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-9c36a7566ee6.x3d",
+   "note": "confirm: Sphere@radius <- ' -1 '",
+   "receipt": null,
+   "sha256": "9c36a7566ee6c44c3041d10d0be03236fd8b8f3bc902fc773671893007592d31",
+   "twin": "work:c007/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-21ff12fcc1e1",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-73fe2ba3a3dc.x3d",
+   "note": "confirm: GeoViewpoint@fieldOfView <- '-1'",
+   "receipt": null,
+   "sha256": "73fe2ba3a3dc0b45e45c99c9f3ce17ee1a717164fcc0548f2ca68f9c12c09c1a",
+   "twin": "work:c007/twins/346ee0c0a28c.x3d"
+  },
+  {
+   "event": "ev-b44b49ff171a",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-677be51516a3.x3d",
+   "note": "confirm: GeoViewpoint@fieldOfView <- ' -1 '",
+   "receipt": null,
+   "sha256": "677be51516a37fdaf7d647c9c788eca18199a3d874c7ed40d10c83f45b020071",
+   "twin": "work:c007/twins/43c8ff566559.x3d"
+  },
+  {
+   "event": "ev-f39690cb0636",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-f7be1c344774.x3d",
+   "note": "confirm: Cone@height <- '-1'",
+   "receipt": null,
+   "sha256": "f7be1c34477459f1bc6860ea49637d2a1c0ff0c4692c20ee709336d11ce4de9d",
+   "twin": "work:c007/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-89d0a952ad09",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-a66ad86dafc3.x3d",
+   "note": "widen: Viewpoint@fieldOfView <- ' -1 '",
+   "receipt": null,
+   "sha256": "a66ad86dafc3dfca7e6b606bbf9b2813a10c85ab8bde8e6542a18f72bbd4412f",
+   "twin": "work:c007/twins/a751905ca573.x3d"
+  },
+  {
+   "event": "ev-2974f16e360b",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-e8721361ae3f.x3d",
+   "note": "value: Sphere@radius <- ' -1 ' (live: '-1' failed here)",
+   "receipt": null,
+   "sha256": "e8721361ae3f3d242d992532bb8daa6dcad08db4eb8fc7db8c57e1428aa3bde5",
+   "twin": "work:c007/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-8a3dac6bfa7f",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-0963fdbf93c6.x3d",
+   "note": "value: GeoViewpoint@fieldOfView <- '  -1  ' (live: ' -1 ' failed here)",
+   "receipt": null,
+   "sha256": "0963fdbf93c642ad26df034759dea5b51accc79a4ab1358cb910bc2a8061db21",
+   "twin": "work:c007/twins/43c8ff566559.x3d"
+  },
+  {
+   "event": "ev-c519df686838",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-f75687a52f68.x3d",
+   "note": "value: Cone@height <- ' -1 ' (live: '-1' failed here)",
+   "receipt": null,
+   "sha256": "f75687a52f6858096534a72cfa7446c8689c2504c2486977d0a437f8fedf4685",
+   "twin": "work:c007/twins/a0501ac0fcb0.x3d"
+  },
+  {
+   "event": "ev-0d1ec53f2643",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-5afd03b637ee.x3d",
+   "note": "value: SpotLight@radius <- '  -1  ' (live: ' -1 ' failed here)",
+   "receipt": null,
+   "sha256": "5afd03b637eee0dcb4ffb62971e16ddd658797c924b748304265cf6cea3e9bd0",
+   "twin": "work:c007/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-245bc085812c",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-ef853ec7a9c8.x3d",
+   "note": "value: GeoViewpoint@fieldOfView <- ' -1 ' (live: '-1' failed here)",
+   "receipt": null,
+   "sha256": "ef853ec7a9c86dbe715badf21139fea7514d8cd6e88f2da6c32378db6e0d737d",
+   "twin": "work:c007/twins/346ee0c0a28c.x3d"
+  },
+  {
+   "event": "ev-f88dee49ef1d",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-5e349642841c.x3d",
+   "note": "value: Cone@bottomRadius <- '  -1  ' (live: ' -1 ' failed here)",
+   "receipt": null,
+   "sha256": "5e349642841c969b6742b528755c53dd44be7e03ab82528d838413d97dd3a46d",
+   "twin": "work:c007/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-59be6adbc2b5",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-6ade850cf0bd.x3d",
+   "note": "value: GeoViewpoint@fieldOfView <- ' -1 ' (live: '-1' failed here)",
+   "receipt": null,
+   "sha256": "6ade850cf0bd0af60dcdb85dc6eabec47dc8755e50501e441ea37ab990a965d4",
+   "twin": "work:c007/twins/346ee0c0a28c.x3d"
+  },
+  {
+   "event": "ev-2fdadd3848c7",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-222ba403e2dc.x3d",
+   "note": "value: Cone@height <- ' -1 ' (live: '-1' failed here)",
+   "receipt": null,
+   "sha256": "222ba403e2dcebb1527f3a92d59b90a91b9cc51c8bbd37c9583b3433a6fdc746",
+   "twin": "work:c007/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-8662ee86c177",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-493eea85406c.x3d",
+   "note": "value: Sphere@radius <- ' -1 ' (live: '-1' failed here)",
+   "receipt": null,
+   "sha256": "493eea85406c9f570cd5418d44b8331757a3c6e7c9a5f1cb0738c3351c598f81",
+   "twin": "work:c007/twins/0e37dd6662f2.x3d"
+  },
+  {
+   "event": "ev-5d010fb70c33",
+   "family": "r2r-probe",
+   "file": "work:c007/probes/round3-e4b9cf0fd0ff.x3d",
+   "note": "value: Sphere@radius <- '  -1  ' (live: ' -1 ' failed here)",
+   "receipt": null,
+   "sha256": "e4b9cf0fd0ffbe3e50a24b5e8ac815bfa02684b46fb5f3b66b8c736356d7d3a2",
+   "twin": "work:c007/twins/fc02e4e0c69f.x3d"
+  }
+ ],
+ "sources_total": 31,
+ "status": "candidate"
+}

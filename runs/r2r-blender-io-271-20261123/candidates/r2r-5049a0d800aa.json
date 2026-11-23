@@ -1,0 +1,639 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "0 audit probe(s) and 2+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "S",
+  "grade_word": "Suspected",
+  "missed_seen": 2,
+  "reasons": [
+   "1 audit prediction(s) were wrong: the rule fired and the instrument passed"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-5049a0d800aa",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "ge:max:5",
+    "failures_explained_without_it": 112,
+    "false_alarms_without_it": 20,
+    "role": "test"
+   },
+   {
+    "dropped": "v:arity_mismatch",
+    "failures_explained_without_it": 30,
+    "false_alarms_without_it": 92,
+    "role": "test"
+   },
+   {
+    "dropped": "!e.has:rotation",
+    "failures_explained_without_it": 42,
+    "false_alarms_without_it": 5,
+    "role": "guard"
+   },
+   {
+    "dropped": "at:Transform@translation",
+    "failures_explained_without_it": 30,
+    "false_alarms_without_it": 42,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "ge:max_abs:5",
+      "v:arity_mismatch",
+      "!e.has:rotation",
+      "at:Transform@translation"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation: the largest magnitude is at least 5 and the value has the wrong number of components for its field type, unless its element also has the attribute rotation."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max:5",
+      "!e.has:rotation",
+      "at:Transform@translation",
+      "ntok:many"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation and the value has many token(s): the largest component is at least 5, unless its element also has the attribute rotation."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max:5",
+      "!e.has:rotation",
+      "at:Transform@translation",
+      "nws:many"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation and the value has many space-separated token(s): the largest component is at least 5, unless its element also has the attribute rotation."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max_abs:5",
+      "!e.has:rotation",
+      "at:Transform@translation",
+      "ntok:many"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation and the value has many token(s): the largest magnitude is at least 5, unless its element also has the attribute rotation."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max_abs:5",
+      "!e.has:rotation",
+      "at:Transform@translation",
+      "nws:many"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation and the value has many space-separated token(s): the largest magnitude is at least 5, unless its element also has the attribute rotation."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:arity_mismatch",
+      "!e.has:rotation",
+      "!v:eq: 1 1e 1 , 1 1e 1 ",
+      "!v:tok:\"",
+      "at:Transform@translation"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation: the value has the wrong number of components for its field type, unless its element also has the attribute rotation or the value is exactly ` 1 1e 1 , 1 1e 1 ` or the value has the token `\"`."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:lexical_invalid",
+      "!e.has:rotation",
+      "!v:eq: 1 1e 1 , 1 1e 1 ",
+      "!v:tok:\"",
+      "at:Transform@translation"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation: the value does not have the written form its field type requires, unless its element also has the attribute rotation or the value is exactly ` 1 1e 1 , 1 1e 1 ` or the value has the token `\"`."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:ntok:7",
+      "!e.has:rotation",
+      "!v:tok:\"",
+      "at:Transform@translation"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation: the number of tokens is at least 7, unless its element also has the attribute rotation or the value has the token `\"`."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 64,
+   "confirmed": 23,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 153,
+   "probes": 430,
+   "refuted": 1,
+   "refuted_examples": [
+    "confirm: Transform@translation <- '\"\"1 2 3 4 5 4.0 7\"\"'"
+   ],
+   "silent_ok": 189
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 30
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 2,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [
+    "num_extreme: X3D/Scene/Transform#OB_Torus translation: token 2 0 -> 0x10",
+    "text_garbage: X3D/Scene/Transform#OB_Lamp translation -> '1 2 3 4 5 6 7'"
+   ],
+   "passing_files": 1416
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [
+   {
+    "first_failing": 5.0,
+    "last_passing": 1.0,
+    "literal": "ge:max:5",
+    "number": "max",
+    "passing_values_compared": 20,
+    "untested": [
+     1.0,
+     5.0
+    ]
+   }
+  ],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 2162
+  },
+  "normative_reading": [
+   {
+    "literal": "v:arity_long",
+    "means": "the value has too many components for its field type",
+    "passing_files_with_it_inside_the_fence": 31
+   },
+   {
+    "literal": "v:arity_mismatch",
+    "means": "the value has the wrong number of components for its field type",
+    "passing_files_with_it_inside_the_fence": 42
+   },
+   {
+    "literal": "v:lexical_invalid",
+    "means": "the value does not have the written form its field type requires",
+    "passing_files_with_it_inside_the_fence": 49
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 36,
+    "round": 1,
+    "rules_tested": [
+     "attr[v:arity_long & at:Transform@translation]"
+    ],
+    "tally": {
+     "confirm/confirmed": 8,
+     "confirm/refuted": 2,
+     "value/confirmed": 8,
+     "value/refuted": 2,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 15
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 116,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:arity_long & at:Transform@translation & e.has:rotation]",
+     "attr[v:tok:1e & !p:Scene & !v:quoted & at:Transform@translation]",
+     "attr[v:arity_long & !v:eq: 1 1e 1 , 1 1e 1  & !v:tok:\" & at:Transform@translation]"
+    ],
+    "tally": {
+     "alternate/confirmed": 4,
+     "alternate/silent-ok": 2,
+     "confirm/confirmed": 25,
+     "confirm/refuted": 4,
+     "near/missed": 9,
+     "near/silent-ok": 3,
+     "value/confirmed": 27,
+     "value/refuted": 3,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 38
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 129,
+    "round": 3,
+    "rules_tested": [
+     "attr[ge:ntok:12 & !v:quoted & at:Transform@translation]",
+     "attr[v:arity_long & !p:Scene & !v:quoted & at:Transform@translation]",
+     "attr[ge:max_abs:6 & v:quoted & at:Transform@translation]"
+    ],
+    "tally": {
+     "alternate/confirmed": 6,
+     "bisect/missed": 6,
+     "confirm/confirmed": 27,
+     "confirm/refuted": 3,
+     "near/silent-ok": 12,
+     "value/confirmed": 27,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 47
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 177,
+    "round": "audit",
+    "rules_tested": [
+     "attr[v:arity_long & !p:Scene & !v:quoted & at:Transform@translation]",
+     "attr[ge:max:5 & v:arity_mismatch & !e.has:rotation & at:Transform@translation]",
+     "attr[ge:ntok:12 & !e.child:TransformSensor & !v:quoted & at:Transform@translation]",
+     "attr[ge:len:19 & v:lexical_invalid & !e.child:TransformSensor & !v:tok:\" & at:Transform@translation]"
+    ],
+    "tally": {
+     "alternate/confirmed": 6,
+     "bisect/confirmed": 6,
+     "confirm/confirmed": 35,
+     "confirm/refuted": 5,
+     "near/silent-ok": 21,
+     "value/confirmed": 40,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 63
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "ge:max:5",
+    "v:arity_mismatch",
+    "!e.has:rotation",
+    "at:Transform@translation"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-5049a0d800aa",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Transform@translation"
+  ],
+  "sentence": "At one attribute where the place is Transform translation: the largest component is at least 5 and the value has the wrong number of components for its field type, unless its element also has the attribute rotation.",
+  "signature": "ValueError at import_x3d.py:1700 translateTransform",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 130,
+   "explained_by_this_rule": 30,
+   "failures": 149,
+   "families": {
+    "chaos-differential": 1,
+    "r2r-probe": 148
+   },
+   "observed_by": {
+    "tool": 149
+   },
+   "with_known_good_twin": 149
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed ge:max:5, fenced to at:Transform@translation: explains 42, false alarms 1409",
+   "+ v:arity_mismatch: explains 42, false alarms 5 (gain 142.61)",
+   "+ !e.has:rotation: explains 30, false alarms 0 (gain 4.87)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 42,
+   "rule": {
+    "all": [
+     "ge:max:5",
+     "v:arity_mismatch",
+     "!e.has:rotation"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "ge:max:5",
+   "v:arity_mismatch",
+   "!e.has:rotation",
+   "at:Transform@translation"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the place is Transform translation: the largest component is at least 5 and the value has the wrong number of components for its field type, unless its element also has the attribute rotation.",
+ "signature": "ValueError at import_x3d.py:1700 translateTransform",
+ "sources": [
+  {
+   "event": "ev-ce68fd53a8e1",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round1-26b1bfa4dffc.x3d",
+   "note": "confirm: Transform@translation <- '1 2 3 4 5 6 7'",
+   "receipt": null,
+   "sha256": "26b1bfa4dffc14ba7b1bfef7f4b6a26568abf5ef1f8ce485e3cfefe628f33ee2",
+   "twin": "work:c006/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-22fb855b37ab",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-f1be773f3ec5.x3d",
+   "note": "confirm: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7'",
+   "receipt": null,
+   "sha256": "f1be773f3ec530d1dbc7e21a84c1710030f5cfad6d4cdb37fb2d2091cd223a6a",
+   "twin": "work:c006/twins/7314b92f358b.x3d"
+  },
+  {
+   "event": "ev-5d0d55e889a2",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-a9b0bc973233.x3d",
+   "note": "confirm: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7'",
+   "receipt": null,
+   "sha256": "a9b0bc973233795d45e89ec175c7dd4fff75b94de1f12d3c9a26d58a8e7cbfb3",
+   "twin": "work:c006/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-668961c40da5",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-cb5c1fa277c8.x3d",
+   "note": "confirm: Transform@translation <- '1 2 3 4 5 6 7'",
+   "receipt": null,
+   "sha256": "cb5c1fa277c84bf4d3e8da1d928dcf9c5e6ed8312d9ce93207c2b692674bec6a",
+   "twin": "work:c006/twins/d588e5f733ad.x3d"
+  },
+  {
+   "event": "ev-765f17397222",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-8a58888829ec.x3d",
+   "note": "value: Transform@translation <- ' 1 2 3 4 5 6 7 1 2 3 4 5 6 7 ' (live: '1 2 3 4 5 6 7 1 2 3 4 5 6 7' failed here)",
+   "receipt": null,
+   "sha256": "8a58888829ecf8f65595f639a19afcd599e15b093923aa2bb5110e606d5df0b1",
+   "twin": "work:c006/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-c4a2b60dada9",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-6507308d32c9.x3d",
+   "note": "value: Transform@translation <- '\"1 2 3 4 5 6 7\"' (live: '1 2 3 4 5 6 7' failed here)",
+   "receipt": null,
+   "sha256": "6507308d32c9288ba11719d5cbb4ce33bb96cd7ff811c13749aeaa5234873d8d",
+   "twin": "work:c006/twins/d588e5f733ad.x3d"
+  },
+  {
+   "event": "ev-858b94325766",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-3ce79e361a8e.x3d",
+   "note": "value: Transform@translation <- '1 2 3 4 5 6 7,1 2 3 4 5 6 7' (live: '1 2 3 4 5 6 7' failed here)",
+   "receipt": null,
+   "sha256": "3ce79e361a8ea2ced69363e8a1a17cd36ec4072eee3c94655292c6c24afd0d7a",
+   "twin": "work:c006/twins/d588e5f733ad.x3d"
+  },
+  {
+   "event": "ev-9d42d7ec0559",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-1993fb44e12b.x3d",
+   "note": "value: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7' (live: '1 2 3 4 5 6 7 1 2 3 4 5 6 7' failed here)",
+   "receipt": null,
+   "sha256": "1993fb44e12ba32c107c62c711758b6e2f8081b999dc9184c344912023d0d284",
+   "twin": "work:c006/twins/7314b92f358b.x3d"
+  },
+  {
+   "event": "ev-4afb6c65d77c",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-91d1f40073ab.x3d",
+   "note": "value: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7,1 2 3 4 5 6 7 1 2 3 4 5 6 7' (live: '1 2 3 4 5 6 7 1 2 3 4 5 6 7' failed here)",
+   "receipt": null,
+   "sha256": "91d1f40073ab375f71e5f65d71d452c3cb28bdd8324d992853ed82b1632cf95e",
+   "twin": "work:c006/twins/7314b92f358b.x3d"
+  },
+  {
+   "event": "ev-98439e9367da",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-596b5391e62d.x3d",
+   "note": "confirm: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7'",
+   "receipt": null,
+   "sha256": "596b5391e62d8b8a0f43667308417157ae95361852d99c298288d69cd348404f",
+   "twin": "work:c006/twins/d588e5f733ad.x3d"
+  },
+  {
+   "event": "ev-925fedf1858e",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-eb902e379b4b.x3d",
+   "note": "confirm: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7,1 2 3 4 5 6 7 1 2 3 4 5 6 7'",
+   "receipt": null,
+   "sha256": "eb902e379b4be56f11bc9f30cd34e2f9df674759855494a2b5410d889fe94410",
+   "twin": "work:c006/twins/a82bffa86c64.x3d"
+  },
+  {
+   "event": "ev-60e11c9e8ed5",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-d505a59d7bde.x3d",
+   "note": "confirm: Transform@translation <- '\"\"1 2 3 4 5 6 7\"\"'",
+   "receipt": null,
+   "sha256": "d505a59d7bdeeef02452ebda30aa925b6a57395d9b56afc7d4bfeee8c7719d2d",
+   "twin": "work:c006/twins/9db8e93271e6.x3d"
+  },
+  {
+   "event": "ev-23e52f1531fd",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-c3c9fcceaf73.x3d",
+   "note": "confirm: Transform@translation <- ' \"1 2 3 4 5 6 7\" '",
+   "receipt": null,
+   "sha256": "c3c9fcceaf73d2d7348e42c1d87a6a9070c6a852ce8413df290892309010b98e",
+   "twin": "work:c006/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-99368592b325",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-4561fe55254a.x3d",
+   "note": "confirm: Transform@translation <- '\"\"1 2 3 4 5 6 7\"\"'",
+   "receipt": null,
+   "sha256": "4561fe55254a3d3569f062b4444e7c6041396fe5c29fb5073f3b70995b165e46",
+   "twin": "work:c006/twins/7314b92f358b.x3d"
+  },
+  {
+   "event": "ev-a5398c946117",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-bb834103b41e.x3d",
+   "note": "confirm: Transform@translation <- ' \"1 2 3 4 5 6 7\" '",
+   "receipt": null,
+   "sha256": "bb834103b41edbb1db42cac932adcd2778d786d56d08a8c0fac641d85613e0a1",
+   "twin": "work:c006/twins/3329062423a7.x3d"
+  },
+  {
+   "event": "ev-8c8f0120e864",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-ee8e5c3b5f3c.x3d",
+   "note": "confirm: Transform@translation <- '\"\"1 2 3 4 5 6 7\"\"'",
+   "receipt": null,
+   "sha256": "ee8e5c3b5f3c40685b41035b64c113cc32cb461401dc23f9df0c98902606fb48",
+   "twin": "work:c006/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-692b46788716",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-c6d583725f02.x3d",
+   "note": "confirm: Transform@translation <- ' \"1 2 3 4 5 6 7\" '",
+   "receipt": null,
+   "sha256": "c6d583725f024e5dbecd011efc73159a7d4ebedd0f13d049e65b0ee289d0375c",
+   "twin": "work:c006/twins/bc29fb426792.x3d"
+  },
+  {
+   "event": "ev-f4d48cd8d382",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-1019953f7c0e.x3d",
+   "note": "confirm: Transform@translation <- '\"\"1 2 3 4 5 6 7\"\"'",
+   "receipt": null,
+   "sha256": "1019953f7c0e3c1ee091c28e38ec006be366090d076434ebd73c8cfcc0c87abe",
+   "twin": "work:c006/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-a15046781e01",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-c6ba8f02635a.x3d",
+   "note": "bisect: Transform@translation <- max_abs near 4",
+   "receipt": null,
+   "sha256": "c6ba8f02635a54751e19e20265dcb25bf40b49051011d890d2dfa51b2904098b",
+   "twin": "work:c006/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-ff6f20725c6f",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-bec1ea056186.x3d",
+   "note": "bisect: Transform@translation <- max_abs near 4",
+   "receipt": null,
+   "sha256": "bec1ea056186b42e426ba019f5c2249471ff8ba540726700417d207c29efcd19",
+   "twin": "work:c006/twins/3329062423a7.x3d"
+  },
+  {
+   "event": "ev-a368f5c8796d",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-13248d713b84.x3d",
+   "note": "bisect: Transform@translation <- max_abs near 2",
+   "receipt": null,
+   "sha256": "13248d713b84c7e70d4137c9c142dd79ef7a32f551a20895bdabfd362e168dbb",
+   "twin": "work:c006/twins/7314b92f358b.x3d"
+  },
+  {
+   "event": "ev-9bbf38af0241",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-9b9f200badb0.x3d",
+   "note": "value: Transform@translation <- '\"\"1 2 3 4 5 6 7\"\",\"\"1 2 3 4 5 6 7\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "9b9f200badb05ec9362b3b1d3577d81169c2fcc9ed6356e00daa147066a81af1",
+   "twin": "work:c006/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-2407d7b20c65",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-2cf92a82a8ab.x3d",
+   "note": "value: Transform@translation <- '\"\"\"1 2 3 4 5 6 7\"\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "2cf92a82a8ab05f33584705b3c7535be50b352c388307c3227f2288994ee2ba5",
+   "twin": "work:c006/twins/9db8e93271e6.x3d"
+  },
+  {
+   "event": "ev-34d506d5423a",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-d108107db8dd.x3d",
+   "note": "value: Transform@translation <- ' \"1 2 3 4 5 6 7\"   \"1 2 3 4 5 6 7\" ' (live: ' \"1 2 3 4 5 6 7\" ' failed here)",
+   "receipt": null,
+   "sha256": "d108107db8dd840b4f511c6cdbcfd14ff8ebd413095b5079b95f1cb5b65911bf",
+   "twin": "work:c006/twins/3329062423a7.x3d"
+  },
+  {
+   "event": "ev-b98121050f3f",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-e72b8cdedbdd.x3d",
+   "note": "value: Transform@translation <- '\"\"1 2 3 4 5 6 7\"\" \"\"1 2 3 4 5 6 7\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "e72b8cdedbdd50fa81408b70418c7bfccf48856482bdcc1462b42bf7074d2ebd",
+   "twin": "work:c006/twins/9db8e93271e6.x3d"
+  },
+  {
+   "event": "ev-acc4c53277c8",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-8f655f7a0e08.x3d",
+   "note": "value: Transform@translation <- ' \"\"1 2 3 4 5 6 7\"\" ' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "8f655f7a0e0899c92ad0bf79d149ddbc29a8c361bda14477f2ea5c25d47ad7f4",
+   "twin": "work:c006/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-69c53ab0d0db",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-e2baac318861.x3d",
+   "note": "value: Transform@translation <- ' \"1 2 3 4 5 6 7\"   \"1 2 3 4 5 6 7\" ' (live: ' \"1 2 3 4 5 6 7\" ' failed here)",
+   "receipt": null,
+   "sha256": "e2baac31886125ac85da4e4cab21a4eda7d789e3825fb19a70014642166fad3c",
+   "twin": "work:c006/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-24b0f468e4f8",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-cf9595071ae3.x3d",
+   "note": "value: Transform@translation <- '\"\"\"1 2 3 4 5 6 7\"\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "cf9595071ae3e36066c262988430f2cc9859e16298a7ad701220822b5450ec9e",
+   "twin": "work:c006/twins/7314b92f358b.x3d"
+  },
+  {
+   "event": "ev-67c7449eed1c",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-859aa057bb58.x3d",
+   "note": "value: Transform@translation <- '\"\"\"1 2 3 4 5 6 7\"\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "859aa057bb58553e6431923ab499a006c9a054b79cc53807706eed34c6fd0d61",
+   "twin": "work:c006/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-e0264b094721",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-f3938ea5cf1e.x3d",
+   "note": "value: Transform@translation <- '\"\"1 2 3 4 5 6 7\"\",\"\"1 2 3 4 5 6 7\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "f3938ea5cf1e659b50bed8782753d673f426b056c65e360e937984cb4ea95f03",
+   "twin": "work:c006/twins/9db8e93271e6.x3d"
+  }
+ ],
+ "sources_total": 30,
+ "status": "candidate"
+}

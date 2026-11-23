@@ -1,0 +1,964 @@
+{
+ "grade": {
+  "against": "x3d.py 4.0.65.8 through x3d-blender-io 2.7.1 validate.py (does it crash?)",
+  "closure": "open",
+  "closure_reason": "14 audit probe(s) and 0+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "C",
+  "grade_word": "Confirmed",
+  "missed_seen": 14,
+  "reasons": [
+   "11 audit probe(s) confirmed, 0 refuted",
+   "0 false alarms in 1831 known-good files"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-fc92485cb435",
+ "instrument": "x3d.py 4.0.65.8 through x3d-blender-io 2.7.1 validate.py (does it crash?)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "ge:depth:1004"
+     ],
+     "any": [
+      "n:AcousticProperties",
+      "n:Appearance",
+      "n:ArcClose2D",
+      "n:AudioDestination",
+      "n:BooleanToggle",
+      "n:BooleanTrigger",
+      "n:Box",
+      "n:BufferAudioSource",
+      "n:Color",
+      "n:ColorRGBA",
+      "n:Cone",
+      "n:Coordinate",
+      "n:CoordinateDamper",
+      "n:CoordinateInterpolator2D",
+      "n:DirectionalLight",
+      "n:Disk2D",
+      "n:Group",
+      "n:IndexedFaceSet",
+      "n:IndexedLineSet",
+      "n:IndexedTriangleStripSet",
+      "n:IntegerTrigger",
+      "n:ListenerPointSource",
+      "n:Material",
+      "n:Matrix3VertexAttribute",
+      "n:MetadataBoolean",
+      "n:MovieTexture",
+      "n:NavigationInfo",
+      "n:OrientationDamper",
+      "n:OrthoViewpoint",
+      "n:OscillatorSource",
+      "n:PeriodicWave",
+      "n:PhysicalMaterial",
+      "n:PointLight",
+      "n:Polyline2D",
+      "n:PositionChaser2D",
+      "n:PositionDamper",
+      "n:PositionDamper2D",
+      "n:ProgramShader",
+      "n:ScalarChaser",
+      "n:ScalarDamper",
+      "n:ScreenFontStyle",
+      "n:ShaderProgram",
+      "n:Shape",
+      "n:SpatialSound",
+      "n:Sphere",
+      "n:SplinePositionInterpolator",
+      "n:SplinePositionInterpolator2D",
+      "n:SpotLight",
+      "n:Text",
+      "n:TextureCoordinate",
+      "n:TouchSensor",
+      "n:Transform",
+      "n:TransformSensor",
+      "n:TriangleSet2D",
+      "n:Viewpoint",
+      "n:WorldInfo"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element: the nesting depth is at least 1004, at one of 56 places (AcousticProperties, Appearance, ArcClose2D, AudioDestination, BooleanToggle, BooleanTrigger, Box, BufferAudioSource, Color, ColorRGBA, Cone, Coordinate, CoordinateDamper, CoordinateInterpolator2D, DirectionalLight, Disk2D, Group, IndexedFaceSet, IndexedLineSet, IndexedTriangleStripSet, IntegerTrigger, ListenerPointSource, Material, Matrix3VertexAttribute, MetadataBoolean, MovieTexture, NavigationInfo, OrientationDamper, OrthoViewpoint, OscillatorSource, PeriodicWave, PhysicalMaterial, PointLight, Polyline2D, PositionChaser2D, PositionDamper, PositionDamper2D, ProgramShader, ScalarChaser, ScalarDamper, ScreenFontStyle, ShaderProgram, Shape, SpatialSound, Sphere, SplinePositionInterpolator, SplinePositionInterpolator2D, SpotLight, Text, TextureCoordinate, TouchSensor, Transform, TransformSensor, TriangleSet2D, Viewpoint, WorldInfo)."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:n_elements:1007",
+      "le:max_children:6"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the number of elements is at least 1007 and the most children of one element is at most 6."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:bytes:15444",
+      "ge:n_elements:1007",
+      "le:n_defs:11"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 15444 and the number of elements is at least 1007 and the number of DEF names is at most 11."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 11,
+   "missed": 14,
+   "missed_examples": [
+    "alternate:0: depth_max raised to 1003 by deepen",
+    "alternate:0: depth_max raised to 1003 by deepen",
+    "alternate:0: depth_max raised to 1003 by deepen",
+    "alternate:0: depth_max raised to 1003 by deepen",
+    "bisect: depth_max raised to about 1001"
+   ],
+   "other_failure": 0,
+   "probes": 25,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 0
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 60
+  },
+  "held_out": {
+   "caught": 1,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 1,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1469
+  },
+  "idle_literals": [],
+  "instrument": "x3d.py 4.0.65.8 through x3d-blender-io 2.7.1 validate.py (does it crash?)",
+  "intervals": [
+   {
+    "first_failing": 1004.0,
+    "last_passing": 993,
+    "literal": "ge:depth_max:1004",
+    "number": "depth_max",
+    "passing_values_compared": 1831,
+    "untested": [
+     993,
+     1004.0
+    ]
+   }
+  ],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1831
+  },
+  "normative_reading": [],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 28,
+    "round": 1,
+    "rules_tested": [
+     "doc[ge:depth_max:1206]"
+    ],
+    "tally": {
+     "alternate/confirmed": 4,
+     "alternate/missed": 1,
+     "alternate/silent-ok": 1,
+     "bisect/missed": 1,
+     "bisect/silent-ok": 5,
+     "confirm/confirmed": 9,
+     "near/missed": 7
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 27,
+    "round": 2,
+    "rules_tested": [
+     "doc[ge:depth_max:1006]"
+    ],
+    "tally": {
+     "alternate/confirmed": 4,
+     "alternate/missed": 2,
+     "bisect/silent-ok": 6,
+     "confirm/confirmed": 9,
+     "near/missed": 6
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 24,
+    "round": 3,
+    "rules_tested": [
+     "doc[ge:depth_max:1005]"
+    ],
+    "tally": {
+     "alternate/missed": 6,
+     "bisect/silent-ok": 6,
+     "confirm/confirmed": 10,
+     "near/missed": 2
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 25,
+    "round": "audit",
+    "rules_tested": [
+     "doc[ge:depth_max:1004]"
+    ],
+    "tally": {
+     "alternate/confirmed": 1,
+     "alternate/missed": 4,
+     "bisect/missed": 6,
+     "confirm/confirmed": 10,
+     "near/missed": 4
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "ge:depth_max:1004"
+   ],
+   "kind": "doc"
+  },
+  "rule_id": "r2r-fc92485cb435",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "(document)"
+  ],
+  "sentence": "For the file as a whole: the deepest nesting in the file is at least 1004.",
+  "signature": "RecursionError: maximum recursion depth exceeded",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 72,
+   "explained_by_this_rule": 72,
+   "failures": 72,
+   "families": {
+    "chaos-differential": 11,
+    "r2r-probe": 61
+   },
+   "observed_by": {
+    "tool": 72
+   },
+   "with_known_good_twin": 72
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed ge:depth_max:1004, fenced to (anywhere): explains 72, false alarms 0"
+  ],
+  "unfenced": null,
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "ge:depth_max:1004"
+  ],
+  "kind": "doc"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "For the file as a whole: the deepest nesting in the file is at least 1004.",
+ "signature": "RecursionError: maximum recursion depth exceeded",
+ "sources": [
+  {
+   "event": "ev-8cfac0a62769",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/cameras__015__deep_nest.x3d",
+   "note": "deep_nest: scene content nested 1200 Groups deep",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 15
+   },
+   "sha256": "18205af4508f388abc2ec7483711e1411eb95415700727fe5ce1217bfbe1f1a4",
+   "twin": "repos:x3d-blender-io/tests/golden/cameras.c14n.x3d"
+  },
+  {
+   "event": "ev-d735ce12f928",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/emissive_glass__001__deep_nest.x3d",
+   "note": "deep_nest: scene content nested 1200 Groups deep",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 81
+   },
+   "sha256": "67c91f85838515164f3e6734a65db2856960b65efea99aed1c368001c78b24be",
+   "twin": "repos:x3d-blender-io/tests/golden/emissive_glass.c14n.x3d"
+  },
+  {
+   "event": "ev-67530fcd4364",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/four_lights__000__deep_nest.x3d",
+   "note": "deep_nest: scene content nested 1200 Groups deep",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 160
+   },
+   "sha256": "77ded4e22e69e42bfb70da5c4da9dd213428b0219f0949ac6a1fff7ff9290d48",
+   "twin": "repos:x3d-blender-io/tests/golden/four_lights.c14n.x3d"
+  },
+  {
+   "event": "ev-40a7f6dc8c19",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/hierarchy__011__deep_nest.x3d",
+   "note": "deep_nest: scene content nested 1200 Groups deep",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 251
+   },
+   "sha256": "e81272491022f3881e69a34862f1ff74eaf9214a9b70b902ec738ca775dbb4b9",
+   "twin": "repos:x3d-blender-io/tests/golden/hierarchy.c14n.x3d"
+  },
+  {
+   "event": "ev-41b44747dd0d",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/keyframes__022__deep_nest.x3d",
+   "note": "deep_nest: scene content nested 1200 Groups deep",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 342
+   },
+   "sha256": "a5ac2c0ae76cf67f36c2288399e9b74ed7068937bca6d56425030ca4be8f904c",
+   "twin": "repos:x3d-blender-io/tests/golden/keyframes.c14n.x3d"
+  },
+  {
+   "event": "ev-664f02d3fce9",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/linked_instances__059__deep_nest.x3d",
+   "note": "deep_nest: scene content nested 1200 Groups deep",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 459
+   },
+   "sha256": "a08157a98d591b6afdbbfda1710a42eda32c5f9c132d2684b66f8f3daf0870d9",
+   "twin": "repos:x3d-blender-io/tests/golden/linked_instances.c14n.x3d"
+  },
+  {
+   "event": "ev-84e5bd4e9f96",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/lit_cube__021__deep_nest.x3d",
+   "note": "deep_nest: scene content nested 1200 Groups deep",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 501
+   },
+   "sha256": "def1f224e45f2c962c09b3592f108f6cab1c72d54dcfbfe69e6f40d2a633b619",
+   "twin": "repos:x3d-blender-io/tests/golden/lit_cube.c14n.x3d"
+  },
+  {
+   "event": "ev-2b4d41c6151e",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/loose_edges__036__deep_nest.x3d",
+   "note": "deep_nest: scene content nested 1200 Groups deep",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 596
+   },
+   "sha256": "0496ccf95c61e4a81a3422cecaee9a7e1767e37ce337a5856794bec6057b4596",
+   "twin": "repos:x3d-blender-io/tests/golden/loose_edges.c14n.x3d"
+  },
+  {
+   "event": "ev-ff59ffb48b43",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/smooth_torus__016__deep_nest.x3d",
+   "note": "deep_nest: scene content nested 1200 Groups deep",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 656
+   },
+   "sha256": "4e4a4ca8e2e114a99b751be42ef76ff5b1d3676ddaee558f6c194d8b58f0f5b1",
+   "twin": "repos:x3d-blender-io/tests/golden/smooth_torus.c14n.x3d"
+  },
+  {
+   "event": "ev-2d7941e80d6c",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/vertex_colours__039__deep_nest.x3d",
+   "note": "deep_nest: scene content nested 1200 Groups deep",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 919
+   },
+   "sha256": "066dae944b2e8768450e0fa661956f3e30b44d532ba5fd1ec13c27dfffde393e",
+   "twin": "repos:x3d-blender-io/tests/golden/vertex_colours.c14n.x3d"
+  },
+  {
+   "event": "ev-e7b84d7d9461",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/uv_grid__079__deep_nest.x3d",
+   "note": "deep_nest: scene content nested 1200 Groups deep",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 879
+   },
+   "sha256": "1dd4334a1e85270d1b0d63d667810960528f8559b7c01f401620f9acf78824a1",
+   "twin": "repos:x3d-blender-io/tests/golden/uv_grid.c14n.x3d"
+  },
+  {
+   "event": "ev-53d7c0dec8b0",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-92ec72defa8e.x3d",
+   "note": "alternate:0: depth_max raised to 1206 by deepen",
+   "receipt": null,
+   "sha256": "92ec72defa8e088b5bcf22d3b80e3385fce1b1db52f4ccc06f25dabe8ada551c",
+   "twin": "work:c002/twins/46880cb496ce.x3d"
+  },
+  {
+   "event": "ev-c0f6c87ab3b7",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-894567093ee5.x3d",
+   "note": "alternate:0: depth_max raised to 1205 by deepen",
+   "receipt": null,
+   "sha256": "894567093ee581be4a841ed792949ba836a3f77d237a23aa8edd1c18130e4b31",
+   "twin": "work:c002/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-47ebbbc6f757",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-ad8d6e8821da.x3d",
+   "note": "alternate:2: depth_max raised to 1508 by deepen",
+   "receipt": null,
+   "sha256": "ad8d6e8821da394beb90a36d67da9c0b4188b9d236ec24e37cb46f1dcd25119e",
+   "twin": "work:c002/twins/9054cbb5abf1.x3d"
+  },
+  {
+   "event": "ev-cce5988e5dab",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-38309ae80d77.x3d",
+   "note": "alternate:0: depth_max raised to 1206 by deepen",
+   "receipt": null,
+   "sha256": "38309ae80d77c566b610098bb796dcf952247d3dc8b2ba05a5b59a2fa41f8b46",
+   "twin": "work:c002/twins/0da8905ea4c9.x3d"
+  },
+  {
+   "event": "ev-427d228185e4",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-ad292de7d24e.x3d",
+   "note": "alternate:0: depth_max raised to 1206 by deepen",
+   "receipt": null,
+   "sha256": "ad292de7d24eca7cf369794a1bded7cefc990be05a3503de3091e967f8739564",
+   "twin": "work:c002/twins/33f3e2e2c90b.x3d"
+  },
+  {
+   "event": "ev-117729c07c3d",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-0b0129dfa8ce.x3d",
+   "note": "bisect: depth_max raised to about 1006",
+   "receipt": null,
+   "sha256": "0b0129dfa8ce4787b24fe48cfa36b5aa6404b5531341e981d53fd9c36c90b704",
+   "twin": "work:c002/twins/75929e3e7db2.x3d"
+  },
+  {
+   "event": "ev-327c22034c97",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-7b7923a23b1e.x3d",
+   "note": "confirm: depth_max raised to 1508 by deepen",
+   "receipt": null,
+   "sha256": "7b7923a23b1e0cc6a63e8dbf708a64767647f23f3ecf902033e4f157731cd58c",
+   "twin": "work:c002/twins/0da8905ea4c9.x3d"
+  },
+  {
+   "event": "ev-b4a3a7f97b76",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-428c60617024.x3d",
+   "note": "confirm: depth_max raised to 1206 by deepen",
+   "receipt": null,
+   "sha256": "428c60617024b1c10a2d54c1b4c3c7c19b7e6d9f6871d75f180dd2dc9536230d",
+   "twin": "work:c002/twins/75929e3e7db2.x3d"
+  },
+  {
+   "event": "ev-49f122f73cde",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-0c4476376ce0.x3d",
+   "note": "confirm: depth_max raised to 1508 by deepen",
+   "receipt": null,
+   "sha256": "0c4476376ce0878d57a0a68098151d4ddc28f2eedcb2ef59ad103f7e147a4f88",
+   "twin": "work:c002/twins/0149a8cc14c1.x3d"
+  },
+  {
+   "event": "ev-e062971cee21",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-0cd3d3b9e796.x3d",
+   "note": "confirm: depth_max raised to 1508 by deepen",
+   "receipt": null,
+   "sha256": "0cd3d3b9e79649ffbc912dfb329ef480578230a82a1a52d44d1dd544796b3afc",
+   "twin": "work:c002/twins/9bdc8034bd80.x3d"
+  },
+  {
+   "event": "ev-70650c850f26",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-8db0edd25219.x3d",
+   "note": "confirm: depth_max raised to 1508 by deepen",
+   "receipt": null,
+   "sha256": "8db0edd252192fe83e94205d3a540713ce1a7911951642aa2d286a346386c603",
+   "twin": "work:c002/twins/a904dc7c4a23.x3d"
+  },
+  {
+   "event": "ev-d84dbdc7ebb3",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-a367830d4e15.x3d",
+   "note": "confirm: depth_max raised to 1508 by deepen",
+   "receipt": null,
+   "sha256": "a367830d4e1551ab4fb5f427c120d973c7bb9b08ec4e3bbacc6e43c638f8780f",
+   "twin": "work:c002/twins/9d7517bb584e.x3d"
+  },
+  {
+   "event": "ev-6bed75394ffd",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-f7610758b3a9.x3d",
+   "note": "confirm: depth_max raised to 1508 by deepen",
+   "receipt": null,
+   "sha256": "f7610758b3a9af6b8933601d95f6d56806a6a44002c96112cc670f9e87ddb4c5",
+   "twin": "work:c002/twins/ba98d318e6c0.x3d"
+  },
+  {
+   "event": "ev-692cb8696b0b",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-4405bf6a6af2.x3d",
+   "note": "confirm: depth_max raised to 1508 by deepen",
+   "receipt": null,
+   "sha256": "4405bf6a6af2e3f3ffe32c9a2dc2d33e92a7ed5fb85969582e2f0c2b1896fd4c",
+   "twin": "work:c002/twins/94edae2da71c.x3d"
+  },
+  {
+   "event": "ev-4aa5e861853e",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-98e6c09fa8a6.x3d",
+   "note": "confirm: depth_max raised to 1206 by deepen",
+   "receipt": null,
+   "sha256": "98e6c09fa8a68095c7b680684bfc7a1f4e698777405d491f8aac185b22034625",
+   "twin": "work:c002/twins/9822055c6191.x3d"
+  },
+  {
+   "event": "ev-ae3bcba33976",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-716100ee7e1b.x3d",
+   "note": "near: depth_max raised to 1205 by deepen",
+   "receipt": null,
+   "sha256": "716100ee7e1b0d483001f033dcf3e62c7d572fc7877b998d1fda871806b3e183",
+   "twin": "work:c002/twins/a452b342683d.x3d"
+  },
+  {
+   "event": "ev-fd6ffe4fb703",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-dc54b50f4c66.x3d",
+   "note": "near: depth_max raised to 1205 by deepen",
+   "receipt": null,
+   "sha256": "dc54b50f4c668136d569f43312dc5b852c880501e2b617c200a94e99b32c9947",
+   "twin": "work:c002/twins/14501464d801.x3d"
+  },
+  {
+   "event": "ev-e476b3b42e99",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-a9a1b7ab4841.x3d",
+   "note": "near: depth_max raised to 1205 by deepen",
+   "receipt": null,
+   "sha256": "a9a1b7ab4841921012bec53911e3dbdd5d009f0e2aaca67f57f97bc9231870b2",
+   "twin": "work:c002/twins/41c685a86546.x3d"
+  },
+  {
+   "event": "ev-ed233be33a93",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-8a9f832f9e5f.x3d",
+   "note": "near: depth_max raised to 1205 by deepen",
+   "receipt": null,
+   "sha256": "8a9f832f9e5f771bf3840dded7a1be0bb6e497d442f2fa5ab5c29d30cfd19155",
+   "twin": "work:c002/twins/75929e3e7db2.x3d"
+  },
+  {
+   "event": "ev-b3dbbdd76067",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-77e63a10db5a.x3d",
+   "note": "near: depth_max raised to 1205 by deepen",
+   "receipt": null,
+   "sha256": "77e63a10db5aef2daa9e79835d04ef0aba52f77054a4e5a6962639073cfb727f",
+   "twin": "work:c002/twins/a904dc7c4a23.x3d"
+  },
+  {
+   "event": "ev-9b03d0a137bc",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-a4ecc00a5392.x3d",
+   "note": "near: depth_max raised to 1205 by deepen",
+   "receipt": null,
+   "sha256": "a4ecc00a5392e1ad6d3cd65ff5208e8acc5937fe2d422d4c1398eaa1a5e0a02c",
+   "twin": "work:c002/twins/0da8905ea4c9.x3d"
+  },
+  {
+   "event": "ev-173a1e7afc58",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round1-125c49ecae5b.x3d",
+   "note": "near: depth_max raised to 1205 by deepen",
+   "receipt": null,
+   "sha256": "125c49ecae5b89ae15f52b9ec600aa463709b26e3fa0501193a8d1bf5c87121b",
+   "twin": "work:c002/twins/46880cb496ce.x3d"
+  },
+  {
+   "event": "ev-3ed12cc19c79",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-f7cd8b31cb8e.x3d",
+   "note": "alternate:0: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "f7cd8b31cb8e7a8df9d1ed6dfdd1136db515da490f61c8eb0f3da56fd308633c",
+   "twin": "work:c002/twins/a82bffa86c64.x3d"
+  },
+  {
+   "event": "ev-5f2310ed610f",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-57cc829e8dc9.x3d",
+   "note": "alternate:0: depth_max raised to 1006 by deepen",
+   "receipt": null,
+   "sha256": "57cc829e8dc9b1fb7e70ae7d40634b214efa1a8896d745e2e412a4bcfdac162c",
+   "twin": "work:c002/twins/a452b342683d.x3d"
+  },
+  {
+   "event": "ev-06b7199c3fc0",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-294ecc63b02c.x3d",
+   "note": "alternate:0: depth_max raised to 1006 by deepen",
+   "receipt": null,
+   "sha256": "294ecc63b02c6896e2544088d02cb73394a3b323dab7e77c1350100476e226cd",
+   "twin": "work:c002/twins/0da8905ea4c9.x3d"
+  },
+  {
+   "event": "ev-61b1bd043524",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-fee214909ed2.x3d",
+   "note": "alternate:0: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "fee214909ed26b5d9c412df1aa0f80a29584d4070c3bb61ae5ea95a721402eb3",
+   "twin": "work:c002/twins/8b933aff1e1d.x3d"
+  },
+  {
+   "event": "ev-40f3e5d6ad40",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-cb4e05bedf9b.x3d",
+   "note": "alternate:0: depth_max raised to 1006 by deepen",
+   "receipt": null,
+   "sha256": "cb4e05bedf9b141ff21c1a89b9eb6926fb87ceebb293f1933dcbe1764b73eb87",
+   "twin": "work:c002/twins/b85e084aa472.x3d"
+  },
+  {
+   "event": "ev-dd7b42a291a6",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-04811881e0da.x3d",
+   "note": "alternate:0: depth_max raised to 1006 by deepen",
+   "receipt": null,
+   "sha256": "04811881e0da6d997cc84fbadc20c629bfa6515d1de4d4ef7016564693eb593e",
+   "twin": "work:c002/twins/bcd27f9ed29b.x3d"
+  },
+  {
+   "event": "ev-2f8c4a94987d",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-96bee99cc8a0.x3d",
+   "note": "confirm: depth_max raised to 1258 by deepen",
+   "receipt": null,
+   "sha256": "96bee99cc8a04d05d0b73daa05f5b81d673b2cf1e55da2002c87bcada6de9cc6",
+   "twin": "work:c002/twins/6b7f4d52cd02.x3d"
+  },
+  {
+   "event": "ev-c20e072ffafb",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-406fdb54b23f.x3d",
+   "note": "confirm: depth_max raised to 1006 by deepen",
+   "receipt": null,
+   "sha256": "406fdb54b23fba3f930021bd85c1c0541bd1ead06f7147b16ab806f3627d299a",
+   "twin": "work:c002/twins/9d7517bb584e.x3d"
+  },
+  {
+   "event": "ev-158be68b2169",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-f6e45d32253a.x3d",
+   "note": "confirm: depth_max raised to 1258 by deepen",
+   "receipt": null,
+   "sha256": "f6e45d32253ae64229221c34301fdb4e8a4ef4fabb7278993e5c506bb4568d90",
+   "twin": "work:c002/twins/6d40ae1afb4d.x3d"
+  },
+  {
+   "event": "ev-e50c58d61e67",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-2f639efe475e.x3d",
+   "note": "confirm: depth_max raised to 1258 by deepen",
+   "receipt": null,
+   "sha256": "2f639efe475e083e2e212482d86ad388a64c29784d9ae6ce8e4645777dd3a055",
+   "twin": "work:c002/twins/75929e3e7db2.x3d"
+  },
+  {
+   "event": "ev-0c8a773abae7",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-cc8c56c6b463.x3d",
+   "note": "confirm: depth_max raised to 1258 by deepen",
+   "receipt": null,
+   "sha256": "cc8c56c6b4639ebe9acd86825cb72edf59e411ee5e9eb45dc5ea4e82e5a3e4bc",
+   "twin": "work:c002/twins/a82bffa86c64.x3d"
+  },
+  {
+   "event": "ev-3693f79b4eae",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-3b822c8c36bb.x3d",
+   "note": "confirm: depth_max raised to 1258 by deepen",
+   "receipt": null,
+   "sha256": "3b822c8c36bbd98a02bc98dd35ef7aa87e5da733f7a3ae8207b9f7fb44431cc7",
+   "twin": "work:c002/twins/2a76053da253.x3d"
+  },
+  {
+   "event": "ev-91116ab8a161",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-5992dbf5873d.x3d",
+   "note": "confirm: depth_max raised to 1258 by deepen",
+   "receipt": null,
+   "sha256": "5992dbf5873d158ecebad8080839a5e9f54d0ba4d25518af6a7eab29a125d15d",
+   "twin": "work:c002/twins/7f9e54833e4a.x3d"
+  },
+  {
+   "event": "ev-3431d71d92d7",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-34cebe91cb7c.x3d",
+   "note": "confirm: depth_max raised to 1258 by deepen",
+   "receipt": null,
+   "sha256": "34cebe91cb7ce89ea9fb9ceb0948e5205d32bab57c44a42d838417f95fa0e093",
+   "twin": "work:c002/twins/94edae2da71c.x3d"
+  },
+  {
+   "event": "ev-64fbc82c8ac0",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-db16181309e2.x3d",
+   "note": "confirm: depth_max raised to 1258 by deepen",
+   "receipt": null,
+   "sha256": "db16181309e2928326d6af738fdd32574bf5c651312a4f4ce3c0a7e1ac77e3c0",
+   "twin": "work:c002/twins/6efc568fd803.x3d"
+  },
+  {
+   "event": "ev-3b488e71ad42",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-26f78effbcd9.x3d",
+   "note": "near: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "26f78effbcd9a9519cf695d5b7ac263c7e10986fb6438c23952238d5337fdeb8",
+   "twin": "work:c002/twins/0da8905ea4c9.x3d"
+  },
+  {
+   "event": "ev-4b8f84e0b636",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-0681b948a93b.x3d",
+   "note": "near: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "0681b948a93b12ad73c21a18567ce676d3e28cefd725343bad22580e0b2d097d",
+   "twin": "work:c002/twins/711fbc07c824.x3d"
+  },
+  {
+   "event": "ev-73604a245de2",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-2337c656636f.x3d",
+   "note": "near: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "2337c656636faa38a2478a1898110488aec8c136cc722a469114c70e24c6f1fd",
+   "twin": "work:c002/twins/98eae7a19697.x3d"
+  },
+  {
+   "event": "ev-759ab4da6e5a",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-746d8345365f.x3d",
+   "note": "near: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "746d8345365f27ff11140b3213af658939a118bc16fe9657a9a4a0d11d8ece61",
+   "twin": "work:c002/twins/bde219d186fd.x3d"
+  },
+  {
+   "event": "ev-2bd054b81472",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-f383011849d5.x3d",
+   "note": "near: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "f383011849d55cfe088fc1722292aaab340fcbb321d89a5e5d70c346856c1619",
+   "twin": "work:c002/twins/7d167a462478.x3d"
+  },
+  {
+   "event": "ev-a290872092b7",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round2-63eed2cc9a9d.x3d",
+   "note": "near: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "63eed2cc9a9d7e5effeade6e1afc359894236ccbc3ded47becab509c84c823a9",
+   "twin": "work:c002/twins/b98f8c0e37d4.x3d"
+  },
+  {
+   "event": "ev-ce835fae8b02",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-3a0bfba4e0d3.x3d",
+   "note": "alternate:0: depth_max raised to 1004 by deepen",
+   "receipt": null,
+   "sha256": "3a0bfba4e0d37930422c603a770d8f4cf42a9aef7c2f56b71c460c6d2cd73740",
+   "twin": "work:c002/twins/b98f8c0e37d4.x3d"
+  },
+  {
+   "event": "ev-3ff7ea3a2431",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-21bacda315aa.x3d",
+   "note": "alternate:0: depth_max raised to 1004 by deepen",
+   "receipt": null,
+   "sha256": "21bacda315aaef8bd702afb485b7b2d8d12784727cd604638b357216ef7344ee",
+   "twin": "work:c002/twins/33f3e2e2c90b.x3d"
+  },
+  {
+   "event": "ev-a6ffff061c4b",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-d84e552fa510.x3d",
+   "note": "alternate:0: depth_max raised to 1004 by deepen",
+   "receipt": null,
+   "sha256": "d84e552fa51078073011306d8edee99e6a198c51921ecbe19604b1d486e8a3cc",
+   "twin": "work:c002/twins/9822055c6191.x3d"
+  },
+  {
+   "event": "ev-a2708e6e75c6",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-83e119cd1555.x3d",
+   "note": "alternate:0: depth_max raised to 1004 by deepen",
+   "receipt": null,
+   "sha256": "83e119cd15559decfd682a341db895b9f0c30f1658755e55f9a7bf0d443388aa",
+   "twin": "work:c002/twins/98eae7a19697.x3d"
+  },
+  {
+   "event": "ev-07571ad4acc4",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-7a4347f1329f.x3d",
+   "note": "alternate:0: depth_max raised to 1004 by deepen",
+   "receipt": null,
+   "sha256": "7a4347f1329fd2f318edce6af7656bb08be1b2b27e146fdf035b80b85b03d5d8",
+   "twin": "work:c002/twins/b85e084aa472.x3d"
+  },
+  {
+   "event": "ev-6d261213a5ed",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-c20c5755083a.x3d",
+   "note": "alternate:0: depth_max raised to 1004 by deepen",
+   "receipt": null,
+   "sha256": "c20c5755083affeeda53dbcea69d5898ae0f7aeb6c5d8971478ee3bfb98959f9",
+   "twin": "work:c002/twins/5e13f5a60eb1.x3d"
+  },
+  {
+   "event": "ev-74c76443a870",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-8b306085575d.x3d",
+   "note": "confirm: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "8b306085575d4a71b98f2885d6bfdcc554ae05105360f4cca27589b111ffc8f6",
+   "twin": "work:c002/twins/7f9e54833e4a.x3d"
+  },
+  {
+   "event": "ev-8ece54ccb079",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-d6d8fee1bb99.x3d",
+   "note": "confirm: depth_max raised to 1257 by deepen",
+   "receipt": null,
+   "sha256": "d6d8fee1bb99879ff843b3be9d26c662b1a05a01498ef25a5701407169b08833",
+   "twin": "work:c002/twins/87473ea4afbc.x3d"
+  },
+  {
+   "event": "ev-afb5df32ac9c",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-76762404bac6.x3d",
+   "note": "confirm: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "76762404bac62afd3c4e9707bb500999a44b4cae0e6d3dcded244897c89d9bac",
+   "twin": "work:c002/twins/ccb6e202c175.x3d"
+  },
+  {
+   "event": "ev-f83aa76107c8",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-2437040d23ab.x3d",
+   "note": "confirm: depth_max raised to 1257 by deepen",
+   "receipt": null,
+   "sha256": "2437040d23ab0ca68961299f23aab115564ed90579e9c9aa904f3fab77d47f0c",
+   "twin": "work:c002/twins/14501464d801.x3d"
+  },
+  {
+   "event": "ev-1e3fab49b258",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-d4fb384aa102.x3d",
+   "note": "confirm: depth_max raised to 1257 by deepen",
+   "receipt": null,
+   "sha256": "d4fb384aa102cf372be6f9b3a89efcc9b73b3d349b48114e4e1e2410aaa761f1",
+   "twin": "work:c002/twins/0149a8cc14c1.x3d"
+  },
+  {
+   "event": "ev-03f1dfa7dc2d",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-c3a0ab38097b.x3d",
+   "note": "confirm: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "c3a0ab38097b00a8c8136beac967e68f22b198e8931a7c76e33a85324e8c658a",
+   "twin": "work:c002/twins/9bdc8034bd80.x3d"
+  },
+  {
+   "event": "ev-f53374cf71ac",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-e32f813c1e99.x3d",
+   "note": "confirm: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "e32f813c1e992d43850d830a2a21de7cd1110cc60edc11a27b2a960a644ee952",
+   "twin": "work:c002/twins/d3c4e9c912e6.x3d"
+  },
+  {
+   "event": "ev-f5a14324d036",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-3783d009c3e4.x3d",
+   "note": "confirm: depth_max raised to 1257 by deepen",
+   "receipt": null,
+   "sha256": "3783d009c3e473d0065172a39912103e03b4733fcf1e29c29d00edc062d02a85",
+   "twin": "work:c002/twins/46880cb496ce.x3d"
+  },
+  {
+   "event": "ev-e1a74359e503",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-8a618e85118b.x3d",
+   "note": "confirm: depth_max raised to 1257 by deepen",
+   "receipt": null,
+   "sha256": "8a618e85118bfdab838d324d5a80eb577772764b8b65de664fc63ceb84073d11",
+   "twin": "work:c002/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-92cdf90d1f80",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-a61b38c62ae7.x3d",
+   "note": "confirm: depth_max raised to 1005 by deepen",
+   "receipt": null,
+   "sha256": "a61b38c62ae78c707a0d9eade8d205d1c8dd16d9542166716046f55f4b455672",
+   "twin": "work:c002/twins/30dd40dad3f9.x3d"
+  },
+  {
+   "event": "ev-8526c1b2bcee",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-08442a2722c4.x3d",
+   "note": "near: depth_max raised to 1004 by deepen",
+   "receipt": null,
+   "sha256": "08442a2722c4a7276f7812c3681d8523bd59da9f29f413befb8f6355770a037c",
+   "twin": "work:c002/twins/bcd27f9ed29b.x3d"
+  },
+  {
+   "event": "ev-0d96bf4e3028",
+   "family": "r2r-probe",
+   "file": "work:c002/probes/round3-5785ddebcc65.x3d",
+   "note": "near: depth_max raised to 1004 by deepen",
+   "receipt": null,
+   "sha256": "5785ddebcc650a4a09d1ae31a4f509e0945114c469647dc68bb9b1ffddf277a6",
+   "twin": "work:c002/twins/d3c4e9c912e6.x3d"
+  }
+ ],
+ "sources_total": 72,
+ "status": "candidate"
+}

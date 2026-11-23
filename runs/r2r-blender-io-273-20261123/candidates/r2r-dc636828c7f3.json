@@ -1,0 +1,287 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.3 import then export (bpy 5.3.0)",
+  "closure": "untested",
+  "closure_reason": "too few probes outside the rule to say",
+  "grade": "S",
+  "grade_word": "Suspected",
+  "missed_seen": 0,
+  "reasons": [
+   "rests on one failure and no confirmed probe"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-dc636828c7f3",
+ "instrument": "x3d-blender-io 2.7.3 import then export (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "v:use_before_def",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 0,
+    "role": "test"
+   },
+   {
+    "dropped": "(the list of 3 places)",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 66,
+    "role": "fence"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "x:present",
+      "n:MetadataFloat"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where the node is MetadataFloat: the node is present."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:enum_violation",
+      "anc:Anchor",
+      "at:FontStyle@justify"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where it sits inside a Anchor and the place is FontStyle justify: the value is not in the field's closed list of choices."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:extclass:other",
+      "at:Anchor@url",
+      "e.child:Shape"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Anchor url and its element has a Shape child: a URL points at an other file."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:extclass:other",
+      "at:Anchor@url",
+      "e.has:parameter"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Anchor url and its element also has the attribute parameter: a URL points at an other file."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:scheme:https",
+      "at:Anchor@url",
+      "e.has:parameter"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Anchor url and its element also has the attribute parameter: a URL uses the scheme `https`."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:scheme:none",
+      "at:Anchor@url",
+      "e.child:Shape"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Anchor url and its element has a Shape child: a URL is a plain path."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:scheme:none",
+      "at:Anchor@url",
+      "e.has:parameter"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Anchor url and its element also has the attribute parameter: a URL is a plain path."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:ext:html",
+      "at:Anchor@url",
+      "e.child:Shape"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Anchor url and its element has a Shape child: a URL ends in .html."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 0,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 0,
+   "probes": 0,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 0
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 1,
+   "by_trap": {
+    "metadata-containerfield": 1
+   },
+   "checked": 1
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 212,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 964
+  },
+  "idle_literals": [
+   "v:use_before_def"
+  ],
+  "instrument": "x3d-blender-io 2.7.3 import then export (bpy 5.3.0)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1141
+  },
+  "normative_reading": [
+   {
+    "literal": "v:use_before_def",
+    "means": "a USE comes before its DEF",
+    "passing_files_with_it_inside_the_fence": 0
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 17,
+    "round": 1,
+    "rules_tested": [
+     "attr[v:ext:html & at:Anchor@url]"
+    ],
+    "tally": {
+     "confirm/refuted": 1,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 0,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:use_before_def & (at:MetadataFloat@USE | at:MetadataInteger@USE | at:MetadataString@USE)]"
+    ],
+    "tally": {}
+   },
+   {
+    "fed_back": false,
+    "probes": 0,
+    "round": "audit",
+    "rules_tested": [
+     "attr[v:use_before_def & (at:MetadataFloat@USE | at:MetadataInteger@USE | at:MetadataString@USE)]"
+    ],
+    "tally": {}
+   }
+  ],
+  "rule": {
+   "all": [
+    "v:use_before_def"
+   ],
+   "any": [
+    "at:MetadataFloat@USE",
+    "at:MetadataInteger@USE",
+    "at:MetadataString@USE"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-dc636828c7f3",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "MetadataFloat@USE",
+   "MetadataInteger@USE",
+   "MetadataString@USE"
+  ],
+  "sentence": "At one attribute: a USE comes before its DEF, at one of 3 places (MetadataFloat USE, MetadataInteger USE, MetadataString USE).",
+  "signature": "ValueError at export_x3d.py:2177 _modern_writer",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 1,
+   "explained_by_this_rule": 1,
+   "failures": 1,
+   "families": {
+    "natural-sweep": 1
+   },
+   "observed_by": {
+    "tool": 1
+   },
+   "with_known_good_twin": 0
+  },
+  "strays": {},
+  "tier": 1,
+  "trace": [
+   "seed v:use_before_def, fenced to 3 place(s): explains 1, false alarms 0"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 66,
+   "rule": {
+    "all": [
+     "v:use_before_def"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "v:use_before_def"
+  ],
+  "any": [
+   "at:MetadataFloat@USE",
+   "at:MetadataInteger@USE",
+   "at:MetadataString@USE"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute: a USE comes before its DEF, at one of 3 places (MetadataFloat USE, MetadataInteger USE, MetadataString USE).",
+ "signature": "ValueError at export_x3d.py:2177 _modern_writer",
+ "sources": [
+  {
+   "event": "ev-85f2e6275d5f",
+   "family": "natural-sweep",
+   "file": "repos:x3d_mcp/tests/fixtures/scene_rdf/MetadataNodeExamplesX3D4.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.7.3-reexport.jsonl",
+    "row": 308
+   },
+   "sha256": "d5a83f505bd6b9f15a0385f95878f68763273775f05d9b3f4602b23dc2329e01",
+   "twin": null
+  }
+ ],
+ "sources_total": 1,
+ "status": "candidate"
+}

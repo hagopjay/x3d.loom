@@ -1,0 +1,254 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.3 importer (bpy 5.3.0)",
+  "closure": "untested",
+  "closure_reason": "too few probes outside the rule to say",
+  "grade": "L",
+  "grade_word": "Likely",
+  "missed_seen": 0,
+  "reasons": [
+   "nothing unseen has confirmed it: the prober has no experiment for a rule of this shape; 0 held-out failure(s) (need 5)"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-d261dd67c562",
+ "instrument": "x3d-blender-io 2.7.3 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "x:present",
+    "failures_explained_without_it": 2,
+    "false_alarms_without_it": 0,
+    "role": "test"
+   },
+   {
+    "dropped": "n:CoordinateDouble",
+    "failures_explained_without_it": 2,
+    "false_alarms_without_it": 1109,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "v:present",
+      "at:CoordinateDouble@point",
+      "t:MFVec3d"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is CoordinateDouble point and the field type is MFVec3d: the attribute is written."
+   },
+   {
+    "rule": {
+     "all": [
+      "x:present",
+      "isa:X3DCoordinateNode",
+      "n:CoordinateDouble"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where the node is an X3DCoordinateNode and the node is CoordinateDouble: the node is present."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:present",
+      "isa:X3DCoordinateNode"
+     ],
+     "any": [
+      "at:CoordinateDouble@DEF",
+      "at:CoordinateDouble@point"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the node is an X3DCoordinateNode: the attribute is written, at one of 2 places (CoordinateDouble DEF, CoordinateDouble point)."
+   },
+   {
+    "rule": {
+     "all": [
+      "x:present",
+      "isa:X3DGeometricPropertyNode",
+      "n:CoordinateDouble"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where the node is an X3DGeometricPropertyNode and the node is CoordinateDouble: the node is present."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:present",
+      "isa:X3DGeometricPropertyNode"
+     ],
+     "any": [
+      "at:CoordinateDouble@DEF",
+      "at:CoordinateDouble@point"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the node is an X3DGeometricPropertyNode: the attribute is written, at one of 2 places (CoordinateDouble DEF, CoordinateDouble point)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:eq:CoordinateDouble.x3d",
+      "at:meta@content"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is meta content: the value is exactly `CoordinateDouble.x3d`."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 0,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 0,
+   "probes": 0,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 0
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 2
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 212,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 965
+  },
+  "idle_literals": [
+   "x:present"
+  ],
+  "instrument": "x3d-blender-io 2.7.3 importer (bpy 5.3.0)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1109
+  },
+  "normative_reading": [],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 0,
+    "round": 1,
+    "rules_tested": [
+     "elem[x:present & n:CoordinateDouble]"
+    ],
+    "tally": {}
+   },
+   {
+    "fed_back": false,
+    "probes": 0,
+    "round": "audit",
+    "rules_tested": [
+     "elem[x:present & n:CoordinateDouble]"
+    ],
+    "tally": {}
+   }
+  ],
+  "rule": {
+   "all": [
+    "x:present",
+    "n:CoordinateDouble"
+   ],
+   "kind": "elem"
+  },
+  "rule_id": "r2r-d261dd67c562",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "CoordinateDouble"
+  ],
+  "sentence": "At one element where the node is CoordinateDouble: the node is present.",
+  "signature": "AttributeError at import_x3d.py:2038 importMesh_ReadVertices",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 2,
+   "explained_by_this_rule": 2,
+   "failures": 2,
+   "families": {
+    "natural-sweep": 2
+   },
+   "observed_by": {
+    "tool": 2
+   },
+   "with_known_good_twin": 0
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed x:present, fenced to 15 place(s): explains 2, false alarms 1109",
+   "+ n:CoordinateDouble: explains 2, false alarms 0 (gain 15.30)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 1109,
+   "rule": {
+    "all": [
+     "x:present"
+    ],
+    "kind": "elem"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "x:present",
+   "n:CoordinateDouble"
+  ],
+  "kind": "elem"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one element where the node is CoordinateDouble: the node is present.",
+ "signature": "AttributeError at import_x3d.py:2038 importMesh_ReadVertices",
+ "sources": [
+  {
+   "event": "ev-458053bc2b9a",
+   "family": "natural-sweep",
+   "file": "repos:x3d.loom/x3d.webgpu/bridge/fixtures/CoordinateDouble.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.7.3-import.jsonl",
+    "row": 39
+   },
+   "sha256": "f18b628e508799e8870832d2808df9a3da913b11b86749edbab5a8a45c1f1772",
+   "twin": null
+  },
+  {
+   "event": "ev-b3581892c2d9",
+   "family": "natural-sweep",
+   "file": "repos:x3d.loom/x3d.threejs/bridge/fixtures/CoordinateDouble.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.7.3-import.jsonl",
+    "row": 212
+   },
+   "sha256": "2aee8da68818dd08d7375f7649b72d17d07ef61c9826b944704c654f9bb824a6",
+   "twin": null
+  }
+ ],
+ "sources_total": 2,
+ "status": "candidate"
+}

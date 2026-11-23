@@ -1,0 +1,546 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "7 audit probe(s) and 3+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "C",
+  "grade_word": "Confirmed",
+  "missed_seen": 10,
+  "reasons": [
+   "13 audit probe(s) confirmed, 0 refuted",
+   "0 false alarms in 1886 known-good files"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-c78b17d6ccf6",
+ "instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "ge:max_abs:5.05e+38",
+    "failures_explained_without_it": 39,
+    "false_alarms_without_it": 1493,
+    "role": "test"
+   },
+   {
+    "dropped": "e.child:Shape",
+    "failures_explained_without_it": 33,
+    "false_alarms_without_it": 6,
+    "role": "context"
+   },
+   {
+    "dropped": "e.has:DEF",
+    "failures_explained_without_it": 96,
+    "false_alarms_without_it": 7,
+    "role": "context"
+   },
+   {
+    "dropped": "(the list of 2 places)",
+    "failures_explained_without_it": 29,
+    "false_alarms_without_it": 24,
+    "role": "fence"
+   }
+  ],
+  "alternates": [],
+  "audit": {
+   "caught_by_sibling_rule": 56,
+   "confirmed": 13,
+   "missed": 7,
+   "missed_examples": [
+    "bisect: Transform@scale <- max_abs near 4.21697e+35",
+    "widen: Transform@translation <- '\"\"0 6.6999999999999995e+38 0\"\"'",
+    "widen: Transform@rotation <- '\"0 1 INF\" \"0 1 INF\"'",
+    "alternate:0: Transform@translation <- '\"0 5.05e+38 0\"' (live: '0 5.05e+38 0' failed here)",
+    "alternate:0: Transform@translation <- '\"0 5.05e+38 0\"' (live: '0 5.05e+38 0' failed here)"
+   ],
+   "other_failure": 0,
+   "probes": 139,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 63
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 29
+  },
+  "held_out": {
+   "caught": 3,
+   "dropped_as_same_bytes_as_training": 572,
+   "failures": 6,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [
+    "num_extreme: X3D/Scene/Transform#OB_Root rotation: token 1 0 -> INF",
+    "num_extreme: X3D/Scene/Transform#OB_Copy2 translation: token 0 4 -> -1e39",
+    "num_extreme: X3D/Scene/Transform#OB_PartSource translation: token 0 0 -> NaN"
+   ],
+   "passing_files": 1409
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+  "intervals": [
+   {
+    "first_failing": 5.05e+38,
+    "last_passing": 9.999999999999983e+20,
+    "literal": "ge:max_abs:5.05e+38",
+    "number": "max_abs",
+    "passing_values_compared": 5004,
+    "untested": [
+     9.999999999999983e+20,
+     5.05e+38
+    ]
+   }
+  ],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1886
+  },
+  "normative_reading": [],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 49,
+    "round": 1,
+    "rules_tested": [
+     "attr[ge:max_abs:1e+39 & at:Transform@translation & e.child:Shape]"
+    ],
+    "tally": {
+     "alternate/confirmed": 6,
+     "bisect/silent-ok": 6,
+     "confirm/confirmed": 8,
+     "confirm/refuted": 2,
+     "near/missed": 1,
+     "value/confirmed": 8,
+     "value/no-verdict": 2,
+     "widen/missed": 2,
+     "widen/silent-ok": 14
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 97,
+    "round": 2,
+    "rules_tested": [
+     "attr[ge:max:1e+39 & at:Transform@translation]",
+     "attr[v:nonfinite & e.child:Shape & e.has:DEF & (at:Transform@scale | at:Transform@translation)]",
+     "attr[v:inf & at:Transform@translation & p:Group]"
+    ],
+    "tally": {
+     "alternate/confirmed": 1,
+     "bisect/missed": 6,
+     "confirm/confirmed": 20,
+     "confirm/refuted": 3,
+     "near/missed": 2,
+     "value/confirmed": 19,
+     "value/no-verdict": 11,
+     "widen/silent-ok": 35
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 114,
+    "round": 3,
+    "rules_tested": [
+     "attr[ge:max_abs:1e+39 & !p:Scene & at:Transform@translation]",
+     "attr[v:lexical_invalid & !e.has:rotation & e.has:DEF & (at:Transform@scale | at:Transform@translation)]",
+     "attr[v:quoted & e.child:Shape & ntok:3 & (at:Transform@scale | at:Transform@translation)]"
+    ],
+    "tally": {
+     "alternate/missed": 1,
+     "alternate/no-verdict": 5,
+     "bisect/silent-ok": 6,
+     "confirm/confirmed": 20,
+     "confirm/refuted": 4,
+     "value/confirmed": 21,
+     "value/no-verdict": 7,
+     "value/refuted": 2,
+     "widen/silent-ok": 48
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 147,
+    "round": "audit",
+    "rules_tested": [
+     "attr[ge:max_abs:1e+39 & anc:Group & (at:Transform@scale | at:Transform@translation)]",
+     "attr[ge:max_abs:5.05e+38 & e.child:Shape & e.has:DEF & (at:Transform@scale | at:Transform@translation)]",
+     "attr[v:lexical_invalid & !e.has:rotation & at:Transform@scale]",
+     "attr[v:float_overflow32 & !p:Scene & !v:lexical_invalid & at:Transform@translation]"
+    ],
+    "tally": {
+     "alternate/confirmed": 2,
+     "alternate/missed": 4,
+     "bisect/confirmed": 6,
+     "bisect/missed": 1,
+     "bisect/silent-ok": 2,
+     "confirm/confirmed": 28,
+     "confirm/refuted": 3,
+     "near/no-verdict": 6,
+     "near/refuted": 1,
+     "near/silent-ok": 1,
+     "value/confirmed": 33,
+     "value/no-verdict": 2,
+     "value/refuted": 1,
+     "widen/missed": 2,
+     "widen/silent-ok": 55
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "ge:max_abs:5.05e+38",
+    "e.child:Shape",
+    "e.has:DEF"
+   ],
+   "any": [
+    "at:Transform@scale",
+    "at:Transform@translation"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-c78b17d6ccf6",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Transform@scale",
+   "Transform@translation"
+  ],
+  "sentence": "At one attribute where its element has a Shape child and its element also has the attribute DEF: the largest magnitude is at least 5.05e+38, at one of 2 places (Transform scale, Transform translation).",
+  "signature": "RuntimeError at matrix_safety.py:47 inverted64",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 90,
+   "explained_by_this_rule": 29,
+   "failures": 119,
+   "families": {
+    "chaos-differential": 4,
+    "r2r-probe": 115
+   },
+   "observed_by": {
+    "tool": 119
+   },
+   "with_known_good_twin": 119
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed ge:max_abs:5.05e+38, fenced to 3 place(s): explains 101, false alarms 14",
+   "+ e.child:Shape: explains 97, false alarms 7 (gain 8.41)",
+   "+ e.has:DEF: explains 29, false alarms 0 (gain 2.92)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 24,
+   "rule": {
+    "all": [
+     "ge:max_abs:5.05e+38",
+     "e.child:Shape",
+     "e.has:DEF"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "ge:max_abs:5.05e+38",
+   "e.child:Shape",
+   "e.has:DEF"
+  ],
+  "any": [
+   "at:Transform@scale",
+   "at:Transform@translation"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where its element has a Shape child and its element also has the attribute DEF: the largest magnitude is at least 5.05e+38, at one of 2 places (Transform scale, Transform translation).",
+ "signature": "RuntimeError at matrix_safety.py:47 inverted64",
+ "sources": [
+  {
+   "event": "ev-125b2480aba0",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/lit_cube__004__num_extreme.x3d",
+   "note": "num_extreme: X3D/Scene/Transform#OB_Cube translation: token 2 0 -> INF",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 484
+   },
+   "sha256": "df38a4f6b1e3e0366d2a31ceb914a78b95c1fcf78f550990811ce26d8ded2f15",
+   "twin": "repos:x3d-blender-io/tests/golden/lit_cube.c14n.x3d"
+  },
+  {
+   "event": "ev-450a6df5e19e",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/lit_cube__001__num_extreme.x3d",
+   "note": "num_extreme: X3D/Scene/Transform#OB_Cube translation: token 1 1 -> 1e39",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 481
+   },
+   "sha256": "14d6e7bfe9413cb7dfe524401297947e1d1cba48f6ec1bbbbf01b54a0eb228ed",
+   "twin": "repos:x3d-blender-io/tests/golden/lit_cube.c14n.x3d"
+  },
+  {
+   "event": "ev-d4200c2558c9",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/lit_cube__011__num_extreme.x3d",
+   "note": "num_extreme: X3D/Scene/Transform#OB_Cube translation: token 1 1 -> INF",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 491
+   },
+   "sha256": "9c01ed6c605062d096d2653248e481bfe7a084c23798324804b8f521ef541cbd",
+   "twin": "repos:x3d-blender-io/tests/golden/lit_cube.c14n.x3d"
+  },
+  {
+   "event": "ev-bc8de18e1691",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-b8a633ebd114.x3d",
+   "note": "confirm: Transform@translation <- '0 1e39 0'",
+   "receipt": null,
+   "sha256": "b8a633ebd114ff902fb9ebc3e1cd1cb5061d7e2f0b703ffe9a4f16b74520c8aa",
+   "twin": "work:c004/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-7a8befa9975f",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-62eb8e3cfc3f.x3d",
+   "note": "confirm: Transform@translation <- '0 1e39 0'",
+   "receipt": null,
+   "sha256": "62eb8e3cfc3fa8ddb5073cc5a31bcf2f241ccd90d46c55827b0d75b01825a911",
+   "twin": "work:c004/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-e624ea9bdbf9",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-cf4739c9d0dc.x3d",
+   "note": "widen: Transform@scale <- '0 1 INF'",
+   "receipt": null,
+   "sha256": "cf4739c9d0dca363af0ce4077537f7023621896eb1b7f9e9f3f22acf0dd79854",
+   "twin": "work:c004/twins/8e76d7784854.x3d"
+  },
+  {
+   "event": "ev-fac3a06dee0a",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-a3ea86e32d6c.x3d",
+   "note": "alternate:0: Transform@translation <- '\"0 1e39 0\"' (live: '0 1e39 0' failed here)",
+   "receipt": null,
+   "sha256": "a3ea86e32d6c9cf4789a8bbe0d04ebd71e182ea1c2241e12b763acb8fd630bbb",
+   "twin": "work:c004/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-8da69aa2004f",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-439519c557c3.x3d",
+   "note": "value: Transform@translation <- ' 0 1e39 0 ' (live: '0 1e39 0' failed here)",
+   "receipt": null,
+   "sha256": "439519c557c3c50db7f1f7d92ebd066b28c7aeff7e47667b15ab8fee48c6a0e1",
+   "twin": "work:c004/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-bcf2077b1cec",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-9bf6929719b4.x3d",
+   "note": "confirm: Transform@translation <- ' 0 1e39 0 '",
+   "receipt": null,
+   "sha256": "9bf6929719b4ef9c435cdf7e192473250fea3db8f08f3ef2060e91c0402eb5f4",
+   "twin": "work:c004/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-7f9396591f04",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-bd409b8b8c4b.x3d",
+   "note": "confirm: Transform@translation <- '\"0 1e39 0\"'",
+   "receipt": null,
+   "sha256": "bd409b8b8c4b00217318f3428277f3e4581ba462cf70811935d20aeaac6ad3d4",
+   "twin": "work:c004/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-281bab87bf24",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-fe9822052e20.x3d",
+   "note": "bisect: Transform@translation <- max near 5.05e+38",
+   "receipt": null,
+   "sha256": "fe9822052e20f715892f5a05e88443cd6631c609f56ccd5a9626dd6afa73fdb9",
+   "twin": "work:c004/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-387eb83209cd",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-15b930cd1bd5.x3d",
+   "note": "bisect: Transform@translation <- max near 8.35e+38",
+   "receipt": null,
+   "sha256": "15b930cd1bd510a2bdd60ed91591a4780ac52d19775ec568ec6f5907943db7b5",
+   "twin": "work:c004/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-e83a90f2d006",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-ebb2b445fa0b.x3d",
+   "note": "bisect: Transform@translation <- max near 6.7e+38",
+   "receipt": null,
+   "sha256": "ebb2b445fa0bf1359ddced9bba125ac61a7f715c7247b5f743fb589621a84414",
+   "twin": "work:c004/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-702dd35a7f59",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-4f303f400ff0.x3d",
+   "note": "value: Transform@translation <- '  0 1e39 0  ' (live: ' 0 1e39 0 ' failed here)",
+   "receipt": null,
+   "sha256": "4f303f400ff07cae9173cce865e20bb58fc6bbe625770c25b1ec03fe397f6992",
+   "twin": "work:c004/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-3ab5db000586",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-9573ce4845ed.x3d",
+   "note": "value: Transform@translation <- ' 0 1E39 0 ' (live: ' 0 1e39 0 ' failed here)",
+   "receipt": null,
+   "sha256": "9573ce4845ed786e6c836e9a496317d8ed6905b4c2f3dcf288240ff3ccbe5ae0",
+   "twin": "work:c004/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-7fb92e03820e",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-6d58896e8af2.x3d",
+   "note": "confirm: Transform@scale <- '0 1 INF'",
+   "receipt": null,
+   "sha256": "6d58896e8af26c8e095898b6b753ecd29377c24e4f1774b9f41f949da9f2121d",
+   "twin": "work:c004/twins/9822055c6191.x3d"
+  },
+  {
+   "event": "ev-ee18ba8864c5",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-873c90dc07da.x3d",
+   "note": "confirm: Transform@scale <- '0 INF 0'",
+   "receipt": null,
+   "sha256": "873c90dc07dac121ce4b5c9550caf3b1f85a3d21942bc7b88d950c1bac0b62e4",
+   "twin": "work:c004/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-3a67409a816c",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-07106047e186.x3d",
+   "note": "alternate:0: Transform@scale <- '\"0 INF 0\"' (live: '0 INF 0' failed here)",
+   "receipt": null,
+   "sha256": "07106047e186e73139906e242f7567f0deeef08765d10b37ef59206d09d59b8e",
+   "twin": "work:c004/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-04d05d1c5d83",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-9e7dcf85290d.x3d",
+   "note": "value: Transform@scale <- ' 0 1 INF ' (live: '0 1 INF' failed here)",
+   "receipt": null,
+   "sha256": "9e7dcf85290d40bc238229c0602ca3f9a6c57470f57c6ca87fca0734ff20d34f",
+   "twin": "work:c004/twins/9822055c6191.x3d"
+  },
+  {
+   "event": "ev-c042bd6cee15",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-353d9f515b8a.x3d",
+   "note": "value: Transform@scale <- ' 0 INF 0 ' (live: '0 INF 0' failed here)",
+   "receipt": null,
+   "sha256": "353d9f515b8aa77853863374e718d9e0538d0661090204d3abbea34b91981086",
+   "twin": "work:c004/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-f5ef55a6ba30",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-16d476ab152d.x3d",
+   "note": "value: Transform@scale <- '0 inf 0' (live: '0 INF 0' failed here)",
+   "receipt": null,
+   "sha256": "16d476ab152da140e6a59ef0b2b9ea850a8098a4c66c87cd7ce4c59e8f7dc7d9",
+   "twin": "work:c004/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-4f43a33e0d0f",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-2240e17957dc.x3d",
+   "note": "value: Transform@scale <- '0 Inf 0' (live: '0 INF 0' failed here)",
+   "receipt": null,
+   "sha256": "2240e17957dcba50ff4105495f4d1d1cf3fbb21d0440b5aa09a2809793a10c06",
+   "twin": "work:c004/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-d9af4ff1c642",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-cfe3357ce2cf.x3d",
+   "note": "confirm: Transform@translation <- '0 inf 0'",
+   "receipt": null,
+   "sha256": "cfe3357ce2cf36bf4b1fda707fd5ed953f27abdd12aa893b143abb09047d2c9c",
+   "twin": "work:c004/twins/8e76d7784854.x3d"
+  },
+  {
+   "event": "ev-76c513b3d71b",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-b461b2f31c6d.x3d",
+   "note": "confirm: Transform@scale <- '\"0 INF 0\"'",
+   "receipt": null,
+   "sha256": "b461b2f31c6d8574bbc9c8bff03b158561f09b0e8ee7398b8c2b1d4bc0ed641a",
+   "twin": "work:c004/twins/8e76d7784854.x3d"
+  },
+  {
+   "event": "ev-b68f78ac5888",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-35af5708992c.x3d",
+   "note": "value: Transform@scale <- '\"\"0 INF 0\"\"' (live: '\"0 INF 0\"' failed here)",
+   "receipt": null,
+   "sha256": "35af5708992cefab704364faf5aca07d6436e5f4994fe809e20fa5c5cc4a5ffe",
+   "twin": "work:c004/twins/8e76d7784854.x3d"
+  },
+  {
+   "event": "ev-0973b11148ab",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-c752a7a786ae.x3d",
+   "note": "value: Transform@scale <- '\"0 inf 0\"' (live: '\"0 INF 0\"' failed here)",
+   "receipt": null,
+   "sha256": "c752a7a786aecb6a49a545d703ab8f9e4011b8bd20aff4472de3cb7c0d278be9",
+   "twin": "work:c004/twins/8e76d7784854.x3d"
+  },
+  {
+   "event": "ev-c0db72e89f99",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-13b581166c9f.x3d",
+   "note": "value: Transform@scale <- ' \"0 INF 0\" ' (live: '\"0 INF 0\"' failed here)",
+   "receipt": null,
+   "sha256": "13b581166c9f5c57d530a8c57917e34f1a1d82b9aebeeb8f23d9ff485333a569",
+   "twin": "work:c004/twins/8e76d7784854.x3d"
+  },
+  {
+   "event": "ev-501aeda17240",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-37e3d9a752f6.x3d",
+   "note": "value: Transform@translation <- ' 0 inf 0 ' (live: '0 inf 0' failed here)",
+   "receipt": null,
+   "sha256": "37e3d9a752f646634b2d3b818858707eaf43f867e13836d9bc6e784f67b4d933",
+   "twin": "work:c004/twins/8e76d7784854.x3d"
+  },
+  {
+   "event": "ev-0870142703b6",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-14927941a237.x3d",
+   "note": "value: Transform@scale <- '\"0 INF 0\" \"0 INF 0\"' (live: '\"0 INF 0\"' failed here)",
+   "receipt": null,
+   "sha256": "14927941a237b6d1a13e7fab7bf4ca162e41c493884b9e2dc08649de2e5c433b",
+   "twin": "work:c004/twins/8e76d7784854.x3d"
+  }
+ ],
+ "sources_total": 29,
+ "status": "candidate"
+}

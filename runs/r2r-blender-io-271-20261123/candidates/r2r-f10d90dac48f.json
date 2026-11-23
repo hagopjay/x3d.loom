@@ -1,0 +1,1279 @@
+{
+ "also_explains": [
+  {
+   "grade": {
+    "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+    "closure": "open",
+    "closure_reason": "0 audit probe(s) and 1+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+    "grade": "C",
+    "grade_word": "Confirmed",
+    "missed_seen": 1,
+    "reasons": [
+     "20 audit probe(s) confirmed, 0 refuted",
+     "0 false alarms in 2227 known-good files"
+    ],
+    "thresholds": {
+     "min_known_good": 30,
+     "min_recall": 0.9,
+     "min_unseen": 5
+    }
+   },
+   "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "proof": {
+    "ablation": [
+     {
+      "dropped": "v:number_unparseable",
+      "failures_explained_without_it": 50,
+      "false_alarms_without_it": 330,
+      "role": "test"
+     },
+     {
+      "dropped": "!p:Scene",
+      "failures_explained_without_it": 61,
+      "false_alarms_without_it": 15,
+      "role": "guard"
+     },
+     {
+      "dropped": "at:Transform@scale",
+      "failures_explained_without_it": 50,
+      "false_alarms_without_it": 62,
+      "role": "context"
+     },
+     {
+      "dropped": "ntok:3",
+      "failures_explained_without_it": 74,
+      "false_alarms_without_it": 5,
+      "role": "context"
+     }
+    ],
+    "alternates": [
+     {
+      "rule": {
+       "all": [
+        "le:ntok:3",
+        "v:number_unparseable",
+        "!p:Scene",
+        "at:Transform@scale"
+       ],
+       "kind": "attr"
+      },
+      "sentence": "At one attribute where the place is Transform scale: the number of tokens is at most 3 and a token is not a number in X3D's notation, unless the parent is Scene."
+     },
+     {
+      "rule": {
+       "all": [
+        "le:ntok:3",
+        "v:number_unparseable",
+        "!p:Scene",
+        "a:scale",
+        "at:Transform@scale"
+       ],
+       "kind": "attr"
+      },
+      "sentence": "At one attribute where the attribute is scale and the place is Transform scale: the number of tokens is at most 3 and a token is not a number in X3D's notation, unless the parent is Scene."
+     },
+     {
+      "rule": {
+       "all": [
+        "v:number_unparseable",
+        "!p:Scene",
+        "!v:tok:\"",
+        "at:Transform@scale"
+       ],
+       "kind": "attr"
+      },
+      "sentence": "At one attribute where the place is Transform scale: a token is not a number in X3D's notation, unless the parent is Scene or the value has the token `\"`."
+     }
+    ],
+    "audit": {
+     "caught_by_sibling_rule": 25,
+     "confirmed": 20,
+     "missed": 0,
+     "missed_examples": [],
+     "other_failure": 241,
+     "probes": 514,
+     "refuted": 0,
+     "refuted_examples": [],
+     "silent_ok": 228
+    },
+    "degenerate_fired_on": [],
+    "existing_traps": {
+     "any": 0,
+     "by_trap": {},
+     "checked": 50
+    },
+    "held_out": {
+     "caught": 0,
+     "dropped_as_same_bytes_as_training": 591,
+     "failures": 1,
+     "false_alarm_examples": [],
+     "false_alarms": 0,
+     "missed_examples": [
+      "num_extreme: X3D/Scene/Transform#OB_Point scale: token 2 1 -> --1"
+     ],
+     "passing_files": 1416
+    },
+    "idle_literals": [],
+    "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+    "intervals": [],
+    "known_good": {
+     "false_alarm_files": [],
+     "false_alarms": 0,
+     "passing_files": 2227
+    },
+    "normative_reading": [
+     {
+      "literal": "v:lexical_invalid",
+      "means": "the value does not have the written form its field type requires",
+      "passing_files_with_it_inside_the_fence": 46
+     },
+     {
+      "literal": "v:number_unparseable",
+      "means": "a token is not a number in X3D's notation",
+      "passing_files_with_it_inside_the_fence": 31
+     }
+    ],
+    "probe_rounds": [
+     {
+      "fed_back": true,
+      "probes": 39,
+      "round": 1,
+      "rules_tested": [
+       "attr[v:eq:1 1 --1 & at:Transform@scale]"
+      ],
+      "tally": {
+       "alternate/missed": 6,
+       "confirm/confirmed": 7,
+       "confirm/refuted": 3,
+       "near/missed": 7,
+       "widen/silent-ok": 16
+      }
+     },
+     {
+      "fed_back": true,
+      "probes": 40,
+      "round": 2,
+      "rules_tested": [
+       "attr[ge:len:9 & v:number_unparseable & at:Transform@scale & ntok:3]",
+       "elem[!has:rotation & ge:nattrs:2 & child:TouchSensor & n:Transform & p:Scene]"
+      ],
+      "tally": {
+       "alternate/missed": 6,
+       "confirm/confirmed": 4,
+       "confirm/refuted": 6,
+       "value/confirmed": 8,
+       "widen/silent-ok": 16
+      }
+     },
+     {
+      "fed_back": true,
+      "probes": 69,
+      "round": 3,
+      "rules_tested": [
+       "attr[v:number_unparseable & !p:Scene & at:Transform@scale & ntok:3]",
+       "attr[v:quoted & at:Transform@scale & p:Group]",
+       "elem[ge:nattrs:1 & child:TouchSensor & has:scale & n:Transform & p:Scene]"
+      ],
+      "tally": {
+       "alternate/confirmed": 6,
+       "alternate/missed": 5,
+       "alternate/silent-ok": 1,
+       "confirm/confirmed": 20,
+       "value/confirmed": 19,
+       "value/refuted": 1,
+       "widen/silent-ok": 17
+      }
+     },
+     {
+      "fed_back": false,
+      "probes": 84,
+      "round": "audit",
+      "rules_tested": [
+       "attr[v:number_unparseable & !p:Scene & at:Transform@scale & ntok:3]",
+       "attr[ge:ntok:6 & !p:Scene & at:Transform@scale]"
+      ],
+      "tally": {
+       "alternate/confirmed": 6,
+       "confirm/confirmed": 20,
+       "near/silent-ok": 6,
+       "value/confirmed": 19,
+       "value/refuted": 1,
+       "widen/other-failure": 1,
+       "widen/silent-ok": 31
+      }
+     }
+    ],
+    "rule": {
+     "all": [
+      "v:number_unparseable",
+      "!p:Scene",
+      "at:Transform@scale",
+      "ntok:3"
+     ],
+     "kind": "attr"
+    },
+    "rule_id": "r2r-f10d90dac48f",
+    "schema": "loom.rule-proof/1",
+    "seen_at": [
+     "Transform@scale"
+    ],
+    "sentence": "At one attribute where the place is Transform scale and the value has 3 token(s): a token is not a number in X3D's notation, unless the parent is Scene.",
+    "signature": "IndexError at import_x3d.py:1666 translateScale",
+    "sources": {
+     "explained_by_any_rule_of_the_cluster": 74,
+     "explained_by_this_rule": 50,
+     "failures": 89,
+     "families": {
+      "chaos-differential": 1,
+      "r2r-probe": 88
+     },
+     "observed_by": {
+      "tool": 89
+     },
+     "with_known_good_twin": 89
+    },
+    "strays": {
+     "IndexError at import_x3d.py:1665 translateScale": 27
+    },
+    "tier": 1,
+    "trace": [
+     "seed le:ntok:3, fenced to 2 place(s): explains 88, false alarms 1899",
+     "+ v:number_unparseable: explains 61, false alarms 24 (gain 138.64)",
+     "+ !p:Scene: explains 50, false alarms 1 (gain 22.50)",
+     "+ ntok:3: explains 50, false alarms 0 (gain 1.43)",
+     "pruned le:ntok:3: no false alarm returns without it"
+    ],
+    "unfenced": {
+     "false_alarms_on_known_good": 62,
+     "rule": {
+      "all": [
+       "v:number_unparseable",
+       "!p:Scene",
+       "ntok:3"
+      ],
+      "kind": "attr"
+     },
+     "status": "contradicted by passing files"
+    },
+    "vocabulary_gap": false
+   },
+   "signature": "IndexError at import_x3d.py:1666 translateScale",
+   "sources": [
+    {
+     "event": "ev-06e06d689a44",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round1-7462cf1c6bb2.x3d",
+     "note": "confirm: Transform@scale <- '1 1 --1'",
+     "receipt": null,
+     "sha256": "7462cf1c6bb2937a70d67830f97fc5171d379bb6d47ed494b78485c7e7ffba74",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-d121abae24f5",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round1-7389c9719a3f.x3d",
+     "note": "confirm: Transform@scale <- '1 1 --1'",
+     "receipt": null,
+     "sha256": "7389c9719a3f9776881652f18069b76f5ca10a308a177a5e3581da93ea7b83db",
+     "twin": "work:c009/twins/ea58c36cfc79.x3d"
+    },
+    {
+     "event": "ev-5d5d6006c374",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round1-e9a7f7abad18.x3d",
+     "note": "alternate:0: Transform@scale <- ' 1 1 --1 ' (live: '1 1 --1' failed here)",
+     "receipt": null,
+     "sha256": "e9a7f7abad187386cb5e5b64381027b826b17587e69389c85c894c9ddb69298e",
+     "twin": "work:c009/twins/ea58c36cfc79.x3d"
+    },
+    {
+     "event": "ev-45587156a8e3",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round1-f3ded46a8dd0.x3d",
+     "note": "alternate:0: Transform@scale <- ' 1 1 --1 ' (live: '1 1 --1' failed here)",
+     "receipt": null,
+     "sha256": "f3ded46a8dd05cc16162fbd81c7b7113f1b1a77e2ff2c5f840b81d4945191958",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-6775199a34ec",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round1-7f1adf79cae4.x3d",
+     "note": "near: Transform@scale <- '\"1 1 --1\"' (live: '1 1 --1' failed here)",
+     "receipt": null,
+     "sha256": "7f1adf79cae412d0aeef898bf530ee4dd80d034c72e9d8026792d0b00fe5b94b",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-6b026ed449f8",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round1-2fa259deaa05.x3d",
+     "note": "near: Transform@scale <- '\"1 1 --1\"' (live: '1 1 --1' failed here)",
+     "receipt": null,
+     "sha256": "2fa259deaa059c6bd18c582ce907d686161ca04326437edd5008fc0d3218e615",
+     "twin": "work:c009/twins/ea58c36cfc79.x3d"
+    },
+    {
+     "event": "ev-a15e19ef9a65",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round2-6232e9f0c086.x3d",
+     "note": "confirm: Transform@scale <- '\"1 1 --1\"'",
+     "receipt": null,
+     "sha256": "6232e9f0c08632f946e0edd342450231f43968c50ffda9c7d761df2212b80dff",
+     "twin": "work:c009/twins/6d8c5a7b1866.x3d"
+    },
+    {
+     "event": "ev-26c794e6d466",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round2-e82b1537e6b1.x3d",
+     "note": "confirm: Transform@scale <- '\"1 1 --1\"'",
+     "receipt": null,
+     "sha256": "e82b1537e6b1f4922904dc9cfac995bfb23b38f082223471a2e1b9ebebe267c2",
+     "twin": "work:c009/twins/0b72840615c1.x3d"
+    },
+    {
+     "event": "ev-412d61d426ed",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round2-7d07cbba136b.x3d",
+     "note": "confirm: Transform@scale <- '\"1 1 --1\"'",
+     "receipt": null,
+     "sha256": "7d07cbba136b7d1325ce6032dbd2a915ff332cb4f9a9570bcd2febb08b5c256e",
+     "twin": "work:c009/twins/fc02e4e0c69f.x3d"
+    },
+    {
+     "event": "ev-251363980ce1",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round2-e9d58c8adec2.x3d",
+     "note": "confirm: Transform@scale <- '\"1 1 --1\"'",
+     "receipt": null,
+     "sha256": "e9d58c8adec238b188b4b83dfa85c7b3449451427a2061cd40cef7980ba46d5f",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-abb7fb362380",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round2-fe5220ed2693.x3d",
+     "note": "value: Transform@scale <- '\"\"1 1 --1\"\"' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "fe5220ed26934e612234bf1da505b60f4144afe8561bf32fe3b3c0d585c58814",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-f47b6038d3d5",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round2-28dc1f5fb495.x3d",
+     "note": "value: Transform@scale <- ' \"1 1 --1\" ' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "28dc1f5fb495425ed921e36a6014906623127e8fbb009faf30e0580b5b36e40f",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-77056bc0aef8",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round2-b49223a42ca9.x3d",
+     "note": "value: Transform@scale <- ' \"1 1 --1\" ' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "b49223a42ca9e5ada3e8b8684726169b91d66278aef82ce776c406fa2bb6d562",
+     "twin": "work:c009/twins/6d8c5a7b1866.x3d"
+    },
+    {
+     "event": "ev-4b03d43864f4",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round2-f3a7bbe6b540.x3d",
+     "note": "value: Transform@scale <- '\"\"1 1 --1\"\"' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "f3a7bbe6b5409127c6543fc8303866262fcd942d27fe1a9bf1ea9cbd01d4e16a",
+     "twin": "work:c009/twins/0b72840615c1.x3d"
+    },
+    {
+     "event": "ev-196885460db5",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round2-b8dcef262616.x3d",
+     "note": "value: Transform@scale <- ' \"1 1 --1\" ' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "b8dcef262616350940432e798b5cbddac4bb7b5436d52e3aca59e86944e2c0e2",
+     "twin": "work:c009/twins/fc02e4e0c69f.x3d"
+    },
+    {
+     "event": "ev-3284923698ca",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round2-90424a90579b.x3d",
+     "note": "value: Transform@scale <- '\"\"1 1 --1\"\"' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "90424a90579b74a0f00c1d6506b3390226aed3dc2e9969f20f1ab9dfde62969c",
+     "twin": "work:c009/twins/6d8c5a7b1866.x3d"
+    },
+    {
+     "event": "ev-793a1aee3500",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round2-eb2ba1d33043.x3d",
+     "note": "value: Transform@scale <- '\"\"1 1 --1\"\"' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "eb2ba1d33043b0a483fafe60ef1f508b553f4b96faba80507529a8be12a19ebd",
+     "twin": "work:c009/twins/fc02e4e0c69f.x3d"
+    },
+    {
+     "event": "ev-7710217cff34",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round2-eed7f944b5f9.x3d",
+     "note": "value: Transform@scale <- ' \"1 1 --1\" ' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "eed7f944b5f92ccb541dcea10233ba15dcf0a9f3760be5e15739d6d7d86a2c21",
+     "twin": "work:c009/twins/0b72840615c1.x3d"
+    },
+    {
+     "event": "ev-456cd676f494",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-54204fe56f15.x3d",
+     "note": "confirm: Transform@scale <- ' 1 1 --1 '",
+     "receipt": null,
+     "sha256": "54204fe56f15f8c1e83c256c1111e59d4d8609e3625fbafa1952dd99317f6642",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-375fd3ec257b",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-7bea147da382.x3d",
+     "note": "confirm: Transform@scale <- '\"1 1 --1\"'",
+     "receipt": null,
+     "sha256": "7bea147da3822b284d8ff9373eab2af862076e73acbd291aa2ba7e41bcdfad3f",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-f87338d09d6d",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-f58c9f29574b.x3d",
+     "note": "confirm: Transform@scale <- '\"1 1 --1\"'",
+     "receipt": null,
+     "sha256": "f58c9f29574bc3b74387219de44efaf4ec0796161affe2a129146dd81e03a12a",
+     "twin": "work:c009/twins/6d8c5a7b1866.x3d"
+    },
+    {
+     "event": "ev-3b8cdfe3763d",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-9cc620f4cecb.x3d",
+     "note": "confirm: Transform@scale <- ' \"1 1 --1\" '",
+     "receipt": null,
+     "sha256": "9cc620f4cecb1f24ab02da41609b9b0b10549301db85038756a57b1fe7946f3e",
+     "twin": "work:c009/twins/59a7be2708ed.x3d"
+    },
+    {
+     "event": "ev-cf27c0b45024",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-dd9a484deae5.x3d",
+     "note": "confirm: Transform@scale <- '\"1 1 --1\"'",
+     "receipt": null,
+     "sha256": "dd9a484deae514fbacc0a994dce7ecf8fe003f3de4aac6f139810952f1c8b853",
+     "twin": "work:c009/twins/aaddfad27ab0.x3d"
+    },
+    {
+     "event": "ev-68b169127771",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-48a37e321117.x3d",
+     "note": "confirm: Transform@scale <- '\"1 1 --1\"'",
+     "receipt": null,
+     "sha256": "48a37e3211170644df3ad75a6983d7a6b987f0b2c07f5a9d01f5408cec0beb1b",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-ba6efdf21418",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-84caef6e9d55.x3d",
+     "note": "confirm: Transform@scale <- ' 1 1 --1 '",
+     "receipt": null,
+     "sha256": "84caef6e9d554bf2383f4a14977c907440d3bcd09f93679e0fe67891ba8d7b72",
+     "twin": "work:c009/twins/3329062423a7.x3d"
+    },
+    {
+     "event": "ev-ce88da57c32b",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-8b67cae7b006.x3d",
+     "note": "confirm: Transform@scale <- ' 1 1 --1 '",
+     "receipt": null,
+     "sha256": "8b67cae7b006efdc22cfd9a9bfa67d3851b48fb8e07df4b8abab5a00ea850af2",
+     "twin": "work:c009/twins/cbc69f69a289.x3d"
+    },
+    {
+     "event": "ev-b11fe6582e83",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-ca5aa1e79d9e.x3d",
+     "note": "confirm: Transform@scale <- ' \"1 1 --1\" '",
+     "receipt": null,
+     "sha256": "ca5aa1e79d9e8584f5a82a8c4f60a9852b4dd7d9820c0f21599d8cea5af2411d",
+     "twin": "work:c009/twins/cbc69f69a289.x3d"
+    },
+    {
+     "event": "ev-31d3237f5b4a",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-57d2cfd9c578.x3d",
+     "note": "confirm: Transform@scale <- ' \"1 1 --1\" '",
+     "receipt": null,
+     "sha256": "57d2cfd9c578ab8c495a451b2957eecc0aff723461386a94829ce29e58e1a3b7",
+     "twin": "work:c009/twins/b5f1a2bac5d6.x3d"
+    },
+    {
+     "event": "ev-65890f852da4",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-45fdae311aa7.x3d",
+     "note": "value: Transform@scale <- '  \"1 1 --1\"  ' (live: ' \"1 1 --1\" ' failed here)",
+     "receipt": null,
+     "sha256": "45fdae311aa7d4035c697e80e49b161c8b815803d54acdc5b74f99016a669dac",
+     "twin": "work:c009/twins/cbc69f69a289.x3d"
+    },
+    {
+     "event": "ev-594e53de66c0",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-a69c9deb2307.x3d",
+     "note": "value: Transform@scale <- '\"\"1 1 --1\"\"' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "a69c9deb2307529fcff61b3aab45fa6098f2df32af0a80d23b24eb7ab541858c",
+     "twin": "work:c009/twins/6d8c5a7b1866.x3d"
+    },
+    {
+     "event": "ev-be78b485e455",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-3ead1d471357.x3d",
+     "note": "value: Transform@scale <- '  1 1 --1  ' (live: ' 1 1 --1 ' failed here)",
+     "receipt": null,
+     "sha256": "3ead1d4713570dd9bf9727cca8c2c309a8cf59025dccea2f7a049813c43e08b0",
+     "twin": "work:c009/twins/cbc69f69a289.x3d"
+    },
+    {
+     "event": "ev-925c3e696420",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-b2659463e27a.x3d",
+     "note": "value: Transform@scale <- '\"\"1 1 --1\"\"' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "b2659463e27a213427d1b853117ad8b8ea33d27a84c3051e2b786df6c7674a6f",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-f6f657b65da9",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-2288b043af8d.x3d",
+     "note": "value: Transform@scale <- ' \"1 1 --1\" ' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "2288b043af8dc188602c05a2e2697cde4eebe44ca71fcece25a43dd073ca95cf",
+     "twin": "work:c009/twins/6d8c5a7b1866.x3d"
+    },
+    {
+     "event": "ev-1c39d8ca839d",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-e883cdef8e2e.x3d",
+     "note": "value: Transform@scale <- '  \"1 1 --1\"  ' (live: ' \"1 1 --1\" ' failed here)",
+     "receipt": null,
+     "sha256": "e883cdef8e2e2639f2fa6a9f40bf60106ac479c92c32dcc9ff148e0f288b122d",
+     "twin": "work:c009/twins/59a7be2708ed.x3d"
+    },
+    {
+     "event": "ev-6f17bb2e99e6",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-51697b983e66.x3d",
+     "note": "value: Transform@scale <- '  \"1 1 --1\"  ' (live: ' \"1 1 --1\" ' failed here)",
+     "receipt": null,
+     "sha256": "51697b983e665f503698702c751171449d4b66d75090a7b4a660ea8480127619",
+     "twin": "work:c009/twins/b5f1a2bac5d6.x3d"
+    },
+    {
+     "event": "ev-557a8ec8b69d",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-799f0eeaf510.x3d",
+     "note": "value: Transform@scale <- '  1 1 --1  ' (live: ' 1 1 --1 ' failed here)",
+     "receipt": null,
+     "sha256": "799f0eeaf5103bbe1702b80e9c42e0025ba4112279d400f9c2b8044be0e0f91b",
+     "twin": "work:c009/twins/3329062423a7.x3d"
+    },
+    {
+     "event": "ev-b464936899b1",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-da8759fe609b.x3d",
+     "note": "value: Transform@scale <- ' \"1 1 --1\" ' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "da8759fe609b4872e9b811e92b09af3bbab63ebff13263210933886783f9fce6",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-41c06532fcfc",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-aa0168bc44a5.x3d",
+     "note": "value: Transform@scale <- ' \"1 1 --1\" ' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "aa0168bc44a580ebb5cd9e529e8b8e472ed319d1457e5bf17c93b26d1d8846f9",
+     "twin": "work:c009/twins/aaddfad27ab0.x3d"
+    },
+    {
+     "event": "ev-219d5375024c",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-c09c67c2dcd8.x3d",
+     "note": "confirm: Transform@scale <- ' \"1 1 --1\" '",
+     "receipt": null,
+     "sha256": "c09c67c2dcd861d42339cd0687ecfd5610242d27f5b2abb881f2a31a8c196fce",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-81ad775610b1",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-9057807adbcc.x3d",
+     "note": "confirm: Transform@scale <- ' \"1 1 --1\" '",
+     "receipt": null,
+     "sha256": "9057807adbcc9c8b08060dafa7ab1e5f3245eca7414b61257d1a9e876421bfd5",
+     "twin": "work:c009/twins/69b84e701b7d.x3d"
+    },
+    {
+     "event": "ev-d3c254acbe10",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-d74ec4f3452b.x3d",
+     "note": "confirm: Transform@scale <- '\"\"1 1 --1\"\"'",
+     "receipt": null,
+     "sha256": "d74ec4f3452be4bcb18c95c64db37a5f3f5451c86e7152243cf8999bd242a061",
+     "twin": "work:c009/twins/cbc69f69a289.x3d"
+    },
+    {
+     "event": "ev-0b936bccdb81",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-5c93d2e0a826.x3d",
+     "note": "confirm: Transform@scale <- '\"1 1 --1\"'",
+     "receipt": null,
+     "sha256": "5c93d2e0a826ece41a1c7470c3c819b1ed14fb53a7612d2646a3e834980ed21f",
+     "twin": "work:c009/twins/cbc69f69a289.x3d"
+    },
+    {
+     "event": "ev-8d374954e4dd",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-ecd3070e86dd.x3d",
+     "note": "confirm: Transform@scale <- '\"\"1 1 --1\"\"'",
+     "receipt": null,
+     "sha256": "ecd3070e86ddfc2acb062b12c911de1d6b8afe263d798cdcfd417bd3718f2479",
+     "twin": "work:c009/twins/6d8c5a7b1866.x3d"
+    },
+    {
+     "event": "ev-c17d31b54fbd",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-636bc1bda943.x3d",
+     "note": "confirm: Transform@scale <- '\"\"1 1 --1\"\"'",
+     "receipt": null,
+     "sha256": "636bc1bda943eafaad0a58e5c1c4e158d16bc9e88400ea988cc512e3306fd865",
+     "twin": "work:c009/twins/59a7be2708ed.x3d"
+    },
+    {
+     "event": "ev-d6ddf3dc0c79",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-1f2eef3af86d.x3d",
+     "note": "alternate:1: Transform@scale <- ' \"\"1 1 --1\"\" ' (live: '\"\"1 1 --1\"\"' failed here)",
+     "receipt": null,
+     "sha256": "1f2eef3af86d82c3b0eb153cbf74e421904764b6707586c1fbd33e4b8f4ea2b8",
+     "twin": "work:c009/twins/6d8c5a7b1866.x3d"
+    },
+    {
+     "event": "ev-72cf052557a8",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-8dd7afb09fe2.x3d",
+     "note": "alternate:1: Transform@scale <- ' \"\"1 1 --1\"\" ' (live: '\"\"1 1 --1\"\"' failed here)",
+     "receipt": null,
+     "sha256": "8dd7afb09fe2829876fd17bbf8bf55232102e9e343204ee05c4fb3dab58102fa",
+     "twin": "work:c009/twins/cbc69f69a289.x3d"
+    },
+    {
+     "event": "ev-44d7cbc20dfd",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-45261f6c206c.x3d",
+     "note": "alternate:1: Transform@scale <- '\"\"\"1 1 --1\"\"\"' (live: '\"\"1 1 --1\"\"' failed here)",
+     "receipt": null,
+     "sha256": "45261f6c206c3625cd10a59f25cdb32693f28ef47a127cc0047c7737c89da24b",
+     "twin": "work:c009/twins/cbc69f69a289.x3d"
+    },
+    {
+     "event": "ev-c21d7d899aa8",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-f44a05b4a1ea.x3d",
+     "note": "alternate:1: Transform@scale <- '\"\"\"1 1 --1\"\"\"' (live: '\"\"1 1 --1\"\"' failed here)",
+     "receipt": null,
+     "sha256": "f44a05b4a1ea13f9d99561f3e9fa9afe10d5fa7834a05824874129613e2d9fea",
+     "twin": "work:c009/twins/59a7be2708ed.x3d"
+    },
+    {
+     "event": "ev-22efb3016e88",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-a6b2837e7d11.x3d",
+     "note": "alternate:1: Transform@scale <- '\"\"\"1 1 --1\"\"\"' (live: '\"\"1 1 --1\"\"' failed here)",
+     "receipt": null,
+     "sha256": "a6b2837e7d11866320d799fa54558d08046841b2b30bb7624468e5cb8f852f34",
+     "twin": "work:c009/twins/6d8c5a7b1866.x3d"
+    },
+    {
+     "event": "ev-5d25a4c39a4e",
+     "family": "r2r-probe",
+     "file": "work:c009/probes/round3-44da3dbf4c3d.x3d",
+     "note": "alternate:1: Transform@scale <- '\"\"1 1 --1\"\"' (live: '\"1 1 --1\"' failed here)",
+     "receipt": null,
+     "sha256": "44da3dbf4c3d7ed49b81f59510224c61fe8009135936bed65aa307ec8e9a4a14",
+     "twin": "work:c009/twins/cbc69f69a289.x3d"
+    }
+   ],
+   "sources_total": 50
+  }
+ ],
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "2 audit probe(s) and 2+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "C",
+  "grade_word": "Confirmed",
+  "missed_seen": 4,
+  "reasons": [
+   "24 audit probe(s) confirmed, 0 refuted",
+   "0 false alarms in 2024 known-good files"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-f10d90dac48f",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "v:number_unparseable",
+    "failures_explained_without_it": 27,
+    "false_alarms_without_it": 330,
+    "role": "test"
+   },
+   {
+    "dropped": "!p:Scene",
+    "failures_explained_without_it": 69,
+    "false_alarms_without_it": 6,
+    "role": "guard"
+   },
+   {
+    "dropped": "at:Transform@scale",
+    "failures_explained_without_it": 27,
+    "false_alarms_without_it": 27,
+    "role": "context"
+   },
+   {
+    "dropped": "ntok:3",
+    "failures_explained_without_it": 70,
+    "false_alarms_without_it": 3,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "le:ntok:3",
+      "v:lexical_invalid",
+      "!e.has:DEF",
+      "!p:Scene",
+      "at:Transform@scale"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform scale: the number of tokens is at most 3 and the value does not have the written form its field type requires, unless its element also has the attribute DEF or the parent is Scene."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:number_unparseable",
+      "!p:Scene",
+      "!v:tok:\"",
+      "at:Transform@scale"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform scale: a token is not a number in X3D's notation, unless the parent is Scene or the value has the token `\"`."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:number_unparseable",
+      "!p:Scene",
+      "!v:tok:\"",
+      "a:scale",
+      "at:Transform@scale"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the attribute is scale and the place is Transform scale: a token is not a number in X3D's notation, unless the parent is Scene or the value has the token `\"`."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:number_unparseable",
+      "!p:Scene",
+      "!v:eq:\" \"1 1e 1\" \"",
+      "!v:eq:\" 1 1e 1 \"",
+      "at:Transform@scale"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform scale: a token is not a number in X3D's notation, unless the parent is Scene or the value is exactly `\" \"1 1e 1\" \"` or the value is exactly `\" 1 1e 1 \"`."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:len:6",
+      "v:number_unparseable",
+      "!p:Scene",
+      "!v:tok:\"",
+      "at:Transform@scale",
+      "t:SFVec3f"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform scale and the field type is SFVec3f: the length of the value is at least 6 and a token is not a number in X3D's notation, unless the parent is Scene or the value has the token `\"`."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 43,
+   "confirmed": 24,
+   "missed": 2,
+   "missed_examples": [
+    "near: Transform@scale <- '\"\"\"1 1e 1\"\"\" \"\"\"1 1e 1\"\"\"' (live: '\"\"\"1 1e 1\"\"\"' failed here)",
+    "near: Transform@scale <- '  \"1 1e 1\"     \"1 1e 1\"  ' (live: '  \"1 1e 1\"  ' failed here)"
+   ],
+   "other_failure": 83,
+   "probes": 253,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 101
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 27
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 2,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [
+    "num_extreme: X3D/Scene/Transform#OB_Hexagon scale: token 1 1 -> --1",
+    "num_extreme: X3D/Scene/Transform#OB_Copy1 scale: token 1 1 -> 1e"
+   ],
+   "passing_files": 1416
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 2024
+  },
+  "normative_reading": [
+   {
+    "literal": "v:lexical_invalid",
+    "means": "the value does not have the written form its field type requires",
+    "passing_files_with_it_inside_the_fence": 35
+   },
+   {
+    "literal": "v:number_unparseable",
+    "means": "a token is not a number in X3D's notation",
+    "passing_files_with_it_inside_the_fence": 20
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 32,
+    "round": 1,
+    "rules_tested": [
+     "attr[v:number_unparseable & at:Transform@scale & ntok:3]"
+    ],
+    "tally": {
+     "alternate/confirmed": 4,
+     "alternate/missed": 2,
+     "confirm/confirmed": 7,
+     "confirm/refuted": 3,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 102,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:lexical_invalid & at:Transform@scale & e.child:TouchSensor]",
+     "attr[v:quoted & at:Transform@scale & ntok:3]",
+     "attr[v:arity_long & v:number_unparseable & at:Transform@scale]"
+    ],
+    "tally": {
+     "alternate/confirmed": 13,
+     "alternate/missed": 3,
+     "confirm/confirmed": 16,
+     "confirm/refuted": 8,
+     "value/confirmed": 30,
+     "widen/silent-ok": 32
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 129,
+    "round": 3,
+    "rules_tested": [
+     "attr[v:number_unparseable & !p:Scene & at:Transform@scale]",
+     "attr[v:lexical_invalid & at:Transform@scale & e.child:TouchSensor]",
+     "elem[!has:rotation & child:GeoLOD & has:scale & n:Transform]",
+     "attr[v:arity_long & !e.has:rotation & !v:eq:1 1e 1,1 1e 1 & at:Transform@scale & e.child:Shape]",
+     "attr[v:quoted & !ntok:1 & !v:eq:\"1 1e 1\" & at:Transform@scale]"
+    ],
+    "tally": {
+     "alternate/confirmed": 6,
+     "confirm/confirmed": 33,
+     "confirm/refuted": 3,
+     "value/confirmed": 34,
+     "value/refuted": 4,
+     "widen/other-failure": 2,
+     "widen/silent-ok": 47
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 127,
+    "round": "audit",
+    "rules_tested": [
+     "attr[ge:ntok:6 & !p:Scene & at:Transform@scale]",
+     "attr[ge:len:10 & v:number_unparseable & at:Transform@scale & ntok:3]",
+     "elem[ge:nattrs:1 & child:TouchSensor & has:scale & n:Transform & p:Scene]",
+     "attr[v:number_unparseable & !p:Scene & at:Transform@scale & ntok:3]"
+    ],
+    "tally": {
+     "alternate/confirmed": 5,
+     "alternate/refuted": 3,
+     "alternate/silent-ok": 1,
+     "confirm/confirmed": 29,
+     "confirm/refuted": 1,
+     "near/confirmed": 3,
+     "near/missed": 2,
+     "near/silent-ok": 5,
+     "value/confirmed": 30,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 47
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "v:number_unparseable",
+    "!p:Scene",
+    "at:Transform@scale",
+    "ntok:3"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-f10d90dac48f",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Transform@scale"
+  ],
+  "sentence": "At one attribute where the place is Transform scale and the value has 3 token(s): a token is not a number in X3D's notation, unless the parent is Scene.",
+  "signature": "IndexError at import_x3d.py:1665 translateScale",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 111,
+   "explained_by_this_rule": 27,
+   "failures": 149,
+   "families": {
+    "chaos-differential": 1,
+    "r2r-probe": 148
+   },
+   "observed_by": {
+    "tool": 149
+   },
+   "with_known_good_twin": 149
+  },
+  "strays": {},
+  "tier": 1,
+  "trace": [
+   "seed ge:len:8, fenced to 3 place(s): explains 140, false alarms 1743",
+   "+ v:number_unparseable: explains 135, false alarms 24 (gain 257.23)",
+   "+ ntok:3: explains 55, false alarms 3 (gain 8.77)",
+   "+ !p:Scene: explains 23, false alarms 0 (gain 1.76)",
+   "pruned ge:len:8: no false alarm returns without it"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 27,
+   "rule": {
+    "all": [
+     "v:number_unparseable",
+     "!p:Scene",
+     "ntok:3"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "v:number_unparseable",
+   "!p:Scene",
+   "at:Transform@scale",
+   "ntok:3"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the place is Transform scale and the value has 3 token(s): a token is not a number in X3D's notation, unless the parent is Scene.",
+ "signature": "IndexError at import_x3d.py:1665 translateScale",
+ "sources": [
+  {
+   "event": "ev-fa9cb06ac71a",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round1-0b3cb15c985e.x3d",
+   "note": "confirm: Transform@scale <- '1 1e 1'",
+   "receipt": null,
+   "sha256": "0b3cb15c985eb4c879d369792c7e46794409d9fd0744764dcdd4b8f63a3d3ce2",
+   "twin": "work:c005/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-843509835079",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round1-d7bd885308ac.x3d",
+   "note": "confirm: Transform@scale <- '1 1e 1'",
+   "receipt": null,
+   "sha256": "d7bd885308ac7fe680e30fcd8be3fa49fccf15ae71986ab588acb80c8e0f1f1a",
+   "twin": "work:c005/twins/ea58c36cfc79.x3d"
+  },
+  {
+   "event": "ev-845b1906c85e",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round1-a90da885f2d5.x3d",
+   "note": "alternate:3: Transform@scale <- ' 1 1e 1 ' (live: '1 1e 1' failed here)",
+   "receipt": null,
+   "sha256": "a90da885f2d54df3ad7887536f2056d8b1ea468bbd140eeedfdedc64d2f1fe51",
+   "twin": "work:c005/twins/ea58c36cfc79.x3d"
+  },
+  {
+   "event": "ev-6d091063336a",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-d29f5e4a1743.x3d",
+   "note": "confirm: Transform@scale <- '\"1 1e 1\"'",
+   "receipt": null,
+   "sha256": "d29f5e4a1743c2c0e5f4c072e0605cfe6d4371e40cec4d5fd812bacd0a4747fb",
+   "twin": "work:c005/twins/a0501ac0fcb0.x3d"
+  },
+  {
+   "event": "ev-f84610e70b94",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-ac100c16e49c.x3d",
+   "note": "alternate:1: Transform@scale <- '\"1 1E 1\"' (live: '\"1 1e 1\"' failed here)",
+   "receipt": null,
+   "sha256": "ac100c16e49ccca3b6ac30a4491b6e5307852fa21907847fce64d6c84d98416e",
+   "twin": "work:c005/twins/a0501ac0fcb0.x3d"
+  },
+  {
+   "event": "ev-5719c226af1b",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-1f0c9eb1771b.x3d",
+   "note": "value: Transform@scale <- ' \"1 1e 1\" ' (live: '\"1 1e 1\"' failed here)",
+   "receipt": null,
+   "sha256": "1f0c9eb1771bc418082cbaede632bd3c679b3ec6335e4bb535b727f4abc4ae1d",
+   "twin": "work:c005/twins/a0501ac0fcb0.x3d"
+  },
+  {
+   "event": "ev-e15ab8f01912",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-f6c461f9eceb.x3d",
+   "note": "value: Transform@scale <- '\"\"1 1e 1\"\"' (live: '\"1 1e 1\"' failed here)",
+   "receipt": null,
+   "sha256": "f6c461f9eceb74fcacedeb4ada1a2a1d5aef9cd0481815e4b315cebc31d98e42",
+   "twin": "work:c005/twins/a0501ac0fcb0.x3d"
+  },
+  {
+   "event": "ev-daf0fd7f6a91",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-5ab21200cc69.x3d",
+   "note": "confirm: Transform@scale <- '\"1 1e 1\"'",
+   "receipt": null,
+   "sha256": "5ab21200cc698e621db2a6ebb29acaaf7543c5d727722350df1b63f56c0646fc",
+   "twin": "work:c005/twins/9db8e93271e6.x3d"
+  },
+  {
+   "event": "ev-d7cd9ec11467",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-8b901e861432.x3d",
+   "note": "confirm: Transform@scale <- '\"1 1e 1\"'",
+   "receipt": null,
+   "sha256": "8b901e861432f0b9a83054531107a69f7ac32bd9b381d556c1ff332b8c76dd59",
+   "twin": "work:c005/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-bcc18bf03288",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-36d158134718.x3d",
+   "note": "confirm: Transform@scale <- '\"1 1e 1\"'",
+   "receipt": null,
+   "sha256": "36d158134718f760217c3fc51c0cea577f9ab73752687a06c6afb72a722fe058",
+   "twin": "work:c005/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-5c5376b61f05",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-25dfb8c9dff6.x3d",
+   "note": "confirm: Transform@scale <- '\"1 1e 1\"'",
+   "receipt": null,
+   "sha256": "25dfb8c9dff64b3854930b306b4a0766831f4cedc69da100ed31ee4cc344971a",
+   "twin": "work:c005/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-550386868b17",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-c042aecd7663.x3d",
+   "note": "alternate:2: Transform@scale <- '\"\"1 1e 1\"\"' (live: '\"1 1e 1\"' failed here)",
+   "receipt": null,
+   "sha256": "c042aecd7663d2703d0d50a5366d86020e3e13ff2b8db724fc4de86728279df1",
+   "twin": "work:c005/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-fafccaa2da77",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-0a2bf93793dc.x3d",
+   "note": "alternate:3: Transform@scale <- '\"1 1E 1\"' (live: '\"1 1e 1\"' failed here)",
+   "receipt": null,
+   "sha256": "0a2bf93793dcaf3150f06524e3451c422efa371fc9095949c51efd054da18431",
+   "twin": "work:c005/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-692009717339",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-036190c113a5.x3d",
+   "note": "value: Transform@scale <- ' \"1 1e 1\" ' (live: '\"1 1e 1\"' failed here)",
+   "receipt": null,
+   "sha256": "036190c113a534c04008495821d359e48468a72a5f2a91ce40f3d045733fbb24",
+   "twin": "work:c005/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-67b0f148d7b4",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-45be47d6d492.x3d",
+   "note": "value: Transform@scale <- '\"\"1 1e 1\"\"' (live: '\"1 1e 1\"' failed here)",
+   "receipt": null,
+   "sha256": "45be47d6d4922512edd8ae18f09e77037b72e2e8a563095a57b74f4a62ecdc84",
+   "twin": "work:c005/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-fb5a5c55e206",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-32c9d608589e.x3d",
+   "note": "value: Transform@scale <- '\"\"1 1e 1\"\"' (live: '\"1 1e 1\"' failed here)",
+   "receipt": null,
+   "sha256": "32c9d608589e58324ab4a3523ccb3129c31b229d09dbbe1b2c59a7097626d598",
+   "twin": "work:c005/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-2bf6d33365e5",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-ea62378fa8c0.x3d",
+   "note": "value: Transform@scale <- ' \"1 1e 1\" ' (live: '\"1 1e 1\"' failed here)",
+   "receipt": null,
+   "sha256": "ea62378fa8c0ccd1b2a40efb4aca250a0b86915bad3d183e7665ba87173aa41e",
+   "twin": "work:c005/twins/9db8e93271e6.x3d"
+  },
+  {
+   "event": "ev-1767bff85358",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-5c43db62d4e8.x3d",
+   "note": "value: Transform@scale <- '\"\"1 1e 1\"\"' (live: '\"1 1e 1\"' failed here)",
+   "receipt": null,
+   "sha256": "5c43db62d4e82a3ac65aac1b4c0e5fc4617a0cbdd24e03ffa121861f313c99fa",
+   "twin": "work:c005/twins/9db8e93271e6.x3d"
+  },
+  {
+   "event": "ev-54c8f34cedbe",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-a917ed09e0d4.x3d",
+   "note": "confirm: Transform@scale <- '1 1e 1'",
+   "receipt": null,
+   "sha256": "a917ed09e0d413c67095e8d3b16ec8dd9766ccb5e8895d8625af900823925c63",
+   "twin": "work:c005/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-7d19abb472e9",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-78677d0eed1b.x3d",
+   "note": "confirm: Transform@scale <- ' \"1 1e 1\" '",
+   "receipt": null,
+   "sha256": "78677d0eed1b22da2e4290c68b71715019415af217e24c91948589fc2ae7caee",
+   "twin": "work:c005/twins/22cff5016a67.x3d"
+  },
+  {
+   "event": "ev-9bd7cb080878",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-8390252f8c19.x3d",
+   "note": "confirm: Transform@scale <- '1 1e 1'",
+   "receipt": null,
+   "sha256": "8390252f8c19910450a80e0ed68a5feefa8948b39dfcb7b4eb0275c88103432a",
+   "twin": "work:c005/twins/0b72840615c1.x3d"
+  },
+  {
+   "event": "ev-f32962bc29bc",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-b6d3d49617ed.x3d",
+   "note": "confirm: Transform@scale <- ' 1 1e 1 '",
+   "receipt": null,
+   "sha256": "b6d3d49617edd22a70f2aff4039393d0fa36b8cabd700eddeb69646523ca0ec5",
+   "twin": "work:c005/twins/1ff03afbf828.x3d"
+  },
+  {
+   "event": "ev-173adcb6d2ae",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-b07b9fac0768.x3d",
+   "note": "confirm: Transform@scale <- ' \"1 1e 1\" '",
+   "receipt": null,
+   "sha256": "b07b9fac0768ddea6ad3477647774a52fd2e8138d0d4a39ef1fc2fe72d36d358",
+   "twin": "work:c005/twins/a0501ac0fcb0.x3d"
+  },
+  {
+   "event": "ev-d6d263eadb22",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-e81ede32bd34.x3d",
+   "note": "value: Transform@scale <- '  1 1e 1  ' (live: ' 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "e81ede32bd34f5412eadadb8a9811c86aca0570e21adc59b8c517467b3e1fc4c",
+   "twin": "work:c005/twins/1ff03afbf828.x3d"
+  },
+  {
+   "event": "ev-9c3ef5975fb7",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-506f9834ed78.x3d",
+   "note": "confirm: Transform@scale <- ' \"1 1e 1\" '",
+   "receipt": null,
+   "sha256": "506f9834ed7856a160745a10c043fb94596511406ef1b52e847fc945c21a4be3",
+   "twin": "work:c005/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-d7ffddddb2ac",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-52e031fa8400.x3d",
+   "note": "value: Transform@scale <- '  \"1 1e 1\"  ' (live: ' \"1 1e 1\" ' failed here)",
+   "receipt": null,
+   "sha256": "52e031fa8400cc7eea9dd5fd49dfeb8900d65baddb57e5c81954eb4a49e83f3b",
+   "twin": "work:c005/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-7afb9577cb4a",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-54bb256f7bbe.x3d",
+   "note": "value: Transform@scale <- ' \"1 1E 1\" ' (live: ' \"1 1e 1\" ' failed here)",
+   "receipt": null,
+   "sha256": "54bb256f7bbe06690e15f6a61e82278f84b311c52c402868c9f1f764f7323456",
+   "twin": "work:c005/twins/a865682fa1ca.x3d"
+  }
+ ],
+ "sources_total": 27,
+ "status": "candidate"
+}

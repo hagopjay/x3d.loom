@@ -1,0 +1,637 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "7 audit probe(s) and 3+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "S",
+  "grade_word": "Suspected",
+  "missed_seen": 13,
+  "reasons": [
+   "2 audit prediction(s) were wrong: the rule fired and the instrument passed"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-eac8fb7c9a21",
+ "instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "ge:max_abs:1e+39",
+    "failures_explained_without_it": 45,
+    "false_alarms_without_it": 213,
+    "role": "test"
+   },
+   {
+    "dropped": "anc:Group",
+    "failures_explained_without_it": 90,
+    "false_alarms_without_it": 14,
+    "role": "context"
+   },
+   {
+    "dropped": "(the list of 2 places)",
+    "failures_explained_without_it": 41,
+    "false_alarms_without_it": 10,
+    "role": "fence"
+   }
+  ],
+  "alternates": [],
+  "audit": {
+   "caught_by_sibling_rule": 43,
+   "confirmed": 26,
+   "missed": 7,
+   "missed_examples": [
+    "bisect: Transform@scale <- max_abs near 4.21697e+35",
+    "widen: Transform@translation <- '\"\"0 6.6999999999999995e+38 0\"\"'",
+    "widen: Transform@rotation <- '\"0 1 INF\" \"0 1 INF\"'",
+    "alternate:0: Transform@translation <- '\"0 5.05e+38 0\"' (live: '0 5.05e+38 0' failed here)",
+    "alternate:0: Transform@translation <- '\"0 5.05e+38 0\"' (live: '0 5.05e+38 0' failed here)"
+   ],
+   "other_failure": 0,
+   "probes": 139,
+   "refuted": 2,
+   "refuted_examples": [
+    "value: Transform@scale <- '\" 0 1E39 0 \"' (live: ' 0 1E39 0 ' failed here)",
+    "near: Transform@translation <- '\" 0 1E39 0 \"' (live: ' 0 1E39 0 ' failed here)"
+   ],
+   "silent_ok": 61
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 41
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 572,
+   "failures": 6,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [
+    "num_extreme: X3D/Scene/Transform#OB_Root rotation: token 1 0 -> INF",
+    "num_extreme: X3D/Scene/Transform#OB_Copy2 translation: token 0 4 -> -1e39",
+    "num_extreme: X3D/Scene/Transform#OB_PartSource translation: token 0 0 -> NaN"
+   ],
+   "passing_files": 1409
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+  "intervals": [
+   {
+    "first_failing": 1e+39,
+    "last_passing": 1.778279410038931e+32,
+    "literal": "ge:max_abs:1e+39",
+    "number": "max_abs",
+    "passing_values_compared": 770,
+    "untested": [
+     1.778279410038931e+32,
+     1e+39
+    ]
+   }
+  ],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1886
+  },
+  "normative_reading": [],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 49,
+    "round": 1,
+    "rules_tested": [
+     "attr[ge:max_abs:1e+39 & at:Transform@translation & e.child:Shape]"
+    ],
+    "tally": {
+     "alternate/confirmed": 6,
+     "bisect/silent-ok": 6,
+     "confirm/confirmed": 8,
+     "confirm/refuted": 2,
+     "near/missed": 1,
+     "value/confirmed": 8,
+     "value/no-verdict": 2,
+     "widen/missed": 2,
+     "widen/silent-ok": 14
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 97,
+    "round": 2,
+    "rules_tested": [
+     "attr[ge:max:1e+39 & at:Transform@translation]",
+     "attr[v:nonfinite & e.child:Shape & e.has:DEF & (at:Transform@scale | at:Transform@translation)]",
+     "attr[v:inf & at:Transform@translation & p:Group]"
+    ],
+    "tally": {
+     "alternate/confirmed": 1,
+     "bisect/missed": 6,
+     "confirm/confirmed": 20,
+     "confirm/refuted": 3,
+     "near/missed": 2,
+     "value/confirmed": 19,
+     "value/no-verdict": 11,
+     "widen/silent-ok": 35
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 114,
+    "round": 3,
+    "rules_tested": [
+     "attr[ge:max_abs:1e+39 & !p:Scene & at:Transform@translation]",
+     "attr[v:lexical_invalid & !e.has:rotation & e.has:DEF & (at:Transform@scale | at:Transform@translation)]",
+     "attr[v:quoted & e.child:Shape & ntok:3 & (at:Transform@scale | at:Transform@translation)]"
+    ],
+    "tally": {
+     "alternate/missed": 1,
+     "alternate/no-verdict": 5,
+     "bisect/silent-ok": 6,
+     "confirm/confirmed": 20,
+     "confirm/refuted": 4,
+     "value/confirmed": 21,
+     "value/no-verdict": 7,
+     "value/refuted": 2,
+     "widen/silent-ok": 48
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 147,
+    "round": "audit",
+    "rules_tested": [
+     "attr[ge:max_abs:1e+39 & anc:Group & (at:Transform@scale | at:Transform@translation)]",
+     "attr[ge:max_abs:5.05e+38 & e.child:Shape & e.has:DEF & (at:Transform@scale | at:Transform@translation)]",
+     "attr[v:lexical_invalid & !e.has:rotation & at:Transform@scale]",
+     "attr[v:float_overflow32 & !p:Scene & !v:lexical_invalid & at:Transform@translation]"
+    ],
+    "tally": {
+     "alternate/confirmed": 2,
+     "alternate/missed": 4,
+     "bisect/confirmed": 6,
+     "bisect/missed": 1,
+     "bisect/silent-ok": 2,
+     "confirm/confirmed": 28,
+     "confirm/refuted": 3,
+     "near/no-verdict": 6,
+     "near/refuted": 1,
+     "near/silent-ok": 1,
+     "value/confirmed": 33,
+     "value/no-verdict": 2,
+     "value/refuted": 1,
+     "widen/missed": 2,
+     "widen/silent-ok": 55
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "ge:max_abs:1e+39",
+    "anc:Group"
+   ],
+   "any": [
+    "at:Transform@scale",
+    "at:Transform@translation"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-eac8fb7c9a21",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Transform@scale",
+   "Transform@translation"
+  ],
+  "sentence": "At one attribute where it sits inside a Group: the largest magnitude is at least 1e+39, at one of 2 places (Transform scale, Transform translation).",
+  "signature": "RuntimeError at matrix_safety.py:47 inverted64",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 90,
+   "explained_by_this_rule": 41,
+   "failures": 119,
+   "families": {
+    "chaos-differential": 4,
+    "r2r-probe": 115
+   },
+   "observed_by": {
+    "tool": 119
+   },
+   "with_known_good_twin": 119
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed ge:max_abs:1e+39, fenced to 3 place(s): explains 91, false alarms 14",
+   "+ anc:Group: explains 41, false alarms 0 (gain 8.46)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 10,
+   "rule": {
+    "all": [
+     "ge:max_abs:1e+39",
+     "anc:Group"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "ge:max_abs:1e+39",
+   "anc:Group"
+  ],
+  "any": [
+   "at:Transform@scale",
+   "at:Transform@translation"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where it sits inside a Group: the largest magnitude is at least 1e+39, at one of 2 places (Transform scale, Transform translation).",
+ "signature": "RuntimeError at matrix_safety.py:47 inverted64",
+ "sources": [
+  {
+   "event": "ev-d1444867a4cb",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-583a29577568.x3d",
+   "note": "confirm: Transform@translation <- '0 1e39 0'",
+   "receipt": null,
+   "sha256": "583a2957756855eb39b5eb2d7691f7df5f8f2a266334267af07ca5f81f6cdce9",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-eb1431826b55",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-2d21c994351b.x3d",
+   "note": "confirm: Transform@translation <- '0 INF 0'",
+   "receipt": null,
+   "sha256": "2d21c994351b74c937a5ce466ac037b37a095f49c6379c2a44f8a1c9c07264fd",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-75081b4c5f30",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-7ef0f787e412.x3d",
+   "note": "alternate:0: Transform@translation <- '\"0 1e39 0\"' (live: '0 1e39 0' failed here)",
+   "receipt": null,
+   "sha256": "7ef0f787e412a5b9f19e2b3a6d2a4598f0c89e32dcde7d3545a9fdfbce70c66d",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-0fd73085cb21",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-d425aba4c52a.x3d",
+   "note": "alternate:0: Transform@translation <- '\"0 INF 0\"' (live: '0 INF 0' failed here)",
+   "receipt": null,
+   "sha256": "d425aba4c52a1f0c5788ec56934719f0a0d5e520ec620ff81cbe60cc38372dd3",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-1f2b5f7eceb7",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-52a6fabfb0b2.x3d",
+   "note": "value: Transform@translation <- '0 1E39 0' (live: '0 1e39 0' failed here)",
+   "receipt": null,
+   "sha256": "52a6fabfb0b2258a5ab4c017f37c925c8bdefdb0beae9c83f73d52b1535a36c9",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-aa9f35aef949",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-1ac9b4e9c6ed.x3d",
+   "note": "value: Transform@translation <- ' 0 1e39 0 ' (live: '0 1e39 0' failed here)",
+   "receipt": null,
+   "sha256": "1ac9b4e9c6ed5216af48fd08e0caf20a9396850d98bd02b847ebc2a780ecf748",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-9e4d7d89945c",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-e639ab9066e6.x3d",
+   "note": "value: Transform@translation <- '0 inf 0' (live: '0 INF 0' failed here)",
+   "receipt": null,
+   "sha256": "e639ab9066e62d78cd5db7e5828ce09bd1907f67642fc2aa9f7d522f04538cd1",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-8829804b82ec",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-10c6c5d7ee2f.x3d",
+   "note": "confirm: Transform@translation <- '0 1e39 0'",
+   "receipt": null,
+   "sha256": "10c6c5d7ee2f34cef27bc48d79e8c51815a76cf75f2475f4c57cda5b4971be70",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-89a46fc7a144",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-96109c3f034c.x3d",
+   "note": "confirm: Transform@translation <- ' 0 1e39 0 '",
+   "receipt": null,
+   "sha256": "96109c3f034c462e4821ea03799f44312d7de39cfd471daba4aaddb097f6703f",
+   "twin": "work:c004/twins/aaddfad27ab0.x3d"
+  },
+  {
+   "event": "ev-e5096543859e",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-8294d2bdd93f.x3d",
+   "note": "value: Transform@translation <- ' 0 1E39 0 ' (live: ' 0 1e39 0 ' failed here)",
+   "receipt": null,
+   "sha256": "8294d2bdd93fbdc7fb264bc45c7a5e0d54c301e5894d29b1b7d39ed18d4f255d",
+   "twin": "work:c004/twins/aaddfad27ab0.x3d"
+  },
+  {
+   "event": "ev-d10c8b7c62fc",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-6ab302fcb905.x3d",
+   "note": "value: Transform@translation <- '\"0 1e39 0\"' (live: '0 1e39 0' failed here)",
+   "receipt": null,
+   "sha256": "6ab302fcb90505755df95bb6462f784a48ad10292c3a693d567eb2a1e7a5020d",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-83a3a24915a1",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-bca0e6ffb2b5.x3d",
+   "note": "confirm: Transform@translation <- '\"0 INF 0\"'",
+   "receipt": null,
+   "sha256": "bca0e6ffb2b502aaa2a21a7f3562277a60bbc1b3e239d90e0504cc2f461a3d95",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-55fe314c91a4",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-c1c6a319f706.x3d",
+   "note": "confirm: Transform@translation <- '\"0 INF 0\"'",
+   "receipt": null,
+   "sha256": "c1c6a319f7068ea5d26d84b7c20b46ce3a1a8ca0e6de7fa54c634d8c126b40fb",
+   "twin": "work:c004/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-0fc663b1aeb7",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-c48ca3d16da8.x3d",
+   "note": "confirm: Transform@translation <- '\"0 INF 0\"'",
+   "receipt": null,
+   "sha256": "c48ca3d16da81d01c328b42fe309ec08edca431eb7d31c1584444298e4773946",
+   "twin": "work:c004/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-81b4c3263255",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-d282da30533c.x3d",
+   "note": "confirm: Transform@translation <- '\"0 INF 0\"'",
+   "receipt": null,
+   "sha256": "d282da30533c039c280bd66c3cf707c38b31764e02d6b9753313f3d75979dab4",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-0ce518ca5d41",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-6a21d8ae2d0f.x3d",
+   "note": "confirm: Transform@translation <- '\"0 INF 0\"'",
+   "receipt": null,
+   "sha256": "6a21d8ae2d0f2f88f07a0dcf69180d238ffd7825d2c2b1a8e178ee127f07d197",
+   "twin": "work:c004/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-980ddfef0ea0",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-e53d460c9020.x3d",
+   "note": "confirm: Transform@translation <- '0 INF 0'",
+   "receipt": null,
+   "sha256": "e53d460c902007d92b433eb3ce98171189ab0892ce2eed874809b1fa1603c728",
+   "twin": "work:c004/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-48194d92b976",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-c81245e57812.x3d",
+   "note": "confirm: Transform@translation <- '0 INF 0'",
+   "receipt": null,
+   "sha256": "c81245e57812735fa68e02336b88a474507bf25b4a2788a84800bc54950452a8",
+   "twin": "work:c004/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-92c420443be1",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-0e784da5f9e0.x3d",
+   "note": "confirm: Transform@translation <- '\"0 INF 0\"'",
+   "receipt": null,
+   "sha256": "0e784da5f9e034c274a6c7489e104d227b307b436e40393b958ec122ade97d65",
+   "twin": "work:c004/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-f59761909136",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-45d981b5b142.x3d",
+   "note": "confirm: Transform@translation <- '0 INF 0'",
+   "receipt": null,
+   "sha256": "45d981b5b1424be50a4a939a1974b226f1f9f310d8f115e0be49752671857bbc",
+   "twin": "work:c004/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-c9809de4f7ce",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-f8d76917b948.x3d",
+   "note": "confirm: Transform@translation <- '0 inf 0'",
+   "receipt": null,
+   "sha256": "f8d76917b9481ec427f37717ffe2bdead52a74ef34a62e62e6e8df06b8572a59",
+   "twin": "work:c004/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-5d417609f986",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-0b918430b7d0.x3d",
+   "note": "value: Transform@translation <- '\"\"0 INF 0\"\"' (live: '\"0 INF 0\"' failed here)",
+   "receipt": null,
+   "sha256": "0b918430b7d0622f004c1006a58afb645821cbc21bc99e8d81e918ffef599493",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-48dd6ef18254",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-2cbbc2f83a09.x3d",
+   "note": "value: Transform@translation <- ' \"0 INF 0\" ' (live: '\"0 INF 0\"' failed here)",
+   "receipt": null,
+   "sha256": "2cbbc2f83a09dc5c85a79f662529cc43a7a0c557d42e09f903f34c7cb7fb192e",
+   "twin": "work:c004/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-e6e02f82d8eb",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-0f74d46ebf12.x3d",
+   "note": "value: Transform@translation <- '0 Inf 0' (live: '0 INF 0' failed here)",
+   "receipt": null,
+   "sha256": "0f74d46ebf12f37b678c620c5dca94d685130a0b7506b75789a48cf80dee5e38",
+   "twin": "work:c004/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-94b67eb05408",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-1e2e0073a92f.x3d",
+   "note": "value: Transform@translation <- '\"\"0 INF 0\"\"' (live: '\"0 INF 0\"' failed here)",
+   "receipt": null,
+   "sha256": "1e2e0073a92fd6244ec5064f71774ad075026dc34e4dc30fd628bd9af631459d",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-46154ee98c46",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-34542ef7dd5a.x3d",
+   "note": "value: Transform@translation <- '0 inf 0' (live: '0 INF 0' failed here)",
+   "receipt": null,
+   "sha256": "34542ef7dd5ad8276ec6c5b89c04a263e09132c17ac063ab9e0538f2949e9a8e",
+   "twin": "work:c004/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-849303c9f2cf",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-1659a1077799.x3d",
+   "note": "value: Transform@translation <- '\"0 inf 0\"' (live: '\"0 INF 0\"' failed here)",
+   "receipt": null,
+   "sha256": "1659a1077799c5cffcdf64a1eb372d7bc0d3a503c629232223dc353575546365",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-1adeeba2d0c3",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-5bb6c7962f38.x3d",
+   "note": "confirm: Transform@translation <- '\"0 inf 0\"'",
+   "receipt": null,
+   "sha256": "5bb6c7962f389f255740973b4f941d94b0233c1af61d6c0d33118d32b2bbcb27",
+   "twin": "work:c004/twins/8b209fda2eb1.x3d"
+  },
+  {
+   "event": "ev-64408535d542",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-02c460a6b46f.x3d",
+   "note": "confirm: Transform@translation <- ' 0 1E39 0 '",
+   "receipt": null,
+   "sha256": "02c460a6b46f0715f2476d3c2229c22c107f06bc53858b7cf284b96c9f68de12",
+   "twin": "work:c004/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-8d5a45287464",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-b9dee276c735.x3d",
+   "note": "confirm: Transform@translation <- '0 1e39 0'",
+   "receipt": null,
+   "sha256": "b9dee276c73530e4ac1c8a454db83f1d9c2816cabd46e8292fa570e7ddfcc57d",
+   "twin": "work:c004/twins/aaddfad27ab0.x3d"
+  },
+  {
+   "event": "ev-5b7883d735fc",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-5efb49caaca1.x3d",
+   "note": "confirm: Transform@translation <- '0 1e39 0'",
+   "receipt": null,
+   "sha256": "5efb49caaca1990a5b4f1a6b22fb9c9ea287d2c84221242d463eb1dd07078fa8",
+   "twin": "work:c004/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-faaab018ddcb",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-9bec83c2e6f7.x3d",
+   "note": "confirm: Transform@translation <- ' \"0 INF 0\" '",
+   "receipt": null,
+   "sha256": "9bec83c2e6f72d60e1b61d1bf510c7b9eadd05e9a0e86593e63b9cb4789a13e0",
+   "twin": "work:c004/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-5b15b734434c",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-c0f1f56ab78a.x3d",
+   "note": "confirm: Transform@translation <- '\"0 inf 0\"'",
+   "receipt": null,
+   "sha256": "c0f1f56ab78a83bef6c51325cbdb5d696b36e9746d3a1be98054fc84c955b1c3",
+   "twin": "work:c004/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-b8c9e20a2f34",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-2317a02f24e8.x3d",
+   "note": "confirm: Transform@translation <- '\"0 1e39 0\"'",
+   "receipt": null,
+   "sha256": "2317a02f24e8a88562f37fe4e4bc481f347868a22ccc3c384d20864d56f0764a",
+   "twin": "work:c004/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-873289840b3c",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-57fe368f95c2.x3d",
+   "note": "confirm: Transform@translation <- '\"0 inf 0\"'",
+   "receipt": null,
+   "sha256": "57fe368f95c2bf219fd157e931e0a8f9253e103b27a2b9cdfdc04cd6ebea8dbb",
+   "twin": "work:c004/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-87883c1cb25c",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-8979d40159a3.x3d",
+   "note": "value: Transform@translation <- '\"0 INF 0\"' (live: '\"0 inf 0\"' failed here)",
+   "receipt": null,
+   "sha256": "8979d40159a36022a8041755a62542628957e76e10ce304f7c29e4e2a0897612",
+   "twin": "work:c004/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-e5706f066ee8",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-bbcf99bbef78.x3d",
+   "note": "value: Transform@translation <- '\"\"0 inf 0\"\"' (live: '\"0 inf 0\"' failed here)",
+   "receipt": null,
+   "sha256": "bbcf99bbef78e7e7ae9deab68f8ed62e3f7319b2e2b9199e84c47aa1a2c3754b",
+   "twin": "work:c004/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-780ba871d938",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-d8c9d721b68c.x3d",
+   "note": "value: Transform@translation <- '\"\"0 inf 0\"\"' (live: '\"0 inf 0\"' failed here)",
+   "receipt": null,
+   "sha256": "d8c9d721b68cfdebe75aae0a348210ae3111b344ede2b5f8ca33ab80f3bfad73",
+   "twin": "work:c004/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-341eaba545c6",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-4088cd97a48a.x3d",
+   "note": "confirm: Transform@translation <- '\"0 1e39 0\"'",
+   "receipt": null,
+   "sha256": "4088cd97a48a611c1a8906c897ffb81b1c9ca4eaafb829ccdf9523bfab34cd09",
+   "twin": "work:c004/twins/b5f1a2bac5d6.x3d"
+  },
+  {
+   "event": "ev-ce51e46cdcb1",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-528631fc4d48.x3d",
+   "note": "confirm: Transform@scale <- '\"0 INF 0\"'",
+   "receipt": null,
+   "sha256": "528631fc4d48f023496bae017a53aa76bc9bbaa5a93b04d40a0754397e5e80c2",
+   "twin": "work:c004/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-c9fe6a01dd8f",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-2f2bac81a50c.x3d",
+   "note": "value: Transform@scale <- '\"\"0 INF 0\"\"' (live: '\"0 INF 0\"' failed here)",
+   "receipt": null,
+   "sha256": "2f2bac81a50cc65fa2224ea402e827fe5bae9012cec09ebcd46b8927362922d8",
+   "twin": "work:c004/twins/54cc72ab3816.x3d"
+  }
+ ],
+ "sources_total": 41,
+ "status": "candidate"
+}
