@@ -1,0 +1,899 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "1 audit probe(s) and 0+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "C",
+  "grade_word": "Confirmed",
+  "missed_seen": 1,
+  "reasons": [
+   "20 audit probe(s) confirmed, 0 refuted",
+   "0 false alarms in 2297 known-good files"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-cbf17e0bb9ea",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "v:inf",
+    "failures_explained_without_it": 62,
+    "false_alarms_without_it": 186,
+    "role": "test"
+   },
+   {
+    "dropped": "!v:arity_mismatch",
+    "failures_explained_without_it": 62,
+    "false_alarms_without_it": 14,
+    "role": "guard"
+   },
+   {
+    "dropped": "(the list of 2 places)",
+    "failures_explained_without_it": 62,
+    "false_alarms_without_it": 41,
+    "role": "fence"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "ge:max_abs:inf",
+      "!v:arity_mismatch"
+     ],
+     "any": [
+      "at:GeoViewpoint@fieldOfView",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: the largest magnitude is at least inf, at one of 2 places (GeoViewpoint fieldOfView, Viewpoint fieldOfView), unless the value has the wrong number of components for its field type."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:inf",
+      "ntok:1"
+     ],
+     "any": [
+      "at:GeoViewpoint@fieldOfView",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 1 token(s): a number is infinite, at one of 2 places (GeoViewpoint fieldOfView, Viewpoint fieldOfView)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:nonfinite",
+      "!v:arity_mismatch"
+     ],
+     "any": [
+      "at:GeoViewpoint@fieldOfView",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: a number is NaN or infinite, at one of 2 places (GeoViewpoint fieldOfView, Viewpoint fieldOfView), unless the value has the wrong number of components for its field type."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max_abs:inf",
+      "ntok:1"
+     ],
+     "any": [
+      "at:GeoViewpoint@fieldOfView",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 1 token(s): the largest magnitude is at least inf, at one of 2 places (GeoViewpoint fieldOfView, Viewpoint fieldOfView)."
+   },
+   {
+    "rule": {
+     "all": [
+      "le:ntok:1",
+      "v:inf"
+     ],
+     "any": [
+      "at:GeoViewpoint@fieldOfView",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: the number of tokens is at most 1 and a number is infinite, at one of 2 places (GeoViewpoint fieldOfView, Viewpoint fieldOfView)."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max_abs:inf",
+      "le:ntok:1"
+     ],
+     "any": [
+      "at:GeoViewpoint@fieldOfView",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: the largest magnitude is at least inf and the number of tokens is at most 1, at one of 2 places (GeoViewpoint fieldOfView, Viewpoint fieldOfView)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:nonfinite",
+      "ntok:1"
+     ],
+     "any": [
+      "at:GeoViewpoint@fieldOfView",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 1 token(s): a number is NaN or infinite, at one of 2 places (GeoViewpoint fieldOfView, Viewpoint fieldOfView)."
+   },
+   {
+    "rule": {
+     "all": [
+      "le:ntok:1",
+      "v:nonfinite"
+     ],
+     "any": [
+      "at:GeoViewpoint@fieldOfView",
+      "at:Viewpoint@fieldOfView"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: the number of tokens is at most 1 and a number is NaN or infinite, at one of 2 places (GeoViewpoint fieldOfView, Viewpoint fieldOfView)."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 20,
+   "missed": 1,
+   "missed_examples": [
+    "near: Viewpoint@fieldOfView <- ' Inf , Inf ' (live: ' Inf ' failed here)"
+   ],
+   "other_failure": 286,
+   "probes": 558,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 251
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 60
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1416
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 2297
+  },
+  "normative_reading": [
+   {
+    "literal": "v:lexical_invalid",
+    "means": "the value does not have the written form its field type requires",
+    "passing_files_with_it_inside_the_fence": 25
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 42,
+    "round": 1,
+    "rules_tested": [
+     "attr[v:inf & at:Viewpoint@fieldOfView]"
+    ],
+    "tally": {
+     "alternate/refuted": 4,
+     "alternate/silent-ok": 2,
+     "confirm/confirmed": 10,
+     "value/confirmed": 10,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 44,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:inf & at:Viewpoint@fieldOfView & ntok:1]"
+    ],
+    "tally": {
+     "confirm/confirmed": 10,
+     "near/silent-ok": 8,
+     "value/confirmed": 10,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 15
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 44,
+    "round": 3,
+    "rules_tested": [
+     "attr[v:inf & !v:arity_mismatch & at:Viewpoint@fieldOfView]"
+    ],
+    "tally": {
+     "confirm/confirmed": 10,
+     "near/silent-ok": 8,
+     "value/confirmed": 10,
+     "widen/missed": 1,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 14
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 44,
+    "round": "audit",
+    "rules_tested": [
+     "attr[v:inf & !v:arity_mismatch & (at:GeoViewpoint@fieldOfView | at:Viewpoint@fieldOfView)]"
+    ],
+    "tally": {
+     "confirm/confirmed": 10,
+     "near/missed": 1,
+     "near/silent-ok": 7,
+     "value/confirmed": 10,
+     "widen/silent-ok": 16
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "v:inf",
+    "!v:arity_mismatch"
+   ],
+   "any": [
+    "at:GeoViewpoint@fieldOfView",
+    "at:Viewpoint@fieldOfView"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-cbf17e0bb9ea",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "GeoViewpoint@fieldOfView",
+   "Viewpoint@fieldOfView"
+  ],
+  "sentence": "At one attribute: a number is infinite, at one of 2 places (GeoViewpoint fieldOfView, Viewpoint fieldOfView), unless the value has the wrong number of components for its field type.",
+  "signature": "ValueError at viewpoint_fov.py:42 blender_camera_angle",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 62,
+   "explained_by_this_rule": 62,
+   "failures": 62,
+   "families": {
+    "chaos-differential": 1,
+    "r2r-probe": 61
+   },
+   "observed_by": {
+    "tool": 62
+   },
+   "with_known_good_twin": 62
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed v:inf, fenced to 2 place(s): explains 62, false alarms 14",
+   "+ !v:arity_mismatch: explains 62, false alarms 0 (gain 18.21)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 41,
+   "rule": {
+    "all": [
+     "v:inf",
+     "!v:arity_mismatch"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "v:inf",
+   "!v:arity_mismatch"
+  ],
+  "any": [
+   "at:GeoViewpoint@fieldOfView",
+   "at:Viewpoint@fieldOfView"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute: a number is infinite, at one of 2 places (GeoViewpoint fieldOfView, Viewpoint fieldOfView), unless the value has the wrong number of components for its field type.",
+ "signature": "ValueError at viewpoint_fov.py:42 blender_camera_angle",
+ "sources": [
+  {
+   "event": "ev-9e4394f3175d",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/cameras__047__num_extreme.x3d",
+   "note": "num_extreme: X3D/Scene/Transform#OB_Persp/Viewpoint#CA_Persp fieldOfView: token 0 0.5632 -> INF",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 47
+   },
+   "sha256": "c1265097ebbc1c5b9f7a29684e42de1f2fa251b750152ddc2984af3cb9a72775",
+   "twin": "repos:x3d-blender-io/tests/golden/cameras.c14n.x3d"
+  },
+  {
+   "event": "ev-2945777dfce6",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-336bdf4be829.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "336bdf4be8292ab0e94f12ed1a8f119de6302a4d6b2f31f26fd33cb46085c386",
+   "twin": "work:c010/twins/0404539e6227.x3d"
+  },
+  {
+   "event": "ev-b3988f486e14",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-1495ade9f94b.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "1495ade9f94b78916dc908d95b69cacfb38214ceb926ebe8e1ae9ec6e275a226",
+   "twin": "work:c010/twins/67cf0c5dc6ee.x3d"
+  },
+  {
+   "event": "ev-2e41ef8a3ad8",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-a31a410a7374.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "a31a410a7374a0617d9f623a32fe994aa25af0ac9edff73db5ae0c595f7d0ce5",
+   "twin": "work:c010/twins/67cf0c5dc6ee.x3d"
+  },
+  {
+   "event": "ev-6e7d9234f46a",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-02cf788dad78.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "02cf788dad781010bf8c5596eb153f04b551f130394a800a3fef11904b62649b",
+   "twin": "work:c010/twins/a751905ca573.x3d"
+  },
+  {
+   "event": "ev-ce5d0ef0bec1",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-8a3f5699afbc.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "8a3f5699afbc47884c8939801e6c253efa16ec5e64e67d25897b29b3bc18ad54",
+   "twin": "work:c010/twins/da4f25821c06.x3d"
+  },
+  {
+   "event": "ev-b5a37c77fe13",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-367dd7e7e5b5.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "367dd7e7e5b59315835660d979103ef99d9a9440a96ab515d34dc513c94bd876",
+   "twin": "work:c010/twins/67cf0c5dc6ee.x3d"
+  },
+  {
+   "event": "ev-844cc07f4bba",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-d994ce84672a.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "d994ce84672a43e479c4f3d344aa081ec93e60740cab57a5331b0dbbfe55c870",
+   "twin": "work:c010/twins/8e76d7784854.x3d"
+  },
+  {
+   "event": "ev-e4702021970c",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-d41eb1f776eb.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "d41eb1f776ebc979a9589596e90e5c69d9f8d530ac271226729acbc8f5f1cd95",
+   "twin": "work:c010/twins/31aac1d6f6da.x3d"
+  },
+  {
+   "event": "ev-66e6a2de4f81",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-e898a07c735b.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "e898a07c735b70023f13f53ee68e27fdc8e4859d395bba179b90fa4436b0b094",
+   "twin": "work:c010/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-5ffacb0ece26",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-06b5724dc7dd.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "06b5724dc7dd0d14bd3aca00e133e4d8d29120ff2279eb047eebffb2b6711657",
+   "twin": "work:c010/twins/3329062423a7.x3d"
+  },
+  {
+   "event": "ev-a8ff08ec5f30",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-9f502f07aede.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'Inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "9f502f07aedee863c7306bca77aaed243936d68341b85fa2496a7214d53bfbc7",
+   "twin": "work:c010/twins/da4f25821c06.x3d"
+  },
+  {
+   "event": "ev-52e2ebc5b947",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-ebcd621e0759.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'Inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "ebcd621e0759e47390c73979027c679b02a0fd60e5fb6b9509dff8c7b385c5f5",
+   "twin": "work:c010/twins/67cf0c5dc6ee.x3d"
+  },
+  {
+   "event": "ev-90879ca60aae",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-138bdd4325b2.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "138bdd4325b2bf76e3ad9c7c181e0b2ce2804924043613ee26b59c89e1c0a1d0",
+   "twin": "work:c010/twins/a751905ca573.x3d"
+  },
+  {
+   "event": "ev-189fc8bbd5ae",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-8bc30bd91647.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "8bc30bd916474b0f6deb3c3788c3debd4b48e07588637f7490f7d09966e65b29",
+   "twin": "work:c010/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-f319f9de5c63",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-f63639907296.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "f636399072962c27938731be65d3c3b456e17382ea1c66c73abc4a9fb10da38a",
+   "twin": "work:c010/twins/67cf0c5dc6ee.x3d"
+  },
+  {
+   "event": "ev-97d4f5a1341c",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-c48db5d91195.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "c48db5d911952c7cf5fe6111e27302f22725674d6f4c2e44f96db5fa82ff92b8",
+   "twin": "work:c010/twins/67cf0c5dc6ee.x3d"
+  },
+  {
+   "event": "ev-6aac0dbe8f94",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-db81ab13834e.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'Inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "db81ab13834ef291180df8cebc23702fb3c78d215182bf2c822ba927b63fb8b6",
+   "twin": "work:c010/twins/67cf0c5dc6ee.x3d"
+  },
+  {
+   "event": "ev-c2e64522a6ae",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-f0755bb9179b.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'Inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "f0755bb9179b5b1d0757eb9c7349616ad25c5c199819dc0578d94e0f779baa76",
+   "twin": "work:c010/twins/a751905ca573.x3d"
+  },
+  {
+   "event": "ev-9ed8831a3f1d",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-b3839215568e.x3d",
+   "note": "value: Viewpoint@fieldOfView <- ' INF ' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "b3839215568e1ea23d4113d603bdd372ba295896c069b118358edb091f985813",
+   "twin": "work:c010/twins/31aac1d6f6da.x3d"
+  },
+  {
+   "event": "ev-fdb557020d0c",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round1-d8ed924b5263.x3d",
+   "note": "value: Viewpoint@fieldOfView <- ' INF ' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "d8ed924b5263858879f1d575a90b22e067431a16d4a2ec0ef974607167497ba3",
+   "twin": "work:c010/twins/a751905ca573.x3d"
+  },
+  {
+   "event": "ev-9ed8b3859e4b",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-1574ac0c2ba2.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'Inf'",
+   "receipt": null,
+   "sha256": "1574ac0c2ba2be417ebdbf488e84aed2d28843ca0dac4a661e3d7bbe2d243afa",
+   "twin": "work:c010/twins/3d232a7709be.x3d"
+  },
+  {
+   "event": "ev-9b89e6ce7d64",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-198a27e1adf0.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'Inf'",
+   "receipt": null,
+   "sha256": "198a27e1adf07607fbc4137384e57d0198362796d7ebe055bb354727499a70ee",
+   "twin": "work:c010/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-68dd6bc64cf4",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-88feb0cbc460.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'inf'",
+   "receipt": null,
+   "sha256": "88feb0cbc46037458a421fa5139040ba589ee8de66686f48751d1091dda8ebb0",
+   "twin": "work:c010/twins/8b933aff1e1d.x3d"
+  },
+  {
+   "event": "ev-b348a84e323c",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-438d4f3069b3.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'inf'",
+   "receipt": null,
+   "sha256": "438d4f3069b3e03a2bd55a4a59826970e3c5259ad7f36baa1d4b761af89e9260",
+   "twin": "work:c010/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-2a6d8e6482ed",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-09343772af3c.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'Inf'",
+   "receipt": null,
+   "sha256": "09343772af3c706252f0a8c96830fd5ad9077f02e2c0dd24d733d9f1810e0faa",
+   "twin": "work:c010/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-e0be5e9f085d",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-fb14fb4550e6.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "fb14fb4550e6383e09f3c72bb5c07e69890af20f9a45b7b436da5663c91fa4b7",
+   "twin": "work:c010/twins/67cf0c5dc6ee.x3d"
+  },
+  {
+   "event": "ev-6a3f4dbd8a06",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-c146e3e0c6d8.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- ' INF '",
+   "receipt": null,
+   "sha256": "c146e3e0c6d80228cad8ec2b559309ba0fb78862f678a3e712ec993a9862c135",
+   "twin": "work:c010/twins/01e857f27f6e.x3d"
+  },
+  {
+   "event": "ev-c1c0fc50b555",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-4bcda7409535.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'Inf'",
+   "receipt": null,
+   "sha256": "4bcda7409535fe80e0151132888b70fd6336481d5a256312937c715bd84d2116",
+   "twin": "work:c010/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-25f296efc0f3",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-ab25aa15f32c.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "ab25aa15f32cb0d051a26dd4ec2a0b962eae041789a56d3af93d5580c2c1f06c",
+   "twin": "work:c010/twins/0b72840615c1.x3d"
+  },
+  {
+   "event": "ev-03fb3a1725ce",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-430ba14d09d1.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "430ba14d09d133ec7f0ed3d8e3c9161450431a9be81464618f875c3c98de92a8",
+   "twin": "work:c010/twins/2b396ee243bb.x3d"
+  },
+  {
+   "event": "ev-e8e2c1d0b580",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-994ec35b34e2.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'Inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "994ec35b34e24e74cd2d5288df905ef3e641e5af97b0ff6a7e610f65c865ef64",
+   "twin": "work:c010/twins/2b396ee243bb.x3d"
+  },
+  {
+   "event": "ev-1d826724291d",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-8f5a2866bf57.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'INF' (live: 'Inf' failed here)",
+   "receipt": null,
+   "sha256": "8f5a2866bf578dc8b7235bef58962328cb19068651b42c35e098a07c88a9ee57",
+   "twin": "work:c010/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-62bbe4aca33e",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-6a560cc8a57e.x3d",
+   "note": "value: Viewpoint@fieldOfView <- ' inf ' (live: ' INF ' failed here)",
+   "receipt": null,
+   "sha256": "6a560cc8a57e175c5a764fedf79c02061dc34f99f78a2e4c9c6b03a25bcf1c92",
+   "twin": "work:c010/twins/01e857f27f6e.x3d"
+  },
+  {
+   "event": "ev-02f8891e3132",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-c16f09c35545.x3d",
+   "note": "value: Viewpoint@fieldOfView <- ' inf ' (live: 'inf' failed here)",
+   "receipt": null,
+   "sha256": "c16f09c35545832ebcb7fb993a84c087c6f87f21e6e406c32dff43bcf8685076",
+   "twin": "work:c010/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-eb3a7a944b21",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-97664aada5ee.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'inf' (live: 'Inf' failed here)",
+   "receipt": null,
+   "sha256": "97664aada5ee4f5f388ca3c7afcd061278d41b10944f926e3dcf7a8e33ecccbc",
+   "twin": "work:c010/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-2faa62711b9f",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-29191072e402.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'Inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "29191072e402c9d2236a712fa0d2273f885cfa22d59bb79c50c0f26f6f63317e",
+   "twin": "work:c010/twins/67cf0c5dc6ee.x3d"
+  },
+  {
+   "event": "ev-4efd23cfa152",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-4aa9914bf19d.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'inf' (live: 'Inf' failed here)",
+   "receipt": null,
+   "sha256": "4aa9914bf19db8d5351ce713b3ccff7a2539dfb13e6453a922cef0d49f10f376",
+   "twin": "work:c010/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-ac31406e8d66",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-416020e88663.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'INF' (live: 'Inf' failed here)",
+   "receipt": null,
+   "sha256": "416020e886638567ce0720a4307d212cd30b7081fcacbd613e2f332997a958df",
+   "twin": "work:c010/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-0f0cbe9ff6f9",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-e51e076a74a3.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "e51e076a74a34988ccf5f1da17e2e1b96e5d92ff86674473ecc0326aae7fe174",
+   "twin": "work:c010/twins/0b72840615c1.x3d"
+  },
+  {
+   "event": "ev-2ccfa03c02e1",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round2-cdfc5c45cf7c.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'INF' (live: 'Inf' failed here)",
+   "receipt": null,
+   "sha256": "cdfc5c45cf7cb2b738ec3cf14bb5a7a72c71ea6ef67a12cfd29180d384cb9a8a",
+   "twin": "work:c010/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-cd48f9f35cd3",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-1d2491e3c0ec.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- ' INF '",
+   "receipt": null,
+   "sha256": "1d2491e3c0ec3fea4e286539842324bd6f9f9b791f13f8c097e718a97ac82ec0",
+   "twin": "work:c010/twins/67cf0c5dc6ee.x3d"
+  },
+  {
+   "event": "ev-93bdc579f52d",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-835adce84975.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'Inf'",
+   "receipt": null,
+   "sha256": "835adce84975c260c77ce6eada2b50bdea1ac55904c69c6386f459804ffd31c6",
+   "twin": "work:c010/twins/ccbd4d9a99c9.x3d"
+  },
+  {
+   "event": "ev-ad7f7437a942",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-8ced35c9f55a.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'Inf'",
+   "receipt": null,
+   "sha256": "8ced35c9f55a244f07effbd211f5db18147fdb46e2a8fb2267d2e889ea7ecab9",
+   "twin": "work:c010/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-48960c47a726",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-6cb45afaf417.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- ' inf '",
+   "receipt": null,
+   "sha256": "6cb45afaf417fa3c32c69f3fba93985c81850c687fee347559e4c7d7c43edfb2",
+   "twin": "work:c010/twins/e6eeedad6f03.x3d"
+  },
+  {
+   "event": "ev-6255dfae81c7",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-2cdf276e236e.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "2cdf276e236ef66b9052aeda392bf0b2155e4322161f03bb2771462e74d20534",
+   "twin": "work:c010/twins/a904dc7c4a23.x3d"
+  },
+  {
+   "event": "ev-8dc2b15b544b",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-3aba91e89c06.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- ' inf '",
+   "receipt": null,
+   "sha256": "3aba91e89c06f5cbf9ecc700f9a6c3ccc23fdba073a82bf28f4f8e74cf0fe683",
+   "twin": "work:c010/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-0748a9831642",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-5082cc0c9e2d.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'INF'",
+   "receipt": null,
+   "sha256": "5082cc0c9e2d8bef86a3226da0e2113b349c12ffb694da6079f093f94ebe6553",
+   "twin": "work:c010/twins/ed083479af37.x3d"
+  },
+  {
+   "event": "ev-960f1ff907f8",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-e67dc7c509ac.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'inf'",
+   "receipt": null,
+   "sha256": "e67dc7c509ac32911f45fec3afdb21126dbab2d4498ac171221e96a417fc8d7c",
+   "twin": "work:c010/twins/22cff5016a67.x3d"
+  },
+  {
+   "event": "ev-3ace96f19571",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-8cb9e721c63f.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- ' inf '",
+   "receipt": null,
+   "sha256": "8cb9e721c63f8c7f49a5ccef8cedfa880b52a20996aae952aaed040371e36773",
+   "twin": "work:c010/twins/0404539e6227.x3d"
+  },
+  {
+   "event": "ev-b45af7a6cc49",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-3376fbc0bc8f.x3d",
+   "note": "confirm: Viewpoint@fieldOfView <- 'Inf'",
+   "receipt": null,
+   "sha256": "3376fbc0bc8f7ff63f31c641625fc423e8060425bb28cf7f14052ffac0416fc4",
+   "twin": "work:c010/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-ecc6f1600764",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-337ac7c87b28.x3d",
+   "note": "widen: GeoViewpoint@fieldOfView <- 'Inf'",
+   "receipt": null,
+   "sha256": "337ac7c87b28db03acb95e89fce424730e9298d1ffdc2b28bcddc19b9dae8cbc",
+   "twin": "work:c010/twins/346ee0c0a28c.x3d"
+  },
+  {
+   "event": "ev-72f7b7a9e530",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-4c727cab6984.x3d",
+   "note": "value: Viewpoint@fieldOfView <- ' Inf ' (live: ' inf ' failed here)",
+   "receipt": null,
+   "sha256": "4c727cab698470ba36aab6362b37a2ce9ce6750eddeefed94364169646dde2b5",
+   "twin": "work:c010/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-52685605a8d7",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-88a2f491c765.x3d",
+   "note": "value: Viewpoint@fieldOfView <- ' Inf ' (live: ' inf ' failed here)",
+   "receipt": null,
+   "sha256": "88a2f491c765e659e29cde674c520cc80af29e47dbadcc0d6835c5772a4b0d62",
+   "twin": "work:c010/twins/e6eeedad6f03.x3d"
+  },
+  {
+   "event": "ev-6dfd709c8102",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-69221356edc4.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'INF' (live: 'inf' failed here)",
+   "receipt": null,
+   "sha256": "69221356edc444acc4472e44c55ed03567a7b2cfce68efd36c74ca992e4b8484",
+   "twin": "work:c010/twins/22cff5016a67.x3d"
+  },
+  {
+   "event": "ev-aceada0ced67",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-d5df42c256be.x3d",
+   "note": "value: Viewpoint@fieldOfView <- ' inf ' (live: 'inf' failed here)",
+   "receipt": null,
+   "sha256": "d5df42c256bea084a3b446d0b67e828277593d6573e9b2051c185b773e4507ab",
+   "twin": "work:c010/twins/22cff5016a67.x3d"
+  },
+  {
+   "event": "ev-2f531ac956a8",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-02ffaeb2540a.x3d",
+   "note": "value: Viewpoint@fieldOfView <- ' Inf ' (live: ' inf ' failed here)",
+   "receipt": null,
+   "sha256": "02ffaeb2540a2b0d8c31938474bf5905006aa9a5dcc6231f545c0fc453651fed",
+   "twin": "work:c010/twins/0404539e6227.x3d"
+  },
+  {
+   "event": "ev-c2d5a9975053",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-d787883f0122.x3d",
+   "note": "value: Viewpoint@fieldOfView <- ' Inf ' (live: ' INF ' failed here)",
+   "receipt": null,
+   "sha256": "d787883f012280b81b4ba2b14a48349bc1b8f2533596e078c70d8c39a73819f5",
+   "twin": "work:c010/twins/67cf0c5dc6ee.x3d"
+  },
+  {
+   "event": "ev-75b33f24612a",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-76a559aad169.x3d",
+   "note": "value: Viewpoint@fieldOfView <- ' Inf ' (live: 'Inf' failed here)",
+   "receipt": null,
+   "sha256": "76a559aad1696d245fe591e9bc8142f9262694bedf77c351e19f610c1d2dad7c",
+   "twin": "work:c010/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-870933079cb3",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-9d30fad8b725.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'INF' (live: 'Inf' failed here)",
+   "receipt": null,
+   "sha256": "9d30fad8b7251313ed59808c09d4b15ffe6de9199dc1467c14b55a45a94fb633",
+   "twin": "work:c010/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-8112e63b4e78",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-89ec48a4bda7.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'Inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "89ec48a4bda72ebd373f772745ddcd069b4c5c79e2b519d82714bcb6e0da41bf",
+   "twin": "work:c010/twins/ed083479af37.x3d"
+  },
+  {
+   "event": "ev-2a5a012bb178",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-83c5c11b7c5b.x3d",
+   "note": "value: Viewpoint@fieldOfView <- 'inf' (live: 'Inf' failed here)",
+   "receipt": null,
+   "sha256": "83c5c11b7c5b3012289e16153b40bf788053d879a24b3f6f409483b5665cfb88",
+   "twin": "work:c010/twins/cf3507f27f6d.x3d"
+  }
+ ],
+ "sources_total": 62,
+ "status": "candidate"
+}

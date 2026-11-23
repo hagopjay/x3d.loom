@@ -1,0 +1,1437 @@
+[
+ {
+  "found_by": "receipts",
+  "held_out_events": 55,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "133 failure(s) to explain; the instrument passed 1813 file(s) and failed 156 in all",
+   "rule 1: attr[v:bool_noncanonical & !v:case_variant & nws:1 & (at:Box@solid | at:CollidableShape@visible | at:Cone@solid | at:DirectionalLight@global | at:DirectionalLight@shadows | at:Disk2D@solid | at:ElevationGrid@solid | at:Group@visible | at:HAnimHumanoid@visible | at:IndexedFaceSet@solid | at:IndexedTriangleFanSet@solid | at:IndexedTriangleSet@solid | at:IndexedTriangleStripSet@solid | at:LOD@visible | at:Layer@visible | at:NavigationInfo@headlight | at:PointLight@global | at:PointLight@shadows | at:RigidBody@visible | at:Shape@visible | at:Sphere@solid | at:SpotLight@global | at:TriangleFanSet@solid | at:TriangleSet2D@solid)] explains 133 more (133 in all); 2 alternate(s) the receipts cannot rule out; seen at Box@solid, CollidableShape@visible, Cone@solid, DirectionalLight@global"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-96ba3f032944"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 64.4,
+  "signature": "IndexError at import_x3d.py:860 getFieldAsBool",
+  "training_events": 61,
+  "training_failures": 133,
+  "unclean_best_efforts": [
+   {
+    "explains": 47,
+    "false_alarms": 178,
+    "rule": {
+     "all": [
+      "enc:utf-8",
+      "ge:n_elements:12",
+      "le:max_children:7",
+      "le:max_nattrs:5",
+      "le:n_routes:0",
+      "!x:has_doctype"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the declared encoding is utf-8 and the number of elements is at least 12 and the most children of one element is at most 7 and the most attributes on one element is at most 5 and the number of ROUTEs is at most 0, unless the file has a DOCTYPE.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   },
+   {
+    "explains": 67,
+    "false_alarms": 653,
+    "rule": {
+     "all": [
+      "ge:bytes:1698",
+      "ge:n_defs:2",
+      "le:max_children:9",
+      "le:n_elements:73",
+      "le:n_routes:0",
+      "dp:Immersive",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive and the file declares X3D 4.0: the file size in bytes is at least 1698 and the number of DEF names is at least 2 and the most children of one element is at most 9 and the number of elements is at most 73 and the number of ROUTEs is at most 0.",
+    "why": "stopped: 67 failure(s) may not buy more than 7 literal(s)"
+   },
+   {
+    "explains": 100,
+    "false_alarms": 1030,
+    "rule": {
+     "all": [
+      "ge:bytes:1316",
+      "ge:depth_max:6",
+      "le:max_children:9",
+      "le:n_elements:73",
+      "le:n_routes:0",
+      "dp:Immersive",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive and the file declares X3D 4.0: the file size in bytes is at least 1316 and the deepest nesting in the file is at least 6 and the most children of one element is at most 9 and the number of elements is at most 73 and the number of ROUTEs is at most 0.",
+    "why": "stopped: 100 failure(s) may not buy more than 7 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 31,
+  "instrument": "x3d.py 4.0.65.8 through x3d-blender-io 2.7.1 validate.py (does it crash?)",
+  "log": [
+   "72 failure(s) to explain; the instrument passed 1831 file(s) and failed 72 in all",
+   "rule 1: doc[ge:depth_max:1004] explains 72 more (72 in all); 3 alternate(s) the receipts cannot rule out; seen at (document)"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-fc92485cb435"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 92.4,
+  "signature": "RecursionError: maximum recursion depth exceeded",
+  "training_events": 29,
+  "training_failures": 72,
+  "unclean_best_efforts": [
+   {
+    "explains": 13,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "v:eq:N",
+      "!isa:X3DEnvironmentalSensorNode",
+      "!isa:X3DFollowerNode",
+      "!isa:X3DSoundProcessingNode",
+      "p:Group"
+     ],
+     "any": [
+      "at:AcousticProperties@DEF",
+      "at:Analyser@DEF",
+      "at:AudioDestination@DEF",
+      "at:BooleanToggle@DEF",
+      "at:BooleanTrigger@DEF",
+      "at:CoordinateDamper@DEF",
+      "at:CoordinateInterpolator2D@DEF",
+      "at:Delay@DEF",
+      "at:DynamicsCompressor@DEF",
+      "at:Gain@DEF",
+      "at:IntegerTrigger@DEF",
+      "at:Matrix3VertexAttribute@DEF",
+      "at:OrientationDamper@DEF",
+      "at:PositionChaser2D@DEF",
+      "at:PositionDamper2D@DEF",
+      "at:PositionDamper@DEF",
+      "at:ProgramShader@DEF",
+      "at:ScalarChaser@DEF",
+      "at:ScalarDamper@DEF",
+      "at:ScreenFontStyle@DEF",
+      "at:ShaderProgram@DEF",
+      "at:SplinePositionInterpolator2D@DEF",
+      "at:SplinePositionInterpolator@DEF",
+      "at:TransformSensor@DEF"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the parent is Group: the value is exactly `N`, at one of 24 places (AcousticProperties DEF, Analyser DEF, AudioDestination DEF, BooleanToggle DEF, BooleanTrigger DEF, CoordinateDamper DEF, CoordinateInterpolator2D DEF, Delay DEF, DynamicsCompressor DEF, Gain DEF, IntegerTrigger DEF, Matrix3VertexAttribute DEF, OrientationDamper DEF, PositionChaser2D DEF, PositionDamper2D DEF, PositionDamper DEF, ProgramShader DEF, ScalarChaser DEF, ScalarDamper DEF, ScreenFontStyle DEF, ShaderProgram DEF, SplinePositionInterpolator2D DEF, SplinePositionInterpolator DEF, TransformSensor DEF), unless the node is an X3DEnvironmentalSensorNode or the node is an X3DFollowerNode or the node is an X3DSoundProcessingNode.",
+    "why": "stopped: 13 failure(s) may not buy more than 5 literal(s)"
+   },
+   {
+    "explains": 7,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "le:max:1",
+      "!isa:X3DBoundedObject",
+      "!isa:X3DFollowerNode",
+      "!isa:X3DSoundProcessingNode",
+      "p:Group"
+     ],
+     "any": [
+      "at:AcousticProperties@absorption",
+      "at:AcousticProperties@diffuse",
+      "at:AcousticProperties@refraction",
+      "at:AcousticProperties@specular",
+      "at:Analyser@maxDecibels",
+      "at:Analyser@minDecibels",
+      "at:Analyser@smoothingTimeConstant",
+      "at:ArcClose2D@startAngle",
+      "at:AudioDestination@gain",
+      "at:Color@color",
+      "at:ColorRGBA@color",
+      "at:Coordinate@point",
+      "at:CoordinateDamper@initialDestination",
+      "at:CoordinateDamper@initialValue",
+      "at:CoordinateDamper@tau",
+      "at:CoordinateInterpolator2D@key",
+      "at:Delay@delayTime",
+      "at:Delay@maxDelayTime",
+      "at:Disk2D@innerRadius",
+      "at:Gain@gain",
+      "at:Material@diffuseColor",
+      "at:Material@emissiveColor",
+      "at:Material@shininess",
+      "at:Material@specularColor",
+      "at:OrientationDamper@tau",
+      "at:PhysicalMaterial@baseColor",
+      "at:PhysicalMaterial@emissiveColor",
+      "at:PhysicalMaterial@metallic",
+      "at:PhysicalMaterial@roughness",
+      "at:PhysicalMaterial@transparency",
+      "at:PositionChaser2D@duration",
+      "at:PositionDamper2D@tau",
+      "at:PositionDamper@tau",
+      "at:ScalarChaser@duration",
+      "at:ScalarChaser@initialDestination",
+      "at:ScalarChaser@initialValue",
+      "at:ScalarDamper@initialDestination",
+      "at:ScalarDamper@initialValue",
+      "at:ScalarDamper@tau",
+      "at:SplinePositionInterpolator2D@key",
+      "at:SplinePositionInterpolator@key",
+      "at:SplinePositionInterpolator@keyValue",
+      "at:SplinePositionInterpolator@keyVelocity",
+      "at:TextureCoordinate@point",
+      "at:Transform@rotation",
+      "at:Transform@scale",
+      "at:Transform@translation"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the parent is Group: the largest component is at most 1, at one of 47 places (AcousticProperties absorption, AcousticProperties diffuse, AcousticProperties refraction, AcousticProperties specular, Analyser maxDecibels, Analyser minDecibels, Analyser smoothingTimeConstant, ArcClose2D startAngle, AudioDestination gain, Color color, ColorRGBA color, Coordinate point, CoordinateDamper initialDestination, CoordinateDamper initialValue, CoordinateDamper tau, CoordinateInterpolator2D key, Delay delayTime, Delay maxDelayTime, Disk2D innerRadius, Gain gain, Material diffuseColor, Material emissiveColor, Material shininess, Material specularColor, OrientationDamper tau, PhysicalMaterial baseColor, PhysicalMaterial emissiveColor, PhysicalMaterial metallic, PhysicalMaterial roughness, PhysicalMaterial transparency, PositionChaser2D duration, PositionDamper2D tau, PositionDamper tau, ScalarChaser duration, ScalarChaser initialDestination, ScalarChaser initialValue, ScalarDamper initialDestination, ScalarDamper initialValue, ScalarDamper tau, SplinePositionInterpolator2D key, SplinePositionInterpolator key, SplinePositionInterpolator keyValue, SplinePositionInterpolator keyVelocity, TextureCoordinate point, Transform rotation, Transform scale, Transform translation), unless the node is an X3DBoundedObject or the node is an X3DFollowerNode or the node is an X3DSoundProcessingNode.",
+    "why": "stopped: 7 failure(s) may not buy more than 4 literal(s)"
+   },
+   {
+    "explains": 7,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "le:max_abs:1",
+      "!isa:X3DBoundedObject",
+      "!isa:X3DFollowerNode",
+      "!isa:X3DSoundProcessingNode",
+      "p:Group"
+     ],
+     "any": [
+      "at:AcousticProperties@absorption",
+      "at:AcousticProperties@diffuse",
+      "at:AcousticProperties@refraction",
+      "at:AcousticProperties@specular",
+      "at:Analyser@maxDecibels",
+      "at:Analyser@smoothingTimeConstant",
+      "at:ArcClose2D@startAngle",
+      "at:AudioDestination@gain",
+      "at:Color@color",
+      "at:ColorRGBA@color",
+      "at:Coordinate@point",
+      "at:CoordinateDamper@initialDestination",
+      "at:CoordinateDamper@initialValue",
+      "at:CoordinateDamper@tau",
+      "at:CoordinateInterpolator2D@key",
+      "at:Delay@delayTime",
+      "at:Delay@maxDelayTime",
+      "at:Disk2D@innerRadius",
+      "at:Gain@gain",
+      "at:Material@diffuseColor",
+      "at:Material@emissiveColor",
+      "at:Material@shininess",
+      "at:Material@specularColor",
+      "at:OrientationDamper@tau",
+      "at:PhysicalMaterial@baseColor",
+      "at:PhysicalMaterial@emissiveColor",
+      "at:PhysicalMaterial@metallic",
+      "at:PhysicalMaterial@roughness",
+      "at:PhysicalMaterial@transparency",
+      "at:PositionChaser2D@duration",
+      "at:PositionDamper2D@tau",
+      "at:PositionDamper@tau",
+      "at:ScalarChaser@duration",
+      "at:ScalarChaser@initialDestination",
+      "at:ScalarChaser@initialValue",
+      "at:ScalarDamper@initialDestination",
+      "at:ScalarDamper@initialValue",
+      "at:ScalarDamper@tau",
+      "at:SplinePositionInterpolator2D@key",
+      "at:SplinePositionInterpolator@key",
+      "at:SplinePositionInterpolator@keyValue",
+      "at:SplinePositionInterpolator@keyVelocity",
+      "at:TextureCoordinate@point",
+      "at:Transform@rotation",
+      "at:Transform@scale",
+      "at:Transform@translation"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the parent is Group: the largest magnitude is at most 1, at one of 46 places (AcousticProperties absorption, AcousticProperties diffuse, AcousticProperties refraction, AcousticProperties specular, Analyser maxDecibels, Analyser smoothingTimeConstant, ArcClose2D startAngle, AudioDestination gain, Color color, ColorRGBA color, Coordinate point, CoordinateDamper initialDestination, CoordinateDamper initialValue, CoordinateDamper tau, CoordinateInterpolator2D key, Delay delayTime, Delay maxDelayTime, Disk2D innerRadius, Gain gain, Material diffuseColor, Material emissiveColor, Material shininess, Material specularColor, OrientationDamper tau, PhysicalMaterial baseColor, PhysicalMaterial emissiveColor, PhysicalMaterial metallic, PhysicalMaterial roughness, PhysicalMaterial transparency, PositionChaser2D duration, PositionDamper2D tau, PositionDamper tau, ScalarChaser duration, ScalarChaser initialDestination, ScalarChaser initialValue, ScalarDamper initialDestination, ScalarDamper initialValue, ScalarDamper tau, SplinePositionInterpolator2D key, SplinePositionInterpolator key, SplinePositionInterpolator keyValue, SplinePositionInterpolator keyVelocity, TextureCoordinate point, Transform rotation, Transform scale, Transform translation), unless the node is an X3DBoundedObject or the node is an X3DFollowerNode or the node is an X3DSoundProcessingNode.",
+    "why": "stopped: 7 failure(s) may not buy more than 4 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 15,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "76 failure(s) to explain; the instrument passed 1887 file(s) and failed 232 in all",
+   "rule 1: attr[ge:index_excess:440304889 & ge:ntok:20 & !e.has:ccw & at:IndexedFaceSet@coordIndex & e.child:Coordinate] explains 49 more (49 in all); 2 alternate(s) the receipts cannot rule out; seen at IndexedFaceSet@coordIndex; strays into 1 failure(s) with other signatures",
+   "rule 2: attr[ge:index_excess:2147483633 & le:ntok:15 & !v:lexical_invalid & at:IndexedFaceSet@coordIndex & p:Shape] explains 27 more (27 in all); 2 alternate(s) the receipts cannot rule out; seen at IndexedFaceSet@coordIndex"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-2a5db21f7cdd",
+   "r2r-8c73ea66efdc"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 416.7,
+  "signature": "RuntimeError at import_x3d.py:2008 validate_points_field",
+  "training_events": 18,
+  "training_failures": 76,
+  "unclean_best_efforts": [
+   {
+    "explains": 28,
+    "false_alarms": 124,
+    "rule": {
+     "all": [
+      "ge:max_attr_len:222",
+      "ge:n_elements:14",
+      "le:depth_max:6",
+      "le:n_defs:6",
+      "le:n_routes:0",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the file declares X3D 4.0: the longest attribute value is at least 222 and the number of elements is at least 14 and the deepest nesting in the file is at most 6 and the number of DEF names is at most 6 and the number of ROUTEs is at most 0.",
+    "why": "stopped: 28 failure(s) may not buy more than 6 literal(s)"
+   },
+   {
+    "explains": 27,
+    "false_alarms": 124,
+    "rule": {
+     "all": [
+      "ge:max_attr_len:223",
+      "ge:n_elements:14",
+      "le:depth_max:6",
+      "le:n_defs:6",
+      "le:n_routes:0",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the file declares X3D 4.0: the longest attribute value is at least 223 and the number of elements is at least 14 and the deepest nesting in the file is at most 6 and the number of DEF names is at most 6 and the number of ROUTEs is at most 0.",
+    "why": "stopped: 27 failure(s) may not buy more than 6 literal(s)"
+   },
+   {
+    "explains": 39,
+    "false_alarms": 465,
+    "rule": {
+     "all": [
+      "ge:bytes:1783",
+      "ge:n_elements:14",
+      "le:depth_max:8",
+      "le:max_children:6",
+      "le:n_routes:0",
+      "dp:Immersive",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive and the file declares X3D 4.0: the file size in bytes is at least 1783 and the number of elements is at least 14 and the deepest nesting in the file is at most 8 and the most children of one element is at most 6 and the number of ROUTEs is at most 0.",
+    "why": "stopped: 39 failure(s) may not buy more than 7 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 6,
+  "instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+  "log": [
+   "119 failure(s) to explain; the instrument passed 1886 file(s) and failed 121 in all",
+   "rule 1: attr[ge:max_abs:1e+39 & anc:Group & (at:Transform@scale | at:Transform@translation)] explains 41 more (41 in all); 0 alternate(s) the receipts cannot rule out; seen at Transform@scale, Transform@translation",
+   "rule 2: attr[ge:max_abs:5.05e+38 & e.child:Shape & e.has:DEF & (at:Transform@scale | at:Transform@translation)] explains 29 more (29 in all); 0 alternate(s) the receipts cannot rule out; seen at Transform@scale, Transform@translation",
+   "rule 3: attr[v:lexical_invalid & !e.has:rotation & at:Transform@scale] explains 13 more (28 in all); 2 alternate(s) the receipts cannot rule out; seen at Transform@scale",
+   "rule 4: attr[v:float_overflow32 & !p:Scene & !v:lexical_invalid & at:Transform@translation] explains 7 more (16 in all); 6 alternate(s) the receipts cannot rule out; seen at Transform@translation",
+   "29 failure(s) left unexplained (residue)"
+  ],
+  "probed": true,
+  "residue": 29,
+  "residue_examples": [
+   "num_extreme: X3D/Scene/Transform#OB_PartSource scale: token 0 1 -> NaN",
+   "confirm: Transform@translation <- '0 1e39 0'",
+   "confirm: Transform@translation <- '0 1e39 0'",
+   "confirm: Transform@translation <- '0 1e39 0'",
+   "confirm: Transform@translation <- '0 1 INF'"
+  ],
+  "rules": [
+   "r2r-eac8fb7c9a21",
+   "r2r-c78b17d6ccf6",
+   "r2r-bd1f8384f6cd",
+   "r2r-4b8b7ade96af"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 78.0,
+  "signature": "RuntimeError at matrix_safety.py:47 inverted64",
+  "training_events": 4,
+  "training_failures": 119,
+  "unclean_best_efforts": [
+   {
+    "explains": 87,
+    "false_alarms": 209,
+    "rule": {
+     "all": [
+      "ge:bytes:1362",
+      "ge:n_elements:23",
+      "le:depth_max:8",
+      "le:max_children:9",
+      "le:n_defs:19",
+      "dp:Immersive",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive and the file declares X3D 4.0: the file size in bytes is at least 1362 and the number of elements is at least 23 and the deepest nesting in the file is at most 8 and the most children of one element is at most 9 and the number of DEF names is at most 19.",
+    "why": "stopped: 87 failure(s) may not buy more than 7 literal(s)"
+   },
+   {
+    "explains": 89,
+    "false_alarms": 220,
+    "rule": {
+     "all": [
+      "ge:bytes:1240",
+      "ge:n_elements:23",
+      "le:depth_max:8",
+      "le:max_children:9",
+      "le:n_defs:19",
+      "dp:Immersive",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive and the file declares X3D 4.0: the file size in bytes is at least 1240 and the number of elements is at least 23 and the deepest nesting in the file is at most 8 and the most children of one element is at most 9 and the number of DEF names is at most 19.",
+    "why": "stopped: 89 failure(s) may not buy more than 7 literal(s)"
+   },
+   {
+    "explains": 83,
+    "false_alarms": 208,
+    "rule": {
+     "all": [
+      "ge:bytes:1366",
+      "ge:n_elements:23",
+      "le:depth_max:8",
+      "le:max_children:9",
+      "le:n_defs:19",
+      "dp:Immersive",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive and the file declares X3D 4.0: the file size in bytes is at least 1366 and the number of elements is at least 23 and the deepest nesting in the file is at most 8 and the most children of one element is at most 9 and the number of DEF names is at most 19.",
+    "why": "stopped: 83 failure(s) may not buy more than 7 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 2,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "149 failure(s) to explain; the instrument passed 2024 file(s) and failed 382 in all",
+   "rule 1: attr[ge:ntok:6 & !p:Scene & at:Transform@scale] explains 43 more (43 in all); 8 alternate(s) the receipts cannot rule out; seen at Transform@scale",
+   "rule 2: attr[ge:len:10 & v:number_unparseable & at:Transform@scale & ntok:3] explains 33 more (33 in all); 2 alternate(s) the receipts cannot rule out; seen at Transform@scale",
+   "rule 3: elem[ge:nattrs:1 & child:TouchSensor & has:scale & n:Transform & p:Scene] explains 22 more (28 in all); 2 alternate(s) the receipts cannot rule out; seen at Transform",
+   "rule 4: attr[v:number_unparseable & !p:Scene & at:Transform@scale & ntok:3] explains 13 more (27 in all); 5 alternate(s) the receipts cannot rule out; seen at Transform@scale",
+   "38 failure(s) left unexplained (residue)"
+  ],
+  "probed": true,
+  "residue": 38,
+  "residue_examples": [
+   "num_extreme: X3D/Scene/Transform#OB_Key scale: token 1 1 -> 1e",
+   "confirm: Transform@scale <- '1 1e 1'",
+   "confirm: Transform@scale <- '1 1e 1'",
+   "confirm: Transform@scale <- '1 1e 1'",
+   "confirm: Transform@scale <- '1 1e 1'"
+  ],
+  "rules": [
+   "r2r-61999795e8b4",
+   "r2r-01a07f48ec95",
+   "r2r-0bd64577661d",
+   "r2r-f10d90dac48f"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 71.1,
+  "signature": "IndexError at import_x3d.py:1665 translateScale",
+  "training_events": 1,
+  "training_failures": 149,
+  "unclean_best_efforts": [
+   {
+    "explains": 34,
+    "false_alarms": 35,
+    "rule": {
+     "all": [
+      "ge:bytes:3065",
+      "ge:n_defs:1",
+      "ge:n_elements:22",
+      "le:depth_max:8",
+      "le:max_children:7",
+      "!x:has_doctype"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 3065 and the number of DEF names is at least 1 and the number of elements is at least 22 and the deepest nesting in the file is at most 8 and the most children of one element is at most 7, unless the file has a DOCTYPE.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   },
+   {
+    "explains": 52,
+    "false_alarms": 94,
+    "rule": {
+     "all": [
+      "enc:utf-8",
+      "ge:bytes:2464",
+      "ge:n_elements:22",
+      "le:depth_max:8",
+      "le:n_defs:19",
+      "!x:has_doctype",
+      "dp:Immersive"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive: the declared encoding is utf-8 and the file size in bytes is at least 2464 and the number of elements is at least 22 and the deepest nesting in the file is at most 8 and the number of DEF names is at most 19, unless the file has a DOCTYPE.",
+    "why": "stopped: 52 failure(s) may not buy more than 7 literal(s)"
+   },
+   {
+    "explains": 112,
+    "false_alarms": 342,
+    "rule": {
+     "all": [
+      "ge:bytes:1237",
+      "ge:n_elements:22",
+      "le:depth_max:8",
+      "le:n_defs:19",
+      "!x:has_doctype",
+      "dp:Immersive",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive and the file declares X3D 4.0: the file size in bytes is at least 1237 and the number of elements is at least 22 and the deepest nesting in the file is at most 8 and the number of DEF names is at most 19, unless the file has a DOCTYPE.",
+    "why": "stopped: 112 failure(s) may not buy more than 7 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 2,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "149 failure(s) to explain; the instrument passed 2162 file(s) and failed 532 in all",
+   "rule 1: attr[v:arity_long & !p:Scene & !v:quoted & at:Transform@translation] explains 76 more (76 in all); 8 alternate(s) the receipts cannot rule out; seen at Transform@translation",
+   "rule 2: attr[ge:max:5 & v:arity_mismatch & !e.has:rotation & at:Transform@translation] explains 29 more (30 in all); 8 alternate(s) the receipts cannot rule out; seen at Transform@translation",
+   "rule 3: attr[ge:ntok:12 & !e.child:TransformSensor & !v:quoted & at:Transform@translation] explains 17 more (74 in all); 5 alternate(s) the receipts cannot rule out; seen at Transform@translation",
+   "rule 4: attr[ge:len:19 & v:lexical_invalid & !e.child:TransformSensor & !v:tok:\" & at:Transform@translation] explains 8 more (97 in all); 2 alternate(s) the receipts cannot rule out; seen at Transform@translation",
+   "19 failure(s) left unexplained (residue)"
+  ],
+  "probed": true,
+  "residue": 19,
+  "residue_examples": [
+   "text_garbage: X3D/Scene/Transform#OB_Key translation -> '1 2 3 4 5 6 7'",
+   "widen: Transform@translation <- ' 1 1e 1 , 1 1e 1 '",
+   "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1 '",
+   "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1 '",
+   "confirm: Transform@translation <- '1 2 3 4 5 6 7'"
+  ],
+  "rules": [
+   "r2r-dc3e3fa23485",
+   "r2r-5049a0d800aa",
+   "r2r-018873e9ca67",
+   "r2r-c0b70e49737d"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 83.8,
+  "signature": "ValueError at import_x3d.py:1700 translateTransform",
+  "training_events": 2,
+  "training_failures": 149,
+  "unclean_best_efforts": [
+   {
+    "explains": 9,
+    "false_alarms": 5,
+    "rule": {
+     "all": [
+      "ge:nattrs:1",
+      "child:TouchSensor",
+      "n:Transform",
+      "p:Layer"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where it has a TouchSensor child and the node is Transform and the parent is Layer: the number of attributes is at least 1.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   },
+   {
+    "explains": 3,
+    "false_alarms": 6,
+    "rule": {
+     "all": [
+      "!has:rotation",
+      "ge:nattrs:2",
+      "child:GeoLOD",
+      "n:Transform"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where it has a GeoLOD child and the node is Transform: it has no rotation attribute and the number of attributes is at least 2.",
+    "why": "stopped: 3 failure(s) may not buy more than 3 literal(s)"
+   },
+   {
+    "explains": 96,
+    "false_alarms": 651,
+    "rule": {
+     "all": [
+      "ge:bytes:1251",
+      "ge:n_elements:20",
+      "le:depth_max:8",
+      "le:max_children:7",
+      "le:max_nattrs:8",
+      "dp:Immersive",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive and the file declares X3D 4.0: the file size in bytes is at least 1251 and the number of elements is at least 20 and the deepest nesting in the file is at most 8 and the most children of one element is at most 7 and the most attributes on one element is at most 8.",
+    "why": "stopped: 96 failure(s) may not buy more than 7 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+  "log": [
+   "32 failure(s) to explain; the instrument passed 1962 file(s) and failed 151 in all",
+   "1 failure(s) have no known-good twin: any site may explain them, so their rules are weaker",
+   "rule 1: attr[v:below_min & ntok:1 & (at:Cone@bottomRadius | at:Cone@height | at:GeoViewpoint@fieldOfView | at:PointLight@radius | at:Sphere@radius | at:SpotLight@radius | at:Viewpoint@fieldOfView)] explains 31 more (31 in all); 8 alternate(s) the receipts cannot rule out; seen at Cone@bottomRadius, Cone@height, GeoViewpoint@fieldOfView, PointLight@radius",
+   "1 failure(s) left unexplained (residue)"
+  ],
+  "probed": true,
+  "residue": 1,
+  "residue_examples": [
+   "repos:x3d_mcp/tests/fixtures/scene_rdf/MetadataNodeExamplesX3D4.x3d"
+  ],
+  "rules": [
+   "r2r-ac96dfe7dbc3"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 46.9,
+  "signature": "ValueError at export_x3d.py:2111 _modern_writer",
+  "training_events": 2,
+  "training_failures": 32,
+  "unclean_best_efforts": [
+   {
+    "explains": 2,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "x:present",
+      "child:GeoOrigin",
+      "has:fieldOfView",
+      "has:orientation"
+     ],
+     "any": [
+      "n:Anchor",
+      "n:Appearance",
+      "n:Background",
+      "n:FontStyle",
+      "n:GeoViewpoint",
+      "n:Material",
+      "n:MetadataBoolean",
+      "n:MetadataDouble",
+      "n:MetadataFloat",
+      "n:MetadataInteger",
+      "n:MetadataSet",
+      "n:MetadataString",
+      "n:Scene",
+      "n:Shape",
+      "n:Text",
+      "n:Viewpoint",
+      "n:WorldInfo",
+      "n:X3D",
+      "n:head",
+      "n:meta"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where it has a GeoOrigin child and it has the attribute fieldOfView and it has the attribute orientation: the node is present, at one of 20 places (Anchor, Appearance, Background, FontStyle, GeoViewpoint, Material, MetadataBoolean, MetadataDouble, MetadataFloat, MetadataInteger, MetadataSet, MetadataString, Scene, Shape, Text, Viewpoint, WorldInfo, X3D, head, meta).",
+    "why": "stopped: 2 failure(s) may not buy more than 3 literal(s)"
+   },
+   {
+    "explains": 6,
+    "false_alarms": 4,
+    "rule": {
+     "all": [
+      "ge:n_elements:45",
+      "le:depth_max:6",
+      "le:max_nattrs:4",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the file declares X3D 4.0: the number of elements is at least 45 and the deepest nesting in the file is at most 6 and the most attributes on one element is at most 4.",
+    "why": "stopped: 6 failure(s) may not buy more than 4 literal(s)"
+   },
+   {
+    "explains": 5,
+    "false_alarms": 4,
+    "rule": {
+     "all": [
+      "ge:nattrs:3",
+      "child:GeoOrigin"
+     ],
+     "any": [
+      "n:Anchor",
+      "n:GeoViewpoint",
+      "n:MetadataBoolean",
+      "n:MetadataDouble",
+      "n:MetadataFloat",
+      "n:MetadataInteger",
+      "n:MetadataSet",
+      "n:MetadataString",
+      "n:Viewpoint",
+      "n:WorldInfo",
+      "n:X3D"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where it has a GeoOrigin child: the number of attributes is at least 3, at one of 11 places (Anchor, GeoViewpoint, MetadataBoolean, MetadataDouble, MetadataFloat, MetadataInteger, MetadataSet, MetadataString, Viewpoint, WorldInfo, X3D).",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   }
+  ]
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "2 failure(s) to explain; the instrument passed 2167 file(s) and failed 532 in all",
+   "2 failure(s) have no known-good twin: any site may explain them, so their rules are weaker",
+   "rule 1: elem[x:present & n:CoordinateDouble] explains 2 more (2 in all); 6 alternate(s) the receipts cannot rule out; seen at CoordinateDouble"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-d261dd67c562"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 7.0,
+  "signature": "AttributeError at import_x3d.py:1904 importMesh_ReadVertices",
+  "training_events": 2,
+  "training_failures": 2,
+  "unclean_best_efforts": [
+   {
+    "explains": 1,
+    "false_alarms": 4,
+    "rule": {
+     "all": [
+      "v:eq:0.9 0.5 0.2",
+      "!anc:Transform",
+      "at:Material@diffuseColor"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Material diffuseColor: the value is exactly `0.9 0.5 0.2`, unless it sits inside a Transform.",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   },
+   {
+    "explains": 1,
+    "false_alarms": 7,
+    "rule": {
+     "all": [
+      "v:eq:0 1 0 0.6",
+      "at:Transform@rotation",
+      "e.child:Shape"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform rotation and its element has a Shape child: the value is exactly `0 1 0 0.6`.",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   },
+   {
+    "explains": 1,
+    "false_alarms": 9,
+    "rule": {
+     "all": [
+      "v:eq:-2 -1 0",
+      "at:Transform@translation"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation: the value is exactly `-2 -1 0`.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   }
+  ]
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 1,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "89 failure(s) to explain; the instrument passed 2227 file(s) and failed 620 in all",
+   "rule 1: attr[v:number_unparseable & !p:Scene & at:Transform@scale & ntok:3] explains 50 more (50 in all); 3 alternate(s) the receipts cannot rule out; seen at Transform@scale; strays into 27 failure(s) with other signatures",
+   "rule 2: attr[ge:ntok:6 & !p:Scene & at:Transform@scale] explains 24 more (24 in all); 7 alternate(s) the receipts cannot rule out; seen at Transform@scale; strays into 44 failure(s) with other signatures",
+   "15 failure(s) left unexplained (residue)"
+  ],
+  "probed": true,
+  "residue": 15,
+  "residue_examples": [
+   "num_extreme: X3D/Scene/Transform#OB_Floor scale: token 2 1 -> --1",
+   "confirm: Transform@scale <- '1 1 --1'",
+   "confirm: Transform@scale <- '1 1 --1'",
+   "confirm: Transform@scale <- '1 1 --1'",
+   "confirm: Transform@scale <- '1 1 --1'"
+  ],
+  "rules": [
+   "r2r-f10d90dac48f",
+   "r2r-61999795e8b4"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 51.1,
+  "signature": "IndexError at import_x3d.py:1666 translateScale",
+  "training_events": 1,
+  "training_failures": 89,
+  "unclean_best_efforts": [
+   {
+    "explains": 45,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "!has:DEF",
+      "!has:rotation",
+      "ge:nattrs:1",
+      "has:scale",
+      "n:Transform",
+      "p:Group"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where it has the attribute scale and the node is Transform and the parent is Group: it has no DEF attribute and it has no rotation attribute and the number of attributes is at least 1.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   },
+   {
+    "explains": 45,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "!has:rotation",
+      "ge:nattrs:2",
+      "has:scale",
+      "n:Transform",
+      "p:Group"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where it has the attribute scale and the node is Transform and the parent is Group: it has no rotation attribute and the number of attributes is at least 2.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   },
+   {
+    "explains": 47,
+    "false_alarms": 56,
+    "rule": {
+     "all": [
+      "ge:bytes:2469",
+      "ge:n_elements:23",
+      "le:max_children:7",
+      "le:max_nattrs:4",
+      "le:n_defs:9",
+      "dp:Immersive"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive: the file size in bytes is at least 2469 and the number of elements is at least 23 and the most children of one element is at most 7 and the most attributes on one element is at most 4 and the number of DEF names is at most 9.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   }
+  ]
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "62 failure(s) to explain; the instrument passed 2297 file(s) and failed 683 in all",
+   "rule 1: attr[v:inf & !v:arity_mismatch & (at:GeoViewpoint@fieldOfView | at:Viewpoint@fieldOfView)] explains 62 more (62 in all); 8 alternate(s) the receipts cannot rule out; seen at GeoViewpoint@fieldOfView, Viewpoint@fieldOfView"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-cbf17e0bb9ea"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 38.9,
+  "signature": "ValueError at viewpoint_fov.py:42 blender_camera_angle",
+  "training_events": 1,
+  "training_failures": 62,
+  "unclean_best_efforts": [
+   {
+    "explains": 4,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "!has:DEF",
+      "!has:description",
+      "ge:nattrs:2",
+      "has:fieldOfView",
+      "has:orientation"
+     ],
+     "any": [
+      "n:GeoViewpoint",
+      "n:Viewpoint"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where it has the attribute fieldOfView and it has the attribute orientation: it has no DEF attribute and it has no description attribute and the number of attributes is at least 2, at one of 2 places (GeoViewpoint, Viewpoint).",
+    "why": "stopped: 4 failure(s) may not buy more than 4 literal(s)"
+   },
+   {
+    "explains": 34,
+    "false_alarms": 675,
+    "rule": {
+     "all": [
+      "ge:bytes:1509",
+      "ge:max_children:4",
+      "le:depth_max:8",
+      "le:max_nattrs:9",
+      "le:n_defs:21",
+      "dp:Immersive",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive and the file declares X3D 4.0: the file size in bytes is at least 1509 and the most children of one element is at least 4 and the deepest nesting in the file is at most 8 and the most attributes on one element is at most 9 and the number of DEF names is at most 21.",
+    "why": "stopped: 34 failure(s) may not buy more than 7 literal(s)"
+   },
+   {
+    "explains": 48,
+    "false_alarms": 1368,
+    "rule": {
+     "all": [
+      "ge:bytes:1215",
+      "le:depth_max:8",
+      "le:max_nattrs:9",
+      "le:n_elements:73",
+      "!x:has_doctype",
+      "dp:Immersive",
+      "dv:4.0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive and the file declares X3D 4.0: the file size in bytes is at least 1215 and the deepest nesting in the file is at most 8 and the most attributes on one element is at most 9 and the number of elements is at most 73, unless the file has a DOCTYPE.",
+    "why": "stopped: 48 failure(s) may not buy more than 7 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "a probe of another cluster",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "30 failure(s) to explain; the instrument passed 2315 file(s) and failed 713 in all",
+   "rule 1: attr[ge:index_excess:536870902 & e.child:Color & (at:IndexedTriangleSet@index | at:IndexedTriangleStripSet@index)] explains 22 more (22 in all); 8 alternate(s) the receipts cannot rule out; seen at IndexedTriangleSet@index, IndexedTriangleStripSet@index",
+   "rule 2: attr[ge:index_excess:536870902 & !e.child:Normal & anc:Transform & at:IndexedTriangleStripSet@index] explains 8 more (14 in all); 8 alternate(s) the receipts cannot rule out; seen at IndexedTriangleStripSet@index; strays into 3 failure(s) with other signatures"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-21d944367a59",
+   "r2r-758326262381"
+  ],
+  "same_root_cause_hints": [
+   {
+    "also_explains": "IndexError at import_x3d.py:1927 importMesh_ApplyUVs",
+    "of_its_failures": "2/1",
+    "rule": "r2r-758326262381"
+   }
+  ],
+  "seconds": 115.1,
+  "signature": "IndexError at import_x3d.py:1857 importMesh_ApplyColors",
+  "training_events": 6,
+  "training_failures": 30,
+  "unclean_best_efforts": [
+   {
+    "explains": 14,
+    "false_alarms": 14,
+    "rule": {
+     "all": [
+      "ge:bytes:2579",
+      "ge:n_defs:5",
+      "le:max_children:5",
+      "le:max_nattrs:3"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 2579 and the number of DEF names is at least 5 and the most children of one element is at most 5 and the most attributes on one element is at most 3.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   },
+   {
+    "explains": 13,
+    "false_alarms": 14,
+    "rule": {
+     "all": [
+      "ge:bytes:2580",
+      "ge:n_defs:5",
+      "le:max_children:5",
+      "le:max_nattrs:3"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 2580 and the number of DEF names is at least 5 and the most children of one element is at most 5 and the most attributes on one element is at most 3.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   },
+   {
+    "explains": 23,
+    "false_alarms": 97,
+    "rule": {
+     "all": [
+      "ge:bytes:1229",
+      "ge:n_elements:19",
+      "le:depth_max:7",
+      "le:max_children:5",
+      "le:max_nattrs:4",
+      "le:n_defs:5"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 1229 and the number of elements is at least 19 and the deepest nesting in the file is at most 7 and the most children of one element is at most 5 and the most attributes on one element is at most 4 and the number of DEF names is at most 5.",
+    "why": "stopped: 23 failure(s) may not buy more than 6 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "a probe of another cluster",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "31 failure(s) to explain; the instrument passed 2352 file(s) and failed 759 in all",
+   "rule 1: attr[ge:index_max:177662200 & le:index_excess:440304889 & !v:lexical_invalid & at:IndexedFaceSet@coordIndex & e.child:Coordinate] explains 31 more (31 in all); 8 alternate(s) the receipts cannot rule out; seen at IndexedFaceSet@coordIndex; strays into 5 failure(s) with other signatures"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-4c6fe8b28cb1"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 724.3,
+  "signature": "RuntimeError at import_x3d.py:2253 importMesh_IndexedFaceSet",
+  "training_events": 5,
+  "training_failures": 31,
+  "unclean_best_efforts": [
+   {
+    "explains": 11,
+    "false_alarms": 41,
+    "rule": {
+     "all": [
+      "ge:max_attr_len:222",
+      "ge:n_elements:19",
+      "le:max_children:6",
+      "le:max_nattrs:3",
+      "dp:Immersive"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive: the longest attribute value is at least 222 and the number of elements is at least 19 and the most children of one element is at most 6 and the most attributes on one element is at most 3.",
+    "why": "stopped: 11 failure(s) may not buy more than 5 literal(s)"
+   },
+   {
+    "explains": 24,
+    "false_alarms": 130,
+    "rule": {
+     "all": [
+      "ge:bytes:1228",
+      "ge:n_elements:19",
+      "le:depth_max:7",
+      "le:max_children:6",
+      "le:max_nattrs:3",
+      "dp:Immersive"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive: the file size in bytes is at least 1228 and the number of elements is at least 19 and the deepest nesting in the file is at most 7 and the most children of one element is at most 6 and the most attributes on one element is at most 3.",
+    "why": "stopped: 24 failure(s) may not buy more than 6 literal(s)"
+   },
+   {
+    "explains": 17,
+    "false_alarms": 99,
+    "rule": {
+     "all": [
+      "ge:bytes:1438",
+      "ge:n_elements:19",
+      "le:max_children:6",
+      "le:max_nattrs:3",
+      "dp:Immersive"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive: the file size in bytes is at least 1438 and the number of elements is at least 19 and the most children of one element is at most 6 and the most attributes on one element is at most 3.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   }
+  ]
+ },
+ {
+  "found_by": "a probe of another cluster",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "42 failure(s) to explain; the instrument passed 2359 file(s) and failed 797 in all",
+   "rule 1: attr[ge:index_excess:20060965 & !v:lexical_invalid & at:IndexedFaceSet@coordIndex & e.has:creaseAngle] explains 42 more (42 in all); 8 alternate(s) the receipts cannot rule out; seen at IndexedFaceSet@coordIndex; strays into 19 failure(s) with other signatures"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-de23254b4dea"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 78.1,
+  "signature": "IndexError at import_x3d.py:2231 importMesh_IndexedFaceSet",
+  "training_events": 5,
+  "training_failures": 42,
+  "unclean_best_efforts": [
+   {
+    "explains": 34,
+    "false_alarms": 12,
+    "rule": {
+     "all": [
+      "ge:bytes:8532",
+      "ge:max_children:6",
+      "le:n_elements:30",
+      "!x:has_doctype"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 8532 and the most children of one element is at least 6 and the number of elements is at most 30, unless the file has a DOCTYPE.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   },
+   {
+    "explains": 42,
+    "false_alarms": 15,
+    "rule": {
+     "all": [
+      "ge:bytes:8464",
+      "le:max_nattrs:3",
+      "le:n_elements:30",
+      "dp:Immersive"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive: the file size in bytes is at least 8464 and the most attributes on one element is at most 3 and the number of elements is at most 30.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   },
+   {
+    "explains": 22,
+    "false_alarms": 10,
+    "rule": {
+     "all": [
+      "ge:bytes:8592",
+      "ge:max_children:6",
+      "le:n_elements:30",
+      "!x:has_doctype"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 8592 and the most children of one element is at least 6 and the number of elements is at most 30, unless the file has a DOCTYPE.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   }
+  ]
+ },
+ {
+  "found_by": "a probe of another cluster",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "4 failure(s) to explain; the instrument passed 2376 file(s) and failed 797 in all",
+   "rule 1: attr[ge:ntok:20 & at:IndexedTriangleFanSet@index] explains 4 more (4 in all); 8 alternate(s) the receipts cannot rule out; seen at IndexedTriangleFanSet@index"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-88d9b63e43b3"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 14.0,
+  "signature": "RuntimeError at import_x3d.py:2107 importMesh_IndexedTriangleFanSet",
+  "training_events": 4,
+  "training_failures": 4,
+  "unclean_best_efforts": [
+   {
+    "explains": 3,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "ge:depth_max:6",
+      "ge:max_attr_len:222",
+      "le:n_elements:12"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the deepest nesting in the file is at least 6 and the longest attribute value is at least 222 and the number of elements is at most 12.",
+    "why": "stopped: 3 failure(s) may not buy more than 3 literal(s)"
+   },
+   {
+    "explains": 2,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "ge:depth_max:6",
+      "ge:max_attr_len:223",
+      "le:n_elements:12"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the deepest nesting in the file is at least 6 and the longest attribute value is at least 223 and the number of elements is at most 12.",
+    "why": "stopped: 2 failure(s) may not buy more than 3 literal(s)"
+   },
+   {
+    "explains": 3,
+    "false_alarms": 2,
+    "rule": {
+     "all": [
+      "ge:bytes:985",
+      "le:max_children:2",
+      "le:max_nattrs:3"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 985 and the most children of one element is at most 2 and the most attributes on one element is at most 3.",
+    "why": "stopped: 3 failure(s) may not buy more than 3 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "a probe of another cluster",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "9 failure(s) to explain; the instrument passed 2380 file(s) and failed 804 in all",
+   "rule 1: attr[ge:index_excess:19311468 & at:IndexedTriangleStripSet@index & e.child:TextureCoordinate] explains 9 more (9 in all); 8 alternate(s) the receipts cannot rule out; seen at IndexedTriangleStripSet@index"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-a2a869510561"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 22.4,
+  "signature": "IndexError at import_x3d.py:1927 importMesh_ApplyUVs",
+  "training_events": 3,
+  "training_failures": 9,
+  "unclean_best_efforts": [
+   {
+    "explains": 5,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "ge:bytes:2782",
+      "ge:n_elements:49",
+      "le:max_children:5",
+      "le:max_nattrs:3"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 2782 and the number of elements is at least 49 and the most children of one element is at most 5 and the most attributes on one element is at most 3.",
+    "why": "stopped: 5 failure(s) may not buy more than 4 literal(s)"
+   },
+   {
+    "explains": 9,
+    "false_alarms": 4,
+    "rule": {
+     "all": [
+      "ge:bytes:2633",
+      "ge:depth_max:7",
+      "ge:max_children:5",
+      "le:n_defs:5",
+      "le:n_elements:49"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 2633 and the deepest nesting in the file is at least 7 and the most children of one element is at least 5 and the number of DEF names is at most 5 and the number of elements is at most 49.",
+    "why": "stopped: 9 failure(s) may not buy more than 5 literal(s)"
+   },
+   {
+    "explains": 8,
+    "false_alarms": 4,
+    "rule": {
+     "all": [
+      "ge:bytes:2634",
+      "ge:depth_max:7",
+      "ge:max_children:5",
+      "le:n_defs:5",
+      "le:n_elements:49"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 2634 and the deepest nesting in the file is at least 7 and the most children of one element is at least 5 and the number of DEF names is at most 5 and the number of elements is at most 49.",
+    "why": "stopped: 8 failure(s) may not buy more than 5 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "a probe of another cluster",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "62 failure(s) to explain; the instrument passed 2444 file(s) and failed 866 in all",
+   "rule 1: attr[v:number_unparseable & !p:Scene & !v:quoted & at:Transform@center] explains 55 more (55 in all); 8 alternate(s) the receipts cannot rule out; seen at Transform@center",
+   "7 failure(s) left unexplained (residue)"
+  ],
+  "probed": true,
+  "residue": 7,
+  "residue_examples": [
+   "confirm: Transform@center <- ' 1 1e 1 , 1 1e 1 '",
+   "confirm: Transform@center <- ' 1 1e 1 , 1 1e 1 '",
+   "confirm: Transform@center <- ' 1 1e 1 , 1 1e 1 '",
+   "confirm: Transform@center <- ' 1 1e 1 , 1 1e 1 '",
+   "alternate:3: Transform@center <- '  1 1e 1 , 1 1e 1  ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)"
+  ],
+  "rules": [
+   "r2r-c057e13c2f24"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 60.5,
+  "signature": "ValueError at import_x3d.py:1678 translateTransform",
+  "training_events": 1,
+  "training_failures": 62,
+  "unclean_best_efforts": [
+   {
+    "explains": 32,
+    "false_alarms": 129,
+    "rule": {
+     "all": [
+      "ge:bytes:2466",
+      "ge:n_defs:1",
+      "ge:n_elements:23",
+      "le:max_children:7",
+      "le:max_nattrs:4",
+      "!x:has_doctype"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 2466 and the number of DEF names is at least 1 and the number of elements is at least 23 and the most children of one element is at most 7 and the most attributes on one element is at most 4, unless the file has a DOCTYPE.",
+    "why": "no literal removes a false alarm: the vocabulary cannot separate these"
+   },
+   {
+    "explains": 49,
+    "false_alarms": 283,
+    "rule": {
+     "all": [
+      "ge:bytes:1336",
+      "ge:n_elements:23",
+      "le:depth_max:8",
+      "le:max_children:9",
+      "le:max_nattrs:6",
+      "le:n_defs:19",
+      "le:n_routes:0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 1336 and the number of elements is at least 23 and the deepest nesting in the file is at most 8 and the most children of one element is at most 9 and the most attributes on one element is at most 6 and the number of DEF names is at most 19 and the number of ROUTEs is at most 0.",
+    "why": "stopped: 49 failure(s) may not buy more than 7 literal(s)"
+   },
+   {
+    "explains": 42,
+    "false_alarms": 259,
+    "rule": {
+     "all": [
+      "ge:bytes:1422",
+      "ge:n_elements:23",
+      "le:depth_max:8",
+      "le:max_children:9",
+      "le:max_nattrs:6",
+      "le:n_defs:19",
+      "!x:has_doctype"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 1422 and the number of elements is at least 23 and the deepest nesting in the file is at most 8 and the most children of one element is at most 9 and the most attributes on one element is at most 6 and the number of DEF names is at most 19, unless the file has a DOCTYPE.",
+    "why": "stopped: 42 failure(s) may not buy more than 7 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "a probe of another cluster",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "log": [
+   "28 failure(s) to explain; the instrument passed 2506 file(s) and failed 893 in all",
+   "rule 1: attr[v:inf & !v:arity_mismatch & (at:Arc2D@startAngle | at:ArcClose2D@startAngle)] explains 25 more (25 in all); 8 alternate(s) the receipts cannot rule out; seen at Arc2D@startAngle, ArcClose2D@startAngle",
+   "rule 2: attr[v:has_comma & nws:3 & (at:Arc2D@startAngle | at:ArcClose2D@startAngle)] explains 3 more (3 in all); 8 alternate(s) the receipts cannot rule out; seen at Arc2D@startAngle, ArcClose2D@startAngle"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-b7cf987e340f",
+   "r2r-616562eddf55"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 41.4,
+  "signature": "ValueError at import_x3d.py:4437 _arc_points",
+  "training_events": 1,
+  "training_failures": 28,
+  "unclean_best_efforts": [
+   {
+    "explains": 25,
+    "false_alarms": 109,
+    "rule": {
+     "all": [
+      "ge:bytes:864",
+      "ge:depth_max:6",
+      "ge:max_children:3",
+      "le:max_nattrs:5",
+      "le:n_defs:6",
+      "le:n_elements:21"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 864 and the deepest nesting in the file is at least 6 and the most children of one element is at least 3 and the most attributes on one element is at most 5 and the number of DEF names is at most 6 and the number of elements is at most 21.",
+    "why": "stopped: 25 failure(s) may not buy more than 6 literal(s)"
+   },
+   {
+    "explains": 21,
+    "false_alarms": 109,
+    "rule": {
+     "all": [
+      "ge:bytes:866",
+      "ge:depth_max:6",
+      "ge:max_children:3",
+      "le:max_nattrs:5",
+      "le:n_defs:6",
+      "le:n_elements:21"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 866 and the deepest nesting in the file is at least 6 and the most children of one element is at least 3 and the most attributes on one element is at most 5 and the number of DEF names is at most 6 and the number of elements is at most 21.",
+    "why": "stopped: 21 failure(s) may not buy more than 6 literal(s)"
+   },
+   {
+    "explains": 13,
+    "false_alarms": 111,
+    "rule": {
+     "all": [
+      "ge:bytes:872",
+      "ge:depth_max:6",
+      "ge:max_children:3",
+      "le:max_nattrs:5",
+      "le:n_elements:21"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 872 and the deepest nesting in the file is at least 6 and the most children of one element is at least 3 and the most attributes on one element is at most 5 and the number of elements is at most 21.",
+    "why": "stopped: 13 failure(s) may not buy more than 5 literal(s)"
+   }
+  ]
+ }
+]

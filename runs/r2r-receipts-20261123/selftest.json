@@ -1,0 +1,141 @@
+{
+ "kit": {
+  "loomkit": {
+   "kit_commit": "e16641f02b0b48316793d7e6605e701729f4f716",
+   "kit_dirty": true,
+   "kit_sha256": "549c8cb197f0d252efbf2d14d313b2e7838ef3c20079c44bcc7b79553ebeba67"
+  },
+  "r2r_sha256": "096d1ce649f8b2767e482f9fc48d57b008fe65e51f94b82bc6f49241fcb9fa4d",
+  "r2r_version": "0.1.0",
+  "uom_facts": {
+   "fork_commit": "4d433af",
+   "from": "x3d_mcp fork, src/validation/schemas/X3dUnifiedObjectModel-4.{0,1}.xml",
+   "x3duom_40_sha256": "7e426a238656c21a4a444b989276494329da363625c36f0a719b15d89416bee3",
+   "x3duom_41_sha256": "4fc10e8e15c0d6cf2a916e4f59b815b110104aa7ea734dc6afea9458095c792b"
+  }
+ },
+ "passed": true,
+ "scenarios": [
+  {
+   "bar": "recall >= 0.9 and precision >= 0.95 on the challenge, from rules graded C or L",
+   "challenge": {
+    "clean_by_both": 294,
+    "false_alarms": 0,
+    "files": 325,
+    "flagged_by_both": 31,
+    "missed": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "grades": {
+    "C": 1,
+    "L": 0,
+    "S": 0
+   },
+   "hidden": "attr[v:bool_noncanonical & (at:Box@solid | at:DirectionalLight@on | at:IndexedFaceSet@solid | at:Sphere@solid | at:TimeSensor@loop)]",
+   "oracle_questions": 82,
+   "passed": true,
+   "recovered": [
+    {
+     "closure": "closed-so-far",
+     "grade": "C",
+     "rule": "attr[v:bool_noncanonical & (at:Box@solid | at:DirectionalLight@on | at:IndexedFaceSet@solid | at:Sphere@solid | at:TimeSensor@loop)]",
+     "sentence": "At one attribute: a boolean is spelt as something other than `true` or `false`, at one of 5 places (Box solid, DirectionalLight on, IndexedFaceSet solid, Sphere solid, TimeSensor loop)."
+    }
+   ],
+   "scenario": "bool-reader",
+   "seconds": 10.0,
+   "story": "a tool that crashes on a boolean not spelt true/false, but only at the five attributes it reads",
+   "training_failures": 19
+  },
+  {
+   "bar": "recall >= 0.9 and precision >= 0.95 on the challenge, from rules graded C or L",
+   "challenge": {
+    "clean_by_both": 185,
+    "false_alarms": 0,
+    "files": 325,
+    "flagged_by_both": 140,
+    "missed": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "grades": {
+    "C": 1,
+    "L": 0,
+    "S": 0
+   },
+   "hidden": "doc[ge:depth_max:64]",
+   "oracle_questions": 83,
+   "passed": true,
+   "recovered": [
+    {
+     "closure": "closed-so-far",
+     "grade": "C",
+     "rule": "doc[ge:depth_max:64]",
+     "sentence": "For the file as a whole: the deepest nesting in the file is at least 64."
+    }
+   ],
+   "scenario": "nesting-limit",
+   "seconds": 45.6,
+   "story": "a tool that overflows its stack once nesting reaches 64 levels",
+   "training_failures": 57
+  },
+  {
+   "bar": "recall >= 0.9 and precision >= 0.95 on the challenge, from rules graded C or L",
+   "challenge": {
+    "clean_by_both": 279,
+    "false_alarms": 0,
+    "files": 325,
+    "flagged_by_both": 46,
+    "missed": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "grades": {
+    "C": 1,
+    "L": 0,
+    "S": 0
+   },
+   "hidden": "attr[v:index_out_of_range & at:IndexedFaceSet@coordIndex]",
+   "oracle_questions": 73,
+   "passed": true,
+   "recovered": [
+    {
+     "closure": "closed-so-far",
+     "grade": "C",
+     "rule": "attr[v:index_out_of_range & at:IndexedFaceSet@coordIndex]",
+     "sentence": "At one attribute where the place is IndexedFaceSet coordIndex: an index points past the end of the list it indexes."
+    }
+   ],
+   "scenario": "index-reader",
+   "seconds": 10.1,
+   "story": "a tool that crashes when an IndexedFaceSet coordIndex points past its Coordinate list",
+   "training_failures": 40
+  },
+  {
+   "bar": "nothing graded Confirmed or Likely",
+   "grades": {
+    "C": 0,
+    "L": 0,
+    "S": 1
+   },
+   "hidden": null,
+   "oracle_questions": 123,
+   "passed": true,
+   "recovered": [
+    {
+     "closure": "open",
+     "grade": "S",
+     "rule": "attr[ge:ntok:2 & at:Cone@height]",
+     "sentence": "At one attribute where the place is Cone height: the number of tokens is at least 2."
+    }
+   ],
+   "scenario": "noise",
+   "seconds": 60.4,
+   "story": "a tool that fails one edited file in eight at random: there is no rule to find",
+   "training_failures": 37
+  }
+ ],
+ "schema": "loom.r2r-selftest/1",
+ "seed": 0
+}

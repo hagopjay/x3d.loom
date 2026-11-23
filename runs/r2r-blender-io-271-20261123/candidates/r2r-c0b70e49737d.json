@@ -1,0 +1,1185 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "0 audit probe(s) and 2+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "S",
+  "grade_word": "Suspected",
+  "missed_seen": 2,
+  "reasons": [
+   "5 audit prediction(s) were wrong: the rule fired and the instrument passed",
+   "leans on literal values (a fingerprint): the vocabulary lacks a word for what they share"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-c0b70e49737d",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "ge:len:19",
+    "failures_explained_without_it": 149,
+    "false_alarms_without_it": 25,
+    "role": "test"
+   },
+   {
+    "dropped": "v:lexical_invalid",
+    "failures_explained_without_it": 97,
+    "false_alarms_without_it": 33,
+    "role": "test"
+   },
+   {
+    "dropped": "!e.child:TransformSensor",
+    "failures_explained_without_it": 97,
+    "false_alarms_without_it": 2,
+    "role": "guard"
+   },
+   {
+    "dropped": "!v:tok:\"",
+    "failures_explained_without_it": 97,
+    "false_alarms_without_it": 22,
+    "role": "guard"
+   },
+   {
+    "dropped": "at:Transform@translation",
+    "failures_explained_without_it": 97,
+    "false_alarms_without_it": 92,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "ge:len:19",
+      "!e.child:TransformSensor",
+      "!v:tok:\"",
+      "at:Transform@translation",
+      "ntok:many"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation and the value has many token(s): the length of the value is at least 19, unless its element has a TransformSensor child or the value has the token `\"`."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:len:19",
+      "!e.child:TransformSensor",
+      "!v:tok:\"",
+      "at:Transform@translation",
+      "nws:many"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation and the value has many space-separated token(s): the length of the value is at least 19, unless its element has a TransformSensor child or the value has the token `\"`."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 5,
+   "confirmed": 82,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 153,
+   "probes": 430,
+   "refuted": 5,
+   "refuted_examples": [
+    "confirm: Transform@translation <- '\"\"1 2 3 4 5 4.0 7\"\"'",
+    "confirm: Transform@translation <- '  1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1  '",
+    "confirm: Transform@translation <- '  1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1  '",
+    "confirm: Transform@translation <- '  1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1  '",
+    "confirm: Transform@translation <- '  1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1  ,  1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1  '"
+   ],
+   "silent_ok": 185
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 60
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 2,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [
+    "num_extreme: X3D/Scene/Transform#OB_Torus translation: token 2 0 -> 0x10",
+    "text_garbage: X3D/Scene/Transform#OB_Lamp translation -> '1 2 3 4 5 6 7'"
+   ],
+   "passing_files": 1416
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [
+   {
+    "first_failing": 19.0,
+    "last_passing": 17,
+    "literal": "ge:len:19",
+    "number": "len",
+    "passing_values_compared": 25,
+    "untested": [
+     17,
+     19.0
+    ]
+   }
+  ],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 2162
+  },
+  "normative_reading": [
+   {
+    "literal": "v:arity_long",
+    "means": "the value has too many components for its field type",
+    "passing_files_with_it_inside_the_fence": 31
+   },
+   {
+    "literal": "v:arity_mismatch",
+    "means": "the value has the wrong number of components for its field type",
+    "passing_files_with_it_inside_the_fence": 42
+   },
+   {
+    "literal": "v:lexical_invalid",
+    "means": "the value does not have the written form its field type requires",
+    "passing_files_with_it_inside_the_fence": 49
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 36,
+    "round": 1,
+    "rules_tested": [
+     "attr[v:arity_long & at:Transform@translation]"
+    ],
+    "tally": {
+     "confirm/confirmed": 8,
+     "confirm/refuted": 2,
+     "value/confirmed": 8,
+     "value/refuted": 2,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 15
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 116,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:arity_long & at:Transform@translation & e.has:rotation]",
+     "attr[v:tok:1e & !p:Scene & !v:quoted & at:Transform@translation]",
+     "attr[v:arity_long & !v:eq: 1 1e 1 , 1 1e 1  & !v:tok:\" & at:Transform@translation]"
+    ],
+    "tally": {
+     "alternate/confirmed": 4,
+     "alternate/silent-ok": 2,
+     "confirm/confirmed": 25,
+     "confirm/refuted": 4,
+     "near/missed": 9,
+     "near/silent-ok": 3,
+     "value/confirmed": 27,
+     "value/refuted": 3,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 38
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 129,
+    "round": 3,
+    "rules_tested": [
+     "attr[ge:ntok:12 & !v:quoted & at:Transform@translation]",
+     "attr[v:arity_long & !p:Scene & !v:quoted & at:Transform@translation]",
+     "attr[ge:max_abs:6 & v:quoted & at:Transform@translation]"
+    ],
+    "tally": {
+     "alternate/confirmed": 6,
+     "bisect/missed": 6,
+     "confirm/confirmed": 27,
+     "confirm/refuted": 3,
+     "near/silent-ok": 12,
+     "value/confirmed": 27,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 47
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 177,
+    "round": "audit",
+    "rules_tested": [
+     "attr[v:arity_long & !p:Scene & !v:quoted & at:Transform@translation]",
+     "attr[ge:max:5 & v:arity_mismatch & !e.has:rotation & at:Transform@translation]",
+     "attr[ge:ntok:12 & !e.child:TransformSensor & !v:quoted & at:Transform@translation]",
+     "attr[ge:len:19 & v:lexical_invalid & !e.child:TransformSensor & !v:tok:\" & at:Transform@translation]"
+    ],
+    "tally": {
+     "alternate/confirmed": 6,
+     "bisect/confirmed": 6,
+     "confirm/confirmed": 35,
+     "confirm/refuted": 5,
+     "near/silent-ok": 21,
+     "value/confirmed": 40,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 63
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "ge:len:19",
+    "v:lexical_invalid",
+    "!e.child:TransformSensor",
+    "!v:tok:\"",
+    "at:Transform@translation"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-c0b70e49737d",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Transform@translation"
+  ],
+  "sentence": "At one attribute where the place is Transform translation: the length of the value is at least 19 and the value does not have the written form its field type requires, unless its element has a TransformSensor child or the value has the token `\"`.",
+  "signature": "ValueError at import_x3d.py:1700 translateTransform",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 130,
+   "explained_by_this_rule": 97,
+   "failures": 149,
+   "families": {
+    "chaos-differential": 1,
+    "r2r-probe": 148
+   },
+   "observed_by": {
+    "tool": 149
+   },
+   "with_known_good_twin": 149
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed ge:len:19, fenced to at:Transform@translation: explains 97, false alarms 57",
+   "+ v:lexical_invalid: explains 97, false alarms 24 (gain 33.75)",
+   "+ !v:tok:\": explains 97, false alarms 2 (gain 28.08)",
+   "+ !e.child:TransformSensor: explains 97, false alarms 0 (gain 2.86)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 92,
+   "rule": {
+    "all": [
+     "ge:len:19",
+     "v:lexical_invalid",
+     "!e.child:TransformSensor",
+     "!v:tok:\""
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": true
+ },
+ "rule": {
+  "all": [
+   "ge:len:19",
+   "v:lexical_invalid",
+   "!e.child:TransformSensor",
+   "!v:tok:\"",
+   "at:Transform@translation"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the place is Transform translation: the length of the value is at least 19 and the value does not have the written form its field type requires, unless its element has a TransformSensor child or the value has the token `\"`.",
+ "signature": "ValueError at import_x3d.py:1700 translateTransform",
+ "sources": [
+  {
+   "event": "ev-0ebdc2b9028c",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round1-a95506bfc2a0.x3d",
+   "note": "value: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7' (live: '1 2 3 4 5 6 7' failed here)",
+   "receipt": null,
+   "sha256": "a95506bfc2a0d4fecf939e838eb15700b311cb7df0c58e13f1a694088cb55a04",
+   "twin": "work:c006/twins/83a9ca2ee92d.x3d"
+  },
+  {
+   "event": "ev-ab35289c25d5",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round1-dd0896ec3cc8.x3d",
+   "note": "value: Transform@translation <- '  1 1e 1 , 1 1e 1  ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "dd0896ec3cc802cea8a7c4658b0dede28033b1e550cbab379e108539c0a38ad7",
+   "twin": "work:c006/twins/8b933aff1e1d.x3d"
+  },
+  {
+   "event": "ev-e98720285e1b",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round1-616aac101942.x3d",
+   "note": "value: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "616aac1019426c52248e75b236e8d62067cfd9c5b1c2af31bd0bec28a3180dbc",
+   "twin": "work:c006/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-0ba13669d5fb",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round1-2a0065f831e9.x3d",
+   "note": "value: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "2a0065f831e9eacbf521abef045453bdba0cb14b3f004c6b8fd99eb60b07c898",
+   "twin": "work:c006/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-16b0318ac4f2",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round1-2dd4462c701a.x3d",
+   "note": "value: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "2dd4462c701a025d2732d0a347d7e61d738f2d73bdd428b6f120dac480e73215",
+   "twin": "work:c006/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-c03afdb5b458",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-a2dc48c39e53.x3d",
+   "note": "confirm: Transform@translation <- '  1 1e 1 , 1 1e 1  '",
+   "receipt": null,
+   "sha256": "a2dc48c39e532bd0c475b9906e64fbb9e3c9d0f20e61bacb7773ba6c841007ca",
+   "twin": "work:c006/twins/9db8e93271e6.x3d"
+  },
+  {
+   "event": "ev-90d0cda10a4e",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-f489f3c151ba.x3d",
+   "note": "value: Transform@translation <- ' 1 1E 1 , 1 1E 1 , 1 1E 1 , 1 1E 1 ' (live: ' 1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "f489f3c151ba247ba9f03d5ceb1f9f13597c2196b406778637a2abbe8a86c899",
+   "twin": "work:c006/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-988cb3768cff",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-05b5add2a423.x3d",
+   "note": "value: Transform@translation <- '  1 1E 1 , 1 1E 1  ' (live: '  1 1e 1 , 1 1e 1  ' failed here)",
+   "receipt": null,
+   "sha256": "05b5add2a423b7ac63c41ce593d131fc250fb2f6fa5068b2d5b39e789b0ff2f3",
+   "twin": "work:c006/twins/9db8e93271e6.x3d"
+  },
+  {
+   "event": "ev-137b2e8ed4c8",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-e0a1e6de0a10.x3d",
+   "note": "value: Transform@translation <- '  1 1e 1 , 1 1e 1  ,  1 1e 1 , 1 1e 1  ' (live: '  1 1e 1 , 1 1e 1  ' failed here)",
+   "receipt": null,
+   "sha256": "e0a1e6de0a10f8be1ed93c990296e5dbf36d779aed9c533ee16e510c430c60b7",
+   "twin": "work:c006/twins/9db8e93271e6.x3d"
+  },
+  {
+   "event": "ev-ed1871ea315c",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-d97d0a035875.x3d",
+   "note": "value: Transform@translation <- ' 1 1E 1 , 1 1E 1 , 1 1E 1 , 1 1E 1 ' (live: ' 1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "d97d0a035875f6f57ac95abedfb628e7b14f8d188ca514ea908ec684974ce16d",
+   "twin": "work:c006/twins/8b933aff1e1d.x3d"
+  },
+  {
+   "event": "ev-9c02a26a32a4",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-849773bcfe70.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "849773bcfe704ec96e849ceab6360d74b9da3c4336369778c6cf256d97bd70cb",
+   "twin": "work:c006/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-937eb8e409b3",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-7766228581cf.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "7766228581cf6d5cf1f62eec536a71ab7d94d286617488368f2bf1de5fbfc619",
+   "twin": "work:c006/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-5cb8903a3e22",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-b7d736d2ecef.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "b7d736d2ecefff59991b6ab2545da0a230557cf63150f2bdcaa3042839f2f12e",
+   "twin": "work:c006/twins/aaddfad27ab0.x3d"
+  },
+  {
+   "event": "ev-39fed86a837b",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-5738857b24c2.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "5738857b24c2d1a7ce045050fecc835206bfbb47165498afe736a1b31bf1540b",
+   "twin": "work:c006/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-b695461c69eb",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-82055462b599.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "82055462b599a69948d408992ced30f450f0686c4e25bbf278e73d719b0c5595",
+   "twin": "work:c006/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-93f5070a8d92",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-65df6388f5d4.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "65df6388f5d48fe23e7e04332686829b3aa70fb99ddda0ed22f81bf83ca34154",
+   "twin": "work:c006/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-705d46a766b1",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-b68604772b93.x3d",
+   "note": "near: Transform@translation <- ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' (live: ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "b68604772b93db46948bfe308575b1f746ddde1ca1f80ad31313550c5e3f7a89",
+   "twin": "work:c006/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-7f5fbc84c162",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-54ca0c111b6b.x3d",
+   "note": "near: Transform@translation <- ' 1 1E 1 , 1 1E 1 , 1 1E 1 , 1 1E 1 ' (live: ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "54ca0c111b6b52275b9d3b8d634b17b294b27e582d6e22acde38092b406593f6",
+   "twin": "work:c006/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-29506d498c12",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-3e7758342503.x3d",
+   "note": "near: Transform@translation <- ' 1 1E 1 , 1 1E 1 , 1 1E 1 , 1 1E 1 ' (live: ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "3e7758342503a660e28389680f84449c6cdf5dff8437f4ac9e59e03b06401ae5",
+   "twin": "work:c006/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-73378825bd5c",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-d7058e3ac19f.x3d",
+   "note": "value: Transform@translation <- '  1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1  ' (live: ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "d7058e3ac19f666f3e1830cecff8fef67439019fa33efc388feba4d0332ef1c1",
+   "twin": "work:c006/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-7e1fa68c2c2f",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-99a2578259e7.x3d",
+   "note": "value: Transform@translation <- '  1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1  ' (live: ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "99a2578259e740bdf6ec922dd05de5acc5204e35eaa1e1d606db052d0be8a3f2",
+   "twin": "work:c006/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-e8ca9b7a23a8",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-8e0607af43ed.x3d",
+   "note": "value: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "8e0607af43ed903f0b69f7cc0392b4ba11ee1e870d2ad8b952af0eac9f1a78e3",
+   "twin": "work:c006/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-bf2f4bb9306a",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-faa828032c85.x3d",
+   "note": "value: Transform@translation <- '  1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1  ' (live: ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "faa828032c85e8a57e7bb2afaca2a833cb899e64358186565e8345f8dc3c9722",
+   "twin": "work:c006/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-d1755bff60af",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-1e50acc35173.x3d",
+   "note": "value: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "1e50acc3517388de81f4a2fbf8ee9f7b2240f26c252e66c7989dcde46f86dcb7",
+   "twin": "work:c006/twins/d588e5f733ad.x3d"
+  },
+  {
+   "event": "ev-7368d3bdd2e7",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-a5dd467ffa4d.x3d",
+   "note": "value: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "a5dd467ffa4dd8b81f290c46568780a78e3cb6e3e53b390280c8e1c29cfed1ca",
+   "twin": "work:c006/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-23797b8cbd02",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-3a20f07f7c75.x3d",
+   "note": "value: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "3a20f07f7c750817cccc4995502da7c9f416653def797678c12d1e26c178197b",
+   "twin": "work:c006/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-58fd88b59b7c",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-6770ecb8800a.x3d",
+   "note": "value: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "6770ecb8800ac4ec7596d73db68a33f0bf2a6786e490d11ffcd7c2d9ebc2a041",
+   "twin": "work:c006/twins/aaddfad27ab0.x3d"
+  },
+  {
+   "event": "ev-c0098ae5d62b",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-2472b3ff583a.x3d",
+   "note": "value: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "2472b3ff583a11ff7c9ed81ce531963d6b4e9c5c237bc44ceafb904f8af2960f",
+   "twin": "work:c006/twins/aaddfad27ab0.x3d"
+  },
+  {
+   "event": "ev-44b0d59239f6",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-cf3852f9625e.x3d",
+   "note": "value: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "cf3852f9625e779aca80f82bb69612014d5c4b430f66612d3b0563d001cf2f1c",
+   "twin": "work:c006/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-22fb855b37ab",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-f1be773f3ec5.x3d",
+   "note": "confirm: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7'",
+   "receipt": null,
+   "sha256": "f1be773f3ec530d1dbc7e21a84c1710030f5cfad6d4cdb37fb2d2091cd223a6a",
+   "twin": "work:c006/twins/7314b92f358b.x3d"
+  },
+  {
+   "event": "ev-3e4ccf979678",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-3977f5850b46.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "3977f5850b46d3d683664962bc8f8f263120324afdd234160dc1f1367e83dae5",
+   "twin": "work:c006/twins/a82bffa86c64.x3d"
+  },
+  {
+   "event": "ev-95302377df44",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-140e8353650c.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "140e8353650cbacd0c9327bd2b929c3c2d99ce37e3f6038886f4ff5b171c3093",
+   "twin": "work:c006/twins/67a670a1ab3a.x3d"
+  },
+  {
+   "event": "ev-5d0d55e889a2",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-a9b0bc973233.x3d",
+   "note": "confirm: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7'",
+   "receipt": null,
+   "sha256": "a9b0bc973233795d45e89ec175c7dd4fff75b94de1f12d3c9a26d58a8e7cbfb3",
+   "twin": "work:c006/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-44ba8dd7975a",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-0b640ad1e952.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "0b640ad1e952c63711b44fa2fd88abe3611e988ab2f774c4bb389f755e960c4b",
+   "twin": "work:c006/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-24103cf0c47a",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-e9b4b528a7e6.x3d",
+   "note": "alternate:1: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "e9b4b528a7e680c951d05be8b6492a2a35d9396c4f6afb7fbbe052ae5d06d96f",
+   "twin": "work:c006/twins/a82bffa86c64.x3d"
+  },
+  {
+   "event": "ev-8a6770177550",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-d6b7ded07888.x3d",
+   "note": "alternate:1: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "d6b7ded0788819432da6b3e6b10ebff838289999a2969a2679b0567d828590fd",
+   "twin": "work:c006/twins/67a670a1ab3a.x3d"
+  },
+  {
+   "event": "ev-49031be070b3",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-c82294793f98.x3d",
+   "note": "alternate:1: Transform@translation <- '  1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1  ' (live: ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "c82294793f9877a3eb6d76cfd4b8ba42582c21f650b06ba01ca736f8827a49c3",
+   "twin": "work:c006/twins/67a670a1ab3a.x3d"
+  },
+  {
+   "event": "ev-e79182fe8aa3",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-ab8e36ad8f2f.x3d",
+   "note": "alternate:1: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "ab8e36ad8f2f609fd8bdd77c40bf700bfaa209edd0e40838b02955fc52fe616a",
+   "twin": "work:c006/twins/54cc72ab3816.x3d"
+  },
+  {
+   "event": "ev-765f17397222",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-8a58888829ec.x3d",
+   "note": "value: Transform@translation <- ' 1 2 3 4 5 6 7 1 2 3 4 5 6 7 ' (live: '1 2 3 4 5 6 7 1 2 3 4 5 6 7' failed here)",
+   "receipt": null,
+   "sha256": "8a58888829ecf8f65595f639a19afcd599e15b093923aa2bb5110e606d5df0b1",
+   "twin": "work:c006/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-336eab7dda87",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-004f8d3c5e1f.x3d",
+   "note": "value: Transform@translation <- ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' (live: ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "004f8d3c5e1f32e91ee2ef0288eea7de0bcb18107b494a16f8eeae5a3044cf09",
+   "twin": "work:c006/twins/67a670a1ab3a.x3d"
+  },
+  {
+   "event": "ev-c08b4f95d23a",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-0052930086d3.x3d",
+   "note": "value: Transform@translation <- '  1 1E 1 , 1 1E 1  ' (live: ' 1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "0052930086d3e74ad8be22c2a23b4a3b5b29a974922baec5eb221da8415a2844",
+   "twin": "work:c006/twins/1ff03afbf828.x3d"
+  },
+  {
+   "event": "ev-7cfcba80e858",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-d425b40d0c8e.x3d",
+   "note": "value: Transform@translation <- ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' (live: ' 1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "d425b40d0c8edd2bf8deb1fbc3d6a7d69b96535a16092f4947d49b109c9d5b27",
+   "twin": "work:c006/twins/65a6607224a8.x3d"
+  },
+  {
+   "event": "ev-858b94325766",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-3ce79e361a8e.x3d",
+   "note": "value: Transform@translation <- '1 2 3 4 5 6 7,1 2 3 4 5 6 7' (live: '1 2 3 4 5 6 7' failed here)",
+   "receipt": null,
+   "sha256": "3ce79e361a8ea2ced69363e8a1a17cd36ec4072eee3c94655292c6c24afd0d7a",
+   "twin": "work:c006/twins/d588e5f733ad.x3d"
+  },
+  {
+   "event": "ev-1f2fe8333f85",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-a4f7227d6ea9.x3d",
+   "note": "value: Transform@translation <- ' 1 1E 1 , 1 1E 1 , 1 1E 1 , 1 1E 1 ' (live: ' 1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "a4f7227d6ea9fb4d9f46efdc8ad2a8eb8f96c95fa0754a3f4b72e0e02dc83bb7",
+   "twin": "work:c006/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-bfb712b6f6de",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-843565950792.x3d",
+   "note": "value: Transform@translation <- ' 1 1E 1 , 1 1E 1 , 1 1E 1 , 1 1E 1 ' (live: ' 1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "84356595079280b415bfe2fec662c4b42de9b47c67242d376de2e0c7526e8932",
+   "twin": "work:c006/twins/65a6607224a8.x3d"
+  },
+  {
+   "event": "ev-9d42d7ec0559",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-1993fb44e12b.x3d",
+   "note": "value: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7' (live: '1 2 3 4 5 6 7 1 2 3 4 5 6 7' failed here)",
+   "receipt": null,
+   "sha256": "1993fb44e12ba32c107c62c711758b6e2f8081b999dc9184c344912023d0d284",
+   "twin": "work:c006/twins/7314b92f358b.x3d"
+  },
+  {
+   "event": "ev-4afb6c65d77c",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round2-91d1f40073ab.x3d",
+   "note": "value: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7,1 2 3 4 5 6 7 1 2 3 4 5 6 7' (live: '1 2 3 4 5 6 7 1 2 3 4 5 6 7' failed here)",
+   "receipt": null,
+   "sha256": "91d1f40073ab375f71e5f65d71d452c3cb28bdd8324d992853ed82b1632cf95e",
+   "twin": "work:c006/twins/7314b92f358b.x3d"
+  },
+  {
+   "event": "ev-a81992a52291",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-1f68c39f4c48.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "1f68c39f4c4838447b7986f3d43b6bd2133ec8be28ee21cf7af12eb31a4824b6",
+   "twin": "work:c006/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-98439e9367da",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-596b5391e62d.x3d",
+   "note": "confirm: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7'",
+   "receipt": null,
+   "sha256": "596b5391e62d8b8a0f43667308417157ae95361852d99c298288d69cd348404f",
+   "twin": "work:c006/twins/d588e5f733ad.x3d"
+  },
+  {
+   "event": "ev-2aa8963ccd8b",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-bf7a8d046aaa.x3d",
+   "note": "confirm: Transform@translation <- '  1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1  '",
+   "receipt": null,
+   "sha256": "bf7a8d046aaa7631f933c01f1600de3b1211d4e6f825f2ebb44f02b6473e674b",
+   "twin": "work:c006/twins/8b209fda2eb1.x3d"
+  },
+  {
+   "event": "ev-59594a0e8cd0",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-fdef93eb5b6b.x3d",
+   "note": "confirm: Transform@translation <- '  1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1  '",
+   "receipt": null,
+   "sha256": "fdef93eb5b6bbafea49c9375cbb82b4558290729348dc386bd4e578f34c8bfb1",
+   "twin": "work:c006/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-925fedf1858e",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-eb902e379b4b.x3d",
+   "note": "confirm: Transform@translation <- '1 2 3 4 5 6 7 1 2 3 4 5 6 7,1 2 3 4 5 6 7 1 2 3 4 5 6 7'",
+   "receipt": null,
+   "sha256": "eb902e379b4be56f11bc9f30cd34e2f9df674759855494a2b5410d889fe94410",
+   "twin": "work:c006/twins/a82bffa86c64.x3d"
+  },
+  {
+   "event": "ev-e9c1c097f14d",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-20785ec550d7.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "20785ec550d782eaf930bb2131a656c911232723ed44ea2f511ed1f9cc9d65f0",
+   "twin": "work:c006/twins/9db8e93271e6.x3d"
+  },
+  {
+   "event": "ev-3266844944b6",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-7e1585325e70.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 '",
+   "receipt": null,
+   "sha256": "7e1585325e70e2552da688e0924d14a52d0e8eefeea5c7106793d051bbdfb1a0",
+   "twin": "work:c006/twins/ea58c36cfc79.x3d"
+  },
+  {
+   "event": "ev-be7409f2fa22",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-fd7d07820588.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 '",
+   "receipt": null,
+   "sha256": "fd7d07820588b87cc968dae4edd31b624b3f18bd1364e23660a3409a6a93f6b7",
+   "twin": "work:c006/twins/b5f1a2bac5d6.x3d"
+  },
+  {
+   "event": "ev-1094c75f56c6",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-8950ad99c245.x3d",
+   "note": "confirm: Transform@translation <- '  1 1e 1 , 1 1e 1  ,  1 1e 1 , 1 1e 1  '",
+   "receipt": null,
+   "sha256": "8950ad99c24543a452d7fe74b1573f53ced9edce4b1fa4f8f05cbbfbbf318b11",
+   "twin": "work:c006/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-24b7c2dc7bc3",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-f8a57c609a44.x3d",
+   "note": "value: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' (live: ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "f8a57c609a44c75eda10e986b65e85f4661b7cf4dfd1788ccef8c42eaac62c75",
+   "twin": "work:c006/twins/b5f1a2bac5d6.x3d"
+  },
+  {
+   "event": "ev-1f38ed47c0e2",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-4a7d01eefd2b.x3d",
+   "note": "value: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 ' (live: ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "4a7d01eefd2b17e827c4c92489a875ea50cb54f5a415bc38d1305e58011f5993",
+   "twin": "work:c006/twins/ea58c36cfc79.x3d"
+  },
+  {
+   "event": "ev-c5b617dc715d",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-4f96bf0f8b6a.x3d",
+   "note": "value: Transform@translation <- '  1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1  ,  1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1  ' (live: '  1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1  ' failed here)",
+   "receipt": null,
+   "sha256": "4f96bf0f8b6ab44e93c52aced6c85c62dfeae3e339560ca4729ce9d6fb47dca4",
+   "twin": "work:c006/twins/8b209fda2eb1.x3d"
+  },
+  {
+   "event": "ev-1a664117bf2b",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-aa2680409f41.x3d",
+   "note": "value: Transform@translation <- '  1 1E 1 , 1 1E 1 , 1 1E 1 , 1 1E 1  ' (live: '  1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1  ' failed here)",
+   "receipt": null,
+   "sha256": "aa2680409f41786c46f9a5b6aecef5c644108e018689edccd2317e4a3411868a",
+   "twin": "work:c006/twins/8b209fda2eb1.x3d"
+  },
+  {
+   "event": "ev-a197279f54df",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-0039150ca866.x3d",
+   "note": "value: Transform@translation <- '  1 1E 1 , 1 1E 1  ,  1 1E 1 , 1 1E 1  ' (live: '  1 1e 1 , 1 1e 1  ,  1 1e 1 , 1 1e 1  ' failed here)",
+   "receipt": null,
+   "sha256": "0039150ca866d525dd39b06324f67ba4a4b48c040e22fd85d3e83ea5608d476d",
+   "twin": "work:c006/twins/cf3507f27f6d.x3d"
+  },
+  {
+   "event": "ev-27157522ca4b",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-ed6fa627ac62.x3d",
+   "note": "value: Transform@translation <- ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' (live: ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "ed6fa627ac6267fcdb426ab021648efdda896c3ba0c1c641d7c256ae3671df14",
+   "twin": "work:c006/twins/b5f1a2bac5d6.x3d"
+  },
+  {
+   "event": "ev-3cf5ad0309b8",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-42e3d0cac945.x3d",
+   "note": "value: Transform@translation <- '  1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1  ' (live: ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "42e3d0cac9459cd1dd8e34fba2775d37b41a3954af5500f9aa58e9bd30c559db",
+   "twin": "work:c006/twins/b5f1a2bac5d6.x3d"
+  },
+  {
+   "event": "ev-089f8b332232",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-a6b7fb14047c.x3d",
+   "note": "value: Transform@translation <- '  1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1  ' (live: ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "a6b7fb14047c42671bbd1ed74d00f185c46d67669db499be413f26f4561be2d8",
+   "twin": "work:c006/twins/ea58c36cfc79.x3d"
+  },
+  {
+   "event": "ev-f1a938c4c40d",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-086672ed7a89.x3d",
+   "note": "value: Transform@translation <- ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 , 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' (live: ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "086672ed7a8986fd03e55978a71f7e113b43d0a50416f1bca5e01efb89f0ecde",
+   "twin": "work:c006/twins/ea58c36cfc79.x3d"
+  },
+  {
+   "event": "ev-028015c4b1e4",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-6b8e8aff8d34.x3d",
+   "note": "value: Transform@translation <- ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' (live: ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "6b8e8aff8d3412f95143823feb7e97e4ca5043e1ec4bc9c7089f286cb9712cac",
+   "twin": "work:c006/twins/ea58c36cfc79.x3d"
+  },
+  {
+   "event": "ev-bd774252cb57",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-4524beda28dc.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "4524beda28dc047152f27967ec6379311f551cdefffbaa3a3b7aaf66810e156a",
+   "twin": "work:c006/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-1f38b8912ca3",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-1379bd4124a3.x3d",
+   "note": "confirm: Transform@translation <- '  1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1  '",
+   "receipt": null,
+   "sha256": "1379bd4124a3a0a98003bd05baf87dff014f97fc84958db896e240033efdd66d",
+   "twin": "work:c006/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-573ce7f665f9",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-48697530851c.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "48697530851c0cb66788d87bc0a830818ed83ad53eebd4ac7bddde7801a50e15",
+   "twin": "work:c006/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-839740fa1ee1",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-a28264fab900.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "a28264fab90091b8165f6a5986bdd880b40a96f675f87d8229d373bcd57cf33d",
+   "twin": "work:c006/twins/a0501ac0fcb0.x3d"
+  },
+  {
+   "event": "ev-cc2f64b16edf",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-c151307aa1f0.x3d",
+   "note": "confirm: Transform@translation <- '  1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1  '",
+   "receipt": null,
+   "sha256": "c151307aa1f0345ebf44cd84606dc9966adfab8e7c7076e5bd817a90f8a69e1f",
+   "twin": "work:c006/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-4682ed022ce3",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-b419e646944c.x3d",
+   "note": "confirm: Transform@translation <- ' 1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1 '",
+   "receipt": null,
+   "sha256": "b419e646944cc651fdb13e5ddf7231444e8d84a5ca51f861562e45b6f217dcf2",
+   "twin": "work:c006/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-29dc9d9aa292",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-dd29a08a8ea4.x3d",
+   "note": "alternate:1: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "dd29a08a8ea43b2553791cf2b715628a4232e17900113ab0d923489f7337ce1c",
+   "twin": "work:c006/twins/ea58c36cfc79.x3d"
+  },
+  {
+   "event": "ev-b1243349db2f",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-9cb9daa03e8a.x3d",
+   "note": "alternate:1: Transform@translation <- ' 1 1e 1 , 1 1e 1 , 1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "9cb9daa03e8a71b5654341eb45758ce6e7f9a46bfcb8749eaf93498b53887690",
+   "twin": "work:c006/twins/8b209fda2eb1.x3d"
+  },
+  {
+   "event": "ev-edbacea55e65",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-da9428c41430.x3d",
+   "note": "alternate:1: Transform@translation <- '  1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1  ' (live: '  1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1  ' failed here)",
+   "receipt": null,
+   "sha256": "da9428c41430bb1e2244d60be1a4a494c22ca583f7ca46e1ad149f9d9f0ffbf6",
+   "twin": "work:c006/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-5acf7504616c",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-2f9277654fbc.x3d",
+   "note": "alternate:1: Transform@translation <- '  1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1  ,  1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1  ' (live: '  1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1  ' failed here)",
+   "receipt": null,
+   "sha256": "2f9277654fbc5997e008b5fd09006f13eedd80ca1e5b6a46c1749ed0bd485323",
+   "twin": "work:c006/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-5d14b548a39d",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-d7d05995ff2c.x3d",
+   "note": "alternate:1: Transform@translation <- ' 1 1E 1 , 1 1E 1   1 1E 1 , 1 1E 1 ' (live: ' 1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "d7d05995ff2cd879bbc565b07355d5d75d09300dac2eb087e627bf1743790050",
+   "twin": "work:c006/twins/a0501ac0fcb0.x3d"
+  },
+  {
+   "event": "ev-482b8db7766b",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-9d2e30e3ff73.x3d",
+   "note": "alternate:1: Transform@translation <- '  1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1  ,  1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1  ' (live: '  1 1e 1 , 1 1e 1   1 1e 1 , 1 1e 1  ' failed here)",
+   "receipt": null,
+   "sha256": "9d2e30e3ff73c0fa7f71759de700a70d51bc8065a155eb8a1c83e6580957dc76",
+   "twin": "work:c006/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-b7d8f2392cdf",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-80c4ef7fe9b2.x3d",
+   "note": "value: Transform@translation <- '  1 1e 1 , 1 1e 1  ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "80c4ef7fe9b21a2bd679025fd21dc665678dcad146018aaf04f22a09fb037e72",
+   "twin": "work:c006/twins/ea58c36cfc79.x3d"
+  },
+  {
+   "event": "ev-02904dfe2de6",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-6bebe50a7774.x3d",
+   "note": "value: Transform@translation <- '  1 1e 1 , 1 1e 1  ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "6bebe50a777425c8dd5e79056d2564d57eaebf2f3ccea2fe688bbb7ffb096b3f",
+   "twin": "work:c006/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-425d53e3b84f",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-849de750652d.x3d",
+   "note": "value: Transform@translation <- '  1 1E 1 , 1 1E 1  ' (live: ' 1 1E 1 , 1 1E 1 ' failed here)",
+   "receipt": null,
+   "sha256": "849de750652db2826cc8f93a92aa39bd3a253fd275a102fe1abc9885d607767a",
+   "twin": "work:c006/twins/a0501ac0fcb0.x3d"
+  },
+  {
+   "event": "ev-46e7940921dd",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-4ad318239f9b.x3d",
+   "note": "value: Transform@translation <- '  1 1e 1 , 1 1e 1  ' (live: ' 1 1e 1 , 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "4ad318239f9b059731ab0b9cb9bc17320171a0e27ec9de507371297626165ab8",
+   "twin": "work:c006/twins/8b209fda2eb1.x3d"
+  },
+  {
+   "event": "ev-a15046781e01",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-c6ba8f02635a.x3d",
+   "note": "bisect: Transform@translation <- max_abs near 4",
+   "receipt": null,
+   "sha256": "c6ba8f02635a54751e19e20265dcb25bf40b49051011d890d2dfa51b2904098b",
+   "twin": "work:c006/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-fc3067206bdd",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-b968d0c163ea.x3d",
+   "note": "bisect: Transform@translation <- max_abs near 5",
+   "receipt": null,
+   "sha256": "b968d0c163eae7c47d4c5619578ae95f3df8ac9123a93452dc27ed11654af8ac",
+   "twin": "work:c006/twins/6b7f4d52cd02.x3d"
+  },
+  {
+   "event": "ev-a368f5c8796d",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-13248d713b84.x3d",
+   "note": "bisect: Transform@translation <- max_abs near 2",
+   "receipt": null,
+   "sha256": "13248d713b84c7e70d4137c9c142dd79ef7a32f551a20895bdabfd362e168dbb",
+   "twin": "work:c006/twins/7314b92f358b.x3d"
+  },
+  {
+   "event": "ev-0c844ff35393",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-b3f123069bd5.x3d",
+   "note": "bisect: Transform@translation <- max_abs near 2",
+   "receipt": null,
+   "sha256": "b3f123069bd5c79dc0504b368843589d5a64b7b6e90046c2fe0715d358e87776",
+   "twin": "work:c006/twins/6b7f4d52cd02.x3d"
+  },
+  {
+   "event": "ev-4ae18ba8b4f5",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-55547acd86c6.x3d",
+   "note": "bisect: Transform@translation <- max_abs near 4",
+   "receipt": null,
+   "sha256": "55547acd86c67600a746e4d71892aa7ce8130f8a5050232cf4ccb1fe151183f9",
+   "twin": "work:c006/twins/6b7f4d52cd02.x3d"
+  },
+  {
+   "event": "ev-9bbf38af0241",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-9b9f200badb0.x3d",
+   "note": "value: Transform@translation <- '\"\"1 2 3 4 5 6 7\"\",\"\"1 2 3 4 5 6 7\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "9b9f200badb05ec9362b3b1d3577d81169c2fcc9ed6356e00daa147066a81af1",
+   "twin": "work:c006/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-2407d7b20c65",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-2cf92a82a8ab.x3d",
+   "note": "value: Transform@translation <- '\"\"\"1 2 3 4 5 6 7\"\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "2cf92a82a8ab05f33584705b3c7535be50b352c388307c3227f2288994ee2ba5",
+   "twin": "work:c006/twins/9db8e93271e6.x3d"
+  },
+  {
+   "event": "ev-34d506d5423a",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-d108107db8dd.x3d",
+   "note": "value: Transform@translation <- ' \"1 2 3 4 5 6 7\"   \"1 2 3 4 5 6 7\" ' (live: ' \"1 2 3 4 5 6 7\" ' failed here)",
+   "receipt": null,
+   "sha256": "d108107db8dd840b4f511c6cdbcfd14ff8ebd413095b5079b95f1cb5b65911bf",
+   "twin": "work:c006/twins/3329062423a7.x3d"
+  },
+  {
+   "event": "ev-b98121050f3f",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-e72b8cdedbdd.x3d",
+   "note": "value: Transform@translation <- '\"\"1 2 3 4 5 6 7\"\" \"\"1 2 3 4 5 6 7\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "e72b8cdedbdd50fa81408b70418c7bfccf48856482bdcc1462b42bf7074d2ebd",
+   "twin": "work:c006/twins/9db8e93271e6.x3d"
+  },
+  {
+   "event": "ev-fa772e0a2667",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-0fecba61977d.x3d",
+   "note": "value: Transform@translation <- '\"\"\"1 2 3 4 5 6 7\"\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "0fecba61977d4fee86252508abaebf1df5715923fdb0a89c9c75dd7e79a25409",
+   "twin": "work:c006/twins/6b7f4d52cd02.x3d"
+  },
+  {
+   "event": "ev-acc4c53277c8",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-8f655f7a0e08.x3d",
+   "note": "value: Transform@translation <- ' \"\"1 2 3 4 5 6 7\"\" ' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "8f655f7a0e0899c92ad0bf79d149ddbc29a8c361bda14477f2ea5c25d47ad7f4",
+   "twin": "work:c006/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-69c53ab0d0db",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-e2baac318861.x3d",
+   "note": "value: Transform@translation <- ' \"1 2 3 4 5 6 7\"   \"1 2 3 4 5 6 7\" ' (live: ' \"1 2 3 4 5 6 7\" ' failed here)",
+   "receipt": null,
+   "sha256": "e2baac31886125ac85da4e4cab21a4eda7d789e3825fb19a70014642166fad3c",
+   "twin": "work:c006/twins/59a7be2708ed.x3d"
+  },
+  {
+   "event": "ev-24b0f468e4f8",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-cf9595071ae3.x3d",
+   "note": "value: Transform@translation <- '\"\"\"1 2 3 4 5 6 7\"\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "cf9595071ae3e36066c262988430f2cc9859e16298a7ad701220822b5450ec9e",
+   "twin": "work:c006/twins/7314b92f358b.x3d"
+  },
+  {
+   "event": "ev-67c7449eed1c",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-859aa057bb58.x3d",
+   "note": "value: Transform@translation <- '\"\"\"1 2 3 4 5 6 7\"\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "859aa057bb58553e6431923ab499a006c9a054b79cc53807706eed34c6fd0d61",
+   "twin": "work:c006/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-e0264b094721",
+   "family": "r2r-probe",
+   "file": "work:c006/probes/round3-f3938ea5cf1e.x3d",
+   "note": "value: Transform@translation <- '\"\"1 2 3 4 5 6 7\"\",\"\"1 2 3 4 5 6 7\"\"' (live: '\"\"1 2 3 4 5 6 7\"\"' failed here)",
+   "receipt": null,
+   "sha256": "f3938ea5cf1e659b50bed8782753d673f426b056c65e360e937984cb4ea95f03",
+   "twin": "work:c006/twins/9db8e93271e6.x3d"
+  }
+ ],
+ "sources_total": 97,
+ "status": "candidate"
+}

@@ -1,0 +1,794 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "1 audit probe(s) and 0+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "C",
+  "grade_word": "Confirmed",
+  "missed_seen": 4,
+  "reasons": [
+   "15 audit probe(s) confirmed, 0 refuted",
+   "0 false alarms in 1887 known-good files"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-2a5db21f7cdd",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "ge:index_excess:440304889",
+    "failures_explained_without_it": 49,
+    "false_alarms_without_it": 1086,
+    "role": "test"
+   },
+   {
+    "dropped": "ge:ntok:20",
+    "failures_explained_without_it": 76,
+    "false_alarms_without_it": 8,
+    "role": "test"
+   },
+   {
+    "dropped": "!e.has:ccw",
+    "failures_explained_without_it": 49,
+    "false_alarms_without_it": 2,
+    "role": "guard"
+   },
+   {
+    "dropped": "at:IndexedFaceSet@coordIndex",
+    "failures_explained_without_it": 49,
+    "false_alarms_without_it": 25,
+    "role": "context"
+   },
+   {
+    "dropped": "e.child:Coordinate",
+    "failures_explained_without_it": 49,
+    "false_alarms_without_it": 2,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "ge:index_excess:440304889",
+      "ge:ntok:20",
+      "!anc:HAnimHumanoid",
+      "at:IndexedFaceSet@coordIndex",
+      "e.child:Coordinate"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedFaceSet coordIndex and its element has a Coordinate child: how far the largest index runs past the end of its list is at least 440304889 and the number of tokens is at least 20, unless it sits inside a HAnimHumanoid."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:index_max:440304894",
+      "ge:ntok:20",
+      "!anc:HAnimHumanoid",
+      "at:IndexedFaceSet@coordIndex",
+      "e.child:Coordinate"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedFaceSet coordIndex and its element has a Coordinate child: the largest index is at least 440304894 and the number of tokens is at least 20, unless it sits inside a HAnimHumanoid."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 24,
+   "confirmed": 15,
+   "missed": 1,
+   "missed_examples": [
+    "bisect: IndexedFaceSet@coordIndex <- index_excess near 1.6222e+09"
+   ],
+   "other_failure": 42,
+   "probes": 126,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 44
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 49
+  },
+  "held_out": {
+   "caught": 11,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 14,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1416
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [
+   {
+    "first_failing": 440304889.0,
+    "last_passing": 46340853.0,
+    "literal": "ge:index_excess:440304889",
+    "number": "index_excess",
+    "passing_values_compared": 1233,
+    "untested": [
+     46340853.0,
+     440304889.0
+    ]
+   },
+   {
+    "first_failing": 20.0,
+    "last_passing": 15,
+    "literal": "ge:ntok:20",
+    "number": "ntok",
+    "passing_values_compared": 8,
+    "untested": [
+     15,
+     20.0
+    ]
+   }
+  ],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1887
+  },
+  "normative_reading": [
+   {
+    "literal": "v:index_out_of_range",
+    "means": "an index points past the end of the list it indexes",
+    "passing_files_with_it_inside_the_fence": 61
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 36,
+    "round": 1,
+    "rules_tested": [
+     "attr[ge:index_excess:2147483520 & at:IndexedFaceSet@coordIndex]"
+    ],
+    "tally": {
+     "bisect/other-failure": 2,
+     "bisect/silent-ok": 4,
+     "confirm/confirmed": 7,
+     "confirm/refuted": 3,
+     "value/confirmed": 3,
+     "value/refuted": 1,
+     "widen/other-failure": 2,
+     "widen/silent-ok": 14
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 58,
+    "round": 2,
+    "rules_tested": [
+     "attr[ge:index_excess:2147483640 & le:ntok:30 & !v:lexical_invalid & at:IndexedFaceSet@coordIndex]",
+     "attr[ge:index_max:2147483647 & le:index_excess:2147483623 & at:IndexedFaceSet@coordIndex]"
+    ],
+    "tally": {
+     "bisect/missed": 12,
+     "confirm/confirmed": 10,
+     "confirm/other-failure": 1,
+     "confirm/refuted": 2,
+     "near/silent-ok": 4,
+     "value/confirmed": 10,
+     "widen/other-failure": 3,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 40,
+    "round": 3,
+    "rules_tested": [
+     "attr[ge:index_excess:571626241 & !anc:HAnimHumanoid & !v:lexical_invalid & at:IndexedFaceSet@coordIndex & e.child:Coordinate & p:Shape]"
+    ],
+    "tally": {
+     "bisect/confirmed": 2,
+     "bisect/missed": 1,
+     "bisect/other-failure": 3,
+     "confirm/confirmed": 8,
+     "confirm/other-failure": 2,
+     "near/silent-ok": 2,
+     "value/confirmed": 6,
+     "widen/other-failure": 4,
+     "widen/silent-ok": 12
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 82,
+    "round": "audit",
+    "rules_tested": [
+     "attr[ge:index_excess:440304889 & ge:ntok:20 & !e.has:ccw & at:IndexedFaceSet@coordIndex & e.child:Coordinate]",
+     "attr[ge:index_excess:2147483633 & le:ntok:15 & !v:lexical_invalid & at:IndexedFaceSet@coordIndex & p:Shape]"
+    ],
+    "tally": {
+     "bisect/confirmed": 5,
+     "bisect/missed": 1,
+     "bisect/other-failure": 5,
+     "bisect/silent-ok": 1,
+     "confirm/confirmed": 18,
+     "confirm/other-failure": 1,
+     "confirm/refuted": 1,
+     "near/confirmed": 6,
+     "near/silent-ok": 2,
+     "value/confirmed": 10,
+     "widen/other-failure": 7,
+     "widen/silent-ok": 25
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "ge:index_excess:440304889",
+    "ge:ntok:20",
+    "!e.has:ccw",
+    "at:IndexedFaceSet@coordIndex",
+    "e.child:Coordinate"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-2a5db21f7cdd",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "IndexedFaceSet@coordIndex"
+  ],
+  "sentence": "At one attribute where the place is IndexedFaceSet coordIndex and its element has a Coordinate child: how far the largest index runs past the end of its list is at least 440304889 and the number of tokens is at least 20, unless its element also has the attribute ccw.",
+  "signature": "RuntimeError at import_x3d.py:2008 validate_points_field",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 76,
+   "explained_by_this_rule": 49,
+   "failures": 76,
+   "families": {
+    "chaos-differential": 17,
+    "r2r-probe": 59
+   },
+   "observed_by": {
+    "tool": 76
+   },
+   "with_known_good_twin": 76
+  },
+  "strays": {
+   "IndexError at import_x3d.py:2231 importMesh_IndexedFaceSet": 1
+  },
+  "tier": 2,
+  "trace": [
+   "seed ge:ntok:20, fenced to at:IndexedFaceSet@coordIndex: explains 49, false alarms 1098",
+   "+ ge:index_excess:440304889: explains 49, false alarms 4 (gain 156.60)",
+   "+ e.child:Coordinate: explains 49, false alarms 2 (gain 2.72)",
+   "+ !e.has:ccw: explains 49, false alarms 0 (gain 2.83)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 25,
+   "rule": {
+    "all": [
+     "ge:index_excess:440304889",
+     "ge:ntok:20",
+     "!e.has:ccw",
+     "e.child:Coordinate"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "ge:index_excess:440304889",
+   "ge:ntok:20",
+   "!e.has:ccw",
+   "at:IndexedFaceSet@coordIndex",
+   "e.child:Coordinate"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the place is IndexedFaceSet coordIndex and its element has a Coordinate child: how far the largest index runs past the end of its list is at least 440304889 and the number of tokens is at least 20, unless its element also has the attribute ccw.",
+ "signature": "RuntimeError at import_x3d.py:2008 validate_points_field",
+ "sources": [
+  {
+   "event": "ev-94d5187909fc",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/cameras__063__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Target/Shape/IndexedFaceSet#ME_TargetMesh coordIndex: token 23 4 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 63
+   },
+   "sha256": "a1dd285487f0c7ed89e9fa2aba7dd97f913f3ef942b78b52b436e8455e12ff2c",
+   "twin": "repos:x3d-blender-io/tests/golden/cameras.c14n.x3d"
+  },
+  {
+   "event": "ev-934ba4d9bd69",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/hierarchy__039__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Root/Transform#OB_Arm/Shape/IndexedFaceSet#ME_ArmMesh coordIndex: token 2 2 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 279
+   },
+   "sha256": "527fce2410cdca1f87d2be6745dcbf2bfdf49289b9a552bcdf311175459f783d",
+   "twin": "repos:x3d-blender-io/tests/golden/hierarchy.c14n.x3d"
+  },
+  {
+   "event": "ev-d9ef49891cb1",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/hierarchy__075__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Root/Transform#OB_Arm/Shape/IndexedFaceSet#ME_ArmMesh coordIndex: token 12 7 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 315
+   },
+   "sha256": "e16af6975d81e0449e7903dd628ae32fad9cf906414a2813a929a1675e528c58",
+   "twin": "repos:x3d-blender-io/tests/golden/hierarchy.c14n.x3d"
+  },
+  {
+   "event": "ev-a980caff5a59",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/linked_instances__004__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Copy0/Group#CO_Part/Transform#OB_Part_PartSource/Shape/IndexedFaceSet#ME_PartMesh coordIndex: token 4 -1 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 404
+   },
+   "sha256": "71f0c99c1a9fb1bd23c3ddaee781182c4425d555a28e67aafc3c4688ac1e1fd2",
+   "twin": "repos:x3d-blender-io/tests/golden/linked_instances.c14n.x3d"
+  },
+  {
+   "event": "ev-1ac43b3067d9",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/lit_cube__065__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Cube/Shape/IndexedFaceSet#ME_CubeMesh coordIndex: token 13 1 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 545
+   },
+   "sha256": "febe84035ec9ea4b9e21abce2d28d252f7c30f684057933cdac495414e4c34a2",
+   "twin": "repos:x3d-blender-io/tests/golden/lit_cube.c14n.x3d"
+  },
+  {
+   "event": "ev-75e8e99b9043",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/vertex_colours__026__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Painted/Shape/IndexedFaceSet#ME_PaintMesh coordIndex: token 26 7 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 906
+   },
+   "sha256": "9a9520ed5d40ec2a1521186fb5f789c5fef35c4630d98e16f4141458439b5293",
+   "twin": "repos:x3d-blender-io/tests/golden/vertex_colours.c14n.x3d"
+  },
+  {
+   "event": "ev-55e88978b115",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/vertex_colours__045__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Painted/Shape/IndexedFaceSet#ME_PaintMesh coordIndex: token 17 6 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 925
+   },
+   "sha256": "a162cfc17be809c2d476d2972ece04d561dd70554ef9b9e9b09fb57b1e597c0b",
+   "twin": "repos:x3d-blender-io/tests/golden/vertex_colours.c14n.x3d"
+  },
+  {
+   "event": "ev-4068b3c1b339",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/keyframes__035__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Mover/Shape/IndexedFaceSet#ME_MoverMesh coordIndex: token 9 -1 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 355
+   },
+   "sha256": "ee031d7a9bff85add9421273c12c91f3e456a53ef2fb0cd25ae528f5273679c0",
+   "twin": "repos:x3d-blender-io/tests/golden/keyframes.c14n.x3d"
+  },
+  {
+   "event": "ev-92ea2873d11f",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/linked_instances__032__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Copy0/Group#CO_Part/Transform#OB_Part_PartSource/Shape/IndexedFaceSet#ME_PartMesh coordIndex: token 23 4 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 432
+   },
+   "sha256": "0528507cf5253f40a6e55d76540d53ac9f412f9c2eaa2646503841b89fe0d2ba",
+   "twin": "repos:x3d-blender-io/tests/golden/linked_instances.c14n.x3d"
+  },
+  {
+   "event": "ev-c6278b61adfc",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/lit_cube__042__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Cube/Shape/IndexedFaceSet#ME_CubeMesh coordIndex: token 11 4 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 522
+   },
+   "sha256": "34f8bdd8d5f06be95112c568750d6eb4aaab3b0114bd3a53a5400d15bcb583ef",
+   "twin": "repos:x3d-blender-io/tests/golden/lit_cube.c14n.x3d"
+  },
+  {
+   "event": "ev-100e4a6f5aeb",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/smooth_torus__007__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Torus/Shape/IndexedFaceSet#ME_TorusMesh coordIndex: token 146 37 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 647
+   },
+   "sha256": "49e019e1e0a3623ec5154b8e1f728c8d382b57321ed8322d39b3cf69011c2ff8",
+   "twin": "repos:x3d-blender-io/tests/golden/smooth_torus.c14n.x3d"
+  },
+  {
+   "event": "ev-53f6ec2eaf1a",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/smooth_torus__046__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Torus/Shape/IndexedFaceSet#ME_TorusMesh coordIndex: token 37 1 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 686
+   },
+   "sha256": "21822677975c3ad94f66813099305991221469f9917a54990172c5a03f2bc7fb",
+   "twin": "repos:x3d-blender-io/tests/golden/smooth_torus.c14n.x3d"
+  },
+  {
+   "event": "ev-2c7f9ce86db1",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/smooth_torus__068__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Torus/Shape/IndexedFaceSet#ME_TorusMesh coordIndex: token 126 33 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 708
+   },
+   "sha256": "c08befa80f576b4dbda889364613b721ac47285071ab03886bc868c75e9605f4",
+   "twin": "repos:x3d-blender-io/tests/golden/smooth_torus.c14n.x3d"
+  },
+  {
+   "event": "ev-ae7e99b2b166",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/uv_grid__004__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Grid/Shape/IndexedFaceSet#ME_GridMesh coordIndex: token 50 12 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 804
+   },
+   "sha256": "c889643c6c662097a9f6cd48fc604bd8822a7f28847c2d025b5eab9a09a2afd1",
+   "twin": "repos:x3d-blender-io/tests/golden/uv_grid.c14n.x3d"
+  },
+  {
+   "event": "ev-6956c97c40cf",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/uv_grid__063__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Grid/Shape/IndexedFaceSet#ME_GridMesh coordIndex: token 24 -1 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 863
+   },
+   "sha256": "b9cb8c454732f77dce2853e1a40c0397c9602fe761cf558e2d35499460b0fe9e",
+   "twin": "repos:x3d-blender-io/tests/golden/uv_grid.c14n.x3d"
+  },
+  {
+   "event": "ev-5b4901bbfb3f",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round1-0039d16c4b19.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 4 5 6 7 -1 0 2147483647 7 1 -1 3 2 6 5 -1 0 3 5 4 -1 1 7 6 2 -1'",
+   "receipt": null,
+   "sha256": "0039d16c4b198d26f913f38866ccdddf2474e0237a8156c9a2c9b099442127b6",
+   "twin": "work:c003/twins/e6b4f28298df.x3d"
+  },
+  {
+   "event": "ev-2b236e6b8522",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round1-2c5c63348252.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 4 5 6 7 -1 0 2147483647 7 1 -1 3 2 6 5 -1 0 3 5 4 -1 1 7 6 2 -1'",
+   "receipt": null,
+   "sha256": "2c5c63348252d3b52c407cb1446d8decb7c69cb17f0be67da388490b0a22f27f",
+   "twin": "work:c003/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-cf6d97088029",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round1-d23b5e017118.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 4 5 6 7 -1 0 2147483647 7 1 -1 3 2 6 5 -1 0 3 5 4 -1 1 7 6 2 -1'",
+   "receipt": null,
+   "sha256": "d23b5e0171180ce97759607e7ccb8f72a3c02b0937aac36658ced902b3067e5f",
+   "twin": "work:c003/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-4803e3533e95",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round1-0847a91d94b7.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 4 5 6 7 -1 0 4 7 1 -1 3 2 6 5 -1 0 3 5 4 -1 1 2147483647 6 2 -1'",
+   "receipt": null,
+   "sha256": "0847a91d94b7a1dec2f257d5114cb523696535bf78ad57ae39aba39106fd7f4b",
+   "twin": "work:c003/twins/e6b4f28298df.x3d"
+  },
+  {
+   "event": "ev-289e645534a3",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round1-ea74914c7636.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 4 5 6 7 -1 0 4 7 1 -1 3 2 6 5 -1 0 3 5 4 -1 1 2147483647 6 2 -1'",
+   "receipt": null,
+   "sha256": "ea74914c763696461e69ea45dd5324dfd008b3bb5d5fbbb8a2d712b08e98b340",
+   "twin": "work:c003/twins/0d6f5903fcac.x3d"
+  },
+  {
+   "event": "ev-360e7bc7864e",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-605b2b989104.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 4 5 6 7 2147483647 0 4 7 1 -1 3 2 6 5 -1 0 3 5 4 -1 1 7 6 2 -1'",
+   "receipt": null,
+   "sha256": "605b2b9891042e374709f129dcee56b0e8ce28902a2eabe6cc701b0a6a0bb7ec",
+   "twin": "work:c003/twins/e29e78d4e245.x3d"
+  },
+  {
+   "event": "ev-14c747f3e58c",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-66851e47b2ee.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 4 5 6 7 -1 0 4 7 1 -1 3 2 6 5 -1 0 3 5 2147483647 -1 1 7 6 2 -1'",
+   "receipt": null,
+   "sha256": "66851e47b2eee7602aa9f4d3865549c46e939fb178305b4b10114566ebe6272d",
+   "twin": "work:c003/twins/e6b4f28298df.x3d"
+  },
+  {
+   "event": "ev-4d7cc0f9eda6",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-c74aad91b35c.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 4 5 6 7 -1 0 4 7 2147483647 -1 3 2 6 5 -1 0 3 5 4 -1 1 7 6 2 -1'",
+   "receipt": null,
+   "sha256": "c74aad91b35c2dd92c5532acc026927a079418a8dc3bfad8d10f632cf5b25ccb",
+   "twin": "work:c003/twins/83a9ca2ee92d.x3d"
+  },
+  {
+   "event": "ev-be18b81dbf25",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-797644c0f6cd.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 4 5 6 7 -1 0 4 7 1 -1 3 2 6 5 -1 0 3 5 2147483647 -1 1 7 6 2 -1'",
+   "receipt": null,
+   "sha256": "797644c0f6cdf4fd7903903ad36483c41aaa2a07a87f15cdbc10db44a37b3d2e",
+   "twin": "work:c003/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-d9785d554787",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-407bba8c3925.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 2.14748e+09",
+   "receipt": null,
+   "sha256": "407bba8c392520f421e94136d9f22b717d15c34eae007f2bb36717c5c0d1b873",
+   "twin": "work:c003/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-4a725470891e",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-457a3d80dec1.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 2.14748e+09",
+   "receipt": null,
+   "sha256": "457a3d80dec13100211391fdd63e3401111073affe749ea35bd01ed3ee2226a3",
+   "twin": "work:c003/twins/83a9ca2ee92d.x3d"
+  },
+  {
+   "event": "ev-58a80782934a",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-4f0a4219e91c.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 2.14748e+09",
+   "receipt": null,
+   "sha256": "4f0a4219e91c57c9dee2cabee7d5a743a7ac143c1297a3464f736fc1677b8c42",
+   "twin": "work:c003/twins/e6b4f28298df.x3d"
+  },
+  {
+   "event": "ev-b5e5b0c13d2f",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-464a59d0d18b.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 2.14748e+09",
+   "receipt": null,
+   "sha256": "464a59d0d18b2b2f1b39cc90f89ec46d1a1b6b7632854a2159dcad5c2da8ff96",
+   "twin": "work:c003/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-080598bdf2b7",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-01920165cf5a.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1 0 2147483647 2 3 -1 0 2147483647 2 3 -1 0 2147483647 2 3 -1' (live: '0 2147483647 2 3 -1 0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "01920165cf5aaa33d454f03d4d1325d85580d0c2b284d6273abda72bc2e10ab4",
+   "twin": "work:c003/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-2f226505f606",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-2dbca7ba97b9.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1,0 2147483647 2 3 -1 0 2147483647 2 3 -1,0 2147483647 2 3 -1' (live: '0 2147483647 2 3 -1,0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "2dbca7ba97b932068b4fe2a2cca6c81b5f67eab0524518a52067c82a3e817db3",
+   "twin": "work:c003/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-f112fb29ef32",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-bc677b20ebda.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1 0 2147483647 2 3 -1,0 2147483647 2 3 -1 0 2147483647 2 3 -1' (live: '0 2147483647 2 3 -1 0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "bc677b20ebda2240dd7996a095a4f5a99dfbd310e07414bb70cdbf3d36dfa123",
+   "twin": "work:c003/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-afe108fbb1ee",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-0db2ba4b0c6a.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1,0 2147483647 2 3 -1,0 2147483647 2 3 -1,0 2147483647 2 3 -1' (live: '0 2147483647 2 3 -1,0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "0db2ba4b0c6abc25b6a6dc346a6aaffe35fb505430034cdf4a3d56585b3f0afb",
+   "twin": "work:c003/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-bf73e54399b3",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-e5291de244c0.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 3 2 4 5 -1 5 4 6 7 -1 7 6 8 9 -1 9 8 10 11 -1 11 10 12 13 -1 13 12 14 15 -1 15 14 2147483647 0 -1 1 16 17 2 -1 2 17 18 4 -1 4 18 19 6 -1 6 19 20 8 -1 8 20 21 1",
+   "receipt": null,
+   "sha256": "e5291de244c052de11d378fbdc56eedd128d42840e8903f9e03d88c2d000f5f2",
+   "twin": "work:c003/twins/7db6a93d3baf.x3d"
+  },
+  {
+   "event": "ev-80fe60a38b30",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-40516383dd19.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 3 2 4 5 -1 5 4 6 7 -1 7 6 8 9 -1 9 8 10 11 -1 11 10 12 13 -1 13 12 14 15 -1 15 14 1 0 -1 1 16 17 2 -1 2 17 18 4 -1 4 18 19 6 -1 6 19 20 8 -1 8 20 21 10 -1 10 2",
+   "receipt": null,
+   "sha256": "40516383dd1930a5012f63e5b6275411d2858a59dbe6301bdfce3d9e3174c1d4",
+   "twin": "work:c003/twins/45813a7896e6.x3d"
+  },
+  {
+   "event": "ev-d8c5e8b48729",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-b474e861a35b.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_max near 5.71627e+08",
+   "receipt": null,
+   "sha256": "b474e861a35b3708c060bbd61722a67c3750dcf7692d37a359e5e9138090da9e",
+   "twin": "work:c003/twins/45813a7896e6.x3d"
+  },
+  {
+   "event": "ev-11c21668052a",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-4afa6b1d3ac6.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 2.14748e+09",
+   "receipt": null,
+   "sha256": "4afa6b1d3ac69af90852d6d7d08db25c595bb0f112dac15d657a7da9438d4115",
+   "twin": "work:c003/twins/7db6a93d3baf.x3d"
+  },
+  {
+   "event": "ev-22d7e5f46009",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-6c5278260aa2.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_max near 1.6222e+09",
+   "receipt": null,
+   "sha256": "6c5278260aa2bad952c3a166c23d2fb524f2cd560ad6e3cca198ffdbf9955794",
+   "twin": "work:c003/twins/7db6a93d3baf.x3d"
+  },
+  {
+   "event": "ev-3fb9d4eff184",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-fe524459eba5.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 2.14748e+09",
+   "receipt": null,
+   "sha256": "fe524459eba5e624cab952dd9038e321febcbf06cfa14ba8ed175f6ee122e28b",
+   "twin": "work:c003/twins/45813a7896e6.x3d"
+  },
+  {
+   "event": "ev-fc98c2984cb1",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-1fa343dd3bc2.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 2.14748e+09",
+   "receipt": null,
+   "sha256": "1fa343dd3bc20fc7eaff8781d8e85a592755a2280c39c27ad4c2420599a2844a",
+   "twin": "work:c003/twins/7db6a93d3baf.x3d"
+  },
+  {
+   "event": "ev-1f17b64c21a5",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-5db5f84f452d.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 2.14748e+09",
+   "receipt": null,
+   "sha256": "5db5f84f452dc3bf912fceb7869efe7026157d6163babb89d68bba9b7f5d7996",
+   "twin": "work:c003/twins/45813a7896e6.x3d"
+  },
+  {
+   "event": "ev-a5ce9d722d6e",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-f5d42627c3cf.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1,0 2147483647 2 3 -1 0 2147483647 2 3 -1,0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "f5d42627c3cf13d1b7b6acbfb71bc2d8ae4030e6531a2062e25c5d13cbc96537",
+   "twin": "work:c003/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-be9b01a30afe",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-8885f77af017.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 3 2 4 5 -1 5 4 6 7 -1 7 6 8 9 -1 9 8 10 11 -1 11 10 12 13 -1 13 12 14 15 -1 15 14 1622197949 0 -1 1 16 17 2 -1 2 17 18 4 -1 4 18 19 6 -1 6 19 20 8 -1 8 20 21 1",
+   "receipt": null,
+   "sha256": "8885f77af01711804050920cb2570586a5caffca2efb86655a2a68a36a336a96",
+   "twin": "work:c003/twins/0d6f5903fcac.x3d"
+  },
+  {
+   "event": "ev-2583557f42ac",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-131c40ad1543.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 3 2 4 5 -1 5 4 6 7 -1 7 6 8 9 -1 9 8 10 11 -1 11 10 12 13 -1 13 12 14 15 -1 15 14 1622197949 0 -1 1 16 17 2 -1 2 17 18 4 -1 4 18 19 6 -1 6 19 20 8 -1 8 20 21 1",
+   "receipt": null,
+   "sha256": "131c40ad1543ca7e00ba6febaee4dd6b7a34685c24e7bac9aef2f5a9cf354ab8",
+   "twin": "work:c003/twins/fe83246b0ca3.x3d"
+  },
+  {
+   "event": "ev-485340376000",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-00f75d3debfa.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1,0 2147483647 2 3 -1 0 2147483647 2 3 -1,0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "00f75d3debfa5f581fa88cdb431b21526e4ca03761c124be9fc614e60fe0cd44",
+   "twin": "work:c003/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-b8c55b46fda7",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-fb0d27d17e7c.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 3 2 10 11 2147483647 2 5 12 10 -1 5 7 13 12 -1 7 9 14 13 -1 11 10 15 16 -1 10 12 17 15 -1 12 13 18 17 -1 13 14 19 18 -1 16 15 ",
+   "receipt": null,
+   "sha256": "fb0d27d17e7c79a74fc9c699ed530e8c90fffbcb5d659bc3acf51a33947dad2f",
+   "twin": "work:c003/twins/83a9ca2ee92d.x3d"
+  },
+  {
+   "event": "ev-712321ba043d",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-a3a3b7f6651e.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 1 2 3 -1 4 5 6 7 -1 0 4 7 2147483634 -1 3 2 6 5 -1 0 3 5 4 -1 1 7 6 2 -1'",
+   "receipt": null,
+   "sha256": "a3a3b7f6651e67d4bc31eef349d8d499c91b23638a91b4c22c476bb2340ffaa9",
+   "twin": "work:c003/twins/67a670a1ab3a.x3d"
+  },
+  {
+   "event": "ev-2a73b1298ec2",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-2b1e1236264d.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 4.40305e+08",
+   "receipt": null,
+   "sha256": "2b1e1236264d5e6af0958eec84beb8f6f0e1c230a3d1efc3926a7edbc2a21498",
+   "twin": "work:c003/twins/83a9ca2ee92d.x3d"
+  },
+  {
+   "event": "ev-e0694c1a706d",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-9ef6ba389a9e.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1,0 2147483647 2 3 -1,0 2147483647 2 3 -1,0 2147483647 2 3 -1' (live: '0 2147483647 2 3 -1,0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "9ef6ba389a9ea858103fbf1408b7643a42960f18105a57ac6dc13d80eeb141f8",
+   "twin": "work:c003/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-6fdf45998b0b",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-ea68b98d90c5.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1,0 2147483647 2 3 -1 0 2147483647 2 3 -1,0 2147483647 2 3 -1' (live: '0 2147483647 2 3 -1,0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "ea68b98d90c58e6688a5ab79773cf614a319be9bd867146aa65e89c27c1f009e",
+   "twin": "work:c003/twins/a865682fa1ca.x3d"
+  }
+ ],
+ "sources_total": 49,
+ "status": "candidate"
+}

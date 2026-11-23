@@ -17,6 +17,7 @@ write their record first and then exit by its status. Same convention as the Dat
   python -m loomkit verify-receipt FILE
   python -m loomkit sweep     SRC DEST --rules kit/profiles/public-sweep.json
   python -m loomkit picture   REVIEW.json --subject SHA --frames FRAMES.json
+  python -m loomkit r2r       run|events|show|check|replay|needs|brief|selftest ...   (receipt-to-rule engine; see R2R.md)
 """
 from __future__ import annotations
 
@@ -486,6 +487,10 @@ def cmd_receipt(a) -> dict:
 
 
 def main(argv: list[str] | None = None) -> int:
+    args = sys.argv[1:] if argv is None else list(argv)
+    if args and args[0] == "r2r":                       # the receipt-to-rule engine has its own subcommands and help
+        from .r2r.cli import main as r2r_main
+        return r2r_main(args[1:])
     ap = argparse.ArgumentParser(prog="loomkit")
     sub = ap.add_subparsers(dest="cmd_name", required=True)
 

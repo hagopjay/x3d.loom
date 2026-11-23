@@ -1,0 +1,161 @@
+{
+ "candidates": 28,
+ "claims": 30,
+ "clusters": 17,
+ "created_utc": "2026-11-23T07:03:35Z",
+ "events": 20330,
+ "events_skipped": [],
+ "files_read": 6265,
+ "grades": {
+  "C": 15,
+  "L": 4,
+  "S": 9
+ },
+ "inputs": [
+  {
+   "adapter": "chaos",
+   "events": 3795,
+   "path": "chaos:2.7.1-rng7/rows.json",
+   "sha256": "2dd6193d86d1914a827eaa9b9ff9fe927e56c067e2d1523ba88535a0b1d3b0bf",
+   "split": "train",
+   "what": "differential chaos round, add-on 2.7.1, rng 7: 960 one-edit mutants of the 12 golden scenes (training)"
+  },
+  {
+   "adapter": "chaos",
+   "events": 3802,
+   "path": "chaos:2.7.1-rng11/rows.json",
+   "sha256": "8404e4dc29b5f5b3b3b1b342ac2b57aee739763ff9004deefc8d2105ba271b9c",
+   "split": "train",
+   "what": "differential chaos round, add-on 2.7.1, rng 11: 960 one-edit mutants of the 12 golden scenes (training)"
+  },
+  {
+   "adapter": "chaos",
+   "events": 3801,
+   "path": "chaos:2.7.1-rng23/rows.json",
+   "sha256": "1717af90b34998b23254008c079a7eaeb5e3096d6f0c515acd30676db7a8f887",
+   "split": "held",
+   "what": "differential chaos round, add-on 2.7.1, rng 23: 960 one-edit mutants of the 12 golden scenes (held out)"
+  },
+  {
+   "adapter": "chaos",
+   "events": 3804,
+   "path": "chaos:2.7.1-rng101/rows.json",
+   "sha256": "f200ba949b48c886b489e8c95f471c24fedf7d07fb11f5f57b5fd951449d8c6c",
+   "split": "held",
+   "what": "differential chaos round, add-on 2.7.1, rng 101: 960 one-edit mutants of the 12 golden scenes (held out)"
+  },
+  {
+   "adapter": "verdicts",
+   "events": 514,
+   "path": "sweep:2.7.1-import.jsonl",
+   "sha256": "9b9f9c9355382d1ac7b098e5f775db14b174e1ba5af41c4c36fb435e4b660be4",
+   "split": "by-hash",
+   "what": "514 real project files through the 2.7.1 importer"
+  },
+  {
+   "adapter": "verdicts",
+   "events": 512,
+   "path": "sweep:2.7.1-reexport.jsonl",
+   "sha256": "4af910f89bc9be5120d26a3cf9753ca0ea97aedaeab70863e7e231abc1d00d33",
+   "split": "by-hash",
+   "what": "the same 514 files, import then export, add-on 2.7.1"
+  },
+  {
+   "adapter": "verdicts",
+   "events": 514,
+   "path": "sweep:2.7.1-x3dpy.jsonl",
+   "sha256": "7730129d3b5603f05a75015e2efc8ce7086cdf67bf7b18e41cbafa9f87b91f84",
+   "split": "by-hash",
+   "what": "the same 514 files through x3d.py 4.0.65.8 as add-on 2.7.1 calls it"
+  }
+ ],
+ "instruments": {
+  "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)": {
+   "fail": 255,
+   "pass": 4568
+  },
+  "x3d-blender-io 2.7.1 importer (bpy 5.3.0)": {
+   "fail": 1396,
+   "pass": 5773
+  },
+  "x3d-blender-io 2.7.1 own validator (does it crash?)": {
+   "fail": 0,
+   "pass": 3840
+  },
+  "x3d.py 4.0.65.8 through x3d-blender-io 2.7.1 validate.py (does it crash?)": {
+   "fail": 146,
+   "pass": 4352
+  }
+ },
+ "kit": {
+  "loomkit": {
+   "kit_commit": "e16641f02b0b48316793d7e6605e701729f4f716",
+   "kit_dirty": true,
+   "kit_sha256": "549c8cb197f0d252efbf2d14d313b2e7838ef3c20079c44bcc7b79553ebeba67"
+  },
+  "r2r_sha256": "096d1ce649f8b2767e482f9fc48d57b008fe65e51f94b82bc6f49241fcb9fa4d",
+  "r2r_version": "0.1.0",
+  "uom_facts": {
+   "fork_commit": "4d433af",
+   "from": "x3d_mcp fork, src/validation/schemas/X3dUnifiedObjectModel-4.{0,1}.xml",
+   "x3duom_40_sha256": "7e426a238656c21a4a444b989276494329da363625c36f0a719b15d89416bee3",
+   "x3duom_41_sha256": "4fc10e8e15c0d6cf2a916e4f59b815b110104aa7ea734dc6afea9458095c792b"
+  }
+ },
+ "notes": [
+  "Instruments: the x3d-blender-io add-on at 2.7.1 (commit d931551) inside bpy 5.3.0 (Python 3.13): its importer, and its import followed by its export. Third instrument: x3d.py 4.0.65.8 as the add-on's validate.py at 2.7.1 calls it; a crash there is a crash of that pair, not of x3d.py alone.",
+  "Chaos rounds: tools/chaos/differential.py of x3d-blender-io at main 8e56437 with the add-on source pinned to 2.7.1, 80 mutants per golden scene, six judges (the add-on's own validator, x3d.py 4.0.65.8, xmllint 20914 with x3d-4.0.xsd from the x3d_mcp fork at 4d433af, the Web3D X3D Schematron through SaxonC, bpy 5.3.0 import, import then export). Cloud machine, 15 GB, 4 cores, no memory cap. Machine paths in the tracebacks were replaced by <addon>/, <site-packages>/ and <x3d-blender-io>/ before packing; nothing else was changed.",
+  "Probes: the same instruments through kit/loomkit/r2r/drivers/blender_io.py under a 10 GB address-space cap. A threshold that is really a memory cliff is the cliff of that cap, not of every machine.",
+  "Held out: the chaos rounds marked held (never used for induction), and the half of the real-file sweep whose sha256 is odd. Probe hosts come only from the other half.",
+  "Sweep: every .x3d under the project's repositories on 23 Nov 2026 that is at most 2 MB (514 files), named as repos:<repository>/<path>.",
+  "To repeat: unpack ../chaos-*.tar.xz into ../chaos, check the repositories out side by side, and give --root bpyenv=... (a venv with bpy 5.3.0 and x3d.py) and --root addon-src=... (the add-on source at each version under <version>/source)."
+ ],
+ "oracles": {
+  "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)": {
+   "calls": 29,
+   "deaths": []
+  },
+  "x3d-blender-io 2.7.1 importer (bpy 5.3.0)": {
+   "calls": 140,
+   "deaths": [
+    {
+     "exit": -11,
+     "file": "work:c003/probes/audit-e015cf7768ff.x3d"
+    },
+    {
+     "exit": -11,
+     "file": "work:c003/probes/audit-ece04eb42833.x3d"
+    },
+    {
+     "exit": -11,
+     "file": "work:c012/probes/round1-4019410e772a.x3d"
+    },
+    {
+     "exit": -11,
+     "file": "work:c012/probes/round1-caefb477dfe3.x3d"
+    },
+    {
+     "exit": -11,
+     "file": "work:c012/probes/audit-9f0360145e82.x3d"
+    }
+   ]
+  },
+  "x3d.py 4.0.65.8 through x3d-blender-io 2.7.1 validate.py (does it crash?)": {
+   "calls": 4,
+   "deaths": []
+  }
+ },
+ "proposer": {
+  "name": "inductive (no language model)",
+  "uses_a_model": false
+ },
+ "schema": "loom.r2r-run/1",
+ "seconds": 2006.1,
+ "settings": {
+  "max_generations": 1,
+  "only": null,
+  "rounds": 3,
+  "seed": 1
+ },
+ "title": "x3d-blender-io 2.7.1 in bpy 5.3.0: chaos rounds and a sweep of 514 real files"
+}

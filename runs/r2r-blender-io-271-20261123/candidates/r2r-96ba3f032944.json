@@ -1,0 +1,1747 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "9 audit probe(s) and 0+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "C",
+  "grade_word": "Confirmed",
+  "missed_seen": 9,
+  "reasons": [
+   "20 audit probe(s) confirmed, 0 refuted",
+   "held-out: 35 of 35 failures caught, 0 false alarms in 1416 passing files",
+   "0 false alarms in 1813 known-good files"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-96ba3f032944",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "v:bool_noncanonical",
+    "failures_explained_without_it": 133,
+    "false_alarms_without_it": 1658,
+    "role": "test"
+   },
+   {
+    "dropped": "!v:case_variant",
+    "failures_explained_without_it": 133,
+    "false_alarms_without_it": 21,
+    "role": "guard"
+   },
+   {
+    "dropped": "nws:1",
+    "failures_explained_without_it": 133,
+    "false_alarms_without_it": 23,
+    "role": "context"
+   },
+   {
+    "dropped": "(the list of 24 places)",
+    "failures_explained_without_it": 133,
+    "false_alarms_without_it": 30,
+    "role": "fence"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "v:lexical_invalid",
+      "!v:case_variant",
+      "nws:1"
+     ],
+     "any": [
+      "at:Box@solid",
+      "at:CollidableShape@visible",
+      "at:Cone@solid",
+      "at:DirectionalLight@global",
+      "at:DirectionalLight@shadows",
+      "at:Disk2D@solid",
+      "at:ElevationGrid@solid",
+      "at:Group@visible",
+      "at:HAnimHumanoid@visible",
+      "at:IndexedFaceSet@solid",
+      "at:IndexedTriangleFanSet@solid",
+      "at:IndexedTriangleSet@solid",
+      "at:IndexedTriangleStripSet@solid",
+      "at:LOD@visible",
+      "at:Layer@visible",
+      "at:NavigationInfo@headlight",
+      "at:PointLight@global",
+      "at:PointLight@shadows",
+      "at:RigidBody@visible",
+      "at:Shape@visible",
+      "at:Sphere@solid",
+      "at:SpotLight@global",
+      "at:TriangleFanSet@solid",
+      "at:TriangleSet2D@solid"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 1 space-separated token(s): the value does not have the written form its field type requires, at one of 24 places (Box solid, CollidableShape visible, Cone solid, DirectionalLight global, DirectionalLight shadows, Disk2D solid, ElevationGrid solid, Group visible, HAnimHumanoid visible, IndexedFaceSet solid, IndexedTriangleFanSet solid, IndexedTriangleSet solid, IndexedTriangleStripSet solid, LOD visible, Layer visible, NavigationInfo headlight, PointLight global, PointLight shadows, RigidBody visible, Shape visible, Sphere solid, SpotLight global, TriangleFanSet solid, TriangleSet2D solid), unless the value is a legal one written in another letter case."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:bool_noncanonical",
+      "!v:tok:FALSE",
+      "!v:tok:TRUE",
+      "nws:1"
+     ],
+     "any": [
+      "at:Box@solid",
+      "at:CollidableShape@visible",
+      "at:Cone@solid",
+      "at:DirectionalLight@global",
+      "at:DirectionalLight@shadows",
+      "at:Disk2D@solid",
+      "at:ElevationGrid@solid",
+      "at:Group@visible",
+      "at:HAnimHumanoid@visible",
+      "at:IndexedFaceSet@solid",
+      "at:IndexedTriangleFanSet@solid",
+      "at:IndexedTriangleSet@solid",
+      "at:IndexedTriangleStripSet@solid",
+      "at:LOD@visible",
+      "at:Layer@visible",
+      "at:NavigationInfo@headlight",
+      "at:PointLight@global",
+      "at:PointLight@shadows",
+      "at:RigidBody@visible",
+      "at:Shape@visible",
+      "at:Sphere@solid",
+      "at:SpotLight@global",
+      "at:TriangleFanSet@solid",
+      "at:TriangleSet2D@solid"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 1 space-separated token(s): a boolean is spelt as something other than `true` or `false`, at one of 24 places (Box solid, CollidableShape visible, Cone solid, DirectionalLight global, DirectionalLight shadows, Disk2D solid, ElevationGrid solid, Group visible, HAnimHumanoid visible, IndexedFaceSet solid, IndexedTriangleFanSet solid, IndexedTriangleSet solid, IndexedTriangleStripSet solid, LOD visible, Layer visible, NavigationInfo headlight, PointLight global, PointLight shadows, RigidBody visible, Shape visible, Sphere solid, SpotLight global, TriangleFanSet solid, TriangleSet2D solid), unless the value has the token `FALSE` or the value has the token `TRUE`."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 20,
+   "missed": 9,
+   "missed_examples": [
+    "widen: PickableGroup@visible <- '1'",
+    "widen: IndexedFaceSet@ccw <- ' 1,,2,1,,2 '",
+    "widen: Collision@visible <- 'ABC'",
+    "widen: CADFace@visible <- '\"\"1,,2\"\"'",
+    "widen: ElevationGrid@ccw <- '1,1'"
+   ],
+   "other_failure": 0,
+   "probes": 44,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 15
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 60
+  },
+  "held_out": {
+   "caught": 35,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 35,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1416
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1813
+  },
+  "normative_reading": [
+   {
+    "literal": "v:bool_noncanonical",
+    "means": "a boolean is spelt as something other than `true` or `false`",
+    "passing_files_with_it_inside_the_fence": 44
+   },
+   {
+    "literal": "v:lexical_invalid",
+    "means": "the value does not have the written form its field type requires",
+    "passing_files_with_it_inside_the_fence": 76
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 42,
+    "round": 1,
+    "rules_tested": [
+     "attr[v:bool_noncanonical & !v:case_variant & nws:1 & (at:DirectionalLight@global | at:DirectionalLight@shadows | at:IndexedFaceSet@solid | at:NavigationInfo@headlight | at:PointLight@shadows | at:SpotLight@global)]"
+    ],
+    "tally": {
+     "alternate/confirmed": 1,
+     "alternate/silent-ok": 5,
+     "confirm/confirmed": 10,
+     "value/confirmed": 10,
+     "widen/missed": 5,
+     "widen/silent-ok": 11
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 44,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:bool_noncanonical & !v:case_variant & nws:1 & (at:Box@solid | at:Cone@solid | at:DirectionalLight@global | at:DirectionalLight@shadows | at:ElevationGrid@solid | at:IndexedFaceSet@solid | at:IndexedTriangleStripSet@solid | at:NavigationInfo@headlight | at:PointLight@shadows | at:SpotLight@global | at:TriangleFanSet@solid)]"
+    ],
+    "tally": {
+     "confirm/confirmed": 10,
+     "near/silent-ok": 8,
+     "value/confirmed": 10,
+     "widen/missed": 7,
+     "widen/silent-ok": 9
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 44,
+    "round": 3,
+    "rules_tested": [
+     "attr[v:bool_noncanonical & !v:case_variant & nws:1 & (at:Box@solid | at:CollidableShape@visible | at:Cone@solid | at:DirectionalLight@global | at:DirectionalLight@shadows | at:ElevationGrid@solid | at:Group@visible | at:IndexedFaceSet@solid | at:IndexedTriangleFanSet@solid | at:IndexedTriangleSet@solid | at:IndexedTriangleStripSet@solid | at:NavigationInfo@headlight | at:PointLight@global | at:PointLight@shadows | at:RigidBody@visible | at:SpotLight@global | at:TriangleFanSet@solid | at:TriangleSet2D@solid)]"
+    ],
+    "tally": {
+     "confirm/confirmed": 10,
+     "near/silent-ok": 8,
+     "value/confirmed": 10,
+     "widen/missed": 6,
+     "widen/silent-ok": 10
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 44,
+    "round": "audit",
+    "rules_tested": [
+     "attr[v:bool_noncanonical & !v:case_variant & nws:1 & (at:Box@solid | at:CollidableShape@visible | at:Cone@solid | at:DirectionalLight@global | at:DirectionalLight@shadows | at:Disk2D@solid | at:ElevationGrid@solid | at:Group@visible | at:HAnimHumanoid@visible | at:IndexedFaceSet@solid | at:IndexedTriangleFanSet@solid | at:IndexedTriangleSet@solid | at:IndexedTriangleStripSet@solid | at:LOD@visible | at:Layer@visible | at:NavigationInfo@headlight | at:PointLight@global | at:PointLight@shadows | at:RigidBody@visible | at:Shape@visible | at:Sphere@solid | at:SpotLight@global | at:TriangleFanSet@solid | at:TriangleSet2D@solid)]"
+    ],
+    "tally": {
+     "confirm/confirmed": 10,
+     "near/missed": 2,
+     "near/silent-ok": 6,
+     "value/confirmed": 10,
+     "widen/missed": 7,
+     "widen/silent-ok": 9
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "v:bool_noncanonical",
+    "!v:case_variant",
+    "nws:1"
+   ],
+   "any": [
+    "at:Box@solid",
+    "at:CollidableShape@visible",
+    "at:Cone@solid",
+    "at:DirectionalLight@global",
+    "at:DirectionalLight@shadows",
+    "at:Disk2D@solid",
+    "at:ElevationGrid@solid",
+    "at:Group@visible",
+    "at:HAnimHumanoid@visible",
+    "at:IndexedFaceSet@solid",
+    "at:IndexedTriangleFanSet@solid",
+    "at:IndexedTriangleSet@solid",
+    "at:IndexedTriangleStripSet@solid",
+    "at:LOD@visible",
+    "at:Layer@visible",
+    "at:NavigationInfo@headlight",
+    "at:PointLight@global",
+    "at:PointLight@shadows",
+    "at:RigidBody@visible",
+    "at:Shape@visible",
+    "at:Sphere@solid",
+    "at:SpotLight@global",
+    "at:TriangleFanSet@solid",
+    "at:TriangleSet2D@solid"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-96ba3f032944",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Box@solid",
+   "CollidableShape@visible",
+   "Cone@solid",
+   "DirectionalLight@global",
+   "DirectionalLight@shadows",
+   "Disk2D@solid",
+   "ElevationGrid@solid",
+   "Group@visible",
+   "HAnimHumanoid@visible",
+   "IndexedFaceSet@solid",
+   "IndexedTriangleFanSet@solid",
+   "IndexedTriangleSet@solid",
+   "IndexedTriangleStripSet@solid",
+   "LOD@visible",
+   "Layer@visible",
+   "NavigationInfo@headlight",
+   "PointLight@global",
+   "PointLight@shadows",
+   "RigidBody@visible",
+   "Shape@visible",
+   "Sphere@solid",
+   "SpotLight@global",
+   "TriangleFanSet@solid",
+   "TriangleSet2D@solid"
+  ],
+  "sentence": "At one attribute where the value has 1 space-separated token(s): a boolean is spelt as something other than `true` or `false`, at one of 24 places (Box solid, CollidableShape visible, Cone solid, DirectionalLight global, DirectionalLight shadows, Disk2D solid, ElevationGrid solid, Group visible, HAnimHumanoid visible, IndexedFaceSet solid, IndexedTriangleFanSet solid, IndexedTriangleSet solid, IndexedTriangleStripSet solid, LOD visible, Layer visible, NavigationInfo headlight, PointLight global, PointLight shadows, RigidBody visible, Shape visible, Sphere solid, SpotLight global, TriangleFanSet solid, TriangleSet2D solid), unless the value is a legal one written in another letter case.",
+  "signature": "IndexError at import_x3d.py:860 getFieldAsBool",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 133,
+   "explained_by_this_rule": 133,
+   "failures": 133,
+   "families": {
+    "chaos-differential": 54,
+    "r2r-probe": 79
+   },
+   "observed_by": {
+    "tool": 133
+   },
+   "with_known_good_twin": 133
+  },
+  "strays": {},
+  "tier": 1,
+  "trace": [
+   "seed v:bool_noncanonical, fenced to 24 place(s): explains 133, false alarms 44",
+   "+ nws:1: explains 133, false alarms 21 (gain 26.71)",
+   "+ !v:case_variant: explains 133, false alarms 0 (gain 28.13)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 30,
+   "rule": {
+    "all": [
+     "v:bool_noncanonical",
+     "!v:case_variant",
+     "nws:1"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "v:bool_noncanonical",
+   "!v:case_variant",
+   "nws:1"
+  ],
+  "any": [
+   "at:Box@solid",
+   "at:CollidableShape@visible",
+   "at:Cone@solid",
+   "at:DirectionalLight@global",
+   "at:DirectionalLight@shadows",
+   "at:Disk2D@solid",
+   "at:ElevationGrid@solid",
+   "at:Group@visible",
+   "at:HAnimHumanoid@visible",
+   "at:IndexedFaceSet@solid",
+   "at:IndexedTriangleFanSet@solid",
+   "at:IndexedTriangleSet@solid",
+   "at:IndexedTriangleStripSet@solid",
+   "at:LOD@visible",
+   "at:Layer@visible",
+   "at:NavigationInfo@headlight",
+   "at:PointLight@global",
+   "at:PointLight@shadows",
+   "at:RigidBody@visible",
+   "at:Shape@visible",
+   "at:Sphere@solid",
+   "at:SpotLight@global",
+   "at:TriangleFanSet@solid",
+   "at:TriangleSet2D@solid"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the value has 1 space-separated token(s): a boolean is spelt as something other than `true` or `false`, at one of 24 places (Box solid, CollidableShape visible, Cone solid, DirectionalLight global, DirectionalLight shadows, Disk2D solid, ElevationGrid solid, Group visible, HAnimHumanoid visible, IndexedFaceSet solid, IndexedTriangleFanSet solid, IndexedTriangleSet solid, IndexedTriangleStripSet solid, LOD visible, Layer visible, NavigationInfo headlight, PointLight global, PointLight shadows, RigidBody visible, Shape visible, Sphere solid, SpotLight global, TriangleFanSet solid, TriangleSet2D solid), unless the value is a legal one written in another letter case.",
+ "signature": "IndexError at import_x3d.py:860 getFieldAsBool",
+ "sources": [
+  {
+   "event": "ev-862ef9e5053f",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/cameras__046__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key shadows: true -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 46
+   },
+   "sha256": "74f0b44707b7425a9ed4e9e60fcf5b289dc57808607b9bc9abb344dee33f2e31",
+   "twin": "repos:x3d-blender-io/tests/golden/cameras.c14n.x3d"
+  },
+  {
+   "event": "ev-c81b556415e2",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/cameras__048__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 48
+   },
+   "sha256": "06ad12ac6b4b65c1ccf428854393ea69ee0d9b42eed834e16e295952a8ba4f03",
+   "twin": "repos:x3d-blender-io/tests/golden/cameras.c14n.x3d"
+  },
+  {
+   "event": "ev-590aa686b957",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/emissive_glass__008__text_garbage.x3d",
+   "note": "text_garbage: X3D/Scene/Transform#OB_Lamp/Shape/IndexedFaceSet#ME_LampMesh solid -> '1,,2'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 88
+   },
+   "sha256": "42b32bc0042b5455422ab8d301544fc252d1b1ed29fcbf1edf795a8508a96cdc",
+   "twin": "repos:x3d-blender-io/tests/golden/emissive_glass.c14n.x3d"
+  },
+  {
+   "event": "ev-563b2a1cb29e",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/emissive_glass__024__text_garbage.x3d",
+   "note": "text_garbage: X3D/Scene/NavigationInfo headlight -> '1,,2'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 104
+   },
+   "sha256": "b074198d77576489b25ef8af2f5ff9963135337a03084546cd1eb45fe2ec7dff",
+   "twin": "repos:x3d-blender-io/tests/golden/emissive_glass.c14n.x3d"
+  },
+  {
+   "event": "ev-ccf78e31f6bb",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/emissive_glass__059__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key shadows: true -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 139
+   },
+   "sha256": "efe5b11c929a2012b84f44dcb77471f66c0fda716c01667b42a7a2cfd12aba13",
+   "twin": "repos:x3d-blender-io/tests/golden/emissive_glass.c14n.x3d"
+  },
+  {
+   "event": "ev-ba5e635fcc2e",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/emissive_glass__068__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 148
+   },
+   "sha256": "5c908053ad374cfa8bde439ff81e3c6961a371b31c14b3e3115506edd199fb2a",
+   "twin": "repos:x3d-blender-io/tests/golden/emissive_glass.c14n.x3d"
+  },
+  {
+   "event": "ev-232fcff64c78",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/four_lights__003__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Spot/SpotLight#LA_Spot global: true -> '1'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 163
+   },
+   "sha256": "0df79a4c35576489db1bbfaf082cc85d29ef991c8f22976418c138bbe9121ca8",
+   "twin": "repos:x3d-blender-io/tests/golden/four_lights.c14n.x3d"
+  },
+  {
+   "event": "ev-beb93a949d83",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/four_lights__019__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Spot/SpotLight#LA_Spot global: true -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 179
+   },
+   "sha256": "b46b14105e043cda8c67ddbca5687915af76eab646b05a9de7334493c2cc8d56",
+   "twin": "repos:x3d-blender-io/tests/golden/four_lights.c14n.x3d"
+  },
+  {
+   "event": "ev-6fd1b836b885",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/four_lights__044__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Sun/DirectionalLight#LA_Sun shadows: true -> '1'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 204
+   },
+   "sha256": "fc39cb7ff4a73848a1817fe10c9707d65a9d91e5bf0b7693211eb232dd7a2e9c",
+   "twin": "repos:x3d-blender-io/tests/golden/four_lights.c14n.x3d"
+  },
+  {
+   "event": "ev-1ef64199a9d4",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/four_lights__046__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 206
+   },
+   "sha256": "d537c36a1a84ac0be75875bdef1ce521cc3484b07cfb9b453c504e573f3687aa",
+   "twin": "repos:x3d-blender-io/tests/golden/four_lights.c14n.x3d"
+  },
+  {
+   "event": "ev-1ac63d0b6ac7",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/hierarchy__001__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Root/Transform#OB_Arm/Transform#OB_Hand/Shape/IndexedFaceSet#ME_HandMesh solid: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 241
+   },
+   "sha256": "9ecc964653eb3ecdcdf7929be37f29f8bc2bb9424947bd915ed581deaa39b119",
+   "twin": "repos:x3d-blender-io/tests/golden/hierarchy.c14n.x3d"
+  },
+  {
+   "event": "ev-75285b4aba1b",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/hierarchy__015__text_garbage.x3d",
+   "note": "text_garbage: X3D/Scene/Transform#OB_Root/Transform#OB_Arm/Transform#OB_Hand/Shape/IndexedFaceSet#ME_HandMesh solid -> 'abc'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 255
+   },
+   "sha256": "1ca434f1702f3c1769d6cfa05737f9131fd75cfd184c61ae673c3a389ff52952",
+   "twin": "repos:x3d-blender-io/tests/golden/hierarchy.c14n.x3d"
+  },
+  {
+   "event": "ev-d20941cd3723",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/hierarchy__023__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key shadows: true -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 263
+   },
+   "sha256": "4044374285f650646cc3dd6bac1fca75d74f7e5d51692b150dc40ec8f649285d",
+   "twin": "repos:x3d-blender-io/tests/golden/hierarchy.c14n.x3d"
+  },
+  {
+   "event": "ev-14e8d9b578c9",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/hierarchy__027__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 267
+   },
+   "sha256": "1d1ceadabef70713cb9a896576b70e091f6da7b912c2b121a92cf29be558ab09",
+   "twin": "repos:x3d-blender-io/tests/golden/hierarchy.c14n.x3d"
+  },
+  {
+   "event": "ev-5bd9d8b04b5d",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/hierarchy__035__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Root/Transform#OB_Arm/Shape/IndexedFaceSet#ME_ArmMesh solid: false -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 275
+   },
+   "sha256": "596d3a15368e7bf2969a1c48135b2dc039c9760d216ae0ddf087bacc6111e251",
+   "twin": "repos:x3d-blender-io/tests/golden/hierarchy.c14n.x3d"
+  },
+  {
+   "event": "ev-2edb7ba048d2",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/keyframes__013__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Mover/Shape/IndexedFaceSet#ME_MoverMesh solid: false -> '1'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 333
+   },
+   "sha256": "c9f7e32adf6ad21e04fd52da1c05ee3ebd396020e0aa51efdc225bdc532f2bfd",
+   "twin": "repos:x3d-blender-io/tests/golden/keyframes.c14n.x3d"
+  },
+  {
+   "event": "ev-f7a3b57b4e68",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/keyframes__031__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key global: true -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 351
+   },
+   "sha256": "3cb99dc4bff6ea972cac09cd5251b77a939437c4b3377edb2f3b2023fb1e5b53",
+   "twin": "repos:x3d-blender-io/tests/golden/keyframes.c14n.x3d"
+  },
+  {
+   "event": "ev-5cbc143cc983",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/keyframes__047__text_garbage.x3d",
+   "note": "text_garbage: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key shadows -> '\"unterminated'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 367
+   },
+   "sha256": "7dd533daf99ed8ac9f58358d9db97666293b39a884b42d79d62eb9c9d4a21d3a",
+   "twin": "repos:x3d-blender-io/tests/golden/keyframes.c14n.x3d"
+  },
+  {
+   "event": "ev-2066a1a4e1eb",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/keyframes__068__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 388
+   },
+   "sha256": "f7209e71c9f5d3ffd75a615223b156551df8019da00062305405c7a1ffd24353",
+   "twin": "repos:x3d-blender-io/tests/golden/keyframes.c14n.x3d"
+  },
+  {
+   "event": "ev-d01b5e43fa4d",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/linked_instances__012__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key shadows: true -> '1'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 412
+   },
+   "sha256": "0801ce9b275cf54f9471505a3bf92fbaf69e5a0cc3e9905e6575a7abcfe1361b",
+   "twin": "repos:x3d-blender-io/tests/golden/linked_instances.c14n.x3d"
+  },
+  {
+   "event": "ev-c25a63dc3989",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/linked_instances__016__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key global: true -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 416
+   },
+   "sha256": "56cecb5b8eb855a7de5eb56fc4164268f303ddc82f078f68b4f9e790424bd94c",
+   "twin": "repos:x3d-blender-io/tests/golden/linked_instances.c14n.x3d"
+  },
+  {
+   "event": "ev-c6fc33a1ecea",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/smooth_torus__003__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 643
+   },
+   "sha256": "424bdb2884d8143196a70d8fe1d1f036e192b0e263160c58309db04e8f6394a2",
+   "twin": "repos:x3d-blender-io/tests/golden/smooth_torus.c14n.x3d"
+  },
+  {
+   "event": "ev-7292e33e48d4",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/smooth_torus__010__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> '1'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 650
+   },
+   "sha256": "48ca3faa927e6f415b0df02d3b2ba4e38279748c90eb4ee18977cf5ec004841c",
+   "twin": "repos:x3d-blender-io/tests/golden/smooth_torus.c14n.x3d"
+  },
+  {
+   "event": "ev-75c659152b45",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/smooth_torus__025__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key global: true -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 665
+   },
+   "sha256": "1a4cc27143dc78d892acd46f79fbe274cf756dbd7ce19f6a722f252af55fa023",
+   "twin": "repos:x3d-blender-io/tests/golden/smooth_torus.c14n.x3d"
+  },
+  {
+   "event": "ev-fcfc3296b7b3",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/two_materials__010__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Split/Shape/IndexedFaceSet#ME_SplitMesh_m1 solid: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 730
+   },
+   "sha256": "b04e6a6c5ca900cd7785d8b722fd6705acd046b6d0a8283f6d03891884f25e7c",
+   "twin": "repos:x3d-blender-io/tests/golden/two_materials.c14n.x3d"
+  },
+  {
+   "event": "ev-e6c686b529e6",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/two_materials__078__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key global: true -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 798
+   },
+   "sha256": "db95e716862dd1400a088129f0b4a56ae31a5b1845c6fd6a0101227505cbe22c",
+   "twin": "repos:x3d-blender-io/tests/golden/two_materials.c14n.x3d"
+  },
+  {
+   "event": "ev-0001a2e45260",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/uv_grid__031__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key shadows: true -> '1'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 831
+   },
+   "sha256": "c3fd0fd51d1d688838b396a506c011a6276520e1bd1c69dab4cd27718b0c7f46",
+   "twin": "repos:x3d-blender-io/tests/golden/uv_grid.c14n.x3d"
+  },
+  {
+   "event": "ev-7725bea69157",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/uv_grid__046__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key shadows: true -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 846
+   },
+   "sha256": "33dace6b151423a1ef06f40858778dd2df160930a27ffed24cfe54a3d23f8d43",
+   "twin": "repos:x3d-blender-io/tests/golden/uv_grid.c14n.x3d"
+  },
+  {
+   "event": "ev-7cf7dbf2e1bf",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/vertex_colours__000__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Painted/Shape/IndexedFaceSet#ME_PaintMesh solid: false -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 880
+   },
+   "sha256": "3387882d820e2da4e86f1cfcaf677f02162f5bde3464d8c5aaf60a1a40f27df7",
+   "twin": "repos:x3d-blender-io/tests/golden/vertex_colours.c14n.x3d"
+  },
+  {
+   "event": "ev-514a73333bb5",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/vertex_colours__006__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Painted/Shape/IndexedFaceSet#ME_PaintMesh solid: false -> '1'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 886
+   },
+   "sha256": "039cfba4f3c5ae836bdccbb25b3ff0d2b75ebf0ce3517dfa7c5384c0d357242d",
+   "twin": "repos:x3d-blender-io/tests/golden/vertex_colours.c14n.x3d"
+  },
+  {
+   "event": "ev-2bc68e7cae1d",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/vertex_colours__022__text_garbage.x3d",
+   "note": "text_garbage: X3D/Scene/NavigationInfo headlight -> '\"unterminated'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 902
+   },
+   "sha256": "4878bbb6ab65546458ec0d8bf7882ca61a2d5f37d7e6d3e0cae6bb5a8e3b3697",
+   "twin": "repos:x3d-blender-io/tests/golden/vertex_colours.c14n.x3d"
+  },
+  {
+   "event": "ev-5350deae8662",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/vertex_colours__035__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key shadows: true -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 915
+   },
+   "sha256": "95adc5f28d6923f44fc0003168a5322307305269f33e52a9c3948f50be5e13fe",
+   "twin": "repos:x3d-blender-io/tests/golden/vertex_colours.c14n.x3d"
+  },
+  {
+   "event": "ev-c4c676ea8f56",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/vertex_colours__041__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key global: true -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 921
+   },
+   "sha256": "833e54203066d02a3580f05bae676e808f7666090ee2eba328d8fec48baf6356",
+   "twin": "repos:x3d-blender-io/tests/golden/vertex_colours.c14n.x3d"
+  },
+  {
+   "event": "ev-11413ce6d145",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/cameras__051__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Target/Shape/IndexedFaceSet#ME_TargetMesh solid: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 51
+   },
+   "sha256": "7ecd7d34616e30b04dbbde1c40f2bf20b9932155ff8755300c8705e90683180c",
+   "twin": "repos:x3d-blender-io/tests/golden/cameras.c14n.x3d"
+  },
+  {
+   "event": "ev-2761eeed270a",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/emissive_glass__011__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Lamp/Shape/IndexedFaceSet#ME_LampMesh solid: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 91
+   },
+   "sha256": "6ae86d4ddbeae84fa9d86149118d0cb19ea029f9beb743a9cca5c6f29b422a63",
+   "twin": "repos:x3d-blender-io/tests/golden/emissive_glass.c14n.x3d"
+  },
+  {
+   "event": "ev-48cb33fb57be",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/emissive_glass__036__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key global: true -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 116
+   },
+   "sha256": "84cd58eb6c545295bf916a4ca93a6d3486912bf7f6df3130d8cfb4b9604394e9",
+   "twin": "repos:x3d-blender-io/tests/golden/emissive_glass.c14n.x3d"
+  },
+  {
+   "event": "ev-a67252cee935",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/emissive_glass__069__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Pane/Shape/IndexedFaceSet#ME_PaneMesh solid: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 149
+   },
+   "sha256": "e88bbc3231ecea8cd3f95941d9e52893ab6ee5ebff33d6b3d16d4c34cc081b81",
+   "twin": "repos:x3d-blender-io/tests/golden/emissive_glass.c14n.x3d"
+  },
+  {
+   "event": "ev-6049b1a87489",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/four_lights__013__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Point/PointLight#LA_Point shadows: true -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 173
+   },
+   "sha256": "9b30776f2078840704e79ff865658c36b87d6cd5299391f5eac407ed59453059",
+   "twin": "repos:x3d-blender-io/tests/golden/four_lights.c14n.x3d"
+  },
+  {
+   "event": "ev-ca09dfaa4396",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/hierarchy__003__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Root/Transform#OB_Arm/Shape/IndexedFaceSet#ME_ArmMesh solid: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 243
+   },
+   "sha256": "d64999c8a08a85dcdf45078d4a8b2f5f18e08198e0d2e0a6c8a9d50a85e53e1e",
+   "twin": "repos:x3d-blender-io/tests/golden/hierarchy.c14n.x3d"
+  },
+  {
+   "event": "ev-ed63ea34bedb",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/hierarchy__035__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Root/Transform#OB_Arm/Shape/IndexedFaceSet#ME_ArmMesh solid: false -> '1'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 275
+   },
+   "sha256": "95b8cc979df9452d30210bbd8d92a864f6df6027eccd0c0d0e2634b22d92f1a6",
+   "twin": "repos:x3d-blender-io/tests/golden/hierarchy.c14n.x3d"
+  },
+  {
+   "event": "ev-0a01f37c8ec4",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/hierarchy__060__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key global: true -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 300
+   },
+   "sha256": "5679511f459fb6cbd5e40fb037c4485be9189356edeb6ded5644573656745783",
+   "twin": "repos:x3d-blender-io/tests/golden/hierarchy.c14n.x3d"
+  },
+  {
+   "event": "ev-5df5d64c5e72",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/keyframes__045__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key shadows: true -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 365
+   },
+   "sha256": "96ec36c3736e9d663583013ed92ac198798ae163726dea2113aa7f5e4bee9822",
+   "twin": "repos:x3d-blender-io/tests/golden/keyframes.c14n.x3d"
+  },
+  {
+   "event": "ev-24c42a2e4574",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/linked_instances__017__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 417
+   },
+   "sha256": "3ff852a7a9a759e578139afd122731d012e222c33f7d54eb94b96e38476b966b",
+   "twin": "repos:x3d-blender-io/tests/golden/linked_instances.c14n.x3d"
+  },
+  {
+   "event": "ev-312049f7224f",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/linked_instances__043__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 443
+   },
+   "sha256": "460d3efa79fc6bb7c9ec64597c9d328f13e03f7aa104610c52604af4445295f4",
+   "twin": "repos:x3d-blender-io/tests/golden/linked_instances.c14n.x3d"
+  },
+  {
+   "event": "ev-4b4bb92426fb",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/lit_cube__002__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key shadows: true -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 482
+   },
+   "sha256": "856daea405e230a74098f4978fce2bb4fae0639268e6ff1325bd743428a7ae0e",
+   "twin": "repos:x3d-blender-io/tests/golden/lit_cube.c14n.x3d"
+  },
+  {
+   "event": "ev-b5d7b9805047",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/lit_cube__037__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key global: true -> '1'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 517
+   },
+   "sha256": "efdf5087c4c61abe18344d196a5673a9c933a1bac3e3c6c8dae236f9d9f6f5b6",
+   "twin": "repos:x3d-blender-io/tests/golden/lit_cube.c14n.x3d"
+  },
+  {
+   "event": "ev-e8e8ec121e73",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/loose_edges__017__text_garbage.x3d",
+   "note": "text_garbage: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key global -> '1,,2'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 577
+   },
+   "sha256": "d277ba8e87033f59d5d900b14b51418646ec1d684381fd2c47e43fda39bc5d50",
+   "twin": "repos:x3d-blender-io/tests/golden/loose_edges.c14n.x3d"
+  },
+  {
+   "event": "ev-eca18714ea41",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/loose_edges__030__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 590
+   },
+   "sha256": "73dbd9e1b28aa6b0ed0d5394e572100c830074a98ca51ad795f5ea9224d4df93",
+   "twin": "repos:x3d-blender-io/tests/golden/loose_edges.c14n.x3d"
+  },
+  {
+   "event": "ev-3aed5ac629da",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/loose_edges__077__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> '1'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 637
+   },
+   "sha256": "e37c6301c75c3a661bea698bbe6a242347932b3fc0503a890055ea4202629712",
+   "twin": "repos:x3d-blender-io/tests/golden/loose_edges.c14n.x3d"
+  },
+  {
+   "event": "ev-6dfca10e354d",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/smooth_torus__027__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key shadows: true -> '1'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 667
+   },
+   "sha256": "2dd7bc4cac2c571c0f00fd90a4185bf8a80eae72bea82020fff2f8d71056e281",
+   "twin": "repos:x3d-blender-io/tests/golden/smooth_torus.c14n.x3d"
+  },
+  {
+   "event": "ev-1ca2accb5f36",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/two_materials__016__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Key/DirectionalLight#LA_Key shadows: true -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 736
+   },
+   "sha256": "f349d099cc56cebf9cca3e3bb94023718c83d7c1651392e79e77492468d9db18",
+   "twin": "repos:x3d-blender-io/tests/golden/two_materials.c14n.x3d"
+  },
+  {
+   "event": "ev-d63550f79f3f",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/two_materials__027__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 747
+   },
+   "sha256": "ad8bdce53132633315e53722544f13edc7f61e615001ec0b18f34ab9b385be0e",
+   "twin": "repos:x3d-blender-io/tests/golden/two_materials.c14n.x3d"
+  },
+  {
+   "event": "ev-9489cf019bb8",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/two_materials__033__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/Transform#OB_Split/Shape/IndexedFaceSet#ME_SplitMesh_m0 solid: false -> 'yes'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 753
+   },
+   "sha256": "2cbcd55dbb2e731fde7adf84e594092586911b5c776e108feedc0f12d3b623b5",
+   "twin": "repos:x3d-blender-io/tests/golden/two_materials.c14n.x3d"
+  },
+  {
+   "event": "ev-eb3fcad121f0",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/uv_grid__066__bool_spelling.x3d",
+   "note": "bool_spelling: X3D/Scene/NavigationInfo headlight: false -> '0'",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 866
+   },
+   "sha256": "13663c74bc6673ac36273d011aa08b8d36d6ff9cc1b04a86972deaa429bf545a",
+   "twin": "repos:x3d-blender-io/tests/golden/uv_grid.c14n.x3d"
+  },
+  {
+   "event": "ev-27a2ad628ced",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-94627ad9a095.x3d",
+   "note": "confirm: IndexedFaceSet@solid <- 'abc'",
+   "receipt": null,
+   "sha256": "94627ad9a0953c968d348943643289760a4321f2250653149d4ebb3d756d20a3",
+   "twin": "work:c001/twins/34dac8740556.x3d"
+  },
+  {
+   "event": "ev-7a832d67e38d",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-730668aaf10e.x3d",
+   "note": "confirm: NavigationInfo@headlight <- '1'",
+   "receipt": null,
+   "sha256": "730668aaf10e97f1fde5134860a1dc7b1225686202d3c14978fa82fae1e9eda1",
+   "twin": "work:c001/twins/81f733755568.x3d"
+  },
+  {
+   "event": "ev-0edb182f13db",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-c6b096dd3e77.x3d",
+   "note": "confirm: SpotLight@global <- '0'",
+   "receipt": null,
+   "sha256": "c6b096dd3e771b26228cf1d82468044de34e3c50010249613ba6a5bfa9003c33",
+   "twin": "work:c001/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-3c05ff0e850c",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-88c50fbd879c.x3d",
+   "note": "confirm: DirectionalLight@shadows <- '1,,2'",
+   "receipt": null,
+   "sha256": "88c50fbd879c7db2ad1a5e8fa6ed355dd774056da40e695f23b7e538d8187185",
+   "twin": "work:c001/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-97ff16a043c5",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-acada5cd80d1.x3d",
+   "note": "confirm: DirectionalLight@global <- 'abc'",
+   "receipt": null,
+   "sha256": "acada5cd80d1c4e86cd519a83d8c4eb3555676704fc7e4713d7e9579bd379e43",
+   "twin": "work:c001/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-9fd139e00b0f",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-f1c4495af493.x3d",
+   "note": "confirm: PointLight@shadows <- 'yes'",
+   "receipt": null,
+   "sha256": "f1c4495af49358efecc75b92149a3cb0e4ec96644ba1683649921414f64bbe75",
+   "twin": "work:c001/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-dcad202f4936",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-3b6fa9ab30be.x3d",
+   "note": "confirm: IndexedFaceSet@solid <- '1,,2'",
+   "receipt": null,
+   "sha256": "3b6fa9ab30be812c656f628bcc65d6489823e9428d1dab422b33909fbad22264",
+   "twin": "work:c001/twins/e29e78d4e245.x3d"
+  },
+  {
+   "event": "ev-448729f40abb",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-74270d4fe6dd.x3d",
+   "note": "confirm: NavigationInfo@headlight <- '0'",
+   "receipt": null,
+   "sha256": "74270d4fe6dd1027bc817c486eba72a95b441dac1b40a865752cdc47cbca4c09",
+   "twin": "work:c001/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-2fbb9f631299",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-af43fbb1356d.x3d",
+   "note": "confirm: NavigationInfo@headlight <- 'yes'",
+   "receipt": null,
+   "sha256": "af43fbb1356db2cc5b7d8f66612ecc645a9c57b874314d29d5d54afc37ab64f8",
+   "twin": "work:c001/twins/2b396ee243bb.x3d"
+  },
+  {
+   "event": "ev-b26c0a89b8db",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-0fe16757085c.x3d",
+   "note": "confirm: IndexedFaceSet@solid <- '0'",
+   "receipt": null,
+   "sha256": "0fe16757085ca4614675f27da3bac4bc4f053c4947c9f34b921fbf1d1f8fbaeb",
+   "twin": "work:c001/twins/bc29fb426792.x3d"
+  },
+  {
+   "event": "ev-79fe97528783",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-91b65c7a3492.x3d",
+   "note": "widen: TriangleFanSet@solid <- 'yes'",
+   "receipt": null,
+   "sha256": "91b65c7a3492ddb775e51b8041b7ee23a51b4dd0acdb340958b1461d9b7c4924",
+   "twin": "work:c001/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-3c732440da30",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-f344cfc17a92.x3d",
+   "note": "widen: Cone@solid <- 'abc'",
+   "receipt": null,
+   "sha256": "f344cfc17a920746c6874ca2eb3c3edd1d32f787fa58226313bb2c237fd76891",
+   "twin": "work:c001/twins/3ef331ddfc00.x3d"
+  },
+  {
+   "event": "ev-43a29c5917b4",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-a933917c8061.x3d",
+   "note": "widen: Box@solid <- '1,,2'",
+   "receipt": null,
+   "sha256": "a933917c8061562040d684277e627927ed31fa2612057c47a8223e366e883bea",
+   "twin": "work:c001/twins/d6f91548a1aa.x3d"
+  },
+  {
+   "event": "ev-3ffe1a3b4465",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-7e8ca808ebf8.x3d",
+   "note": "widen: ElevationGrid@solid <- 'yes'",
+   "receipt": null,
+   "sha256": "7e8ca808ebf809d8aa5abf089026dc4867abe05a719ba52dd5dab4c41330c70a",
+   "twin": "work:c001/twins/a751905ca573.x3d"
+  },
+  {
+   "event": "ev-2a168fb04eeb",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-1d02ac4a99e7.x3d",
+   "note": "widen: IndexedTriangleStripSet@solid <- '0'",
+   "receipt": null,
+   "sha256": "1d02ac4a99e7bfa59a6aed39f47cf73a4c61fb2e0f311cd6b7f456edd67e3d14",
+   "twin": "work:c001/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-778f6a30dfb9",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-fd667ccdcfd6.x3d",
+   "note": "alternate:2: DirectionalLight@shadows <- '1,,2,1,,2' (live: '1,,2' failed here)",
+   "receipt": null,
+   "sha256": "fd667ccdcfd6f7439f22a16a3d2045db07259b86d705a9a845db083459609f68",
+   "twin": "work:c001/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-ade54b92da52",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-fa9d726766f0.x3d",
+   "note": "value: NavigationInfo@headlight <- '1,1' (live: '1' failed here)",
+   "receipt": null,
+   "sha256": "fa9d726766f019a3ecce9ed94735b038649a9469115a8d8824ac669466cf93a3",
+   "twin": "work:c001/twins/81f733755568.x3d"
+  },
+  {
+   "event": "ev-7f38c7a7bd8d",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-962d74854cc9.x3d",
+   "note": "value: PointLight@shadows <- 'YES' (live: 'yes' failed here)",
+   "receipt": null,
+   "sha256": "962d74854cc905741d1d6ab3d450ce40ef6cd7ea5609c931c31fe78e260b201e",
+   "twin": "work:c001/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-1b6af0da1d6a",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-35f13bedf13c.x3d",
+   "note": "value: SpotLight@global <- '\"0\"' (live: '0' failed here)",
+   "receipt": null,
+   "sha256": "35f13bedf13cedfeaf0446eab4b503b01ba2750e3dc18eef492d7fa56ce5cf98",
+   "twin": "work:c001/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-a8fd4b982e6c",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-2c844788bc10.x3d",
+   "note": "value: DirectionalLight@shadows <- '\"1,,2\"' (live: '1,,2' failed here)",
+   "receipt": null,
+   "sha256": "2c844788bc109bc032c16fb42d991d44d80a4d21525aa4459c34fc0ebc367e5f",
+   "twin": "work:c001/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-d415ffa38bcf",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-5d93944765bb.x3d",
+   "note": "value: IndexedFaceSet@solid <- ' abc ' (live: 'abc' failed here)",
+   "receipt": null,
+   "sha256": "5d93944765bbcad535d519274c7ea01a1be5132dab136b69cb538af9196de419",
+   "twin": "work:c001/twins/34dac8740556.x3d"
+  },
+  {
+   "event": "ev-002ad1386526",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-a35d42ab4f7c.x3d",
+   "note": "value: DirectionalLight@global <- 'abc,abc' (live: 'abc' failed here)",
+   "receipt": null,
+   "sha256": "a35d42ab4f7c9a1e13157673ac2e5c8556a59c3a28cb2427f47bd972f809c335",
+   "twin": "work:c001/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-492df5ac5099",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-6006ff376a3f.x3d",
+   "note": "value: PointLight@shadows <- ' yes ' (live: 'yes' failed here)",
+   "receipt": null,
+   "sha256": "6006ff376a3f9f70d913a6d5e7b1050d240477e4334df1fc9da6f9f1b0b28a80",
+   "twin": "work:c001/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-07d19c12a6ad",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-9b7603c3e69e.x3d",
+   "note": "value: NavigationInfo@headlight <- '0,0' (live: '0' failed here)",
+   "receipt": null,
+   "sha256": "9b7603c3e69ed7210c9981790587a7f6d11c1bd38c0bd1c7737101633d4fe469",
+   "twin": "work:c001/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-6655dd638afd",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-e6f33385aa53.x3d",
+   "note": "value: SpotLight@global <- ' 0 ' (live: '0' failed here)",
+   "receipt": null,
+   "sha256": "e6f33385aa53078445a8b53897a4189326842d54eba9de37bd8163428572990e",
+   "twin": "work:c001/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-7f46c173bcf7",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round1-22cd1fa95487.x3d",
+   "note": "value: IndexedFaceSet@solid <- '\"1,,2\"' (live: '1,,2' failed here)",
+   "receipt": null,
+   "sha256": "22cd1fa954879130218acdf6a990b954ea7b72c597bcb425b513bc79090d7d81",
+   "twin": "work:c001/twins/e29e78d4e245.x3d"
+  },
+  {
+   "event": "ev-32258813f762",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-f568e0d49fbf.x3d",
+   "note": "confirm: Box@solid <- '1,,2,1,,2'",
+   "receipt": null,
+   "sha256": "f568e0d49fbf05e0fed41a91957ce1c11b9d443b603613ec9d0f7da77649ba4f",
+   "twin": "work:c001/twins/a0501ac0fcb0.x3d"
+  },
+  {
+   "event": "ev-d30484ae8dc2",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-706c2b6bdcdf.x3d",
+   "note": "confirm: NavigationInfo@headlight <- '\"unterminated'",
+   "receipt": null,
+   "sha256": "706c2b6bdcdf66d187dbc6c0ccd6cda6745820dd4acb2381fb2d2687ae2db8a4",
+   "twin": "work:c001/twins/0b72840615c1.x3d"
+  },
+  {
+   "event": "ev-fa3d42104dda",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-24fef8b3abae.x3d",
+   "note": "confirm: IndexedTriangleStripSet@solid <- '\"1,,2\"'",
+   "receipt": null,
+   "sha256": "24fef8b3abae5b2f029f52b7e64e6dcc78dea9c28b3287052a42e13d4bf104d3",
+   "twin": "work:c001/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-2581fa207ffe",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-61dab4cb6c47.x3d",
+   "note": "confirm: DirectionalLight@shadows <- '1,,2,1,,2'",
+   "receipt": null,
+   "sha256": "61dab4cb6c475af03bc2ba9a55a0bada9cc07629ae9d28f727b104ff18202276",
+   "twin": "work:c001/twins/22cff5016a67.x3d"
+  },
+  {
+   "event": "ev-3fe018a509dd",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-931a3eaff07e.x3d",
+   "note": "confirm: IndexedFaceSet@solid <- 'abc,abc'",
+   "receipt": null,
+   "sha256": "931a3eaff07e662aa8eab94314dc1e774754ef937cd0b5647a609444092a3ccb",
+   "twin": "work:c001/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-64de3255733c",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-24b1dae976d4.x3d",
+   "note": "confirm: TriangleFanSet@solid <- 'abc'",
+   "receipt": null,
+   "sha256": "24b1dae976d4391ee5e9d2082e2781c48a9ad384c59d7c52cfba2b3cf1ce7016",
+   "twin": "work:c001/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-a544f47b1482",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-0eaf48752f9f.x3d",
+   "note": "confirm: Cone@solid <- 'abc,abc'",
+   "receipt": null,
+   "sha256": "0eaf48752f9fbffb740bbee21012b4ca895dfc94a08bde374b50e41d4ab8c110",
+   "twin": "work:c001/twins/8b933aff1e1d.x3d"
+  },
+  {
+   "event": "ev-304131f2aca9",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-5c23972a2b99.x3d",
+   "note": "confirm: DirectionalLight@global <- '0'",
+   "receipt": null,
+   "sha256": "5c23972a2b9983fbffce88da1ab13e6dd979ca20306d7c539db2d80bf81f0b89",
+   "twin": "work:c001/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-761e5d79ca66",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-ea3a5b1e88aa.x3d",
+   "note": "confirm: ElevationGrid@solid <- '\"1,,2\"'",
+   "receipt": null,
+   "sha256": "ea3a5b1e88aae98c38606f41e5d8e38c90e3099e5a4786fba27c2741670470d8",
+   "twin": "work:c001/twins/a751905ca573.x3d"
+  },
+  {
+   "event": "ev-ada7e7b44090",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-460d90c705c2.x3d",
+   "note": "confirm: PointLight@shadows <- ' 0 '",
+   "receipt": null,
+   "sha256": "460d90c705c24878ac10608dc4e77d9ebcfc9ef65a5c9477bf9da31814440c08",
+   "twin": "work:c001/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-444e4c679242",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-346080a2cd5f.x3d",
+   "note": "widen: RigidBody@visible <- '0'",
+   "receipt": null,
+   "sha256": "346080a2cd5fc35f77e7a1beffaa841406ff01eae0f7c0cef079d5391ac3e2af",
+   "twin": "work:c001/twins/d6f91548a1aa.x3d"
+  },
+  {
+   "event": "ev-80a3bb86b404",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-fb482ba706b9.x3d",
+   "note": "widen: IndexedTriangleFanSet@solid <- ' 0 '",
+   "receipt": null,
+   "sha256": "fb482ba706b9d70e5014a1c034bb7414dcc3ea6bd802b85a4fc14d397462425b",
+   "twin": "work:c001/twins/65a6607224a8.x3d"
+  },
+  {
+   "event": "ev-a1dd01f9bec4",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-a2a337949751.x3d",
+   "note": "widen: PointLight@global <- '\"1,,2\"'",
+   "receipt": null,
+   "sha256": "a2a3379497519d62830db9c5cdf414c167b7920a153e081878e19060877f4d80",
+   "twin": "work:c001/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-fc011cd049b9",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-31c006422bab.x3d",
+   "note": "widen: CollidableShape@visible <- '1'",
+   "receipt": null,
+   "sha256": "31c006422baba135037b0e593d9d5ccc8264deba74ea2e3b2bc78087cd35cdc3",
+   "twin": "work:c001/twins/31aac1d6f6da.x3d"
+  },
+  {
+   "event": "ev-c1f20e155d19",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-57f5ae285cb4.x3d",
+   "note": "widen: IndexedTriangleSet@solid <- '1,,2,1,,2'",
+   "receipt": null,
+   "sha256": "57f5ae285cb42c0ca8f991ccf89917ce4d54eea48090502d4cc483b47e5f8185",
+   "twin": "work:c001/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-82b0f8e62d70",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-93056c57008b.x3d",
+   "note": "widen: TriangleSet2D@solid <- '1,,2,1,,2'",
+   "receipt": null,
+   "sha256": "93056c57008b917e3547163e6c6937957caa3a0f8e4a6aca6d22bfc5b483d383",
+   "twin": "work:c001/twins/a904dc7c4a23.x3d"
+  },
+  {
+   "event": "ev-79b2d84dfbb0",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-74f8cd8de802.x3d",
+   "note": "widen: Group@visible <- '\"1,,2\"'",
+   "receipt": null,
+   "sha256": "74f8cd8de8021bc6c9dd506e3cb3363387c73bb25f79bb6d462cbe131298f2b9",
+   "twin": "work:c001/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-d277685e8527",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-333d68a6f260.x3d",
+   "note": "value: NavigationInfo@headlight <- '\"\"unterminated\"' (live: '\"unterminated' failed here)",
+   "receipt": null,
+   "sha256": "333d68a6f26092f7b55b5fbb8d4efb12f13147136883cda80a0e785b5dcf03c2",
+   "twin": "work:c001/twins/0b72840615c1.x3d"
+  },
+  {
+   "event": "ev-5029e0f63b3a",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-7a7930d9f2e6.x3d",
+   "note": "value: TriangleFanSet@solid <- 'abc,abc' (live: 'abc' failed here)",
+   "receipt": null,
+   "sha256": "7a7930d9f2e6eeb34cf2a184839ddec286f5574a146ebc9182b1a40d5613e0b7",
+   "twin": "work:c001/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-d338d3dcd83c",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-94992bb974a7.x3d",
+   "note": "value: Cone@solid <- 'abc,abc,abc,abc' (live: 'abc,abc' failed here)",
+   "receipt": null,
+   "sha256": "94992bb974a7a7630561fa0724dfab5bda5d5b8ea886e8127a125e18b483a95c",
+   "twin": "work:c001/twins/8b933aff1e1d.x3d"
+  },
+  {
+   "event": "ev-a245a793e440",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-245dfad5f510.x3d",
+   "note": "value: DirectionalLight@global <- '0,0' (live: '0' failed here)",
+   "receipt": null,
+   "sha256": "245dfad5f510622e32185c6e98135edfbbc286fa261a44a5b02862047f2e5f41",
+   "twin": "work:c001/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-426dcd341f9d",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-81bb49593485.x3d",
+   "note": "value: PointLight@shadows <- '  0  ' (live: ' 0 ' failed here)",
+   "receipt": null,
+   "sha256": "81bb4959348576a88d061d9577e6ef89c5a51426503283027508b118e9a7ec40",
+   "twin": "work:c001/twins/fc02e4e0c69f.x3d"
+  },
+  {
+   "event": "ev-e124290b20ca",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-fd1a78f13917.x3d",
+   "note": "value: DirectionalLight@shadows <- '\"1,,2,1,,2\"' (live: '1,,2,1,,2' failed here)",
+   "receipt": null,
+   "sha256": "fd1a78f1391782bcf54e2b85e04a0e4343f0a718409afc5ad26dd0b60db8f39a",
+   "twin": "work:c001/twins/22cff5016a67.x3d"
+  },
+  {
+   "event": "ev-77854a7005fe",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-01bf45a207a7.x3d",
+   "note": "value: IndexedFaceSet@solid <- 'abc,abc,abc,abc' (live: 'abc,abc' failed here)",
+   "receipt": null,
+   "sha256": "01bf45a207a7fee899b6489b2a902f002bbdb4af2d5949bc156997b8b9f80f2b",
+   "twin": "work:c001/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-c45d5508bc70",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-0d8252f9bd08.x3d",
+   "note": "value: ElevationGrid@solid <- '\"\"1,,2\"\"' (live: '\"1,,2\"' failed here)",
+   "receipt": null,
+   "sha256": "0d8252f9bd0800aa3f1b4ff2ba61bc70cb1810c899b3c60642daa08cd2afdd40",
+   "twin": "work:c001/twins/a751905ca573.x3d"
+  },
+  {
+   "event": "ev-786c5b17feae",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-e563311d2a95.x3d",
+   "note": "value: Box@solid <- ' 1,,2,1,,2 ' (live: '1,,2,1,,2' failed here)",
+   "receipt": null,
+   "sha256": "e563311d2a95e37b6b8976d6d26f2c2953c03327e2b82ca1fd28eb5421e647b8",
+   "twin": "work:c001/twins/a0501ac0fcb0.x3d"
+  },
+  {
+   "event": "ev-53a13d3ab2a5",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round2-551588426d2e.x3d",
+   "note": "value: IndexedTriangleStripSet@solid <- '\"\"1,,2\"\"' (live: '\"1,,2\"' failed here)",
+   "receipt": null,
+   "sha256": "551588426d2ec6087d42a0dca55b949952971c3dbb8aff52ba17b83de2143f60",
+   "twin": "work:c001/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-0a5568527799",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-363a1fead21f.x3d",
+   "note": "confirm: IndexedTriangleSet@solid <- 'YES'",
+   "receipt": null,
+   "sha256": "363a1fead21fd775e1a0bb388e89ec1b223c5be16dbf865c8a76a9cf1b7a00c6",
+   "twin": "work:c001/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-6a4237b14d7a",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-3afc502656cb.x3d",
+   "note": "confirm: RigidBody@visible <- '\"1,,2\"'",
+   "receipt": null,
+   "sha256": "3afc502656cbee0ea83139ac3d723882012370bd0d58ed3127f0dcdb517bbdff",
+   "twin": "work:c001/twins/6ca8d3ef0e62.x3d"
+  },
+  {
+   "event": "ev-7c17cc0da790",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-d0e7994ce1c4.x3d",
+   "note": "confirm: SpotLight@global <- '\"1,,2\"'",
+   "receipt": null,
+   "sha256": "d0e7994ce1c456333daae4d5500a543602a756fc48685a303632c86c0937283a",
+   "twin": "work:c001/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-8908a48e72e5",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-42a05e97d999.x3d",
+   "note": "confirm: IndexedFaceSet@solid <- '1,,2'",
+   "receipt": null,
+   "sha256": "42a05e97d999b1c6dd147ff682b820c0e252293c56da301be0c6fdbdafe3b393",
+   "twin": "work:c001/twins/0d6f5903fcac.x3d"
+  },
+  {
+   "event": "ev-51e1da73c223",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-956ac2b9ee55.x3d",
+   "note": "confirm: NavigationInfo@headlight <- 'YES'",
+   "receipt": null,
+   "sha256": "956ac2b9ee557819e0225d898b08e80b98a12cd56354865965f7aace14fd55ba",
+   "twin": "work:c001/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-99925e51bb28",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-ac04d1b705cd.x3d",
+   "note": "confirm: Group@visible <- 'abc'",
+   "receipt": null,
+   "sha256": "ac04d1b705cda8b88bfc65c5c9fffd1e3b476d227914ec60c47ce86ef11c85ef",
+   "twin": "work:c001/twins/d588e5f733ad.x3d"
+  },
+  {
+   "event": "ev-8cbe52abf5a3",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-59a88f6b6269.x3d",
+   "note": "confirm: DirectionalLight@shadows <- 'YES'",
+   "receipt": null,
+   "sha256": "59a88f6b626963a75c07fc48943457ce4984b6c85b9d924d9054288d1df51f97",
+   "twin": "work:c001/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-89669591d46e",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-ae8e1855c834.x3d",
+   "note": "confirm: Cone@solid <- 'YES'",
+   "receipt": null,
+   "sha256": "ae8e1855c8347ff42ae8cc525d350d30b29389e32619d8cc2f82abf4016b9ee4",
+   "twin": "work:c001/twins/558c63f2d489.x3d"
+  },
+  {
+   "event": "ev-0796c17c69e9",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-f0c826f889ca.x3d",
+   "note": "confirm: DirectionalLight@global <- '\"1,,2,1,,2\"'",
+   "receipt": null,
+   "sha256": "f0c826f889ca7dac98a5a2a77b20e4e45e3e628489de9e942379c8d3e6699106",
+   "twin": "work:c001/twins/22cff5016a67.x3d"
+  },
+  {
+   "event": "ev-879ead38bfb6",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-a7599580d6c9.x3d",
+   "note": "confirm: ElevationGrid@solid <- '1,1'",
+   "receipt": null,
+   "sha256": "a7599580d6c9eb72977aa0d388131e018ce6cb9321a292a3042f3f4e52b736c8",
+   "twin": "work:c001/twins/a751905ca573.x3d"
+  },
+  {
+   "event": "ev-0a6d68d2cd61",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-7deb62f3f1f3.x3d",
+   "note": "widen: LOD@visible <- ' 0 '",
+   "receipt": null,
+   "sha256": "7deb62f3f1f393871382338c4603a6cd266d3d1d371262ee5351e5dd2902b52f",
+   "twin": "work:c001/twins/3cd59ece4297.x3d"
+  },
+  {
+   "event": "ev-9b32bdc9ebdf",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-b95dbebcb2a5.x3d",
+   "note": "widen: Disk2D@solid <- ' 0 '",
+   "receipt": null,
+   "sha256": "b95dbebcb2a57868630dbd1c5828ab6097899702d384e5465e48712b1acb69f9",
+   "twin": "work:c001/twins/a82bffa86c64.x3d"
+  },
+  {
+   "event": "ev-8678f8e26c5d",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-9458efaf0bb5.x3d",
+   "note": "widen: Sphere@solid <- 'abc'",
+   "receipt": null,
+   "sha256": "9458efaf0bb584f8e0d4fc8055ea73d95f21a7355b9038282a1fc02a83868410",
+   "twin": "work:c001/twins/d6f91548a1aa.x3d"
+  },
+  {
+   "event": "ev-d8876af662af",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-d9ef8566e879.x3d",
+   "note": "widen: Shape@visible <- 'abc'",
+   "receipt": null,
+   "sha256": "d9ef8566e879f78302d830b97d5a2568a1e013f5fc75624b33507c97cecfb206",
+   "twin": "work:c001/twins/b6711e268eb1.x3d"
+  },
+  {
+   "event": "ev-b4a3c6d4fd3b",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-25e1ef8f4cba.x3d",
+   "note": "widen: HAnimHumanoid@visible <- 'abc'",
+   "receipt": null,
+   "sha256": "25e1ef8f4cbaca0c1390a8790346d084a56a1a2336cd443591226a4abc2aba75",
+   "twin": "work:c001/twins/81f733755568.x3d"
+  },
+  {
+   "event": "ev-8f9a70f6a356",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-5598929b31fc.x3d",
+   "note": "widen: Layer@visible <- 'abc'",
+   "receipt": null,
+   "sha256": "5598929b31fc54703c680f18f621208f5791ac70d96b88d7087db9084ee8c06e",
+   "twin": "work:c001/twins/1ff03afbf828.x3d"
+  },
+  {
+   "event": "ev-821a040eaf65",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-8525a7151218.x3d",
+   "note": "value: IndexedFaceSet@solid <- '1,,2,1,,2' (live: '1,,2' failed here)",
+   "receipt": null,
+   "sha256": "8525a7151218fdeee372ce014f30d409480ceeebc50eb29a661b1434aa76459e",
+   "twin": "work:c001/twins/0d6f5903fcac.x3d"
+  },
+  {
+   "event": "ev-1098973c9aa7",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-b6321feb1e2a.x3d",
+   "note": "value: Group@visible <- 'ABC' (live: 'abc' failed here)",
+   "receipt": null,
+   "sha256": "b6321feb1e2a969ae8f37bad10f3b042cba86d11c1fd72a8c8f6105a1be50457",
+   "twin": "work:c001/twins/d588e5f733ad.x3d"
+  },
+  {
+   "event": "ev-384956de038b",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-39d5174953a7.x3d",
+   "note": "value: NavigationInfo@headlight <- 'Yes' (live: 'YES' failed here)",
+   "receipt": null,
+   "sha256": "39d5174953a7a264e70190b64ec987a7baf91556f3df80af7a63831b29557406",
+   "twin": "work:c001/twins/512935e8eda0.x3d"
+  },
+  {
+   "event": "ev-05695dc39cb7",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-e885cffe8182.x3d",
+   "note": "value: IndexedTriangleSet@solid <- 'yes' (live: 'YES' failed here)",
+   "receipt": null,
+   "sha256": "e885cffe8182c9d84215e4b5d02b6871ac066c4eb9fdda2a8d00071edb54d8ee",
+   "twin": "work:c001/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-d3425483cff5",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-acfe1890a7bb.x3d",
+   "note": "value: RigidBody@visible <- ' \"1,,2\" ' (live: '\"1,,2\"' failed here)",
+   "receipt": null,
+   "sha256": "acfe1890a7bbb64e15826625b80a1f7c070b906d6941c6c08e60686593d4df2a",
+   "twin": "work:c001/twins/6ca8d3ef0e62.x3d"
+  },
+  {
+   "event": "ev-32061c46ebd1",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-25cff54ac4a2.x3d",
+   "note": "value: SpotLight@global <- '\"\"1,,2\"\"' (live: '\"1,,2\"' failed here)",
+   "receipt": null,
+   "sha256": "25cff54ac4a298a915b18f9fc667158472e92d3d172bc52d8956a5d540fa1633",
+   "twin": "work:c001/twins/851b9441224a.x3d"
+  },
+  {
+   "event": "ev-9b07b8e45f4d",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-adba9371df48.x3d",
+   "note": "value: ElevationGrid@solid <- '1,1,1,1' (live: '1,1' failed here)",
+   "receipt": null,
+   "sha256": "adba9371df485b64a0750059beffe77da9aaf038c29506437b3d4cfe7be605a3",
+   "twin": "work:c001/twins/a751905ca573.x3d"
+  },
+  {
+   "event": "ev-d5f46890ee93",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-577a3cf4d977.x3d",
+   "note": "value: DirectionalLight@shadows <- 'yes' (live: 'YES' failed here)",
+   "receipt": null,
+   "sha256": "577a3cf4d977bc095d4ad7e1e00c0047f553984e2a137eac19ff53abc3cfcaf1",
+   "twin": "work:c001/twins/ffdb3bcab99f.x3d"
+  },
+  {
+   "event": "ev-bf15641cd4df",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-4e2fab53cf87.x3d",
+   "note": "value: Cone@solid <- 'yes' (live: 'YES' failed here)",
+   "receipt": null,
+   "sha256": "4e2fab53cf879cc8c25b5e74bc57739cc396bd9cb703f0a2f74a49d2996155b2",
+   "twin": "work:c001/twins/558c63f2d489.x3d"
+  },
+  {
+   "event": "ev-4006dcac7edb",
+   "family": "r2r-probe",
+   "file": "work:c001/probes/round3-43f0c55a5e6b.x3d",
+   "note": "value: DirectionalLight@global <- ' \"1,,2,1,,2\" ' (live: '\"1,,2,1,,2\"' failed here)",
+   "receipt": null,
+   "sha256": "43f0c55a5e6b048dd5c12ae38355df84d98ed31a9edb1114b5f7eb72065aee63",
+   "twin": "work:c001/twins/22cff5016a67.x3d"
+  }
+ ],
+ "sources_total": 133,
+ "status": "candidate"
+}

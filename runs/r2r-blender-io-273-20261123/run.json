@@ -1,0 +1,124 @@
+{
+ "candidates": 2,
+ "claims": 2,
+ "clusters": 2,
+ "created_utc": "2026-11-23T06:30:08Z",
+ "events": 9252,
+ "events_skipped": [],
+ "files_read": 2120,
+ "grades": {
+  "C": 0,
+  "L": 1,
+  "S": 1
+ },
+ "inputs": [
+  {
+   "adapter": "chaos",
+   "events": 3840,
+   "path": "chaos:2.7.3-rng7/rows.json",
+   "sha256": "a0e4486676fa50ad4c15c9be86bac34cfd2e5066fdfd87317005880a0ea00589",
+   "split": "train",
+   "what": "differential chaos round, add-on 2.7.3, rng 7: 960 one-edit mutants of the 12 golden scenes (training)"
+  },
+  {
+   "adapter": "chaos",
+   "events": 3840,
+   "path": "chaos:2.7.3-rng101/rows.json",
+   "sha256": "f9a7abac1c77b0cc48b63e74da279021fc1662b794ee2623962afa53fbe279a3",
+   "split": "held",
+   "what": "differential chaos round, add-on 2.7.3, rng 101: 960 one-edit mutants of the 12 golden scenes (held out)"
+  },
+  {
+   "adapter": "verdicts",
+   "events": 514,
+   "path": "sweep:2.7.3-import.jsonl",
+   "sha256": "aee06e03ad5181e501a768b7f102b54309c0c557729639ea2612871f961cef78",
+   "split": "by-hash",
+   "what": "514 real project files through the 2.7.3 importer"
+  },
+  {
+   "adapter": "verdicts",
+   "events": 512,
+   "path": "sweep:2.7.3-reexport.jsonl",
+   "sha256": "7e05463972e02382eb20c773a7dd1484ae2a05306ab11dcd02693a219a6c6ba8",
+   "split": "by-hash",
+   "what": "the same 514 files, import then export, add-on 2.7.3"
+  },
+  {
+   "adapter": "verdicts",
+   "events": 514,
+   "path": "sweep:2.7.3-x3dpy.jsonl",
+   "sha256": "b170f514aa2929c799e5845605e419994a894ce9c0d7470e5d6165e57b589935",
+   "split": "by-hash",
+   "what": "the same 514 files through x3d.py 4.0.65.8 as add-on 2.7.3 calls it"
+  }
+ ],
+ "instruments": {
+  "x3d-blender-io 2.7.3 import then export (bpy 5.3.0)": {
+   "fail": 1,
+   "pass": 2463
+  },
+  "x3d-blender-io 2.7.3 importer (bpy 5.3.0)": {
+   "fail": 2,
+   "pass": 2432
+  },
+  "x3d-blender-io 2.7.3 own validator (does it crash?)": {
+   "fail": 0,
+   "pass": 1920
+  },
+  "x3d.py 4.0.65.8 through x3d-blender-io 2.7.3 validate.py (does it crash?)": {
+   "fail": 0,
+   "pass": 2434
+  }
+ },
+ "kit": {
+  "loomkit": {
+   "kit_commit": "e16641f02b0b48316793d7e6605e701729f4f716",
+   "kit_dirty": true,
+   "kit_sha256": "549c8cb197f0d252efbf2d14d313b2e7838ef3c20079c44bcc7b79553ebeba67"
+  },
+  "r2r_sha256": "096d1ce649f8b2767e482f9fc48d57b008fe65e51f94b82bc6f49241fcb9fa4d",
+  "r2r_version": "0.1.0",
+  "uom_facts": {
+   "fork_commit": "4d433af",
+   "from": "x3d_mcp fork, src/validation/schemas/X3dUnifiedObjectModel-4.{0,1}.xml",
+   "x3duom_40_sha256": "7e426a238656c21a4a444b989276494329da363625c36f0a719b15d89416bee3",
+   "x3duom_41_sha256": "4fc10e8e15c0d6cf2a916e4f59b815b110104aa7ea734dc6afea9458095c792b"
+  }
+ },
+ "notes": [
+  "Instruments: the x3d-blender-io add-on at 2.7.3 (commit 8e56437) inside bpy 5.3.0 (Python 3.13): its importer, and its import followed by its export. Third instrument: x3d.py 4.0.65.8 as the add-on's validate.py at 2.7.3 calls it; a crash there is a crash of that pair, not of x3d.py alone.",
+  "Chaos rounds: tools/chaos/differential.py of x3d-blender-io at main 8e56437 with the add-on source pinned to 2.7.3, 80 mutants per golden scene, six judges (the add-on's own validator, x3d.py 4.0.65.8, xmllint 20914 with x3d-4.0.xsd from the x3d_mcp fork at 4d433af, the Web3D X3D Schematron through SaxonC, bpy 5.3.0 import, import then export). Cloud machine, 15 GB, 4 cores, no memory cap. Machine paths in the tracebacks were replaced by <addon>/, <site-packages>/ and <x3d-blender-io>/ before packing; nothing else was changed.",
+  "Probes: the same instruments through kit/loomkit/r2r/drivers/blender_io.py under a 10 GB address-space cap. A threshold that is really a memory cliff is the cliff of that cap, not of every machine.",
+  "Held out: the chaos rounds marked held (never used for induction), and the half of the real-file sweep whose sha256 is odd. Probe hosts come only from the other half.",
+  "Sweep: every .x3d under the project's repositories on 23 Nov 2026 that is at most 2 MB (514 files), named as repos:<repository>/<path>.",
+  "To repeat: unpack ../chaos-*.tar.xz into ../chaos, check the repositories out side by side, and give --root bpyenv=... (a venv with bpy 5.3.0 and x3d.py) and --root addon-src=... (the add-on source at each version under <version>/source)."
+ ],
+ "oracles": {
+  "x3d-blender-io 2.7.3 import then export (bpy 5.3.0)": {
+   "calls": 1,
+   "deaths": []
+  },
+  "x3d-blender-io 2.7.3 importer (bpy 5.3.0)": {
+   "calls": 0,
+   "deaths": []
+  },
+  "x3d.py 4.0.65.8 through x3d-blender-io 2.7.3 validate.py (does it crash?)": {
+   "calls": 0,
+   "deaths": []
+  }
+ },
+ "proposer": {
+  "name": "inductive (no language model)",
+  "uses_a_model": false
+ },
+ "schema": "loom.r2r-run/1",
+ "seconds": 18.0,
+ "settings": {
+  "max_generations": 1,
+  "only": null,
+  "rounds": 3,
+  "seed": 1
+ },
+ "title": "x3d-blender-io 2.7.3 in bpy 5.3.0: chaos rounds and a sweep of 514 real files"
+}

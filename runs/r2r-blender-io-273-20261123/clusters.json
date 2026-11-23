@@ -1,0 +1,130 @@
+[
+ {
+  "found_by": "receipts",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.7.3 importer (bpy 5.3.0)",
+  "log": [
+   "2 failure(s) to explain; the instrument passed 1109 file(s) and failed 2 in all",
+   "2 failure(s) have no known-good twin: any site may explain them, so their rules are weaker",
+   "rule 1: elem[x:present & n:CoordinateDouble] explains 2 more (2 in all); 6 alternate(s) the receipts cannot rule out; seen at CoordinateDouble"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-d261dd67c562"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 9.8,
+  "signature": "AttributeError at import_x3d.py:2038 importMesh_ReadVertices",
+  "training_events": 2,
+  "training_failures": 2,
+  "unclean_best_efforts": [
+   {
+    "explains": 1,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "v:eq:0.2 0.5 0.9",
+      "anc:Group",
+      "at:Material@diffuseColor"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where it sits inside a Group and the place is Material diffuseColor: the value is exactly `0.2 0.5 0.9`.",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   },
+   {
+    "explains": 1,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "v:eq:0.9 0.5 0.2",
+      "!anc:Transform",
+      "at:Material@diffuseColor"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Material diffuseColor: the value is exactly `0.9 0.5 0.2`, unless it sits inside a Transform.",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   },
+   {
+    "explains": 1,
+    "false_alarms": 2,
+    "rule": {
+     "all": [
+      "v:eq:0 1 0 0.6",
+      "at:Transform@rotation",
+      "e.child:Shape"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform rotation and its element has a Shape child: the value is exactly `0 1 0 0.6`.",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.7.3 import then export (bpy 5.3.0)",
+  "log": [
+   "1 failure(s) to explain; the instrument passed 1141 file(s) and failed 1 in all",
+   "1 failure(s) have no known-good twin: any site may explain them, so their rules are weaker",
+   "rule 1: attr[v:use_before_def & (at:MetadataFloat@USE | at:MetadataInteger@USE | at:MetadataString@USE)] explains 1 more (1 in all); 8 alternate(s) the receipts cannot rule out; seen at MetadataFloat@USE, MetadataInteger@USE, MetadataString@USE"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-dc636828c7f3"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 8.2,
+  "signature": "ValueError at export_x3d.py:2177 _modern_writer",
+  "training_events": 1,
+  "training_failures": 1,
+  "unclean_best_efforts": [
+   {
+    "explains": 1,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "v:enum_violation",
+      "!e.has:family",
+      "at:FontStyle@justify"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is FontStyle justify: the value is not in the field's closed list of choices, unless its element also has the attribute family.",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   },
+   {
+    "explains": 1,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "ge:max_children:21",
+      "le:depth_max:6"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the most children of one element is at least 21 and the deepest nesting in the file is at most 6.",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   },
+   {
+    "explains": 1,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "ge:max_children:21",
+      "le:depth_max:6"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the most children of one element is at least 21 and the deepest nesting in the file is at most 6.",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   }
+  ]
+ }
+]

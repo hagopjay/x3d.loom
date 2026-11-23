@@ -1,0 +1,241 @@
+{
+ "grade": {
+  "against": "Fault Lab author (planted faults, x3d.demo fault-lab/v1)",
+  "closure": "untested",
+  "closure_reason": "too few probes outside the rule to say",
+  "grade": "S",
+  "grade_word": "Suspected",
+  "missed_seen": 0,
+  "reasons": [
+   "rests on one failure and no confirmed probe"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-93a51b8e17f9",
+ "instrument": "Fault Lab author (planted faults, x3d.demo fault-lab/v1)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "x:sfnode_multiple",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 1,
+    "role": "test"
+   },
+   {
+    "dropped": "n:PhysicalMaterial",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 0,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "!has:emissiveColor",
+      "n:PhysicalMaterial"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where the node is PhysicalMaterial: it has no emissiveColor attribute."
+   },
+   {
+    "rule": {
+     "all": [
+      "!has:transparency",
+      "n:PhysicalMaterial"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where the node is PhysicalMaterial: it has no transparency attribute."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:all_zero",
+      "!e.has:emissiveColor",
+      "at:PhysicalMaterial@metallic"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is PhysicalMaterial metallic: every component is zero, unless its element also has the attribute emissiveColor."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:all_at_min",
+      "!e.has:emissiveColor",
+      "at:PhysicalMaterial@metallic"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is PhysicalMaterial metallic: every component is at the field's minimum, unless its element also has the attribute emissiveColor."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:all_zero",
+      "!e.has:transparency",
+      "at:PhysicalMaterial@metallic"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is PhysicalMaterial metallic: every component is zero, unless its element also has the attribute transparency."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:all_at_min",
+      "!e.has:transparency",
+      "at:PhysicalMaterial@metallic"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is PhysicalMaterial metallic: every component is at the field's minimum, unless its element also has the attribute transparency."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:not_all_equal",
+      "!e.has:transparency",
+      "at:PhysicalMaterial@baseColor"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is PhysicalMaterial baseColor: the components are not all equal, unless its element also has the attribute transparency."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:not_all_equal",
+      "!e.has:emissiveColor",
+      "at:PhysicalMaterial@baseColor"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is PhysicalMaterial baseColor: the components are not all equal, unless its element also has the attribute emissiveColor."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 0,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 0,
+   "probes": 0,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 0
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 1
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 0,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 0
+  },
+  "idle_literals": [],
+  "instrument": "Fault Lab author (planted faults, x3d.demo fault-lab/v1)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1
+  },
+  "normative_reading": [
+   {
+    "literal": "x:sfnode_multiple",
+    "means": "it is a second node in a field that holds one node",
+    "passing_files_with_it_inside_the_fence": 0
+   }
+  ],
+  "probe_rounds": [],
+  "rule": {
+   "all": [
+    "x:sfnode_multiple",
+    "n:PhysicalMaterial"
+   ],
+   "kind": "elem"
+  },
+  "rule_id": "r2r-93a51b8e17f9",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "PhysicalMaterial"
+  ],
+  "sentence": "At one element where the node is PhysicalMaterial: it is a second node in a field that holds one node.",
+  "signature": "planted fault: two-materials",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 1,
+   "explained_by_this_rule": 1,
+   "failures": 1,
+   "families": {
+    "fault-lab": 1
+   },
+   "observed_by": {
+    "authored": 1
+   },
+   "with_known_good_twin": 1
+  },
+  "strays": {},
+  "tier": 1,
+  "trace": [
+   "seed x:sfnode_multiple, fenced to n:PhysicalMaterial: explains 1, false alarms 0"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 0,
+   "rule": {
+    "all": [
+     "x:sfnode_multiple"
+    ],
+    "kind": "elem"
+   },
+   "status": "untested beyond the fence"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "x:sfnode_multiple",
+   "n:PhysicalMaterial"
+  ],
+  "kind": "elem"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one element where the node is PhysicalMaterial: it is a second node in a field that holds one node.",
+ "signature": "planted fault: two-materials",
+ "sources": [
+  {
+   "event": "ev-ede98f569683",
+   "family": "fault-lab",
+   "file": "repos:x3d.demo/docs/demos/fault-lab/v1/cases/two-materials.x3d",
+   "note": "Two materials on one surface",
+   "receipt": {
+    "path": "repos:x3d.demo/docs/demos/fault-lab/v1/data/cases.json",
+    "row": 1
+   },
+   "sha256": "8b379cde462ee9b4adc460271d0a2ab04e06912630b444f4d466ca8308ce47dd",
+   "twin": "repos:x3d.demo/docs/demos/fault-lab/v1/cases/clean.x3d"
+  }
+ ],
+ "sources_total": 1,
+ "status": "candidate"
+}

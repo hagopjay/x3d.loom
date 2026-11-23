@@ -1,0 +1,556 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "1 audit probe(s) and 0+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "S",
+  "grade_word": "Suspected",
+  "missed_seen": 12,
+  "reasons": [
+   "1 audit prediction(s) were wrong: the rule fired and the instrument passed"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-8c73ea66efdc",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "ge:index_excess:2147483633",
+    "failures_explained_without_it": 27,
+    "false_alarms_without_it": 460,
+    "role": "test"
+   },
+   {
+    "dropped": "le:ntok:15",
+    "failures_explained_without_it": 57,
+    "false_alarms_without_it": 2,
+    "role": "test"
+   },
+   {
+    "dropped": "!v:lexical_invalid",
+    "failures_explained_without_it": 27,
+    "false_alarms_without_it": 7,
+    "role": "guard"
+   },
+   {
+    "dropped": "at:IndexedFaceSet@coordIndex",
+    "failures_explained_without_it": 27,
+    "false_alarms_without_it": 17,
+    "role": "context"
+   },
+   {
+    "dropped": "p:Shape",
+    "failures_explained_without_it": 27,
+    "false_alarms_without_it": 1,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "ge:index_max:2147483638",
+      "le:ntok:15",
+      "!v:lexical_invalid",
+      "at:IndexedFaceSet@coordIndex",
+      "p:Shape"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedFaceSet coordIndex and the parent is Shape: the largest index is at least 2147483638 and the number of tokens is at most 15, unless the value does not have the written form its field type requires."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max_abs:2147483638",
+      "le:ntok:15",
+      "!v:lexical_invalid",
+      "at:IndexedFaceSet@coordIndex",
+      "p:Shape"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedFaceSet coordIndex and the parent is Shape: the largest magnitude is at least 2147483638 and the number of tokens is at most 15, unless the value does not have the written form its field type requires."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 15,
+   "confirmed": 24,
+   "missed": 1,
+   "missed_examples": [
+    "bisect: IndexedFaceSet@coordIndex <- index_excess near 1.6222e+09"
+   ],
+   "other_failure": 42,
+   "probes": 126,
+   "refuted": 1,
+   "refuted_examples": [
+    "confirm: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1'"
+   ],
+   "silent_ok": 43
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 27
+  },
+  "held_out": {
+   "caught": 3,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 14,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1416
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [
+   {
+    "first_failing": 2147483633.0,
+    "last_passing": 46340853.0,
+    "literal": "ge:index_excess:2147483633",
+    "number": "index_excess",
+    "passing_values_compared": 662,
+    "untested": [
+     46340853.0,
+     2147483633.0
+    ]
+   },
+   {
+    "first_failing": 15.0,
+    "last_passing": 30,
+    "literal": "le:ntok:15",
+    "number": "ntok",
+    "passing_values_compared": 2,
+    "untested": [
+     15.0,
+     30
+    ]
+   }
+  ],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1887
+  },
+  "normative_reading": [
+   {
+    "literal": "v:index_out_of_range",
+    "means": "an index points past the end of the list it indexes",
+    "passing_files_with_it_inside_the_fence": 61
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 36,
+    "round": 1,
+    "rules_tested": [
+     "attr[ge:index_excess:2147483520 & at:IndexedFaceSet@coordIndex]"
+    ],
+    "tally": {
+     "bisect/other-failure": 2,
+     "bisect/silent-ok": 4,
+     "confirm/confirmed": 7,
+     "confirm/refuted": 3,
+     "value/confirmed": 3,
+     "value/refuted": 1,
+     "widen/other-failure": 2,
+     "widen/silent-ok": 14
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 58,
+    "round": 2,
+    "rules_tested": [
+     "attr[ge:index_excess:2147483640 & le:ntok:30 & !v:lexical_invalid & at:IndexedFaceSet@coordIndex]",
+     "attr[ge:index_max:2147483647 & le:index_excess:2147483623 & at:IndexedFaceSet@coordIndex]"
+    ],
+    "tally": {
+     "bisect/missed": 12,
+     "confirm/confirmed": 10,
+     "confirm/other-failure": 1,
+     "confirm/refuted": 2,
+     "near/silent-ok": 4,
+     "value/confirmed": 10,
+     "widen/other-failure": 3,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 40,
+    "round": 3,
+    "rules_tested": [
+     "attr[ge:index_excess:571626241 & !anc:HAnimHumanoid & !v:lexical_invalid & at:IndexedFaceSet@coordIndex & e.child:Coordinate & p:Shape]"
+    ],
+    "tally": {
+     "bisect/confirmed": 2,
+     "bisect/missed": 1,
+     "bisect/other-failure": 3,
+     "confirm/confirmed": 8,
+     "confirm/other-failure": 2,
+     "near/silent-ok": 2,
+     "value/confirmed": 6,
+     "widen/other-failure": 4,
+     "widen/silent-ok": 12
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 82,
+    "round": "audit",
+    "rules_tested": [
+     "attr[ge:index_excess:440304889 & ge:ntok:20 & !e.has:ccw & at:IndexedFaceSet@coordIndex & e.child:Coordinate]",
+     "attr[ge:index_excess:2147483633 & le:ntok:15 & !v:lexical_invalid & at:IndexedFaceSet@coordIndex & p:Shape]"
+    ],
+    "tally": {
+     "bisect/confirmed": 5,
+     "bisect/missed": 1,
+     "bisect/other-failure": 5,
+     "bisect/silent-ok": 1,
+     "confirm/confirmed": 18,
+     "confirm/other-failure": 1,
+     "confirm/refuted": 1,
+     "near/confirmed": 6,
+     "near/silent-ok": 2,
+     "value/confirmed": 10,
+     "widen/other-failure": 7,
+     "widen/silent-ok": 25
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "ge:index_excess:2147483633",
+    "le:ntok:15",
+    "!v:lexical_invalid",
+    "at:IndexedFaceSet@coordIndex",
+    "p:Shape"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-8c73ea66efdc",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "IndexedFaceSet@coordIndex"
+  ],
+  "sentence": "At one attribute where the place is IndexedFaceSet coordIndex and the parent is Shape: how far the largest index runs past the end of its list is at least 2147483633 and the number of tokens is at most 15, unless the value does not have the written form its field type requires.",
+  "signature": "RuntimeError at import_x3d.py:2008 validate_points_field",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 76,
+   "explained_by_this_rule": 27,
+   "failures": 76,
+   "families": {
+    "chaos-differential": 17,
+    "r2r-probe": 59
+   },
+   "observed_by": {
+    "tool": 76
+   },
+   "with_known_good_twin": 76
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed le:ntok:15, fenced to at:IndexedFaceSet@coordIndex: explains 27, false alarms 468",
+   "+ ge:index_excess:2147483633: explains 27, false alarms 8 (gain 97.44)",
+   "+ !v:lexical_invalid: explains 27, false alarms 1 (gain 8.69)",
+   "+ p:Shape: explains 27, false alarms 0 (gain 1.42)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 17,
+   "rule": {
+    "all": [
+     "ge:index_excess:2147483633",
+     "le:ntok:15",
+     "!v:lexical_invalid",
+     "p:Shape"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "ge:index_excess:2147483633",
+   "le:ntok:15",
+   "!v:lexical_invalid",
+   "at:IndexedFaceSet@coordIndex",
+   "p:Shape"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the place is IndexedFaceSet coordIndex and the parent is Shape: how far the largest index runs past the end of its list is at least 2147483633 and the number of tokens is at most 15, unless the value does not have the written form its field type requires.",
+ "signature": "RuntimeError at import_x3d.py:2008 validate_points_field",
+ "sources": [
+  {
+   "event": "ev-8c06b986bbc4",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng7/mutants/two_materials__075__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Split/Shape/IndexedFaceSet#ME_SplitMesh_m0 coordIndex: token 1 1 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng7/rows.json",
+    "row": 795
+   },
+   "sha256": "bd5481968b8a837fbd11ec793aa4f898368bb17785a38708083aab7d5f6b2fd0",
+   "twin": "repos:x3d-blender-io/tests/golden/two_materials.c14n.x3d"
+  },
+  {
+   "event": "ev-8eaf53b1c280",
+   "family": "chaos-differential",
+   "file": "chaos:2.7.1-rng11/mutants/four_lights__050__index_oob.x3d",
+   "note": "index_oob: X3D/Scene/Transform#OB_Floor/Shape/IndexedFaceSet#ME_FloorMesh coordIndex: token 1 1 -> 2147483647",
+   "receipt": {
+    "path": "chaos:2.7.1-rng11/rows.json",
+    "row": 210
+   },
+   "sha256": "0df25167fc4f104aac0d62c7adcbab8eb8535923f5af1b29211db638d09c59ae",
+   "twin": "repos:x3d-blender-io/tests/golden/four_lights.c14n.x3d"
+  },
+  {
+   "event": "ev-a29de74ecd28",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round1-369e13a9fb74.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "369e13a9fb744641fe94fefe9acf8b476c787b91ad10191f1c1c5a936dd08e05",
+   "twin": "work:c003/twins/e6b4f28298df.x3d"
+  },
+  {
+   "event": "ev-3aef52feaf4a",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round1-57b65922db87.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1 0 4 5 1 -1 0 3 6 4 -1'",
+   "receipt": null,
+   "sha256": "57b65922db873a84edc4beef0ee045051302db441d429367d5bdd40f252e245f",
+   "twin": "work:c003/twins/34dac8740556.x3d"
+  },
+  {
+   "event": "ev-381d480681fa",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round1-88399ac4fe05.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- ' 0 2147483647 2 3 -1 ' (live: '0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "88399ac4fe0549378d81fc4242fd5492af5c6ba084a82050fd14d19db9020af1",
+   "twin": "work:c003/twins/e6b4f28298df.x3d"
+  },
+  {
+   "event": "ev-73494cc6d7b8",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round1-cf391cda7e1f.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1 0 2147483647 2 3 -1' (live: '0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "cf391cda7e1f0ab917eb9c3c8b25a2b72628f2e2c3a1a01863065afffe690d4a",
+   "twin": "work:c003/twins/e6b4f28298df.x3d"
+  },
+  {
+   "event": "ev-0bb9c11e6aa2",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round1-087ec1ddc430.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1,0 2147483647 2 3 -1' (live: '0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "087ec1ddc4308349cff3e53c82e27b2dc548800dcab42deb6b67ccba5f78a4dd",
+   "twin": "work:c003/twins/e6b4f28298df.x3d"
+  },
+  {
+   "event": "ev-efe47c95eacd",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-5cc7d33345a6.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1,0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "5cc7d33345a6022afa2b6a16d5d8d4c8c93c50fca7533ebc49a31990612cacd9",
+   "twin": "work:c003/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-39904fea4292",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-110b5a17956d.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "110b5a17956d81c89b91c79a7c40d34db089ebfa4b15afc2a0080e4b1eb26107",
+   "twin": "work:c003/twins/bc29fb426792.x3d"
+  },
+  {
+   "event": "ev-30227fa639ca",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-1dd5a3ab6537.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "1dd5a3ab6537afb51b61991827047cac9b2d75529bc9dc33d094aab82daf9746",
+   "twin": "work:c003/twins/34dac8740556.x3d"
+  },
+  {
+   "event": "ev-157cfe85b072",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-1571e5495996.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1 0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "1571e5495996529f9f07325c1f86ea2df0151ff7f1015152b09589bd76349337",
+   "twin": "work:c003/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-1f1ae731ea92",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-b6ef875dc207.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 2.14748e+09",
+   "receipt": null,
+   "sha256": "b6ef875dc20714c295efe3e1666501e88a0ab7bb164bdfc294271ce30242829f",
+   "twin": "work:c003/twins/34dac8740556.x3d"
+  },
+  {
+   "event": "ev-7fc643b9a612",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-a056bc5cf9ee.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 2.14748e+09",
+   "receipt": null,
+   "sha256": "a056bc5cf9ee5009b971acd73c0eac7e2f6aefb64d7d1a471d17ab4ba45c3b5b",
+   "twin": "work:c003/twins/bc29fb426792.x3d"
+  },
+  {
+   "event": "ev-385492d7a937",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-8a8c93c4bea0.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- ' 0 2147483647 2 3 -1,0 2147483647 2 3 -1 ' (live: '0 2147483647 2 3 -1,0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "8a8c93c4bea020e59fd2d632c8e10c7e1998eff6aeab2d535336c1184cfc501b",
+   "twin": "work:c003/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-e9c7fe3f4e96",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-cc940c408b12.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1 0 2147483647 2 3 -1' (live: '0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "cc940c408b12feea63ab06ccaac9801a87306aedf03db140c00eae65159226f8",
+   "twin": "work:c003/twins/34dac8740556.x3d"
+  },
+  {
+   "event": "ev-9bc44922d321",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-a2f6250bedaf.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- ' 0 2147483647 2 3 -1 ' (live: '0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "a2f6250bedaf8308027923fbba082dd32ddc6968ad94bbb5a81c833085ede235",
+   "twin": "work:c003/twins/34dac8740556.x3d"
+  },
+  {
+   "event": "ev-7595296b6731",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-18a218042356.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- ' 0 2147483647 2 3 -1 0 2147483647 2 3 -1 ' (live: '0 2147483647 2 3 -1 0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "18a218042356c21677fc6402f10d7b00999d6713d5a824abf0b0c6cd8006e648",
+   "twin": "work:c003/twins/4a78c0f30dcf.x3d"
+  },
+  {
+   "event": "ev-36da369746bb",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-86188885ea9c.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1,0 2147483647 2 3 -1' (live: '0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "86188885ea9cc4d34954efa3a07c40afd9b16998ca0279603335741b79c3e967",
+   "twin": "work:c003/twins/34dac8740556.x3d"
+  },
+  {
+   "event": "ev-b0b290cf6790",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-8f15a0af5ff6.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- ' 0 2147483647 2 3 -1 ' (live: '0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "8f15a0af5ff6e6aeaab00b528f457208d3e084d238a33c24eec91fc6d4280ac5",
+   "twin": "work:c003/twins/bc29fb426792.x3d"
+  },
+  {
+   "event": "ev-b1c3d27c9b42",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-28a449b9215c.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 2147483647 2 3 -1,0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "28a449b9215c66cc543abe7d37e2ebb333811e825a0f2e8af2e3c059683b9064",
+   "twin": "work:c003/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-054ba418d8a3",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-3b47eae80099.x3d",
+   "note": "confirm: IndexedFaceSet@coordIndex <- '0 2147483638 2 3 -1'",
+   "receipt": null,
+   "sha256": "3b47eae8009948a66be911cc4ab607db94d50ecd93be092a1d208059c4bc2805",
+   "twin": "work:c003/twins/83a9ca2ee92d.x3d"
+  },
+  {
+   "event": "ev-b88f23c0dbc9",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-a50ece402696.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 4.40305e+08",
+   "receipt": null,
+   "sha256": "a50ece402696fdb7d4fdd2246ec0ca6260c4e4d871406bd3bfeaf7e4b8aff808",
+   "twin": "work:c003/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-2d85acf397fe",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-7ffaee0423d5.x3d",
+   "note": "bisect: IndexedFaceSet@coordIndex <- index_excess near 1.77662e+08",
+   "receipt": null,
+   "sha256": "7ffaee0423d552f3adba7e2d0a6b4d9c8f7043058aa1b8722d4e5c4f476bf114",
+   "twin": "work:c003/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-031712c63ace",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-3107aeb70dae.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- ' 0 2147483647 2 3 -1,0 2147483647 2 3 -1 ' (live: '0 2147483647 2 3 -1,0 2147483647 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "3107aeb70dae00332e5fcf71fceeefbfacca244751af116e9e6185c861ffc97a",
+   "twin": "work:c003/twins/a865682fa1ca.x3d"
+  },
+  {
+   "event": "ev-f87b84497703",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-e36aed37f8e0.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- ' 0 2147483638 2 3 -1 ' (live: '0 2147483638 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "e36aed37f8e0b0ad7fc26148542de2db376b42e82681c46c70510b58ce284397",
+   "twin": "work:c003/twins/83a9ca2ee92d.x3d"
+  },
+  {
+   "event": "ev-cfe9015d71c5",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-937a678f662c.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- '0 2147483638 2 3 -1,0 2147483638 2 3 -1' (live: '0 2147483638 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "937a678f662cde7cd9c31294b7f1210f970d88750b105c9f52c4777c790ee845",
+   "twin": "work:c003/twins/83a9ca2ee92d.x3d"
+  },
+  {
+   "event": "ev-29cff31d90f4",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-e5523cb9b433.x3d",
+   "note": "value: IndexedFaceSet@coordIndex <- '0 2147483638 2 3 -1 0 2147483638 2 3 -1' (live: '0 2147483638 2 3 -1' failed here)",
+   "receipt": null,
+   "sha256": "e5523cb9b4332c46e42d0e9872a68392daee5f05dd04d58f3a9c928032c6f7e6",
+   "twin": "work:c003/twins/83a9ca2ee92d.x3d"
+  }
+ ],
+ "sources_total": 27,
+ "status": "candidate"
+}

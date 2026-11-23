@@ -1,0 +1,387 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "closed-so-far",
+  "closure_reason": "300 audit probe(s) outside the rule all passed",
+  "grade": "L",
+  "grade_word": "Likely",
+  "missed_seen": 0,
+  "reasons": [
+   "nothing unseen has confirmed it: 2 audit probe(s) confirmed (need 5); 0 held-out failure(s) (need 5)"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-a2a869510561",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "ge:index_excess:19311468",
+    "failures_explained_without_it": 9,
+    "false_alarms_without_it": 19,
+    "role": "test"
+   },
+   {
+    "dropped": "at:IndexedTriangleStripSet@index",
+    "failures_explained_without_it": 9,
+    "false_alarms_without_it": 8,
+    "role": "context"
+   },
+   {
+    "dropped": "e.child:TextureCoordinate",
+    "failures_explained_without_it": 9,
+    "false_alarms_without_it": 9,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "ge:index_max:19311471",
+      "at:IndexedTriangleStripSet@index",
+      "e.child:TextureCoordinate"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedTriangleStripSet index and its element has a TextureCoordinate child: the largest index is at least 19311471."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max:19311471",
+      "at:IndexedTriangleStripSet@index",
+      "e.child:TextureCoordinate"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedTriangleStripSet index and its element has a TextureCoordinate child: the largest component is at least 19311471."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max_abs:19311471",
+      "at:IndexedTriangleStripSet@index",
+      "e.child:TextureCoordinate"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedTriangleStripSet index and its element has a TextureCoordinate child: the largest magnitude is at least 19311471."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:index_out_of_range",
+      "at:IndexedTriangleStripSet@index",
+      "e.child:TextureCoordinate"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedTriangleStripSet index and its element has a TextureCoordinate child: an index points past the end of the list it indexes."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:ntok:30",
+      "at:IndexedTriangleStripSet@index",
+      "e.child:TextureCoordinate"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedTriangleStripSet index and its element has a TextureCoordinate child: the number of tokens is at least 30."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:index_excess:19311468",
+      "!e.child:Normal",
+      "anc:Transform",
+      "at:IndexedTriangleStripSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where it sits inside a Transform and the place is IndexedTriangleStripSet index: how far the largest index runs past the end of its list is at least 19311468, unless its element has a Normal child."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:index_max:19311471",
+      "!e.child:Normal",
+      "anc:Transform",
+      "at:IndexedTriangleStripSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where it sits inside a Transform and the place is IndexedTriangleStripSet index: the largest index is at least 19311471, unless its element has a Normal child."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:index_out_of_range",
+      "!e.child:Normal",
+      "anc:Transform",
+      "at:IndexedTriangleStripSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where it sits inside a Transform and the place is IndexedTriangleStripSet index: an index points past the end of the list it indexes, unless its element has a Normal child."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 2,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 358,
+   "probes": 660,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 300
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 9
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1416
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [
+   {
+    "first_failing": 19311468.0,
+    "last_passing": 0.0,
+    "literal": "ge:index_excess:19311468",
+    "number": "index_excess",
+    "passing_values_compared": 19,
+    "untested": [
+     0.0,
+     19311468.0
+    ]
+   }
+  ],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 2380
+  },
+  "normative_reading": [
+   {
+    "literal": "v:index_out_of_range",
+    "means": "an index points past the end of the list it indexes",
+    "passing_files_with_it_inside_the_fence": 9
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 5,
+    "round": 1,
+    "rules_tested": [
+     "attr[ge:index_excess:308983544 & at:IndexedTriangleStripSet@index & e.child:TextureCoordinate]"
+    ],
+    "tally": {
+     "bisect/missed": 3,
+     "confirm/confirmed": 1,
+     "widen/silent-ok": 1
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 6,
+    "round": 2,
+    "rules_tested": [
+     "attr[ge:index_excess:77245883 & at:IndexedTriangleStripSet@index & e.child:TextureCoordinate]"
+    ],
+    "tally": {
+     "bisect/missed": 3,
+     "confirm/confirmed": 1,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 1
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 1,
+    "round": 3,
+    "rules_tested": [
+     "attr[ge:index_excess:19311468 & at:IndexedTriangleStripSet@index & e.child:TextureCoordinate]"
+    ],
+    "tally": {
+     "widen/silent-ok": 1
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 1,
+    "round": "audit",
+    "rules_tested": [
+     "attr[ge:index_excess:19311468 & at:IndexedTriangleStripSet@index & e.child:TextureCoordinate]"
+    ],
+    "tally": {
+     "widen/silent-ok": 1
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "ge:index_excess:19311468",
+    "at:IndexedTriangleStripSet@index",
+    "e.child:TextureCoordinate"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-a2a869510561",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "IndexedTriangleStripSet@index"
+  ],
+  "sentence": "At one attribute where the place is IndexedTriangleStripSet index and its element has a TextureCoordinate child: how far the largest index runs past the end of its list is at least 19311468.",
+  "signature": "IndexError at import_x3d.py:1927 importMesh_ApplyUVs",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 9,
+   "explained_by_this_rule": 9,
+   "failures": 9,
+   "families": {
+    "r2r-probe": 9
+   },
+   "observed_by": {
+    "tool": 9
+   },
+   "with_known_good_twin": 9
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed ge:index_excess:19311468, fenced to at:IndexedTriangleStripSet@index: explains 9, false alarms 9",
+   "+ e.child:TextureCoordinate: explains 9, false alarms 0 (gain 9.00)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 8,
+   "rule": {
+    "all": [
+     "ge:index_excess:19311468",
+     "e.child:TextureCoordinate"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "ge:index_excess:19311468",
+   "at:IndexedTriangleStripSet@index",
+   "e.child:TextureCoordinate"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the place is IndexedTriangleStripSet index and its element has a TextureCoordinate child: how far the largest index runs past the end of its list is at least 19311468.",
+ "signature": "IndexError at import_x3d.py:1927 importMesh_ApplyUVs",
+ "sources": [
+  {
+   "event": "ev-28fa6e84b870",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-ae20c73f891d.x3d",
+   "note": "widen: IndexedTriangleStripSet@index <- '0 1 2 3 -1 4 5 6 7 -1 0 4 7 2147483647 -1 3 2 6 5 -1 0 3 5 4 -1 1 7 6 2 -1'",
+   "receipt": null,
+   "sha256": "ae20c73f891d1f2668d65930f4fb72e61763aff592bc37084d8affe66098de8f",
+   "twin": "work:c003/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-d977db2b9db9",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round2-8fa5808011ab.x3d",
+   "note": "confirm: IndexedTriangleStripSet@index <- '0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 3 2 10 11 -1 2 5 12 10 -1 5 7 13 12 -1 7 9 14 13 -1 11 10 15 16 -1 10 12 17 15 -1 2147483647 13 18 17 -1 13 14 19 18 -1 16",
+   "receipt": null,
+   "sha256": "8fa5808011ab27c5af6b72634edfa76c4d00f6edc7318c2e6b9ed7284bcad1b4",
+   "twin": "work:c011/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-2bf20060f098",
+   "family": "r2r-probe",
+   "file": "work:c012/probes/round2-7e75d3f4707b.x3d",
+   "note": "widen: IndexedTriangleStripSet@index <- '0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 3 2 10 11 308983547 2 5 12 10 -1 5 7 13 12 -1 7 9 14 13 -1 11 10 15 16 -1 10 12 17 15 -1 12 13 18 17 -1 13 14 19 18 -1 16 ",
+   "receipt": null,
+   "sha256": "7e75d3f4707b08634c2e41ed53a6bdda79eecac948c3283013bb50914e61ae99",
+   "twin": "work:c012/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-6eb5bbef16f5",
+   "family": "r2r-probe",
+   "file": "work:c015/probes/round1-dd0fbb0cae21.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 2.31738e+08",
+   "receipt": null,
+   "sha256": "dd0fbb0cae213c06e654533e126ba8f6004c0993f71338c32c07e51893ce29b6",
+   "twin": "work:c015/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-d5753e2f009b",
+   "family": "r2r-probe",
+   "file": "work:c015/probes/round1-11f8938a1422.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 7.72459e+07",
+   "receipt": null,
+   "sha256": "11f8938a14224e401316341e4a28a0700591405425e28e1e5b40df236a8bd4fa",
+   "twin": "work:c015/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-f54007af2e6e",
+   "family": "r2r-probe",
+   "file": "work:c015/probes/round1-39d373d89281.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 1.54492e+08",
+   "receipt": null,
+   "sha256": "39d373d89281e88c7b9f67aea962a8518c96c219cd0787fa12fa618ea92a0f4b",
+   "twin": "work:c015/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-390b220ee7d3",
+   "family": "r2r-probe",
+   "file": "work:c015/probes/round2-acf14618b525.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 5.79344e+07",
+   "receipt": null,
+   "sha256": "acf14618b5251f7c0a5014e549920a998e3e92af87c7f22ec7590432457ae254",
+   "twin": "work:c015/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-9326bcf47e8d",
+   "family": "r2r-probe",
+   "file": "work:c015/probes/round2-0d59235fc576.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 1.93115e+07",
+   "receipt": null,
+   "sha256": "0d59235fc576e070ff079b7696c21de31a2b9a62c09211f451a37251fda81570",
+   "twin": "work:c015/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-645d8dfa3d4d",
+   "family": "r2r-probe",
+   "file": "work:c015/probes/round2-c74b578fe653.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 3.86229e+07",
+   "receipt": null,
+   "sha256": "c74b578fe653b61eab254f989f00cfc13a8824f75cc5b38f7df1ff93e75d3c36",
+   "twin": "work:c015/twins/6d8c5a7b1866.x3d"
+  }
+ ],
+ "sources_total": 9,
+ "status": "candidate"
+}

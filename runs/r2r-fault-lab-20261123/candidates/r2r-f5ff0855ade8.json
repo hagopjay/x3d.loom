@@ -1,0 +1,248 @@
+{
+ "grade": {
+  "against": "Fault Lab author (planted faults, x3d.demo fault-lab/v1)",
+  "closure": "untested",
+  "closure_reason": "too few probes outside the rule to say",
+  "grade": "S",
+  "grade_word": "Suspected",
+  "missed_seen": 0,
+  "reasons": [
+   "rests on one failure and no confirmed probe"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-f5ff0855ade8",
+ "instrument": "Fault Lab author (planted faults, x3d.demo fault-lab/v1)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "x:no_children",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 0,
+    "role": "test"
+   },
+   {
+    "dropped": "n:Cylinder",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 1,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "!child:Box"
+     ],
+     "any": [
+      "n:Cylinder",
+      "n:Shape"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element: it has no Box child, at one of 2 places (Cylinder, Shape)."
+   },
+   {
+    "rule": {
+     "all": [
+      "x:present",
+      "n:Cylinder"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where the node is Cylinder: the node is present."
+   },
+   {
+    "rule": {
+     "all": [
+      "x:present",
+      "isa:X3DGeometryNode",
+      "n:Cylinder"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where the node is an X3DGeometryNode and the node is Cylinder: the node is present."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:present",
+      "isa:X3DGeometryNode"
+     ],
+     "any": [
+      "at:Cylinder@height",
+      "at:Cylinder@radius"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the node is an X3DGeometryNode: the attribute is written, at one of 2 places (Cylinder height, Cylinder radius)."
+   },
+   {
+    "rule": {
+     "all": [
+      "x:present",
+      "n:Cylinder",
+      "p:Shape"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where the node is Cylinder and the parent is Shape: the node is present."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:present",
+      "t:SFFloat"
+     ],
+     "any": [
+      "at:Cylinder@height",
+      "at:Cylinder@radius"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the field type is SFFloat: the attribute is written, at one of 2 places (Cylinder height, Cylinder radius)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:present",
+      "tc:float"
+     ],
+     "any": [
+      "at:Cylinder@height",
+      "at:Cylinder@radius"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the field holds a float: the attribute is written, at one of 2 places (Cylinder height, Cylinder radius)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:eq:12",
+      "at:Cylinder@height"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Cylinder height: the value is exactly `12`."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 0,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 0,
+   "probes": 0,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 0
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 1
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 0,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 0
+  },
+  "idle_literals": [
+   "x:no_children"
+  ],
+  "instrument": "Fault Lab author (planted faults, x3d.demo fault-lab/v1)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1
+  },
+  "normative_reading": [],
+  "probe_rounds": [],
+  "rule": {
+   "all": [
+    "x:no_children",
+    "n:Cylinder"
+   ],
+   "kind": "elem"
+  },
+  "rule_id": "r2r-f5ff0855ade8",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Cylinder"
+  ],
+  "sentence": "At one element where the node is Cylinder: it has no children.",
+  "signature": "planted fault: cylinder-shaft",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 1,
+   "explained_by_this_rule": 1,
+   "failures": 1,
+   "families": {
+    "fault-lab": 1
+   },
+   "observed_by": {
+    "authored": 1
+   },
+   "with_known_good_twin": 1
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed x:no_children, fenced to n:Cylinder: explains 1, false alarms 0"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 1,
+   "rule": {
+    "all": [
+     "x:no_children"
+    ],
+    "kind": "elem"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "x:no_children",
+   "n:Cylinder"
+  ],
+  "kind": "elem"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one element where the node is Cylinder: it has no children.",
+ "signature": "planted fault: cylinder-shaft",
+ "sources": [
+  {
+   "event": "ev-7153fe0409fd",
+   "family": "fault-lab",
+   "file": "repos:x3d.demo/docs/demos/fault-lab/v1/cases/cylinder-shaft.x3d",
+   "note": "Shaft redrawn as a Cylinder",
+   "receipt": {
+    "path": "repos:x3d.demo/docs/demos/fault-lab/v1/data/cases.json",
+    "row": 6
+   },
+   "sha256": "c641c397b273c9017fa214a3fda4f6aafa6ab65804dfd37a2a4f95303f7fc335",
+   "twin": "repos:x3d.demo/docs/demos/fault-lab/v1/cases/clean.x3d"
+  }
+ ],
+ "sources_total": 1,
+ "status": "candidate"
+}

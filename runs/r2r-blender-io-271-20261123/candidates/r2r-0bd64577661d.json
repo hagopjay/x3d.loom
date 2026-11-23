@@ -1,0 +1,543 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "2 audit probe(s) and 2+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "L",
+  "grade_word": "Likely",
+  "missed_seen": 4,
+  "reasons": [
+   "nothing unseen has confirmed it: 0 audit probe(s) confirmed (need 5); 2 held-out failure(s) (need 5)"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-0bd64577661d",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "ge:nattrs:1",
+    "failures_explained_without_it": 28,
+    "false_alarms_without_it": 0,
+    "role": "test"
+   },
+   {
+    "dropped": "child:TouchSensor",
+    "failures_explained_without_it": 78,
+    "false_alarms_without_it": 1476,
+    "role": "context"
+   },
+   {
+    "dropped": "has:scale",
+    "failures_explained_without_it": 28,
+    "false_alarms_without_it": 16,
+    "role": "context"
+   },
+   {
+    "dropped": "n:Transform",
+    "failures_explained_without_it": 28,
+    "false_alarms_without_it": 0,
+    "role": "context"
+   },
+   {
+    "dropped": "p:Scene",
+    "failures_explained_without_it": 40,
+    "false_alarms_without_it": 2,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "ge:nattrs:1",
+      "!cf:children",
+      "child:TouchSensor",
+      "has:scale",
+      "n:Transform"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where it has a TouchSensor child and it has the attribute scale and the node is Transform: the number of attributes is at least 1, unless it is filed under children."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:nattrs:1",
+      "!p:Collision",
+      "!p:Layer",
+      "child:TouchSensor",
+      "has:scale",
+      "n:Transform"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where it has a TouchSensor child and it has the attribute scale and the node is Transform: the number of attributes is at least 1, unless the parent is Collision or the parent is Layer."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 67,
+   "confirmed": 0,
+   "missed": 2,
+   "missed_examples": [
+    "near: Transform@scale <- '\"\"\"1 1e 1\"\"\" \"\"\"1 1e 1\"\"\"' (live: '\"\"\"1 1e 1\"\"\"' failed here)",
+    "near: Transform@scale <- '  \"1 1e 1\"     \"1 1e 1\"  ' (live: '  \"1 1e 1\"  ' failed here)"
+   ],
+   "other_failure": 83,
+   "probes": 253,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 101
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 28
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 2,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [
+    "num_extreme: X3D/Scene/Transform#OB_Hexagon scale: token 1 1 -> --1",
+    "num_extreme: X3D/Scene/Transform#OB_Copy1 scale: token 1 1 -> 1e"
+   ],
+   "passing_files": 1416
+  },
+  "idle_literals": [
+   "ge:nattrs:1"
+  ],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [
+   {
+    "first_failing": 1.0,
+    "last_passing": null,
+    "literal": "ge:nattrs:1",
+    "number": "nattrs",
+    "passing_values_compared": 0,
+    "untested": null
+   }
+  ],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 2024
+  },
+  "normative_reading": [],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 32,
+    "round": 1,
+    "rules_tested": [
+     "attr[v:number_unparseable & at:Transform@scale & ntok:3]"
+    ],
+    "tally": {
+     "alternate/confirmed": 4,
+     "alternate/missed": 2,
+     "confirm/confirmed": 7,
+     "confirm/refuted": 3,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 102,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:lexical_invalid & at:Transform@scale & e.child:TouchSensor]",
+     "attr[v:quoted & at:Transform@scale & ntok:3]",
+     "attr[v:arity_long & v:number_unparseable & at:Transform@scale]"
+    ],
+    "tally": {
+     "alternate/confirmed": 13,
+     "alternate/missed": 3,
+     "confirm/confirmed": 16,
+     "confirm/refuted": 8,
+     "value/confirmed": 30,
+     "widen/silent-ok": 32
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 129,
+    "round": 3,
+    "rules_tested": [
+     "attr[v:number_unparseable & !p:Scene & at:Transform@scale]",
+     "attr[v:lexical_invalid & at:Transform@scale & e.child:TouchSensor]",
+     "elem[!has:rotation & child:GeoLOD & has:scale & n:Transform]",
+     "attr[v:arity_long & !e.has:rotation & !v:eq:1 1e 1,1 1e 1 & at:Transform@scale & e.child:Shape]",
+     "attr[v:quoted & !ntok:1 & !v:eq:\"1 1e 1\" & at:Transform@scale]"
+    ],
+    "tally": {
+     "alternate/confirmed": 6,
+     "confirm/confirmed": 33,
+     "confirm/refuted": 3,
+     "value/confirmed": 34,
+     "value/refuted": 4,
+     "widen/other-failure": 2,
+     "widen/silent-ok": 47
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 127,
+    "round": "audit",
+    "rules_tested": [
+     "attr[ge:ntok:6 & !p:Scene & at:Transform@scale]",
+     "attr[ge:len:10 & v:number_unparseable & at:Transform@scale & ntok:3]",
+     "elem[ge:nattrs:1 & child:TouchSensor & has:scale & n:Transform & p:Scene]",
+     "attr[v:number_unparseable & !p:Scene & at:Transform@scale & ntok:3]"
+    ],
+    "tally": {
+     "alternate/confirmed": 5,
+     "alternate/refuted": 3,
+     "alternate/silent-ok": 1,
+     "confirm/confirmed": 29,
+     "confirm/refuted": 1,
+     "near/confirmed": 3,
+     "near/missed": 2,
+     "near/silent-ok": 5,
+     "value/confirmed": 30,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 47
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "ge:nattrs:1",
+    "child:TouchSensor",
+    "has:scale",
+    "n:Transform",
+    "p:Scene"
+   ],
+   "kind": "elem"
+  },
+  "rule_id": "r2r-0bd64577661d",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Transform"
+  ],
+  "sentence": "At one element where it has a TouchSensor child and it has the attribute scale and the node is Transform and the parent is Scene: the number of attributes is at least 1.",
+  "signature": "IndexError at import_x3d.py:1665 translateScale",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 111,
+   "explained_by_this_rule": 28,
+   "failures": 149,
+   "families": {
+    "chaos-differential": 1,
+    "r2r-probe": 148
+   },
+   "observed_by": {
+    "tool": 149
+   },
+   "with_known_good_twin": 149
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed ge:nattrs:1, fenced to n:Transform: explains 148, false alarms 1802",
+   "+ child:TouchSensor: explains 40, false alarms 25 (gain 66.24)",
+   "+ has:scale: explains 40, false alarms 2 (gain 25.20)",
+   "+ p:Scene: explains 28, false alarms 0 (gain 1.97)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 0,
+   "rule": {
+    "all": [
+     "ge:nattrs:1",
+     "child:TouchSensor",
+     "has:scale",
+     "p:Scene"
+    ],
+    "kind": "elem"
+   },
+   "status": "untested beyond the fence"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "ge:nattrs:1",
+   "child:TouchSensor",
+   "has:scale",
+   "n:Transform",
+   "p:Scene"
+  ],
+  "kind": "elem"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one element where it has a TouchSensor child and it has the attribute scale and the node is Transform and the parent is Scene: the number of attributes is at least 1.",
+ "signature": "IndexError at import_x3d.py:1665 translateScale",
+ "sources": [
+  {
+   "event": "ev-3a538197da04",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round1-ef58bc2220ad.x3d",
+   "note": "confirm: Transform@scale <- '1 1e 1'",
+   "receipt": null,
+   "sha256": "ef58bc2220adf88a632d11df5e33b4f90ec37d14bbfe3685ce78f83f69f75ec7",
+   "twin": "work:c005/twins/1ff03afbf828.x3d"
+  },
+  {
+   "event": "ev-8cbf7758c2d6",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round1-45ee9b1d76f6.x3d",
+   "note": "alternate:1: Transform@scale <- '\"1 1e 1\"' (live: '1 1e 1' failed here)",
+   "receipt": null,
+   "sha256": "45ee9b1d76f6c6338371d4b6711a7e03e670b230c9f6d0198c3be6bf7b06fc15",
+   "twin": "work:c005/twins/1ff03afbf828.x3d"
+  },
+  {
+   "event": "ev-b1e29922737f",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-a8efd1b9084b.x3d",
+   "note": "confirm: Transform@scale <- '1 1e 1'",
+   "receipt": null,
+   "sha256": "a8efd1b9084bd30c3a3be455b55866c6af23539aa7570a470563aa4fc2f41803",
+   "twin": "work:c005/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-f0ea5c7424c6",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-86fd594fc31c.x3d",
+   "note": "confirm: Transform@scale <- ' 1 1e 1 '",
+   "receipt": null,
+   "sha256": "86fd594fc31c95acf90e41461f430d19d38cc747554ac320bf230ebe8670aecb",
+   "twin": "work:c005/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-955cf974f589",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-cdb3af281310.x3d",
+   "note": "confirm: Transform@scale <- '1 1e 1'",
+   "receipt": null,
+   "sha256": "cdb3af2813108e8c826f3abe04903fda122ac44bd039fcf951a49a065555eacc",
+   "twin": "work:c005/twins/bc29fb426792.x3d"
+  },
+  {
+   "event": "ev-274a90c6cc26",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-e7e3bdd319fb.x3d",
+   "note": "alternate:1: Transform@scale <- ' 1 1E 1 ' (live: ' 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "e7e3bdd319fbdf4e20c98f1ff93d56860b2244f05772cf87ded6521b483adfed",
+   "twin": "work:c005/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-3ce3a14fd039",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-8445e2f874bd.x3d",
+   "note": "alternate:1: Transform@scale <- '1 1E 1' (live: '1 1e 1' failed here)",
+   "receipt": null,
+   "sha256": "8445e2f874bd48bfd6234f895740a903920c9d0f46c3cc667e3e270bac061d5f",
+   "twin": "work:c005/twins/bc29fb426792.x3d"
+  },
+  {
+   "event": "ev-11f25bd17308",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-1a97bc8e729c.x3d",
+   "note": "alternate:1: Transform@scale <- '1 1E 1' (live: '1 1e 1' failed here)",
+   "receipt": null,
+   "sha256": "1a97bc8e729cdf5352906f8cc0821b57d7e9f103e07f6350da05bf405eeaf421",
+   "twin": "work:c005/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-344de7fad4df",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-7ee87d77e641.x3d",
+   "note": "value: Transform@scale <- '\"1 1e 1\"' (live: '1 1e 1' failed here)",
+   "receipt": null,
+   "sha256": "7ee87d77e64123e5dd0f3a28aac2a566981dc29ee42177fce83f5fd069a5d251",
+   "twin": "work:c005/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-92dc841f8089",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-2afd252bd353.x3d",
+   "note": "value: Transform@scale <- '1 1e 1,1 1e 1' (live: '1 1e 1' failed here)",
+   "receipt": null,
+   "sha256": "2afd252bd353a70e25f82a2e2a8e12e30f7e10cd04afb9f65ec2dc932e18dd05",
+   "twin": "work:c005/twins/bc29fb426792.x3d"
+  },
+  {
+   "event": "ev-3795334efc48",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-45e403c121cf.x3d",
+   "note": "value: Transform@scale <- '1 1e 1 1 1e 1' (live: '1 1e 1' failed here)",
+   "receipt": null,
+   "sha256": "45e403c121cf4e27e338f06dedbcdf4dac32191d916f5cce0b082288c1321501",
+   "twin": "work:c005/twins/bc29fb426792.x3d"
+  },
+  {
+   "event": "ev-c36a1ee21b3c",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-f337be0e93ce.x3d",
+   "note": "value: Transform@scale <- ' 1 1e 1 , 1 1e 1 ' (live: ' 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "f337be0e93ced30e82375d94322fec583423f442e0c5a212d2fa60b1d9e63c57",
+   "twin": "work:c005/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-8d3a9f22cc3b",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-b74dd056aabd.x3d",
+   "note": "value: Transform@scale <- '1 1e 1 1 1e 1' (live: '1 1e 1' failed here)",
+   "receipt": null,
+   "sha256": "b74dd056aabd9b5c8e70960c1ecb3ad1fa3bc8baf31eb97a28f341ffea08480d",
+   "twin": "work:c005/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-4697b49e96b5",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-7465cfa7f6b0.x3d",
+   "note": "value: Transform@scale <- '  1 1e 1  ' (live: ' 1 1e 1 ' failed here)",
+   "receipt": null,
+   "sha256": "7465cfa7f6b07f8594196f9274408a101c991e1b8c752fc623e6ffc8fca85004",
+   "twin": "work:c005/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-84d025e02052",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round2-a7df292d4427.x3d",
+   "note": "value: Transform@scale <- ' 1 1e 1 ' (live: '1 1e 1' failed here)",
+   "receipt": null,
+   "sha256": "a7df292d442744f29100656f99da63cb1a2230c7589d44c7263ba40420430f83",
+   "twin": "work:c005/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-a4e95dffb139",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-0c49df6b17f8.x3d",
+   "note": "confirm: Transform@scale <- '\"1 1e 1\"'",
+   "receipt": null,
+   "sha256": "0c49df6b17f80f64d1399e012eabead64b553fae513db8eca34446c0a8f5860f",
+   "twin": "work:c005/twins/bc29fb426792.x3d"
+  },
+  {
+   "event": "ev-464ad0350552",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-e90504093c84.x3d",
+   "note": "confirm: Transform@scale <- ' \"1 1e 1\" '",
+   "receipt": null,
+   "sha256": "e90504093c845c7b006331a0deded8088a6a0696c58ae568f87cc0e8872fde20",
+   "twin": "work:c005/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-0355e2230fe1",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-825312c30d3c.x3d",
+   "note": "confirm: Transform@scale <- '  1 1e 1  '",
+   "receipt": null,
+   "sha256": "825312c30d3c772e80f2906df2e78042ca17c52fd8338033482a9dd8b6911ed1",
+   "twin": "work:c005/twins/1ff03afbf828.x3d"
+  },
+  {
+   "event": "ev-f19eb2f6d344",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-c5d44084b49f.x3d",
+   "note": "confirm: Transform@scale <- ' \"1 1e 1\" '",
+   "receipt": null,
+   "sha256": "c5d44084b49f26b10735c4a6f9f9d1650eb450014f09e316acdfd1e80518c22d",
+   "twin": "work:c005/twins/7d27fb1227ab.x3d"
+  },
+  {
+   "event": "ev-83faf0f26427",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-dcb63763632d.x3d",
+   "note": "value: Transform@scale <- ' \"1 1e 1\" , \"1 1e 1\" ' (live: ' \"1 1e 1\" ' failed here)",
+   "receipt": null,
+   "sha256": "dcb63763632d509b7628f11e02a94b158ae8581dd102291c21a7129b224befe2",
+   "twin": "work:c005/twins/7d27fb1227ab.x3d"
+  },
+  {
+   "event": "ev-9c3269dfff0a",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-55653a19e18e.x3d",
+   "note": "value: Transform@scale <- ' \"1 1e 1\"   \"1 1e 1\" ' (live: ' \"1 1e 1\" ' failed here)",
+   "receipt": null,
+   "sha256": "55653a19e18e26de236288aa1e235f3c742185c3a9e2d16a3cfae31276eac47e",
+   "twin": "work:c005/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-72e7d232fc65",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-0882c460b871.x3d",
+   "note": "value: Transform@scale <- ' \"1 1E 1\" ' (live: ' \"1 1e 1\" ' failed here)",
+   "receipt": null,
+   "sha256": "0882c460b8719545bf408f5a1f9409fbd54c76b72a00cc529716bc59c85f94b5",
+   "twin": "work:c005/twins/0a9a26a1a542.x3d"
+  },
+  {
+   "event": "ev-e1b8ccb027d3",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-53230d86909f.x3d",
+   "note": "value: Transform@scale <- ' \"1 1E 1\" ' (live: ' \"1 1e 1\" ' failed here)",
+   "receipt": null,
+   "sha256": "53230d86909fbc870282b99e8a5590213bed2c980a4e4a7840fc1183a8a80e49",
+   "twin": "work:c005/twins/7d27fb1227ab.x3d"
+  },
+  {
+   "event": "ev-1b9a3b3dd754",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-914283d895d8.x3d",
+   "note": "value: Transform@scale <- ' \"1 1e 1\"   \"1 1e 1\" ' (live: ' \"1 1e 1\" ' failed here)",
+   "receipt": null,
+   "sha256": "914283d895d885aff34f3ed2fdf4bd83f3a0d9563af800bc948f5159a3c9eb2d",
+   "twin": "work:c005/twins/7d27fb1227ab.x3d"
+  },
+  {
+   "event": "ev-c270269a37fb",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-bdb666359f94.x3d",
+   "note": "value: Transform@scale <- '\"1 1e 1\" \"1 1e 1\"' (live: '\"1 1e 1\"' failed here)",
+   "receipt": null,
+   "sha256": "bdb666359f94178560b4380280dde185107163d0ba04ef89271f2364a6988779",
+   "twin": "work:c005/twins/bc29fb426792.x3d"
+  },
+  {
+   "event": "ev-6ecf8be18ed1",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-a0c972ff362a.x3d",
+   "note": "confirm: Transform@scale <- '1 1e 1 1 1e 1,1 1e 1 1 1e 1'",
+   "receipt": null,
+   "sha256": "a0c972ff362ac949761fa552cee7bdca7a402d50fb8ae8e33fd011bd711dcfc8",
+   "twin": "work:c005/twins/7d27fb1227ab.x3d"
+  },
+  {
+   "event": "ev-ef53f1080fc8",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-1bc4793f112f.x3d",
+   "note": "value: Transform@scale <- '\"1 1e 1 1 1e 1,1 1e 1 1 1e 1\"' (live: '1 1e 1 1 1e 1,1 1e 1 1 1e 1' failed here)",
+   "receipt": null,
+   "sha256": "1bc4793f112f3caff48dbd3a5c48c5da97ce4c545537f3787a7b5f0eeb7c8b41",
+   "twin": "work:c005/twins/7d27fb1227ab.x3d"
+  },
+  {
+   "event": "ev-8f95ed7166de",
+   "family": "r2r-probe",
+   "file": "work:c005/probes/round3-ef42352ee57e.x3d",
+   "note": "value: Transform@scale <- '1 1e 1 1 1e 1,1 1e 1 1 1e 1 1 1e 1 1 1e 1,1 1e 1 1 1e 1' (live: '1 1e 1 1 1e 1,1 1e 1 1 1e 1' failed here)",
+   "receipt": null,
+   "sha256": "ef42352ee57ea737f134d668870fce3812889722c02c3233f05d88f627e817af",
+   "twin": "work:c005/twins/7d27fb1227ab.x3d"
+  }
+ ],
+ "sources_total": 28,
+ "status": "candidate"
+}
