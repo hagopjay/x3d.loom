@@ -106,6 +106,10 @@ jobs:
 
       - name: Scene fixtures, Babylon body vs X_ITE (exploratory)
         continue-on-error: true
+        # Its own limit, below the job's: 151 scene fixtures on SwiftShader outgrew the
+        # 30 minute job limit, and a job-level cancel is not covered by continue-on-error,
+        # so every run since 15 Nov ended "cancelled" after the required step had passed.
+        timeout-minutes: 20
         run: |
           node tools/run-tests.js $(cat "$RUNNER_TEMP/scene.txt") | tee "$RUNNER_TEMP/scene.json"
 
