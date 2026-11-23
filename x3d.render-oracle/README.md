@@ -121,6 +121,29 @@ Castle: `castle-render` 0.1 from x3d.castle at the Castle 7.0-alpha.3 **snapshot
 * Unlit, legacy and the headlit PhysicalMaterial agree (128, 128, 186 vs X_ITE 128, 128, 186): **five of six engines now read 186 to 188 on `exp2_c_physical_default`; three.js alone reads 128.**
 * The no-light controls (`ctrl_noenv`, `ctrl_intensity0`) read black everywhere, Castle included (NEAR, rim only).
 
+## Result 8: twelve lit, coloured, asymmetric scenes, six engines (step 3, 23 Nov 2026)
+`scenes/lit_*.x3d` (made by `tools/make_scenes.py`; all 12 validate against X3D 4.0 XSD with xmllint, x3d_mcp fork 4d433af schemas): directional, spot and point light, specular, emissive and ambient, transparency, PixelTexture, PhysicalMaterial with a direct light only, linear fog, a nested Transform, an asymmetric IndexedFaceSet, the default headlight. No EnvironmentLight. Same rig as before (128x128, Chromium 157.0.8103.78 SwiftShader for X_ITE, three.js, Babylon; x3d-view 0.5.1 on SwiftShader Vulkan; Blender 5.3.0 / Cycles 64 spp; Castle snapshot dce6a4cd... on llvmpipe). Files: `results/2026-11-23-lit12/` (`matrix.md` 15 pairs, `vote.md`, `flip.md`, `sheet.png`).
+
+**No external record exists for these scenes**, so there is no held-out judge of the earlier kind. Two substitutes, each weaker: a **majority vote** (each engine's median distance to the other five, `vote.md`) and **FLIP** (second metric on the same pictures, Spearman 0.922 with the primary MAE_obj over 60 engine-scene cells; whole frame, so it is diluted by the sky colour). Neither confirms a cause.
+
+Pairs against X_ITE (12 scenes): x3d.wgpu 9 AGREE / 1 NEAR / 2 FAR; three.js 8 / 1 / 3; Babylon 6 / 2 / 4; Castle 1 / 7 / 4; Blender 0 / 3 / 9.
+
+**Planted controls (4 scene mutants x 6 engines = 24 runs): 24 of 24 not-AGREE.** Light direction flipped 24.9 to 47.4 (FAR), red box to blue 13.4 to 27.9 (FAR), specular shininess 0.6 to 0.1 8.9 to 25.4 (FAR), cone 17% taller 4.3 to 5.7 (NEAR, caught but small). (`lit_controls.json`).
+
+Gaps with a measured cause (centre or region pixel values; cause grade in brackets):
+| scene | what the engines do | grade |
+|---|---|---|
+| fog_linear | X_ITE, three.js and Castle fog the far boxes (rgb 171,184,209 and 178,191,217, near the fog colour); **x3d.wgpu, Babylon and Blender do not** (far box stays 149,62,29 / 156,64,28 / 142,55,22) | picture Confirmed; "no Fog support" Likely |
+| texture_pixel | **x3d.wgpu draws the box without the PixelTexture colours** (colour std equal across channels, white box in the sheet); Castle and Blender smooth the 4x4 texels (std 52 to 57 vs 75 in X_ITE: filtering) | wgpu picture Confirmed; filtering Likely |
+| physical_direct (DirectionalLight only) | **Babylon draws both PhysicalMaterial objects black**; **three.js sphere hot (255,197,125 vs 152,119,97 in X_ITE) and box dark (48,7,7 vs 71,29,29)**; wgpu, Blender and Castle within 8 of X_ITE | picture Confirmed; causes unknown |
+| emissive_ambient | three.js sphere 50 vs 121 (the bridge's fixed material ambientIntensity of 0.2, already a listed gap); Castle brighter (158); Blender darker (39) | three.js Likely (listed gap); others unknown |
+| headlight_coloured | **Blender draws nothing** (the importer does not make the default headlight; Likely); every other engine within 5 of X_ITE | picture Confirmed |
+| every scene with a Background | Blender draws a black sky (importer ignores Background, as in Result 6) | Confirmed |
+
+Outlier count (vote): Blender 6 scenes, Babylon 3, Castle 1, x3d.wgpu 1, X_ITE 0, three.js 0. The fog and texture scenes have **no clear majority** (all pairs far apart), so the vote cannot name an outlier there; X_ITE and three.js agree (fog 0.013 FLIP, texture 0.008) and are used as the reference only because the older record shows X_ITE as the reference in the furnace set.
+
+Limits: 12 scenes, one geometry each, 128x128, software rendering, all engines at defaults; the vote and FLIP are not independent measurements; no real-GPU claim.
+
 ## Limits (say them before anyone else does)
 * The 29 scenes collapse to **10 distinct X_ITE pictures, 10 wgpu, 2 three.js**: they are furnace probes, built to test one thing. They cannot reveal geometry, texture or light-model differences. Widening the scene set is the next step, not a detail.
 * Software rendering only (SwiftShader both sides). No real-GPU claim.
@@ -129,6 +152,7 @@ Castle: `castle-render` 0.1 from x3d.castle at the Castle 7.0-alpha.3 **snapshot
 
 ## Run it
 ```sh
+python3 tools/make_scenes.py scenes   # the 12 lit scenes; then python3 tools/vote.py RUN OUT and python3 tools/flip_judge.py RUN OUT
 # Castle: CASTLE_RENDER=path/to/castle-render tools/render_castle.sh RUN $S   (see castle-version.txt in results for the bundle)
 # Babylon: BABYLON_JS=path/to/babylon.js (npm pack babylonjs@9.32.0) node tools/render_babylon.js RUN $S
 # Blender: python tools/render_blender.py ~/x3d-blender-io/source RUN $S   (pip install the bpy 5.3.0 wheel)
