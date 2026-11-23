@@ -25,7 +25,7 @@ Method credit: the hypothesis-debugging loop from ioma8, ["LLM assisted reverse 
 4. **Gates carry over unchanged in shape.** `re_fact` (no digit outside a slot), `re_witness` (re-run, fail closed), `re_verdict` (no Confirmed without a re-run witness; disagreements listed), `re_scene` (record ↔ DEF both ways). Each returns `{status, summary, problems, scope}` like `x3dray.gates`.
 5. **Bake stage addition:** a receiving surface must be gridded for a vertex bake to hold shadows (failure mode 203). Emissive parts set to emit during the bake light their neighbours for free (hot roofs warm the walls below).
 
-## New failure modes (added to LOOM-v1.md as 199 to 203)
+## New failure modes (added to LOOM-v1.md as 199 to 204)
 
 | # | Failure | Fix (rule) |
 |---|---|---|
@@ -34,6 +34,7 @@ Method credit: the hypothesis-debugging loop from ioma8, ["LLM assisted reverse 
 | 201 | Witnesses bind argv, so a ledger produced from a scratch directory carried absolute machine paths (the binary, the LD_PRELOAD shim) into a file bound for a public repo | Run producers from a work directory with relative paths, pass probes relative to the working directory, and sweep every receipt for `/tmp`, `/home` before publishing |
 | 202 | The imported ledger's H3/H4 were measured under gdb; a reader could take "the serial is X" from a debugger dump as the native answer, which is exactly the trap the target sets | A witness names its instrument; a value observed under instrumentation is re-earned in the uninstrumented run before it is quoted as the artefact's behaviour |
 | 203 | The first bake left the ground without building shadows: the plinth top was one quad, and a vertex bake holds four values on it | Grid every surface that receives shadow or occlusion before a vertex bake (88 cuts here: 17,251 ground faces, +1.2 MB); check a close frame for contact shadow |
+| 204 | CI found two things the container did not: the runner's glibc binds `strtoul` to `__isoc23_strtoul` (the parse capability vanished), and the runner has no gdb, so the 'debugger lies' claim had no witnessed value | Fold ABI aliases before mapping; withhold (and list) claims whose experiments cannot run on the machine |
 
 ## What was not tested
 
