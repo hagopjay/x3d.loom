@@ -1,6 +1,6 @@
 # x3d.render-oracle: cross-engine differential rendering
 
-Frontier `cross-render` (Loom Frontier Board 2026-11-23, rank 2). One fixed rig, many engines, one differ, with known-bad controls so the differ is *shown* to catch a defect. Step 1: the 29 x3d.wgpu conformance scenes in **3 engines**. Step 2: five engines (Result 6); Castle pending.
+Frontier `cross-render` (Loom Frontier Board 2026-11-23, rank 2). One fixed rig, many engines, one differ, with known-bad controls so the differ is *shown* to catch a defect. Step 1: the 29 x3d.wgpu conformance scenes in **3 engines**. Step 2: six engines (Results 6 and 7).
 
 ## Rig (named beside every claim)
 | item | value |
@@ -104,7 +104,22 @@ Gaps by cause (centre pixel, 0-255):
 | **Babylon unlit default reads 255, the others 128** (`exp2_a_unlit_default`) | 1 | five engines, four agree | Confirmed picture, cause unknown |
 | **three.js is the odd one on `exp2_c_physical_default`**: Babylon 186, Blender 187, x3d.wgpu 188, X_ITE 186, three.js 128 | 1 | four of five engines agree: a headlit PhysicalMaterial is written through a 1/2.2 or sRGB curve everywhere except three.js | Confirmed picture; replaces the earlier "headlight not curved" suspicion with a vote. The bridge's own fixture (X_ITE vs three.js, explicit DirectionalLight) still says direct light is not curved, so the open question is why the headlight differs |
 
-Limits repeated: furnace probes, software rendering only, one scene geometry. Castle is not in this table: see the PR description. The pinned Castle bundle's checksum no longer matches the moving snapshot URL, so the build was stopped rather than bypassed.
+Limits repeated: furnace probes, software rendering only, one scene geometry. Castle is added in Result 7.
+
+## Result 7: six engines (Castle added, 23 Nov 2026)
+Castle: `castle-render` 0.1 from x3d.castle at the Castle 7.0-alpha.3 **snapshot downloaded today, sha256 `dce6a4cd488914b67963b2eb7e86ecc5dd37719512e856fe786b688e4e905c77`**. The checksum pinned in x3d.castle's Dockerfile (`4b8935a4...`) no longer matches the snapshot at the same URL (a moving snapshot), so these numbers are for a different Castle build than the earlier Castle quality leg; used on HagopJay's yes on the decision card. Rig: Xvfb, Mesa llvmpipe 25.2.8 (LLVM 20.1.2), `--size 128`, every lever default. Files: `results/2026-11-23-six-engines/`, `castle-version.txt`.
+
+| pair (vs X_ITE) | AGREE | NEAR | FAR | held-out rows in tolerance |
+|---|--:|--:|--:|--:|
+| x3d.wgpu | 10 | 19 | 0 | 29 / 29 |
+| three.js | 19 | 9 | 1 | 28 / 29 |
+| Castle | 2 | 7 | 20 | 11 / 29 |
+| Blender | 6 | 9 | 14 | 9 / 29 |
+| Babylon | 2 | 13 | 14 | 8 / 29 |
+
+* **Castle draws an EnvironmentLight, at the wrong level (Confirmed picture).** Furnace `furnace_m0_r1_c1`: Castle 147 vs X_ITE 255; `half_m0_r1_c0.5`: 79 vs 137; metal under the half light 206 vs 186. This matches the already-listed gap "Castle EnvironmentLight (IBL) unfinished" (x3d.castle quality leg); not re-diagnosed here.
+* Unlit, legacy and the headlit PhysicalMaterial agree (128, 128, 186 vs X_ITE 128, 128, 186): **five of six engines now read 186 to 188 on `exp2_c_physical_default`; three.js alone reads 128.**
+* The no-light controls (`ctrl_noenv`, `ctrl_intensity0`) read black everywhere, Castle included (NEAR, rim only).
 
 ## Limits (say them before anyone else does)
 * The 29 scenes collapse to **10 distinct X_ITE pictures, 10 wgpu, 2 three.js**: they are furnace probes, built to test one thing. They cannot reveal geometry, texture or light-model differences. Widening the scene set is the next step, not a detail.
@@ -114,6 +129,7 @@ Limits repeated: furnace probes, software rendering only, one scene geometry. Ca
 
 ## Run it
 ```sh
+# Castle: CASTLE_RENDER=path/to/castle-render tools/render_castle.sh RUN $S   (see castle-version.txt in results for the bundle)
 # Babylon: BABYLON_JS=path/to/babylon.js (npm pack babylonjs@9.32.0) node tools/render_babylon.js RUN $S
 # Blender: python tools/render_blender.py ~/x3d-blender-io/source RUN $S   (pip install the bpy 5.3.0 wheel)
 (cd ../x3d.threejs/bridge && npm install)            # three, x_ite, playwright pins
