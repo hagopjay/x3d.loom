@@ -1,6 +1,6 @@
 # x3d.render-oracle: cross-engine differential rendering
 
-Frontier `cross-render` (Loom Frontier Board 2026-11-23, rank 2). One fixed rig, many engines, one differ, with known-bad controls so the differ is *shown* to catch a defect. Step 1: the 29 x3d.wgpu conformance scenes in **3 engines**. Next: widen to six (Babylon, Castle, Blender).
+Frontier `cross-render` (Loom Frontier Board 2026-11-23, rank 2). One fixed rig, many engines, one differ, with known-bad controls so the differ is *shown* to catch a defect. Step 1: the 29 x3d.wgpu conformance scenes in **3 engines**. Step 2: six engines (Results 6 and 7).
 
 ## Rig (named beside every claim)
 | item | value |
@@ -36,7 +36,7 @@ All five are one cause. Ties at 250.6 mean the picture is all-or-nothing:
 | half_m0_r0_c0.5 | 141.1 | 138 | 0 | 140 |
 | ctrl_intensity05_m0_r1_c0.5 (and half_m0_r1_c0.5) | 135.7 | 137 | 0 | 138 |
 
-**Cause (Likely, not yet fixed): the three.js bridge draws no `EnvironmentLight`.** Every scene whose only light is an environment renders black. `exp2_c_physical_default` (no light, PhysicalMaterial) is the same class: three.js 128 vs X_ITE 186 vs wgpu 188 (MAE 56.5). This is the already-listed gap "X_ITE lights PhysicalMaterial with a default environment glow that three.js has no counterpart for", now measured as 21 of 29 scenes.
+**Cause (Confirmed by the fix in Result 5): the three.js bridge drew no `EnvironmentLight`.** Every scene whose only light is an environment renders black. `exp2_c_physical_default` is a different cause (headlight on a PhysicalMaterial, see Result 5).
 
 **The only gap between two engines that both draw the scene: X_ITE vs x3d.wgpu, max MAE 3.87** (`furnace_m0_r0_c0.5`, IoU 0.982), 0 FAR. wgpu runs 1 to 2 grey levels brighter in the centre (188 vs 186, 190 vs 189): small, systematic, on the rim as well (`top5_wgpu_vs_xite.png`).
 
@@ -67,6 +67,83 @@ Planted on all 29 X_ITE pictures (`oracle.json: controls`), plus real scene muta
 * three.js is blind to material changes under no environment (it draws black either way): that is the engine gap, not the differ.
 * Determinism: two full runs per engine, max MAE 0.000 in all three engines.
 
+## Result 5: the three.js bridge fixed (same day, same rig; x3d.loom branch of this PR)
+The oracle's finding was acted on first, as asked. `EnvironmentLight` is now drawn by the three.js bridge (`src/nodes/EnvironmentLight.js`: the cube map becomes `scene.environment`, intensity is `environmentIntensity`) and a second finding came out of the re-run: **X_ITE curves the indirect light a PhysicalMaterial gets from an EnvironmentLight by 1/2.2 after the material has multiplied it** (white light 0.5 on base colour 1 reads 186 = 255 x 0.5^(1/2.2); on base colour 0.5 it reads 137 = 255 x 0.25^(1/2.2)), and direct lights are not curved (a global curve moved the PhysicalMaterial fixture's foreground mean from 86 to 110 and broke its bounds). The bridge now puts the power on the indirect term only.
+
+| pair | before AGREE / NEAR / FAR | after |
+|---|---|---|
+| X_ITE vs three.js | 2 / 6 / **21** | 19 / 9 / **1** |
+| three.js vs x3d.wgpu | 8 / 0 / **21** | 18 / 10 / **1** |
+| X_ITE vs x3d.wgpu | 10 / 19 / 0 | unchanged |
+
+* Held-out record: three.js 8 of 29 rows in tolerance before, **28 of 29** after (X_ITE and wgpu 29 of 29, both times). Determinism: two runs per engine, max MAE 0.000.
+* **Remaining FAR, 1 of 29: `exp2_c_physical_default`** (PhysicalMaterial, headlight only, no EnvironmentLight): three.js 128, X_ITE 186, x3d.wgpu 188. The same scene with `headlight="false"` is black in every engine, so the 186 comes from the headlight, not a default environment (Confirmed by the `ctrl_noenv` rows). A default white environment at 0.5 was tried, broke the headlight=false controls (MAE 133 to 181) and the PhysicalMaterial fixture, and was reverted. Cause Suspected: X_ITE curves the headlight on a PhysicalMaterial too, but not an explicit DirectionalLight (fixture). Open.
+* The residual 2.4 to 3.2 NEAR rows are rim pixels on the smooth dielectric (three.js IBL vs X_ITE), not fitted.
+* Regression: all 135 three.js bridge fixture runs pass after the change (X_ITE 16.6.0, Chromium 153.0.8010.12 SwiftShader, the bridge's own rig); one new fixture `EnvironmentLight` (mad 0.22, IoU 0.99 against X_ITE).
+* Files: `results/2026-11-23-conformance29-three-fixed/`.
+
+## Result 6: five engines (X_ITE, three.js bridge, x3d.wgpu, Babylon bridge, Blender importer + Cycles)
+Same 29 scenes, same 128x128 rig. Babylon: x3d.webgpu bridge body, Babylon.js 9.32.0, WebGPU on SwiftShader (the bridge's own offscreen stub), tone mapping off. Blender: bpy 5.3.0 wheel, the x3d-blender-io importer at x3d-blender-io `0eb4809`, Cycles CPU 64 spp, no denoise, Standard view transform; nothing added to the scene but render settings, the first imported camera bound, and its vertical angle set to the X3D `fieldOfView` (the importer's 16:9 camera made every Blender sphere the wrong size, MAE 8 to 30 on the first run: the Cycles camera trap, already in the Loom memory; after the fix the exp2 scenes are AGREE/NEAR).
+
+| pair | AGREE | NEAR | FAR |
+|---|--:|--:|--:|
+| x3d.wgpu vs X_ITE | 10 | 19 | 0 |
+| three.js vs X_ITE | 19 | 9 | 1 |
+| three.js vs x3d.wgpu | 18 | 10 | 1 |
+| Babylon vs X_ITE | 2 | 13 | 14 |
+| Blender vs X_ITE | 6 | 9 | 14 |
+| Babylon vs Blender | 7 | 2 | 20 |
+
+Held-out X_ITE 16.7.1 record, rows in tolerance: X_ITE 29/29, x3d.wgpu 29/29, three.js 28/29, Babylon 8/29, Blender 9/29. Full table: `results/2026-11-23-five-engines/matrix.md`, pictures `sheet.png`.
+
+Gaps by cause (centre pixel, 0-255):
+| cause | scenes | evidence | grade |
+|---|--:|---|---|
+| **Blender importer ignores `Background` and `EnvironmentLight`**: world stays black, sphere black under a white environment | 20 | `furnace_m0_r1_c1`: Blender 0, others 250 to 255; unlit and legacy spheres match (127 vs 128) | Confirmed (picture), cause Likely (importer behaviour, source not read) |
+| **Babylon bridge draws metals black under an EnvironmentLight** (metal 0 or 1 vs 186 to 255; dielectrics 133 to 183, close to X_ITE) | 11 | not a 1x1 cube (32x32 white faces also 0), not settle time (4 s also 0) | Confirmed (picture), cause Suspected (the specular IBL path in the bridge or in WebGPU on SwiftShader) |
+| **Babylon unlit default reads 255, the others 128** (`exp2_a_unlit_default`) | 1 | five engines, four agree | Confirmed picture, cause unknown |
+| **three.js is the odd one on `exp2_c_physical_default`**: Babylon 186, Blender 187, x3d.wgpu 188, X_ITE 186, three.js 128 | 1 | four of five engines agree: a headlit PhysicalMaterial is written through a 1/2.2 or sRGB curve everywhere except three.js | Confirmed picture; replaces the earlier "headlight not curved" suspicion with a vote. The bridge's own fixture (X_ITE vs three.js, explicit DirectionalLight) still says direct light is not curved, so the open question is why the headlight differs |
+
+Limits repeated: furnace probes, software rendering only, one scene geometry. Castle is added in Result 7.
+
+## Result 7: six engines (Castle added, 23 Nov 2026)
+Castle: `castle-render` 0.1 from x3d.castle at the Castle 7.0-alpha.3 **snapshot downloaded today, sha256 `dce6a4cd488914b67963b2eb7e86ecc5dd37719512e856fe786b688e4e905c77`**. The checksum pinned in x3d.castle's Dockerfile (`4b8935a4...`) no longer matches the snapshot at the same URL (a moving snapshot), so these numbers are for a different Castle build than the earlier Castle quality leg; used on HagopJay's yes on the decision card. Rig: Xvfb, Mesa llvmpipe 25.2.8 (LLVM 20.1.2), `--size 128`, every lever default. Files: `results/2026-11-23-six-engines/`, `castle-version.txt`.
+
+| pair (vs X_ITE) | AGREE | NEAR | FAR | held-out rows in tolerance |
+|---|--:|--:|--:|--:|
+| x3d.wgpu | 10 | 19 | 0 | 29 / 29 |
+| three.js | 19 | 9 | 1 | 28 / 29 |
+| Castle | 2 | 7 | 20 | 11 / 29 |
+| Blender | 6 | 9 | 14 | 9 / 29 |
+| Babylon | 2 | 13 | 14 | 8 / 29 |
+
+* **Castle draws an EnvironmentLight, at the wrong level (Confirmed picture).** Furnace `furnace_m0_r1_c1`: Castle 147 vs X_ITE 255; `half_m0_r1_c0.5`: 79 vs 137; metal under the half light 206 vs 186. This matches the already-listed gap "Castle EnvironmentLight (IBL) unfinished" (x3d.castle quality leg); not re-diagnosed here.
+* Unlit, legacy and the headlit PhysicalMaterial agree (128, 128, 186 vs X_ITE 128, 128, 186): **five of six engines now read 186 to 188 on `exp2_c_physical_default`; three.js alone reads 128.**
+* The no-light controls (`ctrl_noenv`, `ctrl_intensity0`) read black everywhere, Castle included (NEAR, rim only).
+
+## Result 8: twelve lit, coloured, asymmetric scenes, six engines (step 3, 23 Nov 2026)
+`scenes/lit_*.x3d` (made by `tools/make_scenes.py`; all 12 validate against X3D 4.0 XSD with xmllint, x3d_mcp fork 4d433af schemas): directional, spot and point light, specular, emissive and ambient, transparency, PixelTexture, PhysicalMaterial with a direct light only, linear fog, a nested Transform, an asymmetric IndexedFaceSet, the default headlight. No EnvironmentLight. Same rig as before (128x128, Chromium 157.0.8103.78 SwiftShader for X_ITE, three.js, Babylon; x3d-view 0.5.1 on SwiftShader Vulkan; Blender 5.3.0 / Cycles 64 spp; Castle snapshot dce6a4cd... on llvmpipe). Files: `results/2026-11-23-lit12/` (`matrix.md` 15 pairs, `vote.md`, `flip.md`, `sheet.png`).
+
+**No external record exists for these scenes**, so there is no held-out judge of the earlier kind. Two substitutes, each weaker: a **majority vote** (each engine's median distance to the other five, `vote.md`) and **FLIP** (second metric on the same pictures, Spearman 0.922 with the primary MAE_obj over 60 engine-scene cells; whole frame, so it is diluted by the sky colour). Neither confirms a cause.
+
+Pairs against X_ITE (12 scenes): x3d.wgpu 9 AGREE / 1 NEAR / 2 FAR; three.js 8 / 1 / 3; Babylon 6 / 2 / 4; Castle 1 / 7 / 4; Blender 0 / 3 / 9.
+
+**Planted controls (4 scene mutants x 6 engines = 24 runs): 24 of 24 not-AGREE.** Light direction flipped 24.9 to 47.4 (FAR), red box to blue 13.4 to 27.9 (FAR), specular shininess 0.6 to 0.1 8.9 to 25.4 (FAR), cone 17% taller 4.3 to 5.7 (NEAR, caught but small). (`lit_controls.json`).
+
+Gaps with a measured cause (centre or region pixel values; cause grade in brackets):
+| scene | what the engines do | grade |
+|---|---|---|
+| fog_linear | X_ITE, three.js and Castle fog the far boxes (rgb 171,184,209 and 178,191,217, near the fog colour); **x3d.wgpu, Babylon and Blender do not** (far box stays 149,62,29 / 156,64,28 / 142,55,22) | picture Confirmed; "no Fog support" Likely |
+| texture_pixel | **x3d.wgpu draws the box without the PixelTexture colours** (colour std equal across channels, white box in the sheet); Castle and Blender smooth the 4x4 texels (std 52 to 57 vs 75 in X_ITE: filtering) | wgpu picture Confirmed; filtering Likely |
+| physical_direct (DirectionalLight only) | **Babylon draws both PhysicalMaterial objects black**; **three.js sphere hot (255,197,125 vs 152,119,97 in X_ITE) and box dark (48,7,7 vs 71,29,29)**; wgpu, Blender and Castle within 8 of X_ITE | picture Confirmed; causes unknown |
+| emissive_ambient | three.js sphere 50 vs 121 (the bridge's fixed material ambientIntensity of 0.2, already a listed gap); Castle brighter (158); Blender darker (39) | three.js Likely (listed gap); others unknown |
+| headlight_coloured | **Blender draws nothing** (the importer does not make the default headlight; Likely); every other engine within 5 of X_ITE | picture Confirmed |
+| every scene with a Background | Blender draws a black sky (importer ignores Background, as in Result 6) | Confirmed |
+
+Outlier count (vote): Blender 6 scenes, Babylon 3, Castle 1, x3d.wgpu 1, X_ITE 0, three.js 0. The fog and texture scenes have **no clear majority** (all pairs far apart), so the vote cannot name an outlier there; X_ITE and three.js agree (fog 0.013 FLIP, texture 0.008) and are used as the reference only because the older record shows X_ITE as the reference in the furnace set.
+
+Limits: 12 scenes, one geometry each, 128x128, software rendering, all engines at defaults; the vote and FLIP are not independent measurements; no real-GPU claim.
+
 ## Limits (say them before anyone else does)
 * The 29 scenes collapse to **10 distinct X_ITE pictures, 10 wgpu, 2 three.js**: they are furnace probes, built to test one thing. They cannot reveal geometry, texture or light-model differences. Widening the scene set is the next step, not a detail.
 * Software rendering only (SwiftShader both sides). No real-GPU claim.
@@ -75,6 +152,10 @@ Planted on all 29 X_ITE pictures (`oracle.json: controls`), plus real scene muta
 
 ## Run it
 ```sh
+python3 tools/make_scenes.py scenes   # the 12 lit scenes; then python3 tools/vote.py RUN OUT and python3 tools/flip_judge.py RUN OUT
+# Castle: CASTLE_RENDER=path/to/castle-render tools/render_castle.sh RUN $S   (see castle-version.txt in results for the bundle)
+# Babylon: BABYLON_JS=path/to/babylon.js (npm pack babylonjs@9.32.0) node tools/render_babylon.js RUN $S
+# Blender: python tools/render_blender.py ~/x3d-blender-io/source RUN $S   (pip install the bpy 5.3.0 wheel)
 (cd ../x3d.threejs/bridge && npm install)            # three, x_ite, playwright pins
 (cd ~/x3d.wgpu && cargo build --release -p x3d-render --bin x3d-view)
 S=$(ls ~/x3d.wgpu/conformance/scenes/*.x3d)

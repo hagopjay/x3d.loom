@@ -9,6 +9,12 @@
    - Right-handed, Y up, counter-clockwise front faces: the same as three.js, so there is no winding flip and no handedness flag (Babylon needs both).
    - Transform keeps T C R SR S -SR -C as one matrix, so a shear survives (the Babylon body decomposes it to TRS and drops it). */
 const THREE_PI = Math.PI;
+/* X_ITE 16.6.0 raises the colour an EnvironmentLight gives a PhysicalMaterial to 1/2.2 after the material has multiplied it (measured: white light 0.5 on a base colour 1 reads 186 = 255 * 0.5^(1/2.2); on a base
+   colour 0.5 it reads 137 = 255 * (0.5 * 0.5)^(1/2.2); 128 and 65 here without it). Direct lights are NOT curved (a global 1/2.2 on the PhysicalMaterial fixture moved its foreground mean from 86 to 110 and broke its
+   bounds), so the power sits on the two indirect terms. Found by the render oracle (x3d.render-oracle, 23 Nov 2026). */
+function xiteGamma22(shader) {
+  shader.fragmentShader = shader.fragmentShader.replace('#include <lights_fragment_end>', '#include <lights_fragment_end>\n#ifdef USE_ENVMAP\n vec3 xiteInd = reflectedLight.indirectDiffuse + reflectedLight.indirectSpecular; vec3 xiteCur = pow(max(xiteInd, vec3(0.0)), vec3(1.0 / 2.2)); reflectedLight.indirectDiffuse *= xiteCur / max(xiteInd, vec3(1e-6)); reflectedLight.indirectSpecular *= xiteCur / max(xiteInd, vec3(1e-6));\n#endif');
+}
 /* The three.js side of a bridge node, registered from this tree (src/nodes/NODE.js) without touching the Babylon node files:
    R.bridge.three.build.NODE(body, n, parent, chain) -> record, R.bridge.three.geometry.NODE(g, body) -> THREE.BufferGeometry, R.bridge.three.changed.NODE(body, n, field) */
 const T3 = (R.bridge.three = R.bridge.three || { build: {}, geometry: {}, changed: {} });
@@ -83,7 +89,7 @@ class Body {
   clearWorld() {
     if (!this.root) return;
     this.root.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) [].concat(o.material).forEach((m) => { if (m.map) m.map.dispose(); m.dispose(); }); });
-    this.psys = []; this.projs = []; this._pjScoped = false; this.hums = []; this._hrecs = []; this._hanimDirty = false; R.bridge.three.layers.clear(this); this.scene.remove(this.root); this.scene.fog = this.worldFog = null; this.fogHooks = false; this.fogScopes = new WeakMap(); this.localFogs = new Map(); this.tcgMeshes = [];
+    this.envNode = null; this.envCube && this.envCube.dispose(); this.envCube = null; this.envGen = (this.envGen || 0) + 1; this.scene.environment = null; this.scene.environmentIntensity = 1; this.psys = []; this.projs = []; this._pjScoped = false; this.hums = []; this._hrecs = []; this._hanimDirty = false; R.bridge.three.layers.clear(this); this.scene.remove(this.root); this.scene.fog = this.worldFog = null; this.fogHooks = false; this.fogScopes = new WeakMap(); this.localFogs = new Map(); this.tcgMeshes = [];
     for (const r of this.inlines || []) { r.dead = true; r.gen++; r.world = null; } this.inlines = new Set(); this.inlineLoads = 0;
     if (this.cubeGen) for (const e of this.cubeGen) if (e.target) e.target.dispose(); this.cubeGen = new Set(); this.cubeMats = new Set(); if (this.cubeEmpty) { this.cubeEmpty.dispose(); this.cubeEmpty = null; }
     for (const tc of this.textCache.values()) if (tc && tc.map && tc.map.dispose) tc.map.dispose();
@@ -435,7 +441,7 @@ class Body {
     for (const cs of app ? (app.f.shaders || []) : []) { if (!cs || cs.type !== 'ComposedShader') continue; const sm = R.bridge.three.shader.make(this, cs, side); R.bridge.three.shader.announce(cs, !!sm); if (sm) return sm; }   // the first shader that compiles takes the place of the Material (19775-1 31.4.1: the browser uses the first it supports)   // a shader that compiles takes the place of the Material; one that does not leaves the Material
     const vc = !!g.f.color;   // a Color node replaces diffuseColor (19775-1 12.2.2): the material colour is white so the vertex colour is not multiplied by it
     if (mat && mat.type === 'TwoSidedMaterial') { m = new T.MeshPhongMaterial({ side, specular: 0 }); this.refreshPhong(m, this.twoSrc(mat, !!back)); m.map = this.texFor(texN, app && app.f.textureTransform); }
-    else if (mat && mat.type === 'PhysicalMaterial') { m = new T.MeshPhysicalMaterial({ side }); this.refreshPBR(m, mat); m.map = this.texFor(mat.f.baseTexture, app && app.f.textureTransform); }
+    else if (mat && mat.type === 'PhysicalMaterial') { m = new T.MeshPhysicalMaterial({ side }); m.onBeforeCompile = xiteGamma22; m.customProgramCacheKey = () => 'xite-gamma22'; this.refreshPBR(m, mat); m.map = this.texFor(mat.f.baseTexture, app && app.f.textureTransform); }
     else if (mat && mat.type === 'Material') { m = new T.MeshPhongMaterial({ side, specular: 0 }); this.refreshPhong(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }
     else if (mat && mat.type === 'UnlitMaterial') { m = new T.MeshBasicMaterial({ side }); this.refreshUnlit(m, mat); m.map = this.texFor(texN, app && app.f.textureTransform); }   // 19775-1 4.0: no lighting, emissiveColor is the colour
     else { m = new T.MeshBasicMaterial({ side, color: 0xffffff }); m.map = this.texFor(texN, app && app.f.textureTransform); }   // no Material: unlit, white, texture as is (19775-1 12.2.2)
