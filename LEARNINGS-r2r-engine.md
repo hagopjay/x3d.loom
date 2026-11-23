@@ -5,7 +5,7 @@ The engine reads failure receipts and writes candidate Loom rules, each with a t
 spent. Every number below names its instrument; all of it was measured on one cloud machine (15 GB, 4 cores) on
 23 Nov 2026. The engine proposes and never promotes: all 37 rules below are candidates.
 
-Instruments: x3d-blender-io **2.7.1** (commit d931551) and **2.7.3** (8e56437, main) in bpy 5.3.0; x3d.py 4.0.65.8
+Instruments: x3d-blender-io **2.7.1** (commit d931551), **2.7.3** (8e56437) and **2.7.4** (0eb4809, main) in bpy 5.3.0; x3d.py 4.0.65.8
 called through each add-on version's `validate.py`; X3DUOM 4.1 from the x3d_mcp fork at 4d433af; engine
 loomkit.r2r 0.1.0, source sha256 `096d1ce649f8b276` for every run and for the self-test.
 
@@ -26,9 +26,12 @@ loomkit.r2r 0.1.0, source sha256 `096d1ce649f8b276` for every run and for the se
 | Probes that killed the process | 5 (signal 11), all in the huge-index clusters | bpy 5.3.0 under the 10 GB cap; cause not established (S) |
 | The 2.7.1 rules put to add-on 2.7.3 | **21 closed, 1 partly closed, 6 still live**, 0 not exercised | x3d-blender-io 2.7.3 (8e56437, main) in bpy 5.3.0, `kit/loom r2r replay` |
 | Receipts read, add-on 2.7.3 | 9,220 events, 3 failures (0 from 2 chaos rounds, 3 from the sweep); 2 rules: 0 Confirmed, 1 Likely, 1 Suspected | same |
+| The 2.7.1 rules put to add-on 2.7.4 | **0 still live**: 25 closed, 1 partly closed (the export gate, designed), 2 that pass every file they fire on but have 4 and 2 files | x3d-blender-io 2.7.4 (0eb4809, main; source tree 92a942d) in bpy 5.3.0, `kit/loom r2r replay` |
+| The 514-file sweep, add-on 2.7.4 | 0 failures in 514 on each of the three instruments (2.7.3: 2 import, 1 export) | same |
+| Hand files for the three thin rules | 15 of 19 fail on 2.7.3, 0 of 19 on 2.7.4 | 2.7.3 (8e56437) and 2.7.4 in bpy 5.3.0, `runs/r2r-receipts-20261123/hand-274/` |
 | Fault Lab v1, 10 planted faults | 7 rules, all Suspected (a person planted them, one example each); 3 faults reported as not in the file | x3d.demo fault-lab/v1 at 8715b23; no instrument |
 
-## Still live on main (add-on 2.7.3)
+## Still live on add-on 2.7.3
 
 Two chaos rounds on 2.7.3 (1,920 mutants) produced no crash. The 2.7.1 run's rules were then put to 2.7.3, with the
 old failures and the probes that had confirmed each rule rebuilt from their recipes and checked against their recorded
@@ -62,10 +65,49 @@ Hand checks on add-on 2.7.3 in bpy 5.3.0, six files written by hand (C):
   and `importMesh_IndexedTriangleFanSet` ends in `MemoryError` under the 10 GB cap. The thresholds in those rules are
   where the engine's probes happened to land, not a measured boundary.
 
-So three things are live and belong to the Blender lane: `CoordinateDouble` stops the import (two real files in this
+So three things were live on 2.7.3 and went to the Blender lane: `CoordinateDouble` stops the import (two real files in this
 repository), `MetadataBoolean` stops the export (one real file in the x3d_mcp fixtures), and an index of hundreds
 of millions raises `IndexError` in three mesh readers and `MemoryError` in the triangle-fan reader (built files only). The
 seventh rule in the table, the export gate, is the add-on doing what it was designed to do.
+
+## Closed on main (add-on 2.7.4)
+
+The Blender lane took the table above and fixed it in x3d-blender-io #77 (2.7.4, merged to main as 0eb4809). The
+same rules were then put to 2.7.4 with `r2r replay`, the same probes rebuilt from the same recipes
+(`replay-271-rules-on-274.json`, `replay-273-rules-on-274.json`). All of this is C on add-on 2.7.4 in bpy 5.3.0:
+
+| Rule (signature on 2.7.3) | On 2.7.3 | On 2.7.4 | Files that pass on 2.7.4 | Files that fail |
+|---|---|---|---:|---:|
+| `r2r-21d944367a59` (IndexError, ApplyColors) | still live | closed | 30 | 0 |
+| `r2r-758326262381` (IndexError, ApplyColors) | still live | closed | 18 | 0 |
+| `r2r-a2a869510561` (IndexError, ApplyUVs) | still live | closed | 9 | 0 |
+| `r2r-de23254b4dea` (IndexError, IndexedFaceSet) | still live | closed | 46 | 0 |
+| `r2r-88d9b63e43b3` (RuntimeError, IndexedTriangleFanSet) | still live | passes all, too few files to call | 4, and 7 hand files | 0 |
+| `r2r-d261dd67c562` (AttributeError, CoordinateDouble) | still live | passes all, too few files to call | 2, and 10 hand files | 0 |
+| `r2r-ac96dfe7dbc3` (the export gate) | partly closed | partly closed, as designed | 28 | 23 |
+
+Over the whole 2.7.1 run: **25 closed, 0 still live**, 1 partly closed, 2 with fewer than the 5 passing files the
+engine asks for before it writes "closed" (its label for those is `not exercised`). The sweep of 514 real files has
+0 failures on 2.7.4 for the importer, the import then export, and x3d.py. The three real files that failed on 2.7.3
+pass. The two rules of the 2.7.3 run have 2 files and 1 file, and those pass.
+
+Because two rules had so few files, 19 more were written by hand and run on both versions
+(`runs/r2r-receipts-20261123/hand-274/`). 15 of 19 fail on 2.7.3 and 0 of 19 on 2.7.4. They also show where two of
+the engine's Likely rules were off, in ways only a varied file could show:
+
+- **The fan rule's threshold was a stand-in.** The rule said "an `IndexedTriangleFanSet` index of at least 20
+  tokens". A file of 19 tokens holding four fans fails on 2.7.3, and a file of 21 tokens holding one fan passes.
+  The cause is the third fan (the Blender lane found the reader restarting it at the wrong index, which then ran for
+  about 50 s into a `MemoryError`). The vocabulary has a word for the number of tokens and none for the number of
+  runs closed by -1, so the engine took the nearest word it had. Every probe it built had more fans when it had
+  more tokens, so the two could not be told apart (failure mode 198).
+- **The CoordinateDouble rule was too wide.** It said "the node is present". Of ten hand files, the seven with a
+  triangle node as parent fail on 2.7.3; under `IndexedFaceSet`, `IndexedLineSet` and `PointSet` it imports. The rule
+  came from two real files with no probe behind it, which is what Likely with closure `untested` records.
+- `MetadataBoolean value="true false"`: both hand files fail the 2.7.3 export and pass on 2.7.4.
+
+Neither correction changes a verdict above: the fixes close the real cause, and the files pass. They do change how
+far to trust a Likely rule's wording: its place was right both times, its condition was a first guess.
 
 ## Every rule of the 2.7.1 run
 
@@ -144,12 +186,23 @@ sources are in `runs/r2r-blender-io-271-20261123/candidates/` and in that folder
     with controls, and every sealed run here was made again on the fixed code.
 13. **A failure can be the tool working.** The export refusing a negative radius is a gate, not a crash. The engine
     cannot tell the two apart: it reports that the tool said no, and a person reads the message.
+14. **The loop closed in one day.** Receipts from 2.7.1 became rules; six of the rules were still live on 2.7.3,
+    where two chaos rounds had found no crash; the Blender lane fixed them in 2.7.4; the same rules, asked again,
+    find none. Six replay cases now also gate the add-on's own CI (x3d-blender-io #77, `tools/chaos/hostile.py`). That is the flywheel turning once, with a receipt at each
+    step.
+15. **A Likely rule names the place better than the condition.** Both Likely rules that were hand-checked had the
+    right node and the wrong condition (a token count standing in for a fan count; "present" standing in for
+    "under a triangle node"). Before a fix is written from a Likely rule, vary the one thing its probes held fixed.
 
 ## What the engine cannot do yet
 
 - Say anything about a failure whose cause is outside the file, or one that needs two sites compared (a `USE`
   far from its `DEF`, a ROUTE's two ends). The rule language has one site.
-- Name a new idea. When the vocabulary lacks the word, it reports a fingerprint and stops.
+- Name a new idea. When the vocabulary lacks the word, it reports a fingerprint and stops, or it borrows the nearest
+  word it has (failure mode 198). Words it is known to lack: the number of runs in an index list, and the parent
+  node of an element as a condition on that element.
+- Say "closed" on fewer than 5 passing files. Its label for that case, `not exercised`, also covers a rule with no
+  file at all; the two should be told apart.
 - Minimise a Confirmed rule's context. It tries one generation of probes; widening the hosts is the next step.
 - Split a signature. A signature is the exception type and the place it was raised. Two causes raised at one line
   share a cluster, and the smaller one is left as residue (`MetadataBoolean` inside the export gate's cluster).
@@ -169,6 +222,8 @@ python3 -I kit/tests/test_r2r.py                 # controls, both Python modes, 
 kit/loom r2r selftest                            # three hidden rules and noise
 kit/loom r2r show runs/r2r-blender-io-271-20261123
 python3 -I kit/tests/check_r2r_runs.py CHAOS_DIR # sealed runs against their unpacked receipts
+kit/loom r2r replay runs/r2r-blender-io-271-20261123 runs/r2r-receipts-20261123/manifests/blender-io-2.7.4.json \
+    --map OLD=NEW ... --root bpyenv=... --root addon-src=...   # old rules, new version (needs bpy)
 ```
 
 The real instruments need bpy 5.3.0; see `runs/r2r-receipts-20261123/README.md`.
