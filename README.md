@@ -4,7 +4,7 @@ The X3D Loom, consolidated: one definition, its sources, what the other model's 
 
 | File | What it is |
 |---|---|
-| [LOOM-v1.md](LOOM-v1.md) | **The definition.** Purpose, roles, 44 laws, the ten-step loop, artefacts, gates and thresholds, measurements with grades, 219 failure modes, roadmap, open questions, decisions |
+| [LOOM-v1.md](LOOM-v1.md) | **The definition.** Purpose, roles, 44 laws, the ten-step loop, artefacts, gates and thresholds, measurements with grades, 223 failure modes, roadmap, open questions, decisions |
 | [LESSONS-v1.0.md](LESSONS-v1.0.md) | **The v1.0 sweep.** The lessons in plain language: witnesses, limits and causes, science, the browser and X_ITE, process; what v1.0 contains and what is open before it is frozen |
 | [SCIENCE-PLAYBOOK.md](SCIENCE-PLAYBOOK.md) | **For science- and maths-intensive studies.** The order of work, nine witness patterns (exact references and exact discrete identities, convergence, invariants vs events, measured claims, controls that must fail, the display chain, cross-implementation, reproducibility, units), a numerics cheat-sheet, the builder and page skeleton, and the study card (`kit/templates/SCIENCE-STUDY-CARD.md`) |
 | [SOURCES.md](SOURCES.md) | Every input, what it gave, how it was read, and the 14 places sources disagree, each with its resolution |
@@ -27,6 +27,7 @@ The X3D Loom, consolidated: one definition, its sources, what the other model's 
 | [LEARNINGS-gobbler-flyte.md](LEARNINGS-gobbler-flyte.md) | Gobbler.flyte, the 24/7 four-organ LangGraph loop: "x3d" namesakes on the open web, accretion finding 1 still open and what it costs an agent, refusal codes as feedback, one interrupt per cycle, three flywheel counters kept apart |
 | [LEARNINGS-giza-vi.md](LEARNINGS-giza-vi.md) | Giza VI, five editions merged into one Babylon.js narrative with a validated X3D twin: one geometry source for two renderers, right-handed winding and normals, CascadedShadowGenerator drawing nothing, Authored as a mark not a grade, inventions hidden in the accountable file |
 | [LEARNINGS-chess.md](LEARNINGS-chess.md) | The X3D Chess lenses: parity versus an independent oracle, 16 defects an adversarial review found, a live game making every async analysis stale, an overlay module importing its host, picking a square through a PROTO hit point, a 3D chart needing its own camera, Chess960 castling walled off from the library and proved against python-chess |
+| [LEARNINGS-frontier-board.md](LEARNINGS-frontier-board.md) | The frontier board and the bred mascot (23 Nov): 64 candidate frontiers for the Loom through the Assayer's thirteen theses with no model call; a rank moves 31 places under a one-point change, so read tiers; a search left free to touch a data-carrying number flattened it in 9 of 9; one fix moved the cheat; a half-turn camera with a zero axis. Failure modes 220 to 223. x3d.gobbler #6 |
 | [GLOSSARY.md](GLOSSARY.md) | The words |
 | [REVIEW-loom2.md](REVIEW-loom2.md) | Review of the 4 Nov delivery: Cabinet of Worlds, Linked Observatory, Living Archive, Constellation 3 |
 | [REVIEW-scientific.md](REVIEW-scientific.md) | Review of the first x3d.STEM delivery, the Scientific Loom Observatory: measurements, six findings, the hardening patch, 13 lessons |
