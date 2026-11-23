@@ -1,0 +1,387 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "4 audit probe(s) and 0+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "C",
+  "grade_word": "Confirmed",
+  "missed_seen": 4,
+  "reasons": [
+   "14 audit probe(s) confirmed, 0 refuted",
+   "0 false alarms in 2506 known-good files"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-616562eddf55",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "v:has_comma",
+    "failures_explained_without_it": 3,
+    "false_alarms_without_it": 3,
+    "role": "test"
+   },
+   {
+    "dropped": "nws:3",
+    "failures_explained_without_it": 3,
+    "false_alarms_without_it": 3,
+    "role": "context"
+   },
+   {
+    "dropped": "(the list of 2 places)",
+    "failures_explained_without_it": 3,
+    "false_alarms_without_it": 6,
+    "role": "fence"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "v:has_comma",
+      "!nws:1"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: the value has a comma, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle), unless the value has 1 space-separated token(s)."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:len:11",
+      "v:has_comma"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: the length of the value is at least 11 and the value has a comma, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:arity_mismatch",
+      "ntok:2",
+      "nws:3"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 2 token(s) and the value has 3 space-separated token(s): the value has the wrong number of components for its field type, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:arity_long",
+      "ntok:2",
+      "nws:3"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 2 token(s) and the value has 3 space-separated token(s): the value has too many components for its field type, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle)."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:ntok:2",
+      "ntok:2",
+      "nws:3"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 2 token(s) and the value has 3 space-separated token(s): the number of tokens is at least 2, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:arity_long",
+      "!v:number_unparseable",
+      "nws:3"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 3 space-separated token(s): the value has too many components for its field type, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle), unless a token is not a number in X3D's notation."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:arity_long",
+      "!v:quoted",
+      "nws:3"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 3 space-separated token(s): the value has too many components for its field type, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle), unless a token is wrapped in quotation marks where the field is not a string."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:arity_mismatch",
+      "!v:number_unparseable",
+      "nws:3"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 3 space-separated token(s): the value has the wrong number of components for its field type, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle), unless a token is not a number in X3D's notation."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 10,
+   "confirmed": 14,
+   "missed": 4,
+   "missed_examples": [
+    "alternate:0: Arc2D@startAngle <- ' INF , INF   INF , INF ' (live: ' INF , INF ' failed here)",
+    "alternate:0: ArcClose2D@startAngle <- '  INF  ,  INF     INF  ,  INF  ' (live: '  INF  ,  INF  ' failed here)",
+    "alternate:0: ArcClose2D@startAngle <- '  INF  ,  INF  ,  INF  ,  INF  ' (live: '  INF  ,  INF  ' failed here)",
+    "alternate:0: Arc2D@startAngle <- ' INF , INF   INF , INF ' (live: ' INF , INF ' failed here)"
+   ],
+   "other_failure": 382,
+   "probes": 769,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 359
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 3
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1416
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 2506
+  },
+  "normative_reading": [
+   {
+    "literal": "v:arity_long",
+    "means": "the value has too many components for its field type",
+    "passing_files_with_it_inside_the_fence": 11
+   },
+   {
+    "literal": "v:arity_mismatch",
+    "means": "the value has the wrong number of components for its field type",
+    "passing_files_with_it_inside_the_fence": 11
+   },
+   {
+    "literal": "v:lexical_invalid",
+    "means": "the value does not have the written form its field type requires",
+    "passing_files_with_it_inside_the_fence": 14
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 25,
+    "round": 1,
+    "rules_tested": [
+     "attr[v:inf & at:Arc2D@startAngle]"
+    ],
+    "tally": {
+     "alternate/confirmed": 3,
+     "alternate/refuted": 1,
+     "alternate/silent-ok": 2,
+     "confirm/confirmed": 3,
+     "widen/missed": 1,
+     "widen/silent-ok": 15
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 35,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:inf & !v:arity_mismatch & (at:Arc2D@startAngle | at:ArcClose2D@startAngle)]"
+    ],
+    "tally": {
+     "confirm/confirmed": 3,
+     "near/missed": 1,
+     "near/silent-ok": 7,
+     "value/confirmed": 8,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 29,
+    "round": 3,
+    "rules_tested": [
+     "attr[v:inf & !v:arity_mismatch & (at:Arc2D@startAngle | at:ArcClose2D@startAngle)]"
+    ],
+    "tally": {
+     "confirm/confirmed": 2,
+     "near/missed": 2,
+     "near/silent-ok": 4,
+     "value/confirmed": 5,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 68,
+    "round": "audit",
+    "rules_tested": [
+     "attr[v:inf & !v:arity_mismatch & (at:Arc2D@startAngle | at:ArcClose2D@startAngle)]",
+     "attr[v:has_comma & nws:3 & (at:Arc2D@startAngle | at:ArcClose2D@startAngle)]"
+    ],
+    "tally": {
+     "alternate/missed": 4,
+     "alternate/silent-ok": 2,
+     "confirm/confirmed": 6,
+     "near/confirmed": 2,
+     "near/silent-ok": 6,
+     "value/confirmed": 16,
+     "widen/other-failure": 2,
+     "widen/silent-ok": 30
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "v:has_comma",
+    "nws:3"
+   ],
+   "any": [
+    "at:Arc2D@startAngle",
+    "at:ArcClose2D@startAngle"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-616562eddf55",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Arc2D@startAngle",
+   "ArcClose2D@startAngle"
+  ],
+  "sentence": "At one attribute where the value has 3 space-separated token(s): the value has a comma, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle).",
+  "signature": "ValueError at import_x3d.py:4437 _arc_points",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 28,
+   "explained_by_this_rule": 3,
+   "failures": 28,
+   "families": {
+    "r2r-probe": 28
+   },
+   "observed_by": {
+    "tool": 28
+   },
+   "with_known_good_twin": 28
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed v:has_comma, fenced to 2 place(s): explains 3, false alarms 3",
+   "+ nws:3: explains 3, false alarms 0 (gain 3.00)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 6,
+   "rule": {
+    "all": [
+     "v:has_comma",
+     "nws:3"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "v:has_comma",
+   "nws:3"
+  ],
+  "any": [
+   "at:Arc2D@startAngle",
+   "at:ArcClose2D@startAngle"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the value has 3 space-separated token(s): the value has a comma, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle).",
+ "signature": "ValueError at import_x3d.py:4437 _arc_points",
+ "sources": [
+  {
+   "event": "ev-ce07f5fbe057",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round2-5a8691755958.x3d",
+   "note": "near: Arc2D@startAngle <- ' INF , INF ' (live: ' INF ' failed here)",
+   "receipt": null,
+   "sha256": "5a8691755958fd6c32ec24248e9c4fed80ed0eee1c2f6a2d4af0514eb387e368",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-a25f6c89c868",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round3-f4d043d6e376.x3d",
+   "note": "near: ArcClose2D@startAngle <- ' INF , INF ' (live: ' INF ' failed here)",
+   "receipt": null,
+   "sha256": "f4d043d6e376391ca04448c48c08ee336155740c90f8fb8fac921743fe57e6ba",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-34e067598d30",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round3-3a5a9faf210f.x3d",
+   "note": "near: ArcClose2D@startAngle <- '  INF  ,  INF  ' (live: '  INF  ' failed here)",
+   "receipt": null,
+   "sha256": "3a5a9faf210f47532050d73be1669948fe8ceb74ac95e84c739bac9321506a1b",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  }
+ ],
+ "sources_total": 3,
+ "status": "candidate"
+}

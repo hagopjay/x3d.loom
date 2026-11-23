@@ -1,0 +1,305 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "closed-so-far",
+  "closure_reason": "299 audit probe(s) outside the rule all passed",
+  "grade": "L",
+  "grade_word": "Likely",
+  "missed_seen": 0,
+  "reasons": [
+   "nothing unseen has confirmed it: 1 audit probe(s) confirmed (need 5); 0 held-out failure(s) (need 5)"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-88d9b63e43b3",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "ge:ntok:20",
+    "failures_explained_without_it": 4,
+    "false_alarms_without_it": 4,
+    "role": "test"
+   },
+   {
+    "dropped": "at:IndexedTriangleFanSet@index",
+    "failures_explained_without_it": 4,
+    "false_alarms_without_it": 1496,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "ge:bytes:842",
+      "ge:depth_max:6",
+      "le:n_defs:0",
+      "le:n_elements:12"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 842 and the deepest nesting in the file is at least 6 and the number of DEF names is at most 0 and the number of elements is at most 12."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:bytes:842",
+      "le:max_children:2",
+      "le:max_nattrs:3",
+      "le:n_elements:12"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 842 and the most children of one element is at most 2 and the most attributes on one element is at most 3 and the number of elements is at most 12."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:bytes:842",
+      "le:max_children:2",
+      "le:n_defs:0",
+      "le:n_elements:12"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 842 and the most children of one element is at most 2 and the number of DEF names is at most 0 and the number of elements is at most 12."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:len:79",
+      "at:IndexedTriangleFanSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedTriangleFanSet index: the length of the value is at least 79."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:index_excess:308983539",
+      "!v:tok:315461922",
+      "at:IndexedTriangleFanSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedTriangleFanSet index: how far the largest index runs past the end of its list is at least 308983539, unless the value has the token `315461922`."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:index_max:308983547",
+      "!v:tok:315461922",
+      "at:IndexedTriangleFanSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedTriangleFanSet index: the largest index is at least 308983547, unless the value has the token `315461922`."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:index_excess:308983539",
+      "!v:eq:0 315461922 2 3 -1 0 315461922 2 3 -1",
+      "at:IndexedTriangleFanSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedTriangleFanSet index: how far the largest index runs past the end of its list is at least 308983539, unless the value is exactly `0 315461922 2 3 -1 0 315461922 2 3 -1`."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:index_max:308983547",
+      "!v:eq:0 315461922 2 3 -1 0 315461922 2 3 -1",
+      "at:IndexedTriangleFanSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is IndexedTriangleFanSet index: the largest index is at least 308983547, unless the value is exactly `0 315461922 2 3 -1 0 315461922 2 3 -1`."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 1,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 359,
+   "probes": 659,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 299
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 4
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1416
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [
+   {
+    "first_failing": 20.0,
+    "last_passing": 11,
+    "literal": "ge:ntok:20",
+    "number": "ntok",
+    "passing_values_compared": 4,
+    "untested": [
+     11,
+     20.0
+    ]
+   }
+  ],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 2376
+  },
+  "normative_reading": [
+   {
+    "literal": "v:index_out_of_range",
+    "means": "an index points past the end of the list it indexes",
+    "passing_files_with_it_inside_the_fence": 1
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 16,
+    "round": 1,
+    "rules_tested": [
+     "attr[ge:ntok:20 & at:IndexedTriangleFanSet@index]"
+    ],
+    "tally": {
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 16,
+    "round": "audit",
+    "rules_tested": [
+     "attr[ge:ntok:20 & at:IndexedTriangleFanSet@index]"
+    ],
+    "tally": {
+     "widen/other-failure": 2,
+     "widen/silent-ok": 14
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "ge:ntok:20",
+    "at:IndexedTriangleFanSet@index"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-88d9b63e43b3",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "IndexedTriangleFanSet@index"
+  ],
+  "sentence": "At one attribute where the place is IndexedTriangleFanSet index: the number of tokens is at least 20.",
+  "signature": "RuntimeError at import_x3d.py:2107 importMesh_IndexedTriangleFanSet",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 4,
+   "explained_by_this_rule": 4,
+   "failures": 4,
+   "families": {
+    "r2r-probe": 4
+   },
+   "observed_by": {
+    "tool": 4
+   },
+   "with_known_good_twin": 4
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed ge:ntok:20, fenced to at:IndexedTriangleFanSet@index: explains 4, false alarms 0"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 1496,
+   "rule": {
+    "all": [
+     "ge:ntok:20"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "ge:ntok:20",
+   "at:IndexedTriangleFanSet@index"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the place is IndexedTriangleFanSet index: the number of tokens is at least 20.",
+ "signature": "RuntimeError at import_x3d.py:2107 importMesh_IndexedTriangleFanSet",
+ "sources": [
+  {
+   "event": "ev-0b99045a6d59",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round1-f7821ed16c6d.x3d",
+   "note": "widen: IndexedTriangleFanSet@index <- '0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 3 2 10 11 -1 2 5 12 10 -1 5 7 13 12 -1 7 9 14 13 -1 11 10 15 16 -1 10 12 17 15 -1 2147483647 13 18 17 -1 13 14 19 18 -1 16 1",
+   "receipt": null,
+   "sha256": "f7821ed16c6dd490bbf2a87d50a5c301d3338e09d31bb120e1d62617563beda7",
+   "twin": "work:c003/twins/65a6607224a8.x3d"
+  },
+  {
+   "event": "ev-cb592c580fd2",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-3f3219460474.x3d",
+   "note": "widen: IndexedTriangleFanSet@index <- '0 1 2 3 -1 3 2 4 5 -1 5 4 6 7 -1 7 6 8 9 -1 9 8 10 11 -1 11 10 12 13 -1 13 12 14 15 -1 15 14 1622197949 0 -1 1 16 17 2 -1 2 17 18 4 -1 4 18 19 6 -1 6 19 20 8 -1 8 20 21",
+   "receipt": null,
+   "sha256": "3f3219460474317895dd3f9bbdd16ae57dd4e08ca0ceb4520fb54d3e2bbc54c4",
+   "twin": "work:c003/twins/65a6607224a8.x3d"
+  },
+  {
+   "event": "ev-6567470aab42",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round2-d379d130b36c.x3d",
+   "note": "widen: IndexedTriangleFanSet@index <- '0 1073741814 2 3 -1 0 2147483647 2 3 -1 0 2147483647 2 3 -1 0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "d379d130b36ced4a55a8d8ea1a9e746089e66739512e5915f7b2fe54caafcfa7",
+   "twin": "work:c011/twins/65a6607224a8.x3d"
+  },
+  {
+   "event": "ev-f8320beb093f",
+   "family": "r2r-probe",
+   "file": "work:c012/probes/round1-4c7edc3ec45c.x3d",
+   "note": "widen: IndexedTriangleFanSet@index <- '0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 3 2 10 11 308983547 2 5 12 10 -1 5 7 13 12 -1 7 9 14 13 -1 11 10 15 16 -1 10 12 17 15 -1 12 13 18 17 -1 13 14 19 18 -1 16 15",
+   "receipt": null,
+   "sha256": "4c7edc3ec45ccd394e102da692926b6f3509c9f680a9534e54faa13807fbc2bd",
+   "twin": "work:c012/twins/65a6607224a8.x3d"
+  }
+ ],
+ "sources_total": 4,
+ "status": "candidate"
+}

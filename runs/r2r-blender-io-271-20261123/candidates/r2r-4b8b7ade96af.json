@@ -1,0 +1,486 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "7 audit probe(s) and 3+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "C",
+  "grade_word": "Confirmed",
+  "missed_seen": 13,
+  "reasons": [
+   "21 audit probe(s) confirmed, 0 refuted",
+   "0 false alarms in 1886 known-good files"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-4b8b7ade96af",
+ "instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "v:float_overflow32",
+    "failures_explained_without_it": 21,
+    "false_alarms_without_it": 428,
+    "role": "test"
+   },
+   {
+    "dropped": "!p:Scene",
+    "failures_explained_without_it": 34,
+    "false_alarms_without_it": 3,
+    "role": "guard"
+   },
+   {
+    "dropped": "!v:lexical_invalid",
+    "failures_explained_without_it": 20,
+    "false_alarms_without_it": 1,
+    "role": "guard"
+   },
+   {
+    "dropped": "at:Transform@translation",
+    "failures_explained_without_it": 16,
+    "false_alarms_without_it": 23,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "v:float_overflow32",
+      "!p:Scene",
+      "!v:arity_mismatch",
+      "at:Transform@translation"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation: a number is larger than a 32-bit float can hold, unless the parent is Scene or the value has the wrong number of components for its field type."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:float_overflow32",
+      "!e.has:scale",
+      "!v:arity_mismatch",
+      "!v:eq: 0 1e39 0 ",
+      "at:Transform@translation",
+      "e.child:Shape"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation and its element has a Shape child: a number is larger than a 32-bit float can hold, unless its element also has the attribute scale or the value has the wrong number of components for its field type or the value is exactly ` 0 1e39 0 `."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:float_overflow32",
+      "!e.has:center",
+      "!v:arity_mismatch",
+      "!v:eq: 0 1e39 0 ",
+      "at:Transform@translation",
+      "e.child:Shape"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation and its element has a Shape child: a number is larger than a 32-bit float can hold, unless its element also has the attribute center or the value has the wrong number of components for its field type or the value is exactly ` 0 1e39 0 `."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:float_overflow32",
+      "!v:eq: 0 1e39 0 ",
+      "!v:lexical_invalid",
+      "at:Transform@translation",
+      "e.child:Shape"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation and its element has a Shape child: a number is larger than a 32-bit float can hold, unless the value is exactly ` 0 1e39 0 ` or the value does not have the written form its field type requires."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:float_overflow32",
+      "!v:lexical_invalid",
+      "!v:tok:1e39",
+      "at:Transform@translation",
+      "e.child:Shape"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation and its element has a Shape child: a number is larger than a 32-bit float can hold, unless the value does not have the written form its field type requires or the value has the token `1e39`."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:min:0",
+      "v:float_overflow32",
+      "!v:arity_mismatch",
+      "!v:tok:1e39"
+     ],
+     "any": [
+      "at:Transform@scale",
+      "at:Transform@translation"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: the smallest component is at least 0 and a number is larger than a 32-bit float can hold, at one of 2 places (Transform scale, Transform translation), unless the value has the wrong number of components for its field type or the value has the token `1e39`."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 48,
+   "confirmed": 21,
+   "missed": 7,
+   "missed_examples": [
+    "bisect: Transform@scale <- max_abs near 4.21697e+35",
+    "widen: Transform@translation <- '\"\"0 6.6999999999999995e+38 0\"\"'",
+    "widen: Transform@rotation <- '\"0 1 INF\" \"0 1 INF\"'",
+    "alternate:0: Transform@translation <- '\"0 5.05e+38 0\"' (live: '0 5.05e+38 0' failed here)",
+    "alternate:0: Transform@translation <- '\"0 5.05e+38 0\"' (live: '0 5.05e+38 0' failed here)"
+   ],
+   "other_failure": 0,
+   "probes": 139,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 63
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 16
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 572,
+   "failures": 6,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [
+    "num_extreme: X3D/Scene/Transform#OB_Root rotation: token 1 0 -> INF",
+    "num_extreme: X3D/Scene/Transform#OB_Copy2 translation: token 0 4 -> -1e39",
+    "num_extreme: X3D/Scene/Transform#OB_PartSource translation: token 0 0 -> NaN"
+   ],
+   "passing_files": 1409
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1886
+  },
+  "normative_reading": [],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 49,
+    "round": 1,
+    "rules_tested": [
+     "attr[ge:max_abs:1e+39 & at:Transform@translation & e.child:Shape]"
+    ],
+    "tally": {
+     "alternate/confirmed": 6,
+     "bisect/silent-ok": 6,
+     "confirm/confirmed": 8,
+     "confirm/refuted": 2,
+     "near/missed": 1,
+     "value/confirmed": 8,
+     "value/no-verdict": 2,
+     "widen/missed": 2,
+     "widen/silent-ok": 14
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 97,
+    "round": 2,
+    "rules_tested": [
+     "attr[ge:max:1e+39 & at:Transform@translation]",
+     "attr[v:nonfinite & e.child:Shape & e.has:DEF & (at:Transform@scale | at:Transform@translation)]",
+     "attr[v:inf & at:Transform@translation & p:Group]"
+    ],
+    "tally": {
+     "alternate/confirmed": 1,
+     "bisect/missed": 6,
+     "confirm/confirmed": 20,
+     "confirm/refuted": 3,
+     "near/missed": 2,
+     "value/confirmed": 19,
+     "value/no-verdict": 11,
+     "widen/silent-ok": 35
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 114,
+    "round": 3,
+    "rules_tested": [
+     "attr[ge:max_abs:1e+39 & !p:Scene & at:Transform@translation]",
+     "attr[v:lexical_invalid & !e.has:rotation & e.has:DEF & (at:Transform@scale | at:Transform@translation)]",
+     "attr[v:quoted & e.child:Shape & ntok:3 & (at:Transform@scale | at:Transform@translation)]"
+    ],
+    "tally": {
+     "alternate/missed": 1,
+     "alternate/no-verdict": 5,
+     "bisect/silent-ok": 6,
+     "confirm/confirmed": 20,
+     "confirm/refuted": 4,
+     "value/confirmed": 21,
+     "value/no-verdict": 7,
+     "value/refuted": 2,
+     "widen/silent-ok": 48
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 147,
+    "round": "audit",
+    "rules_tested": [
+     "attr[ge:max_abs:1e+39 & anc:Group & (at:Transform@scale | at:Transform@translation)]",
+     "attr[ge:max_abs:5.05e+38 & e.child:Shape & e.has:DEF & (at:Transform@scale | at:Transform@translation)]",
+     "attr[v:lexical_invalid & !e.has:rotation & at:Transform@scale]",
+     "attr[v:float_overflow32 & !p:Scene & !v:lexical_invalid & at:Transform@translation]"
+    ],
+    "tally": {
+     "alternate/confirmed": 2,
+     "alternate/missed": 4,
+     "bisect/confirmed": 6,
+     "bisect/missed": 1,
+     "bisect/silent-ok": 2,
+     "confirm/confirmed": 28,
+     "confirm/refuted": 3,
+     "near/no-verdict": 6,
+     "near/refuted": 1,
+     "near/silent-ok": 1,
+     "value/confirmed": 33,
+     "value/no-verdict": 2,
+     "value/refuted": 1,
+     "widen/missed": 2,
+     "widen/silent-ok": 55
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "v:float_overflow32",
+    "!p:Scene",
+    "!v:lexical_invalid",
+    "at:Transform@translation"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-4b8b7ade96af",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Transform@translation"
+  ],
+  "sentence": "At one attribute where the place is Transform translation: a number is larger than a 32-bit float can hold, unless the parent is Scene or the value does not have the written form its field type requires.",
+  "signature": "RuntimeError at matrix_safety.py:47 inverted64",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 90,
+   "explained_by_this_rule": 16,
+   "failures": 119,
+   "families": {
+    "chaos-differential": 4,
+    "r2r-probe": 115
+   },
+   "observed_by": {
+    "tool": 119
+   },
+   "with_known_good_twin": 119
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed ge:min:0, fenced to 4 place(s): explains 92, false alarms 1688",
+   "+ v:float_overflow32: explains 51, false alarms 6 (gain 121.94)",
+   "+ !v:lexical_invalid: explains 34, false alarms 2 (gain 2.65)",
+   "+ !p:Scene: explains 16, false alarms 0 (gain 1.32)",
+   "pruned ge:min:0: no false alarm returns without it"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 23,
+   "rule": {
+    "all": [
+     "v:float_overflow32",
+     "!p:Scene",
+     "!v:lexical_invalid"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "v:float_overflow32",
+   "!p:Scene",
+   "!v:lexical_invalid",
+   "at:Transform@translation"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the place is Transform translation: a number is larger than a 32-bit float can hold, unless the parent is Scene or the value does not have the written form its field type requires.",
+ "signature": "RuntimeError at matrix_safety.py:47 inverted64",
+ "sources": [
+  {
+   "event": "ev-d1444867a4cb",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-583a29577568.x3d",
+   "note": "confirm: Transform@translation <- '0 1e39 0'",
+   "receipt": null,
+   "sha256": "583a2957756855eb39b5eb2d7691f7df5f8f2a266334267af07ca5f81f6cdce9",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-1f2b5f7eceb7",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-52a6fabfb0b2.x3d",
+   "note": "value: Transform@translation <- '0 1E39 0' (live: '0 1e39 0' failed here)",
+   "receipt": null,
+   "sha256": "52a6fabfb0b2258a5ab4c017f37c925c8bdefdb0beae9c83f73d52b1535a36c9",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-aa9f35aef949",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round1-1ac9b4e9c6ed.x3d",
+   "note": "value: Transform@translation <- ' 0 1e39 0 ' (live: '0 1e39 0' failed here)",
+   "receipt": null,
+   "sha256": "1ac9b4e9c6ed5216af48fd08e0caf20a9396850d98bd02b847ebc2a780ecf748",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-8829804b82ec",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-10c6c5d7ee2f.x3d",
+   "note": "confirm: Transform@translation <- '0 1e39 0'",
+   "receipt": null,
+   "sha256": "10c6c5d7ee2f34cef27bc48d79e8c51815a76cf75f2475f4c57cda5b4971be70",
+   "twin": "work:c004/twins/69b84e701b7d.x3d"
+  },
+  {
+   "event": "ev-2292faeb1c9b",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-131cbf096044.x3d",
+   "note": "confirm: Transform@translation <- '0 1E39 0'",
+   "receipt": null,
+   "sha256": "131cbf0960443eba34b18bf876f380510bd66a8cd38ae0fd64d06018c37c8280",
+   "twin": "work:c004/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-25afa282967c",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-1c944c5a1710.x3d",
+   "note": "confirm: Transform@translation <- '0 1E39 0'",
+   "receipt": null,
+   "sha256": "1c944c5a17100fb861ba090b98ad925033aaa0518b02b920ae58ee6dda82ebd6",
+   "twin": "work:c004/twins/0b72840615c1.x3d"
+  },
+  {
+   "event": "ev-89a46fc7a144",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-96109c3f034c.x3d",
+   "note": "confirm: Transform@translation <- ' 0 1e39 0 '",
+   "receipt": null,
+   "sha256": "96109c3f034c462e4821ea03799f44312d7de39cfd471daba4aaddb097f6703f",
+   "twin": "work:c004/twins/aaddfad27ab0.x3d"
+  },
+  {
+   "event": "ev-161a77057010",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-62e490baf5b1.x3d",
+   "note": "bisect: Transform@translation <- max near 8.35e+38",
+   "receipt": null,
+   "sha256": "62e490baf5b1f11289d37e970f8723baa02d1a1e2812b04628d39863cab030e7",
+   "twin": "work:c004/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-ce910e05a63d",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-1b95da0e13e8.x3d",
+   "note": "bisect: Transform@translation <- max near 5.05e+38",
+   "receipt": null,
+   "sha256": "1b95da0e13e8d2a695cd89ab0294030082faf87ad1808ec535e94a80eb8b190d",
+   "twin": "work:c004/twins/0b72840615c1.x3d"
+  },
+  {
+   "event": "ev-e7fe5ad16315",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-02611af33276.x3d",
+   "note": "bisect: Transform@translation <- max near 5.05e+38",
+   "receipt": null,
+   "sha256": "02611af33276c710ada31a1f8cb5ecea84f8e50db860fbe9463d9dbba0a05ed9",
+   "twin": "work:c004/twins/aaddfad27ab0.x3d"
+  },
+  {
+   "event": "ev-e5096543859e",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-8294d2bdd93f.x3d",
+   "note": "value: Transform@translation <- ' 0 1E39 0 ' (live: ' 0 1e39 0 ' failed here)",
+   "receipt": null,
+   "sha256": "8294d2bdd93fbdc7fb264bc45c7a5e0d54c301e5894d29b1b7d39ed18d4f255d",
+   "twin": "work:c004/twins/aaddfad27ab0.x3d"
+  },
+  {
+   "event": "ev-7e3de38594c7",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round2-21b6fcf468e4.x3d",
+   "note": "value: Transform@translation <- ' 0 1E39 0 ' (live: '0 1E39 0' failed here)",
+   "receipt": null,
+   "sha256": "21b6fcf468e4fb2e098b62c9fb11ca7ec5040251030a917abb4d575b08f10f38",
+   "twin": "work:c004/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-64408535d542",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-02c460a6b46f.x3d",
+   "note": "confirm: Transform@translation <- ' 0 1E39 0 '",
+   "receipt": null,
+   "sha256": "02c460a6b46f0715f2476d3c2229c22c107f06bc53858b7cf284b96c9f68de12",
+   "twin": "work:c004/twins/cbc69f69a289.x3d"
+  },
+  {
+   "event": "ev-ca9c89f463fb",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-71e444f780d8.x3d",
+   "note": "confirm: Transform@translation <- ' 0 1E39 0 '",
+   "receipt": null,
+   "sha256": "71e444f780d8a88a75d61aa4c5d39bceffbb36a39f0d7bbbf8b9221791ad49a2",
+   "twin": "work:c004/twins/9b62ec4bb335.x3d"
+  },
+  {
+   "event": "ev-8d5a45287464",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-b9dee276c735.x3d",
+   "note": "confirm: Transform@translation <- '0 1e39 0'",
+   "receipt": null,
+   "sha256": "b9dee276c73530e4ac1c8a454db83f1d9c2816cabd46e8292fa570e7ddfcc57d",
+   "twin": "work:c004/twins/aaddfad27ab0.x3d"
+  },
+  {
+   "event": "ev-5b7883d735fc",
+   "family": "r2r-probe",
+   "file": "work:c004/probes/round3-5efb49caaca1.x3d",
+   "note": "confirm: Transform@translation <- '0 1e39 0'",
+   "receipt": null,
+   "sha256": "5efb49caaca1990a5b4f1a6b22fb9c9ea287d2c84221242d463eb1dd07078fa8",
+   "twin": "work:c004/twins/54cc72ab3816.x3d"
+  }
+ ],
+ "sources_total": 16,
+ "status": "candidate"
+}

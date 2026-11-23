@@ -1,0 +1,550 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "closed-so-far",
+  "closure_reason": "266 audit probe(s) outside the rule all passed",
+  "grade": "C",
+  "grade_word": "Confirmed",
+  "missed_seen": 0,
+  "reasons": [
+   "11 audit probe(s) confirmed, 0 refuted",
+   "0 false alarms in 2315 known-good files"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-21d944367a59",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "ge:index_excess:536870902",
+    "failures_explained_without_it": 22,
+    "false_alarms_without_it": 22,
+    "role": "test"
+   },
+   {
+    "dropped": "e.child:Color",
+    "failures_explained_without_it": 30,
+    "false_alarms_without_it": 21,
+    "role": "context"
+   },
+   {
+    "dropped": "(the list of 2 places)",
+    "failures_explained_without_it": 22,
+    "false_alarms_without_it": 15,
+    "role": "fence"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "ge:index_max:536870907",
+      "e.child:Color"
+     ],
+     "any": [
+      "at:IndexedTriangleSet@index",
+      "at:IndexedTriangleStripSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where its element has a Color child: the largest index is at least 536870907, at one of 2 places (IndexedTriangleSet index, IndexedTriangleStripSet index)."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max:536870907",
+      "e.child:Color"
+     ],
+     "any": [
+      "at:IndexedTriangleSet@index",
+      "at:IndexedTriangleStripSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where its element has a Color child: the largest component is at least 536870907, at one of 2 places (IndexedTriangleSet index, IndexedTriangleStripSet index)."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max_abs:536870907",
+      "e.child:Color"
+     ],
+     "any": [
+      "at:IndexedTriangleSet@index",
+      "at:IndexedTriangleStripSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where its element has a Color child: the largest magnitude is at least 536870907, at one of 2 places (IndexedTriangleSet index, IndexedTriangleStripSet index)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:index_out_of_range",
+      "e.child:Color"
+     ],
+     "any": [
+      "at:IndexedTriangleSet@index",
+      "at:IndexedTriangleStripSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where its element has a Color child: an index points past the end of the list it indexes, at one of 2 places (IndexedTriangleSet index, IndexedTriangleStripSet index)."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:ntok:10",
+      "v:negative",
+      "e.child:Color"
+     ],
+     "any": [
+      "at:IndexedTriangleSet@index",
+      "at:IndexedTriangleStripSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where its element has a Color child: the number of tokens is at least 10 and a component is negative, at one of 2 places (IndexedTriangleSet index, IndexedTriangleStripSet index)."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:len:18",
+      "v:negative",
+      "e.child:Color"
+     ],
+     "any": [
+      "at:IndexedTriangleSet@index",
+      "at:IndexedTriangleStripSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where its element has a Color child: the length of the value is at least 18 and a component is negative, at one of 2 places (IndexedTriangleSet index, IndexedTriangleStripSet index)."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:len:39",
+      "e.child:Color"
+     ],
+     "any": [
+      "at:IndexedTriangleSet@index",
+      "at:IndexedTriangleStripSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where its element has a Color child: the length of the value is at least 39, at one of 2 places (IndexedTriangleSet index, IndexedTriangleStripSet index)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:tok:-1",
+      "e.child:Color"
+     ],
+     "any": [
+      "at:IndexedTriangleSet@index",
+      "at:IndexedTriangleStripSet@index"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where its element has a Color child: the value has the token `-1`, at one of 2 places (IndexedTriangleSet index, IndexedTriangleStripSet index)."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 5,
+   "confirmed": 11,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 308,
+   "probes": 590,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 266
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 22
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1416
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [
+   {
+    "first_failing": 536870902.0,
+    "last_passing": 0.0,
+    "literal": "ge:index_excess:536870902",
+    "number": "index_excess",
+    "passing_values_compared": 22,
+    "untested": [
+     0.0,
+     536870902.0
+    ]
+   }
+  ],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 2315
+  },
+  "normative_reading": [
+   {
+    "literal": "v:index_out_of_range",
+    "means": "an index points past the end of the list it indexes",
+    "passing_files_with_it_inside_the_fence": 21
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 22,
+    "round": 1,
+    "rules_tested": [
+     "attr[ge:index_excess:2147483629 & e.child:Color & (at:IndexedTriangleSet@index | at:IndexedTriangleStripSet@index)]",
+     "attr[ge:index_excess:2147483642 & at:IndexedTriangleStripSet@index & e.child:ColorRGBA]"
+    ],
+    "tally": {
+     "bisect/confirmed": 3,
+     "bisect/missed": 6,
+     "confirm/confirmed": 4,
+     "value/confirmed": 3,
+     "value/other-failure": 1,
+     "widen/other-failure": 1,
+     "widen/silent-ok": 4
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 19,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:index_out_of_range & !e.child:Normal & !e.has:DEF & at:IndexedTriangleStripSet@index]",
+     "attr[v:out_of_range & at:IndexedTriangleSet@index & e.has:ccw]"
+    ],
+    "tally": {
+     "confirm/confirmed": 2,
+     "confirm/other-failure": 1,
+     "widen/missed": 1,
+     "widen/other-failure": 3,
+     "widen/silent-ok": 12
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 11,
+    "round": 3,
+    "rules_tested": [
+     "attr[ge:index_excess:536870902 & e.child:Color & (at:IndexedTriangleSet@index | at:IndexedTriangleStripSet@index)]",
+     "attr[ge:index_excess:536870902 & at:IndexedTriangleStripSet@index & e.child:ColorRGBA]"
+    ],
+    "tally": {
+     "bisect/confirmed": 6,
+     "confirm/confirmed": 2,
+     "widen/silent-ok": 3
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 32,
+    "round": "audit",
+    "rules_tested": [
+     "attr[ge:index_excess:536870902 & e.child:Color & (at:IndexedTriangleSet@index | at:IndexedTriangleStripSet@index)]",
+     "attr[ge:index_excess:536870902 & !e.child:Normal & anc:Transform & at:IndexedTriangleStripSet@index]"
+    ],
+    "tally": {
+     "bisect/confirmed": 9,
+     "confirm/confirmed": 3,
+     "confirm/other-failure": 1,
+     "widen/other-failure": 4,
+     "widen/silent-ok": 15
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "ge:index_excess:536870902",
+    "e.child:Color"
+   ],
+   "any": [
+    "at:IndexedTriangleSet@index",
+    "at:IndexedTriangleStripSet@index"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-21d944367a59",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "IndexedTriangleSet@index",
+   "IndexedTriangleStripSet@index"
+  ],
+  "sentence": "At one attribute where its element has a Color child: how far the largest index runs past the end of its list is at least 536870902, at one of 2 places (IndexedTriangleSet index, IndexedTriangleStripSet index).",
+  "signature": "IndexError at import_x3d.py:1857 importMesh_ApplyColors",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 30,
+   "explained_by_this_rule": 22,
+   "failures": 30,
+   "families": {
+    "r2r-probe": 30
+   },
+   "observed_by": {
+    "tool": 30
+   },
+   "with_known_good_twin": 30
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed ge:index_excess:536870902, fenced to 2 place(s): explains 30, false alarms 21",
+   "+ e.child:Color: explains 22, false alarms 0 (gain 16.84)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 15,
+   "rule": {
+    "all": [
+     "ge:index_excess:536870902",
+     "e.child:Color"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "ge:index_excess:536870902",
+   "e.child:Color"
+  ],
+  "any": [
+   "at:IndexedTriangleSet@index",
+   "at:IndexedTriangleStripSet@index"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where its element has a Color child: how far the largest index runs past the end of its list is at least 536870902, at one of 2 places (IndexedTriangleSet index, IndexedTriangleStripSet index).",
+ "signature": "IndexError at import_x3d.py:1857 importMesh_ApplyColors",
+ "sources": [
+  {
+   "event": "ev-8bc0d35fa277",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round1-2cdc9259680f.x3d",
+   "note": "widen: IndexedTriangleStripSet@index <- '0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 3 2 10 11 -1 2 5 12 10 -1 5 7 13 12 -1 7 9 14 13 -1 11 10 15 16 -1 10 12 17 15 -1 2147483647 13 18 17 -1 13 14 19 18 -1 16",
+   "receipt": null,
+   "sha256": "2cdc9259680feae5d4b38ce129ca140f6eb71978ca909b0ddfe8324879ae1f69",
+   "twin": "work:c003/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-e81a2cdf8f95",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round2-b6004ee3654a.x3d",
+   "note": "widen: IndexedTriangleStripSet@index <- '0 2147483647 2 3 -1 0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "b6004ee3654a347596267211932f14b5b329e4212bab760afa1158bc4112b1b4",
+   "twin": "work:c003/twins/2a76053da253.x3d"
+  },
+  {
+   "event": "ev-b83fe647aa28",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-5a79869a35d1.x3d",
+   "note": "widen: IndexedTriangleSet@index <- '0 2147483647 2 3 -1 0 2147483647 2 3 -1 0 2147483647 2 3 -1 0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "5a79869a35d1baa8d58cec6693c9fa008b2a6ad76e57f0404dddf887cb568aca",
+   "twin": "work:c003/twins/0404539e6227.x3d"
+  },
+  {
+   "event": "ev-e6587efe6bf7",
+   "family": "r2r-probe",
+   "file": "work:c003/probes/round3-dcd0d6f0eca2.x3d",
+   "note": "widen: IndexedTriangleStripSet@index <- '0 1 2 3 -1 4 5 6 7 -1 0 4 7 2147483634 -1 3 2 6 5 -1 0 3 5 4 -1 1 7 6 2 -1'",
+   "receipt": null,
+   "sha256": "dcd0d6f0eca2e6cd4dbe0f105597a8c50e7753ec147de32e111631d8a57128ad",
+   "twin": "work:c003/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-2a339dcbe9bc",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round1-f3c29e12d28a.x3d",
+   "note": "confirm: IndexedTriangleSet@index <- '0 1 2 3 -1 4 5 6 7 -1 0 4 7 2147483634 -1 3 2 6 5 -1 0 3 5 4 -1 1 7 6 2 -1'",
+   "receipt": null,
+   "sha256": "f3c29e12d28ade2892aaeedccc2d06b5025fd140c97827a0fbb9cfdc0e8647fa",
+   "twin": "work:c011/twins/0404539e6227.x3d"
+  },
+  {
+   "event": "ev-724a5ebc4e66",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round1-5de09b73ce03.x3d",
+   "note": "confirm: IndexedTriangleStripSet@index <- '0 2147483647 2 3 -1 0 2147483647 2 3 -1 0 2147483647 2 3 -1 0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "5de09b73ce032940f09e4b8078ad0264b4a2366906bfbf592091be85ea98ac98",
+   "twin": "work:c011/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-a579608053af",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round1-5c5e3a0c7b04.x3d",
+   "note": "confirm: IndexedTriangleStripSet@index <- '0 1 2 3 -1 4 5 6 7 -1 0 4 7 2147483634 -1 3 2 6 5 -1 0 3 5 4 -1 1 7 6 2 -1'",
+   "receipt": null,
+   "sha256": "5c5e3a0c7b048f4a277457ed666b6d9c96a5b470601d342691f76132169125a3",
+   "twin": "work:c011/twins/2a76053da253.x3d"
+  },
+  {
+   "event": "ev-77c73039ef4b",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round1-90c7b36d5d0f.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 5.36871e+08",
+   "receipt": null,
+   "sha256": "90c7b36d5d0f4643a5579b9ea873bbb0c9347e548709eb12ad4303c05f435854",
+   "twin": "work:c011/twins/2a76053da253.x3d"
+  },
+  {
+   "event": "ev-ccfb2895c884",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round1-8917c857e6db.x3d",
+   "note": "bisect: IndexedTriangleSet@index <- index_excess near 1.07374e+09",
+   "receipt": null,
+   "sha256": "8917c857e6db002c1533b3474eb37511e756cbc0e72200043c45e72aa12195e8",
+   "twin": "work:c011/twins/0404539e6227.x3d"
+  },
+  {
+   "event": "ev-df62fbd421ce",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round1-7fa391e8880f.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 1.07374e+09",
+   "receipt": null,
+   "sha256": "7fa391e8880fb905ae1efa4c1cf14dae7fe0e2c5413f6351b0e2656f5c02f6aa",
+   "twin": "work:c011/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-fb24e5f565dc",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round1-8bb205a8d727.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 1.61061e+09",
+   "receipt": null,
+   "sha256": "8bb205a8d727196b6cda90c1d2961348dc4ae3ef57da7bb245a12dfe42526855",
+   "twin": "work:c011/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-21c717032572",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round1-aaca5027314b.x3d",
+   "note": "bisect: IndexedTriangleSet@index <- index_excess near 1.61061e+09",
+   "receipt": null,
+   "sha256": "aaca5027314b3553c18f20d269b41e9d054bb09bb1af879b702f1d4fe707935b",
+   "twin": "work:c011/twins/0404539e6227.x3d"
+  },
+  {
+   "event": "ev-f9a0f617d4d9",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round1-5e831e7d3d43.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 5.36871e+08",
+   "receipt": null,
+   "sha256": "5e831e7d3d43df4d686a09862e74c3b871592f15061acc588909a8784c98cee2",
+   "twin": "work:c011/twins/6d8c5a7b1866.x3d"
+  },
+  {
+   "event": "ev-8200c034e23e",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round2-55621ab7b228.x3d",
+   "note": "widen: IndexedTriangleSet@index <- '0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 3 2 10 11 -1 2 5 12 10 -1 5 7 13 12 -1 7 9 14 13 -1 11 10 15 16 -1 10 12 17 15 -1 2147483647 13 18 17 -1 13 14 19 18 -1 16 15 2",
+   "receipt": null,
+   "sha256": "55621ab7b22822df99a367f13db98f16200d125420563f86b8dfb942ee17fe2b",
+   "twin": "work:c011/twins/0404539e6227.x3d"
+  },
+  {
+   "event": "ev-750fa458c673",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round3-915c465c3c09.x3d",
+   "note": "confirm: IndexedTriangleSet@index <- '0 536870907 2 3 -1 0 2147483647 2 3 -1 0 2147483647 2 3 -1 0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "915c465c3c095182cfcac4ed59874e247a6c40546fab023def587e587eebe3b0",
+   "twin": "work:c011/twins/0404539e6227.x3d"
+  },
+  {
+   "event": "ev-abd4a1b40f14",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round3-1b802bb7a98f.x3d",
+   "note": "confirm: IndexedTriangleStripSet@index <- '0 1073741814 2 3 -1 0 2147483647 2 3 -1 0 2147483647 2 3 -1 0 2147483647 2 3 -1'",
+   "receipt": null,
+   "sha256": "1b802bb7a98f834f7dff4c669ce8d27ab0a645c5de365b7bc37e83ffa3f37526",
+   "twin": "work:c011/twins/2a76053da253.x3d"
+  },
+  {
+   "event": "ev-052ef176df89",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round3-71633f847f34.x3d",
+   "note": "bisect: IndexedTriangleSet@index <- index_excess near 2.68435e+08",
+   "receipt": null,
+   "sha256": "71633f847f344134b859bd9701c5214dac1471999a201fc601bb00ce9542e794",
+   "twin": "work:c011/twins/0404539e6227.x3d"
+  },
+  {
+   "event": "ev-1526403779f9",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round3-f1655f6665db.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 2.68435e+08",
+   "receipt": null,
+   "sha256": "f1655f6665dbfde0fe64e0571f3f3cc0da544e0d5386f1e4c224d307f22b9b5b",
+   "twin": "work:c011/twins/2a76053da253.x3d"
+  },
+  {
+   "event": "ev-74a3283f6806",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round3-f7f383756449.x3d",
+   "note": "bisect: IndexedTriangleSet@index <- index_excess near 4.02653e+08",
+   "receipt": null,
+   "sha256": "f7f383756449306099fc4ee8c38e264431c9f1cd5bc466a3c30b447a873cdeb3",
+   "twin": "work:c011/twins/0404539e6227.x3d"
+  },
+  {
+   "event": "ev-a7475d3f3d61",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round3-8c18abbe8037.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 4.02653e+08",
+   "receipt": null,
+   "sha256": "8c18abbe80376ee750c477ba3be5074d04246aa20bcbdd531ee9e0889a1442ff",
+   "twin": "work:c011/twins/2a76053da253.x3d"
+  },
+  {
+   "event": "ev-34e068098a46",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round3-61a9be145bab.x3d",
+   "note": "bisect: IndexedTriangleStripSet@index <- index_excess near 1.34218e+08",
+   "receipt": null,
+   "sha256": "61a9be145babace02e964e0a2774ae19f6116faac53b4c35ca72af3fc5db1a27",
+   "twin": "work:c011/twins/2a76053da253.x3d"
+  },
+  {
+   "event": "ev-165db149008e",
+   "family": "r2r-probe",
+   "file": "work:c011/probes/round3-b27045df7c1b.x3d",
+   "note": "bisect: IndexedTriangleSet@index <- index_excess near 1.34218e+08",
+   "receipt": null,
+   "sha256": "b27045df7c1b789aa46776a8c5fbca87e39b34ab2eed7480f0916c2518150844",
+   "twin": "work:c011/twins/0404539e6227.x3d"
+  }
+ ],
+ "sources_total": 22,
+ "status": "candidate"
+}

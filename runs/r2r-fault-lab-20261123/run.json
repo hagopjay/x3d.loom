@@ -1,0 +1,63 @@
+{
+ "candidates": 7,
+ "claims": 7,
+ "clusters": 10,
+ "created_utc": "2026-11-23T06:29:49Z",
+ "events": 11,
+ "events_skipped": [],
+ "files_read": 8,
+ "grades": {
+  "C": 0,
+  "L": 0,
+  "S": 7
+ },
+ "inputs": [
+  {
+   "adapter": "faultlab",
+   "events": 11,
+   "path": "repos:x3d.demo/docs/demos/fault-lab/v1/data/cases.json",
+   "sha256": "a87cbb577f86b516482ee025c8095cee5186ee777ea448703ac0b0256185f76c",
+   "split": "train",
+   "what": "Fault Lab cases.json: 10 planted faults and the clean twin"
+  }
+ ],
+ "instruments": {
+  "Fault Lab author (planted faults, x3d.demo fault-lab/v1)": {
+   "fail": 10,
+   "pass": 1
+  }
+ },
+ "kit": {
+  "loomkit": {
+   "kit_commit": "e16641f02b0b48316793d7e6605e701729f4f716",
+   "kit_dirty": true,
+   "kit_sha256": "549c8cb197f0d252efbf2d14d313b2e7838ef3c20079c44bcc7b79553ebeba67"
+  },
+  "r2r_sha256": "096d1ce649f8b2767e482f9fc48d57b008fe65e51f94b82bc6f49241fcb9fa4d",
+  "r2r_version": "0.1.0",
+  "uom_facts": {
+   "fork_commit": "4d433af",
+   "from": "x3d_mcp fork, src/validation/schemas/X3dUnifiedObjectModel-4.{0,1}.xml",
+   "x3duom_40_sha256": "7e426a238656c21a4a444b989276494329da363625c36f0a719b15d89416bee3",
+   "x3duom_41_sha256": "4fc10e8e15c0d6cf2a916e4f59b815b110104aa7ea734dc6afea9458095c792b"
+  }
+ },
+ "notes": [
+  "x3d.demo docs/demos/fault-lab/v1 at main 8715b23. The failures are AUTHORED: a person planted each fault and says the file is wrong. No tool observed them, so no rule from this run can be graded above Likely, and with one clean file there is nothing to count false alarms on.",
+  "For comparison only: the hand-written checks of x3d_mcp flagged 1 of 10 at 39c6e94 and 9 of 10 at 8205047 (the Fault Lab's own checks-before.json and checks-after.json)."
+ ],
+ "oracles": {},
+ "proposer": {
+  "name": "inductive (no language model)",
+  "uses_a_model": false
+ },
+ "schema": "loom.r2r-run/1",
+ "seconds": 0.1,
+ "settings": {
+  "max_generations": 1,
+  "only": null,
+  "rounds": 0,
+  "seed": 1
+ },
+ "title": "Fault Lab v1: ten planted ontology faults, one clean scene"
+}

@@ -1,0 +1,626 @@
+{
+  "modes": [
+    {
+      "detail": {
+        "cli": [
+          {
+            "case": "cli: run seals a folder (0), refuses to overwrite it (2), show (0), unknown run (2), check flags a failing file (1) and passes a clean one (0)",
+            "result": "0, 2, 0, 2, 1, 0"
+          },
+          {
+            "case": "cli: replay against the same tool says still live (1); against a fixed tool says closed (0), asking it about the old failures and the rebuilt probes",
+            "result": "40 still fail; 40 now pass"
+          },
+          {
+            "case": "cli: replay asks the tool only about files its receipts have not already answered",
+            "result": "9 from receipts, 40 asked"
+          },
+          {
+            "case": "a rule found under two signatures is one candidate file with two claims, each with its own proof; the run counts it once",
+            "result": "1 candidate(s), 2 claims"
+          }
+        ],
+        "engine": [
+          {
+            "case": "finds: bool-reader",
+            "challenge": {
+              "clean_by_both": 294,
+              "false_alarms": 0,
+              "files": 325,
+              "flagged_by_both": 31,
+              "missed": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            },
+            "grades": [
+              "C"
+            ],
+            "hidden": "attr[v:bool_noncanonical & (at:Box@solid | at:DirectionalLight@on | at:IndexedFaceSet@solid | at:Sphere@solid | at:TimeSensor@loop)]",
+            "recovered": [
+              "attr[v:bool_noncanonical & (at:Box@solid | at:DirectionalLight@on | at:IndexedFaceSet@solid | at:Sphere@solid | at:TimeSensor@loop)]"
+            ],
+            "word_for_word": true
+          },
+          {
+            "case": "finds: nesting-limit",
+            "challenge": {
+              "clean_by_both": 185,
+              "false_alarms": 0,
+              "files": 325,
+              "flagged_by_both": 140,
+              "missed": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            },
+            "grades": [
+              "C"
+            ],
+            "hidden": "doc[ge:depth_max:64]",
+            "recovered": [
+              "doc[ge:depth_max:64]"
+            ],
+            "word_for_word": true
+          },
+          {
+            "case": "finds: index-reader",
+            "challenge": {
+              "clean_by_both": 279,
+              "false_alarms": 0,
+              "files": 325,
+              "flagged_by_both": 46,
+              "missed": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            },
+            "grades": [
+              "C"
+            ],
+            "hidden": "attr[v:index_out_of_range & at:IndexedFaceSet@coordIndex]",
+            "recovered": [
+              "attr[v:index_out_of_range & at:IndexedFaceSet@coordIndex]"
+            ],
+            "word_for_word": true
+          },
+          {
+            "case": "refuses: a tool that fails at random",
+            "caught": {
+              "C": 0,
+              "L": 0,
+              "S": 1
+            },
+            "expected": "nothing above Suspected",
+            "training_failures": 37
+          }
+        ],
+        "events": [
+          {
+            "case": "event: outcome not pass or fail",
+            "caught": "ValueError",
+            "expected": "ValueError: outcome must be"
+          },
+          {
+            "case": "event: unknown observer",
+            "caught": "ValueError",
+            "expected": "ValueError: observed must be"
+          },
+          {
+            "case": "signature normalised; one-edit difference found; shifted siblings ignored; skip rows and missing files are not verdicts",
+            "result": "ok"
+          }
+        ],
+        "grades": [
+          {
+            "case": "one refuted audit prediction",
+            "caught": "S",
+            "expected": "S",
+            "reason": "1 audit prediction(s) were wrong: the rule fired and the instrument passed"
+          },
+          {
+            "case": "one false alarm on a known-good file",
+            "caught": "S",
+            "expected": "S",
+            "reason": "fires on 1 file(s) the instrument passed"
+          },
+          {
+            "case": "one held-out false alarm",
+            "caught": "S",
+            "expected": "S",
+            "reason": "fires on 1 held-out file(s) the instrument passed"
+          },
+          {
+            "case": "failures reported by a model (law 32)",
+            "caught": "S",
+            "expected": "S",
+            "reason": "20 source failure(s) were reported by a model, not observed by a tool"
+          },
+          {
+            "case": "a sliver of a cluster and no probe",
+            "caught": "S",
+            "expected": "S",
+            "reason": "explains only 2 of 48 failures of its signature and no probe confirmed it: the signature may have no rule over the file"
+          },
+          {
+            "case": "one failure and no probe",
+            "caught": "S",
+            "expected": "S",
+            "reason": "rests on one failure and no confirmed probe"
+          },
+          {
+            "case": "failures authored by a person",
+            "caught": "L",
+            "expected": "L",
+            "reason": "the failures were authored, not observed by a tool"
+          },
+          {
+            "case": "too few known-good files",
+            "caught": "L",
+            "expected": "L",
+            "reason": "only 12 known-good file(s) to test against (need 30)"
+          },
+          {
+            "case": "nothing unseen confirmed it",
+            "caught": "L",
+            "expected": "L",
+            "reason": "nothing unseen has confirmed it: 2 audit probe(s) confirmed (need 5); 0 held-out failure(s) (need 5)"
+          },
+          {
+            "case": "fingerprint and degenerate firing are S; closure is reported beside the grade",
+            "result": "ok"
+          }
+        ],
+        "ledger": [
+          {
+            "case": "sealed run folder is never overwritten",
+            "caught": "FileExistsError",
+            "expected": "FileExistsError: sealed"
+          },
+          {
+            "case": "every probe rebuilt from host + recipe to the same sha256",
+            "result": "82 of 82"
+          },
+          {
+            "case": "plant.apply refuses an unknown recipe",
+            "caught": "ValueError",
+            "expected": "ValueError: not a plant recipe"
+          },
+          {
+            "case": "the DSPy proposer is a socket, not a runner",
+            "caught": "RuntimeError",
+            "expected": "RuntimeError: designed seam"
+          }
+        ],
+        "optimized": false,
+        "rules": [
+          {
+            "case": "match, fence, OR-group, negation, threshold, JSON round trip, order-free id, sentence",
+            "result": "ok"
+          },
+          {
+            "case": "proposal: context only",
+            "caught": "ValueError",
+            "expected": "ValueError: at least one test literal"
+          },
+          {
+            "case": "proposal: not the rule language",
+            "caught": "ValueError",
+            "expected": "ValueError: not a literal"
+          },
+          {
+            "case": "proposal: no kind",
+            "caught": "ValueError",
+            "expected": "ValueError: a proposal is"
+          }
+        ],
+        "vocabulary": [
+          {
+            "at": "Box@solid",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:bool_noncanonical"
+          },
+          {
+            "at": "IndexedFaceSet@coordIndex",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:index_out_of_range"
+          },
+          {
+            "at": "Material@transparency",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:above_max"
+          },
+          {
+            "at": "Sphere@radius",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:below_min"
+          },
+          {
+            "at": "Transform@translation",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:arity_short"
+          },
+          {
+            "at": "Transform@translation",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:number_unparseable"
+          },
+          {
+            "at": "Transform@translation",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:nonfinite"
+          },
+          {
+            "at": "Shape@USE",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:use_undefined"
+          },
+          {
+            "at": "Group@DEF",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:def_duplicate"
+          },
+          {
+            "at": "ROUTE@fromNode",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:route_node_undefined"
+          },
+          {
+            "at": "Box@wobble",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:unknown_attr"
+          },
+          {
+            "at": "Appearance@alphaMode",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:enum_violation"
+          },
+          {
+            "at": "Material",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "x:sfnode_multiple"
+          },
+          {
+            "at": "Blorb",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "x:unknown_node"
+          },
+          {
+            "at": "Material",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "x:misfiled"
+          }
+        ]
+      },
+      "hidden_rules_recovered": 3,
+      "negative_controls_caught": 18,
+      "optimized": false,
+      "recovered_word_for_word": 3,
+      "vocabulary_literals_two_sided": 15
+    },
+    {
+      "detail": {
+        "cli": [
+          {
+            "case": "cli: run seals a folder (0), refuses to overwrite it (2), show (0), unknown run (2), check flags a failing file (1) and passes a clean one (0)",
+            "result": "0, 2, 0, 2, 1, 0"
+          },
+          {
+            "case": "cli: replay against the same tool says still live (1); against a fixed tool says closed (0), asking it about the old failures and the rebuilt probes",
+            "result": "40 still fail; 40 now pass"
+          },
+          {
+            "case": "cli: replay asks the tool only about files its receipts have not already answered",
+            "result": "9 from receipts, 40 asked"
+          },
+          {
+            "case": "a rule found under two signatures is one candidate file with two claims, each with its own proof; the run counts it once",
+            "result": "1 candidate(s), 2 claims"
+          }
+        ],
+        "engine": [
+          {
+            "case": "finds: bool-reader",
+            "challenge": {
+              "clean_by_both": 294,
+              "false_alarms": 0,
+              "files": 325,
+              "flagged_by_both": 31,
+              "missed": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            },
+            "grades": [
+              "C"
+            ],
+            "hidden": "attr[v:bool_noncanonical & (at:Box@solid | at:DirectionalLight@on | at:IndexedFaceSet@solid | at:Sphere@solid | at:TimeSensor@loop)]",
+            "recovered": [
+              "attr[v:bool_noncanonical & (at:Box@solid | at:DirectionalLight@on | at:IndexedFaceSet@solid | at:Sphere@solid | at:TimeSensor@loop)]"
+            ],
+            "word_for_word": true
+          },
+          {
+            "case": "finds: nesting-limit",
+            "challenge": {
+              "clean_by_both": 185,
+              "false_alarms": 0,
+              "files": 325,
+              "flagged_by_both": 140,
+              "missed": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            },
+            "grades": [
+              "C"
+            ],
+            "hidden": "doc[ge:depth_max:64]",
+            "recovered": [
+              "doc[ge:depth_max:64]"
+            ],
+            "word_for_word": true
+          },
+          {
+            "case": "finds: index-reader",
+            "challenge": {
+              "clean_by_both": 279,
+              "false_alarms": 0,
+              "files": 325,
+              "flagged_by_both": 46,
+              "missed": 0,
+              "precision": 1.0,
+              "recall": 1.0
+            },
+            "grades": [
+              "C"
+            ],
+            "hidden": "attr[v:index_out_of_range & at:IndexedFaceSet@coordIndex]",
+            "recovered": [
+              "attr[v:index_out_of_range & at:IndexedFaceSet@coordIndex]"
+            ],
+            "word_for_word": true
+          },
+          {
+            "case": "refuses: a tool that fails at random",
+            "caught": {
+              "C": 0,
+              "L": 0,
+              "S": 1
+            },
+            "expected": "nothing above Suspected",
+            "training_failures": 37
+          }
+        ],
+        "events": [
+          {
+            "case": "event: outcome not pass or fail",
+            "caught": "ValueError",
+            "expected": "ValueError: outcome must be"
+          },
+          {
+            "case": "event: unknown observer",
+            "caught": "ValueError",
+            "expected": "ValueError: observed must be"
+          },
+          {
+            "case": "signature normalised; one-edit difference found; shifted siblings ignored; skip rows and missing files are not verdicts",
+            "result": "ok"
+          }
+        ],
+        "grades": [
+          {
+            "case": "one refuted audit prediction",
+            "caught": "S",
+            "expected": "S",
+            "reason": "1 audit prediction(s) were wrong: the rule fired and the instrument passed"
+          },
+          {
+            "case": "one false alarm on a known-good file",
+            "caught": "S",
+            "expected": "S",
+            "reason": "fires on 1 file(s) the instrument passed"
+          },
+          {
+            "case": "one held-out false alarm",
+            "caught": "S",
+            "expected": "S",
+            "reason": "fires on 1 held-out file(s) the instrument passed"
+          },
+          {
+            "case": "failures reported by a model (law 32)",
+            "caught": "S",
+            "expected": "S",
+            "reason": "20 source failure(s) were reported by a model, not observed by a tool"
+          },
+          {
+            "case": "a sliver of a cluster and no probe",
+            "caught": "S",
+            "expected": "S",
+            "reason": "explains only 2 of 48 failures of its signature and no probe confirmed it: the signature may have no rule over the file"
+          },
+          {
+            "case": "one failure and no probe",
+            "caught": "S",
+            "expected": "S",
+            "reason": "rests on one failure and no confirmed probe"
+          },
+          {
+            "case": "failures authored by a person",
+            "caught": "L",
+            "expected": "L",
+            "reason": "the failures were authored, not observed by a tool"
+          },
+          {
+            "case": "too few known-good files",
+            "caught": "L",
+            "expected": "L",
+            "reason": "only 12 known-good file(s) to test against (need 30)"
+          },
+          {
+            "case": "nothing unseen confirmed it",
+            "caught": "L",
+            "expected": "L",
+            "reason": "nothing unseen has confirmed it: 2 audit probe(s) confirmed (need 5); 0 held-out failure(s) (need 5)"
+          },
+          {
+            "case": "fingerprint and degenerate firing are S; closure is reported beside the grade",
+            "result": "ok"
+          }
+        ],
+        "ledger": [
+          {
+            "case": "sealed run folder is never overwritten",
+            "caught": "FileExistsError",
+            "expected": "FileExistsError: sealed"
+          },
+          {
+            "case": "every probe rebuilt from host + recipe to the same sha256",
+            "result": "82 of 82"
+          },
+          {
+            "case": "plant.apply refuses an unknown recipe",
+            "caught": "ValueError",
+            "expected": "ValueError: not a plant recipe"
+          },
+          {
+            "case": "the DSPy proposer is a socket, not a runner",
+            "caught": "RuntimeError",
+            "expected": "RuntimeError: designed seam"
+          }
+        ],
+        "optimized": true,
+        "rules": [
+          {
+            "case": "match, fence, OR-group, negation, threshold, JSON round trip, order-free id, sentence",
+            "result": "ok"
+          },
+          {
+            "case": "proposal: context only",
+            "caught": "ValueError",
+            "expected": "ValueError: at least one test literal"
+          },
+          {
+            "case": "proposal: not the rule language",
+            "caught": "ValueError",
+            "expected": "ValueError: not a literal"
+          },
+          {
+            "case": "proposal: no kind",
+            "caught": "ValueError",
+            "expected": "ValueError: a proposal is"
+          }
+        ],
+        "vocabulary": [
+          {
+            "at": "Box@solid",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:bool_noncanonical"
+          },
+          {
+            "at": "IndexedFaceSet@coordIndex",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:index_out_of_range"
+          },
+          {
+            "at": "Material@transparency",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:above_max"
+          },
+          {
+            "at": "Sphere@radius",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:below_min"
+          },
+          {
+            "at": "Transform@translation",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:arity_short"
+          },
+          {
+            "at": "Transform@translation",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:number_unparseable"
+          },
+          {
+            "at": "Transform@translation",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:nonfinite"
+          },
+          {
+            "at": "Shape@USE",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:use_undefined"
+          },
+          {
+            "at": "Group@DEF",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:def_duplicate"
+          },
+          {
+            "at": "ROUTE@fromNode",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:route_node_undefined"
+          },
+          {
+            "at": "Box@wobble",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:unknown_attr"
+          },
+          {
+            "at": "Appearance@alphaMode",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "v:enum_violation"
+          },
+          {
+            "at": "Material",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "x:sfnode_multiple"
+          },
+          {
+            "at": "Blorb",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "x:unknown_node"
+          },
+          {
+            "at": "Material",
+            "clean_fixture": false,
+            "failing_fixture": true,
+            "literal": "x:misfiled"
+          }
+        ]
+      },
+      "hidden_rules_recovered": 3,
+      "negative_controls_caught": 18,
+      "optimized": true,
+      "recovered_word_for_word": 3,
+      "vocabulary_literals_two_sided": 15
+    }
+  ],
+  "schema": "loomkit.self-test/1",
+  "scope": "Synthetic fixtures exercising the real engine; not a project run."
+}

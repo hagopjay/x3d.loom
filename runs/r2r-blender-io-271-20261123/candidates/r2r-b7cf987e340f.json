@@ -1,0 +1,569 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "closure": "open",
+  "closure_reason": "4 audit probe(s) and 0+ held-out failure(s) failed with this signature where no rule of the cluster fired",
+  "grade": "C",
+  "grade_word": "Confirmed",
+  "missed_seen": 4,
+  "reasons": [
+   "10 audit probe(s) confirmed, 0 refuted",
+   "0 false alarms in 2506 known-good files"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-b7cf987e340f",
+ "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "v:inf",
+    "failures_explained_without_it": 25,
+    "false_alarms_without_it": 21,
+    "role": "test"
+   },
+   {
+    "dropped": "!v:arity_mismatch",
+    "failures_explained_without_it": 28,
+    "false_alarms_without_it": 11,
+    "role": "guard"
+   },
+   {
+    "dropped": "(the list of 2 places)",
+    "failures_explained_without_it": 25,
+    "false_alarms_without_it": 81,
+    "role": "fence"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "ge:max_abs:inf",
+      "!v:arity_mismatch"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: the largest magnitude is at least inf, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle), unless the value has the wrong number of components for its field type."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:nonfinite",
+      "!v:arity_mismatch"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: a number is NaN or infinite, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle), unless the value has the wrong number of components for its field type."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:inf",
+      "ntok:1"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 1 token(s): a number is infinite, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle)."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max_abs:inf",
+      "ntok:1"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 1 token(s): the largest magnitude is at least inf, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:nonfinite",
+      "ntok:1"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the value has 1 token(s): a number is NaN or infinite, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:inf",
+      "!v:arity_long"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: a number is infinite, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle), unless the value has too many components for its field type."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:max_abs:inf",
+      "!v:arity_long"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: the largest magnitude is at least inf, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle), unless the value has too many components for its field type."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:nonfinite",
+      "!v:arity_long"
+     ],
+     "any": [
+      "at:Arc2D@startAngle",
+      "at:ArcClose2D@startAngle"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute: a number is NaN or infinite, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle), unless the value has too many components for its field type."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 14,
+   "confirmed": 10,
+   "missed": 4,
+   "missed_examples": [
+    "alternate:0: Arc2D@startAngle <- ' INF , INF   INF , INF ' (live: ' INF , INF ' failed here)",
+    "alternate:0: ArcClose2D@startAngle <- '  INF  ,  INF     INF  ,  INF  ' (live: '  INF  ,  INF  ' failed here)",
+    "alternate:0: ArcClose2D@startAngle <- '  INF  ,  INF  ,  INF  ,  INF  ' (live: '  INF  ,  INF  ' failed here)",
+    "alternate:0: Arc2D@startAngle <- ' INF , INF   INF , INF ' (live: ' INF , INF ' failed here)"
+   ],
+   "other_failure": 382,
+   "probes": 769,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 359
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 25
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 591,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1416
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 2506
+  },
+  "normative_reading": [
+   {
+    "literal": "v:lexical_invalid",
+    "means": "the value does not have the written form its field type requires",
+    "passing_files_with_it_inside_the_fence": 14
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 25,
+    "round": 1,
+    "rules_tested": [
+     "attr[v:inf & at:Arc2D@startAngle]"
+    ],
+    "tally": {
+     "alternate/confirmed": 3,
+     "alternate/refuted": 1,
+     "alternate/silent-ok": 2,
+     "confirm/confirmed": 3,
+     "widen/missed": 1,
+     "widen/silent-ok": 15
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 35,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:inf & !v:arity_mismatch & (at:Arc2D@startAngle | at:ArcClose2D@startAngle)]"
+    ],
+    "tally": {
+     "confirm/confirmed": 3,
+     "near/missed": 1,
+     "near/silent-ok": 7,
+     "value/confirmed": 8,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 29,
+    "round": 3,
+    "rules_tested": [
+     "attr[v:inf & !v:arity_mismatch & (at:Arc2D@startAngle | at:ArcClose2D@startAngle)]"
+    ],
+    "tally": {
+     "confirm/confirmed": 2,
+     "near/missed": 2,
+     "near/silent-ok": 4,
+     "value/confirmed": 5,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 68,
+    "round": "audit",
+    "rules_tested": [
+     "attr[v:inf & !v:arity_mismatch & (at:Arc2D@startAngle | at:ArcClose2D@startAngle)]",
+     "attr[v:has_comma & nws:3 & (at:Arc2D@startAngle | at:ArcClose2D@startAngle)]"
+    ],
+    "tally": {
+     "alternate/missed": 4,
+     "alternate/silent-ok": 2,
+     "confirm/confirmed": 6,
+     "near/confirmed": 2,
+     "near/silent-ok": 6,
+     "value/confirmed": 16,
+     "widen/other-failure": 2,
+     "widen/silent-ok": 30
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "v:inf",
+    "!v:arity_mismatch"
+   ],
+   "any": [
+    "at:Arc2D@startAngle",
+    "at:ArcClose2D@startAngle"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-b7cf987e340f",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Arc2D@startAngle",
+   "ArcClose2D@startAngle"
+  ],
+  "sentence": "At one attribute: a number is infinite, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle), unless the value has the wrong number of components for its field type.",
+  "signature": "ValueError at import_x3d.py:4437 _arc_points",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 28,
+   "explained_by_this_rule": 25,
+   "failures": 28,
+   "families": {
+    "r2r-probe": 28
+   },
+   "observed_by": {
+    "tool": 28
+   },
+   "with_known_good_twin": 28
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed v:inf, fenced to 2 place(s): explains 28, false alarms 11",
+   "+ !v:arity_mismatch: explains 25, false alarms 0 (gain 11.95)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 81,
+   "rule": {
+    "all": [
+     "v:inf",
+     "!v:arity_mismatch"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "v:inf",
+   "!v:arity_mismatch"
+  ],
+  "any": [
+   "at:Arc2D@startAngle",
+   "at:ArcClose2D@startAngle"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute: a number is infinite, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle), unless the value has the wrong number of components for its field type.",
+ "signature": "ValueError at import_x3d.py:4437 _arc_points",
+ "sources": [
+  {
+   "event": "ev-0fb1111e27f5",
+   "family": "r2r-probe",
+   "file": "work:c010/probes/round3-8afe650cc415.x3d",
+   "note": "widen: Arc2D@startAngle <- 'INF'",
+   "receipt": null,
+   "sha256": "8afe650cc41539f2d3e51adfc1e576f05b2fae18a489d93083542bda46b1ee4c",
+   "twin": "work:c010/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-ccdbb9dc40dd",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round1-b93f02903ab2.x3d",
+   "note": "confirm: Arc2D@startAngle <- 'INF'",
+   "receipt": null,
+   "sha256": "b93f02903ab2adada02f027b2412a6dd0f29e430f20d09d7ad029beb9df9601e",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-49e0016a8daf",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round1-1d02caeb886a.x3d",
+   "note": "confirm: Arc2D@startAngle <- 'INF'",
+   "receipt": null,
+   "sha256": "1d02caeb886a200f23e8bff4636f47da44cebc8161b6854ff5e90da6a696b8f6",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-27cfef5dd048",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round1-d89400a84424.x3d",
+   "note": "widen: ArcClose2D@startAngle <- 'INF'",
+   "receipt": null,
+   "sha256": "d89400a844241b8074c4e03fbf8067f09f499a03692dfe00603f37fe45ccee07",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-b0e0d75e9ae0",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round1-101097c36dfd.x3d",
+   "note": "alternate:3: Arc2D@startAngle <- ' INF ' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "101097c36dfd20b93fa1f7868c8306d5a825348c9bc6e334e1c6bad611ce19de",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-58b92cd4bc6e",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round1-a98a93e3a1b8.x3d",
+   "note": "alternate:3: Arc2D@startAngle <- ' INF ' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "a98a93e3a1b84063518a573e6f1ffd9203926835aff381a282a720e45260ac34",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-5bd2fb01fca8",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round1-cbc116ea099d.x3d",
+   "note": "alternate:3: Arc2D@startAngle <- 'inf' (live: 'INF' failed here)",
+   "receipt": null,
+   "sha256": "cbc116ea099d575826be8f3e824b7615dcebc283c59cf1d7bcc850f64a3fce35",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-65767ff42724",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round2-c6033fe103ad.x3d",
+   "note": "confirm: Arc2D@startAngle <- 'inf'",
+   "receipt": null,
+   "sha256": "c6033fe103ad6c79a9c03a5cbe88714fd76056fbfd49f9830388ad3dcc6ea302",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-a4ee3ce0398e",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round2-41736a9680d1.x3d",
+   "note": "confirm: ArcClose2D@startAngle <- 'inf'",
+   "receipt": null,
+   "sha256": "41736a9680d135b2ed4c51c46df2643b002f592eaee9d4a0171fccd8e6ecb81a",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-7ca7002a5e7d",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round2-d11c8b661cd5.x3d",
+   "note": "confirm: Arc2D@startAngle <- ' INF '",
+   "receipt": null,
+   "sha256": "d11c8b661cd5021c02b3637cc79f49e3211e1170a8f771b9fe582f8a328820ac",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-3443b37d13d2",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round2-04f63ad8982a.x3d",
+   "note": "value: ArcClose2D@startAngle <- ' inf ' (live: 'inf' failed here)",
+   "receipt": null,
+   "sha256": "04f63ad8982a0527b9c6f20dd9829921ed370e52e1426595cdfa2b7858b7631c",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-29c318aa068d",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round2-c9d5c46d38c4.x3d",
+   "note": "value: Arc2D@startAngle <- ' Inf ' (live: ' INF ' failed here)",
+   "receipt": null,
+   "sha256": "c9d5c46d38c417e54777ca61e93593dcce31967294db216b1a1c53d74670c59d",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-40642265568e",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round2-596b9b771c70.x3d",
+   "note": "value: Arc2D@startAngle <- 'Inf' (live: 'inf' failed here)",
+   "receipt": null,
+   "sha256": "596b9b771c70cbd1e92fb941092c256a3f2216e5b426555c6bf5270efb8df5c7",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-dadf8e193399",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round2-6bb25597436c.x3d",
+   "note": "value: Arc2D@startAngle <- ' inf ' (live: ' INF ' failed here)",
+   "receipt": null,
+   "sha256": "6bb25597436c88a96e0ae20f131f08b04a636ce2a4f6b996c2ae9663ddcf7885",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-41638e7fad96",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round2-60ef8ff5e1c6.x3d",
+   "note": "value: ArcClose2D@startAngle <- 'INF' (live: 'inf' failed here)",
+   "receipt": null,
+   "sha256": "60ef8ff5e1c6fe8ffa7abe35dbf09e29f170af808ebfde0cbf01754bf6d18565",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-b05a1127940a",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round2-898cd6d944bc.x3d",
+   "note": "value: Arc2D@startAngle <- '  INF  ' (live: ' INF ' failed here)",
+   "receipt": null,
+   "sha256": "898cd6d944bcd0e5a54da6e422ce03969e7ae91e3f8b994c9a3e29174508c748",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-035039acb9bd",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round2-91989a61f4f1.x3d",
+   "note": "value: Arc2D@startAngle <- ' inf ' (live: 'inf' failed here)",
+   "receipt": null,
+   "sha256": "91989a61f4f15a8b9aff1c64c73986876b276d487f9238b66d7c316e37438471",
+   "twin": "work:c017/twins/b3019ced9da1.x3d"
+  },
+  {
+   "event": "ev-84dc34e5c9f8",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round2-bc9b6c5bf7c6.x3d",
+   "note": "value: ArcClose2D@startAngle <- 'Inf' (live: 'inf' failed here)",
+   "receipt": null,
+   "sha256": "bc9b6c5bf7c6817723f0af0bdf401a061a7f0015987c832f93321c27c3bf5116",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-7e85cc5f82c0",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round3-2eae791778d4.x3d",
+   "note": "confirm: ArcClose2D@startAngle <- ' INF '",
+   "receipt": null,
+   "sha256": "2eae791778d4b056f5f5750538abe3de8f18f0bb579bdfc8e973164a3b061dd5",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-30ba859431d4",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round3-653f74f4f40c.x3d",
+   "note": "confirm: ArcClose2D@startAngle <- '  INF  '",
+   "receipt": null,
+   "sha256": "653f74f4f40c0d98c1b59a92af4b3eabf31e8503ac607925aa0a8a494eec76ae",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-864cd06133a4",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round3-f6d5ca42f8b9.x3d",
+   "note": "value: ArcClose2D@startAngle <- '  Inf  ' (live: '  INF  ' failed here)",
+   "receipt": null,
+   "sha256": "f6d5ca42f8b99f5aa6e79f24790d97b9a6595ad71ed2bf355410664d7c81c839",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-cec511ac8623",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round3-d446f30fbd94.x3d",
+   "note": "value: ArcClose2D@startAngle <- '   INF   ' (live: '  INF  ' failed here)",
+   "receipt": null,
+   "sha256": "d446f30fbd94e95c2f25c01d69e3d367eb3039b98712053d3b96f6280da7ece1",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-0aa0138f60a5",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round3-60774bf49187.x3d",
+   "note": "value: ArcClose2D@startAngle <- '  inf  ' (live: '  INF  ' failed here)",
+   "receipt": null,
+   "sha256": "60774bf491872f9dc39a92c3ac8ad99263008b928b3b9514b7d4460a11870c00",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-291456251e40",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round3-94320f780191.x3d",
+   "note": "value: ArcClose2D@startAngle <- '  INF  ' (live: ' INF ' failed here)",
+   "receipt": null,
+   "sha256": "94320f7801916d5cf720f6c071f262ab55435faeedc6ca7155f4849ecafb1d18",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  },
+  {
+   "event": "ev-86571f477198",
+   "family": "r2r-probe",
+   "file": "work:c017/probes/round3-29823a285046.x3d",
+   "note": "value: ArcClose2D@startAngle <- ' Inf ' (live: ' INF ' failed here)",
+   "receipt": null,
+   "sha256": "29823a285046666e285c872bf90e41d6bd66eed85358a69f72943cea7c3c2c13",
+   "twin": "work:c017/twins/8f6444f4c9b4.x3d"
+  }
+ ],
+ "sources_total": 25,
+ "status": "candidate"
+}

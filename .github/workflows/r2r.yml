@@ -1,0 +1,60 @@
+# x3d.loom/.github/workflows/r2r.yml
+# The receipt-to-rule engine (kit/loomkit/r2r): two-sided controls, the hidden-rule self-test, and a check that the
+# sealed runs in runs/r2r-* still load and still flag what they flagged. Standard library only: no browser, no Blender,
+# no model, no key. The real instruments (bpy, x3d.py) are not on this runner; their receipts are in the repository,
+# and what is re-checked here is everything that can be re-checked without them.
+name: r2r
+
+on:
+  push:
+    paths: ['kit/loomkit/r2r/**', 'kit/loomkit/cli.py', 'kit/tests/test_r2r.py', 'kit/tests/check_r2r_runs.py', 'kit/loom', 'runs/r2r-*/**', '.github/workflows/r2r.yml']
+  pull_request:
+    paths: ['kit/loomkit/r2r/**', 'kit/loomkit/cli.py', 'kit/tests/test_r2r.py', 'kit/tests/check_r2r_runs.py', 'kit/loom', 'runs/r2r-*/**', '.github/workflows/r2r.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r2r-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  r2r:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: The X3DUOM facts table is the one the generator makes
+        run: python -I -c "import sys; sys.path.insert(0,'kit'); from loomkit.r2r import uom; f=uom.facts(); assert len(f.nodes) > 250, len(f.nodes); print(len(f.nodes), 'nodes;', f.source)"
+      - name: Two-sided controls (normal and -O) - vocabulary, rules, events, grades, engine, ledger, seam, command line
+        run: python -I kit/tests/test_r2r.py
+      - name: Self-test through the command line (three hidden rules found, noise refused)
+        run: kit/loom r2r selftest
+      - name: Sealed runs load, and unpacked receipts still match them
+        run: |
+          set -euo pipefail
+          for run in runs/r2r-blender-io-271-20261123 runs/r2r-blender-io-273-20261123 runs/r2r-fault-lab-20261123; do
+            # To a file first: with pipefail, `show | head` ends the reader early and the writer exits 120.
+            kit/loom r2r show "$run" > "$RUNNER_TEMP/show.txt"
+            head -n 3 "$RUNNER_TEMP/show.txt"
+          done
+          mkdir -p "$RUNNER_TEMP/chaos"
+          for f in runs/r2r-receipts-20261123/chaos-*.tar.xz; do tar -xJf "$f" -C "$RUNNER_TEMP/chaos"; done
+          python -I kit/tests/check_r2r_runs.py "$RUNNER_TEMP/chaos"
+      - name: Receipt
+        run: |
+          echo "commit: $GITHUB_SHA"
+          echo "runner: $(uname -sr)"
+          python --version

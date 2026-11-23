@@ -1,0 +1,242 @@
+{
+ "grade": {
+  "against": "Fault Lab author (planted faults, x3d.demo fault-lab/v1)",
+  "closure": "untested",
+  "closure_reason": "too few probes outside the rule to say",
+  "grade": "S",
+  "grade_word": "Suspected",
+  "missed_seen": 0,
+  "reasons": [
+   "rests on one failure and no confirmed probe"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-c3d56d0fa43d",
+ "instrument": "Fault Lab author (planted faults, x3d.demo fault-lab/v1)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "x:sfnode_multiple",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 0,
+    "role": "test"
+   },
+   {
+    "dropped": "n:Sphere",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 0,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "x:no_children",
+      "n:Sphere"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where the node is Sphere: it has no children."
+   },
+   {
+    "rule": {
+     "all": [
+      "x:present",
+      "n:Sphere"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where the node is Sphere: the node is present."
+   },
+   {
+    "rule": {
+     "all": [
+      "x:present",
+      "isa:X3DGeometryNode",
+      "n:Sphere"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where the node is an X3DGeometryNode and the node is Sphere: the node is present."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:present",
+      "at:Sphere@radius",
+      "isa:X3DGeometryNode"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Sphere radius and the node is an X3DGeometryNode: the attribute is written."
+   },
+   {
+    "rule": {
+     "all": [
+      "x:present",
+      "n:Sphere",
+      "p:Shape"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where the node is Sphere and the parent is Shape: the node is present."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:present",
+      "at:Sphere@radius",
+      "t:SFFloat"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Sphere radius and the field type is SFFloat: the attribute is written."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:present",
+      "at:Sphere@radius",
+      "tc:float"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Sphere radius and the field holds a float: the attribute is written."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:eq:3",
+      "at:Sphere@radius"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Sphere radius: the value is exactly `3`."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 0,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 0,
+   "probes": 0,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 0
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 1
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 0,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 0
+  },
+  "idle_literals": [
+   "x:sfnode_multiple"
+  ],
+  "instrument": "Fault Lab author (planted faults, x3d.demo fault-lab/v1)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1
+  },
+  "normative_reading": [
+   {
+    "literal": "x:sfnode_multiple",
+    "means": "it is a second node in a field that holds one node",
+    "passing_files_with_it_inside_the_fence": 0
+   }
+  ],
+  "probe_rounds": [],
+  "rule": {
+   "all": [
+    "x:sfnode_multiple",
+    "n:Sphere"
+   ],
+   "kind": "elem"
+  },
+  "rule_id": "r2r-c3d56d0fa43d",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Sphere"
+  ],
+  "sentence": "At one element where the node is Sphere: it is a second node in a field that holds one node.",
+  "signature": "planted fault: two-geometries",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 1,
+   "explained_by_this_rule": 1,
+   "failures": 1,
+   "families": {
+    "fault-lab": 1
+   },
+   "observed_by": {
+    "authored": 1
+   },
+   "with_known_good_twin": 1
+  },
+  "strays": {},
+  "tier": 1,
+  "trace": [
+   "seed x:sfnode_multiple, fenced to n:Sphere: explains 1, false alarms 0"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 0,
+   "rule": {
+    "all": [
+     "x:sfnode_multiple"
+    ],
+    "kind": "elem"
+   },
+   "status": "untested beyond the fence"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "x:sfnode_multiple",
+   "n:Sphere"
+  ],
+  "kind": "elem"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one element where the node is Sphere: it is a second node in a field that holds one node.",
+ "signature": "planted fault: two-geometries",
+ "sources": [
+  {
+   "event": "ev-6969ee4c92fb",
+   "family": "fault-lab",
+   "file": "repos:x3d.demo/docs/demos/fault-lab/v1/cases/two-geometries.x3d",
+   "note": "Two geometries in one Shape",
+   "receipt": {
+    "path": "repos:x3d.demo/docs/demos/fault-lab/v1/data/cases.json",
+    "row": 2
+   },
+   "sha256": "221181bb038e21dfddb50dcccd72fcfa3b2c06d22958e28ea4fc3fbedb854035",
+   "twin": "repos:x3d.demo/docs/demos/fault-lab/v1/cases/clean.x3d"
+  }
+ ],
+ "sources_total": 1,
+ "status": "candidate"
+}
