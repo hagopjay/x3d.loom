@@ -1,6 +1,6 @@
 # x3d.render-oracle: cross-engine differential rendering
 
-Frontier `cross-render` (Loom Frontier Board 2026-11-23, rank 2). One fixed rig, many engines, one differ, with known-bad controls so the differ is *shown* to catch a defect. Step 1: the 29 x3d.wgpu conformance scenes in **3 engines**. Next: widen to six (Babylon, Castle, Blender).
+Frontier `cross-render` (Loom Frontier Board 2026-11-23, rank 2). One fixed rig, many engines, one differ, with known-bad controls so the differ is *shown* to catch a defect. Step 1: the 29 x3d.wgpu conformance scenes in **3 engines**. Step 2: five engines (Result 6); Castle pending.
 
 ## Rig (named beside every claim)
 | item | value |
@@ -82,6 +82,30 @@ The oracle's finding was acted on first, as asked. `EnvironmentLight` is now dra
 * Regression: all 135 three.js bridge fixture runs pass after the change (X_ITE 16.6.0, Chromium 153.0.8010.12 SwiftShader, the bridge's own rig); one new fixture `EnvironmentLight` (mad 0.22, IoU 0.99 against X_ITE).
 * Files: `results/2026-11-23-conformance29-three-fixed/`.
 
+## Result 6: five engines (X_ITE, three.js bridge, x3d.wgpu, Babylon bridge, Blender importer + Cycles)
+Same 29 scenes, same 128x128 rig. Babylon: x3d.webgpu bridge body, Babylon.js 9.32.0, WebGPU on SwiftShader (the bridge's own offscreen stub), tone mapping off. Blender: bpy 5.3.0 wheel, the x3d-blender-io importer at x3d-blender-io `0eb4809`, Cycles CPU 64 spp, no denoise, Standard view transform; nothing added to the scene but render settings, the first imported camera bound, and its vertical angle set to the X3D `fieldOfView` (the importer's 16:9 camera made every Blender sphere the wrong size, MAE 8 to 30 on the first run: the Cycles camera trap, already in the Loom memory; after the fix the exp2 scenes are AGREE/NEAR).
+
+| pair | AGREE | NEAR | FAR |
+|---|--:|--:|--:|
+| x3d.wgpu vs X_ITE | 10 | 19 | 0 |
+| three.js vs X_ITE | 19 | 9 | 1 |
+| three.js vs x3d.wgpu | 18 | 10 | 1 |
+| Babylon vs X_ITE | 2 | 13 | 14 |
+| Blender vs X_ITE | 6 | 9 | 14 |
+| Babylon vs Blender | 7 | 2 | 20 |
+
+Held-out X_ITE 16.7.1 record, rows in tolerance: X_ITE 29/29, x3d.wgpu 29/29, three.js 28/29, Babylon 8/29, Blender 9/29. Full table: `results/2026-11-23-five-engines/matrix.md`, pictures `sheet.png`.
+
+Gaps by cause (centre pixel, 0-255):
+| cause | scenes | evidence | grade |
+|---|--:|---|---|
+| **Blender importer ignores `Background` and `EnvironmentLight`**: world stays black, sphere black under a white environment | 20 | `furnace_m0_r1_c1`: Blender 0, others 250 to 255; unlit and legacy spheres match (127 vs 128) | Confirmed (picture), cause Likely (importer behaviour, source not read) |
+| **Babylon bridge draws metals black under an EnvironmentLight** (metal 0 or 1 vs 186 to 255; dielectrics 133 to 183, close to X_ITE) | 11 | not a 1x1 cube (32x32 white faces also 0), not settle time (4 s also 0) | Confirmed (picture), cause Suspected (the specular IBL path in the bridge or in WebGPU on SwiftShader) |
+| **Babylon unlit default reads 255, the others 128** (`exp2_a_unlit_default`) | 1 | five engines, four agree | Confirmed picture, cause unknown |
+| **three.js is the odd one on `exp2_c_physical_default`**: Babylon 186, Blender 187, x3d.wgpu 188, X_ITE 186, three.js 128 | 1 | four of five engines agree: a headlit PhysicalMaterial is written through a 1/2.2 or sRGB curve everywhere except three.js | Confirmed picture; replaces the earlier "headlight not curved" suspicion with a vote. The bridge's own fixture (X_ITE vs three.js, explicit DirectionalLight) still says direct light is not curved, so the open question is why the headlight differs |
+
+Limits repeated: furnace probes, software rendering only, one scene geometry. Castle is not in this table: see the PR description. The pinned Castle bundle's checksum no longer matches the moving snapshot URL, so the build was stopped rather than bypassed.
+
 ## Limits (say them before anyone else does)
 * The 29 scenes collapse to **10 distinct X_ITE pictures, 10 wgpu, 2 three.js**: they are furnace probes, built to test one thing. They cannot reveal geometry, texture or light-model differences. Widening the scene set is the next step, not a detail.
 * Software rendering only (SwiftShader both sides). No real-GPU claim.
@@ -90,6 +114,8 @@ The oracle's finding was acted on first, as asked. `EnvironmentLight` is now dra
 
 ## Run it
 ```sh
+# Babylon: BABYLON_JS=path/to/babylon.js (npm pack babylonjs@9.32.0) node tools/render_babylon.js RUN $S
+# Blender: python tools/render_blender.py ~/x3d-blender-io/source RUN $S   (pip install the bpy 5.3.0 wheel)
 (cd ../x3d.threejs/bridge && npm install)            # three, x_ite, playwright pins
 (cd ~/x3d.wgpu && cargo build --release -p x3d-render --bin x3d-view)
 S=$(ls ~/x3d.wgpu/conformance/scenes/*.x3d)
