@@ -1,0 +1,25 @@
+# Learnings: the cross-engine render oracle (step 1, 23 Nov 2026)
+
+Frontier `cross-render` from the Loom Frontier Board. Code and data: [`x3d.render-oracle/`](x3d.render-oracle/) (README holds every table). No model call, nothing spent; one cloud container (4 cores, software rendering only).
+
+Rig: 128x128, Chromium 157.0.8103.78 on ANGLE/SwiftShader; X_ITE 16.6.0; x3d.threejs bridge (x3d.loom 3ebed01, three r187); x3d-view 0.5.1 (x3d.wgpu 86f39bd) on SwiftShader Vulkan. 29 scenes from `x3d.wgpu/conformance/scenes`.
+
+## What was found
+| Claim | Grade | Evidence |
+|---|---|---|
+| X_ITE vs x3d.wgpu: 0 of 29 scenes FAR, 10 AGREE, 19 NEAR, max MAE 3.87 | Confirmed | `oracle.json`, rig above |
+| three.js bridge vs X_ITE and vs wgpu: 21 of 29 FAR; the five largest gaps (MAE 135 to 251) are one cause, no EnvironmentLight (renders black) | Confirmed for the numbers; cause Likely (not yet fixed in the bridge) | `matrix.md`; centre px 0 vs 186 to 255 |
+| The held-out X_ITE 16.7.1 record (`conformance/expected.json`) agrees: X_ITE 29/29 in tolerance, wgpu 29/29, three.js 8/29 | Confirmed | `oracle.json: heldout` |
+| The differ catches planted defects: brightness +4/+12 and 1/3 px shifts 29/29; real scene mutants (radius, sphere to box) 18/18 | Confirmed | `oracle.json: controls`, `scene_controls.json` |
+| The differ misses: gain x1.10 (3/29), vertical flip of a sphere (0/29), colour swap on grey (not observable) | Confirmed | same |
+| Two full runs per engine are pixel-identical | Confirmed | determinism block |
+
+## Lessons (candidate laws and failure modes; numbers left to the Loom owner)
+1. **Score the object, not the frame.** v1 judged whole-frame MAE and the planted +4 brightness passed on 26 of 29 scenes because the white furnace background clipped it. The judge was changed to object pixels after seeing the control run, thresholds untouched, and the change is recorded in the judge's header. A control that the differ cannot see is a finding about the differ.
+2. **The conformance scenes are probes, not a test set.** 29 scenes collapse to 10 distinct pictures in X_ITE and wgpu and 2 in three.js. They cannot show geometry, texture or direction errors (a flipped sphere scores 1.18). The six-engine step needs asymmetric, coloured, lit scenes.
+3. **Ties hide structure.** "The 5 largest gaps" is six scenes at 250.589 here. Rank by cause (cluster) as well as by number.
+4. **Use the older record as the held-out judge.** Comparing engines only to each other cannot tell which one moved; the 16.7.1 record said three.js is the odd one, independent of the differ.
+5. **Rig traps hit this session:** the bridge pins Playwright 1.62.1 whose Chromium is absent here (fell back to the global Playwright); no GPU, so Vulkan comes from the SwiftShader ICD inside Chromium (`VK_ICD_FILENAMES`); `npm ci` fails in the bridge (no lockfile), `npm install` works.
+
+## Next
+Widen to six engines (Babylon via x3d.webgpu, Castle via x3d.castle castle-render, Blender via the add-on) on a scene set with asymmetric lit coloured objects (Demo 57 coverage-board nodes); add FLIP as a second held-out judge; fix or document the three.js EnvironmentLight gap and re-run (the oracle should then show 21 FAR fall).
