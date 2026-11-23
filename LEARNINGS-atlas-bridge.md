@@ -21,7 +21,7 @@ Out: an X3D blockout (boxes, cylinders, a sphere) → every `Viewpoint` as an At
 | Collider boxes vs X3D solids | reading room: 99.5% of seen X3D surface within 50 mm of a box, 3.3% of open air wrongly blocked (400 boxes). King's Chamber: 89.6%, 0.9% (120 boxes) | 150,000 surface points, about 46,000 open-air points | C |
 | Mesh vertices vs X3D surfaces | King's Chamber median 43.4 mm, 80.3% within 100 mm | 80,000 vertices | C |
 | Edit addressed by node name (mask from the ray cast of the `Globe*` nodes) | 95.1 to 98.2% of kept pixels within 8/255 | 4 views, JPEG in and out | C |
-| Bridge render of the splats vs the Atlas picture, same Viewpoint | 22.2 dB (draft, 524,288 splats); 13.3 dB before the colour fix | Chromium 157 SwiftShader, three r187, Spark 2.4.0 | C |
+| Bridge render of the splats vs the Atlas picture, same Viewpoint | 26.3 dB (King's Chamber draft), 22.2 dB (reading room 12-view draft), 16.5 dB (24-view refined: the two rings differ in exposure, mean level 118 vs 147, and the splat blends them); 13.3 dB before the colour fix | Chromium 157 SwiftShader, three r187, Spark 2.4.0 | C |
 
 ## Rules
 
@@ -35,6 +35,7 @@ Out: an X3D blockout (boxes, cylinders, a sphere) → every `Viewpoint` as an At
 | 6 | Tell the splat renderer what colour space the host writes | Spark `encodeLinear` under the bridge | C |
 | 7 | `GaussianSplats` inline arrays are the truth and the preview; a `MetadataString splatFile` names the dense file | 30,000 inline + 2,000,000 in SPZ, file stays valid 4.1 | C |
 | 8 | Put the material first in the prompt and say what it is not | granite came back limestone, then granite | C on one case |
+| 9 | Views made in separate calls can differ in exposure even with the first set as context: check mean level across calls before fusing them | ring 1 mean 118, ring 2 mean 147; refined render 16.5 dB at a ring 1 camera | C |
 
 New failure modes 229 to 235 in [LOOM-v1.md](LOOM-v1.md).
 
