@@ -16,7 +16,7 @@ Rigs: renders = Chromium SwiftShader, three r180 + Spark (Marble zip build) for 
 - Camera and depth gate before every paid call: camera 0 m / 0 deg; bridge depth vs analytic ray cast median 0.03 to 0.52 mm.
 - 28,706 splats lie more than 30 m away (bbox about 360 m), a sky/fog skirt a viewer should crop.
 
-Rights: Athens is a free-tier Marble export (World Labs owns, non-commercial licence; he confirmed 24 Nov). Penrose Atlas outputs are dev-credit outputs shown with World Labs credit and a takedown notice. Both stay private until he says publish.
+Rights: Athens is a free-tier Marble export (World Labs owns, non-commercial licence; he confirmed 24 Nov). Penrose Atlas outputs are dev-credit outputs shown with World Labs credit and a takedown notice. This note holds only numbers and descriptions: no world file, splat, picture or Atlas output is in this repo, and those stay private until the owner publishes them (with World Labs credit and a takedown notice).
 
 ## Update: the illusion camera (zero spend, same day)
 A far, narrow Cam00 fixes mode 5 on paper: v4 puts Cam00 about 110 m out at 6.2 degrees, so flight 4's end is 1.096x the size of flight 1's start (v3: 3.2x), closure gap 1.0 px, and the flights are thin slabs on piers so neither end is hidden. X_ITE 16.7.1 render: it reads as one continuous ring of four flights at a glance (Suspected for "reads as impossible": one human look, not a test). Not sent to Atlas: v4 needs a fresh Chisel ring (about 140 credits) and a new draft (500). Kit: world and generator in the project's penrose-atlas/v4 folder.
