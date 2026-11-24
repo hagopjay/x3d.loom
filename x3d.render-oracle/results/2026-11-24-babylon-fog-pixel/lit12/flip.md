@@ -1,4 +1,4 @@
-# FLIP mean vs X_ITE (LDR, 67 ppd, flip-evaluator ?); Spearman rank agreement with MAE_obj over 72 (scene, engine) cells: 0.943
+# FLIP mean vs X_ITE (LDR, 67 ppd, flip-evaluator ?); Spearman rank agreement with MAE_obj over 72 (scene, engine) cells: 0.947
 
 | scene | babylon | blender | castle | cycles | three | wgpu |
 |---|--:|--:|--:|--:|--:|--:|
@@ -9,7 +9,7 @@
 | lit_headlight_coloured | 0.016 | 0.414 | 0.041 | 0.058 | 0.014 | 0.012 |
 | lit_ifs_smooth | 0.021 | 0.263 | 0.046 | 0.023 | 0.009 | 0.010 |
 | lit_physical_direct | 0.019 | 0.255 | 0.018 | 0.036 | 0.036 | 0.029 |
-| lit_point_attenuation | 0.145 | 0.293 | 0.043 | 0.066 | 0.013 | 0.010 |
+| lit_point_attenuation | 0.017 | 0.293 | 0.043 | 0.066 | 0.013 | 0.010 |
 | lit_spot_cone | 0.028 | 0.341 | 0.034 | 0.108 | 0.009 | 0.012 |
 | lit_texture_pixel | 0.039 | 0.366 | 0.108 | 0.162 | 0.008 | 0.011 |
 | lit_transform_nest | 0.019 | 0.276 | 0.039 | 0.031 | 0.010 | 0.008 |

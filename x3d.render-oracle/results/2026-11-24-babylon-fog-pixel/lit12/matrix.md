@@ -9,8 +9,8 @@
 | lit_headlight_coloured | 78.867 FAR | 4.456 NEAR | 9.004 FAR | 0.9 AGREE | 0.876 AGREE | 1.208 AGREE | 83.495 FAR | 80.755 FAR | 77.769 FAR | 77.528 FAR | 77.547 FAR | 9.281 FAR | 4.832 NEAR | 4.776 NEAR | 5.249 NEAR | 8.7 FAR | 8.659 FAR | 9.073 FAR | 0.473 AGREE | 0.706 AGREE | 0.837 AGREE |  /  /  /  /  /  /  |
 | lit_ifs_smooth | 5.088 NEAR | 6.047 NEAR | 4.297 NEAR | 2.398 NEAR | 2.453 NEAR | 2.396 NEAR | 9.697 FAR | 1.603 AGREE | 4.076 NEAR | 4.096 NEAR | 4.074 NEAR | 9.055 FAR | 8.012 FAR | 8.103 FAR | 8.011 FAR | 3.211 NEAR | 3.277 NEAR | 3.206 NEAR | 0.743 AGREE | 0.004 AGREE | 0.742 AGREE |  /  /  /  /  /  /  |
 | lit_physical_direct | 6.108 NEAR | 1.278 AGREE | 5.613 NEAR | 5.255 NEAR | 5.172 NEAR | 1.454 AGREE | 5.999 NEAR | 1.387 AGREE | 9.839 FAR | 4.007 NEAR | 5.602 NEAR | 5.433 NEAR | 6.356 NEAR | 4.618 NEAR | 1.69 AGREE | 9.039 FAR | 3.29 NEAR | 4.797 NEAR | 8.799 FAR | 4.923 NEAR | 4.119 NEAR |  /  /  /  /  /  /  |
-| lit_point_attenuation | 30.277 FAR | 29.548 FAR | 30.382 FAR | 30.956 FAR | 31.048 FAR | 31.251 FAR | 11.897 FAR | 1.292 AGREE | 10.503 FAR | 10.552 FAR | 10.752 FAR | 11.785 FAR | 5.725 NEAR | 5.771 NEAR | 5.945 NEAR | 10.152 FAR | 10.208 FAR | 10.351 FAR | 0.353 AGREE | 0.403 AGREE | 0.503 AGREE |  /  /  /  /  /  /  |
-| lit_spot_cone | 42.638 FAR | 4.384 NEAR | 43.005 FAR | 5.161 NEAR | 4.303 NEAR | 5.159 NEAR | 40.093 FAR | 0.882 AGREE | 41.33 FAR | 42.28 FAR | 41.333 FAR | 40.261 FAR | 8.324 FAR | 8.105 FAR | 8.33 FAR | 41.419 FAR | 42.367 FAR | 41.425 FAR | 1.41 AGREE | 0.011 AGREE | 1.401 AGREE |  /  /  /  /  /  /  |
+| lit_point_attenuation | 10.762 FAR | 5.121 NEAR | 10.882 FAR | 1.179 AGREE | 1.183 AGREE | 1.337 AGREE | 11.897 FAR | 1.292 AGREE | 10.503 FAR | 10.552 FAR | 10.752 FAR | 11.785 FAR | 5.725 NEAR | 5.771 NEAR | 5.945 NEAR | 10.152 FAR | 10.208 FAR | 10.351 FAR | 0.353 AGREE | 0.403 AGREE | 0.503 AGREE |  /  /  /  /  /  /  |
+| lit_spot_cone | 42.616 FAR | 4.36 NEAR | 42.983 FAR | 5.145 NEAR | 4.291 NEAR | 5.144 NEAR | 40.093 FAR | 0.882 AGREE | 41.33 FAR | 42.28 FAR | 41.333 FAR | 40.261 FAR | 8.324 FAR | 8.105 FAR | 8.33 FAR | 41.419 FAR | 42.367 FAR | 41.425 FAR | 1.41 AGREE | 0.011 AGREE | 1.401 AGREE |  /  /  /  /  /  /  |
 | lit_texture_pixel | 42.414 FAR | 28.598 FAR | 42.674 FAR | 7.413 NEAR | 7.299 NEAR | 7.412 NEAR | 26.038 FAR | 1.025 AGREE | 40.649 FAR | 40.777 FAR | 40.648 FAR | 26.035 FAR | 25.877 FAR | 25.808 FAR | 25.877 FAR | 40.854 FAR | 40.972 FAR | 40.853 FAR | 0.546 AGREE | 0.002 AGREE | 0.545 AGREE |  /  /  /  /  /  /  |
 | lit_transform_nest | 7.511 NEAR | 4.728 NEAR | 6.475 NEAR | 1.861 AGREE | 1.85 AGREE | 1.862 AGREE | 10.208 FAR | 1.922 AGREE | 6.743 NEAR | 6.756 NEAR | 6.746 NEAR | 9.239 FAR | 6.164 NEAR | 6.141 NEAR | 6.166 NEAR | 5.568 NEAR | 5.575 NEAR | 5.568 NEAR | 0.262 AGREE | 0.003 AGREE | 0.26 AGREE |  /  /  /  /  /  /  |
 | lit_transparency | 18.095 FAR | 2.898 NEAR | 16.476 FAR | 0.619 AGREE | 0.581 AGREE | 0.799 AGREE | 16.918 FAR | 3.089 NEAR | 17.997 FAR | 18.046 FAR | 18.301 FAR | 15.075 FAR | 3.116 NEAR | 3.131 NEAR | 3.381 NEAR | 16.245 FAR | 16.273 FAR | 16.492 FAR | 0.318 AGREE | 0.566 AGREE | 0.53 AGREE |  /  /  /  /  /  /  |
@@ -18,11 +18,11 @@
 | pair | AGREE | NEAR | FAR |
 |---|--:|--:|--:|
 | babylon|blender | 0 | 3 | 9 |
-| babylon|castle | 1 | 8 | 3 |
+| babylon|castle | 1 | 9 | 2 |
 | babylon|cycles | 0 | 3 | 9 |
-| babylon|three | 5 | 6 | 1 |
-| babylon|wgpu | 6 | 5 | 1 |
-| babylon|xite | 7 | 4 | 1 |
+| babylon|three | 6 | 6 | 0 |
+| babylon|wgpu | 7 | 5 | 0 |
+| babylon|xite | 8 | 4 | 0 |
 | blender|castle | 0 | 1 | 11 |
 | blender|cycles | 8 | 3 | 1 |
 | blender|three | 0 | 2 | 10 |

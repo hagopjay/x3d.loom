@@ -15,6 +15,19 @@ BR.light = {
     sc.materials.forEach((m) => { if (m.maxSimultaneousLights !== undefined) m.maxSimultaneousLights = 8; });
     BR.light.refresh(l, n); return l;
   },
+  patchFalloff() {   // once: Babylon's StandardMaterial point light falloff, max(0, 1 - d / range), becomes the X3D polynomial; `range` carries a1 and a2 (see refresh)
+    if (BR.light._pf) return; BR.light._pf = true;
+    const from = 'max(0.,1.0-length(direction)/range)';
+    const to = '(1.0/(1.0+0.001*(((range-1.0)-floor((range-1.0)/4096.0)*4096.0)*length(direction)+floor((range-1.0)/4096.0)*dot(direction,direction))))';
+    const fix = (t) => (typeof t === 'string' ? t.split(from).join(to) : t);
+    // Babylon registers a shader include again when it loads the shader that uses it, which would bring the stock text back: the entry keeps the patch through a setter
+    let hit = 0;
+    for (const st of [BABYLON.ShaderStore.IncludesShadersStoreWGSL, BABYLON.ShaderStore.IncludesShadersStore]) for (const k of Object.keys(st)) {
+      if (typeof st[k] !== 'string' || !st[k].includes(from)) continue;
+      let v = fix(st[k]); hit++; Object.defineProperty(st, k, { configurable: true, enumerable: true, get: () => v, set: (x) => { v = fix(x); } });
+    }
+    if (!hit) console.warn('Babylon point light falloff text not found: attenuation stays linear to range (update BR.light.patchFalloff)');
+  },
   /* ambientIntensity: X3D adds light.color * light.ambientIntensity * material.ambientIntensity * diffuseColor for every light that is on (17.2.2.4). Babylon has one scene ambient colour times the
      material's ambientColor: the scene colour is the sum over the enabled bridge lights, the material's is ambientIntensity * diffuseColor (refreshPhong in body-br). The scene colour is global:
      the ambient of a light with global FALSE reaches every shape, not only its group (logged), and the light's attenuation and cone do not weigh it. */
@@ -28,7 +41,9 @@ BR.light = {
     if (l._body) BR.light.ambient(l._body);
     if (n.type === 'DirectionalLight') { l.direction.set(f.direction[0], f.direction[1], f.direction[2]); return; }
     l.position.set(f.location[0], f.location[1], f.location[2]);
-    if (a[1] === 0 && a[2] === 0) l.range = 1e4; else { let d = 0.01; while (d < R_ && 1 / (a[0] + a[1] * d + a[2] * d * d) > 1 / 32) d *= 1.25; l.range = Math.min(R_, d); }
+    // attenuation (19775-1 17.2.2.4): 1 / (a0 + a1 d + a2 d^2). Babylon's stock falloff is linear to its range. The patched Standard falloff (BR.light.patchFalloff) reads the polynomial out of `range`:
+    // 1 + a1q + 4096 a2q, a1/a0 and a2/a0 in thousandths (0 = flat). The hard edge of `radius` is the per-mesh cull below, not the range.
+    { const a0 = Math.max(a[0], 1e-6), q = (v) => Math.min(4095, Math.max(0, Math.round(v / a0 * 1000))); l.range = 1 + q(a[1]) + 4096 * q(a[2]); l.intensity /= a0; BR.light.patchFalloff(); }
     if (n.type === 'SpotLight') {
       l.direction.set(f.direction[0], f.direction[1], f.direction[2]); l.angle = Math.min(Math.PI * 0.98, 2 * f.cutOffAngle); l.innerAngle = Math.min(l.angle, 2 * f.beamWidth); l.exponent = 0;
       BR.light.cone(l, f.beamWidth, Math.min(Math.PI * 0.49, f.cutOffAngle));

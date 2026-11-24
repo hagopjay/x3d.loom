@@ -72,4 +72,5 @@ Widen to six engines (Babylon via x3d.webgpu, Castle via x3d.castle castle-rende
 
 ## Update 24 Nov: Babylon fog and PixelTexture
 * A feature built for the narrow case (LocalFog) did not work for the common case (Fog): the code that ran every frame was started by the narrow case's registration. Test the plain node as well as its variants. The oracle's lit_fog_linear scene is a plain `<Fog>`.
-* A patch that changes the text of a shader chunk is not a patch that changes the picture. Check the picture (range 1 black) before building on the patch.
+* A patch that changes the text of a shader chunk is not a patch that changes the picture. Check the picture (range 1 black) before building on the patch. Here the first patch went into the wrong function (the PBR one; the StandardMaterial has the law inline), found by setting `range` from the page and seeing the stock law answer.
+* Set the value from the page (the PRE hook) to ask the shader what it is really running; it takes a minute and tells you which text the compiled shader holds.
