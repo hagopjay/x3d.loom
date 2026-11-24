@@ -30,11 +30,11 @@ v1 sent boxes. v2 sends a Blender scene (374 mesh objects, a vaulted scriptorium
 1. **Paint on known geometry beats repairing generated geometry.** The Atlas mesh is 24 mm off and wavy; the bake puts the same paint on exact faces and exports a valid X3D with one texture. The scene graph already had the geometry, so only the paint needed to come home.
 2. **A texel takes colour only from a view that really sees it.** Project the texel into each view and test its depth against the depth that was sent; without the test, paint lands on surfaces behind the one the view saw.
 3. **Count what no view saw.** Unseen faces keep their flat source colour and the receipt carries the area. A second ring aimed at the vault, the floor and under the table moved seen area from 355 to 448 m2.
-4. **Compare generated views on shared surface points.** Whole-picture means compare different content. The exposure story from v1 did not survive this test (failure mode 240).
+4. **Compare generated views on shared surface points.** Whole-picture means compare different content. The exposure story from v1 did not survive this test (failure mode 253).
 5. **Measure the floor first.** Two views from the same call already disagree about a surface point (12.4 dB in the reading room, 16.3 dB in the scriptorium). No colour match can beat that floor.
-6. **A physics drop is a better collider test than coverage.** Coverage said the boxes hold the surfaces; the drop said one probe in five rests 100 mm high (failure mode 244).
+6. **A physics drop is a better collider test than coverage.** Coverage said the boxes hold the surfaces; the drop said one probe in five rests 100 mm high (failure mode 257).
 7. **A path tracer is a judge of structure, not of looks.** Cycles and Atlas are 15.9 dB apart as pictures by design. The object-index pass gives outlines and per-object regions, which is what the judge should score.
-8. **Size features for the depth map the model sees.** Steps of 0.12 m rise vanished into ramps; 0.40 m steps survived. One single-frame probe costs 40 credits and settles it (failure mode 245).
+8. **Size features for the depth map the model sees.** Steps of 0.12 m rise vanished into ramps; 0.40 m steps survived. One single-frame probe costs 40 credits and settles it (failure mode 258).
 9. **One spender, one ledger, named reservations.** Three studies shared one account in one evening; each sent a kit, one client ran every call, and the ledger carried the hard stop and the reservations.
 
 ## Blender 5.3 notes (all C on this rig)
@@ -47,7 +47,7 @@ v1 sent boxes. v2 sends a Blender scene (374 mesh objects, a vaulted scriptorium
 
 ## Bridge fix in this change
 
-`UnlitMaterial.emissiveTexture` is now read by the shared reader and drawn by the three.js body (failure mode 241). Bridge tooling tests: 14 of 14.
+`UnlitMaterial.emissiveTexture` is now read by the shared reader and drawn by the three.js body (failure mode 254). Bridge tooling tests: 14 of 14.
 
 ## Not proven
 
@@ -57,4 +57,4 @@ No refined splat of the Blender scene. The Atlas mesh was not repaired. No real 
 
 Atlas outputs are shown with World Labs credit, for personal non-commercial use, with a takedown notice (the demo's DATA-ATTRIBUTION.md). The numbers measure this bridge's round trip, not Atlas.
 
-New failure modes 240 to 245 in [LOOM-v1.md](LOOM-v1.md).
+New failure modes 253 to 258 in [LOOM-v1.md](LOOM-v1.md).
