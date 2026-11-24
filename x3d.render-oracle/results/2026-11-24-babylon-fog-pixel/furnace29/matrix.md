@@ -11,7 +11,7 @@
 | ctrl_noenv_m0_r1_c0.5 | 0.08 AGREE | 0.447 AGREE | 7.798 NEAR | 2.99 NEAR | 3.042 NEAR | 3.58 NEAR | 0.08 AGREE | 12.438 FAR | 4.485 NEAR | 4.785 NEAR | 5.135 NEAR | 7.534 NEAR | 2.988 NEAR | 3.04 NEAR | 3.442 NEAR | 7.569 NEAR | 7.416 NEAR | 5.552 NEAR | 1.476 AGREE | 2.339 NEAR | 2.313 NEAR | 0 / 0 / 0 / 0 / 0 / 0 / 0 |
 | ctrl_noenv_m1_r0.5_c1 | 0.08 AGREE | 0.447 AGREE | 7.798 NEAR | 2.99 NEAR | 3.042 NEAR | 3.58 NEAR | 0.08 AGREE | 12.438 FAR | 4.485 NEAR | 4.785 NEAR | 5.135 NEAR | 7.534 NEAR | 2.988 NEAR | 3.04 NEAR | 3.442 NEAR | 7.569 NEAR | 7.416 NEAR | 5.552 NEAR | 1.476 AGREE | 2.339 NEAR | 2.313 NEAR | 0 / 0 / 0 / 0 / 0 / 0 / 0 |
 | ctrl_noenv_m1_r0_c1 | 0.08 AGREE | 0.447 AGREE | 7.798 NEAR | 2.99 NEAR | 3.042 NEAR | 3.58 NEAR | 0.08 AGREE | 12.438 FAR | 4.485 NEAR | 4.785 NEAR | 5.135 NEAR | 7.534 NEAR | 2.988 NEAR | 3.04 NEAR | 3.442 NEAR | 7.569 NEAR | 7.416 NEAR | 5.552 NEAR | 1.476 AGREE | 2.339 NEAR | 2.313 NEAR | 0 / 0 / 0 / 0 / 0 / 0 / 0 |
-| exp2_a_unlit_default | 124.931 FAR | 127.224 FAR | 124.472 FAR | 125.969 FAR | 125.915 FAR | 127.014 FAR | 3.116 NEAR | 0.478 AGREE | 1.963 AGREE | 1.969 AGREE | 2.201 NEAR | 2.658 NEAR | 1.505 AGREE | 1.531 AGREE | 1.729 AGREE | 1.504 AGREE | 1.511 AGREE | 1.743 AGREE | 0.74 AGREE | 1.174 AGREE | 1.16 AGREE | 128 / 255 / 127 / 128 / 128 / 128 / 128 |
+| exp2_a_unlit_default | 3.058 NEAR | 0.224 AGREE | 2.599 NEAR | 1.505 AGREE | 1.531 AGREE | 1.797 AGREE | 3.116 NEAR | 0.478 AGREE | 1.963 AGREE | 1.969 AGREE | 2.201 NEAR | 2.658 NEAR | 1.505 AGREE | 1.531 AGREE | 1.729 AGREE | 1.504 AGREE | 1.511 AGREE | 1.743 AGREE | 0.74 AGREE | 1.174 AGREE | 1.16 AGREE | 128 / 128 / 127 / 128 / 128 / 128 / 128 |
 | exp2_b_legacy_default | 3.058 NEAR | 0.224 AGREE | 2.599 NEAR | 1.505 AGREE | 1.531 AGREE | 1.797 AGREE | 3.116 NEAR | 0.478 AGREE | 1.963 AGREE | 1.969 AGREE | 2.201 NEAR | 2.658 NEAR | 1.505 AGREE | 1.531 AGREE | 1.729 AGREE | 1.504 AGREE | 1.511 AGREE | 1.743 AGREE | 0.74 AGREE | 1.174 AGREE | 1.16 AGREE | 128 / 128 / 127 / 128 / 128 / 128 / 128 |
 | exp2_c_physical_default | 5.196 NEAR | 0.326 AGREE | 5.628 NEAR | 2.187 NEAR | 4.151 NEAR | 2.611 NEAR | 5.293 NEAR | 0.459 AGREE | 3.596 NEAR | 2.771 NEAR | 4.033 NEAR | 5.726 NEAR | 2.187 NEAR | 4.155 NEAR | 2.512 NEAR | 4.027 NEAR | 2.341 NEAR | 4.467 NEAR | 3.011 NEAR | 1.705 AGREE | 3.635 NEAR | 186 / 186 / 187 / 186 / 188 / 186 / 188 |
 | furnace_m0_r0.5_c0.5 | 191.542 FAR | 81.325 FAR | 180.796 FAR | 1.769 AGREE | 1.643 AGREE | 0.939 AGREE | 110.106 FAR | 12.438 FAR | 191.178 FAR | 192.805 FAR | 192.39 FAR | 104.864 FAR | 78.887 FAR | 80.312 FAR | 81.978 FAR | 178.916 FAR | 180.395 FAR | 181.36 FAR | 1.835 AGREE | 2.357 NEAR | 2.157 NEAR | 189 / 189 / 0 / 122 / 0 / 189 / 190 |
@@ -34,12 +34,12 @@
 
 | pair | AGREE | NEAR | FAR |
 |---|--:|--:|--:|
-| babylon|blender | 12 | 2 | 15 |
-| babylon|castle | 8 | 0 | 21 |
-| babylon|cycles | 0 | 8 | 21 |
-| babylon|three | 15 | 13 | 1 |
-| babylon|wgpu | 8 | 20 | 1 |
-| babylon|xite | 17 | 11 | 1 |
+| babylon|blender | 12 | 3 | 14 |
+| babylon|castle | 9 | 0 | 20 |
+| babylon|cycles | 0 | 9 | 20 |
+| babylon|three | 16 | 13 | 0 |
+| babylon|wgpu | 9 | 20 | 0 |
+| babylon|xite | 18 | 11 | 0 |
 | blender|castle | 9 | 3 | 17 |
 | blender|cycles | 3 | 0 | 26 |
 | blender|three | 8 | 7 | 14 |

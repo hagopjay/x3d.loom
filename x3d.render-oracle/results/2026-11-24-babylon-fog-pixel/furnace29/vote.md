@@ -11,7 +11,7 @@
 | ctrl_noenv_m0_r1_c0.5 | 3.02 | 4.63 | 3.01 | 7.55 | 2.99 | 3.04 | 3.51 |
 | ctrl_noenv_m1_r0.5_c1 | 3.02 | 4.63 | 3.01 | 7.55 | 2.99 | 3.04 | 3.51 |
 | ctrl_noenv_m1_r0_c1 | 3.02 | 4.63 | 3.01 | 7.55 | 2.99 | 3.04 | 3.51 |
-| exp2_a_unlit_default | **125.94** | 2.08 | 2.19 | 1.63 | 1.5 | 1.52 | 1.74 |
+| exp2_a_unlit_default | 1.66 | 2.08 | 1.63 | 1.63 | 1.5 | 1.52 | 1.74 |
 | exp2_b_legacy_default | 1.66 | 2.08 | 1.63 | 1.63 | 1.5 | 1.52 | 1.74 |
 | exp2_c_physical_default | 3.38 | 3.81 | 3.33 | 4.25 | 2.6 | 3.32 | 3.12 |
 | furnace_m0_r0.5_c0.5 | 41.55 | **191.36** | 81.65 | 179.66 | 40.62 | 41.23 | 42.17 |
@@ -32,4 +32,4 @@
 | half_m1_r0_c1 | 89.22 | **186.52** | 183.41 | 175.28 | 88.69 | 89.86 | 89.01 |
 | half_m1_r1_c1 | 62.02 | **186.52** | 119.99 | 175.28 | 60.94 | 62.08 | 61.47 |
 
-| outlier count (scenes) | babylon: 1 | blender: 14 | castle: 1 | cycles: 5 | three: 0 | wgpu: 0 | xite: 0 |
+| outlier count (scenes) | babylon: 0 | blender: 14 | castle: 1 | cycles: 5 | three: 0 | wgpu: 0 | xite: 0 |

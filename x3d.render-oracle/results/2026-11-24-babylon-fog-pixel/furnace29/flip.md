@@ -1,4 +1,4 @@
-# FLIP mean vs X_ITE (LDR, 67 ppd, flip-evaluator ?); Spearman rank agreement with MAE_obj over 174 (scene, engine) cells: 0.784
+# FLIP mean vs X_ITE (LDR, 67 ppd, flip-evaluator ?); Spearman rank agreement with MAE_obj over 174 (scene, engine) cells: 0.785
 
 | scene | babylon | blender | castle | cycles | three | wgpu |
 |---|--:|--:|--:|--:|--:|--:|
@@ -11,7 +11,7 @@
 | ctrl_noenv_m0_r1_c0.5 | 0.011 | 0.741 | 0.011 | 0.020 | 0.013 | 0.012 |
 | ctrl_noenv_m1_r0.5_c1 | 0.011 | 0.741 | 0.011 | 0.020 | 0.013 | 0.012 |
 | ctrl_noenv_m1_r0_c1 | 0.011 | 0.741 | 0.011 | 0.020 | 0.013 | 0.012 |
-| exp2_a_unlit_default | 0.279 | 0.014 | 0.009 | 0.007 | 0.008 | 0.007 |
+| exp2_a_unlit_default | 0.010 | 0.014 | 0.009 | 0.007 | 0.008 | 0.007 |
 | exp2_b_legacy_default | 0.010 | 0.014 | 0.009 | 0.007 | 0.008 | 0.007 |
 | exp2_c_physical_default | 0.015 | 0.023 | 0.013 | 0.022 | 0.011 | 0.024 |
 | furnace_m0_r0.5_c0.5 | 0.007 | 0.969 | 0.202 | 0.281 | 0.017 | 0.017 |

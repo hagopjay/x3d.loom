@@ -722,6 +722,37 @@ R.bridge.headlight = (body) => {
   };
 }
 
+/* UnlitMaterial without a texture (19775-1 4.0 17.2.2): no lighting, the shape is drawn in emissiveColor (default 1 1 1) with 1 - transparency. The stock body looked at the Material type for Material and
+   PhysicalMaterial only, so an UnlitMaterial became "no Material": white, whatever its colour (oracle: exp2_a_unlit_default, emissive 0.5 drew 255 where X_ITE draws 128). A texture on an UnlitMaterial
+   keeps the stock textured-unlit look (the picture alone; the emissiveColor tint of the picture is not applied). */
+{
+  const _mf = Body.prototype.materialsFor;
+  Body.prototype.materialsFor = function (shape, g, app) {
+    const mat = app && app.f.material;
+    if (mat && mat.type === 'UnlitMaterial' && !(app.f.texture || mat.f.emissiveTexture) && !['Text', 'IndexedLineSet'].includes(g.type)) return [{ kind: 'unlitm', mat, deps: [mat] }];
+    return _mf.call(this, shape, g, app);
+  };
+  const _mm = Body.prototype.makeMaterial;
+  Body.prototype.makeMaterial = function (shape, g, spec, mesh) {
+    if (spec.kind !== 'unlitm') return _mm.call(this, shape, g, spec, mesh);
+    const m = new BABYLON.StandardMaterial('unlitm-' + (spec.mat.def || shape.id), this.scene);
+    let gd = null; try { gd = this.geometryData(g); } catch (e) { /* a primitive has no vertex data */ }
+    m.disableLighting = true; m.diffuseColor.set(0, 0, 0); m.specularColor.set(0, 0, 0);
+    m.backFaceCulling = g.f.solid === true; m.twoSidedLighting = this.opts.twoSided !== false;
+    m.sideOrientation = gd && gd.pos ? BABYLON.Material.CounterClockWiseSideOrientation : BABYLON.Material.ClockWiseSideOrientation;
+    BR.unlit(m, spec.mat); return m;
+  };
+  BR.unlit = (m, mat) => {
+    const e = mat.f.emissiveColor || [1, 1, 1]; m.emissiveColor.set(e[0], e[1], e[2]); m.alpha = 1 - (mat.f.transparency || 0);
+    if (m.alpha < 0.999) { m.transparencyMode = BABYLON.Material.MATERIAL_ALPHABLEND; m.disableDepthWrite = true; }
+  };
+  const _ch = Body.prototype.changed;
+  Body.prototype.changed = function (node, field) {
+    if (node.type === 'UnlitMaterial') { for (const mesh of this.meshesOf.get(node.id) || []) if (mesh.material instanceof BABYLON.StandardMaterial && mesh.material.disableLighting) BR.unlit(mesh.material, node); return; }
+    return _ch.call(this, node, field);
+  };
+}
+
 /* The first Viewpoint of a world is bound at load (19775-1 23.4.1: the first Viewpoint node found in the file). The stock body kept its default pose (0 0 10) and bound nothing until a script or a
    ViewpointGroup asked, so a world whose Viewpoint is at z = 12 was drawn from z = 10. An OrthoViewpoint that comes first is bound by its own code above. R.bridge.bindFirstViewpoint = false keeps the
    older behaviour for a page built against it. */

@@ -74,3 +74,7 @@ Widen to six engines (Babylon via x3d.webgpu, Castle via x3d.castle castle-rende
 * A feature built for the narrow case (LocalFog) did not work for the common case (Fog): the code that ran every frame was started by the narrow case's registration. Test the plain node as well as its variants. The oracle's lit_fog_linear scene is a plain `<Fog>`.
 * A patch that changes the text of a shader chunk is not a patch that changes the picture. Check the picture (range 1 black) before building on the patch. Here the first patch went into the wrong function (the PBR one; the StandardMaterial has the law inline), found by setting `range` from the page and seeing the stock law answer.
 * Set the value from the page (the PRE hook) to ask the shader what it is really running; it takes a minute and tells you which text the compiled shader holds.
+
+## Update 24 Nov: Babylon UnlitMaterial
+* A node type the stock body never named is drawn as "no node": the UnlitMaterial became a white default. A one-line scene (emissive 0.5, nothing else) shows it; the furnace set's control scenes (`exp2_*`) are exactly these defaults. Keep default-appearance scenes in every set.
+* Babylon's journey through this lane, by cause: winding of PBR on primitives (black PBR), a Fog that never started, a texture type never read, a falloff law in the wrong function, a material type never named. Five causes, none of them "Babylon renders differently": every one a missing or misplaced line in the bridge, found by comparing against an independent engine on a fixed rig.
