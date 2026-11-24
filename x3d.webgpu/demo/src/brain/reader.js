@@ -374,6 +374,7 @@ Object.assign(DEFS, {
 });
 Object.assign(DEFS.PhysicalMaterial, { baseTexture: ['SFNode', IO, null], emissiveTexture: ['SFNode', IO, null], normalTexture: ['SFNode', IO, null],
   metallicRoughnessTexture: ['SFNode', IO, null], occlusionTexture: ['SFNode', IO, null] });
+Object.assign(DEFS.UnlitMaterial, { emissiveTexture: ['SFNode', IO, null] });   // 19775-1 4.0 12.4.9: the unlit colour is emissiveColor times this texture
 Object.assign(DEFS.Appearance, { texture: ['SFNode', IO, null], lineProperties: ['SFNode', IO, null], textureTransform: ['SFNode', IO, null] });
 Object.assign(DEFS.IndexedTriangleSet, { texCoord: ['SFNode', IO, null] });
 Object.assign(DEFS.IndexedFaceSet, { texCoord: ['SFNode', IO, null] });
