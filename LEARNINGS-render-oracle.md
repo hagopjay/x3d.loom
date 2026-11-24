@@ -53,3 +53,8 @@ Widen to six engines (Babylon via x3d.webgpu, Castle via x3d.castle castle-rende
 * **Lesson: a fit on one scene family is a hypothesis, not a fix.** Check it on a family it was not fitted on; that is why the lit set exists.
 * **Lesson: four engines agreeing is a specification.** Probing the odd one out with an intensity x metallic x roughness grid pinned the formula in one run.
 * Open: rough metals (three.js 80 vs X_ITE 59), likely multiple scattering.
+
+## Update 24 Nov: Cycles as seventh engine
+* A physically based referee does not settle a non-physical engine: Cycles vs X_ITE on legacy Material is 12 to 14 FAR and that is the engine, not an error. Use Cycles only on PhysicalMaterial scenes (lit_physical_direct: X_ITE 4.8, wgpu 3.3, three.js 9.0).
+* A reference with a missing light is a black picture, not a measurement: 26 of 29 furnace probes lit by an EnvironmentLight the add-on drops. Check that the reference draws the thing before scoring it; the held-out judge caught it (20 of 29 outside).
+* Check lists for the next reference: does it draw the light source; is the camera the scene's own; is the output the same size; does a headlit control pass.

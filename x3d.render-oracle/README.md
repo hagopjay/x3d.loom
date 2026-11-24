@@ -161,6 +161,19 @@ Bridge change (`x3d.threejs/bridge/src/body-three.js`, `xiteGamma22`): a Physica
 
 Corrections: Result 5's "direct lights are not curved" is withdrawn (its fixture was compared with the wrong light scale), and the "three.js is the lone outlier on the headlit PhysicalMaterial" finding of Results 6 and 8 is resolved. On `lit_physical_direct` the outlier is now Babylon (both objects black).
 
+## Result 10: Cycles as a seventh engine (24 Nov 2026, from the Atlas bridge thread)
+The Atlas bridge thread rendered the 41 scenes (12 lit + 29 conformance) with `x3d.castle tools/cycles_reference.py`: Blender 5.3.0 bpy, Cycles CPU, 128x128, 64 spp, no denoise, seed 0, Standard view transform, the X3D's own lights as ideal points, Background as camera-ray colour only, 12 bounces (`cycles-receipt.json`). Different path from the `blender` engine (same add-on, but ours uses the importer's own lights and materials). Results: `results/2026-11-24-seven-engines/`.
+
+**Lit 12 (Confirmed numbers, referee role Suspected):**
+- cycles|xite is AGREE 0, NEAR 3, FAR 9 (`lit12/matrix.md`); Cycles is the outlier in 1 of 12 scenes (`lit_spot_cone`, 41.4), `blender` in 5 (the importer lights are the odd ones), three.js and X_ITE in 0.
+- `lit_physical_direct`, the one scene where Cycles is a true referee (PBR, a single direct light): Cycles vs X_ITE **4.8 NEAR**, vs x3d.wgpu **3.3 NEAR**, vs three.js **9.0 FAR**. So after the Result 9 fix three.js is still the engine farthest from the physical answer (and Babylon draws it black, 58.9 median), but X_ITE, wgpu, Castle and Blender sit within 6 of it.
+- Legacy Material scenes: Cycles disagrees with X_ITE by 12 to 14 on `lit_dir_diffuse_colour` and `lit_dir_specular` (FAR). That is expected, not a defect: Cycles is physical; X_ITE's Phong/Blinn is not. Cycles is not a referee for legacy Material, and the FAR is recorded, not explained away.
+- `lit_emissive_ambient`: Cycles 23.6 from X_ITE and 8.9 from three.js. The Atlas thread saw it nearly empty (max pixel 128,90,41); the emissive or the ambient term may be lost in import (Suspected, not checked).
+
+**Furnace 29: not scored for Cycles.** 26 of 29 probes are an EnvironmentLight: the add-on drops it and the tool's world emits nothing, so Cycles draws a black sphere (20 of 29 outside the X_ITE record on the held-out judge; that is a missing world, not a Cycles result). Only the 3 headlit `ctrl_noenv_*` probes are meaningful: Cycles vs X_ITE 5.6 on `ctrl_noenv_m0_r1_c0.5`, `exp2_c_physical_default` 4.5. Building the EnvironmentLight as a Cycles world is the next step for a usable furnace reference; not done.
+
+Per the Cycles receipt, add-on commit `0eb4809` (v2.7.4); script commit `5b13f70`. No determinism repeat for Cycles (seed 0, CPU, 64 spp; not yet re-rendered).
+
 ## Limits (say them before anyone else does)
 * The 29 scenes collapse to **10 distinct X_ITE pictures, 10 wgpu, 2 three.js**: they are furnace probes, built to test one thing. They cannot reveal geometry, texture or light-model differences. Widening the scene set is the next step, not a detail.
 * Software rendering only (SwiftShader both sides). No real-GPU claim.
