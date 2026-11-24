@@ -1,0 +1,8 @@
+{"what":"G+R+V v2, exploratory (designed after seeing held-out pictures of v1, so not a confirmatory test)",
+ "changes":["carve only inside the bounding box of X3D surface seen by sent cameras","fill splats coloured from the Atlas Chisel picture of the sent camera that sees the point, sized to the pixel footprint","rig: three r187 + Spark 2.4.0, Chromium SwiftShader; same 6 held-out views"],
+ "psnr_vs_G_db":{"cross-hall-12":[15.2,29.9],"cross-hall-16":[19.4,22.3],"stairwell-14":[13.2,17.8],"stairwell-19":[23.1,22.4],"courtyard-18":[5.6,7.6],"courtyard-20":[14.3,18.3]},
+ "psnr_note":"[v1, v2]; distance from the unrefined picture, not quality against a reference",
+ "geometry_held_out":{"cross-hall":{"err_mm":[26.4,0.0],"holes_pct":[32.5,10.2]},"stairwell":{"err_mm":[31.7,16.6],"holes_pct":[12.9,6.2]},"courtyard":{"err_mm":[38.5,0.4],"holes_pct":[23.8,8.9]}},
+ "geometry_note":"v2 median error near 0 means the copied X3D fill dominates the sample; it measures the fill, not the generator",
+ "by_eye":["interiors: speckle gone, cross-hall nearly matches G","courtyard: sky still carved (Atlas places sky splats inside the X3D box), statue becomes a white blob","stairwell: railing gets floor-coloured blocks (fill coloured from a view where the railing occludes)"],
+ "verdict":"v2 narrows the picture gap on interiors but G+R+V still does not beat G on pictures in any view. Claim stays: supported on geometry, not on appearance."}
