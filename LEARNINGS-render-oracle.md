@@ -63,3 +63,9 @@ Widen to six engines (Babylon via x3d.webgpu, Castle via x3d.castle castle-rende
 * Two reported faults (black metals under EnvironmentLight, black PBR under DirectionalLight) were one bug: PBR side orientation wrong on Babylon's own primitives. The first was graded "cause Suspected: specular IBL path"; the experiment showed that guess was wrong (Confirmed now). Babylon vs X_ITE furnace 2/13/14 to 17/11/1, held-out 21 to 2 of 29 outside, lit_physical_direct 59.5 to 1.5.
 * **Lesson: when the same engine is wrong in two scene families, look for the shared lower layer (geometry orientation) before the feature layer (lighting).** The Phong path of the same body already handled the winding; the PBR path never did.
 * **Lesson: change one property at a time in the page, not the source.** Eight one-line overrides injected before the screenshot (`PRE=...`) found it in about ten minutes; no rebuild.
+
+## Update 24 Nov: wgpu fog and PixelTexture, three.js ambient and attenuation
+* A renderer that ignores a node is easy to see; a renderer that gets a node right on one face and wrong on another is not. wgpu's Box mapped the picture with an arbitrary axis pair per face: the PixelTexture scene exposed it because the texture has no symmetry (a 4x4 asymmetric image). Use asymmetric test pictures. Tried all four flips first; none fit, so the fault was a rotation, not a flip.
+* A fit that keeps one of two terms (three.js attenuation) fails silently on scenes with both: the scene used a1 = 0.1 and a2 = 0.05. Pack both into the one float the engine gives you rather than choosing.
+* Withdrawn: the "multiple scattering" cause for rough metals (Results 9 and 11). three.js applies it to indirect light only; the direct-light probe stays 80 vs 59 with cause unknown.
+* x3d.wgpu CI runs `cargo fmt --check`: run it before pushing (it failed PR #9 once).

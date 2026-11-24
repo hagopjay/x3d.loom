@@ -189,6 +189,18 @@ Babylon vs X_ITE, before then after the fix (same rig, Babylon.js 9.32.0, bridge
 
 The one FAR left on the furnace set is `exp2_a_unlit_default` (127: Babylon draws a default-appearance sphere differently from X_ITE; pre-existing, not touched). In the vote Babylon is the outlier in 1 furnace scene and 1 lit scene (was 2). Seven-engine run with Cycles included in `furnace29/` and `lit12/`.
 
+## Result 12: x3d.wgpu fog and PixelTexture, three.js ambient and attenuation (24 Nov 2026)
+Four of the gaps listed since Result 4 closed. Same rig; all numbers are object-pixel MAE against X_ITE 16.6.0 unless said otherwise.
+
+| gap | engine | before | after | fix |
+|---|---|---|---|---|
+| `lit_fog_linear` (Fog ignored) | x3d.wgpu | 70.5 FAR | **0.7 AGREE** | Fog node in parser, uniforms and shader (x3d.wgpu #9) |
+| `lit_texture_pixel` (PixelTexture unsupported) | x3d.wgpu | 82.8 FAR | **0.5 AGREE** | PixelTexture to in-memory PNG, nearest-sampled; **and** Box faces now map the picture upright (they were an arbitrary axis pair, so a face came out rotated 90 degrees: found by trying the four flips and seeing none fit) |
+| `lit_emissive_ambient` (material ambientIntensity fixed at 0.2) | three.js | 15.9 FAR | **0.25 AGREE** | the part of the material's own ambientIntensity beyond 0.2 goes into its emissive term (`refreshPhong`, `refreshAmbient` in `body-three.js`) |
+| `lit_point_attenuation` (only one of a1 and a2 kept) | three.js | 10.4 FAR | **0.40 AGREE** | `decay` packs a1/a0 and a2/a0 in thousandths (`a1q + 4096 a2q`), the patched `getDistanceAttenuation` unpacks and uses 1 / (1 + a1 d + a2 d^2) |
+
+Lit 12 against X_ITE (AGREE/NEAR/FAR): x3d.wgpu 9/1/2 to **11/1/0**; three.js 8/2/2 to **10/2/0**. Furnace 29 unchanged for both (wgpu 10/19/0, three.js 20/9/0). Three.js bridge fixtures 135 of 135 pass; x3d.wgpu `fog_and_pixel_texture` tests pass (its three golden mismatches 03, 04, 06 are identical before and after: the goldens were blessed on llvmpipe, this rig is SwiftShader). Left: Babylon has no fog and draws PixelTexture off (3 FAR on lit 12), rough metals (three.js 80 vs 59, Babylon 83 vs 59), Castle EnvironmentLight level, Blender importer ignoring Background and headlight, and Cycles has no furnace world. Direct rough-metal light is not the multiple-scattering term (three.js applies multiple scattering to indirect light only), so that Suspected cause from Result 9 is withdrawn; cause unknown.
+
 ## Limits (say them before anyone else does)
 * The 29 scenes collapse to **10 distinct X_ITE pictures, 10 wgpu, 2 three.js**: they are furnace probes, built to test one thing. They cannot reveal geometry, texture or light-model differences. Widening the scene set is the next step, not a detail.
 * Software rendering only (SwiftShader both sides). No real-GPU claim.
