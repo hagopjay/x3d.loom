@@ -18,6 +18,8 @@ Lane: the generate-refine-verify paper. Claim: a world model generates (World La
 
 Pre-registered thresholds (20% better than the best other arm on error and on holes) pass on 3 of 3 worlds, the stairwell only just (21%). n = 3: no significance claimed.
 
+**But the pictures got worse (C by eye, no reference metric).** Held-out renders (Spark 2.4.0, Chromium SwiftShader, 6 held-out cameras) of G against G+R+V: the fill pass scatters speckled 4 cm dots coloured from the nearest splat, and the carve pass deleted the courtyard sky, because the X3D has no sky and every sky splat counted as open air; the statue became a blob. PSNR between the arms 5.6 to 23.1 dB per view. So the pilot supports the claim on geometry only and fails it on appearance (FM 252).
+
 ## Lessons
 
 1. **Blind refinement is inert or harmful.** Gate every pass on a verify check (FM 247).
@@ -25,7 +27,8 @@ Pre-registered thresholds (20% better than the best other arm on error and on ho
 3. **Geometry cannot see meaning.** Atlas turned a statue's arms into a staff; every geometric check passed (FM 249).
 4. **Distance-based carving misses junk near surfaces.** Use X3D free-space volumes (FM 250).
 5. **Scaffold coverage drives fidelity.** 1 to 2% depth error when X3D fills the frame, 3.8% when it fills a tenth (FM 251).
-6. **The fill pass copies X3D shape.** Part of the G+R+V geometry gain is by construction; picture quality and a blind rating are the next tests before any strong claim.
+6. **A geometry-only gate is Goodhart's law.** It rewarded edits that wreck the picture. Every pass needs a picture gate too, carving must stay inside the volume the X3D encloses (never sky), and fill colour must come from the generated views (FM 252).
+7. **The fill pass copies X3D shape.** Part of the G+R+V geometry gain is by construction; picture quality and a blind rating are the next tests before any strong claim.
 
 ## Not done
 
