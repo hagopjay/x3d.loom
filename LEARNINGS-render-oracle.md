@@ -58,3 +58,8 @@ Widen to six engines (Babylon via x3d.webgpu, Castle via x3d.castle castle-rende
 * A physically based referee does not settle a non-physical engine: Cycles vs X_ITE on legacy Material is 12 to 14 FAR and that is the engine, not an error. Use Cycles only on PhysicalMaterial scenes (lit_physical_direct: X_ITE 4.8, wgpu 3.3, three.js 9.0).
 * A reference with a missing light is a black picture, not a measurement: 26 of 29 furnace probes lit by an EnvironmentLight the add-on drops. Check that the reference draws the thing before scoring it; the held-out judge caught it (20 of 29 outside).
 * Check lists for the next reference: does it draw the light source; is the camera the scene's own; is the output the same size; does a headlit control pass.
+
+## Update 24 Nov: Babylon black PhysicalMaterial (one cause for two symptoms)
+* Two reported faults (black metals under EnvironmentLight, black PBR under DirectionalLight) were one bug: PBR side orientation wrong on Babylon's own primitives. The first was graded "cause Suspected: specular IBL path"; the experiment showed that guess was wrong (Confirmed now). Babylon vs X_ITE furnace 2/13/14 to 17/11/1, held-out 21 to 2 of 29 outside, lit_physical_direct 59.5 to 1.5.
+* **Lesson: when the same engine is wrong in two scene families, look for the shared lower layer (geometry orientation) before the feature layer (lighting).** The Phong path of the same body already handled the winding; the PBR path never did.
+* **Lesson: change one property at a time in the page, not the source.** Eight one-line overrides injected before the screenshot (`PRE=...`) found it in about ten minutes; no rebuild.
