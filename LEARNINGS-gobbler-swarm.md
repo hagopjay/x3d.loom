@@ -62,3 +62,39 @@ Babylon body (shared device and buffer bound, 297 frames, C); against the real s
   apologising (C in the rig with `navigator.gpu` removed).
 
 Failure modes 260 to 265 in LOOM-v1.md section 8 come from this lane.
+
+## v3, the pipeline layer (24 Nov 2026)
+
+His ask, after seeing v2: "a light UI layer showing textual and small imagery and iconography ... signaling the pipeline
+is dynamic and progressing at hyper-speeds". x3d.demo `gobbler-gyroscope-webgpu/v3/` (PR 177). Same rig as above.
+
+### 7. A "live" event feed must be fed by real events
+
+The easy way to make a feed look busy is to invent lines at a plausible rate. v3 instead reads replicas #0 to #1,023
+back from the GPU with the counters (one extra 16 KB buffer copy per readback; the WebGL2 path takes the same replicas
+from the CPU twin) and diffs consecutive readbacks. Every line names a real replica, its flywheel and its real
+transition (C). The feed shows about 12 lines a second, weighted towards refusals, asks, admissions and holds, and its
+header says how many were seen and how many shown. A change is stamped somewhere between the two readbacks that bracket
+it, and the README says so. Because the GPU and JS twins are bit-identical, a sentinel's history can also be replayed on
+the CPU if anyone doubts a line.
+
+### 8. A speed-up claim must be measured, not nominal
+
+"x134" is true only when the machine steps 30 ticks a second. The clock advances by the ticks the swarm actually
+stepped, and the panel prints the measured factor next to the nominal one. In the software rig it read x2 to x18
+(C, shots); on a stall it reads x0. A hyper-speed display that keeps its nominal number on a slow machine is the same
+failure as a typed count.
+
+### 9. Smaller things
+
+- Rates computed from the last two counter samples read 0 on a slow rig: two samples can hold the same readback. The
+  window must reach back past the last sample that holds the same readback (C: rates 0 before, 300/s after).
+- An expected fallback logged with `console.error` looks like a crash to anyone reading the console; v3 logs the
+  no-adapter path as information (2 errors in v2, 0 in v3, same rig, C).
+- A README's hash table went stale when the model changed after the parity run: v2 lists hashes from an earlier build;
+  re-running its own parity page gives other hashes, still bit-identical on both sides (C). Re-run the receipt after
+  the last change, or print hashes from the test page into the README by script.
+- A stream whose backlog is picked at random shows times going backwards. Replace the backlog at each readback and pick
+  only among the next few in time order.
+
+Failure modes 266 to 269 come from v3.

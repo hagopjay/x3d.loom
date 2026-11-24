@@ -655,6 +655,10 @@ Each row is a trap someone paid for. The fix is the v1 rule; LEARNINGS-from-patc
 | 263 | Headless Chromium with SwiftShader loses the WebGPU device on the first swap-chain present, so a working page looks crashed in the test rig | Offscreen capture mode (render to texture, copy to buffer, paint a 2D canvas, paced on readback) and say in the receipt that shots came through it | [same demo, Chrome for Testing 158.0.8127.36, C; v1 fails the same way] |
 | 264 | `pass` used as a WGSL variable name fails the whole shader module | Treat WGSL reserved words as a lint rule; rename to `ok` | [same demo, `swarm/gpu.js`, C] |
 | 265 | A 'needs WebGPU' wall left the owner's own machine (UHD 620 blocklisted) with nothing to see | Ship a WebGL2 path driven by the same reference model, and hide the wall when it runs | [same demo, C in the rig with `navigator.gpu` removed] |
+| 266 | A dashboard's 'live' event feed was easiest to fake at a plausible rate, so nothing tied a line to a real agent | Read back a fixed sample of real agents with the counters, diff consecutive readbacks, and say seen vs shown | [x3d.demo `gobbler-gyroscope-webgpu/v3`, LEARNINGS-gobbler-swarm.md §7-9, C] |
+| 267 | A hyper-speed clock kept its nominal x134 on a machine stepping far fewer ticks | Drive the clock by ticks actually stepped and print the measured factor beside the nominal one | [x3d.demo `gobbler-gyroscope-webgpu/v3`, LEARNINGS-gobbler-swarm.md §7-9, C: x2 to x18 in the software rig] |
+| 268 | Rates from the last two counter samples read 0 when both held the same readback | Reach back past the last sample holding the same readback before dividing | [x3d.demo `gobbler-gyroscope-webgpu/v3`, LEARNINGS-gobbler-swarm.md §7-9, C] |
+| 269 | A README's parity hashes went stale when the model changed after the test run | Re-run receipts after the last change, or have the test page write the numbers the README quotes | [x3d.demo `gobbler-gyroscope-webgpu/v3`, LEARNINGS-gobbler-swarm.md §7-9, C: v2 hashes vs a re-run] |
 
 ---
 
