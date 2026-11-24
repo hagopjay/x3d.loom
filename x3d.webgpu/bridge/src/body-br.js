@@ -698,6 +698,61 @@ R.bridge.headlight = (body) => {
   };
 }
 
+/* PixelTexture (2D). The stock body reads a texture's url only, so a PixelTexture drew as nothing (white). Its image field is [width, height, components, pixel...] (one integer per pixel,
+   components 1 grey, 2 grey + alpha, 3 RGB, 4 RGBA, the first row at the bottom of the picture): a RawTexture with the nearest texel, as X_ITE draws it (sharp blocks). Found by the render oracle (lit_texture_pixel). */
+{
+  const _tex = Body.prototype.tex;
+  Body.prototype.tex = function (texNode) {
+    if (!texNode || texNode.type !== 'PixelTexture') return _tex.call(this, texNode);
+    const hit = this.texCache.get(texNode.id); if (hit) return hit;
+    const im = texNode.f.image || [], w = im[0], h = im[1], c = im[2];
+    if (!(w > 0 && h > 0 && c >= 1 && c <= 4) || im.length < 3 + w * h) return null;
+    const rgba = new Uint8Array(w * h * 4);
+    for (let i = 0; i < w * h; i++) {
+      const p = im[3 + i] >>> 0; let r, g, b, a = 255;
+      if (c === 1) r = g = b = p & 255; else if (c === 2) { r = g = b = (p >>> 8) & 255; a = p & 255; } else if (c === 3) { r = (p >>> 16) & 255; g = (p >>> 8) & 255; b = p & 255; } else { r = (p >>> 24) & 255; g = (p >>> 16) & 255; b = (p >>> 8) & 255; a = p & 255; }
+      rgba.set([r, g, b, a], i * 4);
+    }
+    const t = BABYLON.RawTexture.CreateRGBATexture(rgba, w, h, this.scene, false, true, BABYLON.Texture.NEAREST_SAMPLINGMODE);
+    t.hasAlpha = c === 2 || c === 4;
+    if (texNode.f.repeatS === false) t.wrapU = BABYLON.Texture.CLAMP_ADDRESSMODE; else t.wrapU = BABYLON.Texture.WRAP_ADDRESSMODE;
+    if (texNode.f.repeatT === false) t.wrapV = BABYLON.Texture.CLAMP_ADDRESSMODE; else t.wrapV = BABYLON.Texture.WRAP_ADDRESSMODE;
+    this.texCache.set(texNode.id, t);
+    return t;
+  };
+}
+
+/* UnlitMaterial without a texture (19775-1 4.0 17.2.2): no lighting, the shape is drawn in emissiveColor (default 1 1 1) with 1 - transparency. The stock body looked at the Material type for Material and
+   PhysicalMaterial only, so an UnlitMaterial became "no Material": white, whatever its colour (oracle: exp2_a_unlit_default, emissive 0.5 drew 255 where X_ITE draws 128). A texture on an UnlitMaterial
+   keeps the stock textured-unlit look (the picture alone; the emissiveColor tint of the picture is not applied). */
+{
+  const _mf = Body.prototype.materialsFor;
+  Body.prototype.materialsFor = function (shape, g, app) {
+    const mat = app && app.f.material;
+    if (mat && mat.type === 'UnlitMaterial' && !(app.f.texture || mat.f.emissiveTexture) && !['Text', 'IndexedLineSet'].includes(g.type)) return [{ kind: 'unlitm', mat, deps: [mat] }];
+    return _mf.call(this, shape, g, app);
+  };
+  const _mm = Body.prototype.makeMaterial;
+  Body.prototype.makeMaterial = function (shape, g, spec, mesh) {
+    if (spec.kind !== 'unlitm') return _mm.call(this, shape, g, spec, mesh);
+    const m = new BABYLON.StandardMaterial('unlitm-' + (spec.mat.def || shape.id), this.scene);
+    let gd = null; try { gd = this.geometryData(g); } catch (e) { /* a primitive has no vertex data */ }
+    m.disableLighting = true; m.diffuseColor.set(0, 0, 0); m.specularColor.set(0, 0, 0);
+    m.backFaceCulling = g.f.solid === true; m.twoSidedLighting = this.opts.twoSided !== false;
+    m.sideOrientation = gd && gd.pos ? BABYLON.Material.CounterClockWiseSideOrientation : BABYLON.Material.ClockWiseSideOrientation;
+    BR.unlit(m, spec.mat); return m;
+  };
+  BR.unlit = (m, mat) => {
+    const e = mat.f.emissiveColor || [1, 1, 1]; m.emissiveColor.set(e[0], e[1], e[2]); m.alpha = 1 - (mat.f.transparency || 0);
+    if (m.alpha < 0.999) { m.transparencyMode = BABYLON.Material.MATERIAL_ALPHABLEND; m.disableDepthWrite = true; }
+  };
+  const _ch = Body.prototype.changed;
+  Body.prototype.changed = function (node, field) {
+    if (node.type === 'UnlitMaterial') { for (const mesh of this.meshesOf.get(node.id) || []) if (mesh.material instanceof BABYLON.StandardMaterial && mesh.material.disableLighting) BR.unlit(mesh.material, node); return; }
+    return _ch.call(this, node, field);
+  };
+}
+
 /* The first Viewpoint of a world is bound at load (19775-1 23.4.1: the first Viewpoint node found in the file). The stock body kept its default pose (0 0 10) and bound nothing until a script or a
    ViewpointGroup asked, so a world whose Viewpoint is at z = 12 was drawn from z = 10. An OrthoViewpoint that comes first is bound by its own code above. R.bridge.bindFirstViewpoint = false keeps the
    older behaviour for a page built against it. */
@@ -705,6 +760,7 @@ R.bridge.headlight = (body) => {
   const _sw = Body.prototype.setWorld;
   Body.prototype.setWorld = function (...a) {
     const r = _sw.apply(this, a), w = this.world;
+    if (w && w.nodes.some((n) => n.type === 'Fog')) BR.fog.reg(this);   // a world with a Fog and no LocalFog never started the per-frame fog code: the Fog was read and never drawn (oracle: lit_fog_linear)
     if (R.bridge.bindFirstViewpoint !== false && w) { const first = w.nodes.find((n) => n.type === 'Viewpoint' || n.type === 'OrthoViewpoint'); if (first && first.type === 'Viewpoint' && !first.f.isBound) { this.started = false; this.bindViewpoint(first, true); } }
     return r;
   };

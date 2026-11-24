@@ -25,13 +25,13 @@ const T3 = (R.bridge.three = R.bridge.three || { build: {}, geometry: {}, change
 /* Three shader chunks replaced once, each with the X3D / X_ITE 16.6.0 formula it stands for. A replace that finds nothing throws, so a three.js upgrade that moves the text fails loudly here.
    1  point and spot radius: X3D has a hard edge (no light past radius) and no window function; three.js dims with 1 - (d / r)^4 squared.
    2  spot cone: X3D is full intensity inside beamWidth and a LINEAR ramp in the angle to nothing at cutOffAngle (17.4.4); three.js uses smoothstep over the cosines.
-   1b attenuation: three.js light falls as d^-decay. Here decay is read as the X3D polynomial normalised by a0: 0 = flat, b > 0 = 1 / (1 + b d^2), b < 0 = 1 / (1 + |b| d); the light intensity carries 1 / a0.
+   1b attenuation: three.js light falls as d^-decay. Here decay packs the X3D polynomial normalised by a0 (a1/a0 and a2/a0 in thousandths, a1q + 4096 a2q; 0 = flat): 1 / (1 + a1 d + a2 d^2); the light intensity carries 1 / a0.
    3  fog: X_ITE fog factor from the distance to the eye (not the view depth), LINEAR or EXPONENTIAL as in Fog2.glsl; FogExp2.density holds the visibility range. */
 let _patched = false;
 function patchThreeShaders() {
   if (_patched) return; _patched = true; const C = THREE.ShaderChunk;
   const sub = (name, from, to) => { if (!C[name].includes(from)) throw new Error('three.js shader chunk ' + name + ' changed; update patchThreeShaders in body-three.js'); C[name] = C[name].replace(from, to); };
-  sub('lights_pars_begin', 'float distanceFalloff = 1.0 / max( pow( lightDistance, decayExponent ), 0.01 );', 'float distanceFalloff = decayExponent == 0.0 ? 1.0 : ( decayExponent > 0.0 ? 1.0 / ( 1.0 + decayExponent * lightDistance * lightDistance ) : 1.0 / ( 1.0 - decayExponent * lightDistance ) );');
+  sub('lights_pars_begin', 'float distanceFalloff = 1.0 / max( pow( lightDistance, decayExponent ), 0.01 );', 'float a2q = floor( decayExponent / 4096.0 ); float a1q = decayExponent - a2q * 4096.0; float distanceFalloff = decayExponent == 0.0 ? 1.0 : 1.0 / ( 1.0 + 0.001 * ( a1q * lightDistance + a2q * lightDistance * lightDistance ) );');
   sub('lights_pars_begin', 'distanceFalloff *= pow2( saturate( 1.0 - pow4( lightDistance / cutoffDistance ) ) );', 'distanceFalloff *= step( lightDistance, cutoffDistance );');
   sub('lights_pars_begin', 'return smoothstep( coneCosine, penumbraCosine, angleCosine );', 'float aOut = acos( coneCosine ), aIn = acos( penumbraCosine ); return clamp( ( aOut - acos( clamp( angleCosine, -1.0, 1.0 ) ) ) / max( aOut - aIn, 1e-5 ), 0.0, 1.0 ) * step( coneCosine, angleCosine );');
   sub('fog_vertex', 'vFogDepth = - mvPosition.z;', 'vFogDepth = length( mvPosition.xyz );');
@@ -464,6 +464,9 @@ class Body {
   refreshPhong(m, mat) {
     const f = mat.f, vc = m.vertexColors; m.color.setRGB(vc ? 1 : f.diffuseColor[0], vc ? 1 : f.diffuseColor[1], vc ? 1 : f.diffuseColor[2]); m.emissive.setRGB(f.emissiveColor[0], f.emissiveColor[1], f.emissiveColor[2]);
     m.specular.setRGB(f.specularColor[0], f.specularColor[1], f.specularColor[2]); m.shininess = Math.max(f.shininess * 128 * (this.opts.shininessScale || 4), 1e-3);   // X_ITE evaluates Phong with the reflection vector; Blinn-Phong (three.js) needs about 4x the exponent for the same highlight width
+    const amb = this.ambientSum, k = (f.ambientIntensity === undefined ? 0.2 : f.ambientIntensity) - 0.2;   // the AmbientLight already holds 0.2: the rest of this material's own ambientIntensity goes into the emissive term
+    if (amb && k !== 0) m.emissive.r += k * amb[0] * m.color.r, m.emissive.g += k * amb[1] * m.color.g, m.emissive.b += k * amb[2] * m.color.b;
+    m.userData.x3dPhong = mat;
     m.opacity = 1 - f.transparency; m.transparent = m.opacity < 0.999; m.depthWrite = !m.transparent; m.needsUpdate = true;
   }
   refreshUnlit(m, mat) { const e = mat.f.emissiveColor || [1, 1, 1]; m.color.setRGB(e[0], e[1], e[2]); m.opacity = 1 - (mat.f.transparency || 0); m.transparent = m.opacity < 0.999; m.depthWrite = !m.transparent; m.needsUpdate = true; }
@@ -488,22 +491,22 @@ class Body {
       const d = new THREE.Vector3(...f.direction).normalize(); l.position.copy(d).multiplyScalar(-50); l.target.position.set(0, 0, 0); l.intensity = f.intensity * THREE_PI; return;
     }
     const a = f.attenuation || [1, 0, 0], loc = new THREE.Vector3(...f.location); l.position.copy(loc); l.distance = f.radius > 0 ? f.radius : 0;
-    // 19775-1 17.2.2.4: 1 / max(a0 + a1 d + a2 d^2, 1). Normalised by a0 the light keeps one of two shapes (patchShaders): 1 / (1 + b d^2) when a1 = 0, 1 / (1 + |b| d) when a2 = 0.
-    // Both terms at once have no counterpart: the quadratic form is fitted to agree at d = radius (or 10 without one), a logged difference.
+    // 19775-1 17.2.2.4: 1 / max(a0 + a1 d + a2 d^2, 1). Normalised by a0 (the intensity carries 1 / a0) both terms are kept: the one `decay` float packs a1/a0 and a2/a0 in thousandths,
+    // a1q + 4096 * a2q (the patched getDistanceAttenuation reads them back, 0 = flat); precision 0.001, range 4.095.
     const a0 = Math.max(a[0], 1e-6); l.intensity = f.intensity * THREE_PI / a0;
-    if (a[1] === 0 && a[2] === 0) l.decay = 0;
-    else if (a[1] === 0) l.decay = a[2] / a0;
-    else if (a[2] === 0) l.decay = -a[1] / a0;
-    else { const d = f.radius > 0 ? f.radius : 10; l.decay = Math.max((a[1] * d + a[2] * d * d) / a0 / (d * d), 1e-6); }
+    const q = (v) => Math.min(4095, Math.max(0, Math.round(v / a0 * 1000)));
+    l.decay = q(a[1]) + 4096 * q(a[2]);
     if (n.type === 'SpotLight') {
       const cut = Math.min(Math.PI / 2 - 1e-3, Math.max(f.cutOffAngle, 1e-3)), beam = Math.min(f.beamWidth, cut), d = new THREE.Vector3(...f.direction).normalize();
       l.angle = cut; l.penumbra = 1 - beam / cut; l.target.position.copy(loc).add(d);
     }
   }
-  refreshAmbient() {   // Ia * ambientIntensity(light) * material ambientIntensity (default 0.2) * diffuse; the AmbientLight multiplies by the diffuse colour, the 0.2 is folded in (gap: per material value)
+  refreshAmbient() {   // Ia * ambientIntensity(light) * material ambientIntensity (default 0.2) * diffuse; the AmbientLight multiplies by the diffuse colour, the 0.2 is folded in (a material's own value above or below 0.2 goes into its emissive term)
     this.lights = this.lights.filter((l) => l.parent); let r = 0, g = 0, b = 0;
     for (const l of this.lights) { const n = l.userData.node; if (n.f.on === false) continue; r += n.f.ambientIntensity * n.f.color[0]; g += n.f.ambientIntensity * n.f.color[1]; b += n.f.ambientIntensity * n.f.color[2]; }
     this.ambient.color.setRGB(r, g, b); this.ambient.intensity = 0.2 * THREE_PI;
+    const was = this.ambientSum; this.ambientSum = [r, g, b];
+    if (!was || was[0] !== r || was[1] !== g || was[2] !== b) this.scene.traverse((o) => { const m = o.material; if (m && m.userData && m.userData.x3dPhong && m.isMeshPhongMaterial) this.refreshPhong(m, m.userData.x3dPhong); });   // a material's ambientIntensity beyond 0.2 follows the lights' ambient
   }
   /* Fog: the first Fog node of the world. X_ITE 16.6.0 (Fog2.glsl): LINEAR  f = max(range - d, 0) / range, EXPONENTIAL  f = exp(-d / max(range - d, 0.001)), d = distance from the eye;
      colour = mix(fogColor, colour, f). three.js fog uses view depth and smoothstep, so patchShaders replaces both formulas; FogExp2.density carries the range. */

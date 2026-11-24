@@ -63,3 +63,18 @@ Widen to six engines (Babylon via x3d.webgpu, Castle via x3d.castle castle-rende
 * Two reported faults (black metals under EnvironmentLight, black PBR under DirectionalLight) were one bug: PBR side orientation wrong on Babylon's own primitives. The first was graded "cause Suspected: specular IBL path"; the experiment showed that guess was wrong (Confirmed now). Babylon vs X_ITE furnace 2/13/14 to 17/11/1, held-out 21 to 2 of 29 outside, lit_physical_direct 59.5 to 1.5.
 * **Lesson: when the same engine is wrong in two scene families, look for the shared lower layer (geometry orientation) before the feature layer (lighting).** The Phong path of the same body already handled the winding; the PBR path never did.
 * **Lesson: change one property at a time in the page, not the source.** Eight one-line overrides injected before the screenshot (`PRE=...`) found it in about ten minutes; no rebuild.
+
+## Update 24 Nov: wgpu fog and PixelTexture, three.js ambient and attenuation
+* A renderer that ignores a node is easy to see; a renderer that gets a node right on one face and wrong on another is not. wgpu's Box mapped the picture with an arbitrary axis pair per face: the PixelTexture scene exposed it because the texture has no symmetry (a 4x4 asymmetric image). Use asymmetric test pictures. Tried all four flips first; none fit, so the fault was a rotation, not a flip.
+* A fit that keeps one of two terms (three.js attenuation) fails silently on scenes with both: the scene used a1 = 0.1 and a2 = 0.05. Pack both into the one float the engine gives you rather than choosing.
+* Withdrawn: the "multiple scattering" cause for rough metals (Results 9 and 11). three.js applies it to indirect light only; the direct-light probe stays 80 vs 59 with cause unknown.
+* x3d.wgpu CI runs `cargo fmt --check`: run it before pushing (it failed PR #9 once).
+
+## Update 24 Nov: Babylon fog and PixelTexture
+* A feature built for the narrow case (LocalFog) did not work for the common case (Fog): the code that ran every frame was started by the narrow case's registration. Test the plain node as well as its variants. The oracle's lit_fog_linear scene is a plain `<Fog>`.
+* A patch that changes the text of a shader chunk is not a patch that changes the picture. Check the picture (range 1 black) before building on the patch. Here the first patch went into the wrong function (the PBR one; the StandardMaterial has the law inline), found by setting `range` from the page and seeing the stock law answer.
+* Set the value from the page (the PRE hook) to ask the shader what it is really running; it takes a minute and tells you which text the compiled shader holds.
+
+## Update 24 Nov: Babylon UnlitMaterial
+* A node type the stock body never named is drawn as "no node": the UnlitMaterial became a white default. A one-line scene (emissive 0.5, nothing else) shows it; the furnace set's control scenes (`exp2_*`) are exactly these defaults. Keep default-appearance scenes in every set.
+* Babylon's journey through this lane, by cause: winding of PBR on primitives (black PBR), a Fog that never started, a texture type never read, a falloff law in the wrong function, a material type never named. Five causes, none of them "Babylon renders differently": every one a missing or misplaced line in the bridge, found by comparing against an independent engine on a fixed rig.
