@@ -144,6 +144,23 @@ Outlier count (vote): Blender 6 scenes, Babylon 3, Castle 1, x3d.wgpu 1, X_ITE 0
 
 Limits: 12 scenes, one geometry each, 128x128, software rendering, all engines at defaults; the vote and FLIP are not independent measurements; no real-GPU claim.
 
+## Result 9: the three.js PhysicalMaterial fixed (24 Nov 2026, "proceed at your discretion")
+The Result 5 model (curve only the environment light by 1/2.2) was incomplete: it fitted the furnace scenes and broke under a direct light (`lit_physical_direct`: three.js sphere 255,197,125 vs X_ITE 152,119,97). Twelve probes (`results/2026-11-24-three-physical-fixed/probes/`, a sphere facing one DirectionalLight, base 0.5, metallic 0/1, roughness 1/0.5/0.2, intensity 1/2; centre pixel in `probe_centre_pixels.json`) showed X_ITE, x3d.wgpu, Blender and Castle agree within 5 and three.js alone off. Fit on the rough dielectric: X_ITE reads **110 at intensity 1 and 150 at intensity 2 = 255 x (0.5 x I / PI)^(1/2.2)**. So X_ITE does **not** multiply a PhysicalMaterial's light by PI, and writes the whole result through a 1/2.2 power (Confirmed on the probes; 1/2.2 versus sRGB differs by 1 to 2 grey levels, the wgpu 188 vs X_ITE 186 gap). Material and UnlitMaterial are unaffected.
+
+Bridge change (`x3d.threejs/bridge/src/body-three.js`, `xiteGamma22`): a PhysicalMaterial divides its direct light terms by PI and curves the final colour; the IBL-only curve is gone. Same rig, three.js vs X_ITE:
+
+| set | before | after |
+|---|---|---|
+| furnace 29 (AGREE/NEAR/FAR) | 19 / 9 / 1 | **20 / 9 / 0**, held-out 29 of 29 |
+| lit 12 | 8 / 1 / 3 | **8 / 2 / 2** |
+| `lit_physical_direct` | 24.9 FAR | **4.9 NEAR** |
+| `exp2_c_physical_default` | 56.5 FAR | AGREE |
+| PhysicalMaterial fixture vs X_ITE | mad 5.33 | **mad 0.5** |
+
+**Open:** rough metals (metallic 1, roughness 1, base 0.5): X_ITE 59, three.js 80 (intensity 1); likely the multiple-scattering term (Suspected). Remaining three.js FAR in the lit set: `lit_emissive_ambient` (fixed material ambientIntensity 0.2) and `lit_point_attenuation` (fitted attenuation), both listed gaps. Bridge fixtures: 135 of 135 pass.
+
+Corrections: Result 5's "direct lights are not curved" is withdrawn (its fixture was compared with the wrong light scale), and the "three.js is the lone outlier on the headlit PhysicalMaterial" finding of Results 6 and 8 is resolved. On `lit_physical_direct` the outlier is now Babylon (both objects black).
+
 ## Limits (say them before anyone else does)
 * The 29 scenes collapse to **10 distinct X_ITE pictures, 10 wgpu, 2 three.js**: they are furnace probes, built to test one thing. They cannot reveal geometry, texture or light-model differences. Widening the scene set is the next step, not a detail.
 * Software rendering only (SwiftShader both sides). No real-GPU claim.
