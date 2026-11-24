@@ -79,7 +79,32 @@ saying which kind would hide that.
 - **One odd crash.** A helper script called `inspect.py` in the working directory shadows Python's own module and
   `import bpy` then aborts with "You called InitGoogleLogging() twice" (C, seen once; the cause is L).
 
-## 5. Not done
+## 5. Baking the light back into the X3D (Gobbler 6.2, same day)
 
-The Blender light is not baked back into the X3D, so the browser bird still has its own look. The lost light
+He answered "BOTH!" to bake or spin. x3d.gobbler `mascot/baked/`: the glass bird with its Cycles light stored as one
+colour per face (11 parts, 11,616 faces, 17 s to bake at 128 samples on 4 CPU cores) and drawn under `UnlitMaterial`.
+Pinned validator: pass. X_ITE 16.7.0 as vendored: no errors.
+
+- **A bake cannot hold glass.** What glass and metal show depends on where the eye is, and a bake has no eye. So
+  each part got a view-free stand-in for the bake only: a matt surface in its own colour, a share of light let
+  through from behind for the glass parts (a Translucent BSDF mixed in), a share of its own glow. The shares are in
+  the receipt, because they are a choice and not a measurement.
+- **Keep the generator, carry only the colours.** The scene was not exported back out of Blender. The bake writes
+  `bake.json` (one colour per face per named part) and the builder that made the scene writes it again with those
+  colours. That keeps DEF names, ROUTEs, Viewpoints and everything else the importer loses. It rests on one fact,
+  so the script checks it before writing: Blender's polygon order equals the X3D face order (0.0 m worst mismatch
+  over 11,616 faces, add-on 2.7.4 at `0eb4809`, C).
+- **Three tone rounds, all valid, two ugly.** Clipping each channel at 1 turned every lit gold face the same lemon
+  yellow. Pulling over-range colours toward grey turned them white. Rolling luminance off and then dimming a face
+  that is still over range, keeping hue and saturation, kept gold gold. The validator passed all three (C by eye
+  on browser frames).
+- **A dark floor is worth its faces.** 2,688 faces of floor hold the pool of light under the bird and are what
+  makes the browser frame read as lit; the price was 0.95 MB to 1.25 MB.
+- **The Loom skill's recipe was bent in two places, on purpose:** the bake is COMBINED with the glossy pass off,
+  not a white-lit DIFFUSE bake, because the stand-ins carry translucency and glow; and the exposure anchor is the
+  85th-percentile vane face, not the ground.
+
+## 6. Not done
+
+The lost light
 ROUTEs mean the Blender frame has still lights. Neither glTF nor USD file was opened in a second tool.
