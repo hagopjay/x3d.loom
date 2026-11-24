@@ -682,6 +682,22 @@ R.bridge.headlight = (body) => {
   };
 }
 
+/* PhysicalMaterial side orientation. The stock body gives every PBRMaterial CounterClockWise (right: data geometry is wound counter-clockwise), but Babylon's own Box, Sphere, Cylinder and Cone are wound
+   the other way in this right-handed scene (the Phong path already knows: refreshed above by geometryData). On a primitive the PBR material then treated the outside of a closed shape as its back:
+   solid shapes drew their inside, and the normal pointed away from the light, so a PhysicalMaterial under a DirectionalLight came out black (oracle probe: 0 of 255, X_ITE 110; with the orientation of the
+   Phong path 124). A primitive takes ClockWise, data geometry stays CounterClockWise. */
+{
+  const _mm = Body.prototype.makeMaterial;
+  Body.prototype.makeMaterial = function (shape, g, spec, mesh) {
+    const m = _mm.call(this, shape, g, spec, mesh);
+    if (spec.kind === 'pbr' && m instanceof BABYLON.PBRMaterial && this.opts.ccw !== false) {
+      let gd = null; try { gd = this.geometryData(g); } catch (e) { /* a primitive has no vertex data */ }
+      m.sideOrientation = gd && gd.pos ? BABYLON.Material.CounterClockWiseSideOrientation : BABYLON.Material.ClockWiseSideOrientation;
+    }
+    return m;
+  };
+}
+
 /* The first Viewpoint of a world is bound at load (19775-1 23.4.1: the first Viewpoint node found in the file). The stock body kept its default pose (0 0 10) and bound nothing until a script or a
    ViewpointGroup asked, so a world whose Viewpoint is at z = 12 was drawn from z = 10. An OrthoViewpoint that comes first is bound by its own code above. R.bridge.bindFirstViewpoint = false keeps the
    older behaviour for a page built against it. */

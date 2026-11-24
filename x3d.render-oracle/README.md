@@ -174,6 +174,21 @@ The Atlas bridge thread rendered the 41 scenes (12 lit + 29 conformance) with `x
 
 Per the Cycles receipt, add-on commit `0eb4809` (v2.7.4); script commit `5b13f70`. No determinism repeat for Cycles (seed 0, CPU, 64 spp; not yet re-rendered).
 
+## Result 11: the Babylon black PhysicalMaterial fixed (24 Nov 2026)
+Results 3 to 8 listed two Babylon faults as "cause unknown/Suspected": metals black under an EnvironmentLight, and both objects black under a DirectionalLight. They were **one bug**. The stock body (`x3d.webgpu/demo/src/brain/body.js`) gives every PBRMaterial `sideOrientation = CounterClockWise` (correct for data geometry), but Babylon's own Box, Sphere, Cylinder and Cone are wound the other way in this right-handed scene (the Phong path already handles that). On a primitive the PBR material therefore saw the outside as its back: with `solid` TRUE it drew the inside of the shape, whose normal points away from the light, so direct light gave 0. Confirmed by experiment on the 12 probes: `sideOrientation = ClockWise` alone turned 0 into 124 (X_ITE 124); `backFaceCulling = false` alone did nothing; the 1/1000 look of the light scale and the faint glow at intensity 1e6 were the specular term at grazing angles.
+
+Fix (`x3d.webgpu/bridge/src/body-br.js`, new block "PhysicalMaterial side orientation"): a PBRMaterial on a primitive takes ClockWise, on vertex data stays CounterClockWise. 12 probes now: all four dielectrics and the four smooth metals equal X_ITE (255, 124/124, 110/110, 169/169, 150/150); rough metals still brighter (83 vs 59, 114 vs 81, 211 vs 207; the same multiple-scattering gap as three.js, Suspected).
+
+Babylon vs X_ITE, before then after the fix (same rig, Babylon.js 9.32.0, bridge fixtures DirectionalLight, PointLight, SpotLight, TwoSidedMaterial still pass):
+
+| set | before (AGREE/NEAR/FAR) | after |
+|---|---|---|
+| furnace 29 | 2 / 13 / 14, held-out 21 of 29 outside | **17 / 11 / 1**, held-out 2 of 29 outside |
+| lit 12 | 6 / 2 / 4 | 7 / 2 / 3 |
+| `lit_physical_direct` | 59.5 FAR | **1.5 AGREE** |
+
+The one FAR left on the furnace set is `exp2_a_unlit_default` (127: Babylon draws a default-appearance sphere differently from X_ITE; pre-existing, not touched). In the vote Babylon is the outlier in 1 furnace scene and 1 lit scene (was 2). Seven-engine run with Cycles included in `furnace29/` and `lit12/`.
+
 ## Limits (say them before anyone else does)
 * The 29 scenes collapse to **10 distinct X_ITE pictures, 10 wgpu, 2 three.js**: they are furnace probes, built to test one thing. They cannot reveal geometry, texture or light-model differences. Widening the scene set is the next step, not a detail.
 * Software rendering only (SwiftShader both sides). No real-GPU claim.
