@@ -69,3 +69,7 @@ Widen to six engines (Babylon via x3d.webgpu, Castle via x3d.castle castle-rende
 * A fit that keeps one of two terms (three.js attenuation) fails silently on scenes with both: the scene used a1 = 0.1 and a2 = 0.05. Pack both into the one float the engine gives you rather than choosing.
 * Withdrawn: the "multiple scattering" cause for rough metals (Results 9 and 11). three.js applies it to indirect light only; the direct-light probe stays 80 vs 59 with cause unknown.
 * x3d.wgpu CI runs `cargo fmt --check`: run it before pushing (it failed PR #9 once).
+
+## Update 24 Nov: Babylon fog and PixelTexture
+* A feature built for the narrow case (LocalFog) did not work for the common case (Fog): the code that ran every frame was started by the narrow case's registration. Test the plain node as well as its variants. The oracle's lit_fog_linear scene is a plain `<Fog>`.
+* A patch that changes the text of a shader chunk is not a patch that changes the picture. Check the picture (range 1 black) before building on the patch.

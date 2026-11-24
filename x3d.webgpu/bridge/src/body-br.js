@@ -698,6 +698,30 @@ R.bridge.headlight = (body) => {
   };
 }
 
+/* PixelTexture (2D). The stock body reads a texture's url only, so a PixelTexture drew as nothing (white). Its image field is [width, height, components, pixel...] (one integer per pixel,
+   components 1 grey, 2 grey + alpha, 3 RGB, 4 RGBA, the first row at the bottom of the picture): a RawTexture with the nearest texel, as X_ITE draws it (sharp blocks). Found by the render oracle (lit_texture_pixel). */
+{
+  const _tex = Body.prototype.tex;
+  Body.prototype.tex = function (texNode) {
+    if (!texNode || texNode.type !== 'PixelTexture') return _tex.call(this, texNode);
+    const hit = this.texCache.get(texNode.id); if (hit) return hit;
+    const im = texNode.f.image || [], w = im[0], h = im[1], c = im[2];
+    if (!(w > 0 && h > 0 && c >= 1 && c <= 4) || im.length < 3 + w * h) return null;
+    const rgba = new Uint8Array(w * h * 4);
+    for (let i = 0; i < w * h; i++) {
+      const p = im[3 + i] >>> 0; let r, g, b, a = 255;
+      if (c === 1) r = g = b = p & 255; else if (c === 2) { r = g = b = (p >>> 8) & 255; a = p & 255; } else if (c === 3) { r = (p >>> 16) & 255; g = (p >>> 8) & 255; b = p & 255; } else { r = (p >>> 24) & 255; g = (p >>> 16) & 255; b = (p >>> 8) & 255; a = p & 255; }
+      rgba.set([r, g, b, a], i * 4);
+    }
+    const t = BABYLON.RawTexture.CreateRGBATexture(rgba, w, h, this.scene, false, true, BABYLON.Texture.NEAREST_SAMPLINGMODE);
+    t.hasAlpha = c === 2 || c === 4;
+    if (texNode.f.repeatS === false) t.wrapU = BABYLON.Texture.CLAMP_ADDRESSMODE; else t.wrapU = BABYLON.Texture.WRAP_ADDRESSMODE;
+    if (texNode.f.repeatT === false) t.wrapV = BABYLON.Texture.CLAMP_ADDRESSMODE; else t.wrapV = BABYLON.Texture.WRAP_ADDRESSMODE;
+    this.texCache.set(texNode.id, t);
+    return t;
+  };
+}
+
 /* The first Viewpoint of a world is bound at load (19775-1 23.4.1: the first Viewpoint node found in the file). The stock body kept its default pose (0 0 10) and bound nothing until a script or a
    ViewpointGroup asked, so a world whose Viewpoint is at z = 12 was drawn from z = 10. An OrthoViewpoint that comes first is bound by its own code above. R.bridge.bindFirstViewpoint = false keeps the
    older behaviour for a page built against it. */
@@ -705,6 +729,7 @@ R.bridge.headlight = (body) => {
   const _sw = Body.prototype.setWorld;
   Body.prototype.setWorld = function (...a) {
     const r = _sw.apply(this, a), w = this.world;
+    if (w && w.nodes.some((n) => n.type === 'Fog')) BR.fog.reg(this);   // a world with a Fog and no LocalFog never started the per-frame fog code: the Fog was read and never drawn (oracle: lit_fog_linear)
     if (R.bridge.bindFirstViewpoint !== false && w) { const first = w.nodes.find((n) => n.type === 'Viewpoint' || n.type === 'OrthoViewpoint'); if (first && first.type === 'Viewpoint' && !first.f.isBound) { this.started = false; this.bindViewpoint(first, true); } }
     return r;
   };
