@@ -47,3 +47,9 @@ Widen to six engines (Babylon via x3d.webgpu, Castle via x3d.castle castle-rende
 * **Lesson: the furnace set could not show texture, fog or direct-light gaps at all; twelve lit scenes showed all three within one run.** A conformance probe set measures one behaviour; a differ needs scenes that exercise light models, textures and fog.
 * **Lesson: when no record exists, say so.** For these scenes there is no held-out record; the majority vote and FLIP are consistency checks, not independent evidence, and where all pairs disagree (fog, texture) the vote names no outlier. Do not let a reference engine stand in for the standard.
 * Next candidates: fix the cheap ones in their owners' lanes (x3d.wgpu fog and PixelTexture, three.js PhysicalMaterial under a direct light), then re-run; give Babylon's black PhysicalMaterial a lane.
+
+## Update 24 Nov: the three.js PhysicalMaterial, second pass
+* The step 2 fix fitted the furnace scenes and was wrong under a direct light; 12 one-light probes pinned the real model (no PI factor, whole output through 1/2.2). three.js vs X_ITE furnace 20/9/0, held-out 29/29, fixture mad 5.33 to 0.5, 135/135 fixtures pass. Confirmed (X_ITE 16.6.0, three r187, Chromium 157 SwiftShader).
+* **Lesson: a fit on one scene family is a hypothesis, not a fix.** Check it on a family it was not fitted on; that is why the lit set exists.
+* **Lesson: four engines agreeing is a specification.** Probing the odd one out with an intensity x metallic x roughness grid pinned the formula in one run.
+* Open: rough metals (three.js 80 vs X_ITE 59), likely multiple scattering.

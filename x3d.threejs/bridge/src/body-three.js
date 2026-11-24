@@ -9,11 +9,14 @@
    - Right-handed, Y up, counter-clockwise front faces: the same as three.js, so there is no winding flip and no handedness flag (Babylon needs both).
    - Transform keeps T C R SR S -SR -C as one matrix, so a shear survives (the Babylon body decomposes it to TRS and drops it). */
 const THREE_PI = Math.PI;
-/* X_ITE 16.6.0 raises the colour an EnvironmentLight gives a PhysicalMaterial to 1/2.2 after the material has multiplied it (measured: white light 0.5 on a base colour 1 reads 186 = 255 * 0.5^(1/2.2); on a base
-   colour 0.5 it reads 137 = 255 * (0.5 * 0.5)^(1/2.2); 128 and 65 here without it). Direct lights are NOT curved (a global 1/2.2 on the PhysicalMaterial fixture moved its foreground mean from 86 to 110 and broke its
-   bounds), so the power sits on the two indirect terms. Found by the render oracle (x3d.render-oracle, 23 Nov 2026). */
+/* PhysicalMaterial in X_ITE 16.6.0 (measured by the render oracle, x3d.render-oracle probes p_i*_m*_r*, centre pixel facing a DirectionalLight, X_ITE = x3d.wgpu = Blender = Castle within 5, three.js alone off):
+   the light is NOT multiplied by PI (base 0.5, intensity 1, rough dielectric reads 110 = 255 * (0.5 / PI)^(1/2.2); intensity 2 reads 150 = 255 * (1 / PI)^(1/2.2): linear in intensity before the curve) and the whole result
+   is written through a 1/2.2 power (white EnvironmentLight 0.5 on base 1 reads 186 = 255 * 0.5^(1/2.2); the headlit default PhysicalMaterial too). Material and UnlitMaterial are written as they are. The scene's lights carry the PI
+   factor the Phong model needs, so a physical material divides its direct terms by PI here and curves the sum. The first fix (an EnvironmentLight-only curve) matched the furnace scenes and broke under a direct light. */
 function xiteGamma22(shader) {
-  shader.fragmentShader = shader.fragmentShader.replace('#include <lights_fragment_end>', '#include <lights_fragment_end>\n#ifdef USE_ENVMAP\n vec3 xiteInd = reflectedLight.indirectDiffuse + reflectedLight.indirectSpecular; vec3 xiteCur = pow(max(xiteInd, vec3(0.0)), vec3(1.0 / 2.2)); reflectedLight.indirectDiffuse *= xiteCur / max(xiteInd, vec3(1e-6)); reflectedLight.indirectSpecular *= xiteCur / max(xiteInd, vec3(1e-6));\n#endif');
+  shader.fragmentShader = shader.fragmentShader
+    .replace('#include <lights_fragment_end>', '#include <lights_fragment_end>\n reflectedLight.directDiffuse /= PI; reflectedLight.directSpecular /= PI;')
+    .replace('#include <colorspace_fragment>', 'gl_FragColor.rgb = pow(max(gl_FragColor.rgb, vec3(0.0)), vec3(1.0 / 2.2));\n#include <colorspace_fragment>');
 }
 /* The three.js side of a bridge node, registered from this tree (src/nodes/NODE.js) without touching the Babylon node files:
    R.bridge.three.build.NODE(body, n, parent, chain) -> record, R.bridge.three.geometry.NODE(g, body) -> THREE.BufferGeometry, R.bridge.three.changed.NODE(body, n, field) */
