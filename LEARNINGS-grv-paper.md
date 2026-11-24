@@ -29,6 +29,7 @@ Pre-registered thresholds (20% better than the best other arm on error and on ho
 5. **Scaffold coverage drives fidelity.** 1 to 2% depth error when X3D fills the frame, 3.8% when it fills a tenth (FM 251).
 6. **A geometry-only gate is Goodhart's law.** It rewarded edits that wreck the picture. Every pass needs a picture gate too, carving must stay inside the volume the X3D encloses (never sky), and fill colour must come from the generated views (FM 252).
 7. **The fill pass copies X3D shape.** Part of the G+R+V geometry gain is by construction; picture quality and a blind rating are the next tests before any strong claim.
+8. **Exploratory v2 (after seeing the pictures, so not confirmatory).** Fill coloured from the generated view that sees each point removed the speckle (PSNR to the unrefined picture up in 5 of 6 held-out views; cross-hall 15.2 to 29.9 dB), but carving inside the X3D bounding box still deleted the courtyard sky, because Atlas puts sky splats inside that box (FM 259). Geometry error near 0 mm in v2 measures the copied fill, not the generator. Verdict unchanged: wins on geometry, not yet on pictures.
 
 ## Not done
 

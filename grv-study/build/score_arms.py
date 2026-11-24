@@ -127,8 +127,11 @@ def hygiene(S):
     return T, {"dropped": int((~keep).sum()), "clamped": int((S.scales[keep] > 0.5).any(1).sum())}
 
 
-def carve(S, prims, rng):
+def carve(S, prims, rng, box=None):
     vis = np.where(S.alpha >= VIS_ALPHA)[0]
+    if box is not None:                                  # v2: only inside the volume the X3D encloses (never sky or background)
+        lo, hi = box
+        vis = vis[((S.positions[vis] >= lo) & (S.positions[vis] <= hi)).all(1)]
     air, _ = air_mask(prims, S.positions[vis])
     keep = np.ones(len(S.alpha), bool); keep[vis[air]] = False
     return subset(S, keep), {"removed": int((~keep).sum())}
@@ -149,6 +152,36 @@ def fill(S, sent):
     return T, {"added": int(n)}
 
 
+def coloured_surface(prims, vps, views_dir, cache, stride=4):
+    """v2 fill source: X3D surface seen by each SENT camera, coloured by the generated (Chisel) picture of that camera."""
+    from PIL import Image
+    P, C, Z = [], [], []
+    for k, vp in enumerate(vps):
+        cam = A.parse_camera(X.viewpoint_to_camera(vp, 1280, 720))
+        z = np.load(cache / f"cast-{vp['DEF']}.npz")["depth"].astype(np.float64)
+        pts, (rr, cc) = A.unproject(z, cam, stride=stride)
+        img = np.asarray(Image.open(next(Path(views_dir).glob(f"view-{k:02d}.*"))).convert("RGB").resize((1280, 720)), float) / 255
+        P.append(pts); C.append(img[rr, cc]); Z.append(z[rr, cc] / cam.fx * stride)
+    return np.vstack(P), np.vstack(C), np.concatenate(Z)
+
+
+def fill_v2(S, src):
+    P, C, foot = src
+    tree = cKDTree(S.positions[S.alpha >= VIS_ALPHA])
+    d, _ = tree.query(P, k=1, distance_upper_bound=NEAR)
+    gap = np.isinf(d)
+    if not gap.any():
+        return S, {"added": 0}
+    P, C, foot = P[gap], C[gap], foot[gap]
+    cell = np.round(P / 0.03).astype(np.int64)
+    _, first = np.unique(cell, axis=0, return_index=True)
+    P, C, foot = P[first], C[first], foot[first]
+    n = len(P); sc = np.clip(foot, 0.01, 0.04)[:, None].repeat(3, 1)
+    T = A.Splats(np.vstack([S.positions, P]), np.vstack([S.scales, sc]), np.vstack([S.quats, np.tile([0, 0, 0, 1.0], (n, 1))]),
+                 np.concatenate([S.alpha, np.full(n, 0.95)]), np.vstack([S.rgb, C]))
+    return T, {"added": int(n), "colour": "from the generated view of the sent camera that sees the point"}
+
+
 def align(S, sent_tree, centre):
     """One similarity: scale about the sent-camera centroid, fitted on SENT-camera surface only."""
     P = S.positions[S.alpha >= VIS_ALPHA]
@@ -166,7 +199,7 @@ def align(S, sent_tree, centre):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("slug"); ap.add_argument("spz"); ap.add_argument("--out")
+    ap = argparse.ArgumentParser(); ap.add_argument("slug"); ap.add_argument("spz"); ap.add_argument("--out"); ap.add_argument("--v2", action="store_true", help="exploratory (after seeing held-out pictures): carve inside the X3D volume only, fill coloured from generated views")
     a = ap.parse_args()
     t0 = time.time(); rng = np.random.default_rng(7)
     world = HERE / "worlds" / f"{a.slug}.x3d"
@@ -191,7 +224,14 @@ def main():
     # G+R+V: gated passes, gate reads sent-side numbers only
     cur, cur_m, log = G, R["arms"]["G"], []
     def sent_score(m): return (m["air_pct"], m["holes_sent_pct"], m["geo_err_median_mm"])
-    for name, fn in (("P1 hygiene", lambda S: hygiene(S)), ("P2 carve", lambda S: carve(S, prims, rng)), ("P3 fill", lambda S: fill(S, sent))):
+    if a.v2:
+        box = (sent.min(0) - 0.05, sent.max(0) + 0.05)
+        src = coloured_surface(prims, sent_vp, HERE / "out" / a.slug / "chisel", cache)
+        R["v2"] = {"note": "exploratory: designed after seeing held-out pictures of v1", "carve_box": [box[0].tolist(), box[1].tolist()]}
+        passes = (("P1 hygiene", lambda S: hygiene(S)), ("P2 carve inside X3D volume", lambda S: carve(S, prims, rng, box)), ("P3 fill coloured from views", lambda S: fill_v2(S, src)))
+    else:
+        passes = (("P1 hygiene", lambda S: hygiene(S)), ("P2 carve", lambda S: carve(S, prims, rng)), ("P3 fill", lambda S: fill(S, sent)))
+    for name, fn in passes:
         cand, info = fn(cur)
         m = measure(cand, prims, held, sent, traps, rng)
         a0, h0, g0 = sent_score(cur_m); a1, h1, g1 = sent_score(m)
