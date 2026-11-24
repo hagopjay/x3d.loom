@@ -1,0 +1,64 @@
+# The Gobbler swarm: 30,000 LangGraph replicas on the flywheels (24 Nov 2026)
+
+Demo 23 version 2, x3d.demo `docs/demos/gobbler-gyroscope-webgpu/v2/` (PR 175). His ask, 24 Nov: keep the v1
+gyroscope's look, push the visuals and VFX, and put signals of the Gobbler's LangGraph agents on the flywheels
+"more like 3000, or even 30,000". His picks: 30,000 by default with a slider past 100,000; one agent = one full
+replica of the Gobbler.flyte graph riding its loop's hoop, position = stage; behaviour replayed from recorded tapes.
+No model was called and nothing was spent.
+
+Rig for every number here unless named: Chrome for Testing 158.0.8127.36 headless with SwiftShader (a CPU
+rasteriser, not a GPU), and Node 22.23.5 on the build container (Xeon @ 2.10 GHz, 4 cores). Grades: C Confirmed,
+L Likely, S Suspected.
+
+## 1. Calibrate a swarm from tapes, and say what the tapes are
+
+`source/calibrate.py` reads the five recorded sim days in x3d.gobbler (`flyte/runs/sim-2026-11-18*/tape.jsonl`,
+x3d.gobbler at `cd95382`) and writes every branch probability with its counts and the tapes' sha256 (C):
+signal 175/240, first pass 90/175, second pass 40/85, ask 40/175, answered 12/32, refusal codes 45/45/40 of 130,
+hold 0/175, $0.000544 per simulated weave. The five tapes replay the same fixture day, so this is one day seen five
+times, not five days; the page and the README say so. A swarm that looks alive is not evidence of anything until
+each of its probabilities points to a row count.
+
+## 2. Integer state machines make a GPU twin checkable bit for bit
+
+Each replica is four u32 (packed stage/loop/attempt/flags, tick, duration, PCG32 state); thresholds are p x 2^32,
+durations are integer ticks. The JavaScript reference and the WGSL compute kernel then produce the same bytes:
+FNV hash of all state equal at 4,096 x 600, 30,000 x 400, 131,072 x 200 ticks and 30,000 x 300 with chaos 0.6,
+and all event counters equal (C, 4 of 4). Floats in the update would have made "close enough" the only possible
+claim. The same model.js then drives the WebGL2 fallback on the CPU, so all three paths share one truth.
+
+## 3. A windowed KPI must not count the time before the first readback
+
+The live panel compares each rate to the recorded one and marks it within 3 binomial standard errors. The first
+build flagged false misses: its rolling window started before the GPU's first counter readback, so the window held
+zeros and the warm-up crowd. Skipping samples until the first readback and printing "warming" until the window
+spans 8 s fixed it (C: first pass 51.6% live against 51.4% recorded after the fix). At 100,000 replicas in capture
+mode, with only three readbacks in 16 s, two rows still show amber (C, shot s5); the steady-state run is the check
+to quote, the live table is a dashboard.
+
+## 4. Headless SwiftShader cannot present a WebGPU swap chain
+
+In this rig the device is lost on the first present to a canvas context; v1 of the same page does the same, and it
+is not limits, post-processing or the scene (C, bisected with probe pages). Compute and offscreen render work, so
+`?capture=1` renders to a texture, copies it to a buffer, and paints a 2D canvas, paced on the readback so map
+requests do not pile up. Every WebGPU screenshot in v2 is a capture frame and the README says so. This is a test
+rig limit, not a claim about real GPUs.
+
+## 5. Share the page's GPUDevice and buffer instead of copying matrices
+
+On WebGPU the swarm uses Babylon's own `GPUDevice` and binds the page's kinetics storage buffer (10 hoops x
+80 bytes) directly, so replicas ride the hoops' real matrices with no CPU round trip. Its final pass writes alpha
+0 over a transparent canvas, so the compositor adds the swarm's light onto the scene. Shown against a stand-in
+Babylon body (shared device and buffer bound, 297 frames, C); against the real scene on a real GPU, not yet seen.
+
+## 6. Smaller things
+
+- `pass` is a reserved word in WGSL; a variable named `pass` fails the whole module (C).
+- 30,000 additive comets white out at the first exposure. Agent gain scales as 0.10 x sqrt(30,000 / n) and the
+  bloom threshold sits at 0.35 so the hoops' colour survives the crowd (C by eye, shots s1 and s5).
+- Starting every replica at the start line shows a parade, not a fleet. A 900-tick warm-up and a random first
+  idle of 1 to 420 ticks put the swarm at steady state before the first frame (C).
+- A "needs WebGPU" wall is a dead end on his machine (UHD 620 blocklisted). The fallback now draws instead of
+  apologising (C in the rig with `navigator.gpu` removed).
+
+Failure modes 260 to 265 in LOOM-v1.md section 8 come from this lane.
