@@ -98,3 +98,40 @@ failure as a typed count.
   only among the next few in time order.
 
 Failure modes 266 to 269 come from v3.
+
+## v4, the Ouroboros (25 Nov 2026)
+
+x3d.demo `gobbler-gyroscope-webgpu/v4`: a serpent of 60,000 sprites around the swarm (raw, structured, Assayer gate,
+knowledge, a staged Blender sci-viz lens, action, the bite), two nested serpents at the bite, and a panel fed by live
+swarm counters plus a recorded data file. Rig for every C below: Chrome for Testing 158.0.8127.36 headless, SwiftShader.
+
+### 10. An overlay canvas that borrows the camera works over either backend
+
+The serpent is one WebGL2 canvas over the swarm (additive, transparent clear). It reads the host's view-projection
+matrix each frame and places every sprite in the vertex shader from a per-sprite seed, so there are no per-frame
+uploads and no dependence on whether the swarm underneath draws with WebGPU or WebGL2. C for the solo page on WebGPU
+(through `?capture=1`) and for the page's WebGL2 fallback. Suspected only for the integrated page on a real GPU, where
+the swarm draws on Babylon's device: that path cannot present in the rig, so the overlay there has not been seen.
+
+### 11. "0 console errors" missed a HUD that threw on every frame
+
+A label helper used a variable from another function's scope and reassigned a `const`. The panel went blank and all
+labels stacked at the top-left corner, yet the error watcher printed nothing: it listened for `console` messages of
+type error, and an uncaught exception arrives as a `pageerror` event instead. The screenshot caught it; the watcher
+now listens for both (C).
+
+### 12. Draw a planned organ as planned
+
+The owner asked for the Blender sci-viz agent on the picture; it is not a node of the graph yet. The lens is drawn on
+the serpent where it would sit, labelled "staged, not yet an organ", with no counter, and the panel lists only what a
+person has rendered by hand, from the render receipts. Likewise the funnel marks every row that is a live counter
+times a recorded ratio with ≈ and names the ratio, and the README says the swarm model has no fold-back step.
+
+### 13. Smaller things
+
+- A counting script run inside a working branch counted that branch's unmerged entries. Detach the checkout at
+  `origin/main` first and write the commit beside the counts (C: the first data build ran on a local branch).
+- Sprite density on a diagram reads as quantity. The page says the density is a picture and puts the counts on labels.
+- Copying a version folder forward carries the old screenshots; stage the new folder file by file.
+
+Failure modes 270 to 273 come from v4.
