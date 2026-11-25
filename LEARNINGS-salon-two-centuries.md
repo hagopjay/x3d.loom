@@ -54,3 +54,41 @@ Of ArtHistory.md's 27 notes in the slice, 23 are Confirmed and 4 Likely (a mid-b
 framing: Haussmann as "urban realism"; a date mixed with an exhibition: Impression, Sunrise 1872, shown 1874; a span
 given as one year: Guimard 1900). Two of the Likely notes carry a Suspected rider ("1-morning", "cast in days"), and
 2 Confirmed notes fall outside the slice (Klimt's Kiss, Casa Batlló). Counted from `data/movements.json`. Grades go on the plaques and in the page table.
+
+---
+
+# v2: the Western Epic wings (x3d.demo `salon-two-centuries/v2`, 25 Nov 2026)
+
+Western.Epic.md's "Enlightenment & Romantic 1750-1900" branch added as four wings on the same axis: 190 lives (letters 60,
+ideas 45, music 45, building 40) of 771 harvested, 130 works, 211 links (75 cross-field), 12 listening posts, Crystal Palace
+1:18 and Eiffel Tower 1:20. Receipts: XSD 4.0 valid, 0 errors, 244 info (x3d_mcp `4d433af`); 54/54 wall paintings round-trip;
+X_ITE 16.7.1 + Chromium 158 + SwiftShader, 20 frames at 2x, 0 black, ready ~36.5 s.
+
+## 8. One QLever pass covers a cross-field harvest (C)
+Four occupation families, life dates, places, P737/P1066 links and works through three authorship properties (P50 author,
+P86 composer, P84 architect) came back with no 429. The chart named 33 people; 32 were found. Montesquieu was missed
+because his occupation did not match the filter: check a chart's named people against the harvest by name, not only by class.
+Wikidata quirks go on the wall graded: *Deutschlandlied* is dated 1841 (the lyric) under Haydn; the Statue of Liberty is
+credited to Viollet-le-Duc (L).
+
+## 9. Lawful sound from public-domain scores (C for the build, L for the terms)
+Notes from the music21 corpus, played by an additive synth with a short noise-IR reverb and encoded with ffmpeg (mp3 80 kb/s),
+give 12 excerpts in 4.6 MB with no recording rights involved. The compositions are public domain; the encodings keep their own
+terms, and the corpus licence warns that some may not be used commercially. Credit each file's encoder where the file names one.
+Trap: iterating `.flatten().notes` and `.recurse()` mixes in Key objects; test `isinstance(n, (note.Note, chord.Chord))`.
+
+## 10. Walk in to listen: Sound + ProximitySensor, no script (C)
+`ProximitySensor.enterTime -> AudioClip.startTime` and `exitTime -> stopTime` make each listening post play only while you stand
+in it. Start the page muted (`browser.setBrowserOption('Mute', true)` inside try) and give a Sound button.
+
+## 11. Long time-rooms need distance LODs (C, relative)
+200 m of plaques and rails all at once ran SwiftShader at 0.34 fps. Bins of 20 m along z, each an LOD (range 34 m, empty
+level a WorldInfo), plus each wing's rails merged into one IndexedFaceSet, gave 0.56 fps. Software GL, so a ratio, not a claim.
+
+## 12. Screenshot and text traps (C)
+Element screenshots of a canvas partly below the fold came back as 235 px strips or timed out; scroll it into view and clip a
+page screenshot to its box. Plaques rotated 180° to "face the visitor" rendered mirrored; check text from the visitor's side
+in frames, never in the code.
+
+## 13. Share assets across versions (C)
+v2 loads v1's 57 paintings and 3 depth maps by relative url (`../../v1/...`), so 17 MB is stored once and v1 stays untouched.
