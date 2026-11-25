@@ -659,6 +659,10 @@ Each row is a trap someone paid for. The fix is the v1 rule; LEARNINGS-from-patc
 | 267 | A hyper-speed clock kept its nominal x134 on a machine stepping far fewer ticks | Drive the clock by ticks actually stepped and print the measured factor beside the nominal one | [x3d.demo `gobbler-gyroscope-webgpu/v3`, LEARNINGS-gobbler-swarm.md §7-9, C: x2 to x18 in the software rig] |
 | 268 | Rates from the last two counter samples read 0 when both held the same readback | Reach back past the last sample holding the same readback before dividing | [x3d.demo `gobbler-gyroscope-webgpu/v3`, LEARNINGS-gobbler-swarm.md §7-9, C] |
 | 269 | A README's parity hashes went stale when the model changed after the test run | Re-run receipts after the last change, or have the test page write the numbers the README quotes | [x3d.demo `gobbler-gyroscope-webgpu/v3`, LEARNINGS-gobbler-swarm.md §7-9, C: v2 hashes vs a re-run] |
+| 270 | The error watcher reported 0 console errors while a HUD loop threw on every frame, because uncaught exceptions arrive as page errors, not console messages | Listen for page errors as well as console errors, and look at the screenshot | [x3d.demo `gobbler-gyroscope-webgpu/v4`, LEARNINGS-gobbler-swarm.md §10-13, C] |
+| 271 | A counting script run inside a working branch counted unmerged entries | Detach at `origin/main` before counting and write the commit beside the counts | [x3d.demo `gobbler-gyroscope-webgpu/v4`, LEARNINGS-gobbler-swarm.md §10-13, C] |
+| 272 | A pipeline picture was asked to show an agent that does not run yet, which would read as running | Draw it where it would sit, label it staged, give it no counter, and list only what was really produced and by whom | [x3d.demo `gobbler-gyroscope-webgpu/v4`, LEARNINGS-gobbler-swarm.md §10-13, C] |
+| 273 | Derived figures (a live counter times a recorded ratio) sat beside measured counters with nothing to tell them apart | Mark each derived row and name the ratio and its source | [x3d.demo `gobbler-gyroscope-webgpu/v4`, LEARNINGS-gobbler-swarm.md §10-13, C] |
 
 ---
 
