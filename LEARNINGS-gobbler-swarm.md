@@ -135,3 +135,45 @@ times a recorded ratio with ≈ and names the ratio, and the README says the swa
 - Copying a version folder forward carries the old screenshots; stage the new folder file by file.
 
 Failure modes 270 to 273 come from v4.
+
+## v5, the Gobbler returns (25 Nov 2026)
+
+x3d.demo `gobbler-gyroscope-webgpu/v5`: the glass Gobbler's own faces as the serpent's head, a ring of 27 graded lanes
+feeding the serpent, a flywheel board, a spotlight card and a fact strip. Same rig as above for every C.
+
+### 14. Grade a vision before drawing it
+
+The owner listed what the Gobbler should become (ontology, skills, engine profiling, adversarial injection, DSPy, the
+Assayer, graph RAG, vision, a DevTools MCP, Blenderizer IO 4.0, XR, the Loom, bridges to URDF, physics, AEC, Bonsai,
+OpenUSD, Omniverse). Drawing all of it at one brightness would have been a claim. Each lane got one of five grades
+(live, built, touched, planned, envisioned), the builder requires an evidence path in a public repo for any grade above
+envisioned and stops if the path is missing, and unstarted lanes are drawn dashed. Result: 3 live, 9 built, 7 touched,
+3 planned, 5 envisioned. The evidence paths existing is C; the grade chosen for each lane is a judgement (Likely).
+Stream density shows the grade and is labelled as not a measured flow.
+
+### 15. A mesh as additive points is a blob; as rim-lit triangles it is glass
+
+The first bird was 40,000 sprites sampled on the mascot's faces. Additive light with no depth buffer turned it white.
+The second draws the mascot's 11,736 triangles additively with brightness (0.45 + 1.6 rim), rim = (1 - |n.v|)^2 from a
+per-face normal, and keeps points for gems, heart, eyes and a few sparks. The fan's feathers then read as coloured
+panes (C by eye in the rig's shots; no real GPU).
+
+### 16. Two more ways a clean console lied
+
+- A set-up call ran before the element it writes to existed. The error was caught by the module's own try block and
+  logged with `console.warn`, so the watcher (console errors plus page errors, added in v4) printed nothing while the
+  strip, the labels and the spotlight were missing. The watcher now prints warnings; the better check is to assert the
+  elements exist (C).
+- `git log --since=2026-11-18` gave 267 commits, then 265 an hour later: git reads a bare date as that date at the
+  current time of day. Pinned to `T00:00:00+00:00` it gives 273, twice (C).
+
+### 17. Smaller things
+
+- A recorded object does not grow on a page. The glass bird was built at Loom 139896f and wears 228 failure-mode
+  beads; the Loom had 273 when v5 was built. The page shows the current count in the strip and the README says the bird
+  is a record.
+- Counting pull requests by a "(#n)" suffix on commit subjects found 5 of 77 on x3d.loom. Dropped rather than shown.
+- Labels on two rings collide. One pass that steps a lane label above or below any station label it overlaps was
+  enough at 27 + 7 labels (checked by eye only).
+
+Failure modes 274 to 277 come from v5.
