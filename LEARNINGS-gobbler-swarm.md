@@ -177,3 +177,17 @@ panes (C by eye in the rig's shots; no real GPU).
   enough at 27 + 7 labels (checked by eye only).
 
 Failure modes 274 to 277 come from v5.
+
+## v6, head and flywheels together (25 Nov 2026)
+
+### 18. New content must fit the frame of what already works
+
+The owner on v5: the flywheels "look good but not quite as good as" v4's standalone page. The flywheel code was
+byte-identical. What changed was around it: the camera went from 17 to 20 so a wide lane ring would fit (wheels about
+15% smaller), the serpent ring was turned so the bird faced the camera (which moved the thick raw cloud in front of
+the wheels, where v4 has a thin thread of beads), and the bird's fan stood over them. v6 puts the camera and ring back
+where v4 had them, shrinks the bird (0.065 to 0.042) and pulls the lane ring in (1.34 to 1.23) instead. C that the
+three causes were removed; "as good as v4" is by eye in the software rig, at the same distance. An H key hides every
+panel for a clear view.
+
+Failure mode 278 comes from v6.
