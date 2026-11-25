@@ -50,6 +50,7 @@ ElevationGrid for the relief (rotate -90° about X and negate heights); a colour
 Label it as an estimate on the plaque.
 
 ## 7. A chart's notes need grading before they go on a wall (L)
-Of ArtHistory.md's 27 notes in the slice, 19 are Confirmed, 5 Likely (dates that are mid-build or mixed with exhibition
-dates, e.g. Monticello 1772, Impression Sunrise 1872 shown 1874), 3 carry a Suspected rider ("1-morning", "cast in
-days"), and 2 fall outside the slice (Klimt's Kiss, Casa Batlló). Grades go on the plaques and in the page table.
+Of ArtHistory.md's 27 notes in the slice, 23 are Confirmed and 4 Likely (a mid-build date: Monticello 1772; a
+framing: Haussmann as "urban realism"; a date mixed with an exhibition: Impression, Sunrise 1872, shown 1874; a span
+given as one year: Guimard 1900). Two of the Likely notes carry a Suspected rider ("1-morning", "cast in days"), and
+2 Confirmed notes fall outside the slice (Klimt's Kiss, Casa Batlló). Counted from `data/movements.json`. Grades go on the plaques and in the page table.
