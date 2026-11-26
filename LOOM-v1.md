@@ -701,6 +701,9 @@ Each row is a trap someone paid for. The fix is the v1 rule; LEARNINGS-from-patc
 | 312 | Generated metadata passed XSD 4.0 but X_ITE warned (MetadataSet container field, unquoted MFString) | Render every generated scene and fail on console warnings, not only on the validator | [x3d.demo `open3d-ml-bridge/v1`, LEARNINGS-open3d-ml-bridge.md #5, C] |
 | 313 | Open3D torch ops would not load on a CPU box (CUDA-linked, torch version pinned) | Pin torch to the Open3D build's exact minor and supply a CUDA runtime lib even for CPU runs | [x3d.demo `open3d-ml-bridge/v1`, LEARNINGS-open3d-ml-bridge.md #6, C] |
 | 314 | A dataset page with no stated licence ("please cite") was about to be redistributed whole | Ship a derived subset, cite, name the gap, add the takedown route | [x3d.demo `open3d-ml-bridge/v1`, DATA-ATTRIBUTION.md, C] |
+| 315 | A model's per-class scores looked fine on two classes and hid that most walls were called windows | Score per class with a confusion matrix and show a correct-vs-wrong lens, not only overall accuracy | [x3d.demo `open3d-ml-bridge/v2`, LEARNINGS-open3d-ml-bridge.md #9 #11, C/L] |
+| 316 | "Floor at z = 0 by minimum z" put a multi-storey scan's floor in the wrong place (floor recall 39%) | Normalise by the lowest large horizontal plane, or tile by storey, before inference | [x3d.demo `open3d-ml-bridge/v2`, LEARNINGS-open3d-ml-bridge.md #10, L] |
+| 317 | Dataset classes were forced onto a model's label set to get a number | Map only same-meaning classes, list the unscored ones, publish the mapping | [x3d.demo `open3d-ml-bridge/v2`, LEARNINGS-open3d-ml-bridge.md #12, C] |
 
 ---
 
