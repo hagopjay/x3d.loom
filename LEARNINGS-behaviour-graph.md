@@ -164,3 +164,24 @@ Still not proven: the new buttons and the axes choice on a real screen; X_ITE on
 search that found failure mode 338 has not been re-run against the fixed simulator; whether X_ITE's start phase for a
 non-looping timer follows ISO/IEC 19775-1 clause 8.2.4 (not re-read; Suspected departure). A `startTime` received while a
 timer is active is still not stored by the simulator, though X_ITE stores it.
+
+## Version 2.6 (26 Nov 2026): hostile graphs, Play speed, the loss log, and the search re-run
+
+Code: x3d-blender-io pull request 92 (add-on 2.7.6). Same method as 2.5: one written spec per package, one agent per
+package in its own git worktree, joined by cherry-pick and measured together. Instruments: `tools/behaviour_fuzz.py`
+(seeded), `tools/behaviour_bench.py` (median of 300 steps of 1/60 s, shared 4-core Xeon, load average 1.1 to 3.5, Python
+3.13.18, bpy 5.3.0, `PYTHONHASHSEED=3`), the unit suite (1,195 pass, 35 skipped). The search re-run against the fixed
+simulator is in LEARNINGS-selfcode.md, "After the simulator fix".
+
+| # | Finding | Grade | Evidence | Rule it suggests |
+|---|---|---|---|---|
+| 47 | **Legal inputs were clean; the simulator had never met an illegal one.** 0 of 2,000 normal random graphs failed before any fix, while 1,055 of 2,000 hostile ones raised out of `Simulation` and 271 delivered NaN, infinity or a wrong-shaped value to a target. After: 0 and 0, seeds 1 to 3. Each property was shown able to fail by taking its guard out. | Confirmed | `tools/behaviour_fuzz.py --hostile --seed 1`, before and after | Fuzz with a hostile generator as well as a legal one; a clean legal run says nothing about the other |
+| 48 | **One field value could take the machine down.** A Damper with `order=1e9` allocated a list of a billion entries and the process was killed. X3D allows 0 to 5. | Confirmed | hostile seed 1, graphs 21, 87, 125, 137 | Any count read from a file sets an allocation: clamp it where it is read |
+| 49 | **Restoring through a derived form changed the numbers.** `Player.stop()` put objects back through their matrix, so Euler angles `(0.011, -2.24, 2.97)` came back as the equal rotation `(-3.13, -0.90, -0.17)` and a location 3e-8 off. | Confirmed | Blender fuzz seed 1, graphs 2 and 18 of 20 | Save and restore the properties the user typed, not a form computed from them |
+| 50 | **Two packages that each passed undid each other when joined.** The speed package measured the simulation at 1.66 ms (fan, N=1000; 2.41 before). The hardening package added a check to every event. Joined, the same case read 4.3 ms: slower than before either. A checker built once per ROUTE for its target's field type brought it to 2.48 against 2.33 on main, and chains and mixed 12 to 16 % faster. | Confirmed | back-to-back runs of main and the joined branch, same seed | Re-measure after joining parallel work; a speed number belongs to the commit it was measured on |
+| 51 | **The string hash seed moved the benchmark more than the change did.** Fan N=1000 on unchanged code read 4.02, 3.93, 2.23, 2.30, 2.40, 2.34 ms for `PYTHONHASHSEED` 1 to 6. A first comparison without a fixed seed looked like a regression that was not there. | Confirmed | six seeds, main and branch | Fix the hash seed (and say which) when comparing two versions of Python code that iterate dictionaries or sets of strings |
+| 52 | **The slow part of Play was not the simulation.** The player looked each object up by name for every event and walked every node each step to decide the glow. Remembering the object and visiting only senders: fan N=1000 30.4 to 4.45 ms, N=5000 from not finishing in 40 s to 28 ms. Events, order and values are pinned by a digest test. | Confirmed (the before numbers are from an earlier run, not back to back) | `tools/behaviour_bench.py --bpy` | Profile the host calls before the algorithm, and pin the output with a digest before optimising |
+| 53 | **Finding 46 is closed by holding the report back, not by correcting it later.** The importer now defers its ROUTE losses until the graph exists, then reports only those the graph could not keep; the log and strict mode agree with the list. The keyword defaults to off, so other callers are unchanged. | Confirmed | `tests/test_behaviour_loss_report_bpy.py` (`StrictLogTests`) | When a later stage may rescue something, defer the report, do not amend it |
+
+Still not proven: Blender 4.5 to 5.2 with a window; a real viewport redraw; the new buttons on a real screen. Known
+and not fixed: building the node tree from a large graph (about 7 s for 600 nodes, superlinear).

@@ -38,3 +38,15 @@ Instruments: x3d-blender-io `e783aa1` (`behaviour_graph.py`, `behaviour_sim.py`,
 - A language-model arm: does a model write these faster, and does the kernel catch its mistakes? Needs a spend cap.
 - Turning remembered shapes into Loom rules that an agent reads.
 - Proximity, key and string sensors, sequencers, scripts, chasers: outside the vocabulary.
+
+## After the simulator fix (x3d-blender-io 2.7.5, 26 Nov 2026)
+
+The hole of item 11 was fixed in the add-on (a non-looping timer started with a startTime in the past). The search was run again against the fixed simulator, same code, seeds and budget (`selfcode/results-2.7.5/`, instruments in its README: simulator `91d6ad3`, X_ITE 16.8.1, kernel `4d433af`).
+
+1. **The fix closes the hole the search found (C).** Replayed through the fixed simulator, the old start-on-press-4 solution no longer equals its reference, on the lesson or on the unseen stimulus. So do the other six solutions built on `elapsedTime -> startTime` (the short-lesson start-on-press-5 to 9, and start-on-press-4 short): 7 of 267 old files, and no other file changes verdict. The old run was first reproduced exactly with the old simulator, so the comparison is like for like.
+2. **The search finds a legal route round it (C).** Against the fixed simulator the headline is unchanged: H1 87 of 90, H2 267 of 267, H3 87 against 87 (was 86), H4 4,270 to 1,018 runs (p = 2.9e-12), H5 1 of 18. The long lesson now writes `isActive -> loop` plus `cycleTime -> startTime`, or a TimeTrigger. Start-on-press-4 costs 262 runs where it cost 101; the short lesson costs 155 to 434 where it cost 81 to 91, and no longer lets the look-alike through. No other task changed outcome or cost.
+3. **The browser agrees now (C for the number, L for the reading).** Start-on-press-4: 0.2% of samples outside in X_ITE, was 38.5%; the 7 old solutions read 6.5 to 38% on the same day, the new ones 0.2 to 5.0%. At the strict 1% threshold 12 of 18 sampled solutions agree (15 before), but the noise floor on a shared machine that day was up to 5.5% (reference against itself, same file, 4.4% for slide-4), and the 6 strict failures are the same size as that noise. Read by the first court's method, 0 of 18 now differ in a repeatable way, against 1 before.
+4. **Measure the instrument on the day (C).** The court's own noise moved from 0.7 to 2% to up to 5.5% with machine load alone. A threshold fixed once is only valid at the load it was set at; a court should re-measure its floor in the same session as its verdicts (extends FM 339).
+5. **The hole was wider than the one solution (C).** The first court sampled one pair and found it. All seven solutions on that wiring differ from their reference in X_ITE at the same day's load (10.9 to 38.2% for six; 6.5% for start-on-press-7 short, inside twice the noise, L).
+
+Not done: a court on a quiet machine, drag and hover tasks in the browser, the memory arm in the browser, the kernel at its original revision.
