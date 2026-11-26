@@ -88,3 +88,8 @@ Full account in [`selfcode/wild/COURT.md`](selfcode/wild/COURT.md). Expectations
 10. **The one difference is a rule the simulator's tolerance let through (C).** A model-written "spin" with keys 0 and 6.28319 moves 0.000005 rad; the search matched that stillness with the wrong clock, inside 0.001. A task that moves less than the tolerance is not a task (FM 451).
 11. **Load is part of the instrument (C).** At load 7 on 4 cores, 9 short fast scenes read unclear or blind (FM 452).
 
+## From finding to rule: the half turn (26 Nov 2026, later still)
+
+12. **Three notes became one kernel check, and the check found 136 scenes (C).** Failure modes 357, 361 and 451 are now `check_orientation_steps` in x3d_mcp. Its predictions for eight spellings of "0, pi, 2 pi" matched X_ITE 16.8.1 eight times of eight. On 2,562 project scenes, 136 of the 443 with an OrientationInterpolator play differently from how they are written (FM 453, 455). See `flywheel/rules-from-findings/`.
+13. **The spelling of pi picks the direction (C).** 3.14159 is under pi and goes forward; 3.1416 and 3.141593 are over and go back; 3.14159265 followed by 6.28318531 goes forward then back.
+14. **A rule needs a survey before it ships (C).** The first draft flagged 10 baked animations whose wrapped angles are correct (FM 454).
