@@ -185,3 +185,27 @@ simulator is in LEARNINGS-selfcode.md, "After the simulator fix".
 
 Still not proven: Blender 4.5 to 5.2 with a window; a real viewport redraw; the new buttons on a real screen. Known
 and not fixed: building the node tree from a large graph (about 7 s for 600 nodes, superlinear).
+
+## Version 2.7 (26 Nov 2026): the editor shows its own events, recordings as lessons, a judge with a noise floor
+
+Code: x3d-blender-io pull request 93 (add-on 2.7.7) and Wire Lab v3 (x3d.demo, Demo 73 version 3). Same method: one
+spec per package, one agent per package in its own worktree, joined by cherry-pick, re-measured. Instruments: the unit
+suite on the bpy 5.3.0 wheel; `tools/behaviour_fuzz.py` seed 1; `tools/behaviour_bench.py` (`PYTHONHASHSEED=3`);
+`tools/behaviour_sim_judge` against X_ITE 16.8.1; and, new, a real Blender 5.2.2 window in GitHub Actions (Xvfb, Mesa
+llvmpipe, OpenGL 4.5, `.github/workflows/eyetest.yml`), whose screenshots a reviewer reads. Failure modes 374 to 378.
+
+| # | Finding | Grade | Evidence | Rule it suggests |
+|---|---|---|---|---|
+| 54 | **A real window can be had without a desk.** No Blender binary may run in the authoring sandbox; a CI job opens Blender under Xvfb, plays three worlds and uploads screenshots. The first shots were black PNGs: Blender's screenshot operator read a buffer llvmpipe never presented. Grabbing the X display fixed it. | Confirmed | eyetest runs 2 and 3 | FM 374 |
+| 55 | **Geometry that passes its unit tests can still miss the picture.** The overlay's socket positions were estimated; tests proved the curve passed through the estimated points. The first real shot showed input ends 10 px low and the panel under the sidebar. Measured from the shot: header 23.3 view units, row 21.6, outputs from the top, inputs from the bottom. Drawing moved to view space (POST_VIEW), text stays in pixels. | Confirmed | eyetest runs 3, 4 and 6 (links end on sockets at two zooms) | FM 375 |
+| 56 | **Counting at the wrong boundary halves the count.** Activity fed once per call under-counted a drag; the simulator forgets fired ROUTEs at each `post`. Wrapping `post` per instance made totals equal the simulation log and the changes handed to targets. | Confirmed | `tests/test_behaviour_activity.py`, drag recording | FM 376 |
+| 57 | **A recording is a lesson.** An `x3d.activity/1` file (every delivery, plus the stimulus with its object) let the search lane rebuild the door in 60 runs and the counter in 664 from recordings made in the editor. | Confirmed (the search lane's count) | x3d.loom #213, `tests/behaviour/activity/` | Record stimulus and response together, uncoalesced, with the object named |
+| 58 | **A file rule between parallel agents blocked a one-line fix.** Shortest round-trip floats made a widget's 0.3 print as 0.30000001192092896; the fix was one line in a file the agent was told not to edit. It stopped and reported; the owner allowed the line. | Confirmed | commit "Node tree widgets: a value set from a widget is formatted as the 32-bit float it is" | FM 377 |
+| 59 | **A speed-up that was not there.** Tree building: the Python side is now linear, the whole only 5 to 15 % faster, still quadratic inside Blender (601 nodes about 6 s, 2,001 nodes 68.8 s). | Confirmed | `tools/behaviour_bench.py --tree` | FM 378 |
+| 60 | **Three interpolators entered the simulator by the same door as the others.** CoordinateInterpolator, CoordinateInterpolator2D and NormalInterpolator agree with X_ITE 16.8.1 on every stream of `probe-coord.x3d`. X_ITE's NormalInterpolator goes along the great circle; a wrong keyValue length sends nothing. The Player does not move vertices. | Confirmed (simulation); not played | `tests/test_behaviour_sim.py`, trace `probe-coord.json` | A node is "simulated" only after the judge agrees on every stream |
+| 61 | **X_ITE confirms failure mode 361 and reads exponent floats.** Keys 0, 3.14159265, 6.28318531 rock (to pi and back); 3.141593, 6.283185 make one full turn, starting the other way; five keys turn plainly. `1e-05`, `2.5E+0`, `5e-01` parse. The simulator agrees at all 62 samples per stream. | Confirmed | `probe-turn.x3d`, trace `probe-turn.json` | A hair under or over pi is a different motion: never round a rotation key |
+| 62 | **A judge should carry its own noise.** `tools/behaviour_pair_judge.py` replays two files interleaved and says same, differs (above the floor in every pairing, 3 times the floor and 1 % at least) or unclear. Answers failure mode 356. | Confirmed for the pure parts (synthetic series); Likely for the browser cases (run once, numbers in the commit) | `tests/test_behaviour_pair_judge.py` | "Unclear" is a verdict |
+| 63 | **Nothing moves unless an event was sent.** In Wire Lab v3 and in the Blender overlay every packet, count and line comes from a delivered event (X_ITE field callbacks; the simulation log). The page test asserts 0 events and 0 packets before a click and counts equal to callbacks after. The page's Blender lane shows 365 deliveries against X_ITE's 23 for one click: two clocks (1/60 s steps against the browser's frames), stated as two measurements, not agreement. | Confirmed | Wire Lab v3 `build/test_page.cjs` | Draw only what was measured, and say when two counts are not comparable |
+
+Still not proven: the overlay on a real GPU and on a Mac, by a person; Blender 4.5 and 5.1 with a window; the overlay's
+cost on a large tree while redrawing. Activity costs Player.step +15 % (4.35 to 4.99 ms, fan N=1000).
