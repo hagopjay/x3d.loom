@@ -73,3 +73,15 @@ test('evals: the metric cannot be gamed by throwing the palette away', () => {
   assert.ok(metric(t, BASELINES['home-palette'].run(t, cat), scene).score <= 0.51);
   assert.equal(metric(t, { nonsense: true }, scene).score, 0);
 });
+
+// 25 Nov, A Landscape of Consciousness (LEARNINGS-landscape-of-consciousness.md): the first style borrowed from a source figure, kept apart from the
+// 12-style catalogue because adding it would change the matrix and vocabulary counts that Demo 75 quotes. Its authored failure is the test.
+test('kuhn-landscape: the authored palette fails G4 (borrowed figure colours: colour-blind min 0.027 against 0.04), the repaired one passes every applicable rule', () => {
+  const k = R('../styles/kuhn-landscape.style.json');
+  const a = lint(k.authored);
+  assert.equal(a.ok, false);
+  assert.deepEqual(a.rules.filter(r => r.applies && !r.pass).map(r => r.id), ['G4']);   // the learnings text says G4 and G6 and 10/12 to 12/12; re-linted here it is G4 only, 10/11 to 11/11 (G6 was met after the hand change to the silver)
+  const f = lint(k.final); assert.ok(f.ok, f.rules.filter(r => r.applies && !r.pass).map(r => r.id).join());
+  assert.equal(k.final.palette.categorical.length, 10);
+  assert.notDeepEqual(k.final.palette.categorical, k.authored.palette.categorical);
+});

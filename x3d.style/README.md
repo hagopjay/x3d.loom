@@ -13,6 +13,7 @@ A style is a small JSON-LD sentence of ten parts of speech (palette, surface, li
 | `src/compile.mjs` | scene + style → X3D 4.0 text |
 | `src/evals.mjs`, `bin/eval.mjs`, `evals/dspy_socket.py` | tasks, metric, baselines; the DSPy seam, switched off |
 | `styles/authored.jsonld` | the 12 styles as first written |
+| `styles/kuhn-landscape.style.json` | `xst:kuhn-landscape`, the first style borrowed from a source figure (10 categorical colours): authored, repaired, both lint records. Kept outside the 12-style catalogue so the matrix and vocabulary counts that Demo 75 quotes do not move; joining the catalogue as the 13th is the owner's call (A Landscape of Consciousness, 25 Nov) |
 | `styles/catalogue.jsonld` | the 12 styles after lint and repair (generated) |
 | `vocab/` | JSON-LD context, OWL + SKOS vocabulary, SHACL shapes (generated from the grammar) |
 | `data/node-city.scene.json` | the abstract scene: 260 X3D nodes as a city (`tools/build_scene.py`) |
