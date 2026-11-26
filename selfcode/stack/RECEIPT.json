@@ -1,0 +1,67 @@
+{
+ "claim": "Clicking the Button lifts the Door (a glTF payload) and brings it back, in a scene whose behaviour no person and no model wrote.",
+ "payload": {
+  "file": "door.gltf",
+  "sha256": "84b50fdd146503096144b97c8b9f5f5ef5a781a3bf3e4c9b05df18c6e5b55309",
+  "judge": "Khronos glTF-Validator 2.0.0-dev.3.10",
+  "errors": 0,
+  "warnings": 0,
+  "codes": []
+ },
+ "scene": {
+  "file": "door-stack.x3d",
+  "sha256": "2932e1317ea6325e545d4817ca7b0c14d13c4b9f6c12047067eef142321a9fda",
+  "stage": "stage-gltf.x3d",
+  "stage_sha256": "6cbbb3a107434cc13e54f535bb9bcd61fccbcaf0d70b4d30bd363ac4e9dd963b",
+  "written_by": "selfcode/synth.py, search over the X3DUOM catalogue",
+  "simulator_runs": 65,
+  "model_calls": 0,
+  "people_in_the_loop": 0,
+  "graph": [
+   "TouchSensor Touch_Button.touchTime --SFTime--> TimeSensor TimeSensor63.startTime",
+   "TimeSensor TimeSensor63.fraction_changed --SFFloat--> PositionInterpolator PositionInterpolator64.set_fraction",
+   "PositionInterpolator PositionInterpolator64.value_changed --SFVec3f--> Transform Door.translation"
+  ],
+  "reproduces_demonstration": true,
+  "reproduces_reference_on_unseen_stimulus": true,
+  "simulator": "x3d-blender-io@e783aa1 source/behaviour_sim.py",
+  "kernel": "x3d_mcp@f0bde28 (X3D 4.0 XSD, semantic checks, file checks)",
+  "xsd_errors": 0,
+  "semantic_errors": [],
+  "semantic_warnings": []
+ },
+ "meaning": {
+  "vocabulary": "X3D Ontology terms as written by the Web3D X3dToTurtle rules (namespace X3dOntology4.1#)",
+  "converter": "x3d_mcp src/x3d_utils/scene_rdf.py",
+  "triples": 322,
+  "individuals": 36,
+  "graph_sha256": "271a55eb8aedcca8e2429525156a92450fbe4a7f1ee9a19108be1acc63457c6e",
+  "question": "What does a press on a TouchSensor end up changing?",
+  "sparql": "PREFIX x3do: <https://www.web3d.org/specifications/X3dOntology4.1#>\nSELECT ?sensor ?event ?target ?field ?hops WHERE {\n  ?s a x3do:TouchSensor ; x3do:DEF ?sensor .\n  ?t a x3do:Transform ; x3do:DEF ?target .\n  { ?r1 a x3do:ROUTE ; x3do:fromNode ?sensor ; x3do:fromField ?event ; x3do:toNode ?target ; x3do:toField ?field .\n    BIND(1 AS ?hops) }\n  UNION\n  { ?r1 a x3do:ROUTE ; x3do:fromNode ?sensor ; x3do:fromField ?event ; x3do:toNode ?n1 .\n    ?r2 a x3do:ROUTE ; x3do:fromNode ?n1 ; x3do:toNode ?target ; x3do:toField ?field .\n    BIND(2 AS ?hops) }\n  UNION\n  { ?r1 a x3do:ROUTE ; x3do:fromNode ?sensor ; x3do:fromField ?event ; x3do:toNode ?n1 .\n    ?r2 a x3do:ROUTE ; x3do:fromNode ?n1 ; x3do:toNode ?n2 .\n    ?r3 a x3do:ROUTE ; x3do:fromNode ?n2 ; x3do:toNode ?target ; x3do:toField ?field .\n    BIND(3 AS ?hops) }\n} ORDER BY ?hops",
+  "answer": [
+   {
+    "sensor": "Touch_Button",
+    "event": "touchTime",
+    "target": "Door",
+    "field": "translation",
+    "routes_walked": "3"
+   }
+  ]
+ },
+ "browser": {
+  "browser": "X_ITE 16.8.1",
+  "samples": [
+   854,
+   770
+  ],
+  "outside": 0.0,
+  "agree": true,
+  "reference_moved": true
+ },
+ "grades": {
+  "payload valid": "Confirmed",
+  "scene valid": "Confirmed",
+  "behaviour as claimed (simulator)": "Confirmed",
+  "behaviour as claimed (browser)": "Confirmed"
+ }
+}

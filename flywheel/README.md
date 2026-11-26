@@ -37,3 +37,7 @@ See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40
 1. A **sealed** benchmark each turn: a fault list the rule writer has not seen (the plan asks Dr Polys's students or another independent author).
 2. A **real-file** benchmark: the false-alarm rate on scenes nobody planted anything in. A first survey of 1,496 X3D scenes from these repositories is in `LEARNINGS-flywheel-turn-2.md`.
 3. The **rule writer in the loop**: a model proposes the check from the miss, the kernel accepts it only if the benchmark improves and no decoy or real file is newly flagged. That needs a spend cap from the owner and is not switched on.
+
+## A second loop: selfcode
+
+[`selfcode/`](../selfcode/README.md) closes a smaller loop end to end with no model and no person: a search writes X3D behaviour from one demonstration, a simulator runs it, the kernel checks the file, a memory of wiring shapes makes the next batch cheaper, and a browser replays a sample. It is not in `LEDGER.jsonl`, which tracks the validator; its numbers are in `selfcode/results/results.json`.
