@@ -684,6 +684,10 @@ Each row is a trap someone paid for. The fix is the v1 rule; LEARNINGS-from-patc
 | 292 | A 200 m time-room with every label drawn ran software GL at 0.34 fps | Bin labels and works into 20 m distance LODs and merge rails into one IndexedFaceSet (0.56 fps, a ratio not a claim) | [x3d.demo `salon-two-centuries/v2`, LEARNINGS-salon-two-centuries.md §11, C] |
 | 293 | Canvas element screenshots came back as cropped strips or timed out when the canvas was partly off screen | Scroll the element into view and clip a page screenshot to its box; check frame heights in the receipt | [x3d.demo `salon-two-centuries/v2`, LEARNINGS-salon-two-centuries.md §12, C] |
 | 294 | Plaques rotated to face the visitor rendered mirrored | Review text in rendered frames from the visitor's side; drop rotations that only look right in code | [x3d.demo `salon-two-centuries/v2`, LEARNINGS-salon-two-centuries.md §12, C] |
+| 295 | An import that built a node tree showed it nowhere, so the add-on looked uninstalled | Show the result in an editor that is already open and say in the import's last line where it went | [x3d-blender-io behaviour graph v2.1, LEARNINGS-behaviour-graph.md #18, C] |
+| 296 | Auto-laid-out nodes overlapped (70 pairs in three worlds) because rows were spaced evenly while nodes grow with their fields | Measure node sizes after the first draw, push overlaps down the column, frame after the next draw; cap long tables on the node | [x3d-blender-io behaviour graph v2.1, LEARNINGS-behaviour-graph.md #19, C] |
+| 297 | A restore check read a derived matrix that Blender had not yet recomputed and reported a false failure | Check the datablock's own fields (`matrix_basis`), or force an update first, and name which was read | [x3d-blender-io behaviour graph v2.1, LEARNINGS-behaviour-graph.md #20, C] |
+| 298 | A far-future time sentinel (1e+30) rendered as thirty cut-off digits in a seconds widget | Give each field type's sentinels their own display ("never") | [x3d-blender-io behaviour graph v2.1, LEARNINGS-behaviour-graph.md #21, C] |
 
 ---
 
