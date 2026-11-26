@@ -590,7 +590,7 @@ class Level:
                 "<ROUTE fromNode='OI_gear' fromField='value_changed' toNode='GEAR_SPIN' toField='set_rotation'/>"
                 "<ROUTE fromNode='T_slow' fromField='fraction_changed' toNode='OI_slow' toField='set_fraction'/>"
                 "<ROUTE fromNode='OI_slow' fromField='value_changed' toNode='GEAR_SLOW' toField='set_rotation'/>"
-                "<OrientationInterpolator DEF='OI_fan' key='0 0.5 1' keyValue='0 1 0 0 0 1 0 3.1416 0 1 0 6.2832'/>"
+                "<OrientationInterpolator DEF='OI_fan' key='0 0.25 0.5 0.75 1' keyValue='0 1 0 0 0 1 0 1.5708 0 1 0 3.1416 0 1 0 4.7124 0 1 0 6.2832'/>"
                 "<ROUTE fromNode='T_fan' fromField='fraction_changed' toNode='OI_fan' toField='set_fraction'/>"
                 "<ROUTE fromNode='OI_fan' fromField='value_changed' toNode='FAN_SPIN' toField='set_rotation'/>")
 

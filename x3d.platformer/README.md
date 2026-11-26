@@ -60,9 +60,11 @@ Each level has 3 golden gears to find, a pile of cogs, checkpoints, a par time a
 
 | Tape | Level sha256 | Ticks | Goal tick | Final state hash |
 |---|---|---|---|---|
-| 1-1 Tinker Meadow | `979542fde819…` | 5154 | 5034 | `78653115e278cfc3` |
-| 2-1 Pendulum Gorge | `5c15c1abd2fa…` | 4126 | 4006 | `f2a7a49770611e45` |
-| 3-1 Clockwork Spire | `6844f58f418a…` | 2376 | 2256 | `4fdab334d2fa7441` |
+| 1-1 Tinker Meadow | `d2abd75ab2e7…` | 5154 | 5034 | `78653115e278cfc3` |
+| 2-1 Pendulum Gorge | `983dd6475655…` | 4126 | 4006 | `f2a7a49770611e45` |
+| 3-1 Clockwork Spire | `6014829be38f…` | 2376 | 2256 | `4fdab334d2fa7441` |
+
+Level hashes changed on 26 Nov 2026: the fan animation went from keys 0, 3.1416, 6.2832 (which plays backwards, Loom failure mode 453) to four steps. The fans are decoration, so the tapes replay to the same final state hashes; only the level hash bound in each tape was updated.
 
 What is not shown: that it is fun (only people playing can say), replays in Firefox or Safari (other JavaScript engines; not run), touch and gamepad feel, real GPUs and frame rate. The tapes were played by bots, so each proves one way through a level, not that the level is fair.
 
