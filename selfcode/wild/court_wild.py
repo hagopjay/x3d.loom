@@ -1,27 +1,39 @@
-"""The wild set in a real browser: does what the search wrote behave like the original in X_ITE?
+"""The wild set in a real browser, second method: both files replayed at the same moment.
 
     python3 selfcode/wild/court_wild.py --roots <repository folders> --x-ite <x_ite dist> [--limit 12] [--seconds 6]
 
-Takes the scenes the wild run rebuilt (results/wild-test.json, no-memory arm), in hash order, and replays each original
-against the scene the search wrote (results/woven-test/, written by wild.py) with x3d-blender-io's pair judge
-(tools/behaviour_pair_judge.py): three replays of each file, interleaved, and a verdict that is measured against what a
-file does against itself in the same session.
+Why a second method (COURT.md, "Run 1"): in X_ITE a looping TimeSensor with startTime 0 takes its phase from the wall
+clock, so two replays a few seconds apart are at different points of the loop and cannot be lined up unless a cycle
+start falls inside the watch. And X_ITE reports one rotation in several axis-angle spellings (0 1 0 6.17 and
+0 -1 0 0.11), which a number-by-number comparison calls different.
 
-Controls that must come out "differs": for every sampled scene whose written table holds a half-turn key of 3.14159265,
-the same file with that key printed to six decimals (3.141593). That is failure mode 357, known to run the other way.
+So here the original and the written scene are started together in two browsers and compared at the same instants of
+X_ITE's own clock, with no alignment step: equal loops are in equal phase because the clock is the same. Rotations are
+compared as rotations (the angle between them). The floor is measured the same way: the original against itself and
+the written scene against itself, each started together.
 
-Stated before the run (COURT.md): at least 10 of the first 12 rebuilt scenes "same", none "differs"; every control
-"differs".
+Recording is x3d-blender-io's (tools/behaviour_pair_judge.py `record`, the page code of behaviour_sim_judge.cjs); the
+comparison is this file's.
+
+Per stream: a sample is outside when the two values differ by more than 2% of the stream's span (for a rotation: of
+the widest angle it sweeps in the watch, and never less than 0.02 rad). Verdict per pair, fixed before the run:
+  same      every stream's A-against-B share outside is at most its floor + 0.05
+  differs   some stream's share is at least 0.20 and at least three times its floor
+  unclear   anything else, and any pair in which no watched stream moved
 """
 from __future__ import annotations
 
 import argparse
+import bisect
 import concurrent.futures
 import datetime
 import glob
 import json
+import math
+import os
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -32,20 +44,102 @@ import core            # noqa: E402
 sys.path.insert(0, str(Path(core.BLENDER_IO) / "tools"))
 import behaviour_pair_judge as judge          # noqa: E402
 
+STEP, SHARE, SLACK, MIN_DIFF, TIMES = 0.05, 0.02, 0.05, 0.20, 3.0
+
+
+def numbers(text):
+    if isinstance(text, bool):
+        return (float(text),)
+    if isinstance(text, (int, float)):
+        return (float(text),)
+    s = str(text).strip().lower()
+    if s in ("true", "false"):
+        return (1.0 if s == "true" else 0.0,)
+    return tuple(float(x) for x in s.replace(",", " ").split())
+
+
+def together(files, seconds, x_ite):
+    """Record the files at the same moment. Returns one trace per file."""
+    def one(f):
+        graph = judge._graph(f)
+        sources = [[k[0], v] for k, v in judge.watched(graph).items()] + judge._extras(graph)
+        with tempfile.TemporaryDirectory() as scratch:
+            return judge.record(f, sources, {"seconds": seconds}, str(x_ite), scratch)
+    with concurrent.futures.ThreadPoolExecutor(len(files)) as pool:
+        return list(pool.map(one, files))
+
+
+def streams(trace):
+    out = {}
+    for when, node, field, value in trace["events"]:
+        if field in ("isActive", "cycleTime"):
+            continue
+        out.setdefault(f"{node}.{field}", []).append((when, numbers(value)))
+    return out
+
+
+def gap(a, b, rotation):
+    if rotation:
+        return core.bs._rotation_distance(a, b)
+    return max(abs(x - y) for x, y in zip(a, b)) if len(a) == len(b) else float("inf")
+
+
+def compare(ta, tb):
+    """{stream: (share of samples outside, widest gap, samples)} at the same instants of X_ITE's clock."""
+    sa, sb = streams(ta), streams(tb)
+    out = {}
+    for name in sorted(set(sa) & set(sb)):
+        a, b = sa[name], sb[name]
+        start, end = max(a[0][0], b[0][0]) + 0.2, min(a[-1][0], b[-1][0])
+        if end - start < 1.0:
+            continue
+        rotation = name.endswith(".rotation") or name.endswith(".orientation")
+        at = lambda rows, times, t: rows[max(0, bisect.bisect_right(times, t) - 1)][1]
+        times_a, times_b = [r[0] for r in a], [r[0] for r in b]
+        grid = [start + k * STEP for k in range(int((end - start) / STEP))]
+        va, vb = [at(a, times_a, t) for t in grid], [at(b, times_b, t) for t in grid]
+        if rotation:
+            span = max(max(gap(v, va[0], True) for v in va), max(gap(v, vb[0], True) for v in vb))
+            limit = max(SHARE * span, 0.02)
+        else:
+            flat = [x for v in va + vb for x in v]
+            limit = max(SHARE * (max(flat) - min(flat)), 1e-9)
+        gaps = [gap(x, y, rotation) for x, y in zip(va, vb)]
+        out[name] = (round(sum(g > limit for g in gaps) / len(gaps), 4), round(max(gaps), 4), len(gaps))
+    return out, sorted(set(sa) ^ set(sb))
+
 
 def one(job):
-    kind, row, a, b, seconds, repeats, x_ite = job
-    began = time.time()
+    kind, row, a, b, seconds, x_ite = job
+    began, load = time.time(), os.getloadavg()[0]
     try:
-        v = judge.judge_pair(str(a), str(b), {"seconds": seconds}, repeats=repeats, x_ite=str(x_ite))
-        streams = [{"stream": s["stream"], "verdict": s["verdict"], "worst_a_vs_b": max(s["a_vs_b"]["fraction"], default=None),
-                    "median_a_vs_b": sorted(s["a_vs_b"]["fraction"])[len(s["a_vs_b"]["fraction"]) // 2] if s["a_vs_b"]["fraction"] else None,
-                    "floor": s["floor"], "floor_typical": s["floor_typical"]} for s in v["streams"]]
-        out = {"verdict": v["verdict"], "streams": streams, "unmatched": v.get("unmatched"), "load": v.get("load"),
-               "page_errors": v.get("page_errors"), "x_ite": v.get("x_ite"), "browser": v.get("browser")}
+        ab, unmatched = compare(*together([a, b], seconds, x_ite))
+        aa, _ = compare(*together([a, a], seconds, x_ite))
+        bb, _ = compare(*together([b, b], seconds, x_ite))
+        rows, verdict = [], "same"
+        for name, (share, widest, n) in ab.items():
+            floor = max(aa.get(name, (0, 0, 0))[0], bb.get(name, (0, 0, 0))[0])
+            if share >= MIN_DIFF and share >= TIMES * floor:
+                v = "differs"
+            elif share <= floor + SLACK:
+                v = "same"
+            else:
+                v = "unclear"
+            rows.append({"stream": name, "verdict": v, "outside": share, "widest_gap": widest, "samples": n, "floor": floor,
+                         "floor_widest_gap": max(aa.get(name, (0, 0, 0))[1], bb.get(name, (0, 0, 0))[1])})
+        if not rows:
+            verdict = "unclear"
+        elif any(r["verdict"] == "differs" for r in rows):
+            verdict = "differs"
+        elif any(r["verdict"] == "unclear" for r in rows):
+            verdict = "unclear"
+        out = {"verdict": verdict, "streams": rows, "only_in_one_file": unmatched}
+        if not rows:
+            out["reason"] = "no watched stream moved in both files"
     except Exception as e:                                   # a tool error is a row, not a crash
         out = {"verdict": "error", "error": f"{type(e).__name__}: {str(e)[:300]}"}
-    return dict(out, kind=kind, hash=row["hash"], source=row["source"], file=row["file"], seconds=round(time.time() - began, 1))
+    return dict(out, kind=kind, hash=row["hash"], source=row["source"], file=row["file"], load_before=round(load, 2),
+                seconds=round(time.time() - began, 1))
 
 
 def main():
@@ -54,8 +148,6 @@ def main():
     ap.add_argument("--x-ite", type=Path, required=True)
     ap.add_argument("--limit", type=int, default=12)
     ap.add_argument("--seconds", type=float, default=6.0)
-    ap.add_argument("--repeats", type=int, default=3)
-    ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--out", type=Path, default=HERE / "results" / "court-wild.json")
     a = ap.parse_args()
     result = json.loads((HERE / "results" / "wild-test.json").read_text())
@@ -69,25 +161,25 @@ def main():
         written = HERE / "results" / "woven-test" / f"{row['hash']}.cold.x3d"
         if not found or not written.exists():
             raise SystemExit(f"missing files for {row['hash']}: run wild.py --split test first")
-        jobs.append(("solution", row, found[0], written, a.seconds, a.repeats, a.x_ite))
+        jobs.append(("solution", row, found[0], str(written), a.seconds, a.x_ite))
         text = written.read_text()
         if " 3.14159265 " in text or ' 3.14159265"' in text:
             c = controls / f"{row['hash']}.six-decimals.x3d"
             c.write_text(text.replace(" 3.14159265", " 3.141593"))
-            jobs.append(("control: half-turn key printed to six decimals", row, found[0], c, a.seconds, a.repeats, a.x_ite))
+            jobs.append(("control: half-turn key printed to six decimals", row, found[0], str(c), a.seconds, a.x_ite))
     began = time.time()
-    with concurrent.futures.ProcessPoolExecutor(a.workers) as pool:
-        rows = list(pool.map(one, jobs))
+    rows = [one(j) for j in jobs]                            # one pair at a time: two browsers is the whole load
     git = lambda path: subprocess.run(["git", "-C", str(path), "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
     sols = [r for r in rows if r["kind"] == "solution"]
     ctrl = [r for r in rows if r["kind"] != "solution"]
     count = lambda rs: {v: sum(1 for r in rs if r["verdict"] == v) for v in ("same", "differs", "unclear", "error")}
-    out = {"meta": {"date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"), "rebuilt_in_wild_run": len(rebuilt),
-                    "sampled": len(sols), "sampling": "first by hash", "watch_seconds": a.seconds, "repeats": a.repeats, "workers": a.workers,
-                    "judge": f"x3d-blender-io@{git(core.BLENDER_IO)} tools/behaviour_pair_judge.py",
-                    "x_ite": next((r.get("x_ite") for r in rows if r.get("x_ite")), None),
-                    "browser": next((r.get("browser") for r in rows if r.get("browser")), None),
-                    "wild_run": result["meta"]["selfcode"], "wall_seconds": round(time.time() - began, 1)},
+    out = {"meta": {"date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"), "method": "simultaneous replay, rotations as rotations",
+                    "rebuilt_in_wild_run": len(rebuilt), "sampled": len(sols), "sampling": "first by hash", "watch_seconds": a.seconds,
+                    "recorder": f"x3d-blender-io@{git(core.BLENDER_IO)} tools/behaviour_pair_judge.py record()",
+                    "x_ite": "X_ITE 16.8.1", "browser": judge.browser_version(), "wild_run": result["meta"]["selfcode"],
+                    "rule": {"sample_step": STEP, "outside": "2% of span", "same": "share <= floor + 0.05",
+                             "differs": "share >= 0.20 and >= 3 x floor"},
+                    "wall_seconds": round(time.time() - began, 1)},
            "summary": {"solutions": count(sols), "controls": count(ctrl)}, "pairs": rows}
     a.out.write_text(json.dumps(out, indent=1) + "\n")
     print(json.dumps(out["summary"], indent=1), out["meta"]["wall_seconds"])

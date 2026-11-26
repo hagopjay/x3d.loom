@@ -16,3 +16,33 @@ Expected:
 
 If a solution "differs", the simulator and the browser disagree about a real scene, and that goes to the node editor
 thread as a simulator finding.
+
+## Run 1: both expectations failed, and the instrument is why
+
+`results/court-wild-run1.json` (script kept as `court_wild_run1.py`). Solutions: 9 same, 2 differs, 1 unclear.
+Controls: 3 of 3 "same". C1 and C2 both fail as stated.
+
+Looking at the raw streams:
+
+- **The judge was blind on slow loops.** In X_ITE a looping TimeSensor with startTime 0 takes its phase from the wall
+  clock (its cycle starts fall on whole multiples of cycleInterval since 1970). Two replays ten seconds apart are at
+  different points of a 30 s loop, and with a 6 s watch no cycle start falls inside to line them up. A file then
+  disagrees with itself on every sample (floor 1.0), anything is "no worse than the floor", and the three controls came
+  out "same" for that reason, not because they are.
+- **Both "differs" are artefacts.** In `anim-05` three timers of 3, 5 and 7 s run at once; one time zero per run lines up
+  one of them. In `sp-09` X_ITE spells the same rotation as `0 1 0 6.17` in one file and `0 -1 0 0.11` in the other;
+  compared as rotations, original against written is 0.041 rad apart at worst, the same as either file against itself
+  (0.044 and 0.043).
+
+Three pairs had a quiet floor and are real agreements: `elevator.x3d` (0 of the samples outside, floor 0),
+`joints-and-sensors.x3d` and the 3 s cube of `anim-05`.
+
+## Run 2: the method, fixed before running it
+
+`court_wild.py` now starts the original and the written scene together in two browsers and compares them at the same
+instants of X_ITE's clock, so equal loops are in equal phase with no alignment; rotations are compared as rotations;
+the floor is each file against itself, started together. The verdict rule is in the script's header. Same sample (first
+12 by hash), same 6 s watch, same controls.
+
+Expected: **C1'** at least 10 of 12 solutions "same", none "differs" (the scene with a touch sensor and nothing to
+start it will be "unclear"). **C2'** every control "differs".
