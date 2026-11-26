@@ -43,3 +43,7 @@ See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40
 ## A second loop: selfcode
 
 [`selfcode/`](../selfcode/README.md) closes a smaller loop end to end with no model and no person: a search writes X3D behaviour from one demonstration, a simulator runs it, the kernel checks the file, a memory of wiring shapes makes the next batch cheaper, and a browser replays a sample. It is not in `LEDGER.jsonl`, which tracks the validator; its numbers are in `selfcode/results/results.json`. On real scenes nobody wrote for it ([`selfcode/wild/`](../selfcode/wild/README.md), pre-registered) it rebuilt 39 of 53, nearly all of the small ones and few of the large ones, and it has learned two worlds from recordings made in the Blender node editor.
+
+## From finding to rule
+
+[`rules-from-findings/`](rules-from-findings/README.md) is the first time notes from the selfcode loop were turned into a kernel check and run on real files: the half-turn rule, 8 of 8 predictions confirmed in X_ITE, 136 of 443 scenes flagged, 10 false alarms found and removed before it shipped.
