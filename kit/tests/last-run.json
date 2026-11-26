@@ -83,6 +83,25 @@
             "expected": "EMPTY_PROFILE"
           },
           {
+            "case": "kit pinned and matching",
+            "result": "accepted"
+          },
+          {
+            "case": "kit: a record from another kit",
+            "caught": "WRONG_KIT",
+            "expected": "WRONG_KIT"
+          },
+          {
+            "case": "kit: a record from a dirty kit",
+            "caught": "WRONG_KIT",
+            "expected": "WRONG_KIT"
+          },
+          {
+            "case": "kit pin that is not a content hash",
+            "caught": "PROFILE_SCHEMA",
+            "expected": "PROFILE_SCHEMA"
+          },
+          {
             "case": "candidate changed during witness",
             "caught": "CANDIDATE_CHANGED_DURING_WITNESS",
             "expected": "CANDIDATE_CHANGED_DURING_WITNESS"
@@ -1161,7 +1180,7 @@
           }
         ]
       },
-      "negative_controls_caught": 151,
+      "negative_controls_caught": 154,
       "optimized": false,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 9,
@@ -1248,6 +1267,25 @@
             "case": "empty profile",
             "caught": "EMPTY_PROFILE",
             "expected": "EMPTY_PROFILE"
+          },
+          {
+            "case": "kit pinned and matching",
+            "result": "accepted"
+          },
+          {
+            "case": "kit: a record from another kit",
+            "caught": "WRONG_KIT",
+            "expected": "WRONG_KIT"
+          },
+          {
+            "case": "kit: a record from a dirty kit",
+            "caught": "WRONG_KIT",
+            "expected": "WRONG_KIT"
+          },
+          {
+            "case": "kit pin that is not a content hash",
+            "caught": "PROFILE_SCHEMA",
+            "expected": "PROFILE_SCHEMA"
           },
           {
             "case": "candidate changed during witness",
@@ -2328,7 +2366,7 @@
           }
         ]
       },
-      "negative_controls_caught": 151,
+      "negative_controls_caught": 154,
       "optimized": true,
       "page_trap_forms_two_sided": 10,
       "page_trap_rules_two_sided": 9,
