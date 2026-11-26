@@ -761,6 +761,8 @@ Each row is a trap someone paid for. The fix is the v1 rule; LEARNINGS-from-patc
 | 369 | World-aligned boxes around tilted dominoes reported collider overlaps that were not there, and fixed scenery overlapping fixed scenery was reported as a problem | Test the shapes themselves (exact spheres, oriented boxes by separating axes); exempt pairs of fixed bodies | [`LEARNINGS-flywheel-turn-3.md`, `flywheel/LEDGER.jsonl`, C] |
 | 370 | A parity count against a format whose validators mostly police its own composition machinery reads as a weak score: X3D states 66 of 340 USD rules | Count the honest denominator (as 328), and report rows the standard makes impossible ('fixed', 32 here) separately from gaps | [`LEARNINGS-flywheel-turn-3.md`, `flywheel/LEDGER.jsonl`, C] |
 | 371 | SimReady requires Z up; X3D is +Y up by definition, so a validator rule would flag every X3D file | Record it as a convention the exporter converts (Blender's USD export writes Z up), not as a rule | [`LEARNINGS-flywheel-turn-3.md`, `flywheel/LEDGER.jsonl`, C] |
+| 372 | X3D faults checked after a Blender USD export: 17 of 25 fired pairs were X3D-only, because Blender's tolerant X3D importer repaired the fault and the USD rulebooks never saw it | Validate the X3D before the exporter runs; an exporter's own validators cannot see what the importer already repaired | [x3d_mcp #33, docs/USD-BLENDER-JOIN.md, Blender 5.3.0, usd-core 26.11, Omniverse Asset Validator 1.18.0, Likely] |
+| 373 | A joined score of "70 of 84 scenes agree" was 1,748 of 1,776 pairs where both sides were quiet; usd-core's 30 validators fired on 0 of 84 exports | Report agreement on pairs where either side fires (8 both, 17 X3D only, 3 other), and name the rulebooks that never fired | [x3d_mcp #33, C] |
 
 ---
 
