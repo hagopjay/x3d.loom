@@ -59,6 +59,10 @@ def edit(ev: Path, name: str, **changes) -> None:
     p = ev / f"{name}.json"; r = json.loads(p.read_text()); r.update(changes); p.write_text(json.dumps(r))
 
 
+def edit_inst(ev: Path, name: str, **changes) -> None:
+    p = ev / f"{name}.json"; r = json.loads(p.read_text()); r["instrument"].update(changes); p.write_text(json.dumps(r))
+
+
 def acceptance_controls() -> list[dict]:
     rows = []
     with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
@@ -91,6 +95,28 @@ def acceptance_controls() -> list[dict]:
     with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
         p = Path(d) / "empty.json"; p.write_text(json.dumps({"schema": "loom.profile/1", "name": "x", "required": []}))
         rows.append({"case": "empty profile", **expect("EMPTY_PROFILE", lambda: acc.load_profile(p))})
+    # a profile may pin the kit by content hash (failure mode 442, x3d.downey 24 Nov 2026)
+    from loomkit.core import kit_stamp
+
+    def pinned(root, ev):
+        for n in ("grammar", "traps", "behaviour", "truth"):
+            p = ev / f"{n}.json"; r = json.loads(p.read_text()); r["instrument"]["kit_dirty"] = False; p.write_text(json.dumps(r))
+        return {**PROFILE, "kit": {"kit_sha256": kit_stamp()["kit_sha256"]}}
+    with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
+        root, ev, s = fixture(Path(d))
+        if acc.accept(root, ev, pinned(root, ev))["status"] != "accepted":
+            raise RuntimeError("POSITIVE_CONTROL_REJECTED: pinned kit")
+        rows.append({"case": "kit pinned and matching", "result": "accepted"})
+    for label, mutate in (("kit: a record from another kit", lambda e: edit_inst(e, "traps", kit_sha256="0" * 64)),
+                          ("kit: a record from a dirty kit", lambda e: edit_inst(e, "grammar", kit_dirty=True))):
+        with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
+            root, ev, s = fixture(Path(d))
+            prof = pinned(root, ev)
+            mutate(ev)
+            rows.append({"case": label, **expect("WRONG_KIT", lambda: acc.accept(root, ev, prof))})
+    with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
+        p = Path(d) / "badkit.json"; p.write_text(json.dumps({**PROFILE, "kit": {"kit_sha256": "a2a3ef0"}}))
+        rows.append({"case": "kit pin that is not a content hash", **expect("PROFILE_SCHEMA", lambda: acc.load_profile(p))})
     with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
         root, ev, s = fixture(Path(d))
         (root / "gen/build.py").write_text("print('changed mid-run')\n")

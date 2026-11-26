@@ -1,0 +1,100 @@
+{
+ "stack": "x3d.downey tree 550594f (monolith kit, 15 commits, HEAD aa35df7 in the building session)",
+ "scenes": 20,
+ "baseline": "x3d_mcp 4d433af (#30, the commit the stack was accepted on; parent of #31)",
+ "current": "x3d_mcp 5543a7b (main: #31 glTF parity, #32 USD parity, #33 Q12, #34 world-place mesh-coincident)",
+ "python": "CPython 3.12.3, lxml 6.1.3, xmlschema 4.3.2, x3d.py 4.0.65.8 (this container)",
+ "totals": {
+  "base": {
+   "errors": 0,
+   "warnings": 0,
+   "infos": 212
+  },
+  "main": {
+   "errors": 0,
+   "warnings": 1,
+   "infos": 223
+  },
+  "fix_branch": {
+   "errors": 0,
+   "warnings": 1,
+   "infos": 216
+  }
+ },
+ "loom_meaning_gate": {
+  "base": "pass 20/20",
+  "main": "pass 20/20 (1 warning not read by the gate)"
+ },
+ "new_findings": [
+  {
+   "scene": "complexity/er.x3d",
+   "check": "coordinate-precision",
+   "level": "warning",
+   "since": "#32 (VG.020 / RTX 2^38)",
+   "count": 1,
+   "class": "TRUE DEFECT",
+   "grade": "Confirmed",
+   "evidence": "LineSet of the n=100 P(connected) curve holds y up to 2.67e25 m: Gilbert's recurrence in float64 cancels catastrophically for p <= 0.0158; 49 of 121 points wrong vs Decimal prec 600 (max |err| 2.23e24); visible as streaks in X_ITE 16.8.1. Banked n=300 curve: 43 of 121 wrong (to 1.76e203), not drawn. Live lab (JS, same recurrence): n 51-60 give 1-7 of 121 points out of [0,1]."
+  },
+  {
+   "scene": "hub.x3d",
+   "check": "mesh-colocated-points",
+   "level": "info",
+   "since": "#32 (VG.016 / OAV WeldChecker)",
+   "count": 2,
+   "class": "IDIOM (false alarm)",
+   "grade": "Confirmed",
+   "evidence": "LineSet rings closed by repeating the first point (first == last); welding means nothing without faces"
+  },
+  {
+   "scene": "sunfall.x3d",
+   "check": "mesh-colocated-points",
+   "level": "info",
+   "since": "#32 (VG.016)",
+   "count": 1,
+   "class": "IDIOM (false alarm)",
+   "grade": "Confirmed",
+   "evidence": "closed orbit LineSet, first == last"
+  },
+  {
+   "scene": "penny.x3d",
+   "check": "mesh-colocated-points",
+   "level": "info",
+   "since": "#32 (VG.016)",
+   "count": 2,
+   "class": "IDIOM (false alarm)",
+   "grade": "Confirmed",
+   "evidence": "a penny's trace that rests at the ground: 54 of 91 samples repeat (40, 0, 0); the other lane repeats its ground point once"
+  },
+  {
+   "scene": "stats/confound.x3d",
+   "check": "mesh-colocated-points",
+   "level": "info",
+   "since": "#32 (VG.016)",
+   "count": 2,
+   "class": "IDIOM (false alarm)",
+   "grade": "Confirmed",
+   "evidence": "PointSet scatter of NSFG records: 79 of 1,453 and 83 of 1,560 points tie (rounded ages and weights). Overplotting hides multiplicity, a chart concern, not a geometry one (Likely)"
+  },
+  {
+   "scene": "bikeshare.x3d",
+   "check": "interpolator-constant",
+   "level": "info",
+   "since": "#32 (VG.015)",
+   "count": 2,
+   "class": "PROFILE-ONLY",
+   "grade": "Confirmed",
+   "evidence": "one interpolator per entity from the bank; bike 11 never rides and count 1 stays at 1, so 62 keys hold one value. 'Set the field directly' is a size tip, not a defect"
+  },
+  {
+   "scene": "plague.x3d",
+   "check": "transparent-open-mesh",
+   "level": "info",
+   "since": "#32 (VG.022)",
+   "count": 2,
+   "class": "PROFILE-ONLY",
+   "grade": "Confirmed",
+   "evidence": "translucent (0.15) solid=false ribbons with 72 open edges each: open on purpose; watertightness matters for physical light transmission (SimReady), not for this chart"
+  }
+ ]
+}

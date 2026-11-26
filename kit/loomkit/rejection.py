@@ -43,7 +43,7 @@ def build(subject: str, candidate_root: Path | str, evidence_dir: Path | str, pr
     for rule in profile["required"]:
         name = rule["witness"]
         try:
-            rows.append({**acc.judge(rule, cand, evidence_dir), "verdict": "accepted"})
+            rows.append({**acc.judge(rule, cand, evidence_dir, profile.get("kit")), "verdict": "accepted"})
             continue
         except GateError as e:
             code, detail = e.code, e.detail
