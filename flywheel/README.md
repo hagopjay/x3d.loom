@@ -46,4 +46,4 @@ See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40
 
 ## From finding to rule
 
-[`rules-from-findings/`](rules-from-findings/README.md) is the first time notes from the selfcode loop were turned into a kernel check and run on real files: the half-turn rule, 8 of 8 predictions confirmed in X_ITE, 136 of 443 scenes flagged, 10 false alarms found and removed before it shipped.
+[`rules-from-findings/`](rules-from-findings/README.md) is the first time notes from the selfcode loop were turned into a kernel check and run on real files: the half-turn rule, 8 of 8 predictions confirmed in X_ITE, 41 of 463 scenes flagged (a first count of 136 read a stale checkout and is corrected there), 10 false alarms found and removed before it shipped.

@@ -30,15 +30,21 @@ arithmetic only).
 
 ## The survey
 
-`survey.py` ran the check on every distinct `.x3d` in the project's repositories as checked out on
-26 Nov 2026 (`survey.json`): 2,562 scenes, 443 with an OrientationInterpolator.
+`survey.py` ran the check on every distinct `.x3d` in the project's repositories, each at the head of its
+default branch on 26 Nov 2026 (`survey.json`): 2,587 scenes, 463 with an OrientationInterpolator.
 
-- **136 of 443 (31%) play differently from how they are written.**
-- 98 of 98 turntables from one generator rock (x3d.accrete; 0, 3.14159265, 6.28318531).
-- 25 of 190 scenes written by language models are spins that never turn (0 to 6.28-something in one step).
-  Every one of them passed the kernel before today.
+- **41 of 463 (9%) play differently from how they are written.** 31 more get a note only.
+- 25 of 190 scenes written by language models are spins that never turn (0 to 6.28-something in one step),
+  and 4 more turn the wrong way or rock. Every one of them passed the kernel before today.
 - 4 hand-written platformer levels in this repository have fans that turn the wrong way (3.1416).
-- One of the flagged files is a "repaired" example in an older demo.
+- 4 in x3d-blender-io: two deliberate probes, and two gallery demos written with 3.1416 and 3.142.
+- 2 Gobbler simulation worlds, 1 archived accrete world kept on purpose, and 1 "repaired" example in an
+  older demo.
+
+**Correction, same day.** The first run of this survey reported 136 of 443.
+It read a checkout of x3d.accrete that was one commit behind: 97 of those were turntables
+the generator fix (x3d.accrete #1, made from failure mode 361) had already regenerated that morning. The numbers here are from every repository at the head of its default branch. A survey
+must name the commit of every repository it reads (failure mode 456).
 
 ## The rule was wrong first
 
@@ -50,7 +56,7 @@ them (failure mode 454).
 
 ## Limits
 
-- One project's files; two families make most of the count. Not a rate for X3D at large.
+- One project's files; one family (model-written scenes) makes most of the count. Not a rate for X3D at large.
 - The rule was written by an agent in a working session, after the findings were known. This is a fix
   confirmed on old files, not a prediction on sealed ones. "Turns without a person" is still 0.
 - A whole turn in one step followed by real motion is not reported (it reads as a wrap).
