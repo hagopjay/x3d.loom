@@ -1,6 +1,6 @@
 # selfcode: X3D behaviour written by search, from one demonstration
 
-A program with no language model and no person in the loop is shown what a world did when it was poked. It writes
+A program that made no model calls while it searched (its rules, tasks and checks were written by an AI agent with the owner present) is shown what a world did when it was poked. It writes
 the X3D behaviour graph that does the same (sensors, timers, event utilities, followers, interpolator tables, ROUTEs),
 runs what it wrote, has the kernel check the file, and remembers the wiring shape. The next batch of worlds is cheaper.
 
@@ -19,7 +19,7 @@ Grades: C = run and counted here; L = likely, argued from what was run; S = susp
 
 | | Hypothesis | Threshold | Result | |
 |---|---|---|---|---|
-| H1 | It codes itself | at least 80% of in-vocabulary test tasks solved and correct on the unseen stimulus | 87 of 90 (96.7%, 95% interval 91 to 99%) | pass, C |
+| H1 | It codes itself | at least 80% of in-vocabulary test tasks solved and correct on the unseen stimulus | 87 of 90 (96.7%, 95% interval 91 to 99%); tasks written by the method's author, judged by the author's simulator | pass, C |
 | H2 | The kernel accepts what it writes | 0 schema and 0 semantic errors in every solved file | 267 of 267 files clean, no warnings | pass, C |
 | H3 | The lesson matters | long lesson at least as good as short | 87 against 86 | pass, C (by one task) |
 | H4 | Memory makes the next batch cheaper | total runs at most half, Wilcoxon p < 0.01, at most 3 tasks lost | 4,109 to 1,018 runs (25%), p = 2.9e-12; cheaper on 60, equal on 23, dearer on 4; 87 against 87 correct | pass, C |
@@ -173,7 +173,7 @@ None in the registered code or thresholds. Added after the run: `court.cjs`, `co
 ## After the registered run
 
 - [`wild/`](wild/README.md): the same search on real scenes nobody wrote for it. Pre-registered; 39 of 53 rebuilt and
-  right on unseen input, 31 of 32 when the original has three behaviour nodes or fewer, 2 of 11 at eleven or more.
+  right on unseen input (47 of the 100 sampled scenes were left out by counted rules, 50 of the 53 tasks are animation only, and two preregistered predictions failed), 31 of 32 when the original has three behaviour nodes or fewer, 2 of 11 at eleven or more.
 - [`lesson.py`](lesson.py) and [`demonstration/`](demonstration/): the search learns from a recording made by the
   node editor's recorder (`x3d.activity/1`). Door in 60 runs, counter in 664, both right on unseen input.
 - [`trace.py`](trace.py) and [`traces/`](traces/): everything the search tried, in order, for three tasks

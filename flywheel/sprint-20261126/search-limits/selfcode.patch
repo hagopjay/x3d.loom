@@ -1,0 +1,76 @@
+diff -ru -x __pycache__ -x results x3d.loom/selfcode/synth.py selfcode/synth.py
+--- x3d.loom/selfcode/synth.py	2026-11-26 09:24:04.257661703 +0000
++++ selfcode/synth.py	2026-11-26 18:10:58.944195022 +0000
+@@ -91,6 +91,49 @@
+     return None
+ 
+ 
++def _flat(v):
++    return list(v) if isinstance(v, (tuple, list)) else [float(v)]
++
++
++def period_between(values, kind):
++    """A repeat length that falls between samples, in seconds, or None: the lag (in samples, fractional) at which the
++    series, read by straight lines between samples, best matches itself, found by a coarse scan and a golden-section refine."""
++    if kind not in ("SFFloat", "SFVec3f", "SFColor", "SFRotation", "SFVec2f", "SFDouble"):
++        return None
++    try:
++        xs = [_flat(v) for v in values]
++        n, d = len(xs), len(xs[0])
++    except (TypeError, ValueError):
++        return None
++    lo = n // 10
++
++    def err(L):
++        k = int(L)
++        w = L - k
++        tot = 0.0
++        for i in range(lo, n - k - 1):
++            a, b, c = xs[i], xs[i + k], xs[i + k + 1]
++            tot += sum(abs(a[j] - (b[j] + w * (c[j] - b[j]))) for j in range(d))
++        return tot / max(1, n - k - 1 - lo)
++
++    lags = [(err(float(k)), k) for k in range(4, n // 3)]
++    if not lags:
++        return None
++    scale = sorted(e for e, _ in lags)[len(lags) // 2]
++    best = min(e for e, _ in lags)
++    if scale <= 0 or best > 0.1 * scale:
++        return None
++    k = next(k for e, k in lags if e <= 1.3 * best + 1e-9 and (k == 4 or e <= lags[k - 5][0]))      # first low point
++    a, b = float(k - 1), float(k + 1)
++    for _ in range(40):
++        c, e = a + 0.382 * (b - a), b - 0.382 * (b - a)
++        if err(c) < err(e):
++            b = e
++        else:
++            a = c
++    return round((a + b) / 2 * DT, 6)
++
++
+ def durations(values, kind, whole=False):
+     """Candidate lengths for a timer, read off the demonstration: how long the value keeps moving, and how long it
+     stays between two jumps. ``whole`` puts the longest whole burst first: a short recording shows a slow timer once,
+@@ -118,7 +161,9 @@
+             last = i
+     best = [round(d * DT, 6) for d, _ in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))][:6]
+     p = period(values, kind)
+-    out = ([p] if p else []) + ([round(longest * DT, 6), round((longest - 1) * DT, 6)] if whole and longest else []) + best + [1.0]
++    q = None if p else period_between(values, kind)
++    extra = [] if q is None else [q] + [round(q, 3), round(q, 2)]
++    out = extra + ([p] if p else []) + ([round(longest * DT, 6), round((longest - 1) * DT, 6)] if whole and longest else []) + best + [1.0]
+     return list(dict.fromkeys(x for x in out if x > DT))
+ 
+ 
+@@ -235,7 +280,10 @@
+         if ptype == "SFFloat" and kind in INTERP and port[1] in ("fraction_changed", "value_changed", "modifiedFraction_changed") \
+                 and all(stream[i] is not None for i in self.moments(key)):      # a table can only act when a fraction arrives
+             table = fit_table(stream, self.demo[key], kind, self.tol)
+-            if table and len(table[0]) > MAX_KEYS:       # a table with this many corners is a recording, not a rule
++            seen = [round(f, 6) for f in stream if f is not None]
++            # many corners are fine when they are well below the samples they explain, or the same fractions come round again
++            # (a loop seen about 3 times); one corner per sample, each fraction once, is a recording, not a rule
++            if table and len(table[0]) > max(MAX_KEYS, len(seen) // 4) and len(seen) < 2.5 * len(set(seen)):
+                 self.memorised += 1
+                 table = None
+             if table:

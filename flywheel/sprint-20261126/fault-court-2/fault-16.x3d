@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="fault-16"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+<TimeSensor DEF="Clock" cycleInterval="4" loop="true"/>
+<Switch whichChoice="0"><Shape><Appearance><Material diffuseColor="1 0 0"/></Appearance><Box/></Shape></Switch>
+<IntegerSequencer DEF="Seq" key="0 0.5" keyValue="0 1"/>
+<ROUTE fromNode="Clock" fromField="fraction_changed" toNode="Seq" toField="set_fraction"/>
+  </Scene>
+</X3D>

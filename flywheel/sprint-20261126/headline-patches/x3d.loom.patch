@@ -1,0 +1,143 @@
+--- a/LEARNINGS-flywheel-turn-2.md
++++ b/LEARNINGS-flywheel-turn-2.md
+@@ -8,8 +8,8 @@
+ 
+ | Measure | Turn 1 (`4d433af`) | Turn 2 (`f0bde28`) | Grade |
+ |---|---|---|---|
+-| glTF-Validator codes X3D can state, with a failing and a passing scene each | 40 of 88 reported | 88 of 88 | C |
+-| Fault Court, X3D arm | 39 of 53 | 52 of 53 | C (seen set, see 4) |
++| glTF-Validator codes X3D can state, with a failing and a passing scene each | 40 of 88 reported | 88 of the 170 Khronos codes (the 88 the project judged X3D can state; the project classified the rest) | C |
++| Fault Court, X3D arm | 39 of 53 | 52 of 53, a fix confirmation by a rule writer who had seen the faults; held-out figure: Loom arm 17 to 20 of 25 | C (seen set, see 4) |
+ | Fault Court, on the 43 faults glTF can also state | X3D 29, glTF 41 | X3D 42, glTF 41 | C (seen set) |
+ | Decoys flagged | 0 of 10 | 1 of 10 | C |
+ | Clean control findings | 0 | 0 | C |
+--- a/LEARNINGS-flywheel-turn-3.md
++++ b/LEARNINGS-flywheel-turn-3.md
+@@ -24,15 +24,15 @@
+ |---|---|---|
+ | USD rules mapped | 340 of 340 | C |
+ | Rules X3D can state | 66 | C |
+-| ... reported, each with a failing and a passing scene | 66 of 66 | C |
++| ... reported, each with a failing and a passing scene | 66 of the 340 rules (the 66 the project judged X3D can state; the project classified the other 274) | C |
+ | ... how they are reported | XSD 13, checks that existed 20, new checks 28, X3D 4.1 GaussianSplats 5 | C |
+ | Rules X3D's standard makes impossible to break | 32 | C (reading; one row L) |
+ | Rules SimReady fixes differently, so the exporter converts (Z up) | 1 | C |
+ | Rules that are not a validator matter in X3D | 241: USD structure 45, packaging 5, features X3D 4.0 lacks 38, one simulator's schema 44, pipeline or profile policy 92, human judgement 17 | C |
+ | New checks shipped | 18 | C |
+-| Fault Court (seen set) | 52 of 53, unchanged | C |
++| Fault Court (seen set) | 52 of 53, unchanged; a fix confirmation by a rule writer who had seen the faults (held-out: Loom arm 17 to 20 of 25) | C |
+ | Decoys flagged | 1 of 10, unchanged (Z04) | C |
+-| glTF-Validator parity | 88 of 88, unchanged | C |
++| glTF-Validator parity | 88 of the 170 Khronos codes, unchanged (the project classified the other 82) | C |
+ | x3d_mcp test suite | 1,847 before, 1,894 after (+47 new, 0 broken) | C |
+ 
+ By rulebook:
+--- a/LEARNINGS-selfcode.md
++++ b/LEARNINGS-selfcode.md
+@@ -8,7 +8,7 @@
+ 
+ | Measure | Value | Grade |
+ |---|---|---|
+-| Unseen in-vocabulary tasks solved and correct on an unseen stimulus | 87 of 90 (95% interval 91 to 99%) | C |
++| Unseen in-vocabulary tasks solved and correct on an unseen stimulus | 87 of 90 (95% interval 91 to 99%); tasks written by the method's author, judged by the author's simulator | C |
+ | Written files with 0 schema and 0 semantic errors | 267 of 267 | C |
+ | Search cost with memory, tasks solved both ways | 4,109 to 1,018 simulator runs, Wilcoxon p = 2.9e-12 | C |
+ | Out-of-vocabulary controls solved and correct | 1 of 18 (a recording, FM 329) | C |
+--- a/flywheel/README.md
++++ b/flywheel/README.md
+@@ -24,14 +24,14 @@
+ 
+ ## The ledger so far
+ 
+-See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40 of 88 codes. Turn 2 (`f0bde28`): 52 of 53 faults, 88 of 88 codes, 1 of 10 decoys flagged. Turn 3 (`f0bde28` + kit `x3d_mcp-usd-parity`): the same, plus 66 of 66 USD rules X3D can state (of 340); see `LEARNINGS-flywheel-turn-3.md`. Turn 4 (`9e21c4c` + the `q12-coincident-world` patch) adds fired pairs after a Blender USD export (`--usd-join`, x3d.nVidia `q12/join.py`): real files 359 (140 both, 117 X3D only, 102 USD only); see `LEARNINGS-flywheel-turn-4.md`.
++See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40 of 88 codes. Turn 2 (`f0bde28`): 52 of 53 faults (a fix confirmation by a rule writer who had seen all 60 faults; the held-out figure is the Loom arm, 17 to 20 of 25), 88 of the 170 Khronos glTF-Validator codes (the 88 the project judged X3D can state; the project, not an outside party, classified the other 82), 1 of 10 decoys flagged. Turn 3 (`f0bde28` + kit `x3d_mcp-usd-parity`): the same, plus 66 of the 340 USD rules (the 66 the project judged X3D can state; the project classified the other 274); see `LEARNINGS-flywheel-turn-3.md`. Turn 4 (`9e21c4c` + the `q12-coincident-world` patch) adds fired pairs after a Blender USD export (`--usd-join`, x3d.nVidia `q12/join.py`): real files 359 (140 both, 117 X3D only, 102 USD only); see `LEARNINGS-flywheel-turn-4.md`.
+ 
+ ## How to read it honestly
+ 
+ - **Turn 2's Fault Court number is a fix confirmation, not a prediction.** The checks were written by someone who had seen all 60 faults. The only held-out evidence in this repository is still the Fault Court's own Loom arm (17 to 20 of 25, rules written from the other half). A fresh claim needs a new sealed fault list, written by somebody else.
+ - **The one fault still missed, F03, is not a fault in X3D** (nearDistance -1 means automatic, failure mode 319). The real ceiling is 52 of 52.
+ - **The flagged decoy, Z04, is counted as a false alarm because the pre-registration says so.** Keys of 0, 5 and 10 are legal in glTF, where they are seconds. In X3D a TimeSensor fraction runs 0 to 1, so that animation never gets past its first key, and the new check says so. See failure mode 326.
+-- **"88 of 88" is over the mistakes X3D can state.** 46 more codes guard glTF's byte layout and 21 guard structures X3D's design has no place for; those are a property of the format, not a score. 12 are glTF material features X3D 4.0 cannot express at all, which counts against X3D as a language. Three more wait for the Tangent node of X3D 4.1.
++- **"88 of 88" means 88 of the 170 Khronos codes, and the project classified the rest.** The 88 are the mistakes the project judged X3D can state; the same applies to 66 of the 340 USD rules. No outside party has checked that classification. 46 more codes guard glTF's byte layout and 21 guard structures X3D's design has no place for; those are a property of the format, not a score. 12 are glTF material features X3D 4.0 cannot express at all, which counts against X3D as a language. Three more wait for the Tangent node of X3D 4.1.
+ - **Rules by, and model calls.** Every turn so far had its rules written by an agent in a working session with a person present, and the loop itself made 0 model calls. The plan's metric "turns without a person" is still 0.
+ 
+ ## What a turn needs next
+@@ -42,7 +42,7 @@
+ 
+ ## A second loop: selfcode
+ 
+-[`selfcode/`](../selfcode/README.md) closes a smaller loop end to end with no model and no person: a search writes X3D behaviour from one demonstration, a simulator runs it, the kernel checks the file, a memory of wiring shapes makes the next batch cheaper, and a browser replays a sample. It is not in `LEDGER.jsonl`, which tracks the validator; its numbers are in `selfcode/results/results.json`. On real scenes nobody wrote for it ([`selfcode/wild/`](../selfcode/wild/README.md), pre-registered) it rebuilt 39 of 53, nearly all of the small ones and few of the large ones, and it has learned two worlds from recordings made in the Blender node editor.
++[`selfcode/`](../selfcode/README.md) closes a smaller loop end to end. The search made no model calls; its rules, tasks and checks were written by an AI agent with the owner present. A search writes X3D behaviour from one demonstration, a simulator runs it, the kernel checks the file, a memory of wiring shapes makes the next batch cheaper, and a browser replays a sample. It is not in `LEDGER.jsonl`, which tracks the validator; its numbers are in `selfcode/results/results.json`. On real scenes nobody wrote for it ([`selfcode/wild/`](../selfcode/wild/README.md), pre-registered) it rebuilt 39 of 53 (47 of the 100 sampled scenes were left out by counted rules, 50 of the 53 tasks are animation only, and two preregistered predictions failed), nearly all of the small ones and few of the large ones, and it has learned two worlds from recordings made in the Blender node editor.
+ 
+ ## From finding to rule
+ 
+--- a/flywheel/turn.py
++++ b/flywheel/turn.py
+@@ -128,7 +128,9 @@
+ def render(es: list[dict]) -> str:
+     L = ["# Flywheel ledger", "",
+          "One row per measured turn. Written by `flywheel/turn.py measure`; do not edit by hand. The numbers are counts",
+-         "of scenes, from the benchmarks named in `flywheel/README.md`.", "",
++         "of scenes, from the benchmarks named in `flywheel/README.md`. Read \"52 of 53\" as a fix confirmation by a rule writer who had seen",
++         "the faults (the held-out figure is the Loom arm, 17 to 20 of 25). Read \"88 of 88\" as 88 of the 170 Khronos codes and \"66 of 66\" as",
++         "66 of the 340 USD rules; the project, not an outside party, classified the rest. A pass certifies the listed checks only.", "",
+          "| Turn | Date | Validator | Fault Court caught | Decoys flagged | glTF-Validator codes matched | USD rules covered | After a Blender USD export: fired pairs (both / X3D only / USD only) | Rules by | Model calls | What changed |",
+          "|---|---|---|---|---|---|---|---|---|---|---|"]
+     for e in es:
+--- a/selfcode/README.md
++++ b/selfcode/README.md
+@@ -1,6 +1,6 @@
+ # selfcode: X3D behaviour written by search, from one demonstration
+ 
+-A program with no language model and no person in the loop is shown what a world did when it was poked. It writes
++A program that made no model calls while it searched (its rules, tasks and checks were written by an AI agent with the owner present) is shown what a world did when it was poked. It writes
+ the X3D behaviour graph that does the same (sensors, timers, event utilities, followers, interpolator tables, ROUTEs),
+ runs what it wrote, has the kernel check the file, and remembers the wiring shape. The next batch of worlds is cheaper.
+ 
+@@ -19,7 +19,7 @@
+ 
+ | | Hypothesis | Threshold | Result | |
+ |---|---|---|---|---|
+-| H1 | It codes itself | at least 80% of in-vocabulary test tasks solved and correct on the unseen stimulus | 87 of 90 (96.7%, 95% interval 91 to 99%) | pass, C |
++| H1 | It codes itself | at least 80% of in-vocabulary test tasks solved and correct on the unseen stimulus | 87 of 90 (96.7%, 95% interval 91 to 99%); tasks written by the method's author, judged by the author's simulator | pass, C |
+ | H2 | The kernel accepts what it writes | 0 schema and 0 semantic errors in every solved file | 267 of 267 files clean, no warnings | pass, C |
+ | H3 | The lesson matters | long lesson at least as good as short | 87 against 86 | pass, C (by one task) |
+ | H4 | Memory makes the next batch cheaper | total runs at most half, Wilcoxon p < 0.01, at most 3 tasks lost | 4,109 to 1,018 runs (25%), p = 2.9e-12; cheaper on 60, equal on 23, dearer on 4; 87 against 87 correct | pass, C |
+@@ -173,7 +173,7 @@
+ ## After the registered run
+ 
+ - [`wild/`](wild/README.md): the same search on real scenes nobody wrote for it. Pre-registered; 39 of 53 rebuilt and
+-  right on unseen input, 31 of 32 when the original has three behaviour nodes or fewer, 2 of 11 at eleven or more.
++  right on unseen input (47 of the 100 sampled scenes were left out by counted rules, 50 of the 53 tasks are animation only, and two preregistered predictions failed), 31 of 32 when the original has three behaviour nodes or fewer, 2 of 11 at eleven or more.
+ - [`lesson.py`](lesson.py) and [`demonstration/`](demonstration/): the search learns from a recording made by the
+   node editor's recorder (`x3d.activity/1`). Door in 60 runs, counter in 664, both right on unseen input.
+ - [`trace.py`](trace.py) and [`traces/`](traces/): everything the search tried, in order, for three tasks
+--- a/selfcode/wild/README.md
++++ b/selfcode/wild/README.md
+@@ -1,7 +1,7 @@
+ # The wild set: the search on scenes nobody wrote for it
+ 
+ The registered self-coding experiment (`../README.md`) scored 87 of 90, on tasks written by the same hand as the
+-search. This folder asks whether that survives contact with real files: every qualifying `.x3d` scene in the project's
++search and judged by that author's simulator. This folder asks whether that survives contact with real files: every qualifying `.x3d` scene in the project's
+ eighteen repositories, behaviour stripped out, rebuilt by the same search from one demonstration, and marked against
+ the original on input the search never saw.
+ 
+@@ -9,7 +9,7 @@
+ Results: [`results/wild-test.json`](results/wild-test.json). Run 2026-11-26, 183 s on 4 cores.
+ Judges: simulator `x3d-blender-io@3e3c1e8 source/behaviour_sim.py`; kernel `x3d_mcp@f0bde28` (X3D 4.0 XSD + semantic
+ checks). No browser in this experiment: every "rebuilt" is the simulator's verdict.
+-Model calls: 0. People in the loop: 0.
++Model calls: 0. The search ran with no person in the loop; its rules, tasks and checks were written by an AI agent with the owner present.
+ 
+ ## Result
+ 
+@@ -18,7 +18,7 @@
+ 
+ | | Prediction | Result | |
+ |---|---|---|---|
+-| W1 | at least 45% of tasks rebuilt and right on unseen input | **39 of 53 (74%, 95% interval 60 to 84%)** | pass, C |
++| W1 | at least 45% of tasks rebuilt and right on unseen input | **39 of 53 (74%, 95% interval 60 to 84%)**; 47 of the 100 sampled scenes were left out by counted rules, 50 of the 53 tasks are animation only, and two preregistered predictions failed (W3b, W4) | pass, C |
+ | W2 | no written scene adds a kernel error to its original | 39 of 39 add none | pass, C |
+ | W3a | originals of 1-3 behaviour nodes: at least 75% rebuilt | 31 of 32 (97%) | pass, C |
+ | W3b | originals of 11 or more nodes: at most 15% rebuilt | 2 of 11 (18%) | **fail** by one scene, C |

@@ -1,0 +1,62 @@
+--- a/docs/fault-court.md
++++ b/docs/fault-court.md
+@@ -37,8 +37,8 @@
+ 
+ | | Before (x3d_mcp `4d433af`) | After (`f0bde28`) |
+ |---|---|---|
+-| glTF-Validator codes X3D can state, reported by X3D's checks | 40 of 88 | **88 of 88** |
+-| Fault Court, X3D caught | 39 of 53 | **52 of 53** |
++| glTF-Validator codes X3D can state, reported by X3D's checks | 40 of 88 | **88 of the 170 Khronos codes** (the 88 the project judged X3D can state; the project classified the rest) |
++| Fault Court, X3D caught | 39 of 53 | **52 of 53**, a fix confirmation by a rule writer who had seen the faults (held-out figure: Loom arm, 17 to 20 of 25) |
+ | On the 43 mistakes glTF can also state | X3D 29, glTF 41 | X3D 42, glTF 41 |
+ | Decoys flagged | 0 of 10 | 1 of 10 |
+ 
+@@ -55,7 +55,7 @@
+ 
+ ## Turn 3 (26 Nov 2026): the USD rulebooks
+ 
+-The same method against USD: all 340 rules of OpenUSD's validators, NVIDIA's Omniverse Asset Validator and the SimReady Foundation. X3D can state 66 of them, and its validator now reports all 66; 32 more cannot be broken in X3D at all. See [usd-parity.md](usd-parity.md).
++The same method against USD: all 340 rules of OpenUSD's validators, NVIDIA's Omniverse Asset Validator and the SimReady Foundation. The project judged that X3D can state 66 of them (66 of 340; the project classified the rest), and its validator now reports those 66; 32 more cannot be broken in X3D at all. See [usd-parity.md](usd-parity.md).
+ 
+ ## The rules on a new stack (26 Nov 2026)
+ 
+--- a/docs/self-coding.md
++++ b/docs/self-coding.md
+@@ -5,7 +5,7 @@
+ ## The test
+ 
+ - **The task.** A static stage with four objects. A hidden reference behaviour is poked by a script (hover, press, drag, release, leave). The synthesiser sees only what the watched fields did every 0.05 s.
+-- **The method.** Search over sensors, timers, event utilities, followers and ROUTEs, typed by the X3DUOM catalogue. Interpolator tables are fitted, not searched. One simulator run is the unit of cost. No language model, no person.
++- **The method.** Search over sensors, timers, event utilities, followers and ROUTEs, typed by the X3DUOM catalogue. Interpolator tables are fitted, not searched. One simulator run is the unit of cost. The search made no model calls; its rules, tasks and checks were written by an AI agent with the owner present.
+ - **The judges.** The simulator on a stimulus the search never saw; the x3d_mcp kernel (X3D 4.0 XSD and semantic checks, `f0bde28`) on every written file; X_ITE in a browser on a sample.
+ - **Registered first.** Five hypotheses were committed (`ec934f1`) before any test seed was run.
+ 
+@@ -13,7 +13,7 @@
+ 
+ | Hypothesis | Result | Grade |
+ |---|---|---|
+-| It codes itself: at least 80% of unseen in-vocabulary tasks solved and correct on an unseen stimulus | 87 of 90 (95% interval 91 to 99%) | C |
++| It codes itself: at least 80% of unseen in-vocabulary tasks solved and correct on an unseen stimulus | 87 of 90 (95% interval 91 to 99%); tasks written by the method's author, judged by the author's simulator | C |
+ | The kernel accepts every file it writes | 267 of 267 with 0 schema and 0 semantic errors | C |
+ | A longer lesson is at least as good as a short one | 87 against 86 | C |
+ | Memory halves the search on the next batch | 4,109 to 1,018 simulator runs, Wilcoxon p = 2.9e-12, no loss of correctness | C |
+@@ -34,7 +34,7 @@
+ | | Result |
+ |---|---|
+ | Left out, each for a counted reason | 47 of 100 |
+-| Rebuilt from one demonstration and right on unseen input | 39 of 53 (74%, 95% interval 60 to 84%) |
++| Rebuilt from one demonstration and right on unseen input | 39 of 53 (74%, 95% interval 60 to 84%); 47 of the 100 sampled scenes were left out by counted rules, 50 of the 53 tasks are animation only, and two preregistered predictions failed |
+ | Written scenes that add a kernel error | 0 of 39 |
+ | Originals of 1-3 behaviour nodes | 31 of 32 |
+ | Originals of 4-10 nodes | 4 of 8 |
+--- a/docs/usd-parity.md
++++ b/docs/usd-parity.md
+@@ -18,7 +18,7 @@
+ 
+ | What X3D does with the mistake | Rules |
+ |---|---|
+-| **X3D can state it, and its validator reports it** (each with a scene it must flag and a scene it must pass) | **66 of 66** |
++| **X3D can state it, and its validator reports it** (each with a scene it must flag and a scene it must pass) | **66 of the 340 rules** (the 66 the project judged X3D can state; the project classified the other 274) |
+ | X3D's standard makes the mistake impossible (one root, +Y up, metres, seconds, normals computed when absent) | 32 |
+ | SimReady fixes it differently (Z up); the exporter converts, and Blender's USD export already writes Z up | 1 |
+ | USD machinery X3D does not have (layers, variants, API schemas, subsets, packages) | 50 |

@@ -1,7 +1,7 @@
 # The wild set: the search on scenes nobody wrote for it
 
 The registered self-coding experiment (`../README.md`) scored 87 of 90, on tasks written by the same hand as the
-search. This folder asks whether that survives contact with real files: every qualifying `.x3d` scene in the project's
+search and judged by that author's simulator. This folder asks whether that survives contact with real files: every qualifying `.x3d` scene in the project's
 eighteen repositories, behaviour stripped out, rebuilt by the same search from one demonstration, and marked against
 the original on input the search never saw.
 
@@ -9,7 +9,7 @@ Pre-registration: [`PREREG.md`](PREREG.md), commit `31461d5`, pushed before the 
 Results: [`results/wild-test.json`](results/wild-test.json). Run 2026-11-26, 183 s on 4 cores.
 Judges: simulator `x3d-blender-io@3e3c1e8 source/behaviour_sim.py`; kernel `x3d_mcp@f0bde28` (X3D 4.0 XSD + semantic
 checks). No browser in this experiment: every "rebuilt" is the simulator's verdict.
-Model calls: 0. People in the loop: 0.
+Model calls: 0. The search ran with no person in the loop; its rules, tasks and checks were written by an AI agent with the owner present.
 
 ## Result
 
@@ -18,7 +18,7 @@ before the run.
 
 | | Prediction | Result | |
 |---|---|---|---|
-| W1 | at least 45% of tasks rebuilt and right on unseen input | **39 of 53 (74%, 95% interval 60 to 84%)** | pass, C |
+| W1 | at least 45% of tasks rebuilt and right on unseen input | **39 of 53 (74%, 95% interval 60 to 84%)**; 47 of the 100 sampled scenes were left out by counted rules, 50 of the 53 tasks are animation only, and two preregistered predictions failed (W3b, W4) | pass, C |
 | W2 | no written scene adds a kernel error to its original | 39 of 39 add none | pass, C |
 | W3a | originals of 1-3 behaviour nodes: at least 75% rebuilt | 31 of 32 (97%) | pass, C |
 | W3b | originals of 11 or more nodes: at most 15% rebuilt | 2 of 11 (18%) | **fail** by one scene, C |

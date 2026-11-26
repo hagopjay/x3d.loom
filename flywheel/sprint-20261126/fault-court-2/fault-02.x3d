@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="fault-02"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+<TimeSensor DEF="Clock" cycleInterval="4" loop="true"/>
+<Transform><Shape><Appearance><Material/></Appearance><Cylinder DEF="Cyl" radius="1"/></Shape></Transform>
+<ScalarInterpolator DEF="SI" key="0 1" keyValue="1 3"/>
+<ROUTE fromNode="Clock" fromField="fraction_changed" toNode="SI" toField="set_fraction"/>
+<ROUTE fromNode="SI" fromField="value_changed" toNode="Cyl" toField="radius"/>
+  </Scene>
+</X3D>

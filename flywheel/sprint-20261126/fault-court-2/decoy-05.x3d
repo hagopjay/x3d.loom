@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="decoy-05"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+<Switch DEF="Sw" whichChoice="-1"><Shape><Appearance><Material diffuseColor="1 0 0"/></Appearance><Box/></Shape></Switch>
+<TouchSensor DEF="Touch"/>
+<ROUTE fromNode="Touch" fromField="isOver" toNode="Sw" toField="whichChoice"/>
+  </Scene>
+</X3D>

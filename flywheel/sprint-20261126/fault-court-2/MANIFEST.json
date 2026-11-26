@@ -1,0 +1,127 @@
+{
+ "fault-01.x3d": {
+  "fault": "SFFloat output of ScalarInterpolator routed to SFVec3f translation.",
+  "viewer_sees": "Box does not move; browser logs ROUTE error.",
+  "spec": "Error (type mismatch)"
+ },
+ "fault-02.x3d": {
+  "fault": "ROUTE targets Cylinder.radius, an initializeOnly field.",
+  "viewer_sees": "Cylinder never grows.",
+  "spec": "Error (field not an input event target)"
+ },
+ "fault-03.x3d": {
+  "fault": "ROUTE source is PositionInterpolator.set_fraction, an inputOnly field.",
+  "viewer_sees": "Box never moves.",
+  "spec": "Error"
+ },
+ "fault-04.x3d": {
+  "fault": "Misspelled event name fraction_change (should be fraction_changed).",
+  "viewer_sees": "Box stays still.",
+  "spec": "Error (unknown field)"
+ },
+ "fault-05.x3d": {
+  "fault": "stopTime (2) earlier than startTime (5), loop false.",
+  "viewer_sees": "Intent to stop is ignored per spec; runs once at t=5 instead of never. Not what the author wanted.",
+  "spec": "Unwise; spec says stopTime<=startTime ignored"
+ },
+ "fault-06.x3d": {
+  "fault": "cycleInterval is 0.",
+  "viewer_sees": "Timer inactive, box never moves.",
+  "spec": "Error (cycleInterval must be >0; ignored if <=0)"
+ },
+ "fault-07.x3d": {
+  "fault": "Interpolator has 3 keys but 2 keyValues.",
+  "viewer_sees": "Box jumps or does nothing.",
+  "spec": "Spec: browser behaviour undefined / must be same count (error)"
+ },
+ "fault-08.x3d": {
+  "fault": "Keys not ascending (0.8 then 0.4).",
+  "viewer_sees": "Box jerks back and forth.",
+  "spec": "Error (keys must be non-decreasing)"
+ },
+ "fault-09.x3d": {
+  "fault": "Keys extend to 2 but TimeSensor fraction only reaches 1; last key never reached.",
+  "viewer_sees": "Box stops halfway at x=3 instead of 6.",
+  "spec": "Legal; merely unwise"
+ },
+ "fault-10.x3d": {
+  "fault": "Orientation step of 4 rad (>pi) between two keys.",
+  "viewer_sees": "Rotation takes short path the opposite way (by 2.28 rad other direction).",
+  "spec": "Legal (slerp shortest path); unwise"
+ },
+ "fault-11.x3d": {
+  "fault": "Full 0..2pi spin written as one step.",
+  "viewer_sees": "Box does not rotate at all.",
+  "spec": "Legal; unwise"
+ },
+ "fault-12.x3d": {
+  "fault": "TouchSensor lives in its own Group, sibling of no geometry.",
+  "viewer_sees": "Clicking box does nothing.",
+  "spec": "Legal; sensor senses nothing"
+ },
+ "fault-13.x3d": {
+  "fault": "TouchSensor enabled=false is the only trigger for the timer.",
+  "viewer_sees": "Clicking does nothing; box never moves.",
+  "spec": "Legal; unwise"
+ },
+ "fault-14.x3d": {
+  "fault": "BooleanToggle output (toggle) is never routed anywhere.",
+  "viewer_sees": "Click toggles internal state, nothing visible.",
+  "spec": "Legal; dead end"
+ },
+ "fault-15.x3d": {
+  "fault": "IntegerSequencer value 3 drives Switch with only 2 children (and routes to whichChoice, which is inputOutput).",
+  "viewer_sees": "Shape blinks to nothing at choice 3.",
+  "spec": "Legal; out-of-range whichChoice shows nothing"
+ },
+ "fault-16.x3d": {
+  "fault": "Sequencer has keys and input but no ROUTE out.",
+  "viewer_sees": "Nothing changes.",
+  "spec": "Legal; dead end"
+ },
+ "fault-17.x3d": {
+  "fault": "Two interpolators drive Transform.translation simultaneously (fan-in).",
+  "viewer_sees": "Box jitters along diagonal; last event wins.",
+  "spec": "Legal; unwise"
+ },
+ "fault-18.x3d": {
+  "fault": "ROUTE cycle between two transforms with no break.",
+  "viewer_sees": "Once either is moved both chase each other (loop broken by same-timestamp rule).",
+  "spec": "Legal (spec loop breaking); unwise"
+ },
+ "fault-19.x3d": {
+  "fault": "ProximitySensor size 0 0 0 (disabled).",
+  "viewer_sees": "Never reacts.",
+  "spec": "Legal (size 0 disables)"
+ },
+ "fault-20.x3d": {
+  "fault": "Script has no url/source and routed outputs.",
+  "viewer_sees": "Nothing moves.",
+  "spec": "Error/warn (Script needs url or inline source)"
+ },
+ "decoy-01.x3d": {
+  "fault": "DECOY: two equal keys with different values (deliberate jump).",
+  "viewer_sees": "Box slides, jumps 2 units at 50%, slides on.",
+  "spec": "Legal and correct"
+ },
+ "decoy-02.x3d": {
+  "fault": "DECOY: sampled full spin ending at 2pi; every step is pi/2.",
+  "viewer_sees": "Smooth full rotation.",
+  "spec": "Legal and correct"
+ },
+ "decoy-03.x3d": {
+  "fault": "DECOY: USE of a TouchSensor in a second group.",
+  "viewer_sees": "Clicking either box fires.",
+  "spec": "Legal and correct"
+ },
+ "decoy-04.x3d": {
+  "fault": "DECOY: ROUTE using bare field names (aliases for set_/_changed): to PI.fraction (alias of set_fraction), to T.translation.",
+  "viewer_sees": "Box slides.",
+  "spec": "Legal (inputOutput/alias naming allowed) but PI.fraction alias: set_fraction only; treat as borderline legal"
+ },
+ "decoy-05.x3d": {
+  "fault": "DECOY: Switch whichChoice=-1 deliberately hides content; TouchSensor at root with no sibling geometry.",
+  "viewer_sees": "Nothing visible (intentional hidden start). Sensor senses Switch siblings only: none, thus actually dead.",
+  "spec": "Mostly legal; arguably a real fault (note)"
+ }
+}

@@ -24,15 +24,15 @@ Instruments:
 |---|---|---|
 | USD rules mapped | 340 of 340 | C |
 | Rules X3D can state | 66 | C |
-| ... reported, each with a failing and a passing scene | 66 of 66 | C |
+| ... reported, each with a failing and a passing scene | 66 of the 340 rules (the 66 the project judged X3D can state; the project classified the other 274) | C |
 | ... how they are reported | XSD 13, checks that existed 20, new checks 28, X3D 4.1 GaussianSplats 5 | C |
 | Rules X3D's standard makes impossible to break | 32 | C (reading; one row L) |
 | Rules SimReady fixes differently, so the exporter converts (Z up) | 1 | C |
 | Rules that are not a validator matter in X3D | 241: USD structure 45, packaging 5, features X3D 4.0 lacks 38, one simulator's schema 44, pipeline or profile policy 92, human judgement 17 | C |
 | New checks shipped | 18 | C |
-| Fault Court (seen set) | 52 of 53, unchanged | C |
+| Fault Court (seen set) | 52 of 53, unchanged; a fix confirmation by a rule writer who had seen the faults (held-out: Loom arm 17 to 20 of 25) | C |
 | Decoys flagged | 1 of 10, unchanged (Z04) | C |
-| glTF-Validator parity | 88 of 88, unchanged | C |
+| glTF-Validator parity | 88 of the 170 Khronos codes, unchanged (the project classified the other 82) | C |
 | x3d_mcp test suite | 1,847 before, 1,894 after (+47 new, 0 broken) | C |
 
 By rulebook:

@@ -1,0 +1,292 @@
+{
+ "decoy-01.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": []
+ },
+ "decoy-02.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": []
+ },
+ "decoy-03.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": [
+   [
+    "info",
+    "shape-no-appearance",
+    "Shape has no Appearance. The shape will render with a default white material."
+   ]
+  ]
+ },
+ "decoy-04.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": []
+ },
+ "decoy-05.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": []
+ },
+ "fault-01.x3d": {
+  "xsd": {
+   "valid": false,
+   "errors": [
+    "Line 6: Element 'Material': This element is not expected. Expected is one of ( IS, MetadataBoolean, MetadataDouble, MetadataFloat, MetadataInteger, MetadataSet, MetadataString, Appearance, Box, Cone )."
+   ]
+  },
+  "semantic": [
+   [
+    "error",
+    "containerfield-unknown",
+    "Material containerField='material' but Shape has no field named 'material'. Material's default containerField is 'material', which does not fit a Shape -- an ex"
+   ],
+   [
+    "info",
+    "shape-no-appearance",
+    "Shape has no Appearance. The shape will render with a default white material."
+   ]
+  ]
+ },
+ "fault-02.x3d": {
+  "xsd": {
+   "valid": false,
+   "errors": [
+    "Line 6: Element 'Appearance': This element is not expected."
+   ]
+  },
+  "semantic": [
+   [
+    "info",
+    "shape-no-appearance",
+    "Shape has no Appearance. The shape will render with a default white material."
+   ]
+  ]
+ },
+ "fault-03.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": [
+   [
+    "error",
+    "use-type-mismatch",
+    "Appearance USE='S1' names a Sphere, not a Appearance. A USE is another appearance of the same node, so the element name must match the DEF's."
+   ]
+  ]
+ },
+ "fault-04.x3d": {
+  "xsd": {
+   "valid": false,
+   "errors": [
+    "Line 6: Element 'Shape', attribute 'DEF': 'A' is not a valid value of the atomic type 'xs:ID'."
+   ]
+  },
+  "semantic": [
+   [
+    "error",
+    "duplicate-def",
+    "Duplicate DEF name 'A': first used on Shape, also used on Shape. DEF names must be unique within a scene."
+   ],
+   [
+    "info",
+    "unused-def",
+    "DEF='A' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   ]
+  ]
+ },
+ "fault-05.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": []
+ },
+ "fault-06.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": [
+   [
+    "error",
+    "index-out-of-range",
+    "IndexedFaceSet coordIndex uses 4 but the coordinate node has 4 point(s) (valid 0 to 3, -1 ends a face); 1 bad entry."
+   ],
+   [
+    "info",
+    "mesh-unused-point",
+    "Coordinate 1 of 4 point(s) are used by no index; they cost memory and skew bounds."
+   ]
+  ]
+ },
+ "fault-07.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": []
+ },
+ "fault-08.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": [
+   [
+    "error",
+    "array-count",
+    "ElevationGrid height has 8 value(s) but xDimension x zDimension = 3 x 3 = 9."
+   ]
+  ]
+ },
+ "fault-09.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": []
+ },
+ "fault-10.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": []
+ },
+ "fault-11.x3d": {
+  "xsd": {
+   "valid": false,
+   "errors": [
+    "Line 6: Element 'PhysicalMaterial', attribute 'roughness': [facet 'maxInclusive'] The value '2' is greater than the maximum value allowed ('1')."
+   ]
+  },
+  "semantic": [
+   [
+    "error",
+    "profile-component",
+    "PhysicalMaterial (component Shape level 2, not declared) is outside profile 'Immersive'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   ],
+   [
+    "info",
+    "profile-component-fix",
+    "Add to <head>: <component name='Shape' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   ]
+  ]
+ },
+ "fault-12.x3d": {
+  "xsd": {
+   "valid": false,
+   "errors": [
+    "Line 6: Element 'Material', attribute 'diffuseColor': [facet 'pattern'] The value '255 0 0' is not accepted by the pattern '\\s*(([+]?((0(\\.[0-9]*)?|\\.[0-9]+)|1(\\.0*)?)([Ee][+-]?[0-9]+)?)\\s+){2}([+]?((0(\\.[0-9]*)?|\\.[0-9]+)|1(\\.0*)?)([Ee][+-]?[0-9]+)?)\\s*'."
+   ]
+  },
+  "semantic": [
+   [
+    "error",
+    "colour-out-of-range",
+    "Material diffuseColor: the colour is '255 0 0', but each component must be between 0 and 1 (1 component out of range). Clamp to 0..1, or divide by 255 if the va"
+   ]
+  ]
+ },
+ "fault-13.x3d": {
+  "xsd": {
+   "valid": false,
+   "errors": [
+    "Line 5: Element 'Viewpoint', attribute 'fieldOfView': [facet 'maxExclusive'] The value '45' must be less than '3.1416'."
+   ]
+  },
+  "semantic": []
+ },
+ "fault-14.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": [
+   [
+    "info",
+    "unused-def",
+    "DEF='sp' (SpotLight) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   ],
+   [
+    "warning",
+    "spot-beam-wider-than-cutoff",
+    "SpotLight (DEF='sp') beamWidth=1.2 is wider than cutOffAngle=0.2; the beam is treated as equal to the cut-off, so the soft edge you asked for is lost."
+   ]
+  ]
+ },
+ "fault-15.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": []
+ },
+ "fault-16.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": [
+   [
+    "warning",
+    "scale-zero",
+    "Transform scale='1 0 1' has a zero component: everything under it collapses and picking and normals break."
+   ]
+  ]
+ },
+ "fault-17.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": []
+ },
+ "fault-18.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": [
+   [
+    "error",
+    "lod-range-order",
+    "LOD range is not increasing: range[0]=50.0 is followed by range[1]=20.0. Each switch distance must be larger than the last."
+   ]
+  ]
+ },
+ "fault-19.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": [
+   [
+    "error",
+    "array-count",
+    "Background skyColor has 2 colour(s) but skyAngle has 3 angle(s); skyColor needs 4 (one more than skyAngle)."
+   ]
+  ]
+ },
+ "fault-20.x3d": {
+  "xsd": {
+   "valid": true,
+   "errors": []
+  },
+  "semantic": []
+ }
+}

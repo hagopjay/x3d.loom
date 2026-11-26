@@ -1,0 +1,260 @@
+{
+ "decoy-01.x3d": {
+  "semantic": [],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "decoy-02.x3d": {
+  "semantic": [],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "decoy-03.x3d": {
+  "semantic": [],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "decoy-04.x3d": {
+  "semantic": [
+   [
+    "error",
+    "route-invalid-to-field",
+    "ROUTE toField='fraction' does not exist on PositionInterpolator (DEF='PI')."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "decoy-05.x3d": {
+  "semantic": [
+   [
+    "error",
+    "route-type-mismatch",
+    "ROUTE type mismatch: Touch.isOver is SFBool but Sw.whichChoice is SFInt32. ROUTE requires matching field types."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-01.x3d": {
+  "semantic": [
+   [
+    "error",
+    "route-type-mismatch",
+    "ROUTE type mismatch: SI.value_changed is SFFloat but T.set_translation is SFVec3f. ROUTE requires matching field types."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-02.x3d": {
+  "semantic": [
+   [
+    "error",
+    "route-wrong-access-type",
+    "ROUTE toField='radius' on Cylinder has accessType='initializeOnly' -- must be 'inputOnly' or 'inputOutput' to be a ROUTE destination."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-03.x3d": {
+  "semantic": [
+   [
+    "error",
+    "route-wrong-access-type",
+    "ROUTE fromField='set_fraction' on PositionInterpolator has accessType='inputOnly' -- must be 'outputOnly' or 'inputOutput' to be a ROUTE source."
+   ],
+   [
+    "error",
+    "route-type-mismatch",
+    "ROUTE type mismatch: PI.set_fraction is SFFloat but T.set_translation is SFVec3f. ROUTE requires matching field types."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-04.x3d": {
+  "semantic": [
+   [
+    "error",
+    "route-invalid-from-field",
+    "ROUTE fromField='fraction_change' does not exist on TimeSensor (DEF='Clock')."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-05.x3d": {
+  "semantic": [],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-06.x3d": {
+  "semantic": [
+   [
+    "warning",
+    "cycle-interval-zero",
+    "TimeSensor (DEF='Clock') cycleInterval='0': 19775-1 gives the range as greater than 0, so the sensor never completes a cycle (the schema itself allows 0)."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-07.x3d": {
+  "semantic": [
+   [
+    "error",
+    "interpolator-key-length",
+    "PositionInterpolator (DEF='PI'): expected 3 keyValue float(s) per key (3 keys -> 9), got 2 per key (6 total)."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-08.x3d": {
+  "semantic": [
+   [
+    "error",
+    "interpolator-key-order",
+    "PositionInterpolator (DEF='PI') key is not in increasing order: key[1]=0.8 is followed by key[2]=0.4. Sort the keys and their keyValue entries together."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-09.x3d": {
+  "semantic": [
+   [
+    "warning",
+    "interpolator-key-unreachable",
+    "PositionInterpolator (DEF='PI') has keys from 0 to 2 but is driven by TimeSensor 'Clock', whose fraction only runs 0 to 1; the keys outside are never reached."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-10.x3d": {
+  "semantic": [
+   [
+    "warning",
+    "orientation-step-long-way",
+    "OrientationInterpolator (DEF='PI') step 0 to 1 is written as 4 rad, more than pi, and plays as 2.28318531 rad the other way: interpolation takes the shortest path. Add key values so every step is clearly shorter than pi."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-11.x3d": {
+  "semantic": [
+   [
+    "warning",
+    "orientation-never-turns",
+    "OrientationInterpolator (DEF='PI') is written to turn 6.2832 rad from key value 0 to 1, but its key values are all the same orientation to within 1.5e-05 rad, so nothing turns. A full turn needs steps shorter than pi, for example angles 0, 2.094, 4.189, 6.283."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-12.x3d": {
+  "semantic": [],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-13.x3d": {
+  "semantic": [],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-14.x3d": {
+  "semantic": [],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-15.x3d": {
+  "semantic": [],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-16.x3d": {
+  "semantic": [],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-17.x3d": {
+  "semantic": [
+   [
+    "warning",
+    "route-fan-in",
+    "ROUTE T.translation is driven by both 'PI' and 'PI2'; when both fire in the same frame the winner is undefined."
+   ]
+  ],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-18.x3d": {
+  "semantic": [],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-19.x3d": {
+  "semantic": [],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ },
+ "fault-20.x3d": {
+  "semantic": [],
+  "xsd": {
+   "valid": true,
+   "errors": []
+  }
+ }
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="fault-19"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+<Transform DEF="T"><Shape><Appearance><Material diffuseColor="1 0 0"/></Appearance><Box/></Shape></Transform>
+<ProximitySensor DEF="Prox" size="0 0 0"/>
+<ROUTE fromNode="Prox" fromField="position_changed" toNode="T" toField="set_translation"/>
+  </Scene>
+</X3D>
