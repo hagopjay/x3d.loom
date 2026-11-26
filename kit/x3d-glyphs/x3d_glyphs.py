@@ -47,11 +47,24 @@ class GlyphText:
             x += lib.advance(ch)
         return f"<Transform translation='0 {_f(-0.34 * size)} 0' scale='{_f(size)} {_f(size)} {_f(size)}'>{''.join(parts)}</Transform>"
 
+    @staticmethod
+    def _drop_degenerate(pts, tris):
+        """Drop triangles whose corners are collinear after the coordinates are rounded to the written precision (4 decimals): the
+        x3d_mcp check mesh-zero-area-face found 31 such faces in the Landscape world (written at 3 decimals; this kit writes 4: 4 glyph meshes of its 118 warned before the filter, 0 after, Ubuntu R and B)."""
+        r = [(round(float(x), 4), round(float(y), 4)) for x, y in pts]
+        keep = []
+        for a, b, c in tris:
+            (ax, ay), (bx, by), (cx, cy) = r[a], r[b], r[c]
+            if abs((bx - ax) * (cy - ay) - (cx - ax) * (by - ay)) > 1e-9:
+                keep.append((a, b, c))
+        return keep
+
     def library_xml(self, name: str = "GlyphLibrary") -> str:
         inv = {v: k for k, v in self.inks.items()}
         out, geos, apps = [f"<Switch DEF='{name}' whichChoice='-1'>"], set(), set()
         for (fk, ch, ink), sname in self.combos.items():
             pts, tris = self.fonts[fk].mesh(ch)
+            tris = self._drop_degenerate(pts, tris)
             gname = f"G{fk}{ord(ch)}"
             app = (f"<Appearance USE='{ink}'/>" if ink in apps else
                    f"<Appearance DEF='{ink}'><UnlitMaterial emissiveColor='{inv[ink]}'/></Appearance>")
