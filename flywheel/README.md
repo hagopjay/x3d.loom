@@ -24,7 +24,7 @@ Needs Python with lxml and a checkout of the x3d_mcp validator. No model is call
 
 ## The ledger so far
 
-See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40 of 88 codes. Turn 2 (`f0bde28`): 52 of 53 faults, 88 of 88 codes, 1 of 10 decoys flagged. Turn 3 (`f0bde28` + kit `x3d_mcp-usd-parity`): the same, plus 66 of 66 USD rules X3D can state (of 340); see `LEARNINGS-flywheel-turn-3.md`.
+See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40 of 88 codes. Turn 2 (`f0bde28`): 52 of 53 faults, 88 of 88 codes, 1 of 10 decoys flagged. Turn 3 (`f0bde28` + kit `x3d_mcp-usd-parity`): the same, plus 66 of 66 USD rules X3D can state (of 340); see `LEARNINGS-flywheel-turn-3.md`. Turn 4 (`9e21c4c` + the `q12-coincident-world` patch) adds fired pairs after a Blender USD export (`--usd-join`, x3d.nVidia `q12/join.py`): real files 359 (140 both, 117 X3D only, 102 USD only); see `LEARNINGS-flywheel-turn-4.md`.
 
 ## How to read it honestly
 
