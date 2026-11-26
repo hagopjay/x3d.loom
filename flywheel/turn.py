@@ -16,6 +16,12 @@ Benchmarks (each is a fixed, public set of scenes; no model is called and nothin
                    NVIDIA's Omniverse Asset Validator and the SimReady Foundation requirements (340), with one
                    failing and one passing scene for each rule X3D can state (absent in checkouts before turn 3)
 
+    usd-join       (turn 4 on, optional) an executed run: X3D scenes exported through Blender to USD, judged by the
+                   three rulebooks, joined per rule with x3d_mcp's verdict on the source (x3d.nVidia q12/join.py).
+                   Recorded as fired pairs (either side reports the fault), split into both, X3D only and USD only,
+                   per corpus (loom FM 373: a score of quiet pairs says nothing). Given with --usd-join; the file's
+                   sha256 and the validator commit it was run with are kept beside the counts.
+
 The validator measured is the checkout given with --x3d-mcp, at whatever commit it is on. An entry made
 from a checkout with uncommitted changes is marked dirty and should not be cited. A turn measured on a
 kit before it is merged names the base commit and the patch instead (--base and --patch), because git am
@@ -108,21 +114,35 @@ def entries() -> list[dict]:
     return [json.loads(x) for x in LEDGER.read_text().splitlines() if x.strip()] if LEDGER.exists() else []
 
 
+def measure_join(path: Path) -> dict:
+    """Fired pairs per corpus, Z-up orientation, from a q12 join receipt (x3d.nVidia q12/join.py)."""
+    d = json.loads(path.read_text())
+    out = {"file": path.name, "sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "corpora": {}}
+    for name, c in d["corpora"].items():
+        o = c["orientations"]["z"]
+        out["corpora"][name] = {"scenes": o["scenes"], **o["fired_pairs"],
+                                "mapped_rules": sum(o["mapped_executed"].values()), "executed_rules": o["executed_rules"]}
+    return out
+
+
 def render(es: list[dict]) -> str:
     L = ["# Flywheel ledger", "",
          "One row per measured turn. Written by `flywheel/turn.py measure`; do not edit by hand. The numbers are counts",
          "of scenes, from the benchmarks named in `flywheel/README.md`.", "",
-         "| Turn | Date | Validator | Fault Court caught | Decoys flagged | glTF-Validator codes matched | USD rules covered | Rules by | Model calls | What changed |",
-         "|---|---|---|---|---|---|---|---|---|---|"]
+         "| Turn | Date | Validator | Fault Court caught | Decoys flagged | glTF-Validator codes matched | USD rules covered | After a Blender USD export: fired pairs (both / X3D only / USD only) | Rules by | Model calls | What changed |",
+         "|---|---|---|---|---|---|---|---|---|---|---|"]
     for e in es:
         c, p, u = e["fault_court"], e["gltf_parity"], e.get("usd_parity")
         usd = f"{u['covered']} of {u['stateable']} (of {u['rules']} rules)" if u else "not measured"
         who = f"`{e['validator']}`" + (" (dirty)" if e.get("dirty") else "")
         if e.get("patch"):
             who = f"`x3d_mcp@{e['patch']['base']}` + `{e['patch']['name']}` (sha256 {e['patch']['sha256'][:12]})"
+        j = e.get("usd_join")
+        join = "; ".join(f"{k} {v['total']} ({v['both']} / {v['x3d_only']} / {v['usd_only']}) on {v['scenes']}"
+                         for k, v in j["corpora"].items()) + f", x3d_mcp@{j['validator']}" if j else "not measured"
         L.append(f"| {e['turn']} | {e['date']} | {who} | "
                  f"{c['caught']} of {c['stateable']} | {len(c['decoys_flagged'])} of 10 | {p['covered']} of {p['stateable']} | "
-                 f"{usd} | {e['rules_by']} | {e['model_calls']} | {e['what']} |")
+                 f"{usd} | {join} | {e['rules_by']} | {e['model_calls']} | {e['what']} |")
     if es:
         last = es[-1]
         L += ["", "## Open after the last turn", "",
@@ -149,6 +169,8 @@ def main() -> None:
     m.add_argument("--date", default=datetime.date.today().isoformat())
     m.add_argument("--base", help="with --patch: the commit the patch applies to (the checkout holds base + patch)")
     m.add_argument("--patch", type=Path, help="the kit's .patch, when the turn is measured before the kit is merged")
+    m.add_argument("--usd-join", type=Path, help="a q12 join receipt (x3d.nVidia q12/join.py): fired pairs after a Blender USD export")
+    m.add_argument("--usd-join-validator", help="the x3d_mcp commit the join was run with")
     sub.add_parser("show")
     a = ap.parse_args()
     es = entries()
@@ -159,6 +181,8 @@ def main() -> None:
              "fault_court": measure_court(mcp), "gltf_parity": measure_parity(mcp, (a.fixtures or mcp / "tests" / "gltf_parity.py").resolve()),
              "usd_parity": measure_usd(mcp),
              "rules_by": a.rules_by, "model_calls": a.model_calls, "what": a.what}
+        if a.usd_join:
+            e["usd_join"] = dict(measure_join(a.usd_join.resolve()), validator=a.usd_join_validator or "unknown")
         if a.patch:
             if not a.base:
                 raise SystemExit("--patch needs --base")
