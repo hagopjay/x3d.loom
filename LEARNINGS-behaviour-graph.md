@@ -209,3 +209,21 @@ llvmpipe, OpenGL 4.5, `.github/workflows/eyetest.yml`), whose screenshots a revi
 
 Still not proven: the overlay on a real GPU and on a Mac, by a person; Blender 4.5 and 5.1 with a window; the overlay's
 cost on a large tree while redrawing. Activity costs Player.step +15 % (4.35 to 4.99 ms, fan N=1000).
+
+## Version 2.8 (26 Nov 2026): the pair judge meets real scenes; joints, Switch and shader fields as targets
+
+Code: x3d-blender-io pull request 96 (add-on 2.7.8). Instruments: the unit suite on the bpy 5.3.0 wheel (1,341 pass,
+35 skipped), `tools/behaviour_fuzz.py` (seeds 1 to 3), `tools/behaviour_sim_judge.py` and
+`tools/behaviour_pair_judge.py` against X_ITE 16.8.1 in headless Chromium. The pair judge's defects were found by the
+search lane on real scenes (`selfcode/wild/COURT.md`, failure modes 379 to 382). Failure modes 383 to 385.
+
+| # | Finding | Grade | Evidence | Rule it suggests |
+|---|---|---|---|---|
+| 64 | **The judge was blind and said "same".** Sequential replays of a 20 s loop watched for 4 s: the file against itself is outside tolerance on up to 100 % of samples. Now that reads "unclear, blind" (median floor 0.5 or more). Run at the same moment in two browsers and compared at X_ITE's own time stamps (wall-clock seconds), the same file reads floor 0 and "same", and a changed keyValue "differs". The search lane's real scenes had no floor between 0.44 and 1.0, which supports 0.5. | Confirmed (three small worlds); Likely for the 0.5 limit | `tests/test_behaviour_pair_judge.py`, browser cases at load 1.3 to 7.0 | FM 383 |
+| 65 | **Rotations must be compared as rotations.** "0 1 0 6.17" and "0 -1 0 0.11" are 6.2 apart as numbers and 0.041 rad apart as rotations. With that, a turntable keyed 3.14159265 against one printed 3.141593 differs by about 3.1 rad on 97 % of samples: failure mode 357 seen by the pair judge. | Confirmed | turntable browser test, two runs | Compare by the angle between; state the unit |
+| 66 | **A wished-for target that the standard does not have.** HAnimJoint, HAnimSite, Switch.whichChoice and ComposedShader `<field>` declarations became targets and agree with X_ITE on 16 of 16, 3 of 3 and 12 of 12 streams. HAnimSegment.rotation could not: the field does not exist in X3D 4.0. | Confirmed | probes `probe-hanim`, `probe-switch`, `probe-shader` and their traces | FM 384 |
+| 67 | **The fuzzer found an old crash when its tables changed.** New node types shifted the random draw; hostile seed 1, graph 246: a PlaneSensor press that misses its plane left no start point and the next drag raised. Fixed with a test that fails without it. | Confirmed | `tools/behaviour_fuzz.py --hostile --seed 1` | FM 385 |
+| 68 | **What Play applies is narrower than what the simulator delivers, and says so.** Joints pose the importer's bone (equal to the importer's keyed pose at a key); Switch shows the tagged branch; sites move only if an object carries the DEF; shader fields are delivered and listed as not applied. | Confirmed on the bpy wheel; not seen in a window | `tests/test_behaviour_play_bpy.py` | List every delivered-but-not-applied field by name |
+
+Still not proven: the new targets in a real Blender window; joints whose `center` is not in armature space; nested
+Switches; the pair judge on real long-loop scenes (the search lane's long run will say).
