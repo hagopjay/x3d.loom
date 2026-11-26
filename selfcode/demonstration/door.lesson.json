@@ -1,0 +1,60 @@
+{
+ "schema": "x3d.selfcode.lesson/1",
+ "recording": {
+  "schema": "x3d.activity/1",
+  "calls": 2,
+  "seconds": 4.0,
+  "deliveries": 365
+ },
+ "shown_to_the_search": {
+  "fields": [
+   "Door.translation"
+  ],
+  "pointer_calls": 2
+ },
+ "recording_matches_resimulation": true,
+ "fields_that_drift": [],
+ "solved": true,
+ "runs": 60,
+ "left": [],
+ "notes": [],
+ "nodes": [
+  [
+   "Touch_Button",
+   "TouchSensor",
+   "Button"
+  ],
+  [
+   "TimeSensor58",
+   "TimeSensor",
+   null
+  ],
+  [
+   "PositionInterpolator59",
+   "PositionInterpolator",
+   null
+  ]
+ ],
+ "routes": [
+  [
+   "Touch_Button",
+   "touchTime",
+   "TimeSensor58",
+   "startTime"
+  ],
+  [
+   "TimeSensor58",
+   "fraction_changed",
+   "PositionInterpolator59",
+   "set_fraction"
+  ],
+  [
+   "PositionInterpolator59",
+   "value_changed",
+   "Door",
+   "translation"
+  ]
+ ],
+ "reference_nodes": 3,
+ "agrees_on_unseen_stimulus": true
+}

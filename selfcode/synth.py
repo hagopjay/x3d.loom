@@ -91,10 +91,12 @@ def period(values, kind):
     return None
 
 
-def durations(values, kind):
+def durations(values, kind, whole=False):
     """Candidate lengths for a timer, read off the demonstration: how long the value keeps moving, and how long it
-    stays between two jumps."""
-    counts = {}
+    stays between two jumps. ``whole`` puts the longest whole burst first: a short recording shows a slow timer once,
+    and a count of how often each length occurs then ranks it last (added for lessons from recordings)."""
+    counts, longest = {}, 0
+    whole = whole and kind not in ("SFBool", "SFInt32", "SFString")     # a run of clicks is not a timer's length
     for run in windows(values, kind):
         for d in (run, run + 1):
             counts[d] = counts.get(d, 0) + 1
@@ -105,15 +107,18 @@ def durations(values, kind):
     for quiet in (10, 30):                           # a burst: movement with pauses shorter than 0.5 s or 1.5 s
         start = last = None
         for i in jumps + [None]:
+            if whole and start is None and i is not None:
+                start = i                            # the first burst (the registered run began counting at the second)
             if i is None or (last is not None and i - last > quiet):
                 if start is not None and last - start > 1:
+                    longest = max(longest, last - start + 1)
                     for d in (last - start, last - start + 1):
                         counts[d] = counts.get(d, 0) + 1
                 start = i
             last = i
     best = [round(d * DT, 6) for d, _ in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))][:6]
     p = period(values, kind)
-    out = ([p] if p else []) + best + [1.0]
+    out = ([p] if p else []) + ([round(longest * DT, 6), round((longest - 1) * DT, 6)] if whole and longest else []) + best + [1.0]
     return list(dict.fromkeys(x for x in out if x > DT))
 
 
@@ -173,7 +178,7 @@ def fit_table(fraction, demo, kind, tol):
 
 
 class Synth:
-    def __init__(self, stage, script, seconds, demo, memory=None, budget=6000, depth=4, tol=1e-3, share=None):
+    def __init__(self, stage, script, seconds, demo, memory=None, budget=6000, depth=4, tol=1e-3, share=None, whole=False):
         self.stage, self.script, self.seconds, self.demo = stage, script, seconds, demo
         self.memory, self.budget, self.depth, self.tol = memory or [], budget, depth, tol
         self.sims, self.typed, self.fresh, self.late, self.memorised = 0, 0, 0, 0, 0
@@ -181,6 +186,7 @@ class Synth:
         self.new_motifs, self.from_memory, self.used = [], 0, []
         self.cache, self.clocks = {}, {}           # one run per distinct wiring, whoever asks for it
         self.share, self.limit = share, float("inf")       # share: runs one field may spend on its first try (added after the registered run)
+        self.whole = whole                         # see durations()
         self.n = 0
         self._moments = {}
 
@@ -446,7 +452,7 @@ class Synth:
                 for key in list(todo):
                     self.limit = self.sims + self.share if self.share and first else float("inf")
                     try:
-                        cands = durations(self.demo[key], self.stage.types[key])
+                        cands = durations(self.demo[key], self.stage.types[key], self.whole)
                         sources = self.sources(base, key)
                         found = self.recall(base, key, cands, sources) if self.memory else None
                         recalled = found is not None

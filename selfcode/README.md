@@ -169,3 +169,12 @@ files) is not committed; `run.py` rebuilds it.
 
 None in the registered code or thresholds. Added after the run: `court.cjs`, `court.py`, `court_noise.py`,
 `fair_share.py`, `stack.py`, and an optional `share` argument to `Synth` (default off) for miss 1.
+
+## After the registered run
+
+- [`wild/`](wild/README.md): the same search on real scenes nobody wrote for it. Pre-registered; 39 of 53 rebuilt and
+  right on unseen input, 31 of 32 when the original has three behaviour nodes or fewer, 2 of 11 at eleven or more.
+- [`lesson.py`](lesson.py) and [`demonstration/`](demonstration/): the search learns from a recording made by the
+  node editor's recorder (`x3d.activity/1`). Door in 60 runs, counter in 664, both right on unseen input.
+- [`trace.py`](trace.py) and [`traces/`](traces/): everything the search tried, in order, for three tasks
+  (`x3d.selfcode.trace/1`), for replay in a viewer.
