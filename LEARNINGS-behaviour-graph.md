@@ -83,3 +83,22 @@ Still not proven: taste (whether 85% and 35% are the right strengths; how dense 
 Proposed addition (not applied; needs a run first, law 8): a **Host-eyes** witness for add-ons, the real-window rig
 above writing a `loom.witness/1` record (worlds, screenshots by sha256, overlap count, restore check), run beside the
 headless tests so a receipt for editor work names both halves (finding 9).
+
+## Version 2.2 (25 Nov 2026): splines, easing and Squad, judged against X_ITE
+
+Code: x3d-blender-io pull request "Behaviour simulator: EaseInEaseOut, the Spline interpolators and Squad, judged
+against X_ITE". Instruments: X_ITE 16.7.1 (the copy vendored in x3d.demo) in headless Chromium with SwiftShader, driven
+by Playwright 1.63 with two real clicks (`tools/behaviour_sim_judge.cjs`); the simulator replayed by
+`tools/behaviour_sim_judge.py`; Blender 5.3.0 with a window for Play (`tools/behaviour_eyetest.py`); macOS 26 arm64.
+X_ITE 16.7.0's unminified source was read for the algorithms.
+
+| # | Finding | Grade | Evidence | Rule it suggests |
+|---|---|---|---|---|
+| 25 | **Port the reference's code, then judge against the reference's runtime.** EaseInEaseOut, the three Spline interpolators and SquadOrientationInterpolator were written from X_ITE's own source (its segment rule, Catmull-Rom tangents, Shoemake inner points) and agreed with X_ITE on the first replay: 12 of 12 streams, exact nodes within 0.000001, the PositionDamper2D within 0.0202 of its 0.08. | Confirmed | `tests/behaviour/x_ite_traces/probe-spline.json`, `test_splines_easing_and_squad` | When a runtime is the reference, read its code for the edge rules before reading the standard's prose. |
+| 26 | **A judge is only as strong as its probe's values.** Five deliberately wrong versions were run through the judge. With the first probe, two passed: a scalar spline whose second velocity was 0 cannot tell "pad with zeros" from "first and last", and one whose last velocity was 0 cannot tell whether the last is normalised. With values chosen so the readings differ, the judge rejects 5 of 5. | Confirmed | mutant runs before and after the probe change (easing 2% off, last velocity normalised, two velocities read as first and last, Squad as plain slerp, closed treated as open) | Mutation-check every new judge, and pick probe values where the competing readings give different numbers. |
+| 27 | **Where X_ITE and a plain reading of the standard part.** EaseInEaseOut sends the eased weight within the current segment (0 to 1), not a fraction mapped back onto the keys. Velocities fewer than the keys are padded with zeros. `normalizeVelocity` leaves the last velocity as it is. An open spline's end tangents are zero. | Confirmed (code read, then judged) | X_ITE 16.7.0 source; the judge on 16.7.1 | Record each divergence beside the code that copies it, so a later change to either side is caught by the trace. |
+| 28 | **The reference has bugs too.** X_ITE 16.7.1 cannot load a world with a vector Spline interpolator (2D or 3D) whose `keyVelocity` is set and `normalizeVelocity` is true: "e.norm is not a function" (X3D field values have `length()`, the spline code calls `norm()`). The scalar one loads. The probe avoids the case; the simulator runs it as X_ITE's code intends, unjudged. A report for X_ITE is drafted and held until the owner types "send". | Confirmed | two one-node worlds, one loads and one does not; X_ITE console | A reference's crash is a finding about the reference, not a reason to copy it; say which cases are judged and which are not. |
+| 29 | **A node that sends nowhere is present, not judged.** The 2D damper first fed nothing, so the trace had no stream for it and a coverage test that counted node types present would have called it judged. It now drives a TextureTransform, and the coverage test counts only node types that send on a ROUTE in a recorded world. | Confirmed | `test_the_probe_covers_what_the_simulator_runs` | Coverage is measured on what the judge compared, not on what the file contains. |
+
+Still not proven: CoordinateInterpolator and NormalInterpolator; the vector `normalizeVelocity` case (X_ITE cannot load
+it); Squad's `closed`, which X_ITE accepts but X3D 4.0 does not define; any browser but X_ITE.
