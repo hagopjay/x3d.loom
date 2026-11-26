@@ -695,6 +695,12 @@ Each row is a trap someone paid for. The fix is the v1 rule; LEARNINGS-from-patc
 | 306 | Hand-written Sphere, Cylinder and Cone tessellators had inverted winding on first write | Test every primitive's signed volume against the closed form before drawing it | [x3d.lab unity bridge, LEARNINGS-unity-bridge.md #306, C] |
 | 307 | `validate_semantic` returns a Markdown report; a gate that parsed it as JSON passed an XSD-valid scene with a dangling ROUTE | Parse the `## Errors` bullets and keep one test that is XSD-valid but semantically broken | [x3d.lab unity bridge, LEARNINGS-unity-bridge.md #307, C] |
 | 308 | mcp 2.x removed `mcp.server.fastmcp`, so the x3d_mcp server module does not import | Import the validators (`validation.validate`, `validation.semantic`) directly; they do not need mcp | [x3d.lab unity bridge, LEARNINGS-unity-bridge.md #308, C] |
+| 309 | A model checkpoint was fed coordinates outside its training frame (floor at z = -2.4, camera Y down) and returned almost only floor/clutter | Put the scan in the model's frame (up axis, floor at 0) in the bridge, record the offset, and measure with-vs-without | [x3d.demo `open3d-ml-bridge/v1`, LEARNINGS-open3d-ml-bridge.md #1, C] |
+| 310 | A model's `predict_scores` were read as probabilities; they were a damped running average (max averaged 0.07) | Check that score rows sum to 1 before plotting them; renormalise and say "uncalibrated" | [x3d.demo `open3d-ml-bridge/v1`, LEARNINGS-open3d-ml-bridge.md #2, C] |
+| 311 | A single run per arm made the converter look 14 points lossy; the pipeline is stochastic | Add a no-bridge control and 5+ replicates per arm before blaming the bridge | [x3d.demo `open3d-ml-bridge/v1`, LEARNINGS-open3d-ml-bridge.md #3-#4, C] |
+| 312 | Generated metadata passed XSD 4.0 but X_ITE warned (MetadataSet container field, unquoted MFString) | Render every generated scene and fail on console warnings, not only on the validator | [x3d.demo `open3d-ml-bridge/v1`, LEARNINGS-open3d-ml-bridge.md #5, C] |
+| 313 | Open3D torch ops would not load on a CPU box (CUDA-linked, torch version pinned) | Pin torch to the Open3D build's exact minor and supply a CUDA runtime lib even for CPU runs | [x3d.demo `open3d-ml-bridge/v1`, LEARNINGS-open3d-ml-bridge.md #6, C] |
+| 314 | A dataset page with no stated licence ("please cite") was about to be redistributed whole | Ship a derived subset, cite, name the gap, add the takedown route | [x3d.demo `open3d-ml-bridge/v1`, DATA-ATTRIBUTION.md, C] |
 
 ---
 
