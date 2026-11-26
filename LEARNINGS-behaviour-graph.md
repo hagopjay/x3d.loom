@@ -252,3 +252,37 @@ real Blender 5.3 window (Host-eyes), and by a trial merge of all three. Instrume
 
 Still not proven: VisibilitySensor (the last simulated node not judged); Play's PlaneSensor under a steep camera; the
 piano's typed text on a Text object in Blender (needs Script); anything by a person's eye beyond the screenshots.
+
+## Version 2.10 (26 Nov 2026): all 57 event nodes, three interfaces, seven packages built in parallel
+
+Code: x3d-blender-io pull requests 105 to 111 and 113 (add-on 2.8.0). The ask was to close "nearly 40 of 57 event nodes"
+with an architecture first. The design (`docs/BEHAVIOUR_EVENT_NODES.md`) defines the 57, a ladder of four rungs (wired,
+simulated, judged against X_ITE, played in Blender), five classes of node and three interfaces for what a pure event graph
+cannot know: `World` (geometry, poses, picking), `Resources` (what a URL would load) and `Hosted` (code and physics).
+Instruments: `tools/behaviour_coverage.py` (counts), `tools/behaviour_sim_judge.py` and its siblings against X_ITE 16.8.1
+recordings (agreement), `tools/behaviour_fuzz.py` (faults), `tools/behaviour_bench.py` (speed), Python 3.13.18, bpy 5.3.0.
+
+| rung | 2.7.8 | 2.8.0 |
+|---|---:|---:|
+| wired | 45 | 57 |
+| simulated | 39 | 57 |
+| judged against X_ITE 16.8.1 | 38 | 56 |
+| played in Blender | 38 | 50 |
+
+| # | Finding | Grade | Evidence | Rule it suggests |
+|---|---|---|---|---|
+| 80 | **"Covered" was four numbers.** Counted from the code, the starting point was 45 wired, 39 simulated, 38 judged, 38 played, and the 57 is 73 X3DUOM 4.0 event nodes less 12 Web Audio and 4 DIS. | Confirmed | `tools/behaviour_coverage.py --check`; pins in `tests/test_behaviour_coverage.py` | Generate the table, pin it, define the denominator (failure mode 467). |
+| 81 | **Three interfaces for what the graph cannot know.** The nodes still open needed something outside the graph: a world (TransformSensor, VisibilitySensor, Collision, four pick sensors, three geo nodes), loaded resources (LoadSensor, AudioClip, MovieTexture) or a host (Script, CollisionSensor). Each interface is plain data, so the simulator still runs without Blender. Streams that agree with X_ITE 16.8.1: list followers 28 of 28, media 171 on 4 probes, world 59 of 59, pick 129 of 129, geo 102 of 102 and 754 conversions. | Confirmed | the judges named above, per package | Name what a node needs from outside as an interface before writing the node. |
+| 82 | **Agreement is not intent.** Two demos turned backward (5 of 5 interpolators) or both ways (6 of 6) on X_ITE 16.8.1 and the simulator agreed to 0 gap: keys 0, 3.1416, 6.2832. A `half-turn` warning now names the node and keys; corrected copies are new folders, the originals untouched. | Confirmed | X_ITE 16.8.1 recordings; `tests/test_behaviour_halfturn.py` (8 spellings warn, 3 stay quiet) | Failure mode 468; see also 357 and 453. |
+| 83 | **A ROUTE written before its node is dropped by X_ITE 16.8.1** (failure mode 3 again): gallery 06's six arcs had zero events as authored, and gallery 05's 16 star timers the same. | Confirmed | scratch recordings of both originals on X_ITE 16.8.1 | Write ROUTEs after their nodes; a probe whose streams are empty proves nothing. |
+| 84 | **The judge counted the two sides differently** (failure mode 469). The "duplicate isActive" was not a difference: X_ITE sends false then true in one stamp too. | Confirmed | raw counts 254, 254, 258, 264 against 256, 256, 264, 270 | Same rule on both sides; print raw beside merged. |
+| 85 | **A looping TimeSensor that wraps inside a frame** sends fraction 1 and then the new fraction in one stamp on X_ITE 16.8.1; the simulator sends the new one only, and a BooleanSequencer behind it sees one event less (8 of 50 streams in gallery 05 v2). The judge's merge of a stamp hides it. | Likely (read from traces, not from X_ITE's source) | `x_ite_turns.json`; a test pins that only the star timers differ | Open: it touches the one-event-per-ROUTE-per-timestamp rule. |
+| 86 | **Python raises where JavaScript answers** (failure mode 470). Hostile faults per 2,000 graphs: 608, 578, 509, 606, 476 before; 13, 13, 13, 22, 7 after, all the fuzzer's deliberate handler error. 0 failed graphs on seeds 1 to 5, normal and hostile. | Confirmed | `tools/behaviour_fuzz.py`, `fault_signatures` | A contained fault is still a node that stopped answering: classify by site and decide each. |
+| 87 | **Speed has a floor** (failure modes 471, 474). World sensors 15.44 to 7.83 ms at N=1000 with identical event digests; list dampers 181 to 84 ms against a floor of 54 ms; pick sensors 21.4 ms, not yet tuned. Budget 16.7 ms. | Confirmed (times); Likely (floor) | `tools/behaviour_bench.py`; equality tests on 100,000 boxes, 20,000 matrix products, 40,000 pairs | An exact shortcut is tested equal to the slow path on random inputs, both answers present. |
+| 88 | **The first `exec` in the add-on** arrived with Script handlers. It is gated by an in-session enable, a SHA-256 of the text and a refusal of linked data, and the owner was told. Extension store policy on it is not checked. | Confirmed (the gates, by test); not checked (policy) | `source/behaviour_hosted.py` and its tests | A capability of this kind is a decision for the owner, flagged in the pull request that adds it. |
+| 89 | **Parallel packages collide in the same places** (failure modes 472, 473, 475). Seven joins, the same six files each time; a pinned test stopped a fix until the lead split it. Browser pair-judge tests read "unclear" in every builder's whole-suite run under load and passed alone and in CI. | Confirmed (conflicts); Likely (load as the cause) | joins of pull requests 105 to 113 | One pull request at a time on one branch; regenerate generated files at the join; re-run a load-sensitive test alone before calling it a regression. |
+| 90 | **What a pick sensor's GEOMETRY mode is exact for.** Box, sphere, point and line against box are computed; other shapes fall back to bounds and are not judged. A contact margin of 0.015 was fitted to X_ITE's answers. GeoProximitySensor sends 2 to 3 events X_ITE does not. | Confirmed (judged pairs); Suspected (the margin's meaning) | `tools/behaviour_pick_judge.py`, 129 of 129 streams | Say which inputs an agreement was measured on. |
+
+Still not proven: CollisionSensor against a physics engine of our own (its contacts come from X_ITE's recording, a
+consistency check); VisibilitySensor, TransformSensor, Collision and the pick sensors in Blender's Play; list dampers and
+pick sensors inside the step budget at 1,000 nodes; the v2 demos in a real Blender window; anything by a person's eye.
