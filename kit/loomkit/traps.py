@@ -194,6 +194,12 @@ def _lod_ortho(order: list, parent: dict) -> list[Hit]:
         rng = _floats(el.get("range", ""))
         if not rng or not eyes:
             continue
+        anc, inproto = parent.get(el), False
+        while anc is not None:  # an LOD inside a PROTO body has no world position until instanced: not resolved here
+            inproto = inproto or _local(anc.tag) in ("ProtoDeclare", "ProtoBody")
+            anc = parent.get(anc)
+        if inproto:
+            continue
         c = _world_pos(el, parent, "center")
         for e in eyes:
             d = math.dist(c, e)
