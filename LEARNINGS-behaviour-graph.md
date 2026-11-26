@@ -102,3 +102,22 @@ X_ITE 16.7.0's unminified source was read for the algorithms.
 
 Still not proven: CoordinateInterpolator and NormalInterpolator; the vector `normalizeVelocity` case (X_ITE cannot load
 it); Squad's `closed`, which X_ITE accepts but X3D 4.0 does not define; any browser but X_ITE.
+
+## Version 2.3 (26 Nov 2026): CylinderSensor and SphereSensor drags, judged against X_ITE
+
+Code: x3d-blender-io pull request "Behaviour simulator: CylinderSensor and SphereSensor drags, judged against X_ITE".
+Instruments: X_ITE 16.7.1 in headless Chromium with SwiftShader, Playwright 1.63, real drags from a drags file
+(`tools/behaviour_sim_judge.cjs`); the simulator run from the recorded pointer (`tools/behaviour_sim_judge.py`);
+Blender 5.3.0 with a window, real drags through its event queue (`tools/behaviour_eyetest.py`); macOS 26 arm64.
+
+| # | Finding | Grade | Evidence | Rule it suggests |
+|---|---|---|---|---|
+| 30 | **Rebuild the reference's input, and calibrate it on something exact.** The judge rebuilds each pointer ray from the pixel and the Viewpoint. A TouchSensor beside each drag sensor, pressed on a flat box face, showed that X_ITE's press point is its pick at the pixel's centre (0.5 px right and up), while its drag ray uses the pointer as given. Without the half pixel the press point was 0.0069 m off; with it, 0.00023. | Confirmed | `probe-drag.x3d`, the three TouchSensors' `hitPoint_changed` against the rebuilt rays | Calibrate a rebuilt input against an exact surface before judging anything that depends on it. |
+| 31 | **One browser, two clocks.** X_ITE advances its clock at a press but stamps a motion with its last frame's time, and does not draw while the pointer rests. Pointer events logged with `getCurrentTime()` were 0.254 s stale; logged with the wall clock they disagreed with the motions. Driven sensors are now compared event for event in order, with equal counts required (51/51, 35/35, 17/17, 17/17, 44/44). | Confirmed | the recorder's pointer log against X_ITE's sensor events | When the reference's time stamps are not one clock, compare sequences and counts instead of times. |
+| 32 | **The reference does things no handler shows.** X_ITE follows a press with one motion on the same ray; `buttonPressEvent` does not call it. Without that motion the simulator sent 49 events to X_ITE's 51 and a SphereSensor's first track point stayed on the picked point. | Confirmed | event counts with and without; X_ITE 16.7.0 source | Let the recording decide behaviour the code does not make obvious, then write down where it was seen. |
+| 33 | **A mutant survives when no probe reaches its branch.** "Sphere ignores behind" and "cylinder never behind" passed the judge while every press landed on the near side; with boxes placed behind their sensor's origin the judge rejects 6 of 6. | Confirmed | mutant runs before and after | Finding 26 again: for each branch in the reference, give the probe one input that takes it. |
+| 34 | **An empty parent lost its name.** A sensor placed in a Transform that holds only other Transforms came back from Blender under `OB_CylBase`: the DEF hint read `x3d_def_path`, which only objects with shapes record. It now falls back to `x3d_def`. | Confirmed | round trip of `probe-drag.x3d`: 10 parent changes before, 0 after | Test identity on a node with no geometry, not only on shapes. |
+| 35 | **A ROUTE into an empty Transform does not survive import.** The importer makes no object for a DEF'd Transform with no shape, so 5 of the drag world's 12 ROUTEs (hit markers) are left out; the import names each one. Not changed here (the importer belongs to the exporter-hardening work). | Confirmed | `probe-drag.x3d` round trip: 7 of 12 ROUTEs | Proposed for the importer: keep a DEF'd Transform that a ROUTE reaches as an empty. |
+
+Still not proven: ProximitySensor, VisibilitySensor and the other viewer-driven sensors; touch screens and orthographic
+views; a CylinderSensor or SphereSensor under a scaled Transform (the probe has none); any browser but X_ITE.

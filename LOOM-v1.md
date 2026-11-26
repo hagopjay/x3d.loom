@@ -704,6 +704,10 @@ Each row is a trap someone paid for. The fix is the v1 rule; LEARNINGS-from-patc
 | 312 | Generated metadata passed XSD 4.0 but X_ITE warned (MetadataSet container field, unquoted MFString) | Render every generated scene and fail on console warnings, not only on the validator | [x3d.demo `open3d-ml-bridge/v1`, LEARNINGS-open3d-ml-bridge.md #5, C] |
 | 313 | Open3D torch ops would not load on a CPU box (CUDA-linked, torch version pinned) | Pin torch to the Open3D build's exact minor and supply a CUDA runtime lib even for CPU runs | [x3d.demo `open3d-ml-bridge/v1`, LEARNINGS-open3d-ml-bridge.md #6, C] |
 | 314 | A dataset page with no stated licence ("please cite") was about to be redistributed whole | Ship a derived subset, cite, name the gap, add the takedown route | [x3d.demo `open3d-ml-bridge/v1`, DATA-ATTRIBUTION.md, C] |
+| 315 | A rebuilt pointer ray missed the reference's press point by half a pixel | Calibrate rebuilt input against an exact surface (a TouchSensor on a flat face); X_ITE picks at the pixel's centre and drags on the raw pointer | [x3d-blender-io behaviour simulator v2.3, LEARNINGS-behaviour-graph.md #30, C] |
+| 316 | Matching drag events by time failed because the reference stamps presses and motions with different clocks | Compare a driven sensor's events in order and require equal counts | [x3d-blender-io behaviour simulator v2.3, LEARNINGS-behaviour-graph.md #31, C] |
+| 317 | A sensor's empty parent Transform lost its DEF on export (OB_CylBase) | Fall back to the recorded DEF when no DEF path was recorded; test identity on nodes without geometry | [x3d-blender-io behaviour simulator v2.3, LEARNINGS-behaviour-graph.md #34, C] |
+| 318 | ROUTEs into empty DEF'd Transforms were left out on import (5 of 12) | Reported by the import; proposed: keep such a Transform as an empty | [x3d-blender-io behaviour simulator v2.3, LEARNINGS-behaviour-graph.md #35, C] |
 
 ---
 
