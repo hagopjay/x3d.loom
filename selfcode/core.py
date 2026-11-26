@@ -62,6 +62,19 @@ def close(a, b, kind, tol):
     return len(a) == len(b) and max(abs(x - y) for x, y in zip(a, b)) <= tol
 
 
+EXACT = False                           # write table numbers in full (set by the wild-set runner; see FM 357)
+
+
+def exact(value):
+    """A list of numbers as text that reads back to the same numbers. The graph writer prints six decimals, and a
+    half-turn key of 3.14159265 comes back as 3.141593, which is past pi: the turn then runs the other way."""
+    if isinstance(value, (list, tuple)) and value and not isinstance(value[0], (str, bool)):
+        flat = [x for v in value for x in (v if isinstance(v, (list, tuple)) else (v,))]
+        if all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in flat):
+            return " ".join(repr(float(x)) if isinstance(x, float) else str(x) for x in flat)
+    return value
+
+
 def build(program) -> "bg.Behaviour":
     """A Behaviour from a plain description: {'targets': {id: type}, 'nodes': [(id, type, parent, fields)],
     'routes': [(from, field, to, field)]}."""
@@ -69,7 +82,7 @@ def build(program) -> "bg.Behaviour":
     for name, kind in program["targets"].items():
         b.target(kind, name)
     for name, kind, parent, fields in program["nodes"]:
-        b.add(kind, name, parent=parent, **fields)
+        b.add(kind, name, parent=parent, **({k: exact(v) for k, v in fields.items()} if EXACT else fields))
     for r in program["routes"]:
         b.route(*r)
     return b
@@ -155,7 +168,7 @@ def train_script(stage: Stage):
 def heldout_script(stage: Stage):
     """Another order, off-grid times, other drag points, and a second click while the first is still playing."""
     objs = list(reversed(stage.touchable))
-    order = [objs[0], objs[0]] + objs[1:] + [objs[1]]
+    order = [objs[0], objs[0]] + objs[1:] + [objs[1 % len(objs)]]      # one object: the same one three times
     script, t = [], 0.73
     for i, obj in enumerate(order):
         part, _ = poke([obj], start=t, press=0.31, drags=((0.17, (-0.3, 0.5, 0.0)), (0.33, (0.25, -0.6, 0.0))), up=0.52,
