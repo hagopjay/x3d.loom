@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile="Full" version="4.0">
+  <head>
+    <meta name="title" content="selfcode stage" />
+    <meta name="description" content="A static stage with no behaviour. The synthesiser adds sensors, timers, interpolators and ROUTEs." />
+  </head>
+  <Scene>
+    <NavigationInfo type="&quot;NONE&quot;" headlight="true" />
+    <Viewpoint DEF="View" description="Front" position="0 1.7 9" />
+    <PointLight DEF="Spot" location="0 4 3" intensity="1" color="1 1 1" on="true" />
+    <Transform translation="0 -0.05 0">
+      <Shape>
+        <Appearance>
+          <PhysicalMaterial baseColor="0.1 0.12 0.18" roughness="0.9" />
+        </Appearance>
+        <Box size="14 0.1 8" />
+      </Shape>
+    </Transform>
+    <Transform DEF="Door" translation="0 1.2 0">
+      <Shape>
+        <Appearance>
+          <PhysicalMaterial DEF="DoorPaint" baseColor="0.85 0.45 0.15" emissiveColor="0 0 0" transparency="0" />
+        </Appearance>
+        <Box size="1.5 2.4 0.12" />
+      </Shape>
+    </Transform>
+    <Transform DEF="Button" translation="-2.4 1.2 0.4">
+      <Shape>
+        <Appearance>
+          <PhysicalMaterial DEF="ButtonPaint" baseColor="0.9 0.15 0.2" emissiveColor="0.25 0 0" transparency="0" />
+        </Appearance>
+        <Sphere radius="0.38" />
+      </Shape>
+    </Transform>
+    <Transform DEF="Lamp" translation="2.4 2.6 0.4">
+      <Shape>
+        <Appearance>
+          <PhysicalMaterial DEF="LampGlow" baseColor="0.2 0.2 0.25" emissiveColor="0.05 0.05 0.08" transparency="0" />
+        </Appearance>
+        <Sphere radius="0.3" />
+      </Shape>
+      <TouchSensor DEF="Touch_Lamp" />
+    </Transform>
+    <Transform DEF="Crate" translation="3.6 0.4 1.2">
+      <Shape>
+        <Appearance>
+          <PhysicalMaterial DEF="CratePaint" baseColor="0.45 0.3 0.15" emissiveColor="0 0 0" transparency="0" />
+        </Appearance>
+        <Box size="0.8 0.8 0.8" />
+      </Shape>
+    </Transform>
+    <TimeTrigger DEF="TimeTrigger3" />
+    <TimeSensor DEF="TimeSensor4" cycleInterval="2" loop="false" />
+    <PositionInterpolator DEF="PositionInterpolator5" key="0 0.2 0.8 1" keyValue="3.6 0.4 1.2 3.6 1.9 1.2 4.1 1.4 1.2 3.6 0.4 1.2" />
+    <ROUTE fromNode="Touch_Lamp" fromField="isActive" toNode="TimeTrigger3" toField="set_boolean" />
+    <ROUTE fromNode="TimeTrigger3" fromField="triggerTime" toNode="TimeSensor4" toField="startTime" />
+    <ROUTE fromNode="TimeSensor4" fromField="fraction_changed" toNode="PositionInterpolator5" toField="set_fraction" />
+    <ROUTE fromNode="PositionInterpolator5" fromField="value_changed" toNode="Crate" toField="translation" />
+  </Scene>
+</X3D>
