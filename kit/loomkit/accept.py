@@ -44,6 +44,14 @@ def parse_profile(data: bytes, label: str = "profile") -> dict:
     for n in names + list(profile.get("visible_not_run", [])):
         safe_name(n)
     need(len(names) == len(set(names)), "PROFILE_DUPLICATE_WITNESS")
+    if "kit" in profile:
+        # failure mode 442 (x3d.downey, 24 Nov 2026): a run on an older checkout of this kit was accepted-shaped and
+        # nothing refused it. A profile may pin the kit by its content hash; a commit alone is not enough (a copied
+        # kit has none, a replayed history has new ones).
+        k = profile["kit"]
+        need(isinstance(k, dict) and isinstance(k.get("kit_sha256"), str) and len(k["kit_sha256"]) == 64
+             and all(ch in "0123456789abcdef" for ch in k["kit_sha256"]), "PROFILE_SCHEMA",
+             f"{label}: kit must be an object with kit_sha256 (64 lowercase hex)")
     for r in profile["required"]:
         need(isinstance(r.get("coverage", {}), dict) and isinstance(r.get("allow", []), list), "PROFILE_SCHEMA", f"{r['witness']}: coverage must be an object, allow a list")
         # a string here would be matched by substring ("declared" in "undeclared"): review round 2, 18 Nov 2026
@@ -140,7 +148,7 @@ def binding_problem(record, name: str, subject_sha256: str, evidence_dir: Path) 
     return ""
 
 
-def judge(rule: dict, subject: dict, evidence_dir: Path) -> dict:
+def judge(rule: dict, subject: dict, evidence_dir: Path, kit: dict | None = None) -> dict:
     """One required witness against one candidate: its summary row, or GateError with a stable code. `accept` stops at
     the first refusal; `rejection.build` calls this for every rule so a rejection names all of them."""
     name = safe_name(rule["witness"])
@@ -155,6 +163,11 @@ def judge(rule: dict, subject: dict, evidence_dir: Path) -> dict:
     need(record.get("witness") == name, "WRONG_WITNESS_NAME", name)
     need(record.get("subject_sha256") == subject["sha256"], "STALE_WITNESS", name)
     need(record.get("development") is False, "DEVELOPMENT_WITNESS", name)
+    if kit is not None:
+        inst = record.get("instrument", {})
+        need(inst.get("kit_sha256") == kit["kit_sha256"] and inst.get("kit_dirty") is not True, "WRONG_KIT",
+             f"{name}: recorded by kit {str(inst.get('kit_sha256'))[:12]}{' (dirty)' if inst.get('kit_dirty') else ''}, "
+             f"the profile pins {kit['kit_sha256'][:12]}")
     status_acceptable(rule, record)
     origin_ok(rule, record)
     if record.get("status") == "pass":
@@ -174,6 +187,6 @@ def accept(candidate_root: Path | str, evidence_dir: Path | str, profile: dict, 
     candidate generation it computed itself (final external scan, defect 2)."""
     subject = subject or candidate(candidate_root)
     evidence_dir = Path(evidence_dir)
-    rows = [judge(rule, subject, evidence_dir) for rule in profile["required"]]
+    rows = [judge(rule, subject, evidence_dir, profile.get("kit")) for rule in profile["required"]]
     return {"status": "accepted", "profile": profile["name"], "subject_sha256": subject["sha256"],
             "witnesses": rows, "visible_not_run": profile.get("visible_not_run", [])}

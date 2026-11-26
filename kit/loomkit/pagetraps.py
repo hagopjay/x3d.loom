@@ -72,6 +72,11 @@ RULES = {
     "anchor-download-hosted": Rule("anchor-download-hosted", "warning", "sandboxed hosted pages",
         "A 4K still button made the image and saved nothing: the hosting sandbox ignores a link's download attribute "
         "(7 Nov, failure mode 113). Where the host offers a save capability, call it on the viewer's click and handle a refusal."),
+    "xite-css-gate": Rule("xite-css-gate", "warning", "X_ITE 16.8.1 under a hosted-page policy (style-src 'self')",
+        "A hosted page drew a black panel: X_ITE builds its view with display:none and reveals it on the load event of x_ite.css; "
+        "the policy refused the cross-origin stylesheet, so the canvas stayed 0 x 0 and the only signal was a page error whose message was Event "
+        "(25 Nov, failure mode 407; bisected, CSS unblocked 620 x 576). Size and reveal the view from the page (the shadowRoot) and assert "
+        "the canvas is larger than 0 x 0 after load."),
 }
 
 WINDOW_PROPS = {"top", "name", "status", "parent", "length", "origin", "self", "frames", "location", "history",
@@ -247,10 +252,23 @@ def inventory(src: str) -> dict:
             "world_loads": len(re.findall(r"\.(?:loadURL|replaceWorld|createX3DFromURL)\s*\(", src))}
 
 
+_XITE_FOREIGN = re.compile(r"""["'(]\s*https?://[^"')\s]*x_ite[^"')\s]*""", re.I)
+
+
+def css_gate(raw: str, code: str, path: str = "<page>", html: bool = False) -> list[Hit]:
+    """xite-css-gate. raw: the file as written (URLs live in src= attributes); code: its comment-stripped script text.
+    Fires when the page loads x_ite from another origin and neither reaches into the canvas's shadowRoot nor clears display:none."""
+    m = _XITE_FOREIGN.search(raw if html else strip_comments(raw))
+    if not m or "shadowRoot" in code or re.search(r"display\s*[:=]", code):
+        return []
+    return [Hit("xite-css-gate", "warning", f"{path}:{_line(raw, m.start())}",
+                "x_ite is loaded from another origin and nothing in the page sizes or reveals the view: under style-src 'self' it stays 0 x 0")]
+
+
 def check(src: str, path: str = "<page>") -> list[Hit]:
     code = strip_comments(src)
     return (syntax(src, path) + patterns(code, path, globals_shared=not is_module(code))
-            + (sim_math(code, path) if is_sim(src) else []))
+            + (sim_math(code, path) if is_sim(src) else []) + css_gate(src, code, path))
 
 
 _JS_TYPES = {"", "module", "text/javascript", "application/javascript"}
@@ -293,4 +311,4 @@ def check_html(html: str, path: str = "<page>") -> list[Hit]:
         if is_sim(html[a:b]):
             only = "".join(c if a <= i < b or c == "\n" else " " for i, c in enumerate(html))
             shared += sim_math(strip_comments(only), path)
-    return hits + shared
+    return hits + shared + css_gate(html, strip_comments(scripts_view(html)), path, html=True)

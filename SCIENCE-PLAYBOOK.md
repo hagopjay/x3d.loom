@@ -88,6 +88,11 @@ Every word in a caption that names a regime or event is a measured claim with a 
 - **Nominal conversions** (12.9 ms per Aliev–Panfilov unit; healing lengths; bohr) are stated as nominal.
 - **A unit-conversion witness** (Lyman-α wavelength from E₂ − E₁) is labelled a units check. Its error equals the energy's.
 
+### J. Motion and standpoint witnesses (A Landscape of Consciousness, 25 Nov)
+
+- **Motion witness:** sample a field the behaviour drives, through the SAI, twice some seconds apart. A constant value is a failed behaviour, whatever the console says. The landscape world read `TessCoord.point[0]` 1.5 s apart: `[1.193, 2.532, 2.312] -> [3.200, 2.750, 2.744]`, so the Script ran; the same check gates a page's SAI twin when a no-eval host refuses the Script (failure mode 409; C, from the delivering thread's run).
+- **Standpoint witness:** an object that must close from one view (a Penrose tribar under an OrthoViewpoint along (1,1,1)) is framed from that view and from one other, and must close only in the first. A render that closes from everywhere is as wrong as one that closes nowhere. LOD measures from the eye even under an OrthoViewpoint (failure mode 412), so the ortho camera sits inside the label ranges.
+
 ## 3. Numerics cheat-sheet
 
 | Method | Expected order | Exact control used | Stability / trap |

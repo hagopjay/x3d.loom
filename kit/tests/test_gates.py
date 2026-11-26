@@ -59,6 +59,10 @@ def edit(ev: Path, name: str, **changes) -> None:
     p = ev / f"{name}.json"; r = json.loads(p.read_text()); r.update(changes); p.write_text(json.dumps(r))
 
 
+def edit_inst(ev: Path, name: str, **changes) -> None:
+    p = ev / f"{name}.json"; r = json.loads(p.read_text()); r["instrument"].update(changes); p.write_text(json.dumps(r))
+
+
 def acceptance_controls() -> list[dict]:
     rows = []
     with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
@@ -91,6 +95,28 @@ def acceptance_controls() -> list[dict]:
     with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
         p = Path(d) / "empty.json"; p.write_text(json.dumps({"schema": "loom.profile/1", "name": "x", "required": []}))
         rows.append({"case": "empty profile", **expect("EMPTY_PROFILE", lambda: acc.load_profile(p))})
+    # a profile may pin the kit by content hash (failure mode 442, x3d.downey 24 Nov 2026)
+    from loomkit.core import kit_stamp
+
+    def pinned(root, ev):
+        for n in ("grammar", "traps", "behaviour", "truth"):
+            p = ev / f"{n}.json"; r = json.loads(p.read_text()); r["instrument"]["kit_dirty"] = False; p.write_text(json.dumps(r))
+        return {**PROFILE, "kit": {"kit_sha256": kit_stamp()["kit_sha256"]}}
+    with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
+        root, ev, s = fixture(Path(d))
+        if acc.accept(root, ev, pinned(root, ev))["status"] != "accepted":
+            raise RuntimeError("POSITIVE_CONTROL_REJECTED: pinned kit")
+        rows.append({"case": "kit pinned and matching", "result": "accepted"})
+    for label, mutate in (("kit: a record from another kit", lambda e: edit_inst(e, "traps", kit_sha256="0" * 64)),
+                          ("kit: a record from a dirty kit", lambda e: edit_inst(e, "grammar", kit_dirty=True))):
+        with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
+            root, ev, s = fixture(Path(d))
+            prof = pinned(root, ev)
+            mutate(ev)
+            rows.append({"case": label, **expect("WRONG_KIT", lambda: acc.accept(root, ev, prof))})
+    with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
+        p = Path(d) / "badkit.json"; p.write_text(json.dumps({**PROFILE, "kit": {"kit_sha256": "a2a3ef0"}}))
+        rows.append({"case": "kit pin that is not a content hash", **expect("PROFILE_SCHEMA", lambda: acc.load_profile(p))})
     with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
         root, ev, s = fixture(Path(d))
         (root / "gen/build.py").write_text("print('changed mid-run')\n")
@@ -135,7 +161,25 @@ TRAP_CASES = {  # rule: (passing XML, failing XML). Synthetic fixtures.
                   "<ROUTE fromNode='T' fromField='fraction_changed' toNode='O' toField='set_fraction'/></Scene></X3D>",
                   "<X3D><Scene><TimeSensor DEF='T' loop='true'/><PositionInterpolator DEF='P' key='0 1' keyValue='0 0 0 0 1 0'/>"
                   "<ROUTE fromNode='T' fromField='fraction_changed' toNode='P' toField='set_fraction'/></Scene></X3D>"),
+    "text-needs-font-fetch": ("<X3D><Scene><Shape USE='glyph_A'/></Scene></X3D>", "<X3D><Scene><Shape><Text string='\"A\"'/></Shape></Scene></X3D>"),
+    "lod-under-ortho": ("<X3D><Scene><OrthoViewpoint position='0 0 24'/><LOD range='36' center='0 0 0'><Transform/><Group/></LOD></Scene></X3D>",
+                        "<X3D><Scene><OrthoViewpoint position='0 0 60'/><LOD range='36' center='0 0 0'><Transform/><Group/></LOD></Scene></X3D>"),
 }
+
+# Extra two-sided forms for rules whose one pair above does not show every behaviour (25 Nov, failure modes 407 to 414).
+_SEAM = ("<X3D><Scene><TimeSensor DEF='T' loop='true'/><PositionInterpolator DEF='P' key='0 1' keyValue='0 0 0 0 1 0'>{}</PositionInterpolator>"
+         "<ROUTE fromNode='T' fromField='fraction_changed' toNode='P' toField='set_fraction'/></Scene></X3D>")
+TRAP_FORMS = [  # (label, rule, host, passing XML, failing XML)
+    ("declared restart is not a seam", "loop-seam", "strict", _SEAM.format("<MetadataString containerField='metadata' name='loom:seam' value='\"restart\"'/>"), _SEAM.format("")),
+    ("sandbox host reads Text too", "text-needs-font-fetch", "sandbox", "<X3D><Scene><Transform/></Scene></X3D>", "<X3D><Scene><Text string='\"A\"'/></Scene></X3D>"),
+    ("Text is fine on an open host", "text-needs-font-fetch", "open", "<X3D><Scene><Text string='\"A\"'/></Scene></X3D>", "<X3D><Scene><Text string='\"A\"'/></Scene></X3D>"),
+    ("LOD inside a PROTO body is not resolved", "lod-under-ortho", "strict",
+     "<X3D><Scene><OrthoViewpoint position='0 0 60'/><ProtoDeclare name='T'><ProtoBody><LOD range='36'/></ProtoBody></ProtoDeclare></Scene></X3D>",
+     "<X3D><Scene><OrthoViewpoint position='0 0 60'/><LOD range='36'/></Scene></X3D>"),
+    ("ortho distance includes Transform ancestors", "lod-under-ortho", "strict",
+     "<X3D><Scene><OrthoViewpoint position='0 0 24'/><Transform translation='0 0 20'><LOD range='36' center='0 0 0'/></Transform></Scene></X3D>",
+     "<X3D><Scene><OrthoViewpoint position='0 0 24'/><Transform translation='0 0 -20'><LOD range='36' center='0 0 0'/></Transform></Scene></X3D>"),
+]
 
 
 def trap_controls() -> list[dict]:
@@ -151,6 +195,17 @@ def trap_controls() -> list[dict]:
         if rule not in b:
             raise RuntimeError(f"SURVIVING_CONTROL: {rule}")
         rows.append({"rule": rule, "passing_fixture": "clean", "failing_fixture": "caught"})
+    for label, rule, host, good, bad in TRAP_FORMS:
+        g = [h.rule for h in traps.check(good.encode(), {"host": host})]
+        b = [h.rule for h in traps.check(bad.encode(), {"host": host})]
+        if rule in g:
+            raise RuntimeError(f"FALSE_POSITIVE ({label}): {rule}")
+        if label.startswith("Text is fine"):
+            rows.append({"form": label, "rule": rule, "result": "silent"})
+            continue
+        if rule not in b:
+            raise RuntimeError(f"SURVIVING_CONTROL ({label}): {rule}")
+        rows.append({"form": label, "rule": rule, "passing_fixture": "clean", "failing_fixture": "caught"})
     return rows
 
 
@@ -172,6 +227,7 @@ PAGE_CASES = {
     "js-syntax": CLEAN_PAGE.replace("console.error(e); } });", "console.error(e); } }););"),
     "sim-nonportable-math": "// loom" + ":sim\n" + CLEAN_PAGE.replace("const t = B.getCurrentTime();", "const t = Math." + "sin(B.getCurrentTime());"),
     "xite-update-auto-resume": CLEAN_PAGE.replace("const t = B.getCurrentTime();", "const t = B.getCurrentTime();\n  canvas.setAttribute(\"update\", \"false\");\n  canvas.setAttribute(\"upd" + "ate\", \"auto\");"),
+    "xite-css-gate": CLEAN_PAGE + "import(\"https://cdn.jsdelivr.net/npm/x_ite@16.8.1/dist/x_ite.min.js\");\n",
     "anchor-download-hosted": CLEAN_PAGE.replace("const t = B.getCurrentTime();", "const t = B.getCurrentTime();\n  const a = document.createElement('a'); a.href = url; a." + "download = 'still.png'; a.click();"),
 }
 
@@ -200,6 +256,9 @@ PAGE_FORMS = [  # (label, rule, reader, passing source, failing source, expected
      _SIM + "const r = Date" + ".now() % 7;\n", 2),
     ("sim inline script", "sim-nonportable-math", "html", _html("const t = 1;\n" + _SIN), _html(_SIM + "const t = 1;\n" + _SIN), 8),
     ("callback passed by name", "xite-callback-unguarded", "js", _NAMED_OK, _NAMED_BAD, 4),
+    ("css gate: shadowRoot reveal passes", "xite-css-gate", "html",
+     _html(CLEAN_PAGE + "const sr = canvas.shadowRoot; sr.host.style.display = 'block';\n").replace("vendor/x_ite.min.js", "https://cdn.jsdelivr.net/npm/x_ite@16.8.1/dist/x_ite.min.js"),
+     _html(CLEAN_PAGE).replace("vendor/x_ite.min.js", "https://cdn.jsdelivr.net/npm/x_ite@16.8.1/dist/x_ite.min.js"), None),
     ("inline module script", "xite-callback-unguarded", "html", _html(CLEAN_PAGE), _html(PAGE_CASES["xite-callback-unguarded"]), 11),
     ("inline classic script", "window-global-shadow", "html", _html(CLEAN_PAGE, ""), _html(PAGE_CASES["window-global-shadow"], ""), 6),
     ("inline script syntax", "js-syntax", "html", _html(CLEAN_PAGE), _html(PAGE_CASES["js-syntax"]), 11),
@@ -216,7 +275,7 @@ def page_controls() -> list[dict]:
     for label, rule, reader, good, bad, line in PAGE_FORMS:
         run = pagetraps.check_html if reader == "html" else pagetraps.check
         g = [h for h in run(good) if h.rule == rule]
-        b = [h for h in run(bad) if h.rule == rule and h.severity == "error"]
+        b = [h for h in run(bad) if h.rule == rule and h.severity in ("error", "warning")]
         if g:
             raise RuntimeError(f"FALSE_POSITIVE ({label}): {[h.__dict__ for h in g]}")
         if not b:
