@@ -105,3 +105,28 @@ confounding by mother's age.
   unprompted, the book's mixed-sample age gap that the card already recorded. Law 44's second reader is cheap and
   it keeps finding what the building thread cannot.
 
+
+## Fifth: the new x3d_mcp rules run on the stack (26 Nov, x3d.io thread)
+
+HagopJay asked whether the glTF-Validator parity checks (x3d_mcp #31) and the USD rulebook checks (#32, #34) help or
+hurt a new integration, and named this stack as the test. Predictions were written first
+(`runs/20261126-downey-rules/PREDICTIONS.md`), then all 20 scenes ran at 4d433af (the stack's own commit) and at main
+5543a7b, CPython 3.12.3. Full tables: `runs/20261126-downey-rules/RESULTS.md`.
+
+| | 4d433af | 5543a7b | this thread's x3d_mcp branch |
+|---|---|---|---|
+| errors / warnings / infos | 0 / 0 / 212 | 0 / 1 / 223 | 0 / 1 / 216 |
+| Loom meaning gate | pass 20/20 | pass 20/20 | pass 20/20 |
+
+- **One true defect, Confirmed.** `complexity/er` draws Gilbert's P(connected) for n = 100 with 49 of 121 points wrong,
+  up to 2.7e25 m tall: the float64 recurrence cancels at small p. Decimal at 600 digits is the reference; X_ITE 16.8.1
+  shows the streaks (`er-before-after-labelled.png`). The room's checked numbers (p10, p50, p90) are right. Failure
+  modes 436 to 438: what is drawn was never checked, a bit-for-bit twin shares the algorithm, the blind reader was asked
+  only for safe points.
+- **It came in as a warning the gate does not read** (failure mode 439), with advice that would have hidden it (440).
+- **Seven false alarms, now zero.** A Mesh-only USD rule ran on LineSet and PointSet (441); x3d_mcp now scopes it.
+- **Four profile-only infos** stay info (442).
+- Nothing from #31 fired; #34's world-place pass fired 0 times; semantic time 0.50 s → 1.27 s for 20 scenes.
+
+The x3d.downey fix (log-space or Decimal recurrence, and a domain check on every banked curve) is not applied: the
+repository is not in the project yet.
