@@ -104,3 +104,6 @@ cd ../x3d_mcp && python tests/usd_parity.py --md && pytest tests/test_usd_parity
 python tests/usd_checks_survey.py ../x3d.loom ../x3d.demo ... --json survey.json
 cd ../x3d.loom && python3 flywheel/turn.py measure --x3d-mcp ../x3d_mcp --what "..."
 ```
+
+## Addendum, 26 Nov: the first Blender leg (Q12), x3d_mcp #33
+84 parity scenes through Blender 5.3.0 (`import_scene.x3d`, add-on 2.7.6, then `wm.usd_export`), then usd-core 26.11 and Omniverse Asset Validator 1.18.0 (Python 3.12.3), joined per rule. 70 rules executed, 27 mapped to an X3D check; 70 of 84 scenes agree on every mapped rule, but that is 1,748 quiet-quiet pairs, 8 both firing, **17 X3D only** (Blender repaired the fault: Likely), 1 export-made and 2 to review. All 30 usd-core validators fired on 0 of 84 exports. `IndexedPrimvarChecker` fails on 37 of 84 exports (Blender writes unindexed primvars). Not shown: real files, SimReady requirements (not executable), up-axis rules. Failure modes **372** (the importer launders faults) and **373** (an agreement score dominated by quiet pairs).
