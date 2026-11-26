@@ -27,6 +27,18 @@ One small scene, written natively by three independent writers, X3D 4.0, glTF 2.
 - **The Loom closed a good part of that gap.** Five rules written only from the learn half caught 3 more of the 8 held-out X3D misses, and 9 more of USD's 19, without a single false alarm. That is one turn of the flywheel: test, rule, better checker. With the rules, X3D reached 20 of 25 held-out faults; glTF's own validator is still ahead at 23 of 24.
 - **USD's registered validators barely look at values** (FM 321).
 
+## Turn 2 (26 Nov 2026): the misses, closed
+
+After this run, 26 data checks were added to the X3D validator (x3d_mcp `0b941c9`), written from these misses and from the full glTF-Validator code list. Rerun on the same cases with `flywheel/turn.py`:
+
+| | Turn 1 | Turn 2 |
+|---|---|---|
+| X3D caught, of 53 stateable | 39 | **52** |
+| On the 43 faults glTF can also state | X3D 29, glTF 41 | X3D 42, glTF 41 |
+| Decoys flagged | 0 | 1 (Z04) |
+
+This is a **fix confirmation on a seen set**, not a new held-out result: the author of the checks had seen every fault. The remaining miss is F03, which is not a fault in X3D. The flagged decoy is legal in glTF and a real stall in X3D (FM 326). See `flywheel/README.md` and `LEARNINGS-flywheel-turn-2.md`.
+
 ## Corrections found after the run (not changed in the score)
 
 - **F03 in X3D was not a fault.** `nearDistance = -1` means "automatic" in X3D (FM 319). Excluding it, X3D is 39 of 52; H1 against glTF still fails.
