@@ -1,0 +1,152 @@
+{
+ "fault-01.x3d": {
+  "category": "structure",
+  "fault": "Material placed directly under Shape instead of inside Appearance",
+  "viewer_sees": "Box in default white/unlit-looking material; red ignored",
+  "spec": "error (invalid child, XSD)"
+ },
+ "fault-02.x3d": {
+  "category": "structure",
+  "fault": "Appearance outside a Shape, as direct Scene child",
+  "viewer_sees": "Sphere has default appearance; green ignored",
+  "spec": "error (Appearance is not a child node of Scene)"
+ },
+ "fault-03.x3d": {
+  "category": "DEF/USE",
+  "fault": "USE of a Sphere DEF inside an Appearance slot (wrong type)",
+  "viewer_sees": "Box with no appearance / loader error",
+  "spec": "error (USE type mismatch)"
+ },
+ "fault-04.x3d": {
+  "category": "DEF/USE",
+  "fault": "Duplicate DEF name A on two different shapes",
+  "viewer_sees": "Both render, but later USE of A is ambiguous",
+  "spec": "error (DEF names must be unique in scope)"
+ },
+ "fault-05.x3d": {
+  "category": "geometry",
+  "fault": "coordIndex lacks -1 face terminators",
+  "viewer_sees": "Nothing or one malformed face",
+  "spec": "error (indexes not terminated by -1)"
+ },
+ "fault-06.x3d": {
+  "category": "geometry",
+  "fault": "coordIndex 4 is one past end of 4 points",
+  "viewer_sees": "Missing/garbled second triangle",
+  "spec": "error (index out of range)"
+ },
+ "fault-07.x3d": {
+  "category": "geometry",
+  "fault": "creaseAngle 30 given in degrees (radians expected)",
+  "viewer_sees": "Smoothed fully (30 rad > pi)",
+  "spec": "unwise (valid)"
+ },
+ "fault-08.x3d": {
+  "category": "geometry",
+  "fault": "ElevationGrid 3x3 needs 9 heights, 8 given",
+  "viewer_sees": "Not rendered or truncated",
+  "spec": "error (spec: height count must equal xDim*zDim)"
+ },
+ "fault-09.x3d": {
+  "category": "geometry",
+  "fault": "Extrusion with a single spine point",
+  "viewer_sees": "Nothing rendered",
+  "spec": "error (needs >=2 spine points)"
+ },
+ "fault-10.x3d": {
+  "category": "appearance",
+  "fault": "transparency 1 on the only object",
+  "viewer_sees": "Scene looks empty",
+  "spec": "unwise (valid)"
+ },
+ "fault-11.x3d": {
+  "category": "appearance",
+  "fault": "PhysicalMaterial roughness 2 (range 0..1)",
+  "viewer_sees": "Clamped/undefined",
+  "spec": "error (out of range)"
+ },
+ "fault-12.x3d": {
+  "category": "appearance",
+  "fault": "Colour given as 255 0 0",
+  "viewer_sees": "White/saturated box",
+  "spec": "error (range 0..1)"
+ },
+ "fault-13.x3d": {
+  "category": "viewing",
+  "fault": "fieldOfView 45 in degrees (radians, max <pi)",
+  "viewer_sees": "Ultra wide-angle distortion",
+  "spec": "error (range 0..pi)"
+ },
+ "fault-14.x3d": {
+  "category": "lights",
+  "fault": "SpotLight cutOffAngle < beamWidth",
+  "viewer_sees": "Hard cutoff, no falloff",
+  "spec": "unwise (spec says beamWidth clamped)"
+ },
+ "fault-15.x3d": {
+  "category": "units",
+  "fault": "rotation angle 90 written in degrees (radians expected)",
+  "viewer_sees": "Box rotated by 90 rad (~ -0.9 rad ... odd angle)",
+  "spec": "unwise (valid)"
+ },
+ "fault-16.x3d": {
+  "category": "units",
+  "fault": "scale 0 on one axis, degenerate flat box",
+  "viewer_sees": "Box vanishes or flat line",
+  "spec": "error/unwise (spec: scale components should be nonzero positive-ish; 0 is degenerate)"
+ },
+ "fault-17.x3d": {
+  "category": "units",
+  "fault": "Object 10000 km from origin",
+  "viewer_sees": "Not visible; precision loss",
+  "spec": "unwise"
+ },
+ "fault-18.x3d": {
+  "category": "misc",
+  "fault": "LOD range not ascending",
+  "viewer_sees": "Wrong level selected",
+  "spec": "error (range must be increasing)"
+ },
+ "fault-19.x3d": {
+  "category": "misc",
+  "fault": "Background skyAngle has 3 values but 2 skyColors (needs n+1=4 colours for 3 angles)",
+  "viewer_sees": "Sky gradient wrong/ignored",
+  "spec": "error (count mismatch)"
+ },
+ "fault-20.x3d": {
+  "category": "lights",
+  "fault": "DirectionalLight direction 0 0 0",
+  "viewer_sees": "Unlit black box",
+  "spec": "error/unwise (zero vector)"
+ },
+ "decoy-01.x3d": {
+  "category": "decoy",
+  "fault": "none: whichChoice -1 on Switch (shows nothing, intentional)",
+  "viewer_sees": "as intended",
+  "spec": "legal"
+ },
+ "decoy-02.x3d": {
+  "category": "decoy",
+  "fault": "none: Mirrored scale -1 1 1",
+  "viewer_sees": "as intended",
+  "spec": "legal"
+ },
+ "decoy-03.x3d": {
+  "category": "decoy",
+  "fault": "none: Shape with geometry but no Appearance",
+  "viewer_sees": "as intended",
+  "spec": "legal"
+ },
+ "decoy-04.x3d": {
+  "category": "decoy",
+  "fault": "none: Zero rotation written 0 0 1 0",
+  "viewer_sees": "as intended",
+  "spec": "legal"
+ },
+ "decoy-05.x3d": {
+  "category": "decoy",
+  "fault": "none: solid false on open surface",
+  "viewer_sees": "as intended",
+  "spec": "legal"
+ }
+}

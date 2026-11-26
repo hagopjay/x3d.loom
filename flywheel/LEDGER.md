@@ -1,7 +1,9 @@
 # Flywheel ledger
 
 One row per measured turn. Written by `flywheel/turn.py measure`; do not edit by hand. The numbers are counts
-of scenes, from the benchmarks named in `flywheel/README.md`.
+of scenes, from the benchmarks named in `flywheel/README.md`. Read "52 of 53" as a fix confirmation by a rule writer who had seen
+the faults (the held-out figure is the Loom arm, 17 to 20 of 25). Read "88 of 88" as 88 of the 170 Khronos codes and "66 of 66" as
+66 of the 340 USD rules; the project, not an outside party, classified the rest. A pass certifies the listed checks only.
 
 | Turn | Date | Validator | Fault Court caught | Decoys flagged | glTF-Validator codes matched | USD rules covered | After a Blender USD export: fired pairs (both / X3D only / USD only) | Rules by | Model calls | What changed |
 |---|---|---|---|---|---|---|---|---|---|---|

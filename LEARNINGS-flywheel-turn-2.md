@@ -8,8 +8,8 @@ Instruments: x3d_mcp fork at `f0bde28` (X3D 4.0 XSD, `semantic_diagnostics`, new
 
 | Measure | Turn 1 (`4d433af`) | Turn 2 (`f0bde28`) | Grade |
 |---|---|---|---|
-| glTF-Validator codes X3D can state, with a failing and a passing scene each | 40 of 88 reported | 88 of 88 | C |
-| Fault Court, X3D arm | 39 of 53 | 52 of 53 | C (seen set, see 4) |
+| glTF-Validator codes X3D can state, with a failing and a passing scene each | 40 of 88 reported | 88 of the 170 Khronos codes (the 88 the project judged X3D can state; the project classified the rest) | C |
+| Fault Court, X3D arm | 39 of 53 | 52 of 53, a fix confirmation by a rule writer who had seen the faults; held-out figure: Loom arm 17 to 20 of 25 | C (seen set, see 4) |
 | Fault Court, on the 43 faults glTF can also state | X3D 29, glTF 41 | X3D 42, glTF 41 | C (seen set) |
 | Decoys flagged | 0 of 10 | 1 of 10 | C |
 | Clean control findings | 0 | 0 | C |

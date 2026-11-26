@@ -8,7 +8,7 @@ Instruments: x3d-blender-io `e783aa1` (`behaviour_graph.py`, `behaviour_sim.py`,
 
 | Measure | Value | Grade |
 |---|---|---|
-| Unseen in-vocabulary tasks solved and correct on an unseen stimulus | 87 of 90 (95% interval 91 to 99%) | C |
+| Unseen in-vocabulary tasks solved and correct on an unseen stimulus | 87 of 90 (95% interval 91 to 99%); tasks written by the method's author, judged by the author's simulator | C |
 | Written files with 0 schema and 0 semantic errors | 267 of 267 | C |
 | Search cost with memory, tasks solved both ways | 4,109 to 1,018 simulator runs, Wilcoxon p = 2.9e-12 | C |
 | Out-of-vocabulary controls solved and correct | 1 of 18 (a recording, FM 329) | C |

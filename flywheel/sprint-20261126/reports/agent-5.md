@@ -1,6 +1,6 @@
 # Gate policy proposal: evidence from 600 scenes
 
-**Sample (C).** 600 distinct-text .x3d files (md5 dedupe) of 2,122 under /home/user (no .git, node_modules, files over 2 MB). Round-robin over 16 repos with a seeded shuffle (6 to 81 each); 9 files timed out or crashed and were skipped. Pass took 35 s. Table: counts.json. The sample includes test fixtures and adversarial probes, which inflate defect rates (L).
+**Sample (C).** 600 distinct-text .x3d files (md5 dedupe) of 2,122 under the checkouts (no .git, node_modules, files over 2 MB). Round-robin over 16 repos with a seeded shuffle (6 to 81 each); 9 files timed out or crashed and were skipped. Pass took 35 s. Table: counts.json. The sample includes test fixtures and adversarial probes, which inflate defect rates (L).
 
 **Baseline (C).** 110 of 600 scenes already fail on an error (79 profile-component). 82 carry a warning; 63 of those are warning-only and pass today.
 
