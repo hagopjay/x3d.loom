@@ -72,7 +72,7 @@ clamp-and-flag, plus a range check on every banked curve (a probability lies in 
   LineSet / IndexedLineSet / PointSet are skipped unless a face set USEs their Coordinate (7 → 0 on Downey).
   `coordinate-precision` past 2^38 now says the value is suspect ("overflowed or cancelled") instead of only "the mesh
   will jitter; move the origin". 6 new tests in `tests/test_downey_findings.py`.
-- **x3d.loom:** failure modes 436 to 442; the foldback kit's 29 as 407 to 435.
+- **x3d.loom:** failure modes 444 to 450; the foldback kit's 29 as 415 to 443.
 
 ## Pre-registered predictions (PREDICTIONS.md, sha256 f0ee4bab…, written 16:04 UTC before any run)
 | # | Prediction | Outcome |
@@ -90,7 +90,7 @@ clamp-and-flag, plus a range check on every banked curve (a probability lies in 
 | Effect | Count | Reading |
 |---|---|---|
 | Gate broken | 0 of 20 | no new error-level rule fired on a data-viz stack |
-| True defect found | 1 | the most valuable result of the run; came in as a warning the gate does not read (FM 439) |
+| True defect found | 1 | the most valuable result of the run; came in as a warning the gate does not read (FM 447) |
 | False alarms | 7 → 0 | one rule mapped wider than its USD source; fixed |
 | Profile-only infos | 4 | keep as info; label them SimReady in receipts |
 | Run time | 2.5x | 0.50 s → 1.27 s for 20 scenes |

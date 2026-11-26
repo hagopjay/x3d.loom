@@ -95,7 +95,7 @@ def acceptance_controls() -> list[dict]:
     with tempfile.TemporaryDirectory(prefix="loomkit-test-") as d:
         p = Path(d) / "empty.json"; p.write_text(json.dumps({"schema": "loom.profile/1", "name": "x", "required": []}))
         rows.append({"case": "empty profile", **expect("EMPTY_PROFILE", lambda: acc.load_profile(p))})
-    # a profile may pin the kit by content hash (failure mode 434, x3d.downey 24 Nov 2026)
+    # a profile may pin the kit by content hash (failure mode 442, x3d.downey 24 Nov 2026)
     from loomkit.core import kit_stamp
 
     def pinned(root, ev):

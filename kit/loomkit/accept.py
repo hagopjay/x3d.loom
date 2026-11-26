@@ -45,7 +45,7 @@ def parse_profile(data: bytes, label: str = "profile") -> dict:
         safe_name(n)
     need(len(names) == len(set(names)), "PROFILE_DUPLICATE_WITNESS")
     if "kit" in profile:
-        # failure mode 434 (x3d.downey, 24 Nov 2026): a run on an older checkout of this kit was accepted-shaped and
+        # failure mode 442 (x3d.downey, 24 Nov 2026): a run on an older checkout of this kit was accepted-shaped and
         # nothing refused it. A profile may pin the kit by its content hash; a commit alone is not enough (a copied
         # kit has none, a replayed history has new ones).
         k = profile["kit"]

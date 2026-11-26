@@ -8,10 +8,10 @@ Earth falling into the Sun (20, 26). The genesis run was accepted under its own 
 kit (grammar, meaning, traps, page-traps, and ten `command` witnesses), with a receipt.
 
 Grades: C, measured by the thread that built it, so **Likely** under law 44 until a second reader recomputes.
-Failure modes 407 to 422 in LOOM-v1.md §8 come from this build and its second session. No new law.
+Failure modes 415 to 430 in LOOM-v1.md §8 come from this build and its second session. No new law.
 
 _Numbering: the foldback kit numbered these 229 to 257 against x3d.loom a2a3ef0 (last was 228). By the time it was applied
-(26 Nov, main 434b580) upstream had reached 406, so every number here is the kit's plus 178: 229 → 407 … 257 → 435.
+(26 Nov, main 434b580) upstream had reached 406, so every number here is the kit's plus 186: 229 → 415 … 257 → 443 (407 to 414 are the Landscape of Consciousness fold-back, x3d.loom #222).
 x3d.downey's own LEARNINGS.md and its evidence still use the kit's numbers._
 
 ## Downey's loop is the Loom's loop
@@ -34,7 +34,7 @@ x3d.downey's own LEARNINGS.md and its evidence still use the kit's numbers._
 **The book's bugs are ready-made controls.** Downey shows his readers their likely mistakes on purpose (negative
 bikes, a function that rebuilds its own System, a forgotten return, swapped arguments). As one-line mutants they are
 exactly what law 19 asks for. 21 were run: 20 caught by the checks their cards named, 1 survived as its card predicted
-(failure mode 408), and 1 prediction was wrong and corrected in the open (409).
+(failure mode 416), and 1 prediction was wrong and corrected in the open (417).
 
 ## Patterns worth copying
 
@@ -46,12 +46,12 @@ exactly what law 19 asks for. 21 were run: 20 caught by the checks their cards n
    initial seed. Gate that the ledger closes; report which cause dominates where.
 3. **A collapse is an invariance: witness the invariance.** Scaling both SIR rates by k is running the clock k times
    faster; checked along the solution to 1e-16, it is why Downey's sweep collapses, and why the stepped model does
-   not (414).
+   not (422).
 4. **Predict survivors.** A mutant that the model cannot see (an area absorbed into a fitted coefficient) is written
    on the card as expected to survive, with the reason. It teaches identifiability, and it is never counted as a catch.
 5. **Portable random streams make Monte Carlo replayable.** xoshiro128** seeded by splitmix32, compared as 24-bit
    integers, gives the same bits in Python and JavaScript: 60 of 60 step hashes and all 31 sweep means equal.
-6. **A bank is an input to a replay: keep its floats exact** (407).
+6. **A bank is an input to a replay: keep its floats exact** (415).
 
 ## Open
 
@@ -70,8 +70,8 @@ small worlds, elementary CA, Life, percolation, the abelian sandpile) on the sam
   CA row, all 1,144 R-pentomino populations and all 5,000 avalanche sizes bit for bit.
 - **A blind second reader works.** A fresh agent given only the cards, the data and the book (no code, no banks)
   recomputed 38 ModSimPy numbers with scipy and numpy: 38 agree. It promotes them from Likely to Confirmed under
-  law 44, and it read a claim the figures witness had passed (416).
-- **Symmetry hides bugs; light cones hide boundaries; caps hide failure** (417 to 420).
+  law 44, and it read a claim the figures witness had passed (424).
+- **Symmetry hides bugs; light cones hide boundaries; caps hide failure** (425 to 428).
 
 ## Third session: Think Stats and x3d.xray's protocol (23 Nov, night)
 
@@ -91,17 +91,17 @@ confounding by mother's age.
 - **Read the data three ways.** The NSFG file was read from its dictionary by new Python, by pandas, and by
   JavaScript with zlib; all agree with every count the book prints, and the page replays Downey's permutation test
   from the same SplitMix64 stream bit for bit.
-- Failure modes 423 to 432.
+- Failure modes 431 to 440.
 
 ## Fourth session: content-bound evidence, a pinned kit, blind readers for every book (24 Nov, small hours)
 
 - **Evidence must survive a replay.** x3d.downey's commits are signed; a patch cannot carry signatures, so every
   replay gives new SHAs. Its limits witness now binds law 44 to content (card blobs, limits hashes, the order of the
-  first card and first code commits) and verifies on a replay whose every SHA differs. Failure mode 433.
+  first card and first code commits) and verifies on a replay whose every SHA differs. Failure mode 441.
 - **Pin the kit by content.** After a run on an older checkout went unrefused, this kit's acceptance learned an
-  optional `kit: {kit_sha256}` in profiles and the code `WRONG_KIT` (3 new controls, 154 caught). Failure mode 434.
+  optional `kit: {kit_sha256}` in profiles and the code `WRONG_KIT` (3 new controls, 154 caught). Failure mode 442.
 - **Blind readers for Think Complexity (21 numbers) and Think Stats (41), from stripped cards.** All agree. The
-  Complexity reader found two places where a card misdescribed Downey (failure mode 435); the Stats reader found,
+  Complexity reader found two places where a card misdescribed Downey (failure mode 443); the Stats reader found,
   unprompted, the book's mixed-sample age gap that the card already recorded. Law 44's second reader is cheap and
   it keeps finding what the building thread cannot.
 
@@ -121,11 +121,11 @@ hurt a new integration, and named this stack as the test. Predictions were writt
 - **One true defect, Confirmed.** `complexity/er` draws Gilbert's P(connected) for n = 100 with 49 of 121 points wrong,
   up to 2.7e25 m tall: the float64 recurrence cancels at small p. Decimal at 600 digits is the reference; X_ITE 16.8.1
   shows the streaks (`er-before-after-labelled.png`). The room's checked numbers (p10, p50, p90) are right. Failure
-  modes 436 to 438: what is drawn was never checked, a bit-for-bit twin shares the algorithm, the blind reader was asked
+  modes 444 to 446: what is drawn was never checked, a bit-for-bit twin shares the algorithm, the blind reader was asked
   only for safe points.
-- **It came in as a warning the gate does not read** (failure mode 439), with advice that would have hidden it (440).
-- **Seven false alarms, now zero.** A Mesh-only USD rule ran on LineSet and PointSet (441); x3d_mcp now scopes it.
-- **Four profile-only infos** stay info (442).
+- **It came in as a warning the gate does not read** (failure mode 447), with advice that would have hidden it (448).
+- **Seven false alarms, now zero.** A Mesh-only USD rule ran on LineSet and PointSet (449); x3d_mcp now scopes it.
+- **Four profile-only infos** stay info (450).
 - Nothing from #31 fired; #34's world-place pass fired 0 times; semantic time 0.50 s → 1.27 s for 20 scenes.
 
 The x3d.downey fix (log-space or Decimal recurrence, and a domain check on every banked curve) is not applied: the
