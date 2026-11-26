@@ -82,3 +82,12 @@ floor of 22%), and `sp-16` has a touch sensor and nothing in a watch to start it
 
 Not done: the other 27 rebuilt scenes; a watch as long as the loop (the slow scenes were seen for a fifth of a turn);
 scenes with a sensor.
+
+## Run 3: all 39, with the fixed judge (expectations, written before the run)
+
+The node editor's pair judge now replays both files at the same moment, compares rotations as rotations and says
+"unclear, blind" when it cannot see (x3d-blender-io 2.7.8, `09a7a99`). `court_full.py` sends all 39 rebuilt scenes
+through it, each watched for one whole loop plus 2 s (40 s at most), two repeats, with three controls.
+
+Expected: **C1''** at least 30 of 39 "same" and none "differs". **C2''** 3 of 3 controls "differs" (a whole loop is in
+view, so the changed half is too). Scenes with a sensor and nothing to press it will be "unclear".
