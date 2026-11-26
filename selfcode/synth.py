@@ -173,19 +173,20 @@ def fit_table(fraction, demo, kind, tol):
 
 
 class Synth:
-    def __init__(self, stage, script, seconds, demo, memory=None, budget=6000, depth=4, tol=1e-3):
+    def __init__(self, stage, script, seconds, demo, memory=None, budget=6000, depth=4, tol=1e-3, share=None):
         self.stage, self.script, self.seconds, self.demo = stage, script, seconds, demo
         self.memory, self.budget, self.depth, self.tol = memory or [], budget, depth, tol
         self.sims, self.typed, self.fresh, self.late, self.memorised = 0, 0, 0, 0, 0
         self.offered = 0                           # extensions before the type check
         self.new_motifs, self.from_memory, self.used = [], 0, []
         self.cache, self.clocks = {}, {}           # one run per distinct wiring, whoever asks for it
+        self.share, self.limit = share, float("inf")       # share: runs one field may spend on its first try (added after the registered run)
         self.n = 0
         self._moments = {}
 
     # -- one simulator run is the unit of cost
     def run(self, program):
-        if self.sims >= self.budget:
+        if self.sims >= min(self.budget, self.limit):
             raise Budget()
         self.sims += 1
         return core.run(core.build(program), self.script, self.stage, self.seconds, want_streams=True)
@@ -438,23 +439,31 @@ class Synth:
         """Returns (program or None, fields left unsolved)."""
         todo = core.changed(self.demo, self.stage)
         base = {"targets": {}, "nodes": [], "routes": []}
-        progress = True
+        progress, first = True, True
         try:
             while todo and progress:
                 progress = False
                 for key in list(todo):
-                    cands = durations(self.demo[key], self.stage.types[key])
-                    sources = self.sources(base, key)
-                    found = self.recall(base, key, cands, sources) if self.memory else None
-                    recalled = found is not None
-                    if not found:
-                        found = self.search(base, key, cands, sources)
+                    self.limit = self.sims + self.share if self.share and first else float("inf")
+                    try:
+                        cands = durations(self.demo[key], self.stage.types[key])
+                        sources = self.sources(base, key)
+                        found = self.recall(base, key, cands, sources) if self.memory else None
+                        recalled = found is not None
+                        if not found:
+                            found = self.search(base, key, cands, sources)
+                    except Budget:
+                        if self.sims >= self.budget:
+                            raise
+                        progress = True              # out of its share, not out of budget: come back to it
+                        continue
                     if found:
                         base = self.trim(found[0])
                         if not recalled:
                             self.new_motifs.append(found[1])
                         todo.remove(key)
                         progress = True
+                first = False
         except Budget:
             pass
         if todo:
