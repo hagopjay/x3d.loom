@@ -43,6 +43,13 @@ Turn 3 mapped all 340 rules of the three USD rulebooks to X3D and answered the 6
 - **400.** One trigger, two outcomes. Compare engines on an unambiguous trigger.
 - **401.** A fixed-step miss with its substep sweep beside it.
 
+## Failure modes 402 to 406 (writer runtime variants, 26 Nov 2026)
+- **402.** Variant selections written to the shared root layer polluted every later target. Select in the session layer.
+- **403.** SimReady's runtime rules are not gated by runtime. Read each runtime on its own composition.
+- **404.** `GetAppliedSchemas()` hides unregistered schema names. Read the `apiSchemas` metadata.
+- **405.** A neutral `physics:approximation = "none"` outranked every runtime payload. Leave fallbacks unauthored.
+- **406.** The validator counted an ArticulationRootAPI that Newton's importer ignores. Run the engine after satisfying a rule.
+
 ## Not shown
 - A GPU.
 - Another machine.
