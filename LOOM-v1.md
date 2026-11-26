@@ -690,6 +690,11 @@ Each row is a trap someone paid for. The fix is the v1 rule; LEARNINGS-from-patc
 | 298 | A far-future time sentinel (1e+30) rendered as thirty cut-off digits in a seconds widget | Give each field type's sentinels their own display ("never") | [x3d-blender-io behaviour graph v2.1, LEARNINGS-behaviour-graph.md #21, C] |
 | 299 | A node editor's activity glow stayed at full strength while a timer ran, so the glowing nodes' fields were unreadable | Flash at full for the start of a run of events, then hold a weaker tint while it continues | [x3d-blender-io behaviour graph v2.1, LEARNINGS-behaviour-graph.md #24, C] |
 | 300 | An import kept both its baked keyframes and the event graph that replaced them, so the timeline played a second copy | When a new container takes over a behaviour, remove what the same import baked for it, only that, and report it | [x3d-blender-io behaviour graph v2.1, LEARNINGS-behaviour-graph.md #22, C] |
+| 304 | Two correct handedness conventions (mirror Z, native; mirror X, glTFast) differ by a 180-degree turn about Y, so native and glTFast imports face opposite ways | Pick one per bridge, name it in the receipt, test with a viewpoint fixture | [x3d.lab unity bridge, LEARNINGS-unity-bridge.md #304, C] |
+| 305 | Mirroring a mesh without reversing its winding turned it inside out (cube signed volume +8 to negative) | Use signed volume > 0 as the per-primitive test after any handedness change | [x3d.lab unity bridge, LEARNINGS-unity-bridge.md #305, C] |
+| 306 | Hand-written Sphere, Cylinder and Cone tessellators had inverted winding on first write | Test every primitive's signed volume against the closed form before drawing it | [x3d.lab unity bridge, LEARNINGS-unity-bridge.md #306, C] |
+| 307 | `validate_semantic` returns a Markdown report; a gate that parsed it as JSON passed an XSD-valid scene with a dangling ROUTE | Parse the `## Errors` bullets and keep one test that is XSD-valid but semantically broken | [x3d.lab unity bridge, LEARNINGS-unity-bridge.md #307, C] |
+| 308 | mcp 2.x removed `mcp.server.fastmcp`, so the x3d_mcp server module does not import | Import the validators (`validation.validate`, `validation.semantic`) directly; they do not need mcp | [x3d.lab unity bridge, LEARNINGS-unity-bridge.md #308, C] |
 
 ---
 
