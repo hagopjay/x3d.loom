@@ -47,3 +47,8 @@ See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40
 ## From finding to rule
 
 [`rules-from-findings/`](rules-from-findings/README.md) is the first time notes from the selfcode loop were turned into a kernel check and run on real files: the half-turn rule, 8 of 8 predictions confirmed in X_ITE, 41 of 463 scenes flagged (a first count of 136 read a stale checkout and is corrected there), 10 false alarms found and removed before it shipped.
+
+## Sprint, 26 Nov 2026
+
+[`sprint-20261126/SPRINT.md`](sprint-20261126/SPRINT.md): eight agents, eight questions, fifteen minutes. A blind behaviour benchmark (`fault-court-2/`, 11 of 20 caught), why the search fails on larger scenes, a red-team review of the claims on this page, and the work list that follows.
+

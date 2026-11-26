@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head><meta name="title" content="fault-11"/></head>
+  <Scene>
+    <Viewpoint position="0 0 10"/>
+<TimeSensor DEF="Clock" cycleInterval="4" loop="true"/>
+<Transform DEF="T"><Shape><Appearance><Material diffuseColor="1 0 0"/></Appearance><Box/></Shape></Transform>
+<OrientationInterpolator DEF="PI" key="0 1" keyValue="0 1 0 0, 0 1 0 6.2832"/>
+<ROUTE fromNode="Clock" fromField="fraction_changed" toNode="PI" toField="set_fraction"/>
+<ROUTE fromNode="PI" fromField="value_changed" toNode="T" toField="set_rotation"/>
+  </Scene>
+</X3D>
