@@ -143,3 +143,24 @@ Still not proven: VisibilitySensor and TransformSensor; more than one 3D view as
 scaled Transform; whether the one-frame lag is X_ITE's choice or the standard's (ISO/IEC 19775-1 clause 22 not read for
 it). The judge cannot see a continuous output re-sent with an unchanged value. Taste in the flight's screenshots is not
 judged.
+
+## Version 2.5 (26 Nov 2026): a timer started in the past, presets to graph, play axes, the loss report
+
+Code: x3d-blender-io pull request 89 (add-on 2.7.5). The work was specified first (one written spec per package, with the
+files each may touch and a "done when"), then implemented and debugged by three separate agents in three git worktrees,
+then merged by the specifier. Instruments: X_ITE 16.8.1 in headless Chromium with SwiftShader, Playwright
+(`tools/behaviour_sim_judge.cjs --hold=300,4500`); the simulator replayed by `tools/behaviour_sim_judge.py`; Blender
+5.3.0 bpy wheel, Python 3.13, unittest (1,126 pass, 35 skipped after merging main).
+
+| # | Finding | Grade | Evidence | Rule it suggests |
+|---|---|---|---|---|
+| 42 | **The search's defect report was real, and the cause was one line.** Failure mode 338 (a search found wiring the simulator calls equivalent and X_ITE does not) traced to this: X_ITE counts a TimeSensor's cycles from `startTime` whether it loops or not, so a non-looping timer started with a `startTime` in the past begins part way through a cycle (fraction 0.273 in the recording) and stops when that cycle ends. The simulator applied the rule to looping timers only. | Confirmed | `tests/behaviour/probe-timer.x3d` and its trace: 3 of 14 streams disagreed before, 14 of 14 agree after; X_ITE 16.8.1 `setRange` read in the dist | A rule learned on one branch of a node (loop true) is a guess on the other branch until a probe covers it |
+| 43 | **Events sent in one phase meet state ended in a later one.** X_ITE sends `elapsedTime` in its prepare phase and ends a finished cycle later in the same frame, so a `startTime` arriving in the frame the cycle ran out is ignored; the timer restarts one frame later. The first fix (phase only) left 2 of the 3 streams wrong. | Confirmed for `elapsedTime`; Likely for `cycleTime` (one recording) | same trace: B isActive false at 10.445, true at 10.462 | When a reference has phases inside a frame, record which phase each output is sent in before modelling a feedback wire |
+| 44 | **A probe that passes under both versions proves nothing about the change.** Of the four chains in the new probe, three (cycleTime to startTime, touchTime to startTime, a stop from a second event) agree with the old and the new simulator alike. Only the first discriminates. They are kept as guards, and reported as such. | Confirmed | per-stream verdicts before and after | Report, per test, whether it failed before the change |
+| 45 | **Converting an old feature by calling the exporter beats re-deriving it.** "Presets to graph" builds its nodes from the exporter's own extract, so the export before and after conversion has the same 8 behaviour nodes and 10 ROUTEs on the test scene; a mutation of one formula makes the test fail. | Confirmed (one scene) | `tests/test_behaviour_presets_bpy.py` | Migrate through the code that defines today's meaning, and test old output against new output |
+| 46 | **A fix placed after the fact leaves the earlier reports wrong.** The loss list is corrected once the graph exists, but the log lines and strict mode run inside the importer, before it, and still call a kept ROUTE lost. Said in the docs, not fixed. | Confirmed | `tests/test_behaviour_loss_report_bpy.py`; reading `import_x3d.load` | When a later stage rescues something, list every earlier place that already reported it lost |
+
+Still not proven: the new buttons and the axes choice on a real screen; X_ITE on a file converted from presets; the
+search that found failure mode 338 has not been re-run against the fixed simulator; whether X_ITE's start phase for a
+non-looping timer follows ISO/IEC 19775-1 clause 8.2.4 (not re-read; Suspected departure). A `startTime` received while a
+timer is active is still not stored by the simulator, though X_ITE stores it.
