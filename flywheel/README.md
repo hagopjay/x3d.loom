@@ -22,7 +22,7 @@ Needs Python with lxml and a checkout of the x3d_mcp validator. No model is call
 
 ## The ledger so far
 
-See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40 of 88 codes. Turn 2 (`0b941c9`): 52 of 53 faults, 88 of 88 codes, 1 of 10 decoys flagged.
+See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40 of 88 codes. Turn 2 (`f0bde28`): 52 of 53 faults, 88 of 88 codes, 1 of 10 decoys flagged.
 
 ## How to read it honestly
 

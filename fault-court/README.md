@@ -29,7 +29,7 @@ One small scene, written natively by three independent writers, X3D 4.0, glTF 2.
 
 ## Turn 2 (26 Nov 2026): the misses, closed
 
-After this run, 26 data checks were added to the X3D validator (x3d_mcp `0b941c9`), written from these misses and from the full glTF-Validator code list. Rerun on the same cases with `flywheel/turn.py`:
+After this run, 26 data checks were added to the X3D validator (x3d_mcp `f0bde28`), written from these misses and from the full glTF-Validator code list. Rerun on the same cases with `flywheel/turn.py`:
 
 | | Turn 1 | Turn 2 |
 |---|---|---|

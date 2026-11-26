@@ -2,11 +2,11 @@
 
 The Fault Court (turn 1) found that X3D's validator caught 29 of 43 shared faults where the Khronos glTF-Validator caught 41. The owner asked for everything glTF-Validator can do, equivalent or better, and for the flywheel to keep turning. This is what was built and measured. Grades: C = run and counted here; L = likely; S = suspected.
 
-Instruments: x3d_mcp fork at `0b941c9` (X3D 4.0 XSD, `semantic_diagnostics`, new `data_checks.py`); baseline `4d433af`; glTF-Validator code list from `ISSUES.md` of KhronosGroup/glTF-Validator (170 codes; the validator used in turn 1 was 2.0.0-dev.3.10).
+Instruments: x3d_mcp fork at `f0bde28` (X3D 4.0 XSD, `semantic_diagnostics`, new `data_checks.py`); baseline `4d433af`; glTF-Validator code list from `ISSUES.md` of KhronosGroup/glTF-Validator (170 codes; the validator used in turn 1 was 2.0.0-dev.3.10).
 
 ## Numbers
 
-| Measure | Turn 1 (`4d433af`) | Turn 2 (`0b941c9`) | Grade |
+| Measure | Turn 1 (`4d433af`) | Turn 2 (`f0bde28`) | Grade |
 |---|---|---|---|
 | glTF-Validator codes X3D can state, with a failing and a passing scene each | 40 of 88 reported | 88 of 88 | C |
 | Fault Court, X3D arm | 39 of 53 | 52 of 53 | C (seen set, see 4) |
