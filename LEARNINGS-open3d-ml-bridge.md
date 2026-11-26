@@ -12,3 +12,10 @@ Grades: C confirmed here, L likely, S suspected.
 6. **Open3D's torch ops need a CUDA-12 runtime even on CPU (C).** Open3D 0.20.0's ops link the CUDA build of torch 2.13.*; the CPU wheel fails ("Version mismatch", then "Could not load this library"). PyPI torch 2.13.0 + `nvidia-cuda-runtime-cu12` on `LD_LIBRARY_PATH` works.
 7. **Third-party scan data (C):** the Redwood page states no licence ("please cite"); ship a derived subset only, cite, add the takedown route. KITTI/SemanticKITTI/S3DIS were not used (registration or non-commercial terms).
 8. **Hole (C):** no real LiDAR frame was run, so 3D-box output is unit-tested on synthetic boxes only; no detection-accuracy claim.
+
+## Second pass: scored against Rohbau3D ground truth (Demo 81 v2, 26 Nov 2026)
+Rohbau3D (CC BY 4.0, doi:10.60776/ZWJFI4, licence read from the Dataverse API). RandLA-Net S3DIS on 3 scenes of site_02, 400,000 random points each, 3 runs each, Open3D 0.20.0 / torch 2.13.0 CPU; scored only on classes that map with the same meaning (9 of 18 Rohbau classes).
+9. **Ceiling and floor transfer, walls do not (C).** Ceiling recall 97-99%, floor 98-100% in two scenes; wall recall 38 / 5 / 5%. In the two worst scenes most "wall" points were called "window" (57%, 91%): bare concrete shells are outside the finished-office training distribution. Likely a domain gap; not tested by fine-tuning.
+10. **Floor-at-z=0 by min z breaks on multi-level scans (L).** scene_02000 spans z -2.6 to 3.7 m: floor recall 39% (29% called ceiling). Normalise by the lowest large horizontal plane or tile by storey.
+11. **A correctness lens shows what accuracy hides (L).** Overall accuracy ~66% reads as "meh"; the lens shows one red slab on the walls, a systematic gap.
+12. **A score needs a stated class mapping (C).** Cutouts, openings, stairs, facade, TGA were not forced into "clutter"; they are unscored.
