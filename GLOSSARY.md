@@ -28,6 +28,11 @@ Terms as Loom v1 uses them. Source IDs are in [SOURCES.md](SOURCES.md).
 | **x3dprov** | Hash-chained provenance steps inside the X3D head; lives in x3d.ML; 0.1 unsigned | DEF |
 | **FACTS** | x3d.onto's graded rulebook of findings (sections A to Q) | DEF |
 | **Trap** | A specific mistake already paid for once, usually one a validator passes | DEF, LEC 3 |
+| **SAI twin** | Page-side code that does through the SAI what a Script node would do, switched on by a motion witness when the Script cannot run (a no-eval host) | LAND §2.3, failure mode 409 |
+| **Motion witness** | Reading a driven field twice through the SAI some time apart; a constant value is a failed behaviour whatever the console says | LAND §3.10 |
+| **Standpoint object** | An object that is only correct from one view (the Penrose tribar closes only under an OrthoViewpoint along (1,1,1)); it is framed from that view and from one other and must close only in the first | LAND §3.4 |
+| **Glyph library** | Text as geometry: each glyph outline flattened and triangulated once, defined in a `Switch whichChoice=-1` DEF block and reused by `USE`, so no font is fetched (`kit/x3d-glyphs`) | LAND §2.2, failure mode 408 |
+| **Hosted page** | A page served by a host whose policy limits scripts to a CDN list, refuses cross-origin fetch and may refuse eval; the renderer comes from a foreign origin and the world's own files must be self-contained | LAND §2 |
 | **loom_gate.py** | x3d.onto's Traps witness (11 rules plus `--fork`) | DEF |
 | **loomkit** | This repository's portable kit: acceptance, traps subset, fold-back check, picture protocol, receipts | kit/ |
 | **Fork, the** | hagopjay/x3d_mcp, the family's Grammar and Meaning validator | MC |
