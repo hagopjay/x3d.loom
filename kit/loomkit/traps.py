@@ -83,6 +83,15 @@ RULES = {
                       "A looping clock's interpolators ended away from their first values, so the picture jumped at "
                       "every loop. Close the loop, or hide the reset (a fade to black) and say so on the card "
                       "(7 Nov, failure mode 112)"),
+    # 25 Nov, A Landscape of Consciousness (hosted page under a strict policy; LEARNINGS-landscape-of-consciousness.md)
+    "text-needs-font-fetch": Rule("text-needs-font-fetch", "warning", "X_ITE 16.8.1 under a same-origin fetch / no-eval policy",
+                                  "Every label vanished under a hosted page's policy: X_ITE loads Text fonts with fetch(), and a .woff2 "
+                                  "goes through a decoder that evaluates a string. Draw text as geometry (a DEF/USE glyph library, "
+                                  "kit/x3d-glyphs) or ship TrueType bytes (25 Nov, failure mode 408)"),
+    "lod-under-ortho": Rule("lod-under-ortho", "info", "X_ITE 16.8.1",
+                            "An LOD measures from the eye even under an OrthoViewpoint: an ortho view of a close framing hid its labels "
+                            "because the camera stood 60 m away and the label LOD switched at 36 m (25 Nov, failure mode 412). "
+                            "Translation-only world position; rotation and scale are not applied (grade L)"),
 }
 
 
@@ -152,11 +161,47 @@ def check(xml_bytes: bytes, profile: dict | None = None) -> list[Hit]:
             hits.append(Hit("version-fits-nodes", "error", where, f"{tag} needs X3D 4.1, file declares {version}"))
         if tag == "Script" and profile.get("host") == "strict":
             hits.append(Hit("no-script-under-host", "warning", where, "Script node under a strict host policy"))
+        if tag == "Text" and profile.get("host") in ("strict", "sandbox"):
+            hits.append(Hit("text-needs-font-fetch", "warning", where, "Text under a hosted-page policy: fonts need fetch (and WOFF2 needs eval)"))
         if tag.startswith("Metadata") and el in parent:
             ptag = _local(parent[el].tag)
             if not ptag.startswith("Metadata") and ptag not in ("head", "X3D") and "containerField" not in el.attrib:
                 hits.append(Hit("metadata-containerfield", "warning", where, "Metadata node without explicit containerField"))
     hits += _route_traps(order, parent)
+    hits += _lod_ortho(order, parent)
+    return hits
+
+
+def _world_pos(el, parent, own: str) -> list[float]:
+    """Translation-only world position of el: its own attribute plus the translations of its Transform ancestors."""
+    p = (_floats(el.get(own, "0 0 0")) + [0.0, 0.0, 0.0])[:3]
+    node = parent.get(el)
+    while node is not None:
+        if _local(node.tag) in ("Transform", "HAnimHumanoid", "HAnimJoint", "HAnimSegment"):
+            t = (_floats(node.get("translation", "0 0 0")) + [0.0, 0.0, 0.0])[:3]
+            p = [a + b for a, b in zip(p, t)]
+        node = parent.get(node)
+    return p
+
+
+def _lod_ortho(order: list, parent: dict) -> list[Hit]:
+    """lod-under-ortho: an OrthoViewpoint farther from an LOD's centre than its first range hides that LOD's near level."""
+    hits = []
+    eyes = [_world_pos(v, parent, "position") for v in order if _local(v.tag) == "OrthoViewpoint"]
+    for el in order:
+        if _local(el.tag) != "LOD":
+            continue
+        rng = _floats(el.get("range", ""))
+        if not rng or not eyes:
+            continue
+        c = _world_pos(el, parent, "center")
+        for e in eyes:
+            d = math.dist(c, e)
+            if d > rng[0]:
+                hits.append(Hit("lod-under-ortho", "info", f"LOD#{el.get('DEF') or 'anon'}",
+                                f"OrthoViewpoint is {d:.1f} from the LOD centre, past its first range {rng[0]:g}: "
+                                "the near level is hidden although an orthographic framing does not change with distance"))
+                break
     return hits
 
 
@@ -244,6 +289,9 @@ def _route_traps(order: list, parent: dict) -> list[Hit]:
             if len(k) < 2 or not v or len(v) % len(k) or k[0] > 1e-6 or k[-1] < 1 - 1e-6:
                 continue
             n = len(v) // len(k)
+            if any(_local(c.tag) == "MetadataString" and c.get("name") == "loom:seam" and "restart" in c.get("value", "")
+                   for c in interp):  # a declared restart: the jump is the design (25 Nov, F4 of LEARNINGS-landscape-of-consciousness.md)
+                continue
             if not _same_value(_local(interp.tag), v[:n], v[-n:]):
                 hits.append(Hit("loop-seam", "warning", where(interp),
                                 f"loops on {name} but its last value differs from its first"))
