@@ -688,6 +688,8 @@ Each row is a trap someone paid for. The fix is the v1 rule; LEARNINGS-from-patc
 | 296 | Auto-laid-out nodes overlapped (70 pairs in three worlds) because rows were spaced evenly while nodes grow with their fields | Measure node sizes after the first draw, push overlaps down the column, frame after the next draw; cap long tables on the node | [x3d-blender-io behaviour graph v2.1, LEARNINGS-behaviour-graph.md #19, C] |
 | 297 | A restore check read a derived matrix that Blender had not yet recomputed and reported a false failure | Check the datablock's own fields (`matrix_basis`), or force an update first, and name which was read | [x3d-blender-io behaviour graph v2.1, LEARNINGS-behaviour-graph.md #20, C] |
 | 298 | A far-future time sentinel (1e+30) rendered as thirty cut-off digits in a seconds widget | Give each field type's sentinels their own display ("never") | [x3d-blender-io behaviour graph v2.1, LEARNINGS-behaviour-graph.md #21, C] |
+| 299 | A node editor's activity glow stayed at full strength while a timer ran, so the glowing nodes' fields were unreadable | Flash at full for the start of a run of events, then hold a weaker tint while it continues | [x3d-blender-io behaviour graph v2.1, LEARNINGS-behaviour-graph.md #24, C] |
+| 300 | An import kept both its baked keyframes and the event graph that replaced them, so the timeline played a second copy | When a new container takes over a behaviour, remove what the same import baked for it, only that, and report it | [x3d-blender-io behaviour graph v2.1, LEARNINGS-behaviour-graph.md #22, C] |
 
 ---
 
