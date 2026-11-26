@@ -58,3 +58,28 @@ Proposed addition (not applied; needs a run first, law 8): the event-stream judg
 re-implementation of a runtime (a converter's baked animation, a glTF interactivity export), with the reference trace
 committed beside the file it was recorded from.
 
+## Version 2.1 (25 Nov 2026): looked at on a real screen
+
+Code: x3d-blender-io pull request "Behaviour graph: the import shows its result; the editor looked at on a real screen".
+Instrument: `tools/behaviour_eyetest.py` in Blender 5.3.0 with a window (`--factory-startup --enable-event-simulate`,
+1600 x 1000), macOS 26 on arm64; the same rig run on add-on `main` 0eb4809 and on the new version, five worlds (door,
+counter, snake, probe, route-demo). Screenshots and `eyetest.json` were looked at by the agent that ran it; the owner
+saw the door open by hand earlier the same day.
+
+| # | Finding | Grade | Evidence | Rule it suggests |
+|---|---|---|---|---|
+| 17 | **Most of "nobody has looked" was a missing rig, not a missing person.** Blender's `--enable-event-simulate` lets a script send mouse and key events through the window's own queue while the real mouse is ignored. The modal Play operator, its ray cast, the node glow and Esc all ran as for a person, in five worlds, with screenshots of each step. What it cannot judge is taste. | Confirmed | `eyetest.json`: Play started 5 of 5; a real click on the sensed object moved or lit its target in door, counter, probe and route-demo; Esc restored 5 of 5 | Editor work gets a scripted real-window run with screenshots before anyone is asked to look; the person is asked about taste, not about whether it works. |
+| 18 | **The import's result was invisible, so the add-on looked uninstalled.** With "Behaviour as node graph" ticked, main built the tree and showed it nowhere, even with a node editor open (0 of 5 worlds). The fix shows it in an open node editor and says in the import's last line where it went; it never turns another editor into a node editor. | Confirmed | same rig: 0 of 5 on main, 5 of 5 after | A feature that makes something the person cannot see must say where it is in the same breath. |
+| 19 | **A layout that spaces rows evenly breaks the moment nodes show their data.** Target nodes list every field and interpolators drew one row per key (48 on route-demo), so 70 pairs of nodes overlapped (counter 1, probe 31, route-demo 38). Only the editor knows a node's height, and only after drawing it: the fix waits for the first draw, pushes overlapping nodes down their column, waits for the next draw and frames. The node body now shows six key rows; the sidebar shows all. | Confirmed | rig `overlaps`: 70 on main, 0 after; `test_unstack_*` | Lay out with measured sizes, or measure after the first draw; never assume a row height for nodes that grow with data. |
+| 20 | **Check a restore on the data, not on what is derived from it.** The rig first reported that Esc left route-demo's Door at z 3.4 instead of 1.1. The object's own `matrix_basis` was back at once; `matrix_world` is only recomputed at the next redraw, which under event simulation came later than the check. A headless replay of the same events restored exactly. | Confirmed (the false alarm and its cause) | rig log runs 2 and 3; `bpy` replay | Compare the datablock's own fields; read caches only after forcing the host to update them, and say which you read. |
+| 21 | **A typed widget needs the format's sentinels.** `startTime="1e+30"`, a file's way of saying "not until an event", was drawn as a seconds field: thirty digits, cut off. It is now shown as its X3D text, labelled "never". | Confirmed (screenshot) | `route-demo-2-editor.png`, before and after | When a field type gets a widget, list the values that mean something other than their number and give each a display. |
+| 22 | **Two drivers for one object.** On route-demo the importer still bakes the looping interpolators into actions (`Door_x3d`, `Spinner_x3d`) when the graph is built, so the graph and an action both drive Door and Spinner. Export ignores the keyframes (rule 5), the player restores correctly, but the timeline's Play shows the baked copy. Not changed: removing importer-made actions is the owner's call. | Confirmed (bpy probe) | keyframes listed on import; same file through Play and Esc | When a new container takes over a thing (finding 1), the old container's copy is removed in the same step, or kept and named. |
+| 23 | **Blender draws a node's unlinked inputs again after its sidebar panel.** Fields with a key table showed `key` and `keyValue` once more as bare labels. Cosmetic; not changed. | Confirmed (screenshot) | `door-2-editor.png` | Look at the sidebar with a socket unlinked, not only the node body. |
+
+Still not proven: taste (the glow paints the whole node, so its text is hard to read while a timer runs; how dense the
+probe graph should be); other UI scales and Retina pixel sizes; Blender 4.5 to 5.2 with a window; a PlaneSensor drag
+(no test world has one); events from the operating system rather than Blender's queue.
+
+Proposed addition (not applied; needs a run first, law 8): a **Host-eyes** witness for add-ons, the real-window rig
+above writing a `loom.witness/1` record (worlds, screenshots by sha256, overlap count, restore check), run beside the
+headless tests so a receipt for editor work names both halves (finding 9).
