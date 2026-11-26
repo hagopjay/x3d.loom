@@ -82,3 +82,9 @@ Full account in [`selfcode/wild/COURT.md`](selfcode/wild/COURT.md). Expectations
 7. **What the court says about the wild result (C on the sample).** Of the first 12 rebuilt scenes, none was seen to differ from its original in X_ITE; 9 were "same" as run, a tenth after a reader fix, 2 unclear (one flickers faster than the browser draws, one needs a click). 27 rebuilt scenes were not sent, and slow loops were watched for a fifth of a turn.
 8. **Lessons from recordings still hold on 2.7.7 (C).** With the recording naming the object that was hit, the loader needs nothing from the world but the bare scene; door 60 runs, counter 664, both right on unseen input. The registered experiment is unchanged on the new simulator and writer (36 of 36 tasks identical).
 
+### All 39 in the browser (run 3, x3d-blender-io 2.7.8 at `09a7a99`)
+
+9. **25 of 39 rebuilt scenes behave the same in X_ITE over a whole loop; 1 differs; 13 could not be judged (C).** The expectation (30 same, none differs) failed. The 3 planted errors were all caught, about 3.14 rad off.
+10. **The one difference is a rule the simulator's tolerance let through (C).** A model-written "spin" with keys 0 and 6.28319 moves 0.000005 rad; the search matched that stillness with the wrong clock, inside 0.001. A task that moves less than the tolerance is not a task (FM 451).
+11. **Load is part of the instrument (C).** At load 7 on 4 cores, 9 short fast scenes read unclear or blind (FM 452).
+
