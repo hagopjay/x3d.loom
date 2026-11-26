@@ -12,14 +12,20 @@ Benchmarks (each is a fixed, public set of scenes; no model is called and nothin
     fault-court    the X3D arm of fault-court/: 60 planted faults, 10 legal decoys, 1 clean control
     gltf-parity    the scene pairs in the validator's tests/gltf_parity.py: one failing and one passing
                    scene for each Khronos glTF-Validator code that X3D can state
+    usd-parity     the scene pairs in the validator's tests/usd_parity.py: every rule of OpenUSD's validators,
+                   NVIDIA's Omniverse Asset Validator and the SimReady Foundation requirements (340), with one
+                   failing and one passing scene for each rule X3D can state (absent in checkouts before turn 3)
 
 The validator measured is the checkout given with --x3d-mcp, at whatever commit it is on. An entry made
-from a checkout with uncommitted changes is marked dirty and should not be cited.
+from a checkout with uncommitted changes is marked dirty and should not be cited. A turn measured on a
+kit before it is merged names the base commit and the patch instead (--base and --patch), because git am
+gives the merged commit a new hash; anyone can apply that patch to that base and rerun.
 """
 from __future__ import annotations
 
 import argparse
 import datetime
+import hashlib
 import json
 import os
 import subprocess
@@ -83,6 +89,21 @@ def measure_parity(mcp: Path, fixtures: Path) -> dict:
     return {"gltf_codes": j["codes"], "stateable": j["stateable"], "covered": j["covered"], "uncovered": j["uncovered"]}
 
 
+def measure_usd(mcp: Path) -> dict | None:
+    script = mcp / "tests" / "usd_parity.py"
+    if not script.exists():
+        return None
+    env = dict(os.environ, X3D_PARITY_SRC=str(mcp / "src"))
+    r = subprocess.run([sys.executable, str(script), "--json"], capture_output=True, text=True, env=env, timeout=900)
+    if r.returncode:
+        raise SystemExit("usd-parity failed:\n" + r.stderr[-2000:])
+    j = json.loads(r.stdout.strip().splitlines()[-1])
+    c = j["counts"]
+    stateable = sum(c[k] for k in ("xsd", "semantic", "new", "parse", "x3d-4.1", "gap"))
+    return {"rules": j["rules"], "stateable": stateable, "covered": stateable - c["gap"], "counts": c,
+            "fixtures_wrong": j["fixtures_wrong"]}
+
+
 def entries() -> list[dict]:
     return [json.loads(x) for x in LEDGER.read_text().splitlines() if x.strip()] if LEDGER.exists() else []
 
@@ -91,19 +112,28 @@ def render(es: list[dict]) -> str:
     L = ["# Flywheel ledger", "",
          "One row per measured turn. Written by `flywheel/turn.py measure`; do not edit by hand. The numbers are counts",
          "of scenes, from the benchmarks named in `flywheel/README.md`.", "",
-         "| Turn | Date | Validator | Fault Court caught | Decoys flagged | glTF-Validator codes matched | Rules by | Model calls | What changed |",
-         "|---|---|---|---|---|---|---|---|---|"]
+         "| Turn | Date | Validator | Fault Court caught | Decoys flagged | glTF-Validator codes matched | USD rules covered | Rules by | Model calls | What changed |",
+         "|---|---|---|---|---|---|---|---|---|---|"]
     for e in es:
-        c, p = e["fault_court"], e["gltf_parity"]
-        L.append(f"| {e['turn']} | {e['date']} | `{e['validator']}`{' (dirty)' if e.get('dirty') else ''} | "
+        c, p, u = e["fault_court"], e["gltf_parity"], e.get("usd_parity")
+        usd = f"{u['covered']} of {u['stateable']} (of {u['rules']} rules)" if u else "not measured"
+        who = f"`{e['validator']}`" + (" (dirty)" if e.get("dirty") else "")
+        if e.get("patch"):
+            who = f"`x3d_mcp@{e['patch']['base']}` + `{e['patch']['name']}` (sha256 {e['patch']['sha256'][:12]})"
+        L.append(f"| {e['turn']} | {e['date']} | {who} | "
                  f"{c['caught']} of {c['stateable']} | {len(c['decoys_flagged'])} of 10 | {p['covered']} of {p['stateable']} | "
-                 f"{e['rules_by']} | {e['model_calls']} | {e['what']} |")
+                 f"{usd} | {e['rules_by']} | {e['model_calls']} | {e['what']} |")
     if es:
         last = es[-1]
         L += ["", "## Open after the last turn", "",
               f"- Fault Court still missed: {', '.join(last['fault_court']['missed']) or 'none'}",
               f"- Decoys flagged: {', '.join(f'{k} ({v[0]})' for k, v in last['fault_court']['decoys_flagged'].items()) or 'none'}",
               f"- glTF-Validator codes not matched: {', '.join(last['gltf_parity']['uncovered']) or 'none'}"]
+        if last.get("usd_parity"):
+            u = last["usd_parity"]["counts"]
+            L.append(f"- USD rules X3D can state but does not report: {u['gap']}; not a validator matter in X3D: "
+                     + ", ".join(f"{k} {u[k]}" for k in ("fixed", "convention", "design", "binary", "feature", "engine",
+                                                          "policy", "judgement")))
     return "\n".join(L) + "\n"
 
 
@@ -117,6 +147,8 @@ def main() -> None:
     m.add_argument("--rules-by", default="agent, not yet reviewed by a person", help="who wrote the rules of this turn")
     m.add_argument("--model-calls", type=int, default=0, help="model calls made by the loop itself during this turn")
     m.add_argument("--date", default=datetime.date.today().isoformat())
+    m.add_argument("--base", help="with --patch: the commit the patch applies to (the checkout holds base + patch)")
+    m.add_argument("--patch", type=Path, help="the kit's .patch, when the turn is measured before the kit is merged")
     sub.add_parser("show")
     a = ap.parse_args()
     es = entries()
@@ -125,7 +157,12 @@ def main() -> None:
         e = {"turn": len(es) + 1, "date": a.date,
              "validator": f"x3d_mcp@{git(mcp, 'rev-parse', '--short', 'HEAD')}", "dirty": bool(git(mcp, "status", "--porcelain")),
              "fault_court": measure_court(mcp), "gltf_parity": measure_parity(mcp, (a.fixtures or mcp / "tests" / "gltf_parity.py").resolve()),
+             "usd_parity": measure_usd(mcp),
              "rules_by": a.rules_by, "model_calls": a.model_calls, "what": a.what}
+        if a.patch:
+            if not a.base:
+                raise SystemExit("--patch needs --base")
+            e["patch"] = {"base": a.base, "name": a.patch.name, "sha256": hashlib.sha256(a.patch.read_bytes()).hexdigest()}
         with LEDGER.open("a") as fh:
             fh.write(json.dumps(e, sort_keys=True) + "\n")
         es.append(e)

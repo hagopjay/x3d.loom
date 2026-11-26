@@ -9,6 +9,7 @@ The X3D flywheel is a loop: **measure** what the kernel catches, **read the miss
 ```
 python3 flywheel/turn.py measure --x3d-mcp ../x3d_mcp --what "what changed since the last entry"
 python3 flywheel/turn.py show
+python3 flywheel/turn.py measure --x3d-mcp ../x3d_mcp --base <commit> --patch <kit>.patch --what "..."   # a kit not yet merged
 ```
 
 Needs Python with lxml and a checkout of the x3d_mcp validator. No model is called, nothing is rendered, no GPU.
@@ -19,10 +20,11 @@ Needs Python with lxml and a checkout of the x3d_mcp validator. No model is call
 |---|---|---|
 | fault-court | The X3D arm of the Fault Court: 60 planted faults (53 stateable in X3D), 10 legal decoys, 1 clean control | `fault-court/` |
 | gltf-parity | One failing and one passing scene for each Khronos glTF-Validator code X3D can state (88 of 170) | x3d_mcp `tests/gltf_parity.py` |
+| usd-parity | One failing and one passing scene for each rule of OpenUSD's validators, NVIDIA's Omniverse Asset Validator and the SimReady Foundation that X3D can state (66 of 340) | x3d_mcp `tests/usd_parity.py` (from turn 3) |
 
 ## The ledger so far
 
-See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40 of 88 codes. Turn 2 (`f0bde28`): 52 of 53 faults, 88 of 88 codes, 1 of 10 decoys flagged.
+See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40 of 88 codes. Turn 2 (`f0bde28`): 52 of 53 faults, 88 of 88 codes, 1 of 10 decoys flagged. Turn 3 (`f0bde28` + kit `x3d_mcp-usd-parity`): the same, plus 66 of 66 USD rules X3D can state (of 340); see `LEARNINGS-flywheel-turn-3.md`.
 
 ## How to read it honestly
 
