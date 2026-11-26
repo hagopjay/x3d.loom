@@ -82,3 +82,28 @@ floor of 22%), and `sp-16` has a touch sensor and nothing in a watch to start it
 
 Not done: the other 27 rebuilt scenes; a watch as long as the loop (the slow scenes were seen for a fifth of a turn);
 scenes with a sensor.
+
+## Run 3: all 39, with the fixed judge (expectations, written before the run)
+
+The node editor's pair judge now replays both files at the same moment, compares rotations as rotations and says
+"unclear, blind" when it cannot see (x3d-blender-io 2.7.8, `09a7a99`). `court_full.py` sends all 39 rebuilt scenes
+through it, each watched for one whole loop plus 2 s (40 s at most), two repeats, with three controls.
+
+Expected: **C1''** at least 30 of 39 "same" and none "differs". **C2''** 3 of 3 controls "differs" (a whole loop is in
+view, so the changed half is too). Scenes with a sensor and nothing to press it will be "unclear".
+
+## Run 3: result
+
+`results/court-wild-full.json`, 108 minutes in the cloud. Judge `x3d-blender-io@09a7a99` `judge_pair(mode="simultaneous", repeats=2)`, X_ITE 16.8.1.
+
+| | Expected | Result | |
+|---|---|---|---|
+| C1'' | at least 30 of 39 "same", none "differs" | 25 same, 1 differs, 9 unclear, 4 tool errors | **fail**, C |
+| C2'' | 3 of 3 controls "differs" | 3 of 3, each about 3.14 rad from its original | pass, C |
+
+- **The one "differs" is real and small.** `gpu-phase/gpt-oss-20b/oneshot/anim-01.x3d` means to spin a cube with keys 0 and 6.28319. That is 0.000005 rad past a full turn, so by the short way the cube moves five millionths of a radian: it does not spin (a cousin of failure mode 361). The search matched that stillness inside its tolerance of 0.001 with a clock of 0.6 s where the original has 4 s. The browser judge scales its tolerance to the stream and sees the two differ by 0.000004 rad. Nothing a person could see, but the written rule is not the original's rule: the task should have been left out as "moves less than the tolerance".
+- **The 9 unclear.** 5 are "blind" or near it: short, fast scenes (3 to 10 s) on a machine at load 7, where a file disagrees with itself on half the samples or more. 4 have one stream a little over a quiet floor (0.8 to 6% of samples outside against 0 to 3%).
+- **The 4 tool errors.** 3 scenes have a sensor and nothing moving, so the two runs share no samples; 1 (`marble-minimal.x3d`) has no ROUTE end in common between the files, because the judge watches what ROUTEs end at and the stage watched a different field.
+
+Reading: of 39 rebuilt scenes, 25 were seen to behave the same in X_ITE over a whole loop, 1 differs by an amount below sight, and 13 could not be judged on this machine. The planted errors were all caught. A quiet machine would settle most of the 9 unclear.
+

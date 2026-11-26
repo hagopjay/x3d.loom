@@ -57,8 +57,12 @@ The 39 verdicts above are the simulator's. [`COURT.md`](COURT.md) sends the firs
 - Afterwards (exploratory): the tool error was a non-numeric stream, and that pair is "same"; the controls only differ
   in the first half of the loop, and all 3 differ on every sample when the watch is put there.
 
-Reading: no rebuilt scene was seen to behave differently from its original in the browser; 10 of 12 were seen to behave
-the same (one of them counted after a tool fix), over a 6 s watch.
+- Run 3, all 39 through the fixed judge (x3d-blender-io 2.7.8), each watched for a whole loop: 25 same, 1 differs,
+  9 unclear, 4 tool errors; controls 3 of 3 caught. Expected 30 same and none different, so this failed too.
+
+Reading: 25 of 39 rebuilt scenes were seen to behave the same in X_ITE. One differs by 0.000004 rad: a scene that
+barely moves, matched with the wrong clock inside the simulator's tolerance. Thirteen could not be judged on a loaded
+machine or without a click.
 
 ## How to read this
 
