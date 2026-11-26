@@ -44,6 +44,22 @@ running clock whose events reach no watched field. 20 of the 26 are model-writte
 
 x3d.ml 25, 22. x3d.accrete 13, 13. x3d.demo 9, 1. x3d.loom 5, 3. x3d.mashtots 1, 0.
 
+## In a real browser (a sample)
+
+The 39 verdicts above are the simulator's. [`COURT.md`](COURT.md) sends the first 12 rebuilt scenes (by hash) to X_ITE
+16.8.1, original against written scene. Expectations were written before each run and **both runs failed them**:
+
+- Run 1, with x3d-blender-io's pair judge as shipped: 9 same, 2 differs, 1 unclear, and all 3 planted controls "same".
+  The judge was blind: in X_ITE a looping timer takes its phase from the wall clock, so two replays never line up, and
+  it compared rotations as raw numbers.
+- Run 2, original and written scene started at the same moment and rotations compared as rotations: 9 same, 0 differs,
+  2 unclear, 1 tool error; controls 1 of 3. A file now agrees with itself (floor 0 on the turntables, was 1).
+- Afterwards (exploratory): the tool error was a non-numeric stream, and that pair is "same"; the controls only differ
+  in the first half of the loop, and all 3 differ on every sample when the watch is put there.
+
+Reading: no rebuilt scene was seen to behave differently from its original in the browser; 10 of 12 were seen to behave
+the same (one of them counted after a tool fix), over a 6 s watch.
+
 ## How to read this
 
 - **It is a test of animation, not of interaction.** 50 of the 53 tasks had nothing to poke: a clock, a table, a

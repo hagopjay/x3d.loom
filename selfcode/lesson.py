@@ -10,7 +10,8 @@ given less than the file holds. It sees
   * the deliveries that land on a field of the bare scene (a door's translation, a lamp's colour).
 
 It does not see the nodes, the ROUTEs or any delivery between behaviour nodes: those are the answer. The world file is
-read for three things only: the bare scene, which object each named sensor sat on, and, afterwards, to mark the result.
+read for the bare scene and, afterwards, to mark the result. (Recordings older than x3d-blender-io 2.7.7 name only the
+sensor; for those the object it sat on is read from the world as well.)
 
 The recording is made at 60 frames a second and the search samples every 0.05 s, which is every third frame, so no
 value is interpolated: a sample is the last delivery at or before its time.
@@ -38,25 +39,31 @@ def plain(field):
     return field[:-8] if field.endswith("_changed") else field
 
 
-def from_activity(report, stage, sits_on):
-    """(script, seconds, demonstration, notes) for the search. ``sits_on`` maps a sensor's name to its object."""
+def from_activity(report, stage, sits_on=None):
+    """(script, seconds, demonstration, notes) for the search. A pointer call names the object that was hit
+    ("object", recordings since x3d-blender-io 2.7.7); ``sits_on`` (sensor name to object) is only for older files."""
     if report.get("schema") != SCHEMA:
         raise ValueError(f"not an {SCHEMA} file: {report.get('schema')!r}")
     if report.get("trace_truncated"):
         raise ValueError("the recording was cut short (trace_truncated); record it again with a larger log")
     notes, script, steps = [], [], []
+    sits_on = sits_on or {}
+
+    def where(call):                                        # recordings since x3d-blender-io 2.7.7 name the object hit
+        return call.get("object") or sits_on[call["node"]]
+
     for call in report["stimulus"]:
         when, name = float(call["time"]), call["call"]
         if name == "step":
             steps.append(when)
         elif name == "click":                               # a click is a press and a release at one time
-            script += [(when, "press", sits_on[call["node"]], (0.0, 0.0, 0.0)), (when, "release", sits_on[call["node"]], None)]
+            script += [(when, "press", where(call), (0.0, 0.0, 0.0)), (when, "release", where(call), None)]
         elif name in ACTIONS:
             args = call.get("args") or {}
             arg = {"press": tuple(args.get("point", (0.0, 0.0, 0.0))), "release": None,
                    "drag": tuple(args.get("point", args.get("offset", (0.0, 0.0, 0.0)))),
                    "hover": bool(args.get("over", args.get("is_over", True)))}[name]
-            script.append((when, name, sits_on[call["node"]], arg))
+            script.append((when, name, where(call), arg))
         elif name != "start":
             notes.append(f"call '{name}' at {when} is not part of a pointer lesson and was left out")
     seconds = round(max(steps), 6)
@@ -85,7 +92,9 @@ def learn(world_text, report, budget=1000, share=None):
     reference = core.bg.Behaviour.from_x3d(world_text)
     bare = core.bg.strip(world_text)
     stage = core.Stage(bare)
-    sits_on = {k: n.parent for k, n in reference.nodes.items() if n.role == core.bg.BEHAVIOUR and n.node_type in core.bs.POINTING}
+    named = all(c.get("object") for c in report["stimulus"] if c["call"] in ACTIONS or c["call"] == "click")
+    sits_on = None if named else {k: n.parent for k, n in reference.nodes.items()
+                                  if n.role == core.bg.BEHAVIOUR and n.node_type in core.bs.POINTING}
     script, seconds, demo, notes = from_activity(report, stage, sits_on)
     # the recording and this simulator must tell the same story about the original, or the lesson is not a fair one
     again, _ = core.run(reference, script, stage, seconds)
@@ -96,7 +105,7 @@ def learn(world_text, report, budget=1000, share=None):
     out = {"schema": "x3d.selfcode.lesson/1", "recording": {"schema": report["schema"], "calls": len(script), "seconds": seconds,
                                                            "deliveries": len(report["trace"])},
            "shown_to_the_search": {"fields": [f"{a}.{b}" for a, b in fields], "pointer_calls": len(script)},
-           "recording_matches_resimulation": not drift, "fields_that_drift": [f"{a}.{b}" for a, b in drift],
+           "object_named_by_the_recording": named, "recording_matches_resimulation": not drift, "fields_that_drift": [f"{a}.{b}" for a, b in drift],
            "solved": program is not None, "runs": s.sims, "left": [f"{a}.{b}" for a, b in left], "notes": notes}
     if program:
         out["nodes"] = [[i, t, p] for i, t, p, _ in program["nodes"]]
