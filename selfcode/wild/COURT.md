@@ -46,3 +46,39 @@ the floor is each file against itself, started together. The verdict rule is in 
 
 Expected: **C1'** at least 10 of 12 solutions "same", none "differs" (the scene with a touch sensor and nothing to
 start it will be "unclear"). **C2'** every control "differs".
+
+## Run 2: result
+
+`results/court-wild.json`, 456 s. Recorder `x3d-blender-io@8f3fc54`, X_ITE 16.8.1, headless Chromium 158.
+
+| | Expected | Result | |
+|---|---|---|---|
+| C1' | at least 10 of 12 solutions "same", none "differs" | 9 same, 0 differs, 2 unclear, 1 tool error | **fail** by one, C |
+| C2' | every control "differs" | 1 of 3 | **fail**, C |
+
+What changed against run 1 is the instrument: a file now agrees with itself. On the three turntables the floor went
+from every sample outside to none, and the agreement of original and written scene is to 0.004 rad.
+
+The two unclear pairs: `anim-04` flickers faster than this browser draws under load (32% of samples outside against a
+floor of 22%), and `sp-16` has a touch sensor and nothing in a watch to start it.
+
+## After run 2 (exploratory: `court_followup.py`, `results/court-wild-followup.json`)
+
+- **The tool error was the reader, not the scene.** `joints-and-sensors.x3d` has a stream of nodes (contacts) that is
+  not a number. With such streams skipped the pair is "same" (0 of the samples outside, floor 0). Counting it, 10 of 12
+  are the same in the browser; that count is after the fact.
+- **The controls were weak, and the reason is checkable.** Printing 3.14159265 as 3.141593 reverses only the first half
+  of the loop (0 to pi goes the other way round; pi back to 0 is the same short way in both files). A 6 s watch at a
+  random point of a 32 to 53 s loop sees the changed half about one time in two. Started on purpose in each half:
+
+  | Control | First half of the loop | Second half |
+  |---|---|---|
+  | 000094 (32 s) | 100% of samples outside, 3.14 rad apart | 3% outside |
+  | 000087 (53 s) | 100% outside, 2.63 rad apart | 0% |
+  | 000015 (46 s) | 100% outside, 3.01 rad apart | 0% |
+
+  So failure mode 357 is now seen in X_ITE on three real scenes, and the judge tells the files apart whenever the
+  difference is in view.
+
+Not done: the other 27 rebuilt scenes; a watch as long as the loop (the slow scenes were seen for a fifth of a turn);
+scenes with a sensor.

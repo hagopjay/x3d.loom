@@ -68,3 +68,17 @@ Instruments: x3d-blender-io `3e3c1e8` (simulator), x3d_mcp `f0bde28` (kernel). R
 11. **Sensors with no named parent cannot be poked (C for the count).** 8 of 100 real scenes put a TouchSensor at the Scene root or under an unnamed group. That is valid X3D (it senses its siblings); the simulator has no handle for it (FM 363).
 
 Not done: the 401 reserve scenes; a browser court on the wild solutions; the public Web3D example archive as an independent corpus; any scene with a Script.
+
+## The wild set in a browser (26 Nov 2026, x3d-blender-io 2.7.7 at `8f3fc54`, X_ITE 16.8.1)
+
+Full account in [`selfcode/wild/COURT.md`](selfcode/wild/COURT.md). Expectations were written before each run; both runs failed them.
+
+1. **A loop's phase is the wall clock's (C).** In X_ITE a looping TimeSensor with startTime 0 starts its cycles on whole multiples of cycleInterval since 1970, as the standard's formula says. Replays ten seconds apart are at different points of the loop, and two loops of different length have no fixed relation at load. The simulator starts every loop at 0, which is one legal instant out of many (FM 379).
+2. **A judge that cannot line two runs up calls everything the same (C).** With a 6 s watch of 30 to 50 s loops, a file disagreed with itself on every sample, the floor was 1.0, and three planted controls passed as "same". A floor near 1 means blind, and the verdict for blind is "unclear" (FM 380).
+3. **Start both files at the same moment (C).** Two browsers launched together share the clock, so equal loops are in equal phase with no alignment step. The floor on the turntables fell from 1.0 to 0.0 and original against written agreed to 0.004 rad.
+4. **One rotation, two spellings (C).** X_ITE reported `0 1 0 6.17` from one file and `0 -1 0 0.11` from the other for the same rotation; number by number they are 6.2 apart, as rotations 0.04 rad, which is the noise. Compare rotations as rotations (FM 381).
+5. **A control has to differ where you look (C).** The six-decimal half turn reverses only the first half of the loop. At a random 6 s watch 1 of 3 controls was caught; started in the first half 3 of 3 differ on every sample, in the second half 0 of 3. Check a control's reach before trusting a run that used it (FM 382).
+6. **Failure mode 357 is real in a browser, on real scenes (C).** Three accrete turntables with the half-turn key printed to six decimals turn the other way in X_ITE, up to 3.14 rad from the original.
+7. **What the court says about the wild result (C on the sample).** Of the first 12 rebuilt scenes, none was seen to differ from its original in X_ITE; 9 were "same" as run, a tenth after a reader fix, 2 unclear (one flickers faster than the browser draws, one needs a click). 27 rebuilt scenes were not sent, and slow loops were watched for a fifth of a turn.
+8. **Lessons from recordings still hold on 2.7.7 (C).** With the recording naming the object that was hit, the loader needs nothing from the world but the bare scene; door 60 runs, counter 664, both right on unseen input. The registered experiment is unchanged on the new simulator and writer (36 of 36 tasks identical).
+

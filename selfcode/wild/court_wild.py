@@ -55,7 +55,7 @@ def numbers(text):
     s = str(text).strip().lower()
     if s in ("true", "false"):
         return (1.0 if s == "true" else 0.0,)
-    return tuple(float(x) for x in s.replace(",", " ").split())
+    return tuple(float(x) for x in s.replace(",", " ").replace("[", " ").replace("]", " ").split())
 
 
 def together(files, seconds, x_ite):
@@ -70,11 +70,17 @@ def together(files, seconds, x_ite):
 
 
 def streams(trace):
-    out = {}
+    out, skip = {}, set()
     for when, node, field, value in trace["events"]:
         if field in ("isActive", "cycleTime"):
             continue
-        out.setdefault(f"{node}.{field}", []).append((when, numbers(value)))
+        try:
+            out.setdefault(f"{node}.{field}", []).append((when, numbers(value)))
+        except ValueError:                                   # a stream of nodes (contacts, ...) is not compared
+            out.pop(f"{node}.{field}", None)
+            skip.add(f"{node}.{field}")
+    for name in skip:
+        out.pop(name, None)
     return out
 
 

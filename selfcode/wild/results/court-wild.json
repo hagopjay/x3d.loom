@@ -1,0 +1,397 @@
+{
+ "meta": {
+  "date": "2026-11-26",
+  "method": "simultaneous replay, rotations as rotations",
+  "rebuilt_in_wild_run": 39,
+  "sampled": 12,
+  "sampling": "first by hash",
+  "watch_seconds": 6.0,
+  "recorder": "x3d-blender-io@8f3fc54 tools/behaviour_pair_judge.py record()",
+  "x_ite": "X_ITE 16.8.1",
+  "browser": "158.0.8127.36",
+  "wild_run": "31461d5",
+  "rule": {
+   "sample_step": 0.05,
+   "outside": "2% of span",
+   "same": "share <= floor + 0.05",
+   "differs": "share >= 0.20 and >= 3 x floor"
+  },
+  "wall_seconds": 455.7
+ },
+ "summary": {
+  "solutions": {
+   "same": 9,
+   "differs": 0,
+   "unclear": 2,
+   "error": 1
+  },
+  "controls": {
+   "same": 2,
+   "differs": 1,
+   "unclear": 0,
+   "error": 0
+  }
+ },
+ "pairs": [
+  {
+   "verdict": "error",
+   "error": "ValueError: could not convert string to float: '['",
+   "kind": "solution",
+   "hash": "410c48a35647",
+   "source": "x3d.loom",
+   "file": "x3d.physics/physx-bridge/scenes/joints-and-sensors.x3d",
+   "load_before": 0.63,
+   "seconds": 11.6
+  },
+  {
+   "verdict": "unclear",
+   "streams": [
+    {
+     "stream": "SphereMaterial.diffuseColor",
+     "verdict": "unclear",
+     "outside": 0.3217,
+     "widest_gap": 0.053,
+     "samples": 115,
+     "floor": 0.2193,
+     "floor_widest_gap": 0.049
+    },
+    {
+     "stream": "SphereTransform.rotation",
+     "verdict": "unclear",
+     "outside": 0.1391,
+     "widest_gap": 0.0555,
+     "samples": 115,
+     "floor": 0.0522,
+     "floor_widest_gap": 0.0513
+    }
+   ],
+   "only_in_one_file": [],
+   "kind": "solution",
+   "hash": "417a29a190d8",
+   "source": "x3d.ml",
+   "file": "live-2026-10-17/x3d/gpt-6.1-sol/anim-04_a1.x3d",
+   "load_before": 1.6,
+   "seconds": 31.5
+  },
+  {
+   "verdict": "same",
+   "streams": [
+    {
+     "stream": "FlagTransform.rotation",
+     "verdict": "same",
+     "outside": 0.4771,
+     "widest_gap": 0.0745,
+     "samples": 109,
+     "floor": 0.4364,
+     "floor_widest_gap": 0.1296
+    }
+   ],
+   "only_in_one_file": [],
+   "kind": "solution",
+   "hash": "433f21d5713e",
+   "source": "x3d.ml",
+   "file": "live-2026-10-17/x3d/gemini-3.8-flash/sp-09_a1.x3d",
+   "load_before": 3.99,
+   "seconds": 33.1
+  },
+  {
+   "verdict": "same",
+   "streams": [
+    {
+     "stream": "A000094_Rotor.rotation",
+     "verdict": "same",
+     "outside": 0.0,
+     "widest_gap": 0.0041,
+     "samples": 114,
+     "floor": 0.0,
+     "floor_widest_gap": 0.0039
+    }
+   ],
+   "only_in_one_file": [],
+   "kind": "solution",
+   "hash": "44c6d805d525",
+   "source": "x3d.accrete",
+   "file": "web/static-world/patches/000094.x3d",
+   "load_before": 5.5,
+   "seconds": 30.9
+  },
+  {
+   "verdict": "differs",
+   "streams": [
+    {
+     "stream": "A000094_Rotor.rotation",
+     "verdict": "differs",
+     "outside": 0.9204,
+     "widest_gap": 2.0517,
+     "samples": 113,
+     "floor": 0.0,
+     "floor_widest_gap": 0.0104
+    }
+   ],
+   "only_in_one_file": [],
+   "kind": "control: half-turn key printed to six decimals",
+   "hash": "44c6d805d525",
+   "source": "x3d.accrete",
+   "file": "web/static-world/patches/000094.x3d",
+   "load_before": 6.19,
+   "seconds": 31.0
+  },
+  {
+   "verdict": "same",
+   "streams": [
+    {
+     "stream": "A000087_Rotor.rotation",
+     "verdict": "same",
+     "outside": 0.0,
+     "widest_gap": 0.0037,
+     "samples": 113,
+     "floor": 0.0,
+     "floor_widest_gap": 0.0033
+    }
+   ],
+   "only_in_one_file": [],
+   "kind": "solution",
+   "hash": "44c6e3e39740",
+   "source": "x3d.accrete",
+   "file": "web/static-world/patches/000087.x3d",
+   "load_before": 6.13,
+   "seconds": 31.3
+  },
+  {
+   "verdict": "same",
+   "streams": [
+    {
+     "stream": "A000087_Rotor.rotation",
+     "verdict": "same",
+     "outside": 0.0,
+     "widest_gap": 0.0039,
+     "samples": 114,
+     "floor": 0.0,
+     "floor_widest_gap": 0.005
+    }
+   ],
+   "only_in_one_file": [],
+   "kind": "control: half-turn key printed to six decimals",
+   "hash": "44c6e3e39740",
+   "source": "x3d.accrete",
+   "file": "web/static-world/patches/000087.x3d",
+   "load_before": 6.83,
+   "seconds": 31.4
+  },
+  {
+   "verdict": "same",
+   "streams": [
+    {
+     "stream": "P1PlatformT.translation",
+     "verdict": "same",
+     "outside": 0.0,
+     "widest_gap": 0.0032,
+     "samples": 110,
+     "floor": 0.0,
+     "floor_widest_gap": 0.0049
+    }
+   ],
+   "only_in_one_file": [
+    "P1PlatformBody.set_position"
+   ],
+   "kind": "solution",
+   "hash": "4561d7be87a5",
+   "source": "x3d.loom",
+   "file": "physx-bridge/scenes/pieces/elevator.x3d",
+   "load_before": 7.35,
+   "seconds": 32.6
+  },
+  {
+   "verdict": "same",
+   "streams": [
+    {
+     "stream": "CubeTransform.rotation",
+     "verdict": "same",
+     "outside": 0.0,
+     "widest_gap": 0.0,
+     "samples": 115,
+     "floor": 0.0,
+     "floor_widest_gap": 0.0
+    }
+   ],
+   "only_in_one_file": [],
+   "kind": "solution",
+   "hash": "4821574aa1d8",
+   "source": "x3d.ml",
+   "file": "gpu-phase/gpt-oss-20b/oneshot/anim-01.x3d",
+   "load_before": 6.62,
+   "seconds": 30.5
+  },
+  {
+   "verdict": "unclear",
+   "streams": [],
+   "only_in_one_file": [],
+   "reason": "no watched stream moved in both files",
+   "kind": "solution",
+   "hash": "48e12bc6746b",
+   "source": "x3d.ml",
+   "file": "live-2026-10-17/x3d/gemini-3.1-pro-preview/sp-16_a2.x3d",
+   "load_before": 6.95,
+   "seconds": 34.2
+  },
+  {
+   "verdict": "same",
+   "streams": [
+    {
+     "stream": "A000015_Rotor.rotation",
+     "verdict": "same",
+     "outside": 0.0,
+     "widest_gap": 0.0048,
+     "samples": 114,
+     "floor": 0.0,
+     "floor_widest_gap": 0.0064
+    }
+   ],
+   "only_in_one_file": [],
+   "kind": "solution",
+   "hash": "4b5192436cc3",
+   "source": "x3d.accrete",
+   "file": "web/static-world/patches/000015.x3d",
+   "load_before": 4.26,
+   "seconds": 31.1
+  },
+  {
+   "verdict": "same",
+   "streams": [
+    {
+     "stream": "A000015_Rotor.rotation",
+     "verdict": "same",
+     "outside": 0.0,
+     "widest_gap": 0.0046,
+     "samples": 114,
+     "floor": 0.0,
+     "floor_widest_gap": 0.0108
+    }
+   ],
+   "only_in_one_file": [],
+   "kind": "control: half-turn key printed to six decimals",
+   "hash": "4b5192436cc3",
+   "source": "x3d.accrete",
+   "file": "web/static-world/patches/000015.x3d",
+   "load_before": 4.64,
+   "seconds": 31.5
+  },
+  {
+   "verdict": "same",
+   "streams": [
+    {
+     "stream": "Cube1Transform.rotation",
+     "verdict": "same",
+     "outside": 0.0,
+     "widest_gap": 0.0301,
+     "samples": 114,
+     "floor": 0.0,
+     "floor_widest_gap": 0.0264
+    },
+    {
+     "stream": "Cube2Transform.rotation",
+     "verdict": "same",
+     "outside": 0.0263,
+     "widest_gap": 3.0782,
+     "samples": 114,
+     "floor": 0.0089,
+     "floor_widest_gap": 3.1306
+    },
+    {
+     "stream": "Cube3Transform.rotation",
+     "verdict": "same",
+     "outside": 0.0,
+     "widest_gap": 0.0215,
+     "samples": 114,
+     "floor": 0.0089,
+     "floor_widest_gap": 3.1342
+    }
+   ],
+   "only_in_one_file": [],
+   "kind": "solution",
+   "hash": "4bb9cf607cd2",
+   "source": "x3d.ml",
+   "file": "gpu-phase/qwen2.5-coder-14b-awq/grounded/anim-05.x3d",
+   "load_before": 5.57,
+   "seconds": 31.2
+  },
+  {
+   "verdict": "same",
+   "streams": [
+    {
+     "stream": "LightMat.emissiveColor",
+     "verdict": "same",
+     "outside": 0.0783,
+     "widest_gap": 0.037,
+     "samples": 115,
+     "floor": 0.2632,
+     "floor_widest_gap": 0.035
+    }
+   ],
+   "only_in_one_file": [],
+   "kind": "solution",
+   "hash": "4f00cd9fba0e",
+   "source": "x3d.ml",
+   "file": "live-2026-10-17/x3d/nvidia_nemotron-3-super-120b-a12b/sp-08_a2.x3d",
+   "load_before": 5.95,
+   "seconds": 31.0
+  },
+  {
+   "verdict": "same",
+   "streams": [
+    {
+     "stream": "OrbitFive.rotation",
+     "verdict": "same",
+     "outside": 0.0,
+     "widest_gap": 0.032,
+     "samples": 111,
+     "floor": 0.0367,
+     "floor_widest_gap": 0.0459
+    },
+    {
+     "stream": "OrbitFour.rotation",
+     "verdict": "same",
+     "outside": 0.0,
+     "widest_gap": 0.0401,
+     "samples": 111,
+     "floor": 0.0367,
+     "floor_widest_gap": 0.0573
+    },
+    {
+     "stream": "OrbitOne.rotation",
+     "verdict": "same",
+     "outside": 0.2162,
+     "widest_gap": 0.0916,
+     "samples": 111,
+     "floor": 0.2411,
+     "floor_widest_gap": 0.131
+    },
+    {
+     "stream": "OrbitThree.rotation",
+     "verdict": "same",
+     "outside": 0.0,
+     "widest_gap": 0.0493,
+     "samples": 111,
+     "floor": 0.0367,
+     "floor_widest_gap": 0.0706
+    },
+    {
+     "stream": "OrbitTwo.rotation",
+     "verdict": "same",
+     "outside": 0.009,
+     "widest_gap": 0.0641,
+     "samples": 111,
+     "floor": 0.0826,
+     "floor_widest_gap": 0.0917
+    }
+   ],
+   "only_in_one_file": [],
+   "kind": "solution",
+   "hash": "4ffcdc9223ff",
+   "source": "x3d.ml",
+   "file": "live-2026-10-17/x3d/gpt-6.1-sol/sp-18_a1.x3d",
+   "load_before": 7.21,
+   "seconds": 32.6
+  }
+ ]
+}
