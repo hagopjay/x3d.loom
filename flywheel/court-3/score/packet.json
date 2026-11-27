@@ -1,0 +1,2618 @@
+[
+ {
+  "file": "a/decoy-01.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "route-wiring",
+   "intent": "Mirror follows Leader along x.",
+   "why_suspicious": "The Leader to Mirror ROUTE uses the plain name translation with no set_ or _changed affix, which a hasty reviewer may flag as a nonexistent field; the standard allows the plain name of an inputOutput field.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "console_errors": 0,
+   "witness_note": "loaded in X_ITE 16.8.0, console errors: 0; samples: 0.1110002 1 0,0.1110002 1 0 | 1.635 1 0,1.635 1 0 | -2.841 1 0,-2.841 1 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/decoy-01.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/decoy-02.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "timing-loop",
+   "intent": "Pulse scales continuously.",
+   "why_suspicious": "stopTime is set but smaller than startTime and loop is true, which looks like a clock that stops at once; per the standard a stopTime less than or equal to startTime is ignored.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "console_errors": 0,
+   "witness_note": "loaded in X_ITE 16.8.0, console errors: 0; samples: 1.429334 1.429334 1.429334,true | 1.977333 1.977333 1.977333,true | 1.344 1.344 1.344,true"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/decoy-02.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/decoy-02.x3d#2",
+    "level": "info",
+    "check": "timesensor-stop-ignored",
+    "message": "TimeSensor (DEF='Clock') has stopTime 2 not later than startTime 5; a stopTime at or before startTime is ignored, so the clock is not stopped when you may expect. Set stopTime later than startTime, or 0."
+   }
+  ]
+ },
+ {
+  "file": "a/decoy-03.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "interpolator-keys",
+   "intent": "Hopper stays at -3 for half the cycle then at 3.",
+   "why_suspicious": "Duplicate key value 0.5 looks like a keys error; the standard requires non-decreasing keys, so equal neighbours are legal and give a discontinuity.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "console_errors": 0,
+   "witness_note": "loaded in X_ITE 16.8.0, console errors: 0; samples: -3 0 0 | -3 0 0 | -3 0 0 | 3 0 0 | 3 0 0 | -3 0 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/decoy-03.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/decoy-04.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "route-wiring",
+   "intent": "Both spinners rotate from the shared clock.",
+   "why_suspicious": "Fan-in (two ROUTEs to Clock.set_startTime) and fan-out (one output to two interpolators) look like duplicate or conflicting routes; both are legal.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "console_errors": 0,
+   "witness_note": "loaded in X_ITE 16.8.0, console errors: 0; samples: 0 1 0 3.3976293782723,1 0 0 3.3976293782723 | 0 1 0 4.97627815852881,1 0 0 4.97627815852881 | 0 1 0 0.285884567161799,1 0 0 0.285884567161799"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/decoy-04.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/decoy-04.x3d#2",
+    "level": "info",
+    "check": "orientation-half-turn-step",
+    "message": "OrientationInterpolator (DEF='TurnA') has 2 step(s) of a half turn (closest: key value 0 to 1, 2.7e-06 rad short of pi). It plays as written, but rounding the angle to fewer digits reverses it. Add a key value in between so every step is clearly shorter than pi."
+   },
+   {
+    "id": "a/decoy-04.x3d#3",
+    "level": "info",
+    "check": "orientation-half-turn-step",
+    "message": "OrientationInterpolator (DEF='TurnB') has 2 step(s) of a half turn (closest: key value 0 to 1, 2.7e-06 rad short of pi). It plays as written, but rounding the angle to fewer digits reverses it. Add a key value in between so every step is clearly shorter than pi."
+   }
+  ]
+ },
+ {
+  "file": "a/decoy-05.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "drag-sensor",
+   "intent": "Handle can be dragged anywhere.",
+   "why_suspicious": "min greater than max looks like swapped limits; per the standard this means unconstrained on that axis, which is exactly the intent.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "console_errors": 0,
+   "witness_note": "loaded in X_ITE 16.8.0, console errors: 0; samples: 0 0 0 | 4.919684 2.95181 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/decoy-05.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-01.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "route-wiring",
+   "fault": "TimeSensor ROUTE source field is misspelt fraction_change instead of fraction_changed",
+   "viewer_sees": "The red box never rotates (route dropped); rotation stayed 0 0 1 0 over 3 s",
+   "spec": "error: ROUTE fromField must name an existing output field",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin rotation advanced 0 -> 4.7 rad over 3 s",
+   "twin": "twin-01.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-01.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-01.x3d#2",
+    "level": "error",
+    "check": "route-invalid-from-field",
+    "message": "ROUTE fromField='fraction_change' does not exist on TimeSensor (DEF='Clock')."
+   },
+   {
+    "id": "a/fault-01.x3d#3",
+    "level": "info",
+    "check": "orientation-half-turn-step",
+    "message": "OrientationInterpolator (DEF='Spin') has 2 step(s) of a half turn (closest: key value 0 to 1, 2.7e-06 rad short of pi). It plays as written, but rounding the angle to fewer digits reverses it. Add a key value in between so every step is clearly shorter than pi."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-02.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "route-type",
+   "fault": "The interpolator SFVec3f output is routed to Lamp set_rotation (SFRotation) instead of set_translation",
+   "viewer_sees": "The lamp does not move; translation stayed -3 0 0 over 3 s (X_ITE: 'source field type must match destination')",
+   "spec": "error: ROUTE source and destination field types must match",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin translation swept -2.8 .. 2.8",
+   "twin": "twin-02.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-02.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-02.x3d#2",
+    "level": "error",
+    "check": "route-type-mismatch",
+    "message": "ROUTE type mismatch: Slide.value_changed is SFVec3f but Lamp.set_rotation is SFRotation. ROUTE requires matching field types."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-03.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "route-access",
+   "fault": "ROUTE fromField is Leader set_translation (an inputOnly event) instead of translation_changed",
+   "viewer_sees": "legal per X_ITE only: engine accepted it and Follower still followed; per the standard the route source is invalid",
+   "spec": "error: ROUTE source must be an outputOnly/inputOutput event",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "same motion in twin",
+   "twin": "twin-03.x3d",
+   "engine_disagrees": true
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-03.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-03.x3d#2",
+    "level": "error",
+    "check": "route-invalid-from-field",
+    "message": "ROUTE fromField='set_translation' does not exist on Transform (DEF='Leader')."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-04.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "timing-loop",
+   "fault": "TimeSensor has loop=false with a startTime long in the past, though the pulse is meant to repeat forever",
+   "viewer_sees": "The indicator never pulses; scale stayed 1 1 1 and isActive false over 6 s",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin scale cycled 1.2 .. 1.9, isActive true",
+   "twin": "twin-04.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-04.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-05.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "route-wiring",
+   "fault": "ROUTE toNode is door but the node is DEF Door (case mismatch)",
+   "viewer_sees": "The door never swings; rotation stayed 0 0 1 0 (X_ITE: unknown named node 'door')",
+   "spec": "error: ROUTE toNode must name a DEF-ed node in scope",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin rotation varied 0.4 .. 1.4",
+   "twin": "twin-05.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-05.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-05.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Door' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-05.x3d#3",
+    "level": "error",
+    "check": "route-missing-to-node",
+    "message": "ROUTE toNode='door' not found. Available DEFs: Cam, Clock, Door, Swing."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-06.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "interpolator-keys",
+   "fault": "PositionInterpolator has three keys but only two keyValue triples",
+   "viewer_sees": "The cabin follows a wrong path and never reaches 6; y rose to 3 and stopped there in the 4 s sampled, instead of 0,3,6",
+   "spec": "error: keyValue count must equal key count",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin y reached up to 5.27",
+   "twin": "twin-06.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-06.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-06.x3d#2",
+    "level": "error",
+    "check": "interpolator-key-length",
+    "message": "PositionInterpolator (DEF='Lift'): expected 3 keyValue float(s) per key (3 keys -> 9), got 2 per key (6 total)."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-07.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "interpolator-keys",
+   "fault": "ScalarInterpolator key list 0 0.8 0.5 is not non-decreasing (should be 0 0.5 1)",
+   "viewer_sees": "The fade is irregular: transparency hits 0 at about 3 s then is back near 0.9 and ramps down again instead of holding opaque",
+   "spec": "error: interpolator keys must be non-decreasing",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin transparency 1 -> 0 over first half, then 0 hold, restart at cycle end",
+   "twin": "twin-07.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-07.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-07.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Fader' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-07.x3d#3",
+    "level": "error",
+    "check": "interpolator-key-order",
+    "message": "ScalarInterpolator (DEF='Fade') key is not in increasing order: key[1]=0.8 is followed by key[2]=0.5. Sort the keys and their keyValue entries together."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-08.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "pointing-sensor",
+   "fault": "TouchSensor sits in a different Group from the sphere, so it is not a sibling of the geometry it should sense",
+   "viewer_sees": "Clicking the sphere does nothing; Touch.isOver and Spin.isActive stayed false with real mouse events",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin isOver true and Spin.isActive true after click",
+   "twin": "twin-08.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-08.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Button' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-08.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-08.x3d#3",
+    "level": "warning",
+    "check": "sensor-senses-nothing",
+    "message": "TouchSensor (DEF='Touch') sits in its own Group with no Shape beside it or under its siblings, so there is nothing to click or drag and it never fires. Put the sensor in the same group as the Shape it should react to."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-09.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "drag-sensor",
+   "fault": "PlaneSensor minPosition 2 0 and maxPosition 0 0 are swapped (min greater than max leaves x unconstrained)",
+   "viewer_sees": "Dragging pulls the handle past the limit; translation_changed x reached 4.92 after a drag",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin clamped at x=2",
+   "twin": "twin-09.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-09.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-10.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "trigger-toggle",
+   "fault": "The clock is left enabled (default) so the spinner runs from load, though it should wait for the first click",
+   "viewer_sees": "The cube spins from load; first click only stops it",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "reasoned only: needs EventUtilities which the kit does not ship",
+   "twin": "twin-10.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-10.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-10.x3d#2",
+    "level": "info",
+    "check": "orientation-half-turn-step",
+    "message": "OrientationInterpolator (DEF='Turn') has 2 step(s) of a half turn (closest: key value 0 to 1, 2.7e-06 rad short of pi). It plays as written, but rounding the angle to fewer digits reverses it. Add a key value in between so every step is clearly shorter than pi."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-11.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "follower",
+   "fault": "PositionDamper tau is 0 (no smoothing) instead of 0.5",
+   "viewer_sees": "The chasing ball moves in lockstep with the target, no lag; x difference <= 0.1 in all samples",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin chaser lagged by several units (-2.58 vs 3)",
+   "twin": "twin-11.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-11.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-12.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "environment-sensor",
+   "fault": "ProximitySensor size is 0 0 0 (disabled) instead of 30 30 30",
+   "viewer_sees": "The porch lamp never turns on; Zone.isActive and light on stayed false",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin isActive true, light on",
+   "twin": "twin-12.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-12.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-12.x3d#2",
+    "level": "warning",
+    "check": "sensor-zero-size",
+    "message": "ProximitySensor (DEF='Zone') has size 0 0 0 (the default), so it never senses anything and never sends isActive. Set size to the region to watch, for example size=\"10 10 10\"."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-13.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "environment-sensor",
+   "fault": "The Wall Shape is a sibling of the Collision node instead of its child",
+   "viewer_sees": "The wall is not collidable and no collideTime is produced",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "reasoned only: needs avatar motion",
+   "twin": "twin-13.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-13.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-13.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Wall' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-13.x3d#3",
+    "level": "warning",
+    "check": "empty-group",
+    "message": "Collision (DEF='Hit') has no children. Empty grouping nodes have no effect."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-14.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "key-sensor",
+   "fault": "StringSensor enteredText is routed to the label instead of finalText",
+   "viewer_sees": "The label shows partial text on every keystroke",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "reasoned only: KeyDeviceSensor/Text chunks not shipped",
+   "twin": "twin-14.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-14.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-14.x3d#2",
+    "level": "error",
+    "check": "route-type-mismatch",
+    "message": "ROUTE type mismatch: Typed.enteredText is SFString but Echo.set_string is MFString. ROUTE requires matching field types."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-15.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "switch-sequencer",
+   "fault": "IntegerSequencer last keyValue is 3 but the Switch has only choices 0..2",
+   "viewer_sees": "For the last quarter of each cycle whichChoice is 3 (out of range) so no lamp is shown",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "reasoned only: IntegerSequencer needs EventUtilities which the kit does not ship",
+   "twin": "twin-15.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-15.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-15.x3d#2",
+    "level": "warning",
+    "check": "switch-index-past-children",
+    "message": "ROUTE routes 'Seq' to Switch 'Lamps', whose key values reach 3 but the Switch has only 3 child(ren) (indices 0 to 2). While the value is 3 the viewer sees nothing. Add children or lower the values (-1 shows nothing on purpose)."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-16.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "script",
+   "fault": "Script handler function is named onTick but the inputOnly field is named tick, so it is never called",
+   "viewer_sees": "The readout stays at 'ticks: 0'",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "reasoned only: Scripting chunk not shipped",
+   "twin": "twin-16.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-16.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-16.x3d#2",
+    "level": "error",
+    "check": "route-type-mismatch",
+    "message": "ROUTE type mismatch: Counter.label is SFString but Readout.set_string is MFString. ROUTE requires matching field types."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-17.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "viewpoint-binding",
+   "fault": "The Closeup Viewpoint is listed before Overview, so Closeup is bound at load",
+   "viewer_sees": "The scene opens at Closeup; Closeup.isBound true and Overview.isBound false at load",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin Overview.isBound true",
+   "twin": "twin-17.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-17.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Closeup' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-17.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Overview' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-18.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "load-sensor",
+   "fault": "The watched Inline has load=false so it never loads and LoadSensor never reports isLoaded",
+   "viewer_sees": "The ready lamp stays off; Loader.isLoaded false over 2 s",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin Loader.isLoaded true, lamp on",
+   "twin": "twin-18.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-18.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-18.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Model' (Inline) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-19.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "anchor-navigation",
+   "fault": "Anchor url fragment is #Closeup but the Viewpoint is DEF CloseUp (case mismatch)",
+   "viewer_sees": "Clicking the box does not change the view; CloseUp.isBound stayed false after a real click",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin CloseUp.isBound true after click",
+   "twin": "twin-19.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-19.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "Anchor (component Networking level 2, declared at level 1) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "a/fault-19.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Networking' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "a/fault-19.x3d#3",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam2' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-19.x3d#4",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='CloseUp' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/fault-20.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "lod",
+   "fault": "LOD range is 20 5 (decreasing) instead of 5 20",
+   "viewer_sees": "Wrong level shown at distance 10: level_changed 2 (the box) instead of 1 (the sphere)",
+   "spec": "error: LOD range values must be increasing",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin level_changed 1",
+   "twin": "twin-20.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/fault-20.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "LOD (component Navigation level 2, declared at level 1) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "a/fault-20.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Navigation' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "a/fault-20.x3d#3",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-20.x3d#4",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Detail' (LOD) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/fault-20.x3d#5",
+    "level": "error",
+    "check": "lod-range-order",
+    "message": "LOD (DEF='Detail') range is not increasing: range[0]=20.0 is followed by range[1]=5.0. Each switch distance must be larger than the last."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-01.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "route-wiring",
+   "intent": "A red box named Spinner rotates continuously about the vertical axis, one turn every 4 seconds.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin rotation advanced 0 -> 4.7 rad over 3 s"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-01.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/twin-01.x3d#2",
+    "level": "info",
+    "check": "orientation-half-turn-step",
+    "message": "OrientationInterpolator (DEF='Spin') has 2 step(s) of a half turn (closest: key value 0 to 1, 2.7e-06 rad short of pi). It plays as written, but rounding the angle to fewer digits reverses it. Add a key value in between so every step is clearly shorter than pi."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-02.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "route-type",
+   "intent": "A lamp box named Lamp slides from the left to the right of the view and back, driven by a clock.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin translation swept -2.8 .. 2.8"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-02.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-03.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "route-access",
+   "intent": "A leader box moves along x under animation; a second box named Follower copies the leader position by a ROUTE from the leader translation output.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "same motion in twin"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-03.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-04.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "timing-loop",
+   "intent": "A pulsing indicator named Pulse grows and shrinks forever, one pulse every 1.5 seconds.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin scale cycled 1.2 .. 1.9, isActive true"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-04.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-05.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "route-wiring",
+   "intent": "A door panel named Door swings open about its hinge and then closes, repeating every 6 seconds.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin rotation varied 0.4 .. 1.4"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-05.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-06.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "interpolator-keys",
+   "intent": "An elevator box named Cabin rises through three floors at heights 0, 3 and 6 with equal timing over 6 seconds, then jumps back and repeats.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin y reached up to 5.27"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-06.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-07.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "interpolator-keys",
+   "intent": "A panel named Fader fades from invisible to opaque over the first half of an 8 second cycle, then holds fully opaque.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin transparency 1 -> 0 over first half, then 0 hold, restart at cycle end"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-07.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/twin-07.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Fader' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-08.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "pointing-sensor",
+   "intent": "Clicking the green sphere named Button starts a spin timer: the TouchSensor touchTime starts the clock Spin and the clock becomes active.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin isOver true and Spin.isActive true after click"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-08.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Button' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/twin-08.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-09.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "drag-sensor",
+   "intent": "A slider handle named Handle can be dragged by the pointer horizontally but must stay within x from 0 to 2 and fixed at y equal to 0.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin clamped at x=2"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-09.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-10.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "trigger-toggle",
+   "intent": "A cube named Spinner stays still until the user clicks the red ball; each click toggles the spin clock on or off.",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "reasoned: reasoned only: needs EventUtilities which the kit does not ship"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-10.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/twin-10.x3d#2",
+    "level": "info",
+    "check": "orientation-half-turn-step",
+    "message": "OrientationInterpolator (DEF='Turn') has 2 step(s) of a half turn (closest: key value 0 to 1, 2.7e-06 rad short of pi). It plays as written, but rounding the angle to fewer digits reverses it. Add a key value in between so every step is clearly shorter than pi."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-11.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "follower",
+   "intent": "A target ball named Target moves right over 2 seconds; a second ball named Chaser follows it with a smooth lag using a damper (time constant 0.5 s), so it trails behind the target.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin chaser lagged by several units (-2.58 vs 3)"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-11.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-12.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "environment-sensor",
+   "intent": "A lamp named Porch turns on while the viewer is inside a 30 by 30 by 30 zone centred on the origin; the viewer starts at 0 0 10, inside the zone.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin isActive true, light on"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-12.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-13.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "environment-sensor",
+   "intent": "Walking into the wall named Wall fires the collision event: the Collision node holds the Wall geometry and its collideTime starts a flash timer.",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "reasoned: reasoned only: needs avatar motion"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-13.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/twin-13.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Wall' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-14.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "key-sensor",
+   "intent": "A label named Echo shows the typed word only after Enter is pressed: a StringSensor finalText feeds the label, so partial typing is not displayed.",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "reasoned: reasoned only: KeyDeviceSensor/Text chunks not shipped"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-14.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/twin-14.x3d#2",
+    "level": "error",
+    "check": "route-type-mismatch",
+    "message": "ROUTE type mismatch: Typed.finalText is SFString but Echo.set_string is MFString. ROUTE requires matching field types."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-15.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "switch-sequencer",
+   "intent": "Three lamps in a Switch named Lamps light one at a time in a repeating cycle of 0, 1, 2, 0: an IntegerSequencer feeds whichChoice every second.",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "reasoned: reasoned only: IntegerSequencer needs EventUtilities which the kit does not ship"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-15.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-16.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "script",
+   "intent": "A Script named Counter counts ticks of a one second clock and writes a label such as ticks: 3 into the Text node Readout.",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "reasoned: reasoned only: Scripting chunk not shipped"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-16.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/twin-16.x3d#2",
+    "level": "error",
+    "check": "route-type-mismatch",
+    "message": "ROUTE type mismatch: Counter.label is SFString but Readout.set_string is MFString. ROUTE requires matching field types."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-17.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "viewpoint-binding",
+   "intent": "The scene opens at the wide viewpoint named Overview; the Closeup viewpoint is only reached by navigation.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin Overview.isBound true"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-17.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Closeup' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/twin-17.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Overview' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-18.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "load-sensor",
+   "intent": "A LoadSensor named Loader watches the Inline named Model and, once loaded, turns the lamp Ready on via isLoaded.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin Loader.isLoaded true, lamp on"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-18.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/twin-18.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Model' (Inline) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-19.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "anchor-navigation",
+   "intent": "Clicking the blue box (an Anchor) jumps the view to the Viewpoint DEF named CloseUp.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin CloseUp.isBound true after click"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-19.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "Anchor (component Networking level 2, declared at level 1) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "a/twin-19.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Networking' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "a/twin-19.x3d#3",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam2' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/twin-19.x3d#4",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='CloseUp' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "a/twin-20.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "lod",
+   "intent": "A LOD node named Detail shows a detailed cylinder when the viewer is closer than 5 units, a sphere between 5 and 20 units and a simple box beyond 20 units; the viewer sits 10 units away so the sphere is the expected level.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "twin level_changed 1"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "a/twin-20.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "LOD (component Navigation level 2, declared at level 1) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "a/twin-20.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Navigation' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "a/twin-20.x3d#3",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "a/twin-20.x3d#4",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Detail' (LOD) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/decoy-01.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "decoy",
+   "intent": "Two crates facing each other: the left one is a mirror image of the right, made with a negative scale.",
+   "why_suspicious": "Negative scale looks like a bad value, but mirroring is legal.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "3 root nodes; 8.5% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": []
+ },
+ {
+  "file": "b/decoy-02.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "decoy",
+   "intent": "A coloured cube using separate colour indices and a Color list shorter than the vertex list.",
+   "why_suspicious": "Two colours for eight vertices looks like a count mismatch, but colorIndex legally maps vertices to colours.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 13.4% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/decoy-02.x3d#1",
+    "level": "warning",
+    "check": "rotation-axis-not-unit",
+    "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means."
+   }
+  ]
+ },
+ {
+  "file": "b/decoy-03.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "decoy",
+   "intent": "Spinning-looking orientations: rotation angles outside the 0 to two-pi range, including a negative one.",
+   "why_suspicious": "Angles 7.0, negative and 4pi look out of range but SFRotation angles are unbounded.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "4 root nodes; 17.0% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": []
+ },
+ {
+  "file": "b/decoy-04.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "decoy",
+   "intent": "A DEFed shape inside an unselected Switch child is reused by USE elsewhere; an empty LOD range list is also used.",
+   "why_suspicious": "USE of a node inside a Switch that shows nothing, and an empty LOD range, look broken but are legal.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "4 root nodes; 8.0% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/decoy-04.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "Switch (component Grouping level 2, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/decoy-04.x3d#2",
+    "level": "error",
+    "check": "profile-component",
+    "message": "LOD (component Navigation level 2, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/decoy-04.x3d#3",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Grouping' level='2'/> <component name='Navigation' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   }
+  ]
+ },
+ {
+  "file": "b/decoy-05.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "decoy",
+   "intent": "A prototype whose body defines a node and reuses it internally, instanced once with defaults only and once with an override.",
+   "why_suspicious": "Instance with no fieldValue and a USE inside a proto body look unfinished, but defaults and body-internal reuse are legal.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "3 root nodes; 10.9% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": []
+ },
+ {
+  "file": "b/fault-01.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "geometry-indices",
+   "fault": "One face of the indexed face set references vertex index 8 but only vertices 0 to 7 exist.",
+   "viewer_sees": "A face missing or broken, possibly a spike or load warning.",
+   "spec": "error: coordIndex entry must be less than the number of Coordinate points (IndexedFaceSet rule)",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 6.7% non-background pixels; console errors 0, warnings 0; 6.9% of pixels differ from twin",
+   "twin": "twin-01.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-01.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/fault-01.x3d#2",
+    "level": "error",
+    "check": "index-out-of-range",
+    "message": "IndexedFaceSet coordIndex uses 8 but the coordinate node has 8 point(s) (valid 0 to 7, -1 ends a face); 1 bad entry."
+   },
+   {
+    "id": "b/fault-01.x3d#3",
+    "level": "warning",
+    "check": "rotation-axis-not-unit",
+    "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-02.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "lod-switch",
+   "fault": "LOD range has three entries for three children; it must have one fewer entry than children.",
+   "viewer_sees": "The distant cone is drawn instead of the box.",
+   "spec": "error: LOD range field must contain n-1 values for n children",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 5.9% non-background pixels; console errors 0, warnings 0; 9.1% of pixels differ from twin",
+   "twin": "twin-02.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-02.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "LOD (component Navigation level 2, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/fault-02.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Navigation' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "b/fault-02.x3d#3",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='FarDetail' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/fault-02.x3d#4",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='MidDetail' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/fault-02.x3d#5",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='NearDetail' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-03.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "winding",
+   "fault": "ccw is set to false although the faces are wound counter-clockwise seen from outside.",
+   "viewer_sees": "The crate looks hollow or inside out: near faces culled, far inner faces visible.",
+   "spec": "legal, renders wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 13.4% non-background pixels; console errors 0, warnings 0; 8.7% of pixels differ from twin",
+   "twin": "twin-03.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-03.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/fault-03.x3d#2",
+    "level": "warning",
+    "check": "rotation-axis-not-unit",
+    "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-04.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "normals",
+   "fault": "Six per-face normals are supplied while normalPerVertex is true and there are eight vertices.",
+   "viewer_sees": "Wrong or flat-looking shading on some corners, or normals ignored.",
+   "spec": "error: with normalPerVertex TRUE the Normal vector count must match the Coordinate count (or normalIndex)",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 8.7% non-background pixels; console errors 0, warnings 0; 9.5% of pixels differ from twin",
+   "twin": "twin-04.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-04.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/fault-04.x3d#2",
+    "level": "error",
+    "check": "attribute-count-mismatch",
+    "message": "IndexedFaceSet Normal has 6 value(s) but the coordIndex reaches vertex 7, so 8 are needed. The missing ones are undefined and browsers draw them differently."
+   },
+   {
+    "id": "b/fault-04.x3d#3",
+    "level": "warning",
+    "check": "rotation-axis-not-unit",
+    "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-05.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "colour",
+   "fault": "Colour components are written on a 0 to 255 scale instead of 0 to 1.",
+   "viewer_sees": "Nearly every corner saturates to white, no visible colour blending.",
+   "spec": "error: Color components must lie in [0,1]",
+   "xsd_valid": false,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 13.4% non-background pixels; console errors 0, warnings 0; 11.4% of pixels differ from twin",
+   "twin": "twin-05.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": false,
+  "xsd_errors": "[\"Line 14: Element 'Color', attribute 'color': [facet 'pattern'] The value '255 0 0, 0 255 0, 0 0 255, 255 255 0, 255 0 255, 0 255 255, 255 255 255, 127 127 127' is not accepted by the pattern '\\\\s*((([+-]?((0(\\\\.[0-9]*)?|\\\\.[0-9]+)|1(\\\\.0*)?)([Ee][+-]?[0-9]+)?)\\\\s+){2}([+-]?((0(\\\\.[0-9]*)?|\\\\.[0-9]+)|1(\\\\.0*)?)([Ee][+-]?[0-9]+)?)\\\\s*,?\\\\s*)*'.\"]",
+  "xsd_valid_oldkernel": false,
+  "diagnostics": [
+   {
+    "id": "b/fault-05.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/fault-05.x3d#2",
+    "level": "error",
+    "check": "colour-out-of-range",
+    "message": "Color color: colour 1 of 8 is '255 0 0', but each component must be between 0 and 1 (15 components out of range). Clamp to 0..1, or divide by 255 if the values were written as 0..255."
+   },
+   {
+    "id": "b/fault-05.x3d#3",
+    "level": "warning",
+    "check": "rotation-axis-not-unit",
+    "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-06.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "proto",
+   "fault": "The ProtoInstance sets a field called towerColour but the prototype declares towerColor.",
+   "viewer_sees": "The tower is the default grey, not red.",
+   "spec": "error: ProtoInstance fieldValue name must match a field declared in the ProtoInterface",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 9.7% non-background pixels; console errors 0, warnings 1; 7.6% of pixels differ from twin; warning: XML Parser: Couldn't assign field value. Unknown field 'towerColour' in node class Tower.",
+   "twin": "twin-06.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-06.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='RedTower' (ProtoInstance) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-07.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "texture-coordinates",
+   "fault": "The TextureCoordinate holds three points for a four-vertex face.",
+   "viewer_sees": "Texture smeared, a missing corner coordinate, or no texture.",
+   "spec": "error: TextureCoordinate count must cover every referenced vertex index",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 29.7% non-background pixels; console errors 0, warnings 0; 7.0% of pixels differ from twin",
+   "twin": "twin-07.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-07.x3d#1",
+    "level": "error",
+    "check": "attribute-count-mismatch",
+    "message": "IndexedFaceSet TextureCoordinate has 3 value(s) but the coordIndex reaches vertex 3, so 4 are needed. The missing ones are undefined and browsers draw them differently."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-08.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "extrusion",
+   "fault": "The cross-section points are ordered so the outline crosses itself (a bow-tie) instead of tracing the square.",
+   "viewer_sees": "A twisted two-triangle bow-tie profile rather than a square post.",
+   "spec": "legal, renders wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 12.8% non-background pixels; console errors 0, warnings 0; 13.0% of pixels differ from twin",
+   "twin": "twin-08.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-08.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "Extrusion (component Geometry3D level 4, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/fault-08.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Geometry3D' level='4'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "b/fault-08.x3d#3",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='SquarePost' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-09.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "elevationgrid",
+   "fault": "height lists 11 values but xDimension times zDimension is 12.",
+   "viewer_sees": "The terrain is missing or truncated.",
+   "spec": "error: ElevationGrid height must contain xDimension*zDimension values",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 8.1% non-background pixels; console errors 0, warnings 0; 2.4% of pixels differ from twin",
+   "twin": "twin-09.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-09.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "ElevationGrid (component Geometry3D level 3, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/fault-09.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Geometry3D' level='3'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "b/fault-09.x3d#3",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Terrain' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/fault-09.x3d#4",
+    "level": "error",
+    "check": "array-count",
+    "message": "ElevationGrid height has 11 value(s) but xDimension x zDimension = 4 x 3 = 12."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-10.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "nurbs",
+   "fault": "The uKnot vector has six values but uDimension plus uOrder needs seven.",
+   "viewer_sees": "The surface does not appear or is badly distorted.",
+   "spec": "error: knot vector length must equal dimension + order",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "X_ITE 16.8.0 in the kit cannot load the NURBS component (assets/components absent), scene fails to load; label is by reasoning from the spec",
+   "twin": "twin-10.x3d"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-10.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "CoordinateDouble (component Rendering level 1, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/fault-10.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Rendering' level='1'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "b/fault-10.x3d#3",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Canopy' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-11.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "profile-component",
+   "fault": "The scene uses a NURBS node but neither the profile nor a component statement provides the NURBS component.",
+   "viewer_sees": "Curve is missing or a console error says the node is unknown.",
+   "spec": "error: nodes must belong to the declared profile or components",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 2.1% non-background pixels; console errors 1, warnings 0; 98.5% of pixels differ from twin; error: XML Parser: Unknown node type 'NurbsCurve'. You probably have insufficient component/profile statements and/or an inappropriate speci",
+   "twin": "twin-11.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-11.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "NurbsCurve (component NURBS level 1, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/fault-11.x3d#2",
+    "level": "error",
+    "check": "profile-component",
+    "message": "CoordinateDouble (component Rendering level 1, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/fault-11.x3d#3",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='NURBS' level='1'/> <component name='Rendering' level='1'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "b/fault-11.x3d#4",
+    "level": "error",
+    "check": "containerfield-unknown",
+    "message": "CoordinateDouble containerField='coord' but NurbsCurve has no field named 'coord'. CoordinateDouble's default containerField is 'coord', which does not fit a NurbsCurve -- an explicit containerField is required here. Use containerField='controlPoint' to place a CoordinateDouble here."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-12.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "def-use",
+   "fault": "USE refers to wheel but the node was defined as Wheel; names are case sensitive.",
+   "viewer_sees": "Only one wheel appears and a console error reports the missing name.",
+   "spec": "error: USE must name a previously DEFed node (names are case-sensitive)",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "3 root nodes; 3.7% non-background pixels; console errors 0, warnings 1; 1.6% of pixels differ from twin; warning: XML Parser: Named or imported node 'wheel' not found.",
+   "twin": "twin-12.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-12.x3d#1",
+    "level": "error",
+    "check": "use-undefined-def",
+    "message": "USE='wheel' references a DEF that does not exist in this scene. Available DEF names: Wheel."
+   },
+   {
+    "id": "b/fault-12.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Wheel' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-13.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "def-use",
+   "fault": "The blue ball reuses the DEF name RedPost, so the later USE resolves to the ball.",
+   "viewer_sees": "The right-hand object is a blue ball instead of a red post.",
+   "spec": "error: DEF names must be unique within a scope (a name may not be redefined with a different node)",
+   "xsd_valid": false,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "4 root nodes; 11.8% non-background pixels; console errors 0, warnings 0; 4.9% of pixels differ from twin",
+   "twin": "twin-13.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": false,
+  "xsd_errors": "[\"Line 13: Element 'Shape', attribute 'DEF': 'RedPost' is not a valid value of the atomic type 'xs:ID'.\"]",
+  "xsd_valid_oldkernel": false,
+  "diagnostics": [
+   {
+    "id": "b/fault-13.x3d#1",
+    "level": "error",
+    "check": "duplicate-def",
+    "message": "Duplicate DEF name 'RedPost': first used on Shape, also used on Shape. DEF names must be unique within a scene."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-14.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "containment",
+   "fault": "Material is placed directly in Shape instead of inside Appearance.",
+   "viewer_sees": "The cube is rendered white or default, or the parser rejects the node.",
+   "spec": "error: Shape children are only appearance and geometry; Material belongs in Appearance",
+   "xsd_valid": false,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 11.1% non-background pixels; console errors 0, warnings 1; 9.1% of pixels differ from twin; warning: XML Parser: Container field for node Material not found. Unknown field 'material' in node class Shape.",
+   "twin": "twin-14.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": false,
+  "xsd_errors": "[\"Line 10: Element 'Material': This element is not expected. Expected is one of ( IS, MetadataBoolean, MetadataDouble, MetadataFloat, MetadataInteger, MetadataSet, MetadataString, Appearance, Box, Cone ).\"]",
+  "xsd_valid_oldkernel": false,
+  "diagnostics": [
+   {
+    "id": "b/fault-14.x3d#1",
+    "level": "error",
+    "check": "containerfield-unknown",
+    "message": "Material containerField='material' but Shape has no field named 'material'. Material's default containerField is 'material', which does not fit a Shape -- an explicit containerField is required here."
+   },
+   {
+    "id": "b/fault-14.x3d#2",
+    "level": "info",
+    "check": "shape-no-appearance",
+    "message": "Shape has no Appearance. The shape will render with a default white material."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-15.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "angle-units",
+   "fault": "The rotation angle is written as 90, which X3D reads as ninety radians.",
+   "viewer_sees": "The door is at an arbitrary angle (about 1.9 rad), not a right angle.",
+   "spec": "legal, renders wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "3 root nodes; 6.7% non-background pixels; console errors 0, warnings 0; 2.6% of pixels differ from twin",
+   "twin": "twin-15.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-15.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Door' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/fault-15.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='DoorHinge' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/fault-15.x3d#3",
+    "level": "warning",
+    "check": "angle-looks-like-degrees",
+    "message": "Transform (DEF='DoorHinge') has rotation with the angle 90. X3D angles are in radians, and 90 reads as degrees: write 1.5708 for 90 degrees, or add a UNIT statement for angles."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-16.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "angle-units",
+   "fault": "fieldOfView is given as 60 (degrees) but is in radians and must be in (0, pi).",
+   "viewer_sees": "Extremely distorted or wrongly clamped view of the box.",
+   "spec": "error: Viewpoint fieldOfView must be in the range (0, pi)",
+   "xsd_valid": false,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 19.8% non-background pixels; console errors 0, warnings 0; 8.8% of pixels differ from twin",
+   "twin": "twin-16.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": false,
+  "xsd_errors": "[\"Line 8: Element 'Viewpoint', attribute 'fieldOfView': [facet 'maxExclusive'] The value '60' must be less than '3.1416'.\"]",
+  "xsd_valid_oldkernel": false,
+  "diagnostics": [
+   {
+    "id": "b/fault-16.x3d#1",
+    "level": "warning",
+    "check": "angle-looks-like-degrees",
+    "message": "Viewpoint has fieldOfView with the angle 60. X3D angles are in radians, and 60 reads as degrees: write 1.0472 for 60 degrees, or add a UNIT statement for angles."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-17.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "navigation-lighting",
+   "fault": "The headlight is switched off and the scene has no other light, so the lit sphere is unlit.",
+   "viewer_sees": "A black sphere on the background.",
+   "spec": "legal, renders wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "3 root nodes; 2.1% non-background pixels; console errors 0, warnings 0; 12.5% of pixels differ from twin",
+   "twin": "twin-17.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": []
+ },
+ {
+  "file": "b/fault-18.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "lod-switch",
+   "fault": "whichChoice is 3, counted from one, but choices are indexed from zero so index 3 selects nothing.",
+   "viewer_sees": "Nothing is drawn.",
+   "spec": "legal, renders wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 2.1% non-background pixels; console errors 0, warnings 0; 3.8% of pixels differ from twin",
+   "twin": "twin-18.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-18.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "Switch (component Grouping level 2, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/fault-18.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Grouping' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "b/fault-18.x3d#3",
+    "level": "warning",
+    "check": "switch-index-past-children",
+    "message": "Switch has whichChoice=3 but only 3 child(ren) (indices 0 to 2), so it shows nothing. Use an index below 3, or -1 if showing nothing is the intent."
+   }
+  ]
+ },
+ {
+  "file": "b/fault-19.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "material-range",
+   "fault": "shininess is 50 where the legal range is 0 to 1.",
+   "viewer_sees": "Rock-hard tiny highlight (value clamps to 1).",
+   "spec": "error: Material shininess must lie in [0,1]",
+   "xsd_valid": false,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 14.5% non-background pixels; console errors 0, warnings 0; 1.4% of pixels differ from twin",
+   "twin": "twin-19.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": false,
+  "xsd_errors": "[\"Line 9: Element 'Material', attribute 'shininess': [facet 'maxInclusive'] The value '50' is greater than the maximum value allowed ('1').\"]",
+  "xsd_valid_oldkernel": false,
+  "diagnostics": []
+ },
+ {
+  "file": "b/fault-20.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "lights",
+   "fault": "The DirectionalLight direction is the zero vector.",
+   "viewer_sees": "Sphere is black or lit incorrectly.",
+   "spec": "error: DirectionalLight direction must be a non-zero vector",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "4 root nodes; 2.1% non-background pixels; console errors 0, warnings 0; 5.8% of pixels differ from twin",
+   "twin": "twin-20.x3d",
+   "engine_disagrees": false
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/fault-20.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Sun' (DirectionalLight) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/fault-20.x3d#2",
+    "level": "warning",
+    "check": "light-direction-zero",
+    "message": "DirectionalLight (DEF='Sun') has direction 0 0 0, which points nowhere, so it lights nothing in most browsers. Give it a direction such as 0 0 -1."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-01.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "geometry-indices",
+   "intent": "A blue crate built from eight points and six quad faces, seen at an angle.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 13.4% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-01.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/twin-01.x3d#2",
+    "level": "warning",
+    "check": "rotation-axis-not-unit",
+    "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-02.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "lod-switch",
+   "intent": "A three-level LOD: sphere when close (under 5 m), box between 5 m and 15 m, cone beyond 15 m. The viewer stands 8 m away, so the box is expected.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 11.1% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-02.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "LOD (component Navigation level 2, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/twin-02.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Navigation' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "b/twin-02.x3d#3",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='FarDetail' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/twin-02.x3d#4",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='MidDetail' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/twin-02.x3d#5",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='NearDetail' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-03.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "winding",
+   "intent": "A solid blue crate whose outside faces should be visible and lit.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 13.4% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-03.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/twin-03.x3d#2",
+    "level": "warning",
+    "check": "rotation-axis-not-unit",
+    "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-04.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "normals",
+   "intent": "A smooth-shaded crate using one normal per vertex, as normalPerVertex says.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 12.2% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-04.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/twin-04.x3d#2",
+    "level": "warning",
+    "check": "rotation-axis-not-unit",
+    "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-05.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "colour",
+   "intent": "A crate with a different colour at each of its eight corners, blended smoothly.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 13.4% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-05.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/twin-05.x3d#2",
+    "level": "warning",
+    "check": "rotation-axis-not-unit",
+    "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-06.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "proto",
+   "intent": "A tall red tower made by instancing a Tower prototype with a colour and a height.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 9.7% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-06.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='RedTower' (ProtoInstance) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-07.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "texture-coordinates",
+   "intent": "A square panel showing the four-colour two by two texture exactly once, one colour per quadrant.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 29.7% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": []
+ },
+ {
+  "file": "b/twin-08.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "extrusion",
+   "intent": "A square-section post extruded along a short straight spine.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 15.9% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-08.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "Extrusion (component Geometry3D level 4, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/twin-08.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Geometry3D' level='4'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "b/twin-08.x3d#3",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='SquarePost' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-09.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "elevationgrid",
+   "intent": "A small four by three grid of terrain with a central ridge.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 8.1% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-09.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "ElevationGrid (component Geometry3D level 3, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/twin-09.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Geometry3D' level='3'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "b/twin-09.x3d#3",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Terrain' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-10.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "nurbs",
+   "intent": "A rippled four by four NURBS canopy with quadratic basis in both directions.",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "X_ITE 16.8.0 in the kit cannot load the NURBS component (assets/components absent), scene fails to load; label is by reasoning from the spec"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-10.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "CoordinateDouble (component Rendering level 1, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/twin-10.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Rendering' level='1'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "b/twin-10.x3d#3",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Canopy' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-11.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "profile-component",
+   "intent": "An orange NURBS curve arching across the view.",
+   "xsd_valid": true,
+   "witness": "reasoned",
+   "witness_note": "X_ITE 16.8.0 in the kit cannot load the NURBS component (assets/components absent), scene fails to load; label is by reasoning from the spec"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-11.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "CoordinateDouble (component Rendering level 1, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/twin-11.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Rendering' level='1'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   },
+   {
+    "id": "b/twin-11.x3d#3",
+    "level": "error",
+    "check": "containerfield-unknown",
+    "message": "CoordinateDouble containerField='coord' but NurbsCurve has no field named 'coord'. CoordinateDouble's default containerField is 'coord', which does not fit a NurbsCurve -- an explicit containerField is required here. Use containerField='controlPoint' to place a CoordinateDouble here."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-12.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "def-use",
+   "intent": "Two identical wheels side by side: one defined, the second a reuse of the first.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "3 root nodes; 5.3% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": []
+ },
+ {
+  "file": "b/twin-13.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "def-use",
+   "intent": "A red post on the left, a blue ball in the middle, and a second red post on the right which is a reuse of the first.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "4 root nodes; 11.1% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-13.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='BlueBall' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-14.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "containment",
+   "intent": "A green cube given its colour through a Material.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 11.1% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": []
+ },
+ {
+  "file": "b/twin-15.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "angle-units",
+   "intent": "A door hinged on its left edge and swung open by a quarter turn (ninety degrees).",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "3 root nodes; 4.4% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-15.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Door' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "b/twin-15.x3d#2",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='DoorHinge' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-16.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "angle-units",
+   "intent": "A wide-angle (sixty degree) view of a four metre box seen from twelve metres.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 11.1% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": []
+ },
+ {
+  "file": "b/twin-17.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "navigation-lighting",
+   "intent": "A yellow sphere lit by the default headlight.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "3 root nodes; 14.5% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": []
+ },
+ {
+  "file": "b/twin-18.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "lod-switch",
+   "intent": "A switch of three shapes (box, sphere, cone) set to show the third one, the blue cone.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 5.9% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-18.x3d#1",
+    "level": "error",
+    "check": "profile-component",
+    "message": "Switch (component Grouping level 2, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "b/twin-18.x3d#2",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Grouping' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   }
+  ]
+ },
+ {
+  "file": "b/twin-19.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "material-range",
+   "intent": "A red glossy sphere with a moderate highlight.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "2 root nodes; 14.4% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": []
+ },
+ {
+  "file": "b/twin-20.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "lights",
+   "intent": "A grey sphere lit from straight above by a sun, with the headlight off.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "4 root nodes; 7.9% non-background pixels; console errors 0, warnings 0"
+  },
+  "xsd_valid": true,
+  "xsd_errors": "",
+  "xsd_valid_oldkernel": true,
+  "diagnostics": [
+   {
+    "id": "b/twin-20.x3d#1",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Sun' (DirectionalLight) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ }
+]

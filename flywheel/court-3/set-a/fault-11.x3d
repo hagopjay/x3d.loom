@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <component name='Followers' level='1'/>
+    <meta name='description' content='A target ball named Target moves right over 2 seconds; a second ball named Chaser follows it with a smooth lag using a damper (time constant 0.5 s), so it trails behind the target.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <Transform DEF='Target'><Shape><Appearance><Material diffuseColor='1 0 0'/></Appearance><Sphere radius="0.4"/></Shape></Transform>
+    <Transform DEF='Chaser' translation='0 -1 0'><Shape><Appearance><Material diffuseColor='0 0 1'/></Appearance><Sphere radius="0.4"/></Shape></Transform>
+    <TimeSensor DEF='Clock' cycleInterval='4' loop='true'/>
+    <PositionInterpolator DEF='Path' key='0 0.5 1' keyValue='-3 0 0  3 0 0  3 0 0'/>
+    <PositionDamper DEF='Lag' tau='0' tolerance='0.001' initialDestination='-3 -1 0' initialValue='-3 -1 0' order='3'/>
+    <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Path' toField='set_fraction'/>
+    <ROUTE fromNode='Path' fromField='value_changed' toNode='Target' toField='set_translation'/>
+    <ROUTE fromNode='Path' fromField='value_changed' toNode='Lag' toField='set_destination'/>
+    <ROUTE fromNode='Lag' fromField='value_changed' toNode='Chaser' toField='set_translation'/>
+  </Scene>
+</X3D>

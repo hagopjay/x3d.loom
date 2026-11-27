@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <component name='Lighting' level='2'/>
+    <component name='Networking' level='3'/>
+    <meta name='description' content='A LoadSensor named Loader watches the Inline named Model and, once loaded, turns the lamp Ready on via isLoaded.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <LoadSensor DEF='Loader' timeOut='10'>
+      <Inline DEF='Model' load='true' url='"twin-01.x3d"'/>
+    </LoadSensor>
+    <PointLight DEF='Ready' on='false'/>
+    <ROUTE fromNode='Loader' fromField='isLoaded' toNode='Ready' toField='set_on'/>
+  </Scene>
+</X3D>

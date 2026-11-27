@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <meta name='description' content='An elevator box named Cabin rises through three floors at heights 0, 3 and 6 with equal timing over 6 seconds, then jumps back and repeats.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <Transform DEF='Cabin'><Shape><Appearance><Material diffuseColor='0.6 0.6 0.9'/></Appearance><Box/></Shape></Transform>
+    <TimeSensor DEF='Clock' cycleInterval='6' loop='true'/>
+    <PositionInterpolator DEF='Lift' key='0 0.5 1' keyValue='0 0 0  0 3 0'/>
+    <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Lift' toField='set_fraction'/>
+    <ROUTE fromNode='Lift' fromField='value_changed' toNode='Cabin' toField='set_translation'/>
+  </Scene>
+</X3D>

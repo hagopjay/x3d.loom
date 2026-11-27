@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <meta name='description' content='A red box named Spinner rotates continuously about the vertical axis, one turn every 4 seconds.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <Transform DEF='Spinner'><Shape><Appearance><Material diffuseColor='0.8 0.2 0.2'/></Appearance><Box/></Shape></Transform>
+    <TimeSensor DEF='Clock' cycleInterval='4' loop='true'/>
+    <OrientationInterpolator DEF='Spin' key='0 0.5 1' keyValue='0 1 0 0  0 1 0 3.14159  0 1 0 6.28318'/>
+    <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Spin' toField='set_fraction'/>
+    <ROUTE fromNode='Spin' fromField='value_changed' toNode='Spinner' toField='set_rotation'/>
+  </Scene>
+</X3D>

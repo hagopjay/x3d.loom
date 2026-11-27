@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Interchange' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='title' content='decoy-04.x3d'/>
+    <meta name='description' content='A DEFed shape inside an unselected Switch child is reused by USE elsewhere; an empty LOD range list is also used.'/>
+  </head>
+  <Scene>
+    <Viewpoint position='0 0 8' description='Front'/>
+    <Switch whichChoice='-1'><Shape DEF='Hidden'><Appearance><Material diffuseColor='0.9 0.5 0.1'/></Appearance><Box size='1 1 1'/></Shape></Switch>
+    <Transform translation='-2 0 0'><Shape USE='Hidden'/></Transform>
+    <Transform translation='2 0 0'>
+      <LOD range=''>
+        <Shape><Appearance><Material diffuseColor='0.1 0.5 0.9'/></Appearance><Sphere/></Shape>
+        <Shape><Appearance><Material diffuseColor='0.1 0.9 0.5'/></Appearance><Cone/></Shape>
+      </LOD>
+    </Transform>
+
+  </Scene>
+</X3D>

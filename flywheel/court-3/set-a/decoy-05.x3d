@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <component name='PointingDeviceSensor' level='1'/>
+    <meta name='description' content='A handle named Handle can be dragged anywhere with no limits: minPosition is deliberately greater than maxPosition, which the standard defines as no constraint.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <Group>
+      <PlaneSensor DEF='Drag' minPosition='1 1' maxPosition='-1 -1' autoOffset='true'/>
+      <Transform DEF='Handle'><Shape><Appearance><Material diffuseColor='0.9 0.9 0.2'/></Appearance><Sphere radius="0.5"/></Shape></Transform>
+    </Group>
+    <ROUTE fromNode='Drag' fromField='translation_changed' toNode='Handle' toField='set_translation'/>
+  </Scene>
+</X3D>

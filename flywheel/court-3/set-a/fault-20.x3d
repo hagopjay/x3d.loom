@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <component name='Navigation' level='1'/>
+    <meta name='description' content='A LOD node named Detail shows a detailed cylinder when the viewer is closer than 5 units, a sphere between 5 and 20 units and a simple box beyond 20 units; the viewer sits 10 units away so the sphere is the expected level.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <LOD DEF='Detail' range='20 5'>
+      <Shape><Appearance><Material diffuseColor='1 0 0'/></Appearance><Cylinder/></Shape>
+      <Shape><Appearance><Material diffuseColor='0 1 0'/></Appearance><Sphere/></Shape>
+      <Shape><Appearance><Material diffuseColor='0 0 1'/></Appearance><Box/></Shape>
+    </LOD>
+  </Scene>
+</X3D>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Interchange' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='title' content='fault-02.x3d'/>
+    <meta name='description' content='A three-level LOD: sphere when close (under 5 m), box between 5 m and 15 m, cone beyond 15 m. The viewer stands 8 m away, so the box is expected.'/>
+  </head>
+  <Scene>
+    <Viewpoint position='0 0 8' description='Front'/>
+    <Transform translation='0 0 0'>
+      <LOD range='0 5 15'>
+        <Shape DEF='NearDetail'><Appearance><Material diffuseColor='0.9 0.1 0.1'/></Appearance><Sphere radius='1.5'/></Shape>
+        <Shape DEF='MidDetail'><Appearance><Material diffuseColor='0.1 0.8 0.1'/></Appearance><Box size='2 2 2'/></Shape>
+        <Shape DEF='FarDetail'><Appearance><Material diffuseColor='0.1 0.1 0.9'/></Appearance><Cone/></Shape>
+      </LOD>
+    </Transform>
+
+  </Scene>
+</X3D>

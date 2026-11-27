@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Interchange' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='title' content='fault-13.x3d'/>
+    <meta name='description' content='A red post on the left, a blue ball in the middle, and a second red post on the right which is a reuse of the first.'/>
+  </head>
+  <Scene>
+    <Viewpoint position='0 0 8' description='Front'/>
+    <Transform translation='-2.5 0 0'>
+      <Shape DEF='RedPost'><Appearance><Material diffuseColor='0.9 0.1 0.1'/></Appearance><Box size='0.5 3 0.5'/></Shape>
+    </Transform>
+    <Transform translation='0 0 0'>
+      <Shape DEF='RedPost'><Appearance><Material diffuseColor='0.1 0.1 0.9'/></Appearance><Sphere radius='0.8'/></Shape>
+    </Transform>
+    <Transform translation='2.5 0 0'>
+      <Shape USE='RedPost'/>
+    </Transform>
+
+  </Scene>
+</X3D>

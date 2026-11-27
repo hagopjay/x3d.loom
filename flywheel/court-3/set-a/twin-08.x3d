@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <component name='PointingDeviceSensor' level='1'/>
+    <meta name='description' content='Clicking the green sphere named Button starts a spin timer: the TouchSensor touchTime starts the clock Spin and the clock becomes active.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <Group>
+      <TouchSensor DEF='Touch'/>
+      <Transform DEF='Button'><Shape><Appearance><Material diffuseColor='0 0.8 0'/></Appearance><Sphere/></Shape></Transform>
+    </Group>
+    <TimeSensor DEF='Spin' cycleInterval='3' loop='false'/>
+    <ROUTE fromNode='Touch' fromField='touchTime' toNode='Spin' toField='set_startTime'/>
+  </Scene>
+</X3D>

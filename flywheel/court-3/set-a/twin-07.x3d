@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <meta name='description' content='A panel named Fader fades from invisible to opaque over the first half of an 8 second cycle, then holds fully opaque.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <Shape DEF='Fader'><Appearance><Material DEF='Mat' diffuseColor='1 1 1' transparency='1'/></Appearance><Box/></Shape>
+    <TimeSensor DEF='Clock' cycleInterval='8' loop='true'/>
+    <ScalarInterpolator DEF='Fade' key='0 0.5 1' keyValue='1 0 0'/>
+    <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Fade' toField='set_fraction'/>
+    <ROUTE fromNode='Fade' fromField='value_changed' toNode='Mat' toField='set_transparency'/>
+  </Scene>
+</X3D>

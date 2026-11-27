@@ -1,0 +1,1876 @@
+{
+ "kernel": "ebe969b3bc2da69d5702e99ef311d6bd5c11b33a",
+ "dirty": false,
+ "src_sha256": {
+  "data_checks.py": "b7fb7af07b5059232d3a02eedfb957f889506e17032327b241f51219409158fd",
+  "semantic.py": "f649e261eeb7edfb2e8c155fc9eb17bfe0adb40f91237d0efef8e3f193d5eb9b"
+ },
+ "files": {
+  "a/decoy-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/decoy-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/decoy-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/decoy-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "orientation-half-turn-step",
+     "message": "OrientationInterpolator (DEF='TurnA') has 2 step(s) of a half turn (closest: key value 0 to 1, 2.7e-06 rad short of pi). It plays as written, but rounding the angle to fewer digits reverses it. Add a key value in between so every step is clearly shorter than pi.",
+     "node": "OrientationInterpolator",
+     "DEF": "TurnA"
+    },
+    {
+     "level": "info",
+     "check": "orientation-half-turn-step",
+     "message": "OrientationInterpolator (DEF='TurnB') has 2 step(s) of a half turn (closest: key value 0 to 1, 2.7e-06 rad short of pi). It plays as written, but rounding the angle to fewer digits reverses it. Add a key value in between so every step is clearly shorter than pi.",
+     "node": "OrientationInterpolator",
+     "DEF": "TurnB"
+    }
+   ]
+  },
+  "a/decoy-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/fault-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "error",
+     "check": "route-invalid-from-field",
+     "message": "ROUTE fromField='fraction_change' does not exist on TimeSensor (DEF='Clock').",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "orientation-half-turn-step",
+     "message": "OrientationInterpolator (DEF='Spin') has 2 step(s) of a half turn (closest: key value 0 to 1, 2.7e-06 rad short of pi). It plays as written, but rounding the angle to fewer digits reverses it. Add a key value in between so every step is clearly shorter than pi.",
+     "node": "OrientationInterpolator",
+     "DEF": "Spin"
+    }
+   ]
+  },
+  "a/fault-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "error",
+     "check": "route-type-mismatch",
+     "message": "ROUTE type mismatch: Slide.value_changed is SFVec3f but Lamp.set_rotation is SFRotation. ROUTE requires matching field types.",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/fault-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "error",
+     "check": "route-invalid-from-field",
+     "message": "ROUTE fromField='set_translation' does not exist on Transform (DEF='Leader').",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/fault-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/fault-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Door' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Door"
+    },
+    {
+     "level": "error",
+     "check": "route-missing-to-node",
+     "message": "ROUTE toNode='door' not found. Available DEFs: Cam, Clock, Door, Swing.",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/fault-06.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "error",
+     "check": "interpolator-key-length",
+     "message": "PositionInterpolator (DEF='Lift'): expected 3 keyValue float(s) per key (3 keys -> 9), got 2 per key (6 total).",
+     "node": "PositionInterpolator",
+     "DEF": "Lift"
+    }
+   ]
+  },
+  "a/fault-07.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Fader' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Fader"
+    },
+    {
+     "level": "error",
+     "check": "interpolator-key-order",
+     "message": "ScalarInterpolator (DEF='Fade') key is not in increasing order: key[1]=0.8 is followed by key[2]=0.5. Sort the keys and their keyValue entries together.",
+     "node": "ScalarInterpolator",
+     "DEF": "Fade"
+    }
+   ]
+  },
+  "a/fault-08.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Button' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Button"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/fault-09.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/fault-10.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "orientation-half-turn-step",
+     "message": "OrientationInterpolator (DEF='Turn') has 2 step(s) of a half turn (closest: key value 0 to 1, 2.7e-06 rad short of pi). It plays as written, but rounding the angle to fewer digits reverses it. Add a key value in between so every step is clearly shorter than pi.",
+     "node": "OrientationInterpolator",
+     "DEF": "Turn"
+    }
+   ]
+  },
+  "a/fault-11.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/fault-12.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/fault-13.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Wall' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Wall"
+    },
+    {
+     "level": "warning",
+     "check": "empty-group",
+     "message": "Collision (DEF='Hit') has no children. Empty grouping nodes have no effect.",
+     "node": "Collision",
+     "DEF": "Hit"
+    }
+   ]
+  },
+  "a/fault-14.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "error",
+     "check": "route-type-mismatch",
+     "message": "ROUTE type mismatch: Typed.enteredText is SFString but Echo.set_string is MFString. ROUTE requires matching field types.",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/fault-15.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/fault-16.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "error",
+     "check": "route-type-mismatch",
+     "message": "ROUTE type mismatch: Counter.label is SFString but Readout.set_string is MFString. ROUTE requires matching field types.",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/fault-17.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Closeup' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Closeup"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Overview' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Overview"
+    }
+   ]
+  },
+  "a/fault-18.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Model' (Inline) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Inline",
+     "DEF": "Model"
+    }
+   ]
+  },
+  "a/fault-19.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "Anchor (component Networking level 2, declared at level 1) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "Anchor",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Networking' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam2' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam2"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CloseUp' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "CloseUp"
+    }
+   ]
+  },
+  "a/fault-20.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "LOD (component Navigation level 2, declared at level 1) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "LOD",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Navigation' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Detail' (LOD) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "LOD",
+     "DEF": "Detail"
+    },
+    {
+     "level": "error",
+     "check": "lod-range-order",
+     "message": "LOD (DEF='Detail') range is not increasing: range[0]=20.0 is followed by range[1]=5.0. Each switch distance must be larger than the last.",
+     "node": "LOD",
+     "DEF": "Detail"
+    }
+   ]
+  },
+  "a/twin-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "orientation-half-turn-step",
+     "message": "OrientationInterpolator (DEF='Spin') has 2 step(s) of a half turn (closest: key value 0 to 1, 2.7e-06 rad short of pi). It plays as written, but rounding the angle to fewer digits reverses it. Add a key value in between so every step is clearly shorter than pi.",
+     "node": "OrientationInterpolator",
+     "DEF": "Spin"
+    }
+   ]
+  },
+  "a/twin-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/twin-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/twin-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/twin-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/twin-06.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/twin-07.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Fader' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Fader"
+    }
+   ]
+  },
+  "a/twin-08.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Button' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Button"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/twin-09.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/twin-10.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "orientation-half-turn-step",
+     "message": "OrientationInterpolator (DEF='Turn') has 2 step(s) of a half turn (closest: key value 0 to 1, 2.7e-06 rad short of pi). It plays as written, but rounding the angle to fewer digits reverses it. Add a key value in between so every step is clearly shorter than pi.",
+     "node": "OrientationInterpolator",
+     "DEF": "Turn"
+    }
+   ]
+  },
+  "a/twin-11.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/twin-12.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/twin-13.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Wall' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Wall"
+    }
+   ]
+  },
+  "a/twin-14.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "error",
+     "check": "route-type-mismatch",
+     "message": "ROUTE type mismatch: Typed.finalText is SFString but Echo.set_string is MFString. ROUTE requires matching field types.",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/twin-15.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    }
+   ]
+  },
+  "a/twin-16.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "error",
+     "check": "route-type-mismatch",
+     "message": "ROUTE type mismatch: Counter.label is SFString but Readout.set_string is MFString. ROUTE requires matching field types.",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/twin-17.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Closeup' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Closeup"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Overview' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Overview"
+    }
+   ]
+  },
+  "a/twin-18.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Model' (Inline) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Inline",
+     "DEF": "Model"
+    }
+   ]
+  },
+  "a/twin-19.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "Anchor (component Networking level 2, declared at level 1) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "Anchor",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Networking' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam2' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam2"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CloseUp' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "CloseUp"
+    }
+   ]
+  },
+  "a/twin-20.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "LOD (component Navigation level 2, declared at level 1) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "LOD",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Navigation' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Cam' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Cam"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Detail' (LOD) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "LOD",
+     "DEF": "Detail"
+    }
+   ]
+  },
+  "b/decoy-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "b/decoy-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "warning",
+     "check": "rotation-axis-not-unit",
+     "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means.",
+     "node": "Transform",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/decoy-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "b/decoy-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "Switch (component Grouping level 2, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "Switch",
+     "DEF": ""
+    },
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "LOD (component Navigation level 2, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "LOD",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Grouping' level='2'/> <component name='Navigation' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/decoy-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "b/fault-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Crate"
+    },
+    {
+     "level": "error",
+     "check": "index-out-of-range",
+     "message": "IndexedFaceSet coordIndex uses 8 but the coordinate node has 8 point(s) (valid 0 to 7, -1 ends a face); 1 bad entry.",
+     "node": "IndexedFaceSet",
+     "DEF": ""
+    },
+    {
+     "level": "warning",
+     "check": "rotation-axis-not-unit",
+     "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means.",
+     "node": "Transform",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/fault-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "LOD (component Navigation level 2, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "LOD",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Navigation' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='FarDetail' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "FarDetail"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='MidDetail' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "MidDetail"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='NearDetail' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "NearDetail"
+    }
+   ]
+  },
+  "b/fault-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Crate"
+    },
+    {
+     "level": "warning",
+     "check": "rotation-axis-not-unit",
+     "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means.",
+     "node": "Transform",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/fault-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Crate"
+    },
+    {
+     "level": "error",
+     "check": "attribute-count-mismatch",
+     "message": "IndexedFaceSet Normal has 6 value(s) but the coordIndex reaches vertex 7, so 8 are needed. The missing ones are undefined and browsers draw them differently.",
+     "node": "IndexedFaceSet",
+     "DEF": ""
+    },
+    {
+     "level": "warning",
+     "check": "rotation-axis-not-unit",
+     "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means.",
+     "node": "Transform",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/fault-05.x3d": {
+   "xsd": {
+    "valid": false,
+    "errors": [
+     "Line 14: Element 'Color', attribute 'color': [facet 'pattern'] The value '255 0 0, 0 255 0, 0 0 255, 255 255 0, 255 0 255, 0 255 255, 255 255 255, 127 127 127' is not accepted by the pattern '\\s*((([+-]?((0(\\.[0-9]*)?|\\.[0-9]+)|1(\\.0*)?)([Ee][+-]?[0-9]+)?)\\s+){2}([+-]?((0(\\.[0-9]*)?|\\.[0-9]+)|1(\\.0*)?)([Ee][+-]?[0-9]+)?)\\s*,?\\s*)*'."
+    ]
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Crate"
+    },
+    {
+     "level": "error",
+     "check": "colour-out-of-range",
+     "message": "Color color: colour 1 of 8 is '255 0 0', but each component must be between 0 and 1 (15 components out of range). Clamp to 0..1, or divide by 255 if the values were written as 0..255.",
+     "node": "Color",
+     "DEF": ""
+    },
+    {
+     "level": "warning",
+     "check": "rotation-axis-not-unit",
+     "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means.",
+     "node": "Transform",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/fault-06.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RedTower' (ProtoInstance) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "ProtoInstance",
+     "DEF": "RedTower"
+    }
+   ]
+  },
+  "b/fault-07.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "attribute-count-mismatch",
+     "message": "IndexedFaceSet TextureCoordinate has 3 value(s) but the coordIndex reaches vertex 3, so 4 are needed. The missing ones are undefined and browsers draw them differently.",
+     "node": "IndexedFaceSet",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/fault-08.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "Extrusion (component Geometry3D level 4, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "Extrusion",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Geometry3D' level='4'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='SquarePost' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "SquarePost"
+    }
+   ]
+  },
+  "b/fault-09.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "ElevationGrid (component Geometry3D level 3, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "ElevationGrid",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Geometry3D' level='3'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Terrain' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Terrain"
+    },
+    {
+     "level": "error",
+     "check": "array-count",
+     "message": "ElevationGrid height has 11 value(s) but xDimension x zDimension = 4 x 3 = 12.",
+     "node": "ElevationGrid",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/fault-10.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "CoordinateDouble (component Rendering level 1, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "CoordinateDouble",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Rendering' level='1'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Canopy' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Canopy"
+    }
+   ]
+  },
+  "b/fault-11.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "NurbsCurve (component NURBS level 1, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "NurbsCurve",
+     "DEF": ""
+    },
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "CoordinateDouble (component Rendering level 1, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "CoordinateDouble",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='NURBS' level='1'/> <component name='Rendering' level='1'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "error",
+     "check": "containerfield-unknown",
+     "message": "CoordinateDouble containerField='coord' but NurbsCurve has no field named 'coord'. CoordinateDouble's default containerField is 'coord', which does not fit a NurbsCurve -- an explicit containerField is required here. Use containerField='controlPoint' to place a CoordinateDouble here.",
+     "node": "CoordinateDouble",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/fault-12.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "use-undefined-def",
+     "message": "USE='wheel' references a DEF that does not exist in this scene. Available DEF names: Wheel.",
+     "node": "",
+     "DEF": "wheel"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Wheel' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Wheel"
+    }
+   ]
+  },
+  "b/fault-13.x3d": {
+   "xsd": {
+    "valid": false,
+    "errors": [
+     "Line 13: Element 'Shape', attribute 'DEF': 'RedPost' is not a valid value of the atomic type 'xs:ID'."
+    ]
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "duplicate-def",
+     "message": "Duplicate DEF name 'RedPost': first used on Shape, also used on Shape. DEF names must be unique within a scene.",
+     "node": "Shape",
+     "DEF": "RedPost"
+    }
+   ]
+  },
+  "b/fault-14.x3d": {
+   "xsd": {
+    "valid": false,
+    "errors": [
+     "Line 10: Element 'Material': This element is not expected. Expected is one of ( IS, MetadataBoolean, MetadataDouble, MetadataFloat, MetadataInteger, MetadataSet, MetadataString, Appearance, Box, Cone )."
+    ]
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "containerfield-unknown",
+     "message": "Material containerField='material' but Shape has no field named 'material'. Material's default containerField is 'material', which does not fit a Shape -- an explicit containerField is required here.",
+     "node": "Material",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "shape-no-appearance",
+     "message": "Shape has no Appearance. The shape will render with a default white material.",
+     "node": "Shape",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/fault-15.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Door' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Door"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='DoorHinge' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "DoorHinge"
+    }
+   ]
+  },
+  "b/fault-16.x3d": {
+   "xsd": {
+    "valid": false,
+    "errors": [
+     "Line 8: Element 'Viewpoint', attribute 'fieldOfView': [facet 'maxExclusive'] The value '60' must be less than '3.1416'."
+    ]
+   },
+   "semantic": []
+  },
+  "b/fault-17.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "b/fault-18.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "Switch (component Grouping level 2, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "Switch",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Grouping' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/fault-19.x3d": {
+   "xsd": {
+    "valid": false,
+    "errors": [
+     "Line 9: Element 'Material', attribute 'shininess': [facet 'maxInclusive'] The value '50' is greater than the maximum value allowed ('1')."
+    ]
+   },
+   "semantic": []
+  },
+  "b/fault-20.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Sun' (DirectionalLight) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "DirectionalLight",
+     "DEF": "Sun"
+    }
+   ]
+  },
+  "b/twin-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Crate"
+    },
+    {
+     "level": "warning",
+     "check": "rotation-axis-not-unit",
+     "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means.",
+     "node": "Transform",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/twin-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "LOD (component Navigation level 2, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "LOD",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Navigation' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='FarDetail' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "FarDetail"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='MidDetail' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "MidDetail"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='NearDetail' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "NearDetail"
+    }
+   ]
+  },
+  "b/twin-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Crate"
+    },
+    {
+     "level": "warning",
+     "check": "rotation-axis-not-unit",
+     "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means.",
+     "node": "Transform",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/twin-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Crate"
+    },
+    {
+     "level": "warning",
+     "check": "rotation-axis-not-unit",
+     "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means.",
+     "node": "Transform",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/twin-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Crate"
+    },
+    {
+     "level": "warning",
+     "check": "rotation-axis-not-unit",
+     "message": "Transform rotation has 1 rotation(s) whose axis is not unit length (first: 1 1 0 0.6, axis length 1.41). The axis must be normalized; tools disagree on what a longer axis means.",
+     "node": "Transform",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/twin-06.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RedTower' (ProtoInstance) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "ProtoInstance",
+     "DEF": "RedTower"
+    }
+   ]
+  },
+  "b/twin-07.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "b/twin-08.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "Extrusion (component Geometry3D level 4, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "Extrusion",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Geometry3D' level='4'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='SquarePost' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "SquarePost"
+    }
+   ]
+  },
+  "b/twin-09.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "ElevationGrid (component Geometry3D level 3, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "ElevationGrid",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Geometry3D' level='3'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Terrain' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Terrain"
+    }
+   ]
+  },
+  "b/twin-10.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "CoordinateDouble (component Rendering level 1, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "CoordinateDouble",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Rendering' level='1'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Canopy' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Canopy"
+    }
+   ]
+  },
+  "b/twin-11.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "CoordinateDouble (component Rendering level 1, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "CoordinateDouble",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Rendering' level='1'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "error",
+     "check": "containerfield-unknown",
+     "message": "CoordinateDouble containerField='coord' but NurbsCurve has no field named 'coord'. CoordinateDouble's default containerField is 'coord', which does not fit a NurbsCurve -- an explicit containerField is required here. Use containerField='controlPoint' to place a CoordinateDouble here.",
+     "node": "CoordinateDouble",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/twin-12.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "b/twin-13.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BlueBall' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "BlueBall"
+    }
+   ]
+  },
+  "b/twin-14.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "b/twin-15.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Door' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Door"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='DoorHinge' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "DoorHinge"
+    }
+   ]
+  },
+  "b/twin-16.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "b/twin-17.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "b/twin-18.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "Switch (component Grouping level 2, not declared) is outside profile 'Interchange'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "Switch",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Grouping' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/twin-19.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "b/twin-20.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Sun' (DirectionalLight) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "DirectionalLight",
+     "DEF": "Sun"
+    }
+   ]
+  }
+ }
+}

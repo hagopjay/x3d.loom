@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content='A cube named Spinner stays still until the user clicks the red ball; each click toggles the spin clock on or off.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <Transform DEF='Spinner'><Shape><Appearance><Material diffuseColor='0.8 0.2 0.2'/></Appearance><Box/></Shape></Transform>
+    <Transform translation='3 0 0'><TouchSensor DEF='Switch'/><Shape><Appearance><Material diffuseColor='1 0 0'/></Appearance><Sphere radius="0.4"/></Shape></Transform>
+    <BooleanToggle DEF='Flip'/>
+    <TimeSensor DEF='Clock' cycleInterval='4' loop='true' enabled='false'/>
+    <OrientationInterpolator DEF='Turn' key='0 0.5 1' keyValue='0 1 0 0  0 1 0 3.14159  0 1 0 6.28318'/>
+    <ROUTE fromNode='Switch' fromField='isActive' toNode='Flip' toField='set_boolean'/>
+    <ROUTE fromNode='Flip' fromField='toggle_changed' toNode='Clock' toField='set_enabled'/>
+    <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Turn' toField='set_fraction'/>
+    <ROUTE fromNode='Turn' fromField='value_changed' toNode='Spinner' toField='set_rotation'/>
+  </Scene>
+</X3D>

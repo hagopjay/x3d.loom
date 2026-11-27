@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content='Three lamps in a Switch named Lamps light one at a time in a repeating cycle of 0, 1, 2, 0: an IntegerSequencer feeds whichChoice every second.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <Switch DEF='Lamps' whichChoice='0'>
+      <Transform translation='-3 0 0'><Shape><Appearance><Material diffuseColor='1 0 0'/></Appearance><Sphere/></Shape></Transform>
+      <Transform translation='0 0 0'><Shape><Appearance><Material diffuseColor='0 1 0'/></Appearance><Sphere/></Shape></Transform>
+      <Transform translation='3 0 0'><Shape><Appearance><Material diffuseColor='0 0 1'/></Appearance><Sphere/></Shape></Transform>
+    </Switch>
+    <TimeSensor DEF='Clock' cycleInterval='4' loop='true'/>
+    <IntegerSequencer DEF='Seq' key='0 0.25 0.5 0.75' keyValue='0 1 2 0'/>
+    <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Seq' toField='set_fraction'/>
+    <ROUTE fromNode='Seq' fromField='value_changed' toNode='Lamps' toField='set_whichChoice'/>
+  </Scene>
+</X3D>

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content='A label named Echo shows the typed word only after Enter is pressed: a StringSensor finalText feeds the label, so partial typing is not displayed.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <StringSensor DEF='Typed' deletionAllowed='true'/>
+    <Shape><Appearance><Material diffuseColor='1 1 1'/></Appearance>
+      <Text DEF='Echo' string='""'><FontStyle justify='"MIDDLE"'/></Text>
+    </Shape>
+    <ROUTE fromNode='Typed' fromField='finalText' toNode='Echo' toField='set_string'/>
+  </Scene>
+</X3D>
