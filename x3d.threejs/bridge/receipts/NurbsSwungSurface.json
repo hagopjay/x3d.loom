@@ -1,0 +1,116 @@
+{
+ "node": "NurbsSwungSurface",
+ "date": "2026-11-27",
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha fa1672fe84a6",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 18/18",
+ "xite": "pass 18/18",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "main": {
+   "iou": 0.99,
+   "coverOurs": 0.99,
+   "coverXite": 1,
+   "bboxOurs": [
+    17,
+    34,
+    287,
+    239
+   ],
+   "bboxXite": [
+    17,
+    34,
+    287,
+    239
+   ],
+   "nOurs": 16341,
+   "nXite": 16291,
+   "fgFracOurs": 0.21,
+   "fgFracXite": 0.21,
+   "mad": 0.4,
+   "psnr": 44.14,
+   "fgMeanOurs": [
+    123,
+    115,
+    114
+   ],
+   "fgMeanXite": [
+    123,
+    115,
+    114
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  },
+  "coarse": {
+   "iou": 0.95,
+   "coverOurs": 0.96,
+   "coverXite": 0.99,
+   "bboxOurs": [
+    17,
+    34,
+    287,
+    239
+   ],
+   "bboxXite": [
+    17,
+    33,
+    287,
+    239
+   ],
+   "nOurs": 16341,
+   "nXite": 15800,
+   "fgFracOurs": 0.21,
+   "fgFracXite": 0.21,
+   "mad": 1.93,
+   "psnr": 29.87,
+   "fgMeanOurs": [
+    123,
+    115,
+    114
+   ],
+   "fgMeanXite": [
+    120,
+    114,
+    115
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "the frame at an interior spine point: this node (like the Library hall Extrusion) takes the Y axis along the chord spine[i+1] - spine[i-1], which is how the standard words it (Likely: read from memory of 19775-1 13.3.5, the text itself is not in the repository); X_ITE 16.6.0 takes the bisector of the two unit vectors. The two are the same for an evenly spaced spine (octagon trajectory: 1.2e-7) and differ by up to 0.017 in the 2.2 unit vase whose spine points are unevenly spaced (compared at 0.02)",
+  "solid FALSE seen from behind: X_ITE 16.6.0 lights the back face, the Babylon body draws it black (the same gap as the patch and IndexedFaceSet); the two sided swung surface here is seen from the front",
+  "no scale, orientation or caps (the NURBS nodes have none); texture coordinates run 0..1 along the profile (s) and the trajectory (t), the same numbers as X_ITE",
+  "the normals are smoothed over every shared vertex (crease angle pi, as X_ITE sets it): the shading agrees in the pictures (mean colour within 10 of 255, picture difference about 3 of 255), not per vertex"
+ ],
+ "scope": [
+  "triangle corners and texture coordinates come from the vertex arrays X_ITE builds (private getVertices, getMultiTexCoords) and from the mesh this reader builds; pictures are silhouette and mean colour (SwiftShader CPU raster, no tone curve); NurbsSweptSurface (a later batch) shares the extrusion code"
+ ]
+}

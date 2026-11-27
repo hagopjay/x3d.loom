@@ -1,0 +1,22 @@
+{
+ "node": "StreamAudioSource",
+ "date": "2026-11-27",
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha fa1672fe84a6",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 64/64",
+ "xite": "pass 36/36",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "scope": [
+  "X_ITE 16.6.0 does nothing with this node (not supported): no sound is made there and the sound is checked against Web Audio only, in our reader; the stream comes from inside the same page (a StreamAudioDestination or a stream the page adds), a stream from the network (WebRTC) is the page's to connect and is not tested; a stream that is added to the table after the node started is found within one frame"
+ ]
+}

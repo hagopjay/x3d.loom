@@ -1,0 +1,895 @@
+{
+ "node": "Sound",
+ "mode": "scene",
+ "note": "The classic Sound node of the three.js bridge against X_ITE 16.6.0, signal for signal on the page's real Web Audio clock. A 1 kHz sine (rms 0.7071) plays through a Sound (source field) that a Transform moves about a listener at 0 0 10: inside the inner sphere (full level; straight ahead each ear gets 1 - 0.5^2 = 0.75), half way between the spheres (0.5), to the left and to the right (pan from the direction in view space: left = 1 - pan^2, right = 1 - (1 - pan)^2), outside the outer sphere (silent), intensity 0.5 and 5 (held to 1), then an ellipsoid 20 long in front and 5 behind seen from in front ((20 - 12) / 19) and from behind (silent). A second Sound with spatialize FALSE gives the same level in both ears, and a third plays an AudioClip (a 0.25 s wave file in a data url, looped). Each expected number is computed in python from the formulas (tools/gen-sound-fixture.py writes this file and the scene), and the two engines must also agree with each other.",
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "intensity",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "minBack",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "minFront",
+    1
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "maxBack",
+    10
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "maxFront",
+    10
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "spatialize",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "enabled",
+    true
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "location",
+    [
+     0,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "direction",
+    [
+     0,
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N2",
+    "spatialize",
+    false
+   ]
+  },
+  {
+   "tap": [
+    "p",
+    "N",
+    "out",
+    {
+     "channels": 2
+    }
+   ]
+  },
+  {
+   "tap": [
+    "p2",
+    "N2",
+    "out",
+    {
+     "channels": 2
+    }
+   ]
+  },
+  {
+   "tap": [
+    "p3",
+    "N3",
+    "out",
+    {
+     "channels": 2
+    }
+   ]
+  },
+  {
+   "set": [
+    "SO",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "set": [
+    "SO2",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "set": [
+    "AC",
+    "startTime",
+    "$now"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "insideL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.53033",
+    "x.insideL"
+   ]
+  },
+  {
+   "close": [
+    "insideL.rms",
+    "x.insideL",
+    0.012
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "insideR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.53033",
+    "x.insideR"
+   ]
+  },
+  {
+   "close": [
+    "insideR.rms",
+    "x.insideR",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     4.5
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "halfL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.26517",
+    "x.halfL"
+   ]
+  },
+  {
+   "close": [
+    "halfL.rms",
+    "x.halfL",
+    0.012
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "halfR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.26517",
+    "x.halfR"
+   ]
+  },
+  {
+   "close": [
+    "halfR.rms",
+    "x.halfR",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     -3,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "leftL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.35861",
+    "x.leftL"
+   ]
+  },
+  {
+   "close": [
+    "leftL.rms",
+    "x.leftL",
+    0.012
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "leftR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.19768",
+    "x.leftR"
+   ]
+  },
+  {
+   "close": [
+    "leftR.rms",
+    "x.leftR",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     3,
+     0,
+     6
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "rightL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.19768",
+    "x.rightL"
+   ]
+  },
+  {
+   "close": [
+    "rightL.rms",
+    "x.rightL",
+    0.012
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "rightR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.35861",
+    "x.rightR"
+   ]
+  },
+  {
+   "close": [
+    "rightR.rms",
+    "x.rightR",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     -5
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "outsideL",
+    {
+     "ch": 0,
+     "from": -0.3
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "outsideR",
+    {
+     "ch": 1,
+     "from": -0.3
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     4.5
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "intensity",
+    0.5
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "intenL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.13258",
+    "x.intenL"
+   ]
+  },
+  {
+   "close": [
+    "intenL.rms",
+    "x.intenL",
+    0.012
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "intenR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.13258",
+    "x.intenR"
+   ]
+  },
+  {
+   "close": [
+    "intenR.rms",
+    "x.intenR",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "intensity",
+    5
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "clampL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.26517",
+    "x.clampL"
+   ]
+  },
+  {
+   "close": [
+    "clampL.rms",
+    "x.clampL",
+    0.012
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "clampR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.26517",
+    "x.clampR"
+   ]
+  },
+  {
+   "close": [
+    "clampR.rms",
+    "x.clampR",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "intensity",
+    1
+   ]
+  },
+  {
+   "set": [
+    "T",
+    "translation",
+    [
+     0,
+     0,
+     -2
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "maxFront",
+    20
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "maxBack",
+    5
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "frontL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.2233",
+    "x.frontL"
+   ]
+  },
+  {
+   "close": [
+    "frontL.rms",
+    "x.frontL",
+    0.012
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "frontR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.2233",
+    "x.frontR"
+   ]
+  },
+  {
+   "close": [
+    "frontR.rms",
+    "x.frontR",
+    0.012
+   ]
+  },
+  {
+   "set": [
+    "N",
+    "direction",
+    [
+     0,
+     0,
+     -1
+    ],
+    "SFVec3f"
+   ]
+  },
+  {
+   "settle": 1.3
+  },
+  {
+   "sig": [
+    "p",
+    "backL",
+    {
+     "ch": 0,
+     "from": -0.3
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "sig": [
+    "p",
+    "backR",
+    {
+     "ch": 1,
+     "from": -0.3
+    },
+    {
+     "silent": true
+    }
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "sig": [
+    "p2",
+    "flatL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.39284",
+    "x.flatL"
+   ]
+  },
+  {
+   "close": [
+    "flatL.rms",
+    "x.flatL",
+    0.012
+   ]
+  },
+  {
+   "sig": [
+    "p2",
+    "flatR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.39284",
+    "x.flatR"
+   ]
+  },
+  {
+   "close": [
+    "flatR.rms",
+    "x.flatR",
+    0.012
+   ]
+  },
+  {
+   "settle": 0.2
+  },
+  {
+   "sig": [
+    "p3",
+    "clipL",
+    {
+     "ch": 0,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.26517",
+    "x.clipL"
+   ]
+  },
+  {
+   "close": [
+    "clipL.rms",
+    "x.clipL",
+    0.02
+   ]
+  },
+  {
+   "sig": [
+    "p3",
+    "clipR",
+    {
+     "ch": 1,
+     "f0": 1000,
+     "from": -0.3
+    }
+   ]
+  },
+  {
+   "amap": [
+    "0.26517",
+    "x.clipR"
+   ]
+  },
+  {
+   "close": [
+    "clipR.rms",
+    "x.clipR",
+    0.02
+   ]
+  },
+  {
+   "set": [
+    "N2",
+    "enabled",
+    false
+   ]
+  },
+  {
+   "settle": 1.0
+  },
+  {
+   "sig": [
+    "p2",
+    "off",
+    {
+     "ch": 0,
+     "from": -0.3
+    },
+    {
+     "silent": true
+    }
+   ]
+  }
+ ],
+ "agree": [
+  [
+   "insideL.rms",
+   0.012
+  ],
+  [
+   "insideR.rms",
+   0.012
+  ],
+  [
+   "halfL.rms",
+   0.012
+  ],
+  [
+   "halfR.rms",
+   0.012
+  ],
+  [
+   "leftL.rms",
+   0.012
+  ],
+  [
+   "leftR.rms",
+   0.012
+  ],
+  [
+   "rightL.rms",
+   0.012
+  ],
+  [
+   "rightR.rms",
+   0.012
+  ],
+  [
+   "outsideL.rms",
+   0.012
+  ],
+  [
+   "outsideR.rms",
+   0.012
+  ],
+  [
+   "intenL.rms",
+   0.012
+  ],
+  [
+   "intenR.rms",
+   0.012
+  ],
+  [
+   "clampL.rms",
+   0.012
+  ],
+  [
+   "clampR.rms",
+   0.012
+  ],
+  [
+   "frontL.rms",
+   0.012
+  ],
+  [
+   "frontR.rms",
+   0.012
+  ],
+  [
+   "backL.rms",
+   0.012
+  ],
+  [
+   "backR.rms",
+   0.012
+  ],
+  [
+   "flatL.rms",
+   0.012
+  ],
+  [
+   "flatR.rms",
+   0.012
+  ],
+  [
+   "clipL.rms",
+   0.03
+  ],
+  [
+   "clipR.rms",
+   0.03
+  ]
+ ],
+ "gaps": [
+  "priority is held and not used (one voice per node, no voice stealing)",
+  "with minBack, minFront, maxBack or maxFront of 0 X_ITE 16.6.0 reads a matrix left over from the last ellipsoid; the bridge treats such an ellipsoid as empty and measures to the sound's own place, so that case is not compared",
+  "a Sound plays whenever it is enabled; in X_ITE it plays only while it is traversed (a Switch that hides it silences it)",
+  "AudioClip: pauseTime and resumeTime stop and restart the buffer at the paused position; X_ITE plays a media element, so the loop point of a clip that is not a whole number of cycles differs by a few samples",
+  "MovieTexture as a sound source is not played"
+ ],
+ "scope": [
+  "levels are the rms of the last 0.3 s of each ear at the node's output stage (ours: the out gain, X_ITE: getSoundDestination()); the rotation term (front and back gains) cannot be told apart with a mono source and is not measured; hearing is not tested, only the signal"
+ ]
+}

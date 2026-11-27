@@ -1,0 +1,24 @@
+{
+ "node": "CollisionSensor",
+ "date": "2026-11-27",
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha fa1672fe84a6",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 36/36",
+ "xite": "pass 36/36",
+ "mode": "events (hard)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "isActive, intersections and contacts of an impact are not asserted: X_ITE sees an impact for one sub-step, the bridge for one of its 1/240 s steps; both are noisy",
+  "the events of one frame come in the order isActive, intersections, contacts (X_ITE: the same timestamp); the fixture reads values, not order",
+  "enabled is read only at load and when collider is written, as X_ITE 16.6.0 does; the specification says enabled switches the node"
+ ]
+}
