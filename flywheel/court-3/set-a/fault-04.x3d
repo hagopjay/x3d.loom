@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <meta name='description' content='A pulsing indicator named Pulse grows and shrinks forever, one pulse every 1.5 seconds.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <Transform DEF='Pulse'><Shape><Appearance><Material diffuseColor='1 0.5 0'/></Appearance><Sphere/></Shape></Transform>
+    <TimeSensor DEF='Clock' cycleInterval='1.5' loop='false' startTime='1'/>
+    <PositionInterpolator DEF='Grow' key='0 0.5 1' keyValue='1 1 1  2 2 2  1 1 1'/>
+    <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Grow' toField='set_fraction'/>
+    <ROUTE fromNode='Grow' fromField='value_changed' toNode='Pulse' toField='set_scale'/>
+  </Scene>
+</X3D>

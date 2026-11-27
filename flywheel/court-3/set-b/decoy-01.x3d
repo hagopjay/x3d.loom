@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Interchange' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='title' content='decoy-01.x3d'/>
+    <meta name='description' content='Two crates facing each other: the left one is a mirror image of the right, made with a negative scale.'/>
+  </head>
+  <Scene>
+    <Viewpoint position='0 0 8' description='Front'/>
+    <Transform translation='3 0 0'><Shape DEF='Wedge'><Appearance><Material diffuseColor='0.8 0.4 0.1'/></Appearance>
+      <IndexedFaceSet coordIndex='0 1 2 -1 0 2 3 -1 0 3 1 -1 1 3 2 -1'><Coordinate point='0 0 0, 2 0 0, 0 2 0, 0 0 2'/></IndexedFaceSet></Shape></Transform>
+    <Transform translation='-3 0 0' scale='-1 1 1'><Shape USE='Wedge'/></Transform>
+
+  </Scene>
+</X3D>

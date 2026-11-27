@@ -52,3 +52,11 @@ See `LEDGER.md`. Turn 1 is the baseline (x3d_mcp `4d433af`): 39 of 53 faults, 40
 
 [`sprint-20261126/SPRINT.md`](sprint-20261126/SPRINT.md): sixteen agents in two waves, one question each, fifteen minutes. Two blind benchmarks (`fault-court-2/` behaviour, 11 of 20 caught; `fault-court-2b/` structure, 13 of 20), eight candidate checks for scenes that are wired legally and do nothing, two measured fixes to the search (6 of 13 failed scenes rebuilt), a blind recount of the glTF and USD denominators, a list of what a pass proves (`KERNEL-GUARANTEES.md`), a red-team review of the claims on this page, and the work list that follows.
 
+## Blind court 3 (27 November 2026)
+
+[`court-3/RESULTS.md`](court-3/RESULTS.md): the first held-out score taken with the test sealed before the checker was
+frozen. Two blind authors wrote 40 faults, 40 corrected twins and 10 decoys; the plan was pushed before the set was
+opened ([`court-3/PREREG.md`](court-3/PREREG.md)). On that one unseen set the old kernel (`ebe969b`) catches 19 of
+40 and the new one (`d647a10`, 11 checks written from courts 2 and 2b) catches 25, with none lost and no complaint
+from the new checks on the 50 legal files. Of four expectations three held and one failed by one (26 was expected).
+Seen sets at the same commit: 37 of 40. The set is now seen and is a regression set from here on.

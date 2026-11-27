@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Interchange' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='title' content='decoy-05.x3d'/>
+    <meta name='description' content='A prototype whose body defines a node and reuses it internally, instanced once with defaults only and once with an override.'/>
+  </head>
+  <Scene>
+    <Viewpoint position='0 0 8' description='Front'/>
+    <ProtoDeclare name='Ball'>
+      <ProtoInterface><field accessType='initializeOnly' type='SFColor' name='tint' value='0.9 0.3 0.3'/></ProtoInterface>
+      <ProtoBody>
+        <Group>
+          <Shape DEF='Orb'><Appearance><Material><IS><connect nodeField='diffuseColor' protoField='tint'/></IS></Material></Appearance><Sphere radius='0.8'/></Shape>
+          <Transform translation='0 1.4 0' scale='0.5 0.5 0.5'><Shape USE='Orb'/></Transform>
+        </Group>
+      </ProtoBody>
+    </ProtoDeclare>
+    <Transform translation='-2 -1 0'><ProtoInstance name='Ball'/></Transform>
+    <Transform translation='2 -1 0'><ProtoInstance name='Ball'><fieldValue name='tint' value='0.3 0.3 0.9'/></ProtoInstance></Transform>
+
+  </Scene>
+</X3D>

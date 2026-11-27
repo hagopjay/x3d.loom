@@ -1,0 +1,401 @@
+{
+ "fault-01.x3d": {
+  "category": "geometry-indices",
+  "fault": "One face of the indexed face set references vertex index 8 but only vertices 0 to 7 exist.",
+  "viewer_sees": "A face missing or broken, possibly a spike or load warning.",
+  "spec": "error: coordIndex entry must be less than the number of Coordinate points (IndexedFaceSet rule)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 6.7% non-background pixels; console errors 0, warnings 0; 6.9% of pixels differ from twin",
+  "twin": "twin-01.x3d",
+  "engine_disagrees": false
+ },
+ "twin-01.x3d": {
+  "category": "geometry-indices",
+  "intent": "A blue crate built from eight points and six quad faces, seen at an angle.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 13.4% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-02.x3d": {
+  "category": "lod-switch",
+  "fault": "LOD range has three entries for three children; it must have one fewer entry than children.",
+  "viewer_sees": "The distant cone is drawn instead of the box.",
+  "spec": "error: LOD range field must contain n-1 values for n children",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 5.9% non-background pixels; console errors 0, warnings 0; 9.1% of pixels differ from twin",
+  "twin": "twin-02.x3d",
+  "engine_disagrees": false
+ },
+ "twin-02.x3d": {
+  "category": "lod-switch",
+  "intent": "A three-level LOD: sphere when close (under 5 m), box between 5 m and 15 m, cone beyond 15 m. The viewer stands 8 m away, so the box is expected.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 11.1% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-03.x3d": {
+  "category": "winding",
+  "fault": "ccw is set to false although the faces are wound counter-clockwise seen from outside.",
+  "viewer_sees": "The crate looks hollow or inside out: near faces culled, far inner faces visible.",
+  "spec": "legal, renders wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 13.4% non-background pixels; console errors 0, warnings 0; 8.7% of pixels differ from twin",
+  "twin": "twin-03.x3d",
+  "engine_disagrees": false
+ },
+ "twin-03.x3d": {
+  "category": "winding",
+  "intent": "A solid blue crate whose outside faces should be visible and lit.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 13.4% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-04.x3d": {
+  "category": "normals",
+  "fault": "Six per-face normals are supplied while normalPerVertex is true and there are eight vertices.",
+  "viewer_sees": "Wrong or flat-looking shading on some corners, or normals ignored.",
+  "spec": "error: with normalPerVertex TRUE the Normal vector count must match the Coordinate count (or normalIndex)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 8.7% non-background pixels; console errors 0, warnings 0; 9.5% of pixels differ from twin",
+  "twin": "twin-04.x3d",
+  "engine_disagrees": false
+ },
+ "twin-04.x3d": {
+  "category": "normals",
+  "intent": "A smooth-shaded crate using one normal per vertex, as normalPerVertex says.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 12.2% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-05.x3d": {
+  "category": "colour",
+  "fault": "Colour components are written on a 0 to 255 scale instead of 0 to 1.",
+  "viewer_sees": "Nearly every corner saturates to white, no visible colour blending.",
+  "spec": "error: Color components must lie in [0,1]",
+  "xsd_valid": false,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 13.4% non-background pixels; console errors 0, warnings 0; 11.4% of pixels differ from twin",
+  "twin": "twin-05.x3d",
+  "engine_disagrees": false
+ },
+ "twin-05.x3d": {
+  "category": "colour",
+  "intent": "A crate with a different colour at each of its eight corners, blended smoothly.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 13.4% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-06.x3d": {
+  "category": "proto",
+  "fault": "The ProtoInstance sets a field called towerColour but the prototype declares towerColor.",
+  "viewer_sees": "The tower is the default grey, not red.",
+  "spec": "error: ProtoInstance fieldValue name must match a field declared in the ProtoInterface",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 9.7% non-background pixels; console errors 0, warnings 1; 7.6% of pixels differ from twin; warning: XML Parser: Couldn't assign field value. Unknown field 'towerColour' in node class Tower.",
+  "twin": "twin-06.x3d",
+  "engine_disagrees": false
+ },
+ "twin-06.x3d": {
+  "category": "proto",
+  "intent": "A tall red tower made by instancing a Tower prototype with a colour and a height.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 9.7% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-07.x3d": {
+  "category": "texture-coordinates",
+  "fault": "The TextureCoordinate holds three points for a four-vertex face.",
+  "viewer_sees": "Texture smeared, a missing corner coordinate, or no texture.",
+  "spec": "error: TextureCoordinate count must cover every referenced vertex index",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 29.7% non-background pixels; console errors 0, warnings 0; 7.0% of pixels differ from twin",
+  "twin": "twin-07.x3d",
+  "engine_disagrees": false
+ },
+ "twin-07.x3d": {
+  "category": "texture-coordinates",
+  "intent": "A square panel showing the four-colour two by two texture exactly once, one colour per quadrant.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 29.7% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-08.x3d": {
+  "category": "extrusion",
+  "fault": "The cross-section points are ordered so the outline crosses itself (a bow-tie) instead of tracing the square.",
+  "viewer_sees": "A twisted two-triangle bow-tie profile rather than a square post.",
+  "spec": "legal, renders wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 12.8% non-background pixels; console errors 0, warnings 0; 13.0% of pixels differ from twin",
+  "twin": "twin-08.x3d",
+  "engine_disagrees": false
+ },
+ "twin-08.x3d": {
+  "category": "extrusion",
+  "intent": "A square-section post extruded along a short straight spine.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 15.9% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-09.x3d": {
+  "category": "elevationgrid",
+  "fault": "height lists 11 values but xDimension times zDimension is 12.",
+  "viewer_sees": "The terrain is missing or truncated.",
+  "spec": "error: ElevationGrid height must contain xDimension*zDimension values",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 8.1% non-background pixels; console errors 0, warnings 0; 2.4% of pixels differ from twin",
+  "twin": "twin-09.x3d",
+  "engine_disagrees": false
+ },
+ "twin-09.x3d": {
+  "category": "elevationgrid",
+  "intent": "A small four by three grid of terrain with a central ridge.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 8.1% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-10.x3d": {
+  "category": "nurbs",
+  "fault": "The uKnot vector has six values but uDimension plus uOrder needs seven.",
+  "viewer_sees": "The surface does not appear or is badly distorted.",
+  "spec": "error: knot vector length must equal dimension + order",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "X_ITE 16.8.0 in the kit cannot load the NURBS component (assets/components absent), scene fails to load; label is by reasoning from the spec",
+  "twin": "twin-10.x3d"
+ },
+ "twin-10.x3d": {
+  "category": "nurbs",
+  "intent": "A rippled four by four NURBS canopy with quadratic basis in both directions.",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "X_ITE 16.8.0 in the kit cannot load the NURBS component (assets/components absent), scene fails to load; label is by reasoning from the spec"
+ },
+ "fault-11.x3d": {
+  "category": "profile-component",
+  "fault": "The scene uses a NURBS node but neither the profile nor a component statement provides the NURBS component.",
+  "viewer_sees": "Curve is missing or a console error says the node is unknown.",
+  "spec": "error: nodes must belong to the declared profile or components",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 2.1% non-background pixels; console errors 1, warnings 0; 98.5% of pixels differ from twin; error: XML Parser: Unknown node type 'NurbsCurve'. You probably have insufficient component/profile statements and/or an inappropriate speci",
+  "twin": "twin-11.x3d",
+  "engine_disagrees": false
+ },
+ "twin-11.x3d": {
+  "category": "profile-component",
+  "intent": "An orange NURBS curve arching across the view.",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "X_ITE 16.8.0 in the kit cannot load the NURBS component (assets/components absent), scene fails to load; label is by reasoning from the spec"
+ },
+ "fault-12.x3d": {
+  "category": "def-use",
+  "fault": "USE refers to wheel but the node was defined as Wheel; names are case sensitive.",
+  "viewer_sees": "Only one wheel appears and a console error reports the missing name.",
+  "spec": "error: USE must name a previously DEFed node (names are case-sensitive)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "3 root nodes; 3.7% non-background pixels; console errors 0, warnings 1; 1.6% of pixels differ from twin; warning: XML Parser: Named or imported node 'wheel' not found.",
+  "twin": "twin-12.x3d",
+  "engine_disagrees": false
+ },
+ "twin-12.x3d": {
+  "category": "def-use",
+  "intent": "Two identical wheels side by side: one defined, the second a reuse of the first.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "3 root nodes; 5.3% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-13.x3d": {
+  "category": "def-use",
+  "fault": "The blue ball reuses the DEF name RedPost, so the later USE resolves to the ball.",
+  "viewer_sees": "The right-hand object is a blue ball instead of a red post.",
+  "spec": "error: DEF names must be unique within a scope (a name may not be redefined with a different node)",
+  "xsd_valid": false,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "4 root nodes; 11.8% non-background pixels; console errors 0, warnings 0; 4.9% of pixels differ from twin",
+  "twin": "twin-13.x3d",
+  "engine_disagrees": false
+ },
+ "twin-13.x3d": {
+  "category": "def-use",
+  "intent": "A red post on the left, a blue ball in the middle, and a second red post on the right which is a reuse of the first.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "4 root nodes; 11.1% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-14.x3d": {
+  "category": "containment",
+  "fault": "Material is placed directly in Shape instead of inside Appearance.",
+  "viewer_sees": "The cube is rendered white or default, or the parser rejects the node.",
+  "spec": "error: Shape children are only appearance and geometry; Material belongs in Appearance",
+  "xsd_valid": false,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 11.1% non-background pixels; console errors 0, warnings 1; 9.1% of pixels differ from twin; warning: XML Parser: Container field for node Material not found. Unknown field 'material' in node class Shape.",
+  "twin": "twin-14.x3d",
+  "engine_disagrees": false
+ },
+ "twin-14.x3d": {
+  "category": "containment",
+  "intent": "A green cube given its colour through a Material.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 11.1% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-15.x3d": {
+  "category": "angle-units",
+  "fault": "The rotation angle is written as 90, which X3D reads as ninety radians.",
+  "viewer_sees": "The door is at an arbitrary angle (about 1.9 rad), not a right angle.",
+  "spec": "legal, renders wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "3 root nodes; 6.7% non-background pixels; console errors 0, warnings 0; 2.6% of pixels differ from twin",
+  "twin": "twin-15.x3d",
+  "engine_disagrees": false
+ },
+ "twin-15.x3d": {
+  "category": "angle-units",
+  "intent": "A door hinged on its left edge and swung open by a quarter turn (ninety degrees).",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "3 root nodes; 4.4% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-16.x3d": {
+  "category": "angle-units",
+  "fault": "fieldOfView is given as 60 (degrees) but is in radians and must be in (0, pi).",
+  "viewer_sees": "Extremely distorted or wrongly clamped view of the box.",
+  "spec": "error: Viewpoint fieldOfView must be in the range (0, pi)",
+  "xsd_valid": false,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 19.8% non-background pixels; console errors 0, warnings 0; 8.8% of pixels differ from twin",
+  "twin": "twin-16.x3d",
+  "engine_disagrees": false
+ },
+ "twin-16.x3d": {
+  "category": "angle-units",
+  "intent": "A wide-angle (sixty degree) view of a four metre box seen from twelve metres.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 11.1% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-17.x3d": {
+  "category": "navigation-lighting",
+  "fault": "The headlight is switched off and the scene has no other light, so the lit sphere is unlit.",
+  "viewer_sees": "A black sphere on the background.",
+  "spec": "legal, renders wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "3 root nodes; 2.1% non-background pixels; console errors 0, warnings 0; 12.5% of pixels differ from twin",
+  "twin": "twin-17.x3d",
+  "engine_disagrees": false
+ },
+ "twin-17.x3d": {
+  "category": "navigation-lighting",
+  "intent": "A yellow sphere lit by the default headlight.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "3 root nodes; 14.5% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-18.x3d": {
+  "category": "lod-switch",
+  "fault": "whichChoice is 3, counted from one, but choices are indexed from zero so index 3 selects nothing.",
+  "viewer_sees": "Nothing is drawn.",
+  "spec": "legal, renders wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 2.1% non-background pixels; console errors 0, warnings 0; 3.8% of pixels differ from twin",
+  "twin": "twin-18.x3d",
+  "engine_disagrees": false
+ },
+ "twin-18.x3d": {
+  "category": "lod-switch",
+  "intent": "A switch of three shapes (box, sphere, cone) set to show the third one, the blue cone.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 5.9% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-19.x3d": {
+  "category": "material-range",
+  "fault": "shininess is 50 where the legal range is 0 to 1.",
+  "viewer_sees": "Rock-hard tiny highlight (value clamps to 1).",
+  "spec": "error: Material shininess must lie in [0,1]",
+  "xsd_valid": false,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 14.5% non-background pixels; console errors 0, warnings 0; 1.4% of pixels differ from twin",
+  "twin": "twin-19.x3d",
+  "engine_disagrees": false
+ },
+ "twin-19.x3d": {
+  "category": "material-range",
+  "intent": "A red glossy sphere with a moderate highlight.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 14.4% non-background pixels; console errors 0, warnings 0"
+ },
+ "fault-20.x3d": {
+  "category": "lights",
+  "fault": "The DirectionalLight direction is the zero vector.",
+  "viewer_sees": "Sphere is black or lit incorrectly.",
+  "spec": "error: DirectionalLight direction must be a non-zero vector",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "4 root nodes; 2.1% non-background pixels; console errors 0, warnings 0; 5.8% of pixels differ from twin",
+  "twin": "twin-20.x3d",
+  "engine_disagrees": false
+ },
+ "twin-20.x3d": {
+  "category": "lights",
+  "intent": "A grey sphere lit from straight above by a sun, with the headlight off.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "4 root nodes; 7.9% non-background pixels; console errors 0, warnings 0"
+ },
+ "decoy-01.x3d": {
+  "category": "decoy",
+  "intent": "Two crates facing each other: the left one is a mirror image of the right, made with a negative scale.",
+  "why_suspicious": "Negative scale looks like a bad value, but mirroring is legal.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "3 root nodes; 8.5% non-background pixels; console errors 0, warnings 0"
+ },
+ "decoy-02.x3d": {
+  "category": "decoy",
+  "intent": "A coloured cube using separate colour indices and a Color list shorter than the vertex list.",
+  "why_suspicious": "Two colours for eight vertices looks like a count mismatch, but colorIndex legally maps vertices to colours.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2 root nodes; 13.4% non-background pixels; console errors 0, warnings 0"
+ },
+ "decoy-03.x3d": {
+  "category": "decoy",
+  "intent": "Spinning-looking orientations: rotation angles outside the 0 to two-pi range, including a negative one.",
+  "why_suspicious": "Angles 7.0, negative and 4pi look out of range but SFRotation angles are unbounded.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "4 root nodes; 17.0% non-background pixels; console errors 0, warnings 0"
+ },
+ "decoy-04.x3d": {
+  "category": "decoy",
+  "intent": "A DEFed shape inside an unselected Switch child is reused by USE elsewhere; an empty LOD range list is also used.",
+  "why_suspicious": "USE of a node inside a Switch that shows nothing, and an empty LOD range, look broken but are legal.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "4 root nodes; 8.0% non-background pixels; console errors 0, warnings 0"
+ },
+ "decoy-05.x3d": {
+  "category": "decoy",
+  "intent": "A prototype whose body defines a node and reuses it internally, instanced once with defaults only and once with an override.",
+  "why_suspicious": "Instance with no fieldValue and a USE inside a proto body look unfinished, but defaults and body-internal reuse are legal.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "3 root nodes; 10.9% non-background pixels; console errors 0, warnings 0"
+ }
+}

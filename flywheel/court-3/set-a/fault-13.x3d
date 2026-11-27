@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <component name='Navigation' level='2'/>
+    <meta name='description' content='Walking into the wall named Wall fires the collision event: the Collision node holds the Wall geometry and its collideTime starts a flash timer.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <Collision DEF='Hit'/>
+    <Transform DEF='Wall' translation='0 0 -2'><Shape><Appearance><Material diffuseColor='0.5 0.5 0.5'/></Appearance><Box size="6 3 0.3"/></Shape></Transform>
+    <TimeSensor DEF='Flash' cycleInterval='0.5'/>
+    <ROUTE fromNode='Hit' fromField='collideTime' toNode='Flash' toField='set_startTime'/>
+  </Scene>
+</X3D>

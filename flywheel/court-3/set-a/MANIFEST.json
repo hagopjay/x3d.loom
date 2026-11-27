@@ -1,0 +1,388 @@
+{
+ "fault-01.x3d": {
+  "category": "route-wiring",
+  "fault": "TimeSensor ROUTE source field is misspelt fraction_change instead of fraction_changed",
+  "viewer_sees": "The red box never rotates (route dropped); rotation stayed 0 0 1 0 over 3 s",
+  "spec": "error: ROUTE fromField must name an existing output field",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin rotation advanced 0 -> 4.7 rad over 3 s",
+  "twin": "twin-01.x3d"
+ },
+ "twin-01.x3d": {
+  "category": "route-wiring",
+  "intent": "A red box named Spinner rotates continuously about the vertical axis, one turn every 4 seconds.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin rotation advanced 0 -> 4.7 rad over 3 s"
+ },
+ "fault-02.x3d": {
+  "category": "route-type",
+  "fault": "The interpolator SFVec3f output is routed to Lamp set_rotation (SFRotation) instead of set_translation",
+  "viewer_sees": "The lamp does not move; translation stayed -3 0 0 over 3 s (X_ITE: 'source field type must match destination')",
+  "spec": "error: ROUTE source and destination field types must match",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin translation swept -2.8 .. 2.8",
+  "twin": "twin-02.x3d"
+ },
+ "twin-02.x3d": {
+  "category": "route-type",
+  "intent": "A lamp box named Lamp slides from the left to the right of the view and back, driven by a clock.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin translation swept -2.8 .. 2.8"
+ },
+ "fault-03.x3d": {
+  "category": "route-access",
+  "fault": "ROUTE fromField is Leader set_translation (an inputOnly event) instead of translation_changed",
+  "viewer_sees": "legal per X_ITE only: engine accepted it and Follower still followed; per the standard the route source is invalid",
+  "spec": "error: ROUTE source must be an outputOnly/inputOutput event",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "same motion in twin",
+  "twin": "twin-03.x3d",
+  "engine_disagrees": true
+ },
+ "twin-03.x3d": {
+  "category": "route-access",
+  "intent": "A leader box moves along x under animation; a second box named Follower copies the leader position by a ROUTE from the leader translation output.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "same motion in twin"
+ },
+ "fault-04.x3d": {
+  "category": "timing-loop",
+  "fault": "TimeSensor has loop=false with a startTime long in the past, though the pulse is meant to repeat forever",
+  "viewer_sees": "The indicator never pulses; scale stayed 1 1 1 and isActive false over 6 s",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin scale cycled 1.2 .. 1.9, isActive true",
+  "twin": "twin-04.x3d"
+ },
+ "twin-04.x3d": {
+  "category": "timing-loop",
+  "intent": "A pulsing indicator named Pulse grows and shrinks forever, one pulse every 1.5 seconds.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin scale cycled 1.2 .. 1.9, isActive true"
+ },
+ "fault-05.x3d": {
+  "category": "route-wiring",
+  "fault": "ROUTE toNode is door but the node is DEF Door (case mismatch)",
+  "viewer_sees": "The door never swings; rotation stayed 0 0 1 0 (X_ITE: unknown named node 'door')",
+  "spec": "error: ROUTE toNode must name a DEF-ed node in scope",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin rotation varied 0.4 .. 1.4",
+  "twin": "twin-05.x3d"
+ },
+ "twin-05.x3d": {
+  "category": "route-wiring",
+  "intent": "A door panel named Door swings open about its hinge and then closes, repeating every 6 seconds.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin rotation varied 0.4 .. 1.4"
+ },
+ "fault-06.x3d": {
+  "category": "interpolator-keys",
+  "fault": "PositionInterpolator has three keys but only two keyValue triples",
+  "viewer_sees": "The cabin follows a wrong path and never reaches 6; y rose to 3 and stopped there in the 4 s sampled, instead of 0,3,6",
+  "spec": "error: keyValue count must equal key count",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin y reached up to 5.27",
+  "twin": "twin-06.x3d"
+ },
+ "twin-06.x3d": {
+  "category": "interpolator-keys",
+  "intent": "An elevator box named Cabin rises through three floors at heights 0, 3 and 6 with equal timing over 6 seconds, then jumps back and repeats.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin y reached up to 5.27"
+ },
+ "fault-07.x3d": {
+  "category": "interpolator-keys",
+  "fault": "ScalarInterpolator key list 0 0.8 0.5 is not non-decreasing (should be 0 0.5 1)",
+  "viewer_sees": "The fade is irregular: transparency hits 0 at about 3 s then is back near 0.9 and ramps down again instead of holding opaque",
+  "spec": "error: interpolator keys must be non-decreasing",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin transparency 1 -> 0 over first half, then 0 hold, restart at cycle end",
+  "twin": "twin-07.x3d"
+ },
+ "twin-07.x3d": {
+  "category": "interpolator-keys",
+  "intent": "A panel named Fader fades from invisible to opaque over the first half of an 8 second cycle, then holds fully opaque.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin transparency 1 -> 0 over first half, then 0 hold, restart at cycle end"
+ },
+ "fault-08.x3d": {
+  "category": "pointing-sensor",
+  "fault": "TouchSensor sits in a different Group from the sphere, so it is not a sibling of the geometry it should sense",
+  "viewer_sees": "Clicking the sphere does nothing; Touch.isOver and Spin.isActive stayed false with real mouse events",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin isOver true and Spin.isActive true after click",
+  "twin": "twin-08.x3d"
+ },
+ "twin-08.x3d": {
+  "category": "pointing-sensor",
+  "intent": "Clicking the green sphere named Button starts a spin timer: the TouchSensor touchTime starts the clock Spin and the clock becomes active.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin isOver true and Spin.isActive true after click"
+ },
+ "fault-09.x3d": {
+  "category": "drag-sensor",
+  "fault": "PlaneSensor minPosition 2 0 and maxPosition 0 0 are swapped (min greater than max leaves x unconstrained)",
+  "viewer_sees": "Dragging pulls the handle past the limit; translation_changed x reached 4.92 after a drag",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin clamped at x=2",
+  "twin": "twin-09.x3d"
+ },
+ "twin-09.x3d": {
+  "category": "drag-sensor",
+  "intent": "A slider handle named Handle can be dragged by the pointer horizontally but must stay within x from 0 to 2 and fixed at y equal to 0.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin clamped at x=2"
+ },
+ "fault-10.x3d": {
+  "category": "trigger-toggle",
+  "fault": "The clock is left enabled (default) so the spinner runs from load, though it should wait for the first click",
+  "viewer_sees": "The cube spins from load; first click only stops it",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "reasoned only: needs EventUtilities which the kit does not ship",
+  "twin": "twin-10.x3d"
+ },
+ "twin-10.x3d": {
+  "category": "trigger-toggle",
+  "intent": "A cube named Spinner stays still until the user clicks the red ball; each click toggles the spin clock on or off.",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "reasoned: reasoned only: needs EventUtilities which the kit does not ship"
+ },
+ "fault-11.x3d": {
+  "category": "follower",
+  "fault": "PositionDamper tau is 0 (no smoothing) instead of 0.5",
+  "viewer_sees": "The chasing ball moves in lockstep with the target, no lag; x difference <= 0.1 in all samples",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin chaser lagged by several units (-2.58 vs 3)",
+  "twin": "twin-11.x3d"
+ },
+ "twin-11.x3d": {
+  "category": "follower",
+  "intent": "A target ball named Target moves right over 2 seconds; a second ball named Chaser follows it with a smooth lag using a damper (time constant 0.5 s), so it trails behind the target.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin chaser lagged by several units (-2.58 vs 3)"
+ },
+ "fault-12.x3d": {
+  "category": "environment-sensor",
+  "fault": "ProximitySensor size is 0 0 0 (disabled) instead of 30 30 30",
+  "viewer_sees": "The porch lamp never turns on; Zone.isActive and light on stayed false",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin isActive true, light on",
+  "twin": "twin-12.x3d"
+ },
+ "twin-12.x3d": {
+  "category": "environment-sensor",
+  "intent": "A lamp named Porch turns on while the viewer is inside a 30 by 30 by 30 zone centred on the origin; the viewer starts at 0 0 10, inside the zone.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin isActive true, light on"
+ },
+ "fault-13.x3d": {
+  "category": "environment-sensor",
+  "fault": "The Wall Shape is a sibling of the Collision node instead of its child",
+  "viewer_sees": "The wall is not collidable and no collideTime is produced",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "reasoned only: needs avatar motion",
+  "twin": "twin-13.x3d"
+ },
+ "twin-13.x3d": {
+  "category": "environment-sensor",
+  "intent": "Walking into the wall named Wall fires the collision event: the Collision node holds the Wall geometry and its collideTime starts a flash timer.",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "reasoned: reasoned only: needs avatar motion"
+ },
+ "fault-14.x3d": {
+  "category": "key-sensor",
+  "fault": "StringSensor enteredText is routed to the label instead of finalText",
+  "viewer_sees": "The label shows partial text on every keystroke",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "reasoned only: KeyDeviceSensor/Text chunks not shipped",
+  "twin": "twin-14.x3d"
+ },
+ "twin-14.x3d": {
+  "category": "key-sensor",
+  "intent": "A label named Echo shows the typed word only after Enter is pressed: a StringSensor finalText feeds the label, so partial typing is not displayed.",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "reasoned: reasoned only: KeyDeviceSensor/Text chunks not shipped"
+ },
+ "fault-15.x3d": {
+  "category": "switch-sequencer",
+  "fault": "IntegerSequencer last keyValue is 3 but the Switch has only choices 0..2",
+  "viewer_sees": "For the last quarter of each cycle whichChoice is 3 (out of range) so no lamp is shown",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "reasoned only: IntegerSequencer needs EventUtilities which the kit does not ship",
+  "twin": "twin-15.x3d"
+ },
+ "twin-15.x3d": {
+  "category": "switch-sequencer",
+  "intent": "Three lamps in a Switch named Lamps light one at a time in a repeating cycle of 0, 1, 2, 0: an IntegerSequencer feeds whichChoice every second.",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "reasoned: reasoned only: IntegerSequencer needs EventUtilities which the kit does not ship"
+ },
+ "fault-16.x3d": {
+  "category": "script",
+  "fault": "Script handler function is named onTick but the inputOnly field is named tick, so it is never called",
+  "viewer_sees": "The readout stays at 'ticks: 0'",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "reasoned only: Scripting chunk not shipped",
+  "twin": "twin-16.x3d"
+ },
+ "twin-16.x3d": {
+  "category": "script",
+  "intent": "A Script named Counter counts ticks of a one second clock and writes a label such as ticks: 3 into the Text node Readout.",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "reasoned: reasoned only: Scripting chunk not shipped"
+ },
+ "fault-17.x3d": {
+  "category": "viewpoint-binding",
+  "fault": "The Closeup Viewpoint is listed before Overview, so Closeup is bound at load",
+  "viewer_sees": "The scene opens at Closeup; Closeup.isBound true and Overview.isBound false at load",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin Overview.isBound true",
+  "twin": "twin-17.x3d"
+ },
+ "twin-17.x3d": {
+  "category": "viewpoint-binding",
+  "intent": "The scene opens at the wide viewpoint named Overview; the Closeup viewpoint is only reached by navigation.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin Overview.isBound true"
+ },
+ "fault-18.x3d": {
+  "category": "load-sensor",
+  "fault": "The watched Inline has load=false so it never loads and LoadSensor never reports isLoaded",
+  "viewer_sees": "The ready lamp stays off; Loader.isLoaded false over 2 s",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin Loader.isLoaded true, lamp on",
+  "twin": "twin-18.x3d"
+ },
+ "twin-18.x3d": {
+  "category": "load-sensor",
+  "intent": "A LoadSensor named Loader watches the Inline named Model and, once loaded, turns the lamp Ready on via isLoaded.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin Loader.isLoaded true, lamp on"
+ },
+ "fault-19.x3d": {
+  "category": "anchor-navigation",
+  "fault": "Anchor url fragment is #Closeup but the Viewpoint is DEF CloseUp (case mismatch)",
+  "viewer_sees": "Clicking the box does not change the view; CloseUp.isBound stayed false after a real click",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin CloseUp.isBound true after click",
+  "twin": "twin-19.x3d"
+ },
+ "twin-19.x3d": {
+  "category": "anchor-navigation",
+  "intent": "Clicking the blue box (an Anchor) jumps the view to the Viewpoint DEF named CloseUp.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin CloseUp.isBound true after click"
+ },
+ "fault-20.x3d": {
+  "category": "lod",
+  "fault": "LOD range is 20 5 (decreasing) instead of 5 20",
+  "viewer_sees": "Wrong level shown at distance 10: level_changed 2 (the box) instead of 1 (the sphere)",
+  "spec": "error: LOD range values must be increasing",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin level_changed 1",
+  "twin": "twin-20.x3d"
+ },
+ "twin-20.x3d": {
+  "category": "lod",
+  "intent": "A LOD node named Detail shows a detailed cylinder when the viewer is closer than 5 units, a sphere between 5 and 20 units and a simple box beyond 20 units; the viewer sits 10 units away so the sphere is the expected level.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "twin level_changed 1"
+ },
+ "decoy-01.x3d": {
+  "category": "route-wiring",
+  "intent": "Mirror follows Leader along x.",
+  "why_suspicious": "The Leader to Mirror ROUTE uses the plain name translation with no set_ or _changed affix, which a hasty reviewer may flag as a nonexistent field; the standard allows the plain name of an inputOutput field.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "console_errors": 0,
+  "witness_note": "loaded in X_ITE 16.8.0, console errors: 0; samples: 0.1110002 1 0,0.1110002 1 0 | 1.635 1 0,1.635 1 0 | -2.841 1 0,-2.841 1 0"
+ },
+ "decoy-02.x3d": {
+  "category": "timing-loop",
+  "intent": "Pulse scales continuously.",
+  "why_suspicious": "stopTime is set but smaller than startTime and loop is true, which looks like a clock that stops at once; per the standard a stopTime less than or equal to startTime is ignored.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "console_errors": 0,
+  "witness_note": "loaded in X_ITE 16.8.0, console errors: 0; samples: 1.429334 1.429334 1.429334,true | 1.977333 1.977333 1.977333,true | 1.344 1.344 1.344,true"
+ },
+ "decoy-03.x3d": {
+  "category": "interpolator-keys",
+  "intent": "Hopper stays at -3 for half the cycle then at 3.",
+  "why_suspicious": "Duplicate key value 0.5 looks like a keys error; the standard requires non-decreasing keys, so equal neighbours are legal and give a discontinuity.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "console_errors": 0,
+  "witness_note": "loaded in X_ITE 16.8.0, console errors: 0; samples: -3 0 0 | -3 0 0 | -3 0 0 | 3 0 0 | 3 0 0 | -3 0 0"
+ },
+ "decoy-04.x3d": {
+  "category": "route-wiring",
+  "intent": "Both spinners rotate from the shared clock.",
+  "why_suspicious": "Fan-in (two ROUTEs to Clock.set_startTime) and fan-out (one output to two interpolators) look like duplicate or conflicting routes; both are legal.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "console_errors": 0,
+  "witness_note": "loaded in X_ITE 16.8.0, console errors: 0; samples: 0 1 0 3.3976293782723,1 0 0 3.3976293782723 | 0 1 0 4.97627815852881,1 0 0 4.97627815852881 | 0 1 0 0.285884567161799,1 0 0 0.285884567161799"
+ },
+ "decoy-05.x3d": {
+  "category": "drag-sensor",
+  "intent": "Handle can be dragged anywhere.",
+  "why_suspicious": "min greater than max looks like swapped limits; per the standard this means unconstrained on that axis, which is exactly the intent.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "console_errors": 0,
+  "witness_note": "loaded in X_ITE 16.8.0, console errors: 0; samples: 0 0 0 | 4.919684 2.95181 0"
+ }
+}

@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content='A Script named Counter counts ticks of a one second clock and writes a label such as ticks: 3 into the Text node Readout.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <TimeSensor DEF='Clock' cycleInterval='1' loop='true'/>
+    <Script DEF='Counter'>
+      <field name='tick' type='SFTime' accessType='inputOnly'/>
+      <field name='label' type='SFString' accessType='outputOnly'/>
+<![CDATA[ecmascript:
+var n = 0;
+function tick(value) { n++; label = 'ticks: ' + n; }
+]]>
+    </Script>
+    <Shape><Appearance><Material diffuseColor='1 1 1'/></Appearance><Text DEF='Readout' string='"ticks: 0"'/></Shape>
+    <ROUTE fromNode='Clock' fromField='cycleTime' toNode='Counter' toField='tick'/>
+    <ROUTE fromNode='Counter' fromField='label' toNode='Readout' toField='set_string'/>
+  </Scene>
+</X3D>

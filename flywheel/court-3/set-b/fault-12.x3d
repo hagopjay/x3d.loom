@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Interchange' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='title' content='fault-12.x3d'/>
+    <meta name='description' content='Two identical wheels side by side: one defined, the second a reuse of the first.'/>
+  </head>
+  <Scene>
+    <Viewpoint position='0 0 8' description='Front'/>
+    <Transform translation='-2 0 0'>
+      <Shape DEF='Wheel'><Appearance><Material diffuseColor='0.2 0.2 0.2'/></Appearance><Cylinder radius='1' height='0.4'/></Shape>
+    </Transform>
+    <Transform translation='2 0 0'>
+      <Shape USE='wheel'/>
+    </Transform>
+
+  </Scene>
+</X3D>

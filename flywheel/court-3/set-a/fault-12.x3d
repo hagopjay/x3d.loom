@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <component name='EnvironmentalSensor' level='1'/>
+    <component name='Lighting' level='2'/>
+    <meta name='description' content='A lamp named Porch turns on while the viewer is inside a 30 by 30 by 30 zone centred on the origin; the viewer starts at 0 0 10, inside the zone.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <ProximitySensor DEF='Zone' size='0 0 0'/>
+    <PointLight DEF='Porch' on='false' location='0 2 2'/>
+    <Transform><Shape><Appearance><Material diffuseColor='0.7 0.7 0.7'/></Appearance><Box/></Shape></Transform>
+    <ROUTE fromNode='Zone' fromField='isActive' toNode='Porch' toField='set_on'/>
+  </Scene>
+</X3D>

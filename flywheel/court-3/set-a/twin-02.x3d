@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <meta name='description' content='A lamp box named Lamp slides from the left to the right of the view and back, driven by a clock.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <Transform DEF='Lamp' translation='-3 0 0'><Shape><Appearance><Material diffuseColor='1 1 0'/></Appearance><Box/></Shape></Transform>
+    <TimeSensor DEF='Clock' cycleInterval='4' loop='true'/>
+    <PositionInterpolator DEF='Slide' key='0 0.5 1' keyValue='-3 0 0  3 0 0  -3 0 0'/>
+    <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Slide' toField='set_fraction'/>
+    <ROUTE fromNode='Slide' fromField='value_changed' toNode='Lamp' toField='set_translation'/>
+  </Scene>
+</X3D>

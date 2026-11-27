@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<X3D profile='Interchange' version='4.0'>
+  <head>
+    <meta name='description' content='A door panel named Door swings open about its hinge and then closes, repeating every 6 seconds.'/>
+    <meta name='title' content='behaviour test scene'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Cam' description='Front' position='0 0 10'/>
+    <Transform DEF='Door' center='-1 0 0' translation='1 0 0'><Shape><Appearance><Material diffuseColor='0.5 0.3 0.1'/></Appearance><Box size="2 3 0.2"/></Shape></Transform>
+    <TimeSensor DEF='Clock' cycleInterval='6' loop='true'/>
+    <OrientationInterpolator DEF='Swing' key='0 0.5 1' keyValue='0 1 0 0  0 1 0 1.5  0 1 0 0'/>
+    <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Swing' toField='set_fraction'/>
+    <ROUTE fromNode='Swing' fromField='value_changed' toNode='door' toField='set_rotation'/>
+  </Scene>
+</X3D>
