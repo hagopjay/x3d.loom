@@ -1,0 +1,26 @@
+{
+ "node": "OpacityMapVolumeStyle",
+ "date": "2026-11-27",
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha fa1672fe84a6",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 19/19",
+ "xite": "pass 19/19",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "the 4.0 XSD lacks transferFunction in its containerField enumeration (the fixture is checked against a copy that has it)",
+  "only a PixelTexture is read as a 2D transfer function (an ImageTexture is not: the white texel stands in); a 3D transfer function (PixelTexture3D, ComposedTexture3D, ImageTexture3D) is read as X_ITE does, at (r, r, r)",
+  "X_ITE reads the table at (r, g) of the colour the default ramp already made, which is (r, r): the spec's intensity against gradient is not what 16.6.0 does and the bridge copies 16.6.0",
+  "a changed transfer function picture is taken up by the bridge and not by X_ITE 16.6.0 (measured: a PixelTexture image written after load changes nothing there, a toggle of enabled does not help)",
+  "the 2D transfer function repeats in X_ITE unless repeatS and repeatT are false: voxel 255 then lands on texel 0 (the fixture sets repeatS and repeatT to false)"
+ ]
+}

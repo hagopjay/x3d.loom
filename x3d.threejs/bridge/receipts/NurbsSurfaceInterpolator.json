@@ -1,0 +1,27 @@
+{
+ "node": "NurbsSurfaceInterpolator",
+ "date": "2026-11-27",
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha fa1672fe84a6",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 52/52",
+ "xite": "pass 51/51",
+ "mode": "events (hard)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "weights: X_ITE 16.6.0 leaves the weights out of position_changed (0.75, 0.75, 0.25 at the middle of the quarter cylinder; the exact value is 0.7071, 0.7071, 0.25); this node follows the standard",
+  "normal_changed is a unit vector here; X_ITE 16.6.0 sends the cross product dS/du x dS/dv (same direction, the length of the cross product); the directions agree to 1e-5 and are what is compared",
+  "the surface is open (no uClosed / vClosed on the node)"
+ ],
+ "scope": [
+  "the point and the normal are read as the output events through the SAI; the normals compare as directions (normalised in the page, since the engines scale them differently)"
+ ]
+}

@@ -1,0 +1,23 @@
+{
+ "node": "SilhouetteEnhancementVolumeStyle",
+ "date": "2026-11-27",
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha fa1672fe84a6",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 10/10",
+ "xite": "pass 10/10",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "a constant volume draws nothing with this style whatever the parameters (X_ITE 16.6.0 drops every sample with no gradient)",
+  "the opacity is the alpha of a sample times the factor; nearly-saturating stacks hide small errors, so the faint case is the one that discriminates"
+ ]
+}

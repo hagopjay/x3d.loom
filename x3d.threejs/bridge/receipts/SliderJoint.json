@@ -1,0 +1,24 @@
+{
+ "node": "SliderJoint",
+ "date": "2026-11-27",
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha fa1672fe84a6",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 6/6",
+ "xite": "pass 6/6",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "separation is measured along the axis between the two body origins, as in X_ITE's slider",
+  "sliderForce is applied by the bridge as a force along the axis; X_ITE 16.6.0 reads the field and never applies it",
+  "stopBounce is kept and not used by the slider"
+ ]
+}

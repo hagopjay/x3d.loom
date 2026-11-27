@@ -1,0 +1,72 @@
+{
+ "node": "NurbsTrimmedSurface",
+ "date": "2026-11-27",
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha fa1672fe84a6",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 26/26",
+ "xite": "pass 26/26",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "visual": {
+  "main": {
+   "iou": 1,
+   "coverOurs": 1,
+   "coverXite": 1,
+   "bboxOurs": [
+    64,
+    7,
+    238,
+    161
+   ],
+   "bboxXite": [
+    64,
+    7,
+    238,
+    161
+   ],
+   "nOurs": 4690,
+   "nXite": 4693,
+   "fgFracOurs": 0.06,
+   "fgFracXite": 0.06,
+   "mad": 0.03,
+   "psnr": 61.23,
+   "fgMeanOurs": [
+    114,
+    131,
+    93
+   ],
+   "fgMeanXite": [
+    114,
+    131,
+    93
+   ],
+   "bgOurs": [
+    0,
+    0,
+    0
+   ],
+   "bgXite": [
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "the trimmed surface is compared by the area and the bounding box of the triangles that are kept (the two engines cut the grid into different triangles at the contour, so triangle corners are not compared); the picture is compared by silhouette and mean colour",
+  "a contour that crosses itself, or two contours that cross each other, is cut by parity in both engines but the bridge was only tested with contours that do not cross",
+  "the new corners take position, normal and texture coordinate from the grid triangle they fall in, as X_ITE does, so the cut edge is a polyline of the contour lying on the grid's flat triangles"
+ ],
+ "scope": [
+  "the contour is the tessellation of its curves (NurbsCurve2D at its own tessellation, ContourPolyline2D as written), scaled by the knot range; the kept part is where an odd number of contours contain the point, which makes a contour inside another a hole whichever way it runs (the standard asks for opposite directions)"
+ ]
+}

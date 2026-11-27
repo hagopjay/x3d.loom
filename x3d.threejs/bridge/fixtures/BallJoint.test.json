@@ -1,0 +1,90 @@
+{
+ "node": "BallJoint",
+ "mode": "scene",
+ "note": "A fixed pivot body and a sphere 2 m away on the horizontal, joined by a BallJoint at the pivot. The sphere swings under gravity and stays 2 m from the pivot, and a sideways kick (3 m/s along z) takes it out of the plane, which a ball joint allows. forceOutput names the anchor outputs raised. three.js bridge copy of the shared spec (same .x3d, same assertions): the one settle is 0.6 s where the shared spec waits 1.5 s. Measured 27 Nov 2026 in both engines (X_ITE 16.6.0 and this body, Chromium 158 SwiftShader), the ball is back at the pivot height at about 1.5 s (y 5.00 here, 4.92 in X_ITE, against the line y < 4.9) and crosses z = 0 at about 1.0 s (against |z| > 0.3), so the shared wait asks its questions at the two moments the answers flip, and X_ITE itself failed one run in three. At 0.5 to 0.75 s both engines are well inside every bound (y 3.2 to 3.9, |z| 0.78 to 1.23).",
+ "gaps": [
+  "the bridge solves joints as velocity rows with a 0.2 per step error correction; a long chain of joints needs more iterations",
+  "anchor outputs are local to each body, as in X_ITE; changing anchorPoint after load does not move the joint (it is fixed from the initial poses)",
+  "forceOutput ALL raises every output of the node"
+ ],
+ "steps": [
+  {
+   "expect": [
+    "N",
+    "anchorPoint",
+    [
+     0,
+     5,
+     0
+    ]
+   ]
+  },
+  {
+   "expect": [
+    "N",
+    "forceOutput",
+    [
+     "body1AnchorPoint",
+     "body2AnchorPoint"
+    ]
+   ]
+  },
+  {
+   "settle": 0.6
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Math.abs(Math.hypot(__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[0]-0,__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[1]-5,__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[2]-0)-2)<0.12",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "Math.abs(Math.hypot(X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[0]-0,X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[1]-5,X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[2]-0)-2)<0.12",
+    true
+   ]
+  },
+  {
+   "nearv": [
+    "N",
+    "body1AnchorPoint",
+    [
+     0,
+     0,
+     0
+    ],
+    0.05
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "Math.abs(__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[2])>0.3",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "Math.abs(X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[2])>0.3",
+    true
+   ]
+  },
+  {
+   "only": "ours",
+   "js": [
+    "__worlds[__worlds.length-1].nodes.find(n=>n.def==='B2').f.position[1]<4.9",
+    true
+   ]
+  },
+  {
+   "only": "xite",
+   "js": [
+    "X3D.getBrowser('#c').currentScene.getNamedNode('B2').position[1]<4.9",
+    true
+   ]
+  }
+ ]
+}

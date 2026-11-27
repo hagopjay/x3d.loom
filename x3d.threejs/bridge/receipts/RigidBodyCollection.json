@@ -1,0 +1,25 @@
+{
+ "node": "RigidBodyCollection",
+ "date": "2026-11-27",
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha fa1672fe84a6",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 18/18",
+ "xite": "pass 18/18",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "the bridge engine is its own: sequential impulses at 240 Hz, spheres and boxes (cylinder and cone stand in as bounding spheres), one friction and bounce for the whole collection; a Cone is found by its bottomRadius (it fell through the ground before the fix) and rests at the height of its bounding sphere, 1.41 against 1.39 in X_ITE 16.6.0 (the fixture asserts 0.8 to 2.0)",
+  "autoDisable, disableTime and the disable speeds are kept but never put a body to sleep",
+  "centerOfMass is kept and not used; joints come in their own batch",
+  "contactSurfaceThickness, preferAccuracy and set_contacts are kept; CollisionSensor/Contact nodes come later"
+ ]
+}

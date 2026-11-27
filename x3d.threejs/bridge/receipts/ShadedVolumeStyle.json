@@ -1,0 +1,25 @@
+{
+ "node": "ShadedVolumeStyle",
+ "date": "2026-11-27",
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha fa1672fe84a6",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 19/19",
+ "xite": "pass 19/19",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "the gradient is taken one voxel either side of the sample in the red channel, so a volume with no empty margin has no gradient at its border and draws nothing (as in X_ITE)",
+  "only the headlight and up to three more lights act; their attenuation, radius and spot cone are not applied (X_ITE applies them)",
+  "shadows and phaseFunction are kept and not used (X_ITE does not use them either)",
+  "anisotropic dimensions tilt X_ITE's normals differently from the bridge's (the bridge divides the gradient by the dimensions); the test uses a cube"
+ ]
+}

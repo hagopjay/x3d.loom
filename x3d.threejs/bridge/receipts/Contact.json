@@ -1,0 +1,24 @@
+{
+ "node": "Contact",
+ "date": "2026-11-27",
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha fa1672fe84a6",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 30/30",
+ "xite": "pass 30/30",
+ "mode": "events (hard)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "body1, body2, geometry1, geometry2: the bridge fills them, X_ITE leaves them null (checked on each side)",
+  "the sign of contactNormal depends on the order of the pair and flips with nested shapes: only its length and axis are asserted",
+  "a Contact routed to set_contacts is held and does nothing, as in X_ITE"
+ ]
+}

@@ -567,12 +567,13 @@ class Body {
     else if (t === 'Background' || t === 'TextureBackground') this.applyBackground();
     else if (t === 'NavigationInfo') this.applyNavigation();
     else if (t === 'Viewpoint' || t === 'OrthoViewpoint') this.viewpointChanged(node, field);
-    else if (t === 'Coordinate' || t === 'Color' || t === 'Normal' || t === 'TextureCoordinate') this.geometryChanged(node);
+    else if (t === 'Coordinate' || t === 'CoordinateDouble' || t === 'Color' || t === 'Normal' || t === 'TextureCoordinate') this.geometryChanged(node);
     const sp = R.bridge.specs.get(t); if (sp && (sp.geometry || sp.lines || sp.points) && sp.changed) sp.changed(this, node, field);   // the geometry nodes of the shared bridge keep their own change hooks
     if (T3.changed[t]) T3.changed[t](this, node, field);
   }
   geometryChanged(n) {
-    for (const r of [...this.rec.values()]) if (r.node && r.node.type === 'Shape' && r.node.f.geometry && ['coord', 'color', 'normal', 'texCoord'].some((k) => r.node.f.geometry.f[k] === n)) this.rebuildShape(r.node);
+    // spec.refs: more node fields a shared-bridge geometry is made from (the NURBS controlPoint), as the Babylon body reads them in body-br.js
+    for (const r of [...this.rec.values()]) { const g = r.node && r.node.type === 'Shape' && r.node.f.geometry; if (!g) continue; const sp = R.bridge.specs.get(g.type); if (['coord', 'color', 'normal', 'texCoord', ...((sp && sp.refs) || [])].some((k) => g.f[k] === n)) this.rebuildShape(r.node); }
   }
   rebuildShape(shape) {   // the Shape's objects are made again from its nodes, in the same place in its parent
     const r = this.rec.get(shape.id); if (!r) return; if (shape.f.geometry) this.geoCache.delete(shape.f.geometry.id);

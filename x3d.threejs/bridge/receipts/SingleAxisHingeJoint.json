@@ -1,0 +1,24 @@
+{
+ "node": "SingleAxisHingeJoint",
+ "date": "2026-11-27",
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.threejs reader (shared with the Babylon bridge) + three.js body, bundle sha fa1672fe84a6",
+  "three": "187",
+  "glRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "xite": "{\"name\":\"X_ITE\",\"version\":\"16.6.0\"}"
+ },
+ "ok": true,
+ "ours": "pass 9/9",
+ "xite": "pass 9/9",
+ "mode": "scene (look: reference bounds)",
+ "oursOk": true,
+ "xiteOk": true,
+ "comparison": "passed",
+ "msg": "",
+ "gaps": [
+  "minAngle, maxAngle, stopBounce and stopErrorCorrection are applied by the bridge (one-sided limit rows); X_ITE 16.6.0 makes a btHingeConstraint without limits, so it ignores them (see the limit fixture lines)",
+  "angle is signed in the bridge and unsigned in X_ITE (the angle of the axis-angle rotation)",
+  "angleRate comes from the angle change over the time since the last tick; X_ITE multiplies by the frame rate"
+ ]
+}
