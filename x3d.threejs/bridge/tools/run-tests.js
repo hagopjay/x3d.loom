@@ -107,6 +107,15 @@ async function main() {
             if (want && m.error) { r.oursOk = false; r.ours += ` | compare ${name}: ${m.error}`; } else if (want) { const bad = judgeVisual(m, want); if (bad.length) { r.oursOk = false; r.ours += ` | compare ${name}: ${bad.join('; ')}`; } }
           }
         } if (!Object.keys(r.visual).length) delete r.visual; }
+      // jsmap values: the two engines' numbers (flat or nested lists) must agree to a relative tolerance (the Babylon runner has this check, the same rule; opt.sort compares triples as sets). Until 28 Nov 2026 this runner kept the maps and dropped them here, so an `agree` list never failed.
+      if (r.map && r.mapX) for (const [name, tol, opt] of spec.agree || []) {
+        const fl = (x) => (Array.isArray(x) ? x.flatMap(fl) : [x]); let a = fl(r.map[name]), c = fl(r.mapX[name]);
+        if (opt && opt.sort && a.length % 3 === 0 && c.length % 3 === 0) { const rows = (x) => { const o = []; for (let i = 0; i < x.length; i += 3) o.push(x.slice(i, i + 3)); return o.sort((p, q) => p[0] - q[0] || p[1] - q[1] || p[2] - q[2]).flat(); }; a = rows(a); c = rows(c); }
+        if (opt && opt.rot && c.length === 3) { const [ax, ay, az, an] = opt.rot, l = Math.hypot(ax, ay, az) || 1, k = [ax / l, ay / l, az / l], co = Math.cos(an), si = Math.sin(an), d = k[0] * c[0] + k[1] * c[1] + k[2] * c[2], x = [k[1] * c[2] - k[2] * c[1], k[2] * c[0] - k[0] * c[2], k[0] * c[1] - k[1] * c[0]]; c = c.map((v, i) => v * co + x[i] * si + k[i] * d * (1 - co)); }   // opt.rot: a documented frame difference, as in the Babylon runner
+        if (opt && opt.quat && a.length === 4 && c.length === 4) { const q = (r) => { const l = Math.hypot(r[0], r[1], r[2]) || 1, h = Math.sin(r[3] / 2), w = Math.cos(r[3] / 2), v = [r[0] / l * h, r[1] / l * h, r[2] / l * h, w]; return v[3] < 0 ? v.map((x) => -x) : v; }; a = q(a); c = q(c); }   // opt.quat: the same turn may be written with the axis flipped and the angle negated
+        const sc = Math.max(1, ...c.map(Math.abs));
+        if (!(a.length === c.length && a.every((v, i) => Math.abs(v - c[i]) <= tol * sc))) { r.oursOk = false; r.ours += ` | ${name}: ours ${JSON.stringify(r.map[name])} vs X_ITE ${JSON.stringify(r.mapX[name])} (tol ${tol})`; }
+      } else if ((spec.agree || []).length && !noXite) { r.oursOk = false; r.ours += ' | agree: a jsmap value is missing from one engine'; }
       delete r.shotsOurs; delete r.shotsXite; delete r.map; delete r.mapX;
       verdict(r, spec, noXite, errs.slice(errorStart));
       for (const k of ['gaps', 'scope', 'lookNote']) if (spec[k] && spec[k].length) r[k] = spec[k];

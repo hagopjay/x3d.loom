@@ -8,6 +8,12 @@
    "settle": 1
   },
   {
+   "jsmap": [
+    "(()=>{const r=x=>Math.round(x*1000)/1000; if(eng.name==='ours'){const out=[]; window.__body.scene.updateMatrixWorld(true); window.__body.scene.traverse(o=>{ if(o.isMesh&&o.visible){const g=o.geometry; g.computeBoundingBox(); const b=g.boundingBox; out.push((g.index? g.index.count : g.attributes.position.count)/3, ...b.min.toArray().map(r), ...b.max.toArray().map(r))}}); return out} const sc=X3D.getBrowser('#c').currentScene; const shapes=[]; const walk=(n)=>{ if(!n) return; if(n.getNodeTypeName()==='Shape'){shapes.push(n)} else if(n.children){ for(const c of n.children) walk(c)} }; for(const n of sc.rootNodes) walk(n); const out=[]; for(const s of shapes){ const iv=s.geometry.getValue(), m=iv.getBBox().matrix; out.push(iv.vertexCount/3, r(m[12]-m[0]),r(m[13]-m[5]),r(m[14]-m[10]), r(m[12]+m[0]),r(m[13]+m[5]),r(m[14]+m[10])) } return out})()",
+    "geo"
+   ]
+  },
+  {
    "shot": "main"
   }
  ],
@@ -17,5 +23,11 @@
    "mad": 3,
    "fg": 8
   }
- }
+ },
+ "agree": [
+  [
+   "geo",
+   0.002
+  ]
+ ]
 }
