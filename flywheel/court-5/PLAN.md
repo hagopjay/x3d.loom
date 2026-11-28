@@ -116,10 +116,10 @@ above or a gate below, except P6, which only arm S addresses.
 | G2 dry run | `dry-run/run.sh` passes on the frozen scripts with the frozen kernel | passes today on the scaffold (old `ebe969b`, new `2943b78`, X_ITE 16.8.0); passed again 28 Nov on the frozen kernel (old `2943b78`, new `4040fe1`) |
 | G3 seal | three fresh authors, forbidden every repository and memory, return the fixed form and a hash | DONE 28 Nov: arm S and sets a, b, c sealed (owner's go 13:49 UTC); hashes and the authors' counts are in `PREREG.md`; 60 faults, 60 twins, 15 decoys in arm F |
 | G4 freeze | kernel commit and `PREREG.md` pushed before any archive is opened | DONE 28 Nov: x3d_mcp `4040fe1`, `PREREG.md` in the commit that carries this line |
-| G5 open | intent stripped, both kernels run once, play test run once | |
-| G6 read | a fresh second reader, blind to which kernel said what, and the editor's reading written first | |
-| G7 results | `RESULTS.md`, ledger turn, fold-back to x3d.docs | |
-| G8 retire | the set is marked seen | |
+| G5 open | intent stripped, both kernels run once, play test run once | DONE 28 Nov: four archives opened after the freeze, hashes matched |
+| G6 read | a fresh second reader, blind to which kernel said what, and the editor's reading written first | DONE 28 Nov: two blind readers, one per arm, `results/arm-*/reader-verdicts.json`; the editor's reading was NOT written first (a departure, listed in `RESULTS.md`) |
+| G7 results | `RESULTS.md`, ledger turn, fold-back to x3d.docs | DONE 28 Nov: `RESULTS.md`; headline 20 of 56 for both kernels |
+| G8 retire | the set is marked seen | court 5 is a seen set from 28 Nov |
 
 ## The stranger arm: open, and the owner's choice
 
