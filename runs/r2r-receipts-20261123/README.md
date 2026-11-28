@@ -1,5 +1,9 @@
 # Receipts for the R2R runs of 23 November 2026
 
+> **Erratum, 28 Nov 2026:** the sweep was fourteen named folders with a 400,000-byte cap (514 files), not every
+> `.x3d` of at most 2 MB as the manifests say. See [ERRATA.md](ERRATA.md). The first full sweep is in
+> `runs/r2r-weekly-20261128/`.
+
 Everything the three sealed R2R runs read, so they can be checked and repeated. Made on a cloud machine (15 GB,
 4 cores) on 23 Nov 2026. Nothing here was sent to any outside project.
 

@@ -4,7 +4,7 @@
 # Needs: the x3d_mcp checkout (LOOM_FORK), and for ifc-truss the x3d.demo checkout (X3D_DEMO) and ifcopenshell.
 # fourbar also needs `npm install` in x3d.physics/rigid-engines; its engine runs are re-stepped here into .work/.
 # tensegrity needs numpy and Node (the page's solver is held against the bank, then the page is assembled).
-# footbridge needs numpy and openseespy (the independent solver), and Node for its page.
+# footbridge needs numpy, openseespy (the independent solver) and Node.
 set -eu
 HERE="$(cd "$(dirname "$0")" && pwd)"; V1="$(cd "$HERE/.." && pwd)"
 STUDY="$1"; ROOT="$HERE/$STUDY"
@@ -20,7 +20,7 @@ case "$STUDY" in
   fourbar)   (cd "$ROOT" && python3 -I fourbar.py build && node run_engines.js && python3 -I check.py) > "$RUN/build.log" 2>&1 ;;
   ifc-truss) (cd "$ROOT" && python3 exchange.py build && python3 check.py) > "$RUN/build.log" 2>&1 ;;
   tensegrity) (cd "$ROOT" && python3 build.py && node page_solver_check.js && python3 check.py && python3 page/build_page.py) > "$RUN/build.log" 2>&1 ;;
-  footbridge) (cd "$ROOT" && python3 build.py && python3 check.py && { [ ! -f page/build_page.py ] || { node page_solver_check.js && python3 page/build_page.py; }; }) > "$RUN/build.log" 2>&1 ;;
+  footbridge) (cd "$ROOT" && python3 build.py && node page_solver_check.js && python3 check.py && python3 page/build_page.py) > "$RUN/build.log" 2>&1 ;;
   *) echo "unknown study: $STUDY"; exit 2 ;;
 esac
 "$LOOM" candidate "$ROOT" > "$RUN/candidate.json"

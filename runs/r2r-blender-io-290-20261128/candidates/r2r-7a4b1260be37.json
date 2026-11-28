@@ -1,0 +1,228 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+  "closure": "untested",
+  "closure_reason": "too few probes outside the rule to say",
+  "grade": "S",
+  "grade_word": "Suspected",
+  "missed_seen": 0,
+  "reasons": [
+   "leans on literal values (a fingerprint): the vocabulary lacks a word for what they share",
+   "rests on one failure and no confirmed probe"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-7a4b1260be37",
+ "instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "v:eq:0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 44,
+    "role": "test"
+   },
+   {
+    "dropped": "at:Extrusion@crossSection",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 5,
+    "role": "context"
+   },
+   {
+    "dropped": "p:Shape",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 1,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "v:eq:0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1",
+      "anc:Shape",
+      "at:Extrusion@crossSection"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where it sits inside a Shape and the place is Extrusion crossSection: the value is exactly `0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1`."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:eq:0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1",
+      "!p:Group",
+      "at:Extrusion@crossSection"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Extrusion crossSection: the value is exactly `0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1`, unless the parent is Group."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 0,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 0,
+   "probes": 4,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 4
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 1
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 0,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1112
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1247
+  },
+  "normative_reading": [],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 2,
+    "round": 1,
+    "rules_tested": [
+     "attr[v:eq:0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 & at:Extrusion@crossSection & p:Shape]"
+    ],
+    "tally": {
+     "widen/silent-ok": 2
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 26,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:eq:1 0.843 0 & anc:Shape & at:Material@diffuseColor]"
+    ],
+    "tally": {
+     "confirm/refuted": 10,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 3,
+    "round": 3,
+    "rules_tested": [
+     "attr[v:eq:0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 & at:Extrusion@crossSection & p:Shape]"
+    ],
+    "tally": {
+     "widen/silent-ok": 3
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 4,
+    "round": "audit",
+    "rules_tested": [
+     "attr[v:eq:0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 & at:Extrusion@crossSection & p:Shape]"
+    ],
+    "tally": {
+     "widen/silent-ok": 4
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "v:eq:0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1",
+    "at:Extrusion@crossSection",
+    "p:Shape"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-7a4b1260be37",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "Extrusion@crossSection"
+  ],
+  "sentence": "At one attribute where the place is Extrusion crossSection and the parent is Shape: the value is exactly `0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1`.",
+  "signature": "ZeroDivisionError at import_x3d.py:3054 scaledLoopVertex",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 1,
+   "explained_by_this_rule": 1,
+   "failures": 1,
+   "families": {
+    "natural-sweep": 1
+   },
+   "observed_by": {
+    "tool": 1
+   },
+   "with_known_good_twin": 0
+  },
+  "strays": {},
+  "tier": 4,
+  "trace": [
+   "seed v:eq:0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1, fenced to at:Extrusion@crossSection: explains 1, false alarms 1",
+   "+ p:Shape: explains 1, false alarms 0 (gain 1.00)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 5,
+   "rule": {
+    "all": [
+     "v:eq:0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1",
+     "p:Shape"
+    ],
+    "kind": "attr"
+   },
+   "status": "contradicted by passing files"
+  },
+  "vocabulary_gap": true
+ },
+ "rule": {
+  "all": [
+   "v:eq:0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1",
+   "at:Extrusion@crossSection",
+   "p:Shape"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the place is Extrusion crossSection and the parent is Shape: the value is exactly `0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1`.",
+ "signature": "ZeroDivisionError at import_x3d.py:3054 scaledLoopVertex",
+ "sources": [
+  {
+   "event": "ev-abf8569eb656",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/qwen3-8b/oneshot/obj-05.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1884
+   },
+   "sha256": "3e68ff3fc8048259cdec217b43c1e69751386126695beda9533f509560ef103d",
+   "twin": null
+  }
+ ],
+ "sources_total": 1,
+ "status": "candidate"
+}

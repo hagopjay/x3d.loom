@@ -1,0 +1,280 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+  "closure": "untested",
+  "closure_reason": "too few probes outside the rule to say",
+  "grade": "S",
+  "grade_word": "Suspected",
+  "missed_seen": 0,
+  "reasons": [
+   "rests on one failure and no confirmed probe"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-b1582e0e10fb",
+ "instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "v:scheme:data",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 0,
+    "role": "test"
+   },
+   {
+    "dropped": "at:AudioClip@url",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 0,
+    "role": "context"
+   },
+   {
+    "dropped": "e.has:loop",
+    "failures_explained_without_it": 1,
+    "false_alarms_without_it": 10,
+    "role": "context"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "v:present",
+      "t:SFBool"
+     ],
+     "any": [
+      "at:AudioClip@loop",
+      "at:Sound@spatialize"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the field type is SFBool: the attribute is written, at one of 2 places (AudioClip loop, Sound spatialize)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:present",
+      "tc:bool"
+     ],
+     "any": [
+      "at:AudioClip@loop",
+      "at:Sound@spatialize"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the field holds a bool: the attribute is written, at one of 2 places (AudioClip loop, Sound spatialize)."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:eq:-3 0 6",
+      "at:Transform@translation"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation: the value is exactly `-3 0 6`."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:eq:AC",
+      "at:AudioClip@DEF"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is AudioClip DEF: the value is exactly `AC`."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:eq:Sound.x3d",
+      "at:meta@content"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is meta content: the value is exactly `Sound.x3d`."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:eq:0 0 9.5",
+      "at:Transform@translation"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation: the value is exactly `0 0 9.5`."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:eq:N3",
+      "at:Sound@DEF"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Sound DEF: the value is exactly `N3`."
+   },
+   {
+    "rule": {
+     "all": [
+      "v:eq:N2",
+      "at:Sound@DEF"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Sound DEF: the value is exactly `N2`."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 0,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 0,
+   "probes": 0,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 0
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 1
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 0,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1112
+  },
+  "idle_literals": [
+   "v:scheme:data"
+  ],
+  "instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1192
+  },
+  "normative_reading": [],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 26,
+    "round": 1,
+    "rules_tested": [
+     "attr[v:scheme:data & at:AudioClip@url]"
+    ],
+    "tally": {
+     "confirm/refuted": 10,
+     "widen/silent-ok": 16
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 0,
+    "round": 2,
+    "rules_tested": [
+     "attr[v:scheme:data & at:AudioClip@url & e.has:loop]"
+    ],
+    "tally": {}
+   },
+   {
+    "fed_back": false,
+    "probes": 0,
+    "round": "audit",
+    "rules_tested": [
+     "attr[v:scheme:data & at:AudioClip@url & e.has:loop]"
+    ],
+    "tally": {}
+   }
+  ],
+  "rule": {
+   "all": [
+    "v:scheme:data",
+    "at:AudioClip@url",
+    "e.has:loop"
+   ],
+   "kind": "attr"
+  },
+  "rule_id": "r2r-b1582e0e10fb",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "AudioClip@url"
+  ],
+  "sentence": "At one attribute where the place is AudioClip url and its element also has the attribute loop: a URL uses the scheme `data`.",
+  "signature": "AttributeError at import_x3d.py:6538 importAudio",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 1,
+   "explained_by_this_rule": 1,
+   "failures": 1,
+   "families": {
+    "natural-sweep": 1
+   },
+   "observed_by": {
+    "tool": 1
+   },
+   "with_known_good_twin": 0
+  },
+  "strays": {},
+  "tier": 3,
+  "trace": [
+   "seed v:scheme:data, fenced to at:AudioClip@url: explains 1, false alarms 10",
+   "+ e.has:loop: explains 1, false alarms 0 (gain 3.46)"
+  ],
+  "unfenced": {
+   "false_alarms_on_known_good": 0,
+   "rule": {
+    "all": [
+     "v:scheme:data",
+     "e.has:loop"
+    ],
+    "kind": "attr"
+   },
+   "status": "untested beyond the fence"
+  },
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "v:scheme:data",
+   "at:AudioClip@url",
+   "e.has:loop"
+  ],
+  "kind": "attr"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "At one attribute where the place is AudioClip url and its element also has the attribute loop: a URL uses the scheme `data`.",
+ "signature": "AttributeError at import_x3d.py:6538 importAudio",
+ "sources": [
+  {
+   "event": "ev-b6a44c8770fe",
+   "family": "natural-sweep",
+   "file": "week:x3d.loom/x3d.threejs/bridge/fixtures/Sound.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1364
+   },
+   "sha256": "e0e29527ab4570c71127fbe2ffe41ed7c4bd1e7fdff46a8209a9476de4d0311a",
+   "twin": null
+  }
+ ],
+ "sources_total": 1,
+ "status": "candidate"
+}

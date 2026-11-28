@@ -1,0 +1,105 @@
+{
+ "candidates": 4,
+ "claims": 4,
+ "clusters": 4,
+ "created_utc": "2026-11-28T07:26:28Z",
+ "events": 7040,
+ "events_skipped": [],
+ "files_read": 2470,
+ "grades": {
+  "C": 0,
+  "L": 1,
+  "S": 3
+ },
+ "inputs": [
+  {
+   "adapter": "verdicts",
+   "events": 2300,
+   "path": "sweep:2.9.0-import.jsonl",
+   "sha256": "8bb00db3d5d249b7803856f3cb8d383bf885152fbd50b4b6d3a7673599ee1125",
+   "split": "by-hash",
+   "what": "2,300 real project files through the 2.9.0 importer"
+  },
+  {
+   "adapter": "verdicts",
+   "events": 2264,
+   "path": "sweep:2.9.0-reexport.jsonl",
+   "sha256": "3412612a95cdb9e0c5a5f64426c1992f6ddaba00525a1805583b03b89dfaceb6",
+   "split": "by-hash",
+   "what": "the same files, import then export, add-on 2.9.0"
+  },
+  {
+   "adapter": "verdicts",
+   "events": 2300,
+   "path": "sweep:2.9.0-x3dpy.jsonl",
+   "sha256": "e6c8ef829d869a9abecc320dad05b7f39e8af92ec455e516de9becebe37892de",
+   "split": "by-hash",
+   "what": "the same files through x3d.py 4.0.65.8 as add-on 2.9.0 calls it"
+  }
+ ],
+ "instruments": {
+  "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)": {
+   "fail": 8,
+   "pass": 2329
+  },
+  "x3d-blender-io 2.9.0 importer (bpy 5.3.0)": {
+   "fail": 36,
+   "pass": 2367
+  },
+  "x3d.py 4.0.65.8 through x3d-blender-io 2.9.0 validate.py (does it crash?)": {
+   "fail": 0,
+   "pass": 2300
+  }
+ },
+ "kit": {
+  "loomkit": {
+   "kit_commit": "ee3cc1acfbb65fb076bcfbb4480af102cd75fbe9",
+   "kit_dirty": false,
+   "kit_sha256": "a0bdfb27c94e53a84644e9b1a795afcfdf356ab407ebea2ad232319a960d94ac"
+  },
+  "r2r_sha256": "096d1ce649f8b2767e482f9fc48d57b008fe65e51f94b82bc6f49241fcb9fa4d",
+  "r2r_version": "0.1.0",
+  "uom_facts": {
+   "fork_commit": "4d433af",
+   "from": "x3d_mcp fork, src/validation/schemas/X3dUnifiedObjectModel-4.{0,1}.xml",
+   "x3duom_40_sha256": "7e426a238656c21a4a444b989276494329da363625c36f0a719b15d89416bee3",
+   "x3duom_41_sha256": "4fc10e8e15c0d6cf2a916e4f59b815b110104aa7ea734dc6afea9458095c792b"
+  }
+ },
+ "notes": [
+  "Instruments: the x3d-blender-io add-on at 2.9.0 (main 6bf1d15, source tree 2866ac6) inside bpy 5.3.0 (Python 3.13): its importer, and its import followed by its export. Third instrument: x3d.py 4.0.65.8 as the add-on's validate.py at 2.9.0 calls it.",
+  "The judge is the same as for the runs of 23 Nov: kit/loomkit/r2r/drivers/blender_io.py with tools/chaos of x3d-blender-io at 8e56437, the add-on source pinned to the version named, under a 10 GB address-space cap. Cloud machine, 15 GB, 4 cores, four files at a time.",
+  "Sweep: every .x3d file of at most 2,000,000 bytes on the default branch of the sixteen project repositories that hold X3D, identical contents counted once (by git blob): 2,644 files, 2,300 distinct. The list was made by `git ls-tree -r -l` and is the first column of each sweep file. Commits: x3d-blender-io 6bf1d15, x3d.accrete 3755e78, x3d.castle 5b13f70, x3d.chess d314fcf, x3d.demo a80fade, x3d.docs e702465, x3d.gamelab e0a0d97, x3d.gobbler cd95382, x3d.lab 62f3aab, x3d.loom fc30c89, x3d.mashtots 3b57769, x3d.mathslab d883fb7, x3d.ml adc7464, x3d.stem 98f79d7, x3d.wgpu 091b2be, x3d_mcp ca0e75c.",
+  "A file is named week:<repository>/<path>. A file that gave no answer within 60 seconds has the signature 'no answer in 60 s (sweep runner stopped the process)'; the harness's own watchdog is 120 seconds. tools/sweep_runner.py made the sweep and tools/pack_week.py packed it; machine paths in messages were replaced by <addon>/, <site-packages>/, <x3d-blender-io>/ and <tmp>/.",
+  "Correction made before sealing: the judge runs import followed by export in one call, so the eight files whose EXPORT gave no answer in 60 s were first stamped as importer failures. The importer was asked again alone (tools/import_only.py) and passed all eight; those eight importer rows carry \"asked\": \"import alone\". In every other importer row 'seconds' is import plus export.",
+  "Held out: the half of the sweep whose sha256 is odd. Probe hosts come only from the other half, files of at most 60 KB.",
+  "To repeat: check the repositories out side by side at the commits above and give --root week=<that folder>, --root bpyenv=<a venv with bpy 5.3.0 and x3d.py>, --root addon-src=<the add-on source at each version under <version>/source>. Replaying the rules of 23 Nov also needs --root repos=<checkouts at the 23 Nov commits: x3d-blender-io 8e56437, x3d.castle 5b13f70, x3d.chess 17e0d05, x3d.demo 8715b23, x3d.loom 32a33f4, x3d.mathslab d883fb7, x3d.wgpu 86f39bd, x3d_mcp 4d433af> and --root chaos=<../r2r-receipts-20261123/chaos-*.tar.xz unpacked>."
+ ],
+ "oracles": {
+  "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)": {
+   "calls": 3,
+   "deaths": []
+  },
+  "x3d-blender-io 2.9.0 importer (bpy 5.3.0)": {
+   "calls": 5,
+   "deaths": []
+  },
+  "x3d.py 4.0.65.8 through x3d-blender-io 2.9.0 validate.py (does it crash?)": {
+   "calls": 0,
+   "deaths": []
+  }
+ },
+ "proposer": {
+  "name": "inductive (no language model)",
+  "uses_a_model": false
+ },
+ "schema": "loom.r2r-run/1",
+ "seconds": 211.5,
+ "settings": {
+  "max_generations": 1,
+  "only": null,
+  "rounds": 3,
+  "seed": 1
+ },
+ "title": "x3d-blender-io 2.9.0 in bpy 5.3.0: weekly sweep of 2,300 real files (28 Nov 2026)"
+}

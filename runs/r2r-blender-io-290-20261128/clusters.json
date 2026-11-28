@@ -1,0 +1,249 @@
+[
+ {
+  "found_by": "receipts",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+  "log": [
+   "34 failure(s) to explain; the instrument passed 1152 file(s) and failed 36 in all",
+   "34 failure(s) have no known-good twin: any site may explain them, so their rules are weaker",
+   "rule 1: doc[x:not_wellformed] explains 34 more (34 in all); 4 alternate(s) the receipts cannot rule out; seen at (document)"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-8fd2544c0404"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 44.9,
+  "signature": "import returned CANCELLED",
+  "training_events": 34,
+  "training_failures": 34,
+  "unclean_best_efforts": []
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)",
+  "log": [
+   "8 failure(s) to explain; the instrument passed 1199 file(s) and failed 8 in all",
+   "8 failure(s) have no known-good twin: any site may explain them, so their rules are weaker",
+   "rule 1: doc[ge:depth_max:9 & ge:n_elements:2819 & ge:n_routes:3] explains 8 more (8 in all); 2 alternate(s) the receipts cannot rule out; seen at (document)"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-c5884565c319"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 85.4,
+  "signature": "no answer in 60 s (sweep runner stopped the process)",
+  "training_events": 8,
+  "training_failures": 8,
+  "unclean_best_efforts": [
+   {
+    "explains": 7,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "ge:n_elements:2819",
+      "ge:n_routes:3",
+      "le:max_children:460",
+      "dp:Immersive"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole where the profile is Immersive: the number of elements is at least 2819 and the number of ROUTEs is at least 3 and the most children of one element is at most 460.",
+    "why": "stopped: 7 failure(s) may not buy more than 4 literal(s)"
+   },
+   {
+    "explains": 7,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "ge:n_elements:2819",
+      "ge:n_routes:3",
+      "le:max_children:460",
+      "le:max_nattrs:6"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the number of elements is at least 2819 and the number of ROUTEs is at least 3 and the most children of one element is at most 460 and the most attributes on one element is at most 6.",
+    "why": "stopped: 7 failure(s) may not buy more than 4 literal(s)"
+   },
+   {
+    "explains": 7,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "ge:depth_max:9",
+      "ge:n_defs:61",
+      "ge:n_elements:2819",
+      "le:n_routes:246"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the deepest nesting in the file is at least 9 and the number of DEF names is at least 61 and the number of elements is at least 2819 and the number of ROUTEs is at most 246.",
+    "why": "stopped: 7 failure(s) may not buy more than 4 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+  "log": [
+   "1 failure(s) to explain; the instrument passed 1192 file(s) and failed 36 in all",
+   "1 failure(s) have no known-good twin: any site may explain them, so their rules are weaker",
+   "rule 1: attr[v:scheme:data & at:AudioClip@url & e.has:loop] explains 1 more (1 in all); 8 alternate(s) the receipts cannot rule out; seen at AudioClip@url"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-b1582e0e10fb"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 27.9,
+  "signature": "AttributeError at import_x3d.py:6538 importAudio",
+  "training_events": 1,
+  "training_failures": 1,
+  "unclean_best_efforts": [
+   {
+    "explains": 1,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "v:tok:9.5",
+      "at:Transform@translation",
+      "e.has:DEF"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform translation and its element also has the attribute DEF: the value has the token `9.5`.",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   },
+   {
+    "explains": 1,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "v:eq:T",
+      "at:Transform@DEF",
+      "e.has:translation"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Transform DEF and its element also has the attribute translation: the value is exactly `T`.",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   },
+   {
+    "explains": 1,
+    "false_alarms": 4,
+    "rule": {
+     "all": [
+      "ge:n_defs:7",
+      "le:n_elements:18"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the number of DEF names is at least 7 and the number of elements is at most 18.",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   }
+  ]
+ },
+ {
+  "found_by": "receipts",
+  "held_out_events": 0,
+  "instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+  "log": [
+   "1 failure(s) to explain; the instrument passed 1247 file(s) and failed 36 in all",
+   "1 failure(s) have no known-good twin: any site may explain them, so their rules are weaker",
+   "rule 1: attr[v:eq:0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 & at:Extrusion@crossSection & p:Shape] explains 1 more (1 in all); 2 alternate(s) the receipts cannot rule out; seen at Extrusion@crossSection"
+  ],
+  "probed": true,
+  "residue": 0,
+  "residue_examples": [],
+  "rules": [
+   "r2r-7a4b1260be37"
+  ],
+  "same_root_cause_hints": [],
+  "seconds": 53.3,
+  "signature": "ZeroDivisionError at import_x3d.py:3054 scaledLoopVertex",
+  "training_events": 1,
+  "training_failures": 1,
+  "unclean_best_efforts": [
+   {
+    "explains": 1,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "v:present",
+      "a:height"
+     ],
+     "any": [
+      "at:Extrusion@creaseAngle",
+      "at:Extrusion@crossSection",
+      "at:Extrusion@height",
+      "at:Extrusion@solid",
+      "at:Material@diffuseColor",
+      "at:Material@shininess",
+      "at:Material@specularColor",
+      "at:NavigationInfo@type",
+      "at:Viewpoint@description",
+      "at:Viewpoint@orientation",
+      "at:Viewpoint@position",
+      "at:X3D@noNamespaceSchemaLocation",
+      "at:X3D@profile",
+      "at:X3D@version",
+      "at:meta@content",
+      "at:meta@name"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the attribute is height: the attribute is written, at one of 16 places (Extrusion creaseAngle, Extrusion crossSection, Extrusion height, Extrusion solid, Material diffuseColor, Material shininess, Material specularColor, NavigationInfo type, Viewpoint description, Viewpoint orientation, Viewpoint position, X3D noNamespaceSchemaLocation, X3D profile, X3D version, meta content, meta name).",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   },
+   {
+    "explains": 1,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "x:present",
+      "has:height"
+     ],
+     "any": [
+      "n:Appearance",
+      "n:Extrusion",
+      "n:Material",
+      "n:NavigationInfo",
+      "n:Scene",
+      "n:Shape",
+      "n:Viewpoint",
+      "n:X3D",
+      "n:head",
+      "n:meta"
+     ],
+     "kind": "elem"
+    },
+    "sentence": "At one element where it has the attribute height: the node is present, at one of 10 places (Appearance, Extrusion, Material, NavigationInfo, Scene, Shape, Viewpoint, X3D, head, meta).",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   },
+   {
+    "explains": 1,
+    "false_alarms": 1,
+    "rule": {
+     "all": [
+      "v:tok:0.843",
+      "!anc:Transform",
+      "at:Material@diffuseColor"
+     ],
+     "kind": "attr"
+    },
+    "sentence": "At one attribute where the place is Material diffuseColor: the value has the token `0.843`, unless it sits inside a Transform.",
+    "why": "stopped: 1 failure(s) may not buy more than 2 literal(s)"
+   }
+  ]
+ }
+]

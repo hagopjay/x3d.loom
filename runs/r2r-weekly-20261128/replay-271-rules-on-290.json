@@ -1,0 +1,801 @@
+{
+ "how_to_read": "closed: the new instrument passed at least 5 files this rule fires on and failed none. still live: it failed every such file it was run on. A rule is about an instrument at a version; 'closed' retires the rule for the new version and keeps it as a regression test.",
+ "instrument_map": {
+  "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)": "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)",
+  "x3d-blender-io 2.7.1 importer (bpy 5.3.0)": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+  "x3d.py 4.0.65.8 through x3d-blender-io 2.7.1 validate.py (does it crash?)": "x3d.py 4.0.65.8 through x3d-blender-io 2.9.0 validate.py (does it crash?)"
+ },
+ "kit": {
+  "loomkit": {
+   "kit_commit": "ee3cc1acfbb65fb076bcfbb4480af102cd75fbe9",
+   "kit_dirty": false,
+   "kit_sha256": "a0bdfb27c94e53a84644e9b1a795afcfdf356ab407ebea2ad232319a960d94ac"
+  },
+  "r2r_sha256": "096d1ce649f8b2767e482f9fc48d57b008fe65e51f94b82bc6f49241fcb9fa4d",
+  "r2r_version": "0.1.0",
+  "uom_facts": {
+   "fork_commit": "4d433af",
+   "from": "x3d_mcp fork, src/validation/schemas/X3dUnifiedObjectModel-4.{0,1}.xml",
+   "x3duom_40_sha256": "7e426a238656c21a4a444b989276494329da363625c36f0a719b15d89416bee3",
+   "x3duom_41_sha256": "4fc10e8e15c0d6cf2a916e4f59b815b110104aa7ea734dc6afea9458095c792b"
+  }
+ },
+ "old_run": {
+  "created_utc": "2026-11-23T07:03:35Z",
+  "kit": "096d1ce649f8b2767e482f9fc48d57b008fe65e51f94b82bc6f49241fcb9fa4d",
+  "title": "x3d-blender-io 2.7.1 in bpy 5.3.0: chaos rounds and a sweep of 514 real files"
+ },
+ "rules": [
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 23,
+    "failure_signatures": {
+     "ValueError at export_x3d.py:2188 _modern_writer": 23
+    },
+    "files": 51,
+    "of_which": {
+     "confirmed probe, rebuilt": 20,
+     "source failure": 1,
+     "source failure, rebuilt from its probe recipe": 30
+    },
+    "passed": 28,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-ac96dfe7dbc3",
+   "sentence": "At one attribute where the value has 1 token(s): a component is below the minimum the X3DUOM declares, at one of 7 places (Cone bottomRadius, Cone height, GeoViewpoint fieldOfView, PointLight radius, Sphere radius, SpotLight radius, Viewpoint fieldOfView).",
+   "signature": "ValueError at export_x3d.py:2111 _modern_writer",
+   "verdict": "partly closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 39,
+    "of_which": {
+     "confirmed probe, rebuilt": 10,
+     "source failure": 3,
+     "source failure, rebuilt from its probe recipe": 26
+    },
+    "passed": 39,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-c78b17d6ccf6",
+   "sentence": "At one attribute where its element has a Shape child and its element also has the attribute DEF: the largest magnitude is at least 5.05e+38, at one of 2 places (Transform scale, Transform translation).",
+   "signature": "RuntimeError at matrix_safety.py:47 inverted64",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 38,
+    "of_which": {
+     "confirmed probe, rebuilt": 22,
+     "source failure, rebuilt from its probe recipe": 16
+    },
+    "passed": 38,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-4b8b7ade96af",
+   "sentence": "At one attribute where the place is Transform translation: a number is larger than a 32-bit float can hold, unless the parent is Scene or the value does not have the written form its field type requires.",
+   "signature": "RuntimeError at matrix_safety.py:47 inverted64",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 153,
+    "of_which": {
+     "confirmed probe, rebuilt": 20,
+     "source failure": 54,
+     "source failure, rebuilt from its probe recipe": 79
+    },
+    "passed": 153,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-96ba3f032944",
+   "sentence": "At one attribute where the value has 1 space-separated token(s): a boolean is spelt as something other than `true` or `false`, at one of 24 places (Box solid, CollidableShape visible, Cone solid, DirectionalLight global, DirectionalLight shadows, Disk2D solid, ElevationGrid solid, Group visible, HAnimHumanoid visible, IndexedFaceSet solid, IndexedTriangleFanSet solid, IndexedTriangleSet solid, IndexedTriangleStripSet solid, LOD visible, Layer visible, NavigationInfo headlight, PointLight global, PointLight shadows, RigidBody visible, Shape visible, Sphere solid, SpotLight global, TriangleFanSet solid, TriangleSet2D solid), unless the value is a legal one written in another letter case.",
+   "signature": "IndexError at import_x3d.py:860 getFieldAsBool",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 96,
+    "of_which": {
+     "confirmed probe, rebuilt": 43,
+     "source failure, rebuilt from its probe recipe": 53
+    },
+    "passed": 96,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-dc3e3fa23485",
+   "sentence": "At one attribute where the place is Transform translation: the value has too many components for its field type, unless the parent is Scene or a token is wrapped in quotation marks where the field is not a string.",
+   "signature": "ValueError at import_x3d.py:1700 translateTransform",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 82,
+    "of_which": {
+     "confirmed probe, rebuilt": 20,
+     "source failure": 1,
+     "source failure, rebuilt from its probe recipe": 61
+    },
+    "passed": 82,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-cbf17e0bb9ea",
+   "sentence": "At one attribute: a number is infinite, at one of 2 places (GeoViewpoint fieldOfView, Viewpoint fieldOfView), unless the value has the wrong number of components for its field type.",
+   "signature": "ValueError at viewpoint_fov.py:42 blender_camera_angle",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 75,
+    "of_which": {
+     "confirmed probe, rebuilt": 60,
+     "source failure, rebuilt from its probe recipe": 15
+    },
+    "passed": 75,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-c057e13c2f24",
+   "sentence": "At one attribute where the place is Transform center: a token is not a number in X3D's notation, unless the parent is Scene or a token is wrapped in quotation marks where the field is not a string.",
+   "signature": "ValueError at import_x3d.py:1678 translateTransform",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 58,
+    "of_which": {
+     "confirmed probe, rebuilt": 9,
+     "source failure": 15,
+     "source failure, rebuilt from its probe recipe": 34
+    },
+    "passed": 58,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-2a5db21f7cdd",
+   "sentence": "At one attribute where the place is IndexedFaceSet coordIndex and its element has a Coordinate child: how far the largest index runs past the end of its list is at least 440304889 and the number of tokens is at least 20, unless its element also has the attribute ccw.",
+   "signature": "RuntimeError at import_x3d.py:2008 validate_points_field",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 49,
+    "of_which": {
+     "confirmed probe, rebuilt": 37,
+     "source failure, rebuilt from its probe recipe": 12
+    },
+    "passed": 49,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-4c6fe8b28cb1",
+   "sentence": "At one attribute where the place is IndexedFaceSet coordIndex and its element has a Coordinate child: the largest index is at least 177662200 and how far the largest index runs past the end of its list is at most 440304889, unless the value does not have the written form its field type requires.",
+   "signature": "RuntimeError at import_x3d.py:2253 importMesh_IndexedFaceSet",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [
+    "IndexError at import_x3d.py:1666 translateScale"
+   ],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 128,
+    "of_which": {
+     "confirmed probe, rebuilt": 71,
+     "source failure, rebuilt from its probe recipe": 57
+    },
+    "passed": 128,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-f10d90dac48f",
+   "sentence": "At one attribute where the place is Transform scale and the value has 3 token(s): a token is not a number in X3D's notation, unless the parent is Scene.",
+   "signature": "IndexError at import_x3d.py:1665 translateScale",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 37,
+    "of_which": {
+     "confirmed probe, rebuilt": 30,
+     "source failure, rebuilt from its probe recipe": 7
+    },
+    "passed": 37,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-b7cf987e340f",
+   "sentence": "At one attribute: a number is infinite, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle), unless the value has the wrong number of components for its field type.",
+   "signature": "ValueError at import_x3d.py:4437 _arc_points",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 30,
+    "of_which": {
+     "confirmed probe, rebuilt": 16,
+     "source failure, rebuilt from its probe recipe": 14
+    },
+    "passed": 30,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-21d944367a59",
+   "sentence": "At one attribute where its element has a Color child: how far the largest index runs past the end of its list is at least 536870902, at one of 2 places (IndexedTriangleSet index, IndexedTriangleStripSet index).",
+   "signature": "IndexError at import_x3d.py:1857 importMesh_ApplyColors",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 18,
+    "of_which": {
+     "confirmed probe, rebuilt": 4,
+     "source failure, rebuilt from its probe recipe": 14
+    },
+    "passed": 18,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-758326262381",
+   "sentence": "At one attribute where it sits inside a Transform and the place is IndexedTriangleStripSet index: how far the largest index runs past the end of its list is at least 536870902, unless its element has a Normal child.",
+   "signature": "IndexError at import_x3d.py:1857 importMesh_ApplyColors",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 15,
+    "of_which": {
+     "confirmed probe, rebuilt": 12,
+     "source failure, rebuilt from its probe recipe": 3
+    },
+    "passed": 15,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-616562eddf55",
+   "sentence": "At one attribute where the value has 3 space-separated token(s): the value has a comma, at one of 2 places (Arc2D startAngle, ArcClose2D startAngle).",
+   "signature": "ValueError at import_x3d.py:4437 _arc_points",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 83,
+    "of_which": {
+     "confirmed probe, rebuilt": 11,
+     "source failure": 11,
+     "source failure, rebuilt from its probe recipe": 61
+    },
+    "passed": 83,
+    "skipped": 0
+   },
+   "grade": "C",
+   "new_instrument": "x3d.py 4.0.65.8 through x3d-blender-io 2.9.0 validate.py (does it crash?)",
+   "old_instrument": "x3d.py 4.0.65.8 through x3d-blender-io 2.7.1 validate.py (does it crash?)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-fc92485cb435",
+   "sentence": "For the file as a whole: the deepest nesting in the file is at least 1004.",
+   "signature": "RecursionError: maximum recursion depth exceeded",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 28,
+    "of_which": {
+     "source failure, rebuilt from its probe recipe": 28
+    },
+    "passed": 28,
+    "skipped": 0
+   },
+   "grade": "L",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 4,
+    "passed": 4
+   },
+   "rule": "r2r-0bd64577661d",
+   "sentence": "At one element where it has a TouchSensor child and it has the attribute scale and the node is Transform and the parent is Scene: the number of attributes is at least 1.",
+   "signature": "IndexError at import_x3d.py:1665 translateScale",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 9,
+    "of_which": {
+     "source failure, rebuilt from its probe recipe": 9
+    },
+    "passed": 9,
+    "skipped": 0
+   },
+   "grade": "L",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-a2a869510561",
+   "sentence": "At one attribute where the place is IndexedTriangleStripSet index and its element has a TextureCoordinate child: how far the largest index runs past the end of its list is at least 19311468.",
+   "signature": "IndexError at import_x3d.py:1927 importMesh_ApplyUVs",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 4,
+    "of_which": {
+     "source failure, rebuilt from its probe recipe": 4
+    },
+    "passed": 4,
+    "skipped": 0
+   },
+   "grade": "L",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 6,
+    "passed": 6
+   },
+   "rule": "r2r-88d9b63e43b3",
+   "sentence": "At one attribute where the place is IndexedTriangleFanSet index: the number of tokens is at least 20.",
+   "signature": "RuntimeError at import_x3d.py:2107 importMesh_IndexedTriangleFanSet",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 0,
+    "of_which": {},
+    "passed": 0,
+    "skipped": 0
+   },
+   "grade": "L",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 18,
+    "passed": 18
+   },
+   "rule": "r2r-d261dd67c562",
+   "sentence": "At one element where the node is CoordinateDouble: the node is present.",
+   "signature": "AttributeError at import_x3d.py:1904 importMesh_ReadVertices",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 61,
+    "of_which": {
+     "confirmed probe, rebuilt": 20,
+     "source failure, rebuilt from its probe recipe": 41
+    },
+    "passed": 61,
+    "skipped": 0
+   },
+   "grade": "S",
+   "new_instrument": "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-eac8fb7c9a21",
+   "sentence": "At one attribute where it sits inside a Group: the largest magnitude is at least 1e+39, at one of 2 places (Transform scale, Transform translation).",
+   "signature": "RuntimeError at matrix_safety.py:47 inverted64",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 45,
+    "of_which": {
+     "confirmed probe, rebuilt": 17,
+     "source failure, rebuilt from its probe recipe": 28
+    },
+    "passed": 45,
+    "skipped": 0
+   },
+   "grade": "S",
+   "new_instrument": "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 import then export (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-bd1f8384f6cd",
+   "sentence": "At one attribute where the place is Transform scale: the value does not have the written form its field type requires, unless its element also has the attribute rotation.",
+   "signature": "RuntimeError at matrix_safety.py:47 inverted64",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 113,
+    "of_which": {
+     "confirmed probe, rebuilt": 16,
+     "source failure, rebuilt from its probe recipe": 97
+    },
+    "passed": 113,
+    "skipped": 0
+   },
+   "grade": "S",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-c0b70e49737d",
+   "sentence": "At one attribute where the place is Transform translation: the length of the value is at least 19 and the value does not have the written form its field type requires, unless its element has a TransformSensor child or the value has the token `\"`.",
+   "signature": "ValueError at import_x3d.py:1700 translateTransform",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 100,
+    "of_which": {
+     "confirmed probe, rebuilt": 26,
+     "source failure, rebuilt from its probe recipe": 74
+    },
+    "passed": 100,
+    "skipped": 0
+   },
+   "grade": "S",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-018873e9ca67",
+   "sentence": "At one attribute where the place is Transform translation: the number of tokens is at least 12, unless its element has a TransformSensor child or a token is wrapped in quotation marks where the field is not a string.",
+   "signature": "ValueError at import_x3d.py:1700 translateTransform",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [
+    "IndexError at import_x3d.py:1666 translateScale"
+   ],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 106,
+    "of_which": {
+     "confirmed probe, rebuilt": 39,
+     "source failure, rebuilt from its probe recipe": 67
+    },
+    "passed": 106,
+    "skipped": 0
+   },
+   "grade": "S",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-61999795e8b4",
+   "sentence": "At one attribute where the place is Transform scale: the number of tokens is at least 6, unless the parent is Scene.",
+   "signature": "IndexError at import_x3d.py:1665 translateScale",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 46,
+    "of_which": {
+     "confirmed probe, rebuilt": 18,
+     "source failure, rebuilt from its probe recipe": 28
+    },
+    "passed": 46,
+    "skipped": 0
+   },
+   "grade": "S",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-de23254b4dea",
+   "sentence": "At one attribute where the place is IndexedFaceSet coordIndex and its element also has the attribute creaseAngle: how far the largest index runs past the end of its list is at least 20060965, unless the value does not have the written form its field type requires.",
+   "signature": "IndexError at import_x3d.py:2231 importMesh_IndexedFaceSet",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 55,
+    "of_which": {
+     "confirmed probe, rebuilt": 22,
+     "source failure, rebuilt from its probe recipe": 33
+    },
+    "passed": 55,
+    "skipped": 0
+   },
+   "grade": "S",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-01a07f48ec95",
+   "sentence": "At one attribute where the place is Transform scale and the value has 3 token(s): the length of the value is at least 10 and a token is not a number in X3D's notation.",
+   "signature": "IndexError at import_x3d.py:1665 translateScale",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 55,
+    "of_which": {
+     "confirmed probe, rebuilt": 25,
+     "source failure, rebuilt from its probe recipe": 30
+    },
+    "passed": 55,
+    "skipped": 0
+   },
+   "grade": "S",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-5049a0d800aa",
+   "sentence": "At one attribute where the place is Transform translation: the largest component is at least 5 and the value has the wrong number of components for its field type, unless its element also has the attribute rotation.",
+   "signature": "ValueError at import_x3d.py:1700 translateTransform",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 57,
+    "of_which": {
+     "confirmed probe, rebuilt": 30,
+     "source failure": 2,
+     "source failure, rebuilt from its probe recipe": 25
+    },
+    "passed": 57,
+    "skipped": 0
+   },
+   "grade": "S",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.1 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 0,
+    "passed": 0
+   },
+   "rule": "r2r-8c73ea66efdc",
+   "sentence": "At one attribute where the place is IndexedFaceSet coordIndex and the parent is Shape: how far the largest index runs past the end of its list is at least 2147483633 and the number of tokens is at most 15, unless the value does not have the written form its field type requires.",
+   "signature": "RuntimeError at import_x3d.py:2008 validate_points_field",
+   "verdict": "closed"
+  }
+ ],
+ "schema": "loom.r2r-replay/1",
+ "summary": {
+  "closed": 27,
+  "not exercised": 0,
+  "partly closed": 1,
+  "still live": 0
+ },
+ "title": "x3d-blender-io 2.9.0 in bpy 5.3.0: weekly sweep of 2,300 real files (28 Nov 2026)"
+}

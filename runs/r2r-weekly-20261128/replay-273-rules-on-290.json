@@ -1,0 +1,86 @@
+{
+ "how_to_read": "closed: the new instrument passed at least 5 files this rule fires on and failed none. still live: it failed every such file it was run on. A rule is about an instrument at a version; 'closed' retires the rule for the new version and keeps it as a regression test.",
+ "instrument_map": {
+  "x3d-blender-io 2.7.3 import then export (bpy 5.3.0)": "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)",
+  "x3d-blender-io 2.7.3 importer (bpy 5.3.0)": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+  "x3d.py 4.0.65.8 through x3d-blender-io 2.7.3 validate.py (does it crash?)": "x3d.py 4.0.65.8 through x3d-blender-io 2.9.0 validate.py (does it crash?)"
+ },
+ "kit": {
+  "loomkit": {
+   "kit_commit": "ee3cc1acfbb65fb076bcfbb4480af102cd75fbe9",
+   "kit_dirty": false,
+   "kit_sha256": "a0bdfb27c94e53a84644e9b1a795afcfdf356ab407ebea2ad232319a960d94ac"
+  },
+  "r2r_sha256": "096d1ce649f8b2767e482f9fc48d57b008fe65e51f94b82bc6f49241fcb9fa4d",
+  "r2r_version": "0.1.0",
+  "uom_facts": {
+   "fork_commit": "4d433af",
+   "from": "x3d_mcp fork, src/validation/schemas/X3dUnifiedObjectModel-4.{0,1}.xml",
+   "x3duom_40_sha256": "7e426a238656c21a4a444b989276494329da363625c36f0a719b15d89416bee3",
+   "x3duom_41_sha256": "4fc10e8e15c0d6cf2a916e4f59b815b110104aa7ea734dc6afea9458095c792b"
+  }
+ },
+ "old_run": {
+  "created_utc": "2026-11-23T06:30:08Z",
+  "kit": "096d1ce649f8b2767e482f9fc48d57b008fe65e51f94b82bc6f49241fcb9fa4d",
+  "title": "x3d-blender-io 2.7.3 in bpy 5.3.0: chaos rounds and a sweep of 514 real files"
+ },
+ "rules": [
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 0,
+    "of_which": {},
+    "passed": 0,
+    "skipped": 0
+   },
+   "grade": "L",
+   "new_instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.3 importer (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 18,
+    "passed": 18
+   },
+   "rule": "r2r-d261dd67c562",
+   "sentence": "At one element where the node is CoordinateDouble: the node is present.",
+   "signature": "AttributeError at import_x3d.py:2038 importMesh_ReadVertices",
+   "verdict": "closed"
+  },
+  {
+   "also_explains": [],
+   "asked": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files": 0,
+    "of_which": {},
+    "passed": 0,
+    "skipped": 0
+   },
+   "grade": "S",
+   "new_instrument": "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)",
+   "old_instrument": "x3d-blender-io 2.7.3 import then export (bpy 5.3.0)",
+   "receipts": {
+    "failed": 0,
+    "failure_signatures": {},
+    "files_the_rule_fires_on": 1,
+    "passed": 1
+   },
+   "rule": "r2r-dc636828c7f3",
+   "sentence": "At one attribute: a USE comes before its DEF, at one of 3 places (MetadataFloat USE, MetadataInteger USE, MetadataString USE).",
+   "signature": "ValueError at export_x3d.py:2177 _modern_writer",
+   "verdict": "not exercised"
+  }
+ ],
+ "schema": "loom.r2r-replay/1",
+ "summary": {
+  "closed": 1,
+  "not exercised": 1,
+  "partly closed": 0,
+  "still live": 0
+ },
+ "title": "x3d-blender-io 2.9.0 in bpy 5.3.0: weekly sweep of 2,300 real files (28 Nov 2026)"
+}

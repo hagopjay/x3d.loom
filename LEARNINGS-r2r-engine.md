@@ -109,6 +109,52 @@ the engine's Likely rules were off, in ways only a varied file could show:
 Neither correction changes a verdict above: the fixes close the real cause, and the files pass. They do change how
 far to trust a Likely rule's wording: its place was right both times, its condition was a first guess.
 
+## The weekly watch: add-on 2.9.0 and every real file (28 Nov)
+
+From 28 Nov the engine runs once a week: sweep the real files, replay the kept rules, read what is new. The first
+run is the baseline, in `runs/r2r-weekly-20261128/` (its README has every number and file).
+
+**A correction first.** The notes of 23 Nov say the sweep was "every .x3d under the project's repositories ... at
+most 2 MB (514 files)". It was fourteen named folders, files of at most 400,000 bytes. The sentence was written by
+hand and not by the code that made the list (`runs/r2r-receipts-20261123/ERRATA.md`, failure mode 532). The true
+population on 28 Nov is 2,644 files, 2,300 distinct, and this week's list comes from `git ls-tree`.
+
+| Measured (C) | Result | Instrument |
+|---|---|---|
+| Importer, 2,300 files | 2,264 pass, 36 fail | x3d-blender-io 2.9.0 (main 6bf1d15) in bpy 5.3.0 |
+| Import then export | 2,256 pass, 8 with no answer in 60 s | same |
+| x3d.py through validate.py | 2,300 pass | x3d.py 4.0.65.8 |
+| The 28 + 2 kept rules on 2.9.0 | 28 closed, 1 partly closed (designed), 1 not exercised, **0 still live** | `kit/loom r2r replay` |
+| New candidates | 4: 0 Confirmed, 1 Likely, 3 Suspected | `runs/r2r-blender-io-290-20261128/` |
+
+**What the wider sweep met.** Nothing regressed from 2.7.4 to 2.9.0. Four things that were always there:
+
+1. 34 files that are not well-formed XML (33 written by language models) are refused. Correct.
+2. A `Sound` with no `AudioClip` or `MovieTexture` child raises `AttributeError` in `importAudio`: the source is
+   used one line before the check for None. An empty `<Sound/>` is enough.
+3. An `Extrusion` whose crossSection points are all equal divides by zero in `scaledLoopVertex`. A single-point
+   crossSection raises a `TypeError` two lines earlier (hand file; no real file has it).
+4. **Export grows a 67 KB level to 45.5 MB.** `extract.py` `_sample_animation` samples all 730 objects at all 2,161
+   frames and keeps any object whose transform differs at all from frame to frame. The transforms come through a
+   matrix inversion, so rounding noise counts as motion: 5 interpolators become 497, of which 12 move. 86 of 115
+   profiled seconds are in that function. Three changes would remove it (L, not tried): compare with a tolerance,
+   invert a parent once per frame, sample only what an action, driver, constraint or moving ancestor can move.
+
+**What the engine did with them.** Graded by hand against nine small files (`hand-290/`): the not-well-formed rule
+is right; the Extrusion rule is true and too narrow (it kept the literal value); the slow-export rule (depth, element
+count, ROUTE count) is a correlate of the cause, graded Likely by the engine; the Sound rule is wrong (it blamed the
+`data:` URL of an AudioClip in the same file, and that file passes alone). The engine marked three of the four
+Suspected. One failing file with no known-good twin is not enough to find a cause, and the grade said so.
+
+**Two mistakes of the run itself, both caught before sealing.**
+
+- The judge runs import and export in one call. A file whose export gave no answer was stamped as an importer
+  failure, and for an hour the slowness was blamed on the importer (failure mode 534). A profile of the import alone
+  (1.3 s) showed it. Ask each instrument alone before naming one.
+- The first sweep attempt stopped at file 63 of a sample: the harness's 120 s watchdog ends the whole process, and
+  the files after it were never asked (failure mode 533). `tools/sweep_runner.py` gives each file its own deadline
+  and writes a verdict for a file that hangs or kills the process.
+
 ## Every rule of the 2.7.1 run
 
 Rules are candidates. The rule text is folded where its list of places is long; the full rule, its proof and its
@@ -201,6 +247,12 @@ sources are in `runs/r2r-blender-io-271-20261123/candidates/` and in that folder
 - Name a new idea. When the vocabulary lacks the word, it reports a fingerprint and stops, or it borrows the nearest
   word it has (failure mode 198). Words it is known to lack: the number of runs in an index list, and the parent
   node of an element as a condition on that element.
+  From the weekly run of 28 Nov: a child that is absent (`Sound` without `AudioClip`), a list whose tuples are all
+  equal (an `Extrusion` crossSection), and a product of two counts (timeline frames times objects).
+- Find a cause from one failing file with no twin. It names the rarest thing in the file, which may be a neighbour
+  of the cause (failure mode 536). Its grade for that case is Suspected, which is the right grade.
+- Time an instrument. A verdict is pass or fail; "no answer in 60 s" is a signature like any other, and a rule
+  drawn from it describes large files, not the reason they are slow.
 - Say "closed" on fewer than 5 passing files. Its label for that case, `not exercised`, also covers a rule with no
   file at all; the two should be told apart.
 - Minimise a Confirmed rule's context. It tries one generation of probes; widening the hosts is the next step.
