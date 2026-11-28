@@ -1,0 +1,28 @@
+{
+  "schema": "x3d.springbone-profile/1",
+  "name": "daz-genesis",
+  "status": "Suspected: no Genesis export has been read yet; every bone name below must be checked against a real export (Daz Studio FBX or Diffeomorphic for Blender) before use",
+  "notes": [
+    "Daz hair, tails and clothes come as separate figures with their own bones; their names depend on the product, so they are matched by pattern.",
+    "Breast and glute softness on Genesis 8/9 usually comes from dedicated bones in the torso; the names below are the commonly reported ones, not verified.",
+    "Colliders ride on the figure's own bones; for an HAnim export through the add-on, the ancestors list is the HAnim joint path to that bone."
+  ],
+  "chains": [
+    {"label": "chest soft tissue (Genesis 8)", "rootsMatch": ["lPectoral", "rPectoral"], "grade": "Suspected",
+     "params": {"springModel": "FORCE", "frequency": 3.0, "dampingRatio": 0.35, "stiffness": 0.2, "angleLimit": 12, "stretch": 0.15}},
+    {"label": "chest soft tissue (Genesis 9)", "rootsMatch": ["l_pectoral", "r_pectoral"], "grade": "Suspected",
+     "params": {"springModel": "FORCE", "frequency": 3.0, "dampingRatio": 0.35, "stiffness": 0.2, "angleLimit": 12, "stretch": 0.15}},
+    {"label": "hair strands (product rigs)", "rootsMatch": ["/^hair/i", "/ponytail/i", "/braid/i"], "grade": "Suspected",
+     "params": {"springModel": "FORCE", "frequency": 1.6, "dampingRatio": 0.25, "stiffness": 0.05, "radius": 0.012, "endLength": 0.6,
+                "gravity": [0, -9.81, 0], "forceUnits": "M_PER_S2", "gravityRestCompensation": true,
+                "radiusCurve": [[0, 1], [1, 0.5]], "stiffnessCurve": [[0, 1], [1, 0.3]]}},
+    {"label": "skirt and coat panels (product rigs)", "rootsMatch": ["/skirt/i", "/coat.*(front|back|side)/i"], "grade": "Suspected",
+     "params": {"springModel": "FORCE", "frequency": 1.2, "dampingRatio": 0.4, "stiffness": 0.1, "radius": 0.03, "branchMode": "MEAN"}}
+  ],
+  "colliders": [
+    {"label": "head", "bone": "head", "shape": "SPHERE", "radius": 0.11, "grade": "Suspected"},
+    {"label": "neck", "bone": "neckLower", "shape": "CAPSULE", "radius": 0.06, "height": 0.16, "grade": "Suspected"},
+    {"label": "upper torso", "bone": "chestUpper", "shape": "CAPSULE", "radius": 0.14, "radius2": 0.11, "height": 0.36, "direction": "X", "grade": "Suspected"},
+    {"label": "thighs", "bone": ["lThighBend", "rThighBend"], "shape": "CAPSULE", "radius": 0.085, "radius2": 0.06, "height": 0.45, "grade": "Suspected"}
+  ]
+}
