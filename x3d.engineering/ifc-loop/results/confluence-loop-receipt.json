@@ -1,0 +1,129 @@
+{
+ "schema": "x3d.loom/ifc-loop-receipt/1",
+ "source": "model.ifc",
+ "source_sha256": "32dc72111d14d91964ba523f8f04ef65e0b6909fd161d5e068ab0cfb5ceef0fb",
+ "x3d_sha256": "f09e6abdef95cf3afaf4207d7410cbef5adf028dcb5b519d87c3f604a2ff7795",
+ "x3d_bytes": 559320,
+ "tools": {
+  "ifcopenshell": "0.9.0.post1",
+  "writer": "ifc-loop/ifc2x3d.py",
+  "reader": "ifc-loop/x3d2ifc.py"
+ },
+ "rows": {
+  "spatial elements (class + every direct attribute)": {
+   "carried": 4,
+   "of": 4,
+   "pass": true
+  },
+  "IfcRelAggregates edges (rel GlobalId, parent, child)": {
+   "carried": 3,
+   "of": 3,
+   "pass": true
+  },
+  "IfcRelContainedInSpatialStructure edges": {
+   "carried": 111,
+   "of": 111,
+   "pass": true
+  },
+  "products (class + every direct attribute)": {
+   "carried": 111,
+   "of": 111,
+   "pass": true
+  },
+  "property values (pset, key, IFC value type, value)": {
+   "carried": 444,
+   "of": 444,
+   "pass": true
+  },
+  "property set and relation GlobalIds": {
+   "carried": 111,
+   "of": 111,
+   "pass": true
+  },
+  "IfcExtrudedAreaSolid kept as parameters (profile class + every profile number, Position, direction, Depth)": {
+   "carried": 29,
+   "of": 29,
+   "pass": true
+  },
+  "placement chain (same PlacementRelTo parent)": {
+   "carried": 111,
+   "of": 111,
+   "pass": true
+  },
+  "IfcTriangulatedFaceSet (same indices, coords within 1e-6 unit)": {
+   "carried": 82,
+   "of": 82,
+   "pass": true
+  }
+ },
+ "quantities": {
+  "worst_tessellation_coord_unit": 4.83368012282881e-10,
+  "worst_placement": 4.710045686806552e-13,
+  "placements": 111,
+  "worst_relative_volume": 4.5242647385703355e-13,
+  "worst_relative_area": 1.8133409566544852e-13,
+  "worst_bbox_metres": 4.855560398198122e-13,
+  "bodies_measured": 111,
+  "measured_by": "ifcopenshell.geom 0.9.0.post1 world coords, both files"
+ },
+ "extrusion_witness": {
+  "extrusions": 29,
+  "all_agree": true
+ },
+ "controls": [
+  {
+   "control": "drop one property key",
+   "must_fail": [
+    "property values (pset, key, IFC value type, value)"
+   ],
+   "caught": true,
+   "caught_by": [
+    "property values (pset, key, IFC value type, value)"
+   ]
+  },
+  {
+   "control": "flatten the spatial tree (storey loses its contents)",
+   "must_fail": [
+    "IfcRelContainedInSpatialStructure edges"
+   ],
+   "caught": true,
+   "caught_by": [
+    "IfcRelContainedInSpatialStructure edges"
+   ]
+  },
+  {
+   "control": "change one property's IFC value type",
+   "must_fail": [
+    "property values (pset, key, IFC value type, value)"
+   ],
+   "caught": true,
+   "caught_by": [
+    "property values (pset, key, IFC value type, value)"
+   ]
+  },
+  {
+   "control": "move one drawn vertex 5 mm",
+   "must_fail": [
+    "IfcTriangulatedFaceSet (same indices, coords within 1e-6 unit)",
+    "WITNESS"
+   ],
+   "caught": true,
+   "caught_by": [
+    "IfcTriangulatedFaceSet (same indices, coords within 1e-6 unit)"
+   ]
+  },
+  {
+   "control": "widen one native Extrusion only",
+   "must_fail": [
+    "WITNESS"
+   ],
+   "caught": true,
+   "caught_by": [
+    "WITNESS"
+   ]
+  }
+ ],
+ "controls_caught": 5,
+ "controls_total": 5,
+ "all_rows_pass": true
+}
