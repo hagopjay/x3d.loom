@@ -1,0 +1,60 @@
+{
+ "schema": "loom.eng-loss/1",
+ "from": "the study's model (joints, members, member law, supports, loads)",
+ "to": "X3D 4.0 Immersive, scenes/prism.x3d",
+ "carried": [
+  {
+   "what": "joints",
+   "how": "Transform DEF J0 to J5",
+   "measured": "6 of 6"
+  },
+  {
+   "what": "members with identity, kind, group and end joints",
+   "how": "Transform DEF + MetadataSet",
+   "measured": "12 of 12"
+  },
+  {
+   "what": "length, prestress, worst force, capacity, utilisation",
+   "how": "MetadataDouble, 3 decimals",
+   "measured": "see gate R7"
+  },
+  {
+   "what": "the loaded shapes",
+   "how": "interpolator keys in scenes/prism-press.x3d, 17 load steps",
+   "measured": "positions to 6 decimals"
+  }
+ ],
+ "lost": [
+  {
+   "what": "one-sidedness: a cable cannot push and a strut here is never pulled",
+   "why": "X3D 4.0 has no node for it. RigidBodyPhysics offers BallJoint, SingleAxisHingeJoint, DoubleAxisHingeJoint, SliderJoint, UniversalJoint and MotorJoint (read from X3dUnifiedObjectModel-4.0.xml in x3d_mcp at ca0e75c): none is a spring, a rope or a distance limit. A SliderJoint with a one-sided stop between two BallJoints is the nearest construct and was not tried",
+   "consequence": "the scene shows a tensegrity and cannot behave as one in an X3D physics engine; kind survives only as a metadata string"
+  },
+  {
+   "what": "prestress as a state",
+   "why": "rest lengths are not geometry; they survive only as the metadata number prestress_N",
+   "consequence": "a reader that drops metadata has a shape with no reason to stand"
+  },
+  {
+   "what": "the member law (EA, engineering strain) and the supports",
+   "why": "no X3D field",
+   "consequence": "not in the scene at all; they are in card.json and results/bank.json"
+  },
+  {
+   "what": "the 14 load cases",
+   "why": "no X3D field",
+   "consequence": "only the worst force per member and its case name are carried"
+  },
+  {
+   "what": "true cable diameter",
+   "why": "a 3 mm rope does not show at this scale, so cables are drawn at 6 mm",
+   "consequence": "stated in the scene description; the true diameter is in card.json"
+  }
+ ],
+ "measured_in_scene": {
+  "Transform": 30,
+  "MetadataSet": 12,
+  "RigidBody": 0,
+  "any_joint_node": 0
+ }
+}

@@ -1,11 +1,12 @@
 # x3d.engineering
 
-Two worked studies that paid for [ENGINEERING-PLAYBOOK.md](../ENGINEERING-PLAYBOOK.md) (28 November 2026). Both are worked examples: **not for construction**, and no licensed engineer has reviewed either. Every number is measured by the thread that built it and stays Likely until a second reader recomputes it (law 44).
+Three worked studies behind [ENGINEERING-PLAYBOOK.md](../ENGINEERING-PLAYBOOK.md) (28 November 2026): the two that paid for it and a third added the same day. All are worked examples: **not for construction**, and no licensed engineer has reviewed any of them. Every number is measured by the thread that built it and stays Likely until a second reader recomputes it (law 44).
 
 | Study | What it is | Result | Receipt |
 |---|---|---|---|
 | [fourbar/](fourbar/) | A Grashof crank-rocker judged on paper (kinematics, transmission angle, buckling, pin shear) and stepped on three rigid-body engines from one X3D file | 10 of 10 gates, 8 of 8 controls caught | `runs/engineering-fourbar-20261128/`, re-issued in `-r2` after the adapter change |
 | [ifc-truss/](ifc-truss/) | An IFC4 building compared element by element with its X3D scene (a loss receipt), then a roof truss designed across its court and written as IFC4 and X3D | 22 of 22 gates, 13 of 13 controls caught | `runs/engineering-ifc-truss-20261128/`, re-issued in `-r2` on the fixed validator |
+| [tensegrity/](tensegrity/) | A three-strut tensegrity prism designed for an 800 N load (twist, self-stress, prestress window, two solvers) and the six-strut classic, with a teaching page whose solver is held against the bank | 17 of 17 gates, 17 of 17 controls caught | `runs/engineering-tensegrity-20261128/` |
 
 ## Run them
 
@@ -18,6 +19,8 @@ x3d.engineering/accept.sh fourbar
 pip install ifcopenshell                             # 0.9.0.post1 was used
 export X3D_DEMO=/path/to/x3d.demo                    # the building's IFC and X3D live there
 x3d.engineering/accept.sh ifc-truss
+
+x3d.engineering/accept.sh tensegrity                 # numpy and Node only
 ```
 
 `accept.sh` rebuilds the study, runs Grammar, Meaning and Traps on every scene, runs the study's own `check.py` as the `requirements` witness, accepts under `kit/profiles/x3d-engineering.json`, writes a receipt, and then touches a scene to prove the gate rejects a stale witness.

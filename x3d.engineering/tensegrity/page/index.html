@@ -1,0 +1,624 @@
+<title>Tensegrity Workbench</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/x_ite@16.5.1/dist/x_ite.min.js"></script>
+<!-- X_ITE 16.5.1 stylesheet (MIT, copyright 2009 Holger Seelig and other contributors), icons and fonts removed.
+     A viewer that blocks the CDN stylesheet leaves the 3D surface hidden; the page adopts this copy into the player. -->
+<script type="text/x-css" id="xite-css">
+:host,X3DCanvas{--red:#d71f1f;--orange:#ff9230;--orange-filter:brightness(0) saturate(100%) invert(71%) sepia(100%) saturate(1647%) hue-rotate(335deg) brightness(101%) contrast(101%);--text-color:#fff;--text-color-dark:#fff;--text-shadow-color:#000;--link-color:var(--orange);--progress-background:#fff;--splash-screen-background:#0f0f0f;--splash-screen-image:none;--gradient:linear-gradient(180deg,rgba(35,37,40,.553) 0%,rgba(13,16,21,.831));--border:4px solid rgba(43,45,47,.675);--button-border:1px solid hsla(0,0%,100%,.1);--tint-color:rgba(50,50,50,.44);--tint-hover-color:rgba(64,64,64,.44);--table-tint-color:hsla(0,0%,100%,.083);--icon-filter:none}@media (prefers-color-scheme:light){:host(:not([theme=dark])),X3DCanvas:not([theme=dark]){--red:#e12b2b;--orange-filter:brightness(0) saturate(100%) invert(71%) sepia(100%) saturate(2647%) hue-rotate(335deg) brightness(70%) contrast(121%);--text-color:#000;--text-shadow-color:#fff;--link-color:var(--red);--progress-background:#000;--splash-screen-background:#fcfcfc;--splash-screen-image:none;--gradient:linear-gradient(180deg,rgba(247,247,252,.642) 0%,hsla(252,8%,88%,.6));--border:4px solid rgba(229,229,234,.66);--button-border:1px solid hsla(0,0%,100%,.49);--tint-color:hsla(0,0%,100%,.37);--tint-hover-color:hsla(0,0%,100%,.46);--table-tint-color:var(--tint-color);--icon-filter:invert(100%)}}:host([theme=light]),X3DCanvas[theme=light]{--red:#e12b2b;--orange-filter:brightness(0) saturate(100%) invert(71%) sepia(100%) saturate(2647%) hue-rotate(335deg) brightness(70%) contrast(121%);--text-color:#000;--text-shadow-color:#fff;--link-color:var(--red);--progress-background:#000;--splash-screen-background:#fcfcfc;--splash-screen-image:none;--gradient:linear-gradient(180deg,rgba(247,247,252,.642) 0%,hsla(252,8%,88%,.6));--border:4px solid rgba(229,229,234,.66);--button-border:1px solid hsla(0,0%,100%,.49);--tint-color:hsla(0,0%,100%,.37);--tint-hover-color:hsla(0,0%,100%,.46);--table-tint-color:var(--tint-color);--icon-filter:invert(100%)}:host,X3DCanvas{all:initial;display:inline-block;height:150px;overflow:hidden;-webkit-user-select:none;user-select:none;width:300px}:host(.x_ite-fullscreen),X3DCanvas.x_ite-fullscreen{height:100vh!important;width:100vw!important}X3DCanvas>:not(.x_ite-private-browser,.x_ite-private-menu){display:none}.x_ite-private-browser,.x_ite-private-browser *,.x_ite-private-menu,.x_ite-private-menu *{all:revert}.x_ite-private-browser{height:100%;outline:none;overflow:hidden;position:relative;-webkit-user-select:none;user-select:none}.x_ite-private-surface{height:100%}.x_ite-private-canvas{height:100%;width:100%}.x_ite-private-notification{backdrop-filter:blur(8px);background:var(--gradient);background-clip:padding-box;border:var(--border);border-bottom-left-radius:16px;border-right:none;border-top-left-radius:16px;color:var(--text-color);font-family:X_ITE PT Sans,sans-serif;font-size:10pt;line-height:1.1;padding:5px 0 3px 7px;pointer-events:none;position:absolute;right:0;top:20px;visibility:hidden;white-space:pre;width:0}.x_ite-private-notification span{background:none no-repeat top -1px left 0;background-size:17px 17px;display:inline-block;padding:0 16px 2px 22px;position:relative;top:-1px}.x_ite-private-browser-timings{backdrop-filter:blur(8px);background:var(--gradient);background-clip:padding-box;border-right:var(--border);border-top:var(--border);border-top-right-radius:12px;bottom:0;color:var(--text-color);font-family:X_ITE PT Sans,sans-serif;font-size:9pt;left:0;padding:8px 12px 10px;pointer-events:none;position:absolute;white-space:pre}.x_ite-private-browser-timings :is(table,thead,tbody,tfoot,tr,th,td){box-sizing:border-box;color:var(--text-color);font-size:inherit;line-height:1.1;text-align:left}.x_ite-private-browser-timings table{border-collapse:separate;border-spacing:2px;empty-cells:show;max-width:100%;overflow:hidden;width:100%}.x_ite-private-browser-timings thead th{background:none no-repeat -1px 1px;background-size:17px 17px;color:var(--text-color-dark);filter:var(--icon-filter);font-weight:700;padding-bottom:5px;padding-left:20px;padding-top:3px}.x_ite-private-browser-timings td:first-child{padding-right:10px}.x_ite-private-browser-timings table.more tr.x_ite-private-more td{padding-bottom:5px}.x_ite-private-browser-timings table.less tr.x_ite-private-more~tr{display:none}.x_ite-private-browser-timings td{padding-bottom:2px}.x_ite-private-browser-timings td.pointer{pointer-events:all}.x_ite-private-browser-timings tfoot td:first-child{padding-right:0}.x_ite-private-browser-timings tfoot td{padding-top:4px}.x_ite-private-browser-timings button{background:var(--tint-color);border:var(--button-border);border-radius:10px;box-sizing:border-box;color:var(--text-color);cursor:pointer;font-family:X_ITE PT Sans,sans-serif;font-size:9pt;font-style:italic;height:14pt;line-height:1.1;margin-top:2px;padding:0;pointer-events:all;text-align:center;width:100%}.x_ite-private-browser-timings button:hover{background-color:var(--tint-hover-color)}.x_ite-private-world-info-overlay{inset:0;position:absolute}.x_ite-private-world-info{backdrop-filter:blur(8px);background:var(--gradient);background-clip:padding-box;border:var(--border);border-radius:15px;inset:0;margin:21pt;overflow-y:auto;padding:0 21pt 21pt;position:absolute}.x_ite-private-world-info .x_ite-private-world-info-buttons{border-bottom:4px solid var(--table-tint-color);margin-bottom:12pt}.x_ite-private-world-info button{background:none;border:none;color:var(--text-color);height:21pt;width:100pt}.x_ite-private-world-info button:hover{background-color:var(--table-tint-color)}.x_ite-private-world-info button.active{font-weight:700}.x_ite-private-world-info :is(.x_ite-private-world-info-top,.x_ite-private-world-info-title,.x_ite-private-world-info-info,p){box-sizing:border-box;color:var(--text-color);font-family:X_ITE PT Sans,sans-serif;font-style:normal;line-height:1.3;text-align:left}.x_ite-private-world-info .x_ite-private-world-info-top{font-size:9pt;font-style:italic;font-weight:700;margin:.3em 0}.x_ite-private-world-info .x_ite-private-world-info-title{font-size:16pt;font-weight:700;margin:.3em 0;overflow-wrap:break-word;word-break:break-word}.x_ite-private-world-info .x_ite-private-world-info-info,.x_ite-private-world-info .x_ite-private-world-info-info p{font-size:11pt;margin:.5em 0;overflow-wrap:break-word;word-break:break-word}.x_ite-private-world-info table{border-collapse:collapse;line-height:1.3;margin:.5em 0;width:100%}.x_ite-private-world-info tr:nth-child(odd){background-color:var(--table-tint-color)}.x_ite-private-world-info td{color:var(--text-color);font-family:X_ITE PT Sans,sans-serif;font-size:10pt;overflow-wrap:break-word;padding:4pt;vertical-align:top;word-break:break-word}.x_ite-private-world-info td:first-child{min-width:70px}.x_ite-private-world-info a{color:var(--link-color)}.x_ite-private-menu.context-menu-layer{inset:0;position:fixed;z-index:10000}.x_ite-private-menu .context-menu-list,.x_ite-private-menu.context-menu-list{border:4px solid transparent;border-radius:12px;box-sizing:border-box;color:var(--text-color);display:none;font-family:X_ITE PT Sans,sans-serif;font-size:10pt;line-height:1.2;list-style-type:none;margin:0 0 0 1px;min-width:120px;overscroll-behavior:none;padding:5px 10px 6px 9px;white-space:pre}.x_ite-private-menu.context-menu-list{isolation:isolate;position:fixed;z-index:10000}.x_ite-private-menu .context-menu-list{position:absolute;top:-13px}.x_ite-private-menu .context-menu-background{backdrop-filter:blur(8px);background:var(--gradient);background-clip:padding-box;border:var(--border);border-radius:12px;box-sizing:border-box;inset:0;margin:0 0 0 1px;min-width:120px;outline:none;padding:5px 10px 9px 9px;position:absolute}.x_ite-private-menu .context-menu-item{border-radius:12px;cursor:pointer;font-size:10pt;line-height:1;margin:0;margin:0 4px;padding:0 2px;position:relative;text-align:left}.x_ite-private-menu .context-menu-item:first-of-type{margin-top:4px}.x_ite-private-menu .context-menu-item:last-of-type{margin-bottom:4px}.x_ite-private-menu .context-menu-item:hover:not(.context-menu-not-selectable){background-color:var(--red)}.x_ite-private-menu .context-menu-item:hover>.context-menu-list{display:block}.x_ite-private-menu .context-menu-not-selectable{cursor:default}.x_ite-private-menu .context-menu-separator{border-bottom:1px solid #8a8a8a;border-top:0;cursor:default;margin:2px 0;padding-bottom:0;padding-top:0}.x_ite-private-menu .context-menu-separator+.context-menu-separator{display:none!important}.x_ite-private-menu .context-menu-submenu:after{border-color:transparent transparent transparent #e8eaed;border-style:solid;border-width:4px 0 4px 5px;content:"";display:block;filter:var(--icon-filter);height:0;margin-right:2px;position:absolute;right:4px;top:8px;width:0}.x_ite-private-menu .context-menu-item>span,.x_ite-private-menu label{display:block;padding:5px 24px;width:100%}.x_ite-private-menu label{box-sizing:border-box;cursor:pointer;font-size:10pt;font-weight:400;line-height:1;margin:0}.x_ite-private-menu label span{color:var(--text-color-dark);filter:var(--icon-filter)}.x_ite-private-menu label:has(>input[type=radio]:checked){font-weight:700}.x_ite-private-menu label>*{font-size:10pt;line-height:1;vertical-align:top}.x_ite-private-menu input{appearance:none;cursor:pointer}.x_ite-private-menu input[type=checkbox],.x_ite-private-menu input[type=radio]{background:none no-repeat left 0 top 0;background-size:17px 17px;display:inline-block;filter:var(--icon-filter);height:17px;margin:0 0 0 -22px;padding:0;position:absolute;top:3px;width:17px}.x_ite-private-menu input:checked{filter:var(--orange-filter)}.x_ite-private-menu .context-menu-input:hover input:checked{filter:var(--icon-filter)}.x_ite-private-menu input[type=checkbox]:checked{background-image:none}.x_ite-private-menu input[type=radio]:checked{background-image:none}.x_ite-private-menu span{padding-left:0}.x_ite-private-menu .context-menu-title{font-weight:700}.x_ite-private-menu .context-menu-icon>span{background-position:2px 3px;background-repeat:no-repeat;background-size:17px 17px;color:var(--text-color-dark);display:block;filter:var(--icon-filter)}.x_ite-private-menu .x_ite-private-icon-logo>span{background-image:none;background-position:2px 4px;color:var(--text-color);filter:none}.x_ite-private-icon-viewpoint>span{background-image:none}.x_ite-private-menu .x_ite-private-viewpoint input{background-image:none}.x_ite-private-menu .x_ite-private-viewpoint input:checked{background-image:none}.x_ite-private-icon-viewer>span{background-image:none}.x_ite-private-menu .x_ite-private-examine-viewer :is(input,input:checked){background-image:none}.x_ite-private-menu .x_ite-private-walk-viewer :is(input,input:checked){background-image:none}.x_ite-private-menu .x_ite-private-fly-viewer :is(input,input:checked){background-image:none}.x_ite-private-menu .x_ite-private-plane-viewer :is(input,input:checked){background-image:none}.x_ite-private-menu .x_ite-private-lookat-viewer :is(input,input:checked){background-image:none}.x_ite-private-menu .x_ite-private-none-viewer :is(input,input:checked){background-image:none}.x_ite-private-icon-primitive-quality>span{background-image:none}.x_ite-private-icon-texture-quality>span{background-image:none}.x_ite-private-icon-shading>span{background-image:none}.x_ite-private-icon-animations>span{background-image:none}.x_ite-private-icon-play>span{background-image:none}.x_ite-private-icon-stop>span{background-image:none}.x_ite-private-icon-enter-fullscreen>span{background-image:none}.x_ite-private-icon-leave-fullscreen>span{background-image:none}.x_ite-private-icon-world-info>span{background-image:none}.x_ite-private-icon-info>span{background-image:none}.x_ite-private-splash-screen{background:var(--splash-screen-image) var(--splash-screen-background);background-position:calc(50% - 30px) calc(50% + 58px);inset:0;pointer-events:none;position:absolute}.x_ite-private-spinner{--offset-x:100px;--offset-y:-48px;--size:32px;--padding:8px;--center-x:calc(var(--size)*0.44727 + var(--padding));--center-y:calc(var(--size)*0.52637 + var(--padding));animation:x_ite-spinner-animation 8s linear infinite;background:none no-repeat 50%;background-size:var(--size) var(--size);height:var(--size);left:calc(50% - var(--size)/2 + var(--size)/2 - var(--center-x) + var(--offset-x));padding:var(--padding);position:absolute;top:calc(50% - var(--size)/2 + var(--size)/2 - var(--center-y) + var(--offset-y));transform-origin:var(--center-x) var(--center-y);width:var(--size)}@keyframes x_ite-spinner-animation{to{transform:rotate(1turn)}}.x_ite-private-progress{left:calc(50% - 100px);position:absolute;top:calc(50% - 39pt);width:195px}.x_ite-private-x_ite{color:var(--text-color);font-family:X_ITE PT Sans,sans-serif;font-size:32pt;text-align:center;text-shadow:1px 1px 0 var(--text-shadow-color)}.x_ite-private-x_ite b{font-family:X_ITE PT Sans,sans-serif;font-weight:700}.x_ite-private-spinner-text{color:var(--text-color);font-family:X_ITE PT Sans,sans-serif;font-size:11pt;text-align:center;text-shadow:1px 1px 0 var(--text-shadow-color)}.x_ite-private-progressbar{background:var(--progress-background);border-radius:4px;height:8px;margin:8px;overflow:hidden}.x_ite-private-progressbar div{background:var(--red);height:100%;width:0}.x_ite-private-buttons{align-items:center;background:var(--gradient);background-clip:padding-box;border:var(--border);border-radius:32px;bottom:10px;display:flex;gap:16px;justify-content:center;padding:0 24px 0 16px;position:absolute;right:-16px}.x_ite-private-buttons:is(:empty,:not(:has(:not(.x_ite-private-hidden)))){display:none;opacity:0}.x_ite-private-button{background-repeat:no-repeat;background-size:30px 30px;cursor:pointer;filter:var(--icon-filter);height:30px;width:30px}.x_ite-private-button:hover{scale:1.2}.x_ite-private-no-sound-button{background-image:none;order:1}.x_ite-private-xr-button{background-image:none;order:2}.x_ite-private-fade{opacity:1;transition:display allow-discrete .3s,opacity .3s ease-in-out}@starting-style{.x_ite-private-fade{opacity:0}}.x_ite-private-hidden{display:none;opacity:0}.x_ite-private-splash-screen.x_ite-private-fade{transition:none}.x_ite-private-splash-screen.x_ite-private-hidden{transition:display allow-discrete .2s,opacity .2s ease-in-out}.x_ite-private-button.x_ite-private-fade{transition:display allow-discrete 0s .3s,opacity .3s ease-in-out,scale .2s ease-in-out}@-moz-document url-prefix(){.x_ite-private-fade{transition:visibility .3s,opacity .3s ease-in-out}.x_ite-private-hidden{display:block;transition:visibility 0s .3s,opacity .3s ease-in-out;visibility:hidden}.x_ite-private-splash-screen.x_ite-private-hidden{transition:visibility 0s .2s,opacity .2s ease-in-out}.x_ite-private-button.x_ite-private-fade{transition:visibility 0s .3s,opacity .3s ease-in-out,scale .2s ease-in-out}.x_ite-private-button.x_ite-private-hidden{display:none}}
+</script>
+<style>
+/* Layout: a workbench. One dark 3D stage beside one instrument panel; findings and the audit trail below, in a measured column grid. */
+:root {
+  --bg: #f2f4f8; --panel: #ffffff; --ink: #131a26; --muted: #556176; --line: #d3dae6; --soft: #e8ecf3;
+  --tension: #1c69cf; --compression: #bf4a28; --ok: #17805a; --warn: #a86a12; --bad: #bd3327; --stage: #0b1019; --stage-ink: #dfe7f5;
+  --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif; --body: "Inter", "Segoe UI", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c1017; --panel: #141a25; --ink: #e7edf6; --muted: #94a1b6; --line: #273142; --soft: #1b2331;
+  --tension: #68aaff; --compression: #f08663; --ok: #4fc592; --warn: #e2b04a; --bad: #ff7466; --stage: #070a10; --stage-ink: #dfe7f5; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c1017; --panel: #141a25; --ink: #e7edf6; --muted: #94a1b6; --line: #273142; --soft: #1b2331;
+  --tension: #68aaff; --compression: #f08663; --ok: #4fc592; --warn: #e2b04a; --bad: #ff7466; --stage: #070a10; --stage-ink: #dfe7f5; color-scheme: dark }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(28px, 4.2vw, 44px); line-height: 1.05; font-weight: 700; }
+h2 { font-size: 22px; font-weight: 600; }
+h3 { font-size: 16px; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--tension); }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.lede { max-width: 66ch; color: var(--muted); font-size: 16px; }
+.head { display: flex; flex-direction: column; gap: 12px; }
+.c { color: var(--compression); font-weight: 600; } .t { color: var(--tension); font-weight: 600; }
+.note { font-size: 13px; color: var(--muted); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+.bench { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 880px) { .bench { grid-template-columns: minmax(0, 1fr); } }
+.stage { position: relative; background: var(--stage); border-radius: 10px; overflow: hidden; aspect-ratio: 1 / 1; max-height: 78vh; width: 100%; min-width: 0; }
+@media (min-width: 881px) { .stage { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); } }
+.stage img.poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.stage x3d-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.stage .hud { position: absolute; left: 12px; right: 12px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: space-between; pointer-events: none; }
+.stage .hud > * { pointer-events: auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; font: 12px/1.2 var(--mono); color: var(--stage-ink); background: rgba(7, 10, 16, 0.72); padding: 6px 9px; border-radius: 6px; }
+.legend i { display: inline-block; width: 18px; height: 4px; border-radius: 2px; vertical-align: middle; margin-right: 5px; }
+.views { display: flex; gap: 4px; }
+.views button { font: 12px/1 var(--mono); color: var(--stage-ink); background: rgba(7, 10, 16, 0.72); border: 1px solid rgba(223, 231, 245, 0.25); border-radius: 6px; padding: 6px 8px; cursor: pointer; }
+.views button[aria-pressed="true"] { border-color: var(--stage-ink); }
+.stage .msg { position: absolute; top: 10px; left: 12px; right: 12px; font: 12px/1.35 var(--mono); color: var(--stage-ink); background: rgba(7, 10, 16, 0.72); padding: 6px 9px; border-radius: 6px; }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; min-width: 0; }
+.tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+.tabs button { font: 600 13px/1.25 var(--display); color: var(--muted); background: none; border: 0; border-bottom: 3px solid transparent; padding: 12px 8px 10px; cursor: pointer; text-align: left; }
+.tabs button small { display: block; font: 400 11px/1.3 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 3px; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--compression); }
+.lesson { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.ctl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: baseline; }
+.ctl label { font-weight: 500; }
+.ctl output { font: 500 14px/1 var(--mono); font-variant-numeric: tabular-nums; }
+.ctl input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: var(--compression); margin: 4px 0 0; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.seg { display: flex; flex-wrap: wrap; gap: 4px; }
+.seg button, .btn { font: 500 13px/1 var(--body); color: var(--ink); background: var(--soft); border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--tension); outline-offset: 2px; }
+.gauge { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; align-items: center; }
+.gauge .bar { height: 10px; background: var(--soft); border-radius: 5px; overflow: hidden; }
+.gauge .bar i { display: block; height: 100%; background: var(--tension); border-radius: 5px; width: 0; }
+.gauge .cap { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+.say { border-left: 3px solid var(--line); padding: 2px 0 2px 12px; }
+.say.on { border-left-color: var(--ok); }
+.say.off { border-left-color: var(--warn); }
+.read { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.read div { background: var(--panel); padding: 8px 10px; min-width: 0; }
+.read dt { font: 400 11px/1.3 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.read dd { margin: 2px 0 0; font: 500 17px/1.2 var(--mono); font-variant-numeric: tabular-nums; }
+.read dd small { font-size: 12px; color: var(--muted); font-weight: 400; }
+dl { margin: 0; }
+.chips { display: flex; flex-direction: column; gap: 6px; }
+.chip { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 13px; padding: 6px 9px; border-radius: 6px; background: var(--soft); }
+.chip b { font: 600 11px/1 var(--mono); letter-spacing: 0.08em; padding: 4px 6px; border-radius: 4px; color: var(--panel); background: var(--muted); }
+.chip.ok b { background: var(--ok); } .chip.bad b { background: var(--bad); }
+.chip span.v { font: 13px/1 var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+.window { position: relative; height: 26px; background: var(--soft); border-radius: 6px; }
+.window .band { position: absolute; top: 0; bottom: 0; background: color-mix(in srgb, var(--ok) 32%, transparent); border-left: 2px solid var(--ok); border-right: 2px solid var(--ok); }
+.window .pin { position: absolute; top: -4px; bottom: -4px; width: 3px; background: var(--ink); border-radius: 2px; transform: translateX(-1px); }
+.window span { position: absolute; top: 5px; font: 11px/16px var(--mono); color: var(--ink); white-space: nowrap; }
+.chart { width: 100%; height: auto; display: block; }
+.chart text { font: 10px var(--mono); fill: var(--muted); }
+.chart .ax { stroke: var(--line); stroke-width: 1; fill: none; }
+.chart .cv { stroke: var(--compression); stroke-width: 2; fill: none; }
+.chart .tg { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 3; fill: none; }
+.chart .dot { fill: var(--ink); }
+
+.find { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px 28px; }
+.find article { display: flex; flex-direction: column; gap: 6px; border-top: 2px solid var(--ink); padding-top: 10px; min-width: 0; }
+.find .big { font: 600 26px/1.1 var(--mono); font-variant-numeric: tabular-nums; color: var(--compression); }
+.find article:nth-child(even) .big { color: var(--tension); }
+.find p { color: var(--muted); }
+.find p strong { color: var(--ink); font-weight: 600; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 11px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td.mono { white-space: nowrap; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px 28px; }
+.two ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); }
+.foot { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+section { display: flex; flex-direction: column; gap: 14px; }
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div class="eyebrow">X3D engineering study C · not for construction</div>
+    <h1>Tensegrity Workbench</h1>
+    <p class="lede">Three <span class="c">struts</span> that never touch, held apart by nine <span class="t">cables</span> that are never slack. Fuller called it tensional integrity. Everything about it, the odd 150° twist, the springiness, the way it stiffens when you tighten it, falls out of one matrix. Operate the three lessons, then read what the numbers say.</p>
+  </header>
+
+  <div class="bench">
+    <div class="stage" id="stage">
+      <img class="poster" id="poster" alt="A three-strut tensegrity prism: three red struts crossing in mid-air, tied by nine thin blue cables" src="data:image/webp;base64,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">
+      <x3d-canvas id="xc" splashScreen="false" contextMenu="false" notifications="false" timings="false"></x3d-canvas>
+      <div class="msg" id="msg" hidden></div>
+      <div class="hud">
+        <div class="legend" id="legend"></div>
+        <div class="views" role="group" aria-label="Camera">
+          <button type="button" id="view-0" aria-pressed="true">3/4</button><button type="button" id="view-1" aria-pressed="false">Top</button><button type="button" id="view-2" aria-pressed="false">Side</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="tabs" role="tablist" aria-label="Lessons">
+        <button type="button" role="tab" id="tab-twist" aria-selected="true" aria-controls="lesson-twist"><small>Lesson 1</small>Find the twist</button>
+        <button type="button" role="tab" id="tab-load" aria-selected="false" aria-controls="lesson-load"><small>Lesson 2</small>Prestress is the stiffness</button>
+        <button type="button" role="tab" id="tab-six" aria-selected="false" aria-controls="lesson-six"><small>Lesson 3</small>Six struts</button>
+      </div>
+
+      <div class="lesson" id="lesson-twist" role="tabpanel" aria-labelledby="tab-twist">
+        <p>Turn the top triangle against the base. At almost every angle this is an ordinary frame with nothing to spare. Look for the one angle where it can be tightened against itself.</p>
+        <div class="ctl"><label for="twist">Twist of the top triangle</label><output id="twist-out" for="twist">150.0°</output>
+          <input type="range" id="twist" min="90" max="210" step="0.5" value="150"></div>
+        <div class="row"><button class="btn" type="button" id="twist-snap">Snap to 150°</button><span class="note">Use the Top view to see the angle.</span></div>
+        <div class="gauge"><div class="bar"><i id="twist-bar"></i></div><output class="mono" id="twist-sig">0.0000</output>
+          <div class="cap">Smallest singular value of the 18 × 12 equilibrium matrix. Zero means the 12 member forces are no longer independent.</div></div>
+        <div class="read"><dl><div><dt>Self-stress states</dt><dd id="twist-s">1</dd></div></dl><dl><div><dt>Floppy modes</dt><dd id="twist-m">1</dd></div></dl></div>
+        <p class="say on" id="twist-say"></p>
+        <p class="note">Maxwell's count for 12 members and 6 joints is 12 − (3 × 6 − 6) = 0. That count always equals self-stress states minus floppy modes, so the two appear together or not at all.</p>
+      </div>
+
+      <div class="lesson" id="lesson-load" role="tabpanel" aria-labelledby="tab-load" hidden>
+        <p>The prism at 150°, 1 m tall, on aluminium tubes and 3 mm wire rope. Set how hard the cables are pulled before any load arrives, then load it. The page solves the shape live.</p>
+        <div class="ctl"><label for="pre">Prestress in each side cable</label><output id="pre-out" for="pre">600 N</output>
+          <input type="range" id="pre" min="0" max="1400" step="10" value="600"></div>
+        <div class="window" id="window" aria-hidden="true"><div class="band" id="win-band"></div><div class="pin" id="win-pin"></div><span id="win-lab"></span></div>
+        <p class="note">Green band: where the study's 14 load cases all pass, 489 N to 1,114 N.</p>
+        <div class="row"><span class="note">Load</span>
+          <div class="seg" id="case" role="group" aria-label="Load case">
+            <button type="button" data-c="press" aria-pressed="true">Press</button><button type="button" data-c="one" aria-pressed="false">Press one joint</button><button type="button" data-c="push" aria-pressed="false">Side push</button><button type="button" data-c="lift" aria-pressed="false">Lift</button><button type="button" data-c="twist" aria-pressed="false">Twist</button>
+          </div></div>
+        <div class="ctl"><label for="load">Load</label><output id="load-out" for="load">800 N</output>
+          <input type="range" id="load" min="0" max="1600" step="20" value="800"></div>
+        <div class="read">
+          <dl><div><dt>Top drops</dt><dd id="r-drop">0</dd></div></dl><dl><div><dt>Top turns</dt><dd id="r-turn">0</dd></div></dl>
+          <dl><div><dt>Worst strut</dt><dd id="r-strut">0</dd></div></dl><dl><div><dt>Worst cable</dt><dd id="r-cable">0</dd></div></dl>
+          <dl><div><dt>Slackest cable</dt><dd id="r-slack">0</dd></div></dl><dl><div><dt>Softest stiffness</dt><dd id="r-soft">0</dd></div></dl>
+        </div>
+        <div class="chips" id="chips"></div>
+        <svg class="chart" id="chart" viewBox="0 0 360 170" role="img" aria-label="Movement against load at this prestress"></svg>
+        <p class="note">Solid: movement against load at this prestress. Dashed: the straight line a linear analysis would draw from the first 100 N. The gap is the structure stiffening as it deforms.</p>
+        <div class="row"><span class="note">Show movement at</span><div class="seg" id="exag" role="group" aria-label="Displayed movement scale"><button type="button" data-x="1" aria-pressed="true">true scale</button><button type="button" data-x="5" aria-pressed="false">5 times</button></div></div>
+      </div>
+
+      <div class="lesson" id="lesson-six" role="tabpanel" aria-labelledby="tab-six" hidden>
+        <p>The shape Fuller and Snelson made famous: six struts in three parallel pairs, 24 cables. Slide the pairs apart or together and find where it locks.</p>
+        <div class="ctl"><label for="gap">Gap between parallel struts</label><output id="gap-out" for="gap">0.500 L</output>
+          <input type="range" id="gap" min="0.3" max="0.7" step="0.005" value="0.5"></div>
+        <div class="row"><button class="btn" type="button" id="gap-snap">Snap to half a strut</button></div>
+        <div class="gauge"><div class="bar"><i id="gap-bar"></i></div><output class="mono" id="gap-sig">0.0000</output>
+          <div class="cap">Smallest singular value of the 36 × 30 equilibrium matrix.</div></div>
+        <p class="say on" id="gap-say"></p>
+        <div class="ctl"><label for="pre6">Prestress in each cable</label><output id="pre6-out" for="pre6">200 N</output>
+          <input type="range" id="pre6" min="0" max="600" step="10" value="200"></div>
+        <div class="ctl"><label for="sq">Squeeze on the top triangle</label><output id="sq-out" for="sq">0 N</output>
+          <input type="range" id="sq" min="0" max="600" step="10" value="0"></div>
+        <div class="read">
+          <dl><div><dt>Each strut carries</dt><dd id="s-strut">0</dd></div></dl><dl><div><dt>Cables carry</dt><dd id="s-cable">0</dd></div></dl>
+          <dl><div><dt>Top drops</dt><dd id="s-drop">0</dd></div></dl><dl><div><dt>Slack cables</dt><dd id="s-slack">0</dd></div></dl>
+        </div>
+        <p class="note">This shape is shown and solved, not designed: no strength check is made on it here.</p>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="eyebrow">What the numbers say</div>
+    <h2>Ten things the study measured</h2>
+    <div class="find">
+      <article><div class="big">150°</div><h3>The shape is found, not chosen</h3><p>The smallest singular value of the equilibrium matrix reaches zero at exactly 90° + 180°/3. <strong>Height and radius do not matter.</strong> The study changed both, and made the top smaller than the base, and the root stayed at 150° to better than 1e-9 rad. For 4, 5 and 6 struts the roots are 135°, 126° and 120°.</p></article>
+      <article><div class="big">0 = 1 − 1</div><h3>Maxwell's count says there is nothing to prestress</h3><p>12 members, 6 joints: 12 − 12 = 0, exactly rigid, nothing spare. Calladine's 1978 reading of Maxwell supplies the fine print: the count equals self-stress states minus floppy modes. At 150° both are 1. <strong>The structure buys its prestress with a floppy mode.</strong></p></article>
+      <article><div class="big">1.63 N/m per N</div><h3>Stiffness is rented from prestress</h3><p>The floppy mode has no material stiffness at all. Its stiffness is 978 N/m at 600 N of prestress and 0 at 0 N, on a straight line. The next mode is 54,368 N/m, 56 times stiffer. <strong>A tensegrity is tuned like a drum skin</strong>, not built like a wall.</p></article>
+      <article><div class="big">4.7°</div><h3>It is a screw</h3><p>Press down with 800 N and the top drops 6.5 mm but turns 4.7°, which is 33 mm of travel at the rim. The floppy mode couples shortening to twist, so <strong>most of what you feel is rotation</strong>.</p></article>
+      <article><div class="big">4 of 4</div><h3>Push, pull or twist: every cable tightens</h3><p>Pressing, lifting and twisting in either sense (four load cases) each raised the tension in all nine cables and the compression in all three struts. Lifting the top with 300 N took the struts from 743 N to 757 N of compression. <strong>Only an off-centre load loosens a cable.</strong></p></article>
+      <article><div class="big">489 to 1,114 N</div><h3>Prestress has a floor and a ceiling</h3><p>Below 489 N the top turns more than 5° under the press, and near 200 N a side push lets a cable go slack. Above 1,114 N a strut passes its buckling allowance and a cable its strength allowance almost together. <strong>The design sits at 600 N</strong>: struts at 0.78, cables at 0.77 of what is allowed.</p></article>
+      <article><div class="big">s = 1</div><h3>There is no spare cable</h3><p>One self-stress state means zero redundancy. The study removed one side cable and the count of self-stress states went to 0: the prestress has nowhere to live. A truss with a redundant member forgives a cut. <strong>This does not.</strong></p></article>
+      <article><div class="big">0.04 vs 0.78</div><h3>Buckling governs, again</h3><p>Against yield the worst strut is at 0.04 of capacity. Against Euler buckling the same strut is at 0.78. As in the four-bar study, <strong>the check that looks comfortable is not the one that decides</strong>.</p></article>
+      <article><div class="big">√6</div><h3>The six-strut classic has the same census</h3><p>Parallel struts sit exactly half a strut apart, every cable is 0.612 of a strut long, and each strut carries √6 = 2.449 times a cable's tension. 30 members, 12 joints, count 0, one self-stress, one floppy mode: the prism's arithmetic in a rounder body.</p></article>
+      <article><div class="big">6 joints, 0 ropes</div><h3>X3D can show it and cannot yet be it</h3><p>X3D 4.0's physics component offers six joint nodes and none is a rope, a spring or a distance limit. These scenes carry the tensegrity as geometry, names, metadata and keyframes. <strong>That gap is where a heavier engine belongs</strong>: PhysX has distance joints and MuJoCo has tendons.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Audit trail</div>
+    <h2>How each number was checked</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Check</th><th>Result</th><th>Able to fail?</th></tr></thead>
+      <tbody>
+        <tr><td>Every requirement and reference on the study card</td><td class="mono">17 of 17 gates</td><td>17 of 17 controls caught: each one broke the gate it names</td></tr>
+        <tr><td>Twist found by search against the closed form, 3 to 6 struts</td><td class="mono">under 1e-9 rad</td><td>Yes: the formula with a minus sign is rejected</td></tr>
+        <tr><td>Two static solvers that share only the member law, 14 load cases</td><td class="mono">5.2e-11 m</td><td>Yes: stopping the second solver early is rejected</td></tr>
+        <tr><td>Stiffness matrix against a finite difference of the forces</td><td class="mono">1.1e-10 relative</td><td>Yes: a flipped sign on the prestress term is rejected</td></tr>
+        <tr><td>This page's solver (the script below, unchanged) against the numpy bank</td><td class="mono">5.8e-10 m</td><td>Yes: a wrong prestress pattern misses by 0.0013 m</td></tr>
+        <tr><td>The X3D scene read back and joined to the bank by name</td><td class="mono">6 of 6 joints, 12 of 12 members</td><td>Yes: a joint moved 20 mm and a force edited by 1 N are both rejected</td></tr>
+        <tr><td>X3D 4.0 schema and semantic checks on the three scenes</td><td class="mono">0 errors</td><td>Validator: x3d_mcp at ca0e75c</td></tr>
+      </tbody></table></div>
+    <div class="two">
+      <div><h3>Not checked</h3><ul><li>Nobody outside the session has recomputed a number, so read every result as likely, not confirmed.</li><li>Material values (rope area, rope modulus, breaking load) are from memory and need the maker's sheet.</li><li>No dynamics: there is no mass model and no measured frequency.</li><li>Struts are ideal pin-ended columns; end fittings, cable terminations, fatigue and temperature are not modelled.</li><li>No licensed engineer has reviewed it.</li></ul></div>
+      <div><h3>Where it came from</h3><ul><li>Kenneth Snelson built the first one, the X-Piece, in 1948 at Black Mountain College, where Buckminster Fuller was teaching. Fuller gave it its name, from "tensional integrity". Sources differ on the year he coined it. <a href="https://en.wikipedia.org/wiki/Tensegrity">Tensegrity, Wikipedia</a>.</li><li>C. R. Calladine, "Buckminster Fuller's 'Tensegrity' structures and Clerk Maxwell's rules for the construction of stiff frames", International Journal of Solids and Structures 14 (1978), 161 to 172. <a href="https://doi.org/10.1016/0020-7683(78)90052-5">doi:10.1016/0020-7683(78)90052-5</a>. Cited from its record and summaries; the full text was not read.</li></ul></div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div>Numbers: Python 3.13.18, numpy 2.5.3, from x3d.loom <span class="mono">x3d.engineering/tensegrity</span>. Page solver checked under Node v22.23.5. 3D view: X_ITE 16.5.1, unpatched, with its stylesheet carried in the page.</div>
+    <div>A worked study. Not a certified design and not for manufacture.</div>
+  </footer>
+</div>
+
+<script>
+// Tensegrity solver for the teaching page: geometry, closed-form prestress, and static equilibrium by dynamic
+// relaxation with kinetic damping. Plain JavaScript, no dependencies; the same file runs in the page and in Node,
+// where page_solver_check.js holds it against the numpy bank. Frame: X3D, y up. Units: m, N.
+(function (root) {
+  'use strict';
+  const T = {};
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  const len = (a) => Math.hypot(a[0], a[1], a[2]);
+  T.prism = function (n, R, H, twist, Rt) {
+    if (twist === undefined || twist === null) twist = Math.PI / 2 + Math.PI / n;
+    if (Rt === undefined || Rt === null) Rt = R;
+    const X = [], M = [];
+    for (let i = 0; i < n; i++) { const a = 2 * Math.PI * i / n; X.push([R * Math.cos(a), 0, -R * Math.sin(a)]); }
+    for (let i = 0; i < n; i++) { const a = 2 * Math.PI * i / n + twist; X.push([Rt * Math.cos(a), H, -Rt * Math.sin(a)]); }
+    for (let i = 0; i < n; i++) M.push({ id: 'S' + i, kind: 'strut', group: 'strut', i: i, j: n + i });
+    for (let i = 0; i < n; i++) M.push({ id: 'B' + i, kind: 'cable', group: 'bottom', i: i, j: (i + 1) % n });
+    for (let i = 0; i < n; i++) M.push({ id: 'T' + i, kind: 'cable', group: 'top', i: n + i, j: n + (i + 1) % n });
+    for (let i = 0; i < n; i++) M.push({ id: 'V' + i, kind: 'cable', group: 'side', i: i, j: n + (i - 1 + n) % n });
+    return { X, M };
+  };
+  T.sixStrut = function (L, gap) {
+    const d = (gap === undefined || gap === null) ? L / 2 : gap, X = [], M = [];
+    for (const s of [1, -1]) { X.push([-L / 2, 0, s * d / 2]); X.push([L / 2, 0, s * d / 2]); }
+    for (const s of [1, -1]) { X.push([s * d / 2, -L / 2, 0]); X.push([s * d / 2, L / 2, 0]); }
+    for (const s of [1, -1]) { X.push([0, s * d / 2, -L / 2]); X.push([0, s * d / 2, L / 2]); }
+    for (let k = 0; k < 6; k++) M.push({ id: 'S' + k, kind: 'strut', group: 'strut', i: 2 * k, j: 2 * k + 1 });
+    const pairs = []; let dmin = Infinity;
+    for (let i = 0; i < 12; i++) for (let j = i + 1; j < 12; j++) if ((i >> 2) !== (j >> 2)) { const q = len(sub(X[i], X[j])); pairs.push([i, j, q]); dmin = Math.min(dmin, q); }
+    let c = 0;
+    for (const [i, j, q] of pairs) if (q < dmin * (1 + 1e-9)) { M.push({ id: 'C' + String(c).padStart(2, '0'), kind: 'cable', group: 'cable', i: i, j: j }); c++; }
+    return { X, M };
+  };
+  T.lengths = (X, M) => M.map((m) => len(sub(X[m.j], X[m.i])));
+  // The one self-stress, from the closed-form force densities, scaled so a side cable (or any cable of the six-strut) is 1.
+  T.prismUnitStress = function (n, X, M) {
+    const l = T.lengths(X, M), q = { strut: -1, bottom: 1 / (2 * Math.sin(Math.PI / n)), top: 1 / (2 * Math.sin(Math.PI / n)), side: 1 };
+    const ls = l[3 * n];
+    return M.map((m, k) => q[m.group] * l[k] / ls);
+  };
+  T.sixUnitStress = (M) => M.map((m) => (m.kind === 'strut' ? -Math.sqrt(6) : 1));
+  T.restLengths = (X, M, EA, t) => T.lengths(X, M).map((l, k) => l / (1 + t[k] / EA[k]));
+  // 3-2-1 support: joint a held in x, y, z; joint b in y and across the line a-b; joint c in y.
+  T.support321 = function (X, a, b, c) {
+    const d = sub(X[b], X[a]); let p = [-d[2], 0, d[0]]; const pl = len(p); p = [p[0] / pl, 0, p[2] / pl];
+    return function (V) {
+      V[a][0] = V[a][1] = V[a][2] = 0;
+      V[b][1] = 0; const s = V[b][0] * p[0] + V[b][2] * p[2]; V[b][0] -= s * p[0]; V[b][2] -= s * p[2];
+      V[c][1] = 0;
+    };
+  };
+  T.tensions = function (X, M, EA, L0) {
+    return M.map((m, k) => { const l = len(sub(X[m.j], X[m.i])); const t = EA[k] * (l - L0[k]) / L0[k]; return (m.kind === 'cable' && t < 0) ? 0 : t; });
+  };
+  // Static equilibrium. F: per-joint load [x, y, z]. Returns { X, t, iterations, residual, found }.
+  T.relax = function (X0, M, EA, L0, F, project, tol, maxIt) {
+    tol = tol || 1e-6; maxIt = maxIt || 200000;
+    const n = X0.length, X = X0.map((p) => p.slice()), mass = new Array(n).fill(0), V = X0.map(() => [0, 0, 0]);
+    M.forEach((m, k) => { mass[m.i] += 2 * EA[k] / L0[k]; mass[m.j] += 2 * EA[k] / L0[k]; });
+    let kePrev = 0, res = Infinity, it = 0, t = null;
+    for (; it < maxIt; it++) {
+      const R = F.map((f) => f.slice());
+      t = new Array(M.length);
+      for (let k = 0; k < M.length; k++) {
+        const m = M[k], d = sub(X[m.j], X[m.i]), l = len(d);
+        let tk = EA[k] * (l - L0[k]) / L0[k]; if (m.kind === 'cable' && tk < 0) tk = 0; t[k] = tk;
+        const s = tk / l;
+        R[m.i][0] += s * d[0]; R[m.i][1] += s * d[1]; R[m.i][2] += s * d[2];
+        R[m.j][0] -= s * d[0]; R[m.j][1] -= s * d[1]; R[m.j][2] -= s * d[2];
+      }
+      project(R);
+      res = 0; for (let i = 0; i < n; i++) res += R[i][0] * R[i][0] + R[i][1] * R[i][1] + R[i][2] * R[i][2];
+      res = Math.sqrt(res);
+      if (res < tol) return { X, t, iterations: it, residual: res, found: true };
+      let ke = 0;
+      for (let i = 0; i < n; i++) for (let a = 0; a < 3; a++) { V[i][a] += R[i][a] / mass[i]; ke += mass[i] * V[i][a] * V[i][a]; }
+      if (ke < kePrev) { for (let i = 0; i < n; i++) V[i][0] = V[i][1] = V[i][2] = 0; ke = 0; }
+      else for (let i = 0; i < n; i++) for (let a = 0; a < 3; a++) X[i][a] += V[i][a];
+      kePrev = ke;
+    }
+    return { X, t, iterations: it, residual: res, found: false };
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = T; else root.Tensegrity = T;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+</script>
+<script>
+const DATA = {"params":{"n":3,"R":0.4,"H":1.0,"six_L":1.0},"EA_strut":9956963.756287495,"EA_cable":441000.0,"cap":{"buckling_N":2049.718114992,"cable_allow_N":1666.666666667},"lim":{"floor":0.1,"drop_mm":10.0,"turn_deg":5.0,"push_mm":5.0},"window":{"floor":489.0625,"ceil":1114.0625},"k_per_N":1.6291942860533333,"unit":{"strut":-1.237526201,"poly":0.391691831},"twist_sweep":[[90,0.541137],[91,0.534664],[92,0.528033],[93,0.521248],[94,0.514312],[95,0.50723],[96,0.500005],[97,0.492642],[98,0.485145],[99,0.477519],[100,0.469766],[101,0.461891],[102,0.453899],[103,0.445792],[104,0.437576],[105,0.429253],[106,0.420828],[107,0.412305],[108,0.403687],[109,0.394979],[110,0.386183],[111,0.377304],[112,0.368345],[113,0.35931],[114,0.350203],[115,0.341026],[116,0.331784],[117,0.322479],[118,0.313116],[119,0.303697],[120,0.294225],[121,0.284705],[122,0.275138],[123,0.265529],[124,0.25588],[125,0.246194],[126,0.236475],[127,0.226725],[128,0.216947],[129,0.207144],[130,0.197319],[131,0.187474],[132,0.177612],[133,0.167736],[134,0.157848],[135,0.147952],[136,0.138049],[137,0.128141],[138,0.118232],[139,0.108324],[140,0.098418],[141,0.088518],[142,0.078625],[143,0.068741],[144,0.05887],[145,0.049012],[146,0.03917],[147,0.029346],[148,0.019542],[149,0.009759],[150,0.0],[151,0.009734],[152,0.01944],[153,0.029117],[154,0.038763],[155,0.048377],[156,0.057957],[157,0.067501],[158,0.077008],[159,0.086475],[160,0.095903],[161,0.105288],[162,0.114629],[163,0.123926],[164,0.133176],[165,0.142378],[166,0.15153],[167,0.160632],[168,0.169682],[169,0.178678],[170,0.18762],[171,0.196505],[172,0.205332],[173,0.2141],[174,0.222808],[175,0.231455],[176,0.240038],[177,0.248556],[178,0.257009],[179,0.265395],[180,0.273712],[181,0.281958],[182,0.290134],[183,0.298236],[184,0.306264],[185,0.314216],[186,0.32209],[187,0.329885],[188,0.3376],[189,0.345232],[190,0.35278],[191,0.360242],[192,0.367617],[193,0.374902],[194,0.382096],[195,0.389196],[196,0.396202],[197,0.40311],[198,0.409918],[199,0.416625],[200,0.423228],[201,0.429725],[202,0.436113],[203,0.44239],[204,0.448553],[205,0.4546],[206,0.460529],[207,0.466335],[208,0.472017],[209,0.477572],[210,0.482996]],"gap_sweep":[[0.3,0.223278],[0.305,0.227513],[0.31,0.231761],[0.315,0.236022],[0.32,0.240295],[0.325,0.234737],[0.33,0.228668],[0.335,0.22256],[0.34,0.216412],[0.345,0.210225],[0.35,0.203998],[0.355,0.197732],[0.36,0.191426],[0.365,0.185082],[0.37,0.178699],[0.375,0.172278],[0.38,0.165818],[0.385,0.159319],[0.39,0.152783],[0.395,0.146209],[0.4,0.139598],[0.405,0.132949],[0.41,0.126264],[0.415,0.119541],[0.42,0.112783],[0.425,0.105988],[0.43,0.099158],[0.435,0.092292],[0.44,0.085391],[0.445,0.078456],[0.45,0.071486],[0.455,0.064483],[0.46,0.057446],[0.465,0.050376],[0.47,0.043274],[0.475,0.036139],[0.48,0.028973],[0.485,0.021775],[0.49,0.014547],[0.495,0.007288],[0.5,0.0],[0.505,0.007317],[0.51,0.014664],[0.515,0.022038],[0.52,0.02944],[0.525,0.036869],[0.53,0.044324],[0.535,0.051805],[0.54,0.059312],[0.545,0.066843],[0.55,0.074398],[0.555,0.081976],[0.56,0.089578],[0.565,0.097201],[0.57,0.104846],[0.575,0.112512],[0.58,0.120198],[0.585,0.127903],[0.59,0.135627],[0.595,0.143369],[0.6,0.151129],[0.605,0.158905],[0.61,0.166697],[0.615,0.174505],[0.62,0.182327],[0.625,0.190162],[0.63,0.198011],[0.635,0.205873],[0.64,0.213745],[0.645,0.221629],[0.65,0.229523],[0.655,0.237426],[0.66,0.245338],[0.665,0.253258],[0.67,0.261185],[0.675,0.269118],[0.68,0.277057],[0.685,0.285],[0.69,0.292948],[0.695,0.300899],[0.7,0.308853]]};
+// The workbench. Geometry and statics come from solver.js (inlined above, the file Node checks against the bank);
+// the two singular-value curves and every limit come from DATA, which build_page.py copies out of results/bank.json.
+(() => {
+  'use strict';
+  const T = globalThis.Tensegrity, D = DATA, P = D.params, $ = (id) => document.getElementById(id);
+  const num = (x, d) => x.toLocaleString('en-US', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+  const S = { lesson: 'twist', twist: 150, pre: 600, load: 800, lcase: 'press', exag: 1, gap: 0.5, pre6: 200, sq: 0, view: 0 };
+  let br = null, world = null, worldKind = null, busy = false, again = false;
+
+  // ---------------------------------------------------------------- small vector kit
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  const len = (a) => Math.hypot(a[0], a[1], a[2]);
+  function yTo(d) {                                   // axis-angle turning +y onto d
+    const l = len(d), x = d[0] / l, y = d[1] / l, z = d[2] / l, s = Math.hypot(z, x);
+    return s < 1e-12 ? [1, 0, 0, y > 0 ? 0 : Math.PI] : [z / s, 0, -x / s, Math.atan2(s, y)];
+  }
+  function lookAt(pos, target) {                      // Viewpoint orientation, +y up
+    let f = sub(target, pos); const fl = len(f); f = f.map((c) => c / fl);
+    let r = [f[1] * 0 - f[2] * 1, f[2] * 0 - f[0] * 0, f[0] * 1 - f[1] * 0]; const rl = len(r);
+    if (rl < 1e-9) return [1, 0, 0, f[1] < 0 ? -Math.PI / 2 : Math.PI / 2];
+    r = r.map((c) => c / rl);
+    const u = [r[1] * f[2] - r[2] * f[1], r[2] * f[0] - r[0] * f[2], r[0] * f[1] - r[1] * f[0]];
+    const R = [[r[0], u[0], -f[0]], [r[1], u[1], -f[1]], [r[2], u[2], -f[2]]];
+    const ang = Math.acos(Math.max(-1, Math.min(1, (R[0][0] + R[1][1] + R[2][2] - 1) / 2)));
+    if (ang < 1e-9) return [0, 1, 0, 0];
+    const k = 2 * Math.sin(ang);
+    return [(R[2][1] - R[1][2]) / k, (R[0][2] - R[2][0]) / k, (R[1][0] - R[0][1]) / k, ang];
+  }
+  function ramp(u) {                                  // utilisation 0..1: blue, teal, amber, red
+    u = Math.max(0, Math.min(1, u));
+    const st = [[0, [0.25, 0.55, 0.95]], [0.5, [0.35, 0.85, 0.75]], [0.8, [0.98, 0.72, 0.2]], [1, [0.95, 0.2, 0.15]]];
+    for (let i = 1; i < st.length; i++) if (u <= st[i][0]) { const w = (u - st[i - 1][0]) / (st[i][0] - st[i - 1][0]); return st[i - 1][1].map((c, a) => c + w * (st[i][1][a] - c)); }
+    return st[3][1];
+  }
+  const lerpTable = (tab, x) => {                     // tab: [[x, y], ...] evenly spaced
+    const dx = tab[1][0] - tab[0][0], f = Math.max(0, Math.min(tab.length - 1, (x - tab[0][0]) / dx)), i = Math.min(tab.length - 2, Math.floor(f));
+    return tab[i][1] + (f - i) * (tab[i + 1][1] - tab[i][1]);
+  };
+
+  // ---------------------------------------------------------------- models
+  const EAof = (M) => M.map((m) => (m.kind === 'strut' ? D.EA_strut : D.EA_cable));
+  function prismAt(twistDeg) { return T.prism(P.n, P.R, P.H, twistDeg * Math.PI / 180); }
+  function sixAt(gap) {                               // stood on one of its cable triangles
+    const g = T.sixStrut(P.six_L, gap * P.six_L), q = Math.SQRT1_2, n = 1 / Math.sqrt(3);
+    const e1 = [q, -q, 0], nn = [n, n, n], e3 = [e1[1] * nn[2] - e1[2] * nn[1], e1[2] * nn[0] - e1[0] * nn[2], e1[0] * nn[1] - e1[1] * nn[0]];
+    let X = g.X.map((p) => [p[0] * e1[0] + p[1] * e1[1] + p[2] * e1[2], p[0] * nn[0] + p[1] * nn[1] + p[2] * nn[2], p[0] * e3[0] + p[1] * e3[1] + p[2] * e3[2]]);
+    const lo = Math.min(...X.map((p) => p[1])); X = X.map((p) => [p[0], p[1] - lo + 0.02, p[2]]);
+    const order = X.map((p, i) => [p[1], i]).sort((a, b) => a[0] - b[0]).map((e) => e[1]);
+    return { X, M: g.M, base: order.slice(0, 3), top: order.slice(-3) };
+  }
+  function loadOn(X, lcase, Pn) {
+    const n = P.n, F = X.map(() => [0, 0, 0]);
+    const rad = (i) => { const h = Math.hypot(X[i][0], X[i][2]); return [X[i][0] / h, 0, X[i][2] / h]; };
+    const tan = (i) => { const r = rad(i); return [r[2], 0, -r[0]]; };
+    if (lcase === 'press') for (let i = n; i < 2 * n; i++) F[i][1] = -Pn / n;
+    if (lcase === 'one') F[n][1] = -Pn;
+    if (lcase === 'push') F[n] = rad(n).map((c) => c * Pn);
+    if (lcase === 'lift') for (let i = n; i < 2 * n; i++) F[i][1] = Pn / n;
+    if (lcase === 'twist') for (let i = n; i < 2 * n; i++) F[i] = tan(i).map((c) => c * Pn / n);
+    return F;
+  }
+  function solvePrism(pre, lcase, Pn, start) {
+    const g = T.prism(P.n, P.R, P.H), tu = T.prismUnitStress(P.n, g.X, g.M), EA = EAof(g.M), tpre = tu.map((v) => v * pre);
+    const L0 = T.restLengths(g.X, g.M, EA, tpre), F = loadOn(g.X, lcase, Pn);
+    const r = T.relax(start || g.X, g.M, EA, L0, F, T.support321(g.X, 0, 1, 2), 1e-6, 80000);
+    const n = P.n; let drop = 0, turn = 0, move = 0;
+    for (let i = n; i < 2 * n; i++) { drop -= (r.X[i][1] - g.X[i][1]) / n; turn += (Math.atan2(-r.X[i][2], r.X[i][0]) - Math.atan2(-g.X[i][2], g.X[i][0])) / n; }
+    for (let i = 0; i < g.X.length; i++) move = Math.max(move, len(sub(r.X[i], g.X[i])));
+    return { X0: g.X, M: g.M, X: r.X, t: r.t, tpre, F, found: r.found, drop, turn: turn * 180 / Math.PI, move };
+  }
+
+  // ---------------------------------------------------------------- the X3D world
+  const R_STRUT = 0.0125, R_CABLE = 0.004, R_JOINT = 0.021;
+  function worldXML(X, M, center, floorR, views) {
+    const f = (x) => (Math.abs(x) < 5e-7 ? '0' : x.toFixed(5));
+    const v = (p) => p.map(f).join(' ');
+    let s = '<X3D profile="Immersive" version="4.0"><Scene>' +
+      '<Background skyColor="0.035 0.05 0.085, 0.07 0.10 0.16, 0.16 0.20 0.28, 0.09 0.11 0.15, 0.05 0.06 0.08" skyAngle="1.2, 1.5708, 1.75, 3.14159265"/>' +
+      '<NavigationInfo type=\'"EXAMINE" "ANY"\' headlight="true" transitionTime="0.6"/>';
+    views.forEach((p, i) => { const o = lookAt(p, center); s += `<Viewpoint DEF="V${i}" position="${v(p)}" orientation="${v(o)}" centerOfRotation="${v(center)}"/>`; });
+    s += '<DirectionalLight direction="-0.45 -0.8 -0.4" intensity="0.9" color="1 0.97 0.92"/><DirectionalLight direction="0.6 -0.3 0.7" intensity="0.35" color="0.75 0.85 1"/>';
+    const seg = 96, pts = [], idx = [];
+    for (let k = 0; k < seg; k++) { pts.push(`${f(center[0] + floorR * Math.cos(2 * Math.PI * k / seg))} -0.024 ${f(center[2] - floorR * Math.sin(2 * Math.PI * k / seg))}`); idx.push(k); }
+    s += `<Shape><Appearance><Material diffuseColor="0.13 0.15 0.19" specularColor="0.08 0.08 0.08" shininess="0.1"/></Appearance><IndexedFaceSet solid="true" convex="true" coordIndex="${idx.join(' ')} -1"><Coordinate point="${pts.join(', ')}"/></IndexedFaceSet></Shape>`;
+    s += `<Shape><Appearance><Material DEF="GhostMat" emissiveColor="0.75 0.8 0.9" transparency="1"/></Appearance><IndexedLineSet coordIndex="${M.map((m) => m.i + ' ' + m.j + ' -1').join(' ')}"><Coordinate DEF="Ghost" point="${X.map(v).join(', ')}"/></IndexedLineSet></Shape>`;
+    const arrowMat = '<Appearance><Material diffuseColor="1 0.85 0.3" emissiveColor="0.5 0.4 0.1"/></Appearance>';
+    X.forEach((p, i) => {
+      s += `<Transform DEF="J${i}" translation="${v(p)}"><Shape><Appearance><Material diffuseColor="0.92 0.93 0.95" specularColor="0.6 0.6 0.6" shininess="0.6"/></Appearance><Sphere radius="${R_JOINT}"/></Shape></Transform>`;
+      s += `<Transform DEF="A${i}" translation="${v(p)}" scale="0.001 0.001 0.001"><Transform DEF="AL${i}"><Transform translation="0 0.165 0"><Shape>${arrowMat}<Cylinder radius="0.006" height="0.18"/></Shape></Transform></Transform>` +
+        `<Transform translation="0 0.052 0" rotation="1 0 0 3.14159265"><Shape>${arrowMat}<Cone bottomRadius="0.017" height="0.046"/></Shape></Transform></Transform>`;
+    });
+    M.forEach((m, k) => {
+      const strut = m.kind === 'strut';
+      s += `<Transform DEF="M${k}"><Transform DEF="L${k}"><Shape><Appearance><Material DEF="C${k}" diffuseColor="${strut ? '0.86 0.42 0.30' : '0.30 0.62 0.98'}" specularColor="0.45 0.45 0.45" shininess="0.4"/></Appearance>` +
+        `<Cylinder radius="${strut ? R_STRUT : R_CABLE}" height="1"/></Shape></Transform></Transform>`;
+    });
+    return s + '</Scene></X3D>';
+  }
+  async function ensureWorld(kind, X, M) {
+    if (!br || worldKind === kind) return;
+    const prism = kind === 'prism', center = prism ? [0, 0.5, 0] : [0, 0.47, 0];
+    const views = prism ? [[1.75, 1.2, 1.95], [0.001, 2.9, 0], [0, 0.5, 2.8]] : [[1.5, 1.25, 1.75], [0.001, 2.8, 0], [0, 0.47, 2.6]];
+    const scene = await br.createX3DFromString(worldXML(X, M, center, 0.8, views));
+    await br.replaceWorld(scene);
+    const get = (n) => scene.getNamedNode(n);
+    world = { J: X.map((_, i) => get('J' + i)), A: X.map((_, i) => get('A' + i)), AL: X.map((_, i) => get('AL' + i)), M: M.map((_, k) => get('M' + k)), L: M.map((_, k) => get('L' + k)),
+      C: M.map((_, k) => get('C' + k)), ghost: get('Ghost'), ghostMat: get('GhostMat'), V: [0, 1, 2].map((i) => get('V' + i)) };
+    worldKind = kind; S.view = 0; markView();
+    dress(); setTimeout(() => { $('poster').hidden = true; }, 400);
+  }
+  // draw: X shown, per-member colour [r,g,b] and transparency, optional ghost X0 and per-joint load vectors F with a reference magnitude
+  function draw(X, M, col, tr, X0, F, Fref) {
+    if (!world) return;
+    X.forEach((p, i) => { world.J[i].translation = new X3D.SFVec3f(p[0], p[1], p[2]); });
+    M.forEach((m, k) => {
+      const a = X[m.i], b = X[m.j], d = sub(b, a), r = yTo(d);
+      world.M[k].translation = new X3D.SFVec3f((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2);
+      world.M[k].rotation = new X3D.SFRotation(r[0], r[1], r[2], r[3]);
+      world.L[k].scale = new X3D.SFVec3f(1, len(d), 1);
+      world.C[k].diffuseColor = new X3D.SFColor(col[k][0], col[k][1], col[k][2]);
+      world.C[k].transparency = tr[k];
+    });
+    world.ghostMat.transparency = X0 ? 0.7 : 1;
+    if (X0) world.ghost.point = new X3D.MFVec3f(...X0.map((p) => new X3D.SFVec3f(p[0], p[1], p[2])));
+    X.forEach((p, i) => {
+      const fm = F ? len(F[i]) : 0;
+      if (fm < 1e-9) { world.A[i].scale = new X3D.SFVec3f(0.001, 0.001, 0.001); return; }
+      const r = yTo(F[i].map((c) => -c));
+      world.A[i].translation = new X3D.SFVec3f(p[0], p[1], p[2]);
+      world.A[i].rotation = new X3D.SFRotation(r[0], r[1], r[2], r[3]);
+      world.A[i].scale = new X3D.SFVec3f(1, 1, 1);
+      world.AL[i].scale = new X3D.SFVec3f(1, Math.max(0.25, Math.min(1.6, fm / Fref)), 1);
+    });
+  }
+  const GREY = [0.45, 0.48, 0.54], RED = [0.86, 0.42, 0.30], BLUE = [0.30, 0.62, 0.98];
+
+  // ---------------------------------------------------------------- lesson 1
+  function showTwist() {
+    const g = prismAt(S.twist), sig = lerpTable(D.twist_sweep, S.twist), on = Math.abs(S.twist - 150) < 0.01;
+    $('twist-out').textContent = S.twist.toFixed(1) + '°';
+    $('twist-sig').textContent = (on ? 0 : sig).toFixed(4);
+    $('twist-bar').style.width = Math.min(100, (on ? 0 : sig) / 0.55 * 100) + '%';
+    $('twist-s').textContent = on ? '1' : '0'; $('twist-m').textContent = on ? '1' : '0';
+    const say = $('twist-say'); say.className = 'say ' + (on ? 'on' : 'off');
+    say.textContent = on
+      ? `Locked. One set of forces now balances itself at every joint with no load: tension 1 in each side cable, ${D.unit.poly.toFixed(3)} in each triangle cable, compression ${(-D.unit.strut).toFixed(3)} in each strut. Scale it up and you have prestress.`
+      : 'No self-stress here. Each member force is fixed by the loads alone, so with no load every force is zero. Tighten a cable and nothing balances it: the frame just moves to a new shape.';
+    legend(on ? [['#db6b4c', 'strut, compression'], ['#4c9efa', 'cable, tension']] : [['#db6b4c', 'strut'], ['#737a8a', 'cable, cannot be pretensioned']]);
+    ensureWorld('prism', g.X, g.M).then(() => draw(g.X, g.M, g.M.map((m) => (m.kind === 'strut' ? RED : on ? BLUE : GREY)), g.M.map(() => 0), null, null, 1));
+  }
+
+  // ---------------------------------------------------------------- lesson 2
+  const CASES = { press: { ref: 800 / 3, lim: 'press' }, one: { ref: 800, lim: null }, push: { ref: 200, lim: 'push' }, lift: { ref: 100, lim: null }, twist: { ref: 100, lim: null } };
+  let curveKey = '', curve = null;
+  function showLoad() {
+    const r = solvePrism(S.pre, S.lcase, S.load), cab = r.M.map((m) => m.kind === 'cable');
+    $('pre-out').textContent = num(S.pre) + ' N'; $('load-out').textContent = num(S.load) + ' N';
+    let strut = 0, cable = 0, least = Infinity, leastFrac = Infinity, slack = 0;
+    r.M.forEach((m, k) => {
+      if (m.kind === 'strut') strut = Math.max(strut, -r.t[k]);
+      else { cable = Math.max(cable, r.t[k]); least = Math.min(least, r.t[k]); if (r.tpre[k] > 0) leastFrac = Math.min(leastFrac, r.t[k] / r.tpre[k]); if (r.t[k] <= 0) slack++; }
+    });
+    const uS = strut / D.cap.buckling_N, uC = cable / D.cap.cable_allow_N;
+    $('r-drop').innerHTML = `${num(r.drop * 1e3, 2)} <small>mm</small>`; $('r-turn').innerHTML = `${num(Math.abs(r.turn), 2)} <small>°</small>`;
+    $('r-strut').innerHTML = `${num(strut)} <small>N of ${num(D.cap.buckling_N)}</small>`; $('r-cable').innerHTML = `${num(cable)} <small>N of ${num(D.cap.cable_allow_N)}</small>`;
+    $('r-slack').innerHTML = slack ? `${slack} <small>slack</small>` : `${num(least)} <small>N</small>`;
+    $('r-soft').innerHTML = `${num(D.k_per_N * S.pre)} <small>N/m</small>`;
+    const chips = [];
+    const taut = S.pre > 0 && leastFrac >= D.lim.floor && !slack;
+    chips.push([taut, 'Every cable stays taut', S.pre > 0 ? `slackest at ${num(Math.max(0, leastFrac) * 100)} % of its prestress, floor 10 %` : 'no prestress']);
+    chips.push([uS <= 1, 'Struts inside the buckling allowance', `${uS.toFixed(2)} of 1`]);
+    chips.push([uC <= 1, 'Cables inside the strength allowance', `${uC.toFixed(2)} of 1`]);
+    const lim = CASES[S.lcase].lim;
+    if (lim === 'press') chips.push([r.drop * 1e3 <= D.lim.drop_mm && Math.abs(r.turn) <= D.lim.turn_deg, 'Sag and turn inside the limit', `${num(D.lim.drop_mm)} mm and ${num(D.lim.turn_deg)}°`]);
+    else if (lim === 'push') chips.push([r.move * 1e3 <= D.lim.push_mm, 'Movement inside the limit', `${num(r.move * 1e3, 2)} of ${num(D.lim.push_mm)} mm`]);
+    else chips.push([null, 'Movement', `${num(r.move * 1e3, 1)} mm at the worst joint, no limit set for this case`]);
+    if (!r.found) chips.unshift([false, 'No resting shape found', 'the structure folds under this load']);
+    $('chips').innerHTML = chips.map(([ok, what, v]) => `<div class="chip ${ok === null ? '' : ok ? 'ok' : 'bad'}"><b>${ok === null ? 'INFO' : ok ? 'PASS' : 'FAIL'}</b><span>${what}</span><span class="v">${v}</span></div>`).join('');
+    $('win-pin').style.left = (S.pre / 1400 * 100) + '%';
+    legend([['#4089f2', 'lightly used'], ['#59d9bf', 'half'], ['#fab833', '80 %'], ['#f23326', 'at the limit'], ['#737a8a', 'slack']]);
+    const key = S.pre + '|' + S.lcase;
+    if (key !== curveKey) {
+      curve = []; let start = null;
+      for (let Pn = 0; Pn <= 1600; Pn += 100) { const q = solvePrism(S.pre, S.lcase, Pn, start); start = q.found ? q.X : null; curve.push([Pn, q.found ? (lim === 'press' || S.lcase === 'one' || S.lcase === 'lift' ? Math.abs(q.drop) : q.move) * 1e3 : NaN]); }
+      curveKey = key;
+    }
+    drawChart(lim === 'press' || S.lcase === 'one' || S.lcase === 'lift' ? 'top drop, mm' : 'worst joint movement, mm');
+    const Xs = r.X.map((p, i) => p.map((c, a) => r.X0[i][a] + S.exag * (c - r.X0[i][a])));
+    const col = r.M.map((m, k) => (m.kind === 'strut' ? ramp(-r.t[k] / D.cap.buckling_N) : r.t[k] <= 0 ? GREY : ramp(r.t[k] / D.cap.cable_allow_N)));
+    ensureWorld('prism', r.X0, r.M).then(() => draw(Xs, r.M, col, r.M.map((m, k) => (cab[k] && r.t[k] <= 0 ? 0.6 : 0)), r.X0, S.load > 0 ? r.F : null, CASES[S.lcase].ref));
+  }
+  function drawChart(ylab) {
+    const W = 360, H = 170, l = 38, rgt = 8, top = 10, bot = 26, pts = curve.filter((p) => isFinite(p[1]));
+    const ymax = Math.max(1, ...pts.map((p) => p[1])) * 1.08, x = (Pn) => l + Pn / 1600 * (W - l - rgt), y = (v) => H - bot - v / ymax * (H - top - bot);
+    let s = `<path class="ax" d="M${l} ${top}V${H - bot}H${W - rgt}"/>`;
+    for (let Pn = 0; Pn <= 1600; Pn += 400) s += `<text x="${x(Pn)}" y="${H - bot + 12}" text-anchor="middle">${Pn}</text>`;
+    const step = ymax > 40 ? 20 : ymax > 16 ? 5 : ymax > 6 ? 2 : 1;
+    for (let v = 0; v <= ymax; v += step) s += `<text x="${l - 5}" y="${y(v) + 3}" text-anchor="end">${v}</text><path class="ax" d="M${l - 2} ${y(v)}H${l}"/>`;
+    s += `<text x="${W - rgt}" y="${H - 3}" text-anchor="end">load, N</text><text x="${l + 4}" y="${top + 8}">${ylab}</text>`;
+    if (pts.length > 1) {
+      const slope = pts[1][1] / 100, pend = Math.min(1600, ymax / Math.max(slope, 1e-9));
+      if (slope > 0) s += `<path class="tg" d="M${x(0)} ${y(0)}L${x(pend)} ${y(slope * pend)}"/>`;
+      s += `<path class="cv" d="M${pts.map((p) => x(p[0]).toFixed(1) + ' ' + y(p[1]).toFixed(1)).join('L')}"/>`;
+      const i = Math.min(curve.length - 2, Math.floor(S.load / 100)), w = S.load / 100 - i, a = curve[i][1], b = curve[i + 1][1];
+      if (isFinite(a) && isFinite(b)) s += `<circle class="dot" cx="${x(S.load)}" cy="${y(a + w * (b - a))}" r="4"/>`;
+    }
+    $('chart').innerHTML = s;
+  }
+
+  // ---------------------------------------------------------------- lesson 3
+  function showSix() {
+    const g = sixAt(S.gap), sig = lerpTable(D.gap_sweep, S.gap), on = Math.abs(S.gap - 0.5) < 1e-6;
+    $('gap-out').textContent = S.gap.toFixed(3) + ' L'; $('gap-sig').textContent = (on ? 0 : sig).toFixed(4);
+    $('gap-bar').style.width = Math.min(100, (on ? 0 : sig) / 0.16 * 100) + '%';
+    $('pre6-out').textContent = num(S.pre6) + ' N'; $('sq-out').textContent = num(S.sq) + ' N';
+    $('pre6').disabled = $('sq').disabled = !on;
+    const say = $('gap-say'); say.className = 'say ' + (on ? 'on' : 'off');
+    say.textContent = on
+      ? 'Locked at half a strut. Every cable is 0.612 L long, and each strut carries √6 = 2.449 times the tension of a cable.'
+      : 'No self-stress at this gap, so there is nothing to tighten. The prestress and squeeze controls wake up at exactly half a strut.';
+    let X = g.X, col = g.M.map((m) => (m.kind === 'strut' ? RED : on ? BLUE : GREY)), tr = g.M.map(() => 0), F = null, X0 = null;
+    if (on) {
+      const EA = EAof(g.M), tpre = T.sixUnitStress(g.M).map((v) => v * S.pre6), L0 = T.restLengths(g.X, g.M, EA, tpre);
+      F = g.X.map(() => [0, 0, 0]); g.top.forEach((i) => { F[i][1] = -S.sq / 3; });
+      const r = T.relax(g.X, g.M, EA, L0, F, T.support321(g.X, g.base[0], g.base[1], g.base[2]), 1e-6, 80000);
+      let strut = 0, cmin = Infinity, cmax = 0, slack = 0, drop = 0;
+      g.M.forEach((m, k) => { if (m.kind === 'strut') strut = Math.max(strut, -r.t[k]); else { cmin = Math.min(cmin, r.t[k]); cmax = Math.max(cmax, r.t[k]); if (r.t[k] <= 0) slack++; } });
+      g.top.forEach((i) => { drop -= (r.X[i][1] - g.X[i][1]) / 3; });
+      $('s-strut').innerHTML = `${num(strut)} <small>N</small>`; $('s-cable').innerHTML = `${num(cmin)} to ${num(cmax)} <small>N</small>`;
+      $('s-drop').innerHTML = `${num(drop * 1e3, 2)} <small>mm</small>`; $('s-slack').textContent = slack + ' of 24';
+      X = r.X; X0 = S.sq > 0 ? g.X : null; if (S.sq === 0) F = null;
+      col = g.M.map((m, k) => (m.kind === 'strut' ? RED : r.t[k] <= 0 ? GREY : S.sq === 0 ? BLUE : ramp(r.t[k] / (2 * Math.max(S.pre6, 1)))));
+      tr = g.M.map((m, k) => (m.kind === 'cable' && r.t[k] <= 0 ? 0.6 : 0));
+      legend(S.sq === 0 ? [['#db6b4c', 'strut, compression'], ['#4c9efa', 'cable, tension']] : [['#db6b4c', 'strut'], ['#4089f2', 'cable losing tension'], ['#59d9bf', 'at its prestress'], ['#f23326', 'at twice its prestress'], ['#737a8a', 'slack']]);
+    } else {
+      ['s-strut', 's-cable', 's-drop'].forEach((id) => { $(id).textContent = 'none'; }); $('s-slack').textContent = 'all 24';
+      legend([['#db6b4c', 'strut'], ['#737a8a', 'cable, cannot be pretensioned']]);
+    }
+    ensureWorld('six', g.X, g.M).then(() => draw(X, g.M, col, tr, X0, F, 100));
+  }
+
+  // ---------------------------------------------------------------- shell
+  function legend(items) { $('legend').innerHTML = items.map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join(''); }
+  function markView() { [0, 1, 2].forEach((i) => $('view-' + i).setAttribute('aria-pressed', i === S.view ? 'true' : 'false')); }
+  function render() {
+    if (busy) { again = true; return; }
+    busy = true;
+    try { ({ twist: showTwist, load: showLoad, six: showSix })[S.lesson](); } finally { busy = false; }
+    if (again) { again = false; render(); }
+  }
+  function dress() {                                  // give the player its stylesheet and unhide its surface
+    const root = $('xc').shadowRoot; if (!root) return;
+    if (!root.__dressed) {
+      const css = $('xite-css').textContent;
+      try { const sh = new CSSStyleSheet(); sh.replaceSync(css); root.adoptedStyleSheets = [...root.adoptedStyleSheets, sh]; }
+      catch (e) { const st = document.createElement('style'); st.textContent = css; root.prepend(st); }
+      root.__dressed = true;
+    }
+    const surf = root.querySelector('.x_ite-private-browser'); if (surf) surf.style.display = '';
+  }
+  function bind(id, key, parse) { $(id).addEventListener('input', (e) => { S[key] = parse(e.target.value); render(); }); }
+  bind('twist', 'twist', Number); bind('pre', 'pre', Number); bind('load', 'load', Number); bind('gap', 'gap', Number); bind('pre6', 'pre6', Number); bind('sq', 'sq', Number);
+  $('twist-snap').addEventListener('click', () => { S.twist = 150; $('twist').value = 150; render(); });
+  $('gap-snap').addEventListener('click', () => { S.gap = 0.5; $('gap').value = 0.5; render(); });
+  for (const b of $('case').querySelectorAll('button')) b.addEventListener('click', () => {
+    S.lcase = b.dataset.c; $('case').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    const d = { press: 800, one: 800, push: 200, lift: 300, twist: 300 }[S.lcase]; S.load = d; $('load').value = d; render();
+  });
+  for (const b of $('exag').querySelectorAll('button')) b.addEventListener('click', () => {
+    S.exag = Number(b.dataset.x); $('exag').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); render();
+  });
+  for (const name of ['twist', 'load', 'six']) $('tab-' + name).addEventListener('click', () => {
+    S.lesson = name;
+    for (const n of ['twist', 'load', 'six']) { $('tab-' + n).setAttribute('aria-selected', n === name ? 'true' : 'false'); $('lesson-' + n).hidden = n !== name; }
+    render();
+  });
+  [0, 1, 2].forEach((i) => $('view-' + i).addEventListener('click', () => { if (world) { world.V[i].set_bind = true; S.view = i; markView(); } }));
+  $('win-band').style.left = (D.window.floor / 1400 * 100) + '%'; $('win-band').style.width = ((D.window.ceil - D.window.floor) / 1400 * 100) + '%';
+  $('win-lab').style.left = 'calc(' + (D.window.floor / 1400 * 100) + '% + 6px)'; $('win-lab').textContent = 'all 14 cases pass';
+
+  async function boot() {
+    render();                                         // numbers first: they do not need the 3D player
+    try {
+      if (typeof X3D === 'undefined') throw new Error('player script missing');
+      br = $('xc').browser; dress();
+      let tries = 0; const keep = setInterval(() => { dress(); if (++tries > 20) clearInterval(keep); }, 250);
+      render();
+    } catch (e) {
+      const m = $('msg'); m.hidden = false; m.textContent = 'The 3D player did not load here, so the picture is a still. Every control and number on the right still works.';
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+
+</script>
