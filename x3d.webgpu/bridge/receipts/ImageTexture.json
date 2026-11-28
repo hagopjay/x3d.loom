@@ -1,0 +1,76 @@
+{
+ "node": "ImageTexture",
+ "pass": true,
+ "xsd": {
+  "ok": true,
+  "msg": "fixtures/ImageTexture.x3d validates",
+  "validator": "xmllint (libxml2) vs x3d-4.0.xsd from x3d_mcp"
+ },
+ "test": {
+  "ok": true,
+  "ours": "pass 2/2",
+  "xite": "pass 2/2",
+  "map": {},
+  "oursOk": true,
+  "mapX": {},
+  "xiteOk": true,
+  "visual": {
+   "main": {
+    "iou": 0.95,
+    "coverOurs": 1,
+    "coverXite": 0.95,
+    "bboxOurs": [
+     124,
+     84,
+     195,
+     155
+    ],
+    "bboxXite": [
+     123,
+     83,
+     196,
+     156
+    ],
+    "nOurs": 5184,
+    "nXite": 5472,
+    "fgFracOurs": 0.07,
+    "fgFracXite": 0.07,
+    "mad": 1.65,
+    "psnr": 38.34,
+    "fgMeanOurs": [
+     128,
+     128,
+     64
+    ],
+    "fgMeanXite": [
+     122,
+     122,
+     61
+    ],
+    "bgOurs": [
+     1,
+     1,
+     3
+    ],
+    "bgXite": [
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  "comparison": "passed",
+  "msg": "",
+  "gaps": [
+   "the same image on a Box is upside down in the Babylon body (V turned) while an IndexedFaceSet quad is right way up: seen in the picture against X_ITE 16.6.0 on the render-oracle scene ImageTexture (MAE 91 of 255 before the hard-texel fix); the cause is not isolated (turning the mesh UV and geometryData uv did nothing); Cylinder, Cone and Sphere are not checked",
+   "an image of 16 x 16 or more keeps the trilinear filter"
+  ]
+ },
+ "env": {
+  "chromium": "158.0.8127.36",
+  "ours": "x3d.webgpu reader + SAI shim, headless, bundle sha 9e062c753260",
+  "xite": "X_ITE 16.6.0 (WebGL2, SwiftShader)",
+  "babylon": "9.32.0"
+ },
+ "driver_commit": "56ae292"
+}
