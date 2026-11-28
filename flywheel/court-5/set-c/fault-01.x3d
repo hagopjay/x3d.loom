@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <component name='Lighting' level='3'/>
+    <meta name='intent:prose' content='A ceiling lamp fixture lights the table and the floor of a small room; the viewer&apos;s headlight is off.'/>
+  </head>
+  <Scene>
+    <NavigationInfo headlight='false'/>
+    <Background skyColor='0.05 0.05 0.08'/>
+    <Viewpoint description='Room' position='0 2 9' orientation='1 0 0 -0.15'/>
+    <Transform DEF='CeilingLamp' translation='0 4 0'>
+      <DirectionalLight DEF='LampLight' direction='-0.3 -1 -0.4' intensity='1'/>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0 0 0' emissiveColor='1 1 0.8'/>
+        </Appearance>
+        <Sphere radius='0.2'/>
+      </Shape>
+    </Transform>
+    <Transform DEF='Table' translation='0 0.5 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.8 0.3 0.2'/>
+        </Appearance>
+        <Box size='2 1 1'/>
+      </Shape>
+    </Transform>
+    <Transform DEF='Floor' translation='0 -0.05 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.7 0.7 0.7'/>
+        </Appearance>
+        <Box size='8 0.1 8'/>
+      </Shape>
+    </Transform>
+  </Scene>
+</X3D>

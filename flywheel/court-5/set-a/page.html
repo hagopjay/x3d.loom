@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>witness</title>
+<script src="/kit/x_ite/x_ite.min.js"></script>
+<style>html,body{margin:0;padding:0}x3d-canvas{display:block;width:800px;height:600px}</style>
+</head><body><x3d-canvas id="c" splashScreen="false" notifications="false" timings="false" contextMenu="false"></x3d-canvas>
+<script>
+window.W = {
+  async load (url) {
+    const B = X3D.getBrowser(document.getElementById("c"));
+    this.B = B;
+    await B.loadURL(new X3D.MFString(url));
+    return { name: B.name, version: B.version };
+  },
+  node (def) {
+    const s = this.B.currentScene;
+    try { return s.getNamedNode(def); } catch (e) {}
+    try { return s.getImportedNode(def); } catch (e) {}
+    throw new Error("no node " + def);
+  },
+  read (def, field) {
+    const v = this.node(def)[field];
+    if (typeof v === "number") return [v];
+    if (typeof v === "boolean") return [v ? 1 : 0];
+    if (typeof v === "string") return [v];
+    return String(v).trim().split(/[\s,]+/).map(Number);
+  },
+  send (def, field, value) {
+    if (value === "now") value = Date.now() / 1000;
+    this.node(def)[field] = value;
+  },
+  track (def, field, ms) {
+    return new Promise(res => {
+      const out = [], t0 = performance.now();
+      const step = () => {
+        out.push(this.read(def, field));
+        if (performance.now() - t0 < ms) requestAnimationFrame(step); else res(out);
+      };
+      step();
+    });
+  },
+  gl () {
+    const g = document.createElement("canvas").getContext("webgl2");
+    const e = g.getExtension("WEBGL_debug_renderer_info");
+    return e ? g.getParameter(e.UNMASKED_RENDERER_WEBGL) : g.getParameter(g.RENDERER);
+  }
+};
+</script></body></html>

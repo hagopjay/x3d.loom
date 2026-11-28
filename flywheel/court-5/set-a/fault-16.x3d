@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <component name='EventUtilities' level='1'/>
+    <meta name="intent:prose" content="Clicking the plaque carries the visitor from the far overview to the close-up position in front of the plaque, where the reading zone switches the reading light on."/>
+    <meta name="intent" content="send GoClose.set_triggerTime = now at 0.3s"/>
+    <meta name="intent" content="after 3.0s: ReadingLight.on changed"/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Overview' description='Overview' position='0 2 20'/>
+    <Viewpoint DEF='CloseUp' description='Close-up' position='0 1.5 2.5' jump='false'/>
+    <SpotLight DEF='ReadingLight' on='false' location='0 3 2' direction='0 -0.6 -1' cutOffAngle='0.6' beamWidth='0.4'/>
+    <Transform translation='0 1.5 0'>
+      <TouchSensor DEF='PlaqueTouch' description='read the plaque'/>
+      <Shape><Appearance><Material diffuseColor='0.8 0.7 0.3'/></Appearance><Box size='1.2 0.8 0.05'/></Shape>
+    </Transform>
+    <Transform translation='0 0.5 -0.3'>
+      <Shape><Appearance><Material diffuseColor='0.5 0.5 0.5'/></Appearance><Box size='1.6 1 0.4'/></Shape>
+    </Transform>
+    <ProximitySensor DEF='ReadingZone' center='0 1.5 2' size='4 3 4'/>
+    <BooleanTrigger DEF='GoClose'/>
+    <ROUTE fromNode='PlaqueTouch' fromField='touchTime' toNode='GoClose' toField='set_triggerTime'/>
+    <ROUTE fromNode='GoClose' fromField='triggerTrue' toNode='CloseUp' toField='set_bind'/>
+    <ROUTE fromNode='ReadingZone' fromField='isActive' toNode='ReadingLight' toField='on'/>
+  </Scene>
+</X3D>

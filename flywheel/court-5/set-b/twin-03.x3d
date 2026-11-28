@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='title' content='Set b scene 03'/>
+    <meta name="intent:prose" content="Two posts share one red paint so that repainting one repaints both."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Posts' position='0 0 8'/>
+    <Transform translation='-1.5 0 0'>
+      <Shape>
+        <Appearance DEF='RedPaint'>
+          <Material diffuseColor='0.9 0.1 0.1'/>
+        </Appearance>
+        <Cylinder height='3' radius='0.3'/>
+      </Shape>
+    </Transform>
+    <Transform translation='1.5 0 0'>
+      <Shape>
+        <Appearance USE='RedPaint'/>
+        <Cylinder height='3' radius='0.3'/>
+      </Shape>
+    </Transform>
+  </Scene>
+</X3D>

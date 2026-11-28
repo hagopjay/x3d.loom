@@ -1,0 +1,1351 @@
+{
+ "engine": "X_ITE 16.8.0",
+ "chromium": "158.0.8127.36",
+ "files": {
+  "a/decoy-01.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.2s: Follower.translation changed",
+     "at_start": "2.544 0 0",
+     "seen": "-2.316001 0 0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "a/decoy-02.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 0.8s: Rotor.rotation changed",
+     "at_start": "0 1 0 4.85048607418731",
+     "seen": "0 1 0 2.48827731097605",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "a/decoy-03.x3d": {
+   "intent_lines": 3,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: CeilingLamp.on changed",
+     "at_start": "false",
+     "seen": "true",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 2,
+   "result": "all hold"
+  },
+  "a/decoy-04.x3d": {
+   "intent_lines": 3,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 2.2s: Frames.whichChoice == 2",
+     "at_start": "-1",
+     "seen": "2",
+     "holds": true
+    },
+    {
+     "line": "after 3.4s: Frames.whichChoice == 1",
+     "at_start": "-1",
+     "seen": "1",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "a/decoy-05.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: Bar.scale[1] > 1.9",
+     "at_start": "1 1 1",
+     "seen": "1 2 1",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "a/fault-01.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: Lift.translation[0] > 4.9",
+     "at_start": "0 1.208 0",
+     "seen": "0 0.2 0",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "result": "fails"
+  },
+  "a/fault-02.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/fault-03.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 2.6s: Signal.whichChoice == 2",
+     "at_start": "0",
+     "seen": "1",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "fails"
+  },
+  "a/fault-04.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 3.0s: Door.translation changed",
+     "at_start": "0 1.5 0",
+     "seen": "0 1.5 0",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "fails"
+  },
+  "a/fault-05.x3d": {
+   "intent_lines": 3,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 0.8s: Rocket.translation unchanged",
+     "at_start": "0 0 0",
+     "seen": "0 0 0",
+     "holds": true
+    },
+    {
+     "line": "after 3.0s: Rocket.translation changed",
+     "at_start": "0 0 0",
+     "seen": "0 4.627625 0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "a/fault-06.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.5s: Head.rotation changed",
+     "at_start": "0 0 1 0",
+     "seen": "0 0 1 0",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "result": "fails"
+  },
+  "a/fault-07.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: Buoy.translation changed",
+     "at_start": "0 0.2 0",
+     "seen": "0 0.2 0",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "result": "fails"
+  },
+  "a/fault-08.x3d": {
+   "intent_lines": 3,
+   "not_understood": [
+    "after 0.7s: HallLamp.intensity > 0.5",
+    "after 3.2s: HallLamp.intensity < 0.3"
+   ],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/fault-09.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/fault-10.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: WorkLamp.on changed",
+     "at_start": "true",
+     "seen": "true",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "fails"
+  },
+  "a/fault-11.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/fault-12.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/fault-13.x3d": {
+   "intent_lines": 3,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.4s: Arm.rotation[3] < 1.0",
+     "at_start": "0 0 1 0",
+     "seen": "0 0 1 1.5708",
+     "holds": false
+    },
+    {
+     "line": "after 3.8s: Arm.rotation[3] > 1.5",
+     "at_start": "0 0 1 0",
+     "seen": "0 0 1 1.5708",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "fails"
+  },
+  "a/fault-14.x3d": {
+   "intent_lines": 3,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.6s: WarningLamp.on unchanged",
+     "at_start": "false",
+     "seen": "true",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "sent": 2,
+   "result": "fails"
+  },
+  "a/fault-15.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/fault-16.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 3.0s: ReadingLight.on changed",
+     "at_start": "false",
+     "seen": "false",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "fails"
+  },
+  "a/fault-17.x3d": {
+   "intent_lines": 3,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: Cart.translation unchanged",
+     "at_start": "-4 0 0",
+     "seen": "2.264 0 0",
+     "holds": false
+    },
+    {
+     "line": "after 3.4s: Cart.translation[0] > 3.9",
+     "at_start": "-4 0 0",
+     "seen": "4 0 0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "fails"
+  },
+  "a/fault-18.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: Crate.translation changed",
+     "at_start": "-3 0 0",
+     "seen": "-3 0 0",
+     "holds": false
+    }
+   ],
+   "console_errors": 2,
+   "sent": 1,
+   "result": "fails"
+  },
+  "a/fault-19.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/fault-20.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 2.5s: Turntable.rotation changed",
+     "at_start": "0 0 1 0",
+     "seen": "0 0 1 0",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "result": "fails"
+  },
+  "a/twin-01.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: Lift.translation[0] > 4.9",
+     "at_start": "5 1.591 0",
+     "seen": "5 0.5770001 0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "a/twin-02.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/twin-03.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 2.6s: Signal.whichChoice == 2",
+     "at_start": "0",
+     "seen": "2",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "a/twin-04.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 3.0s: Door.translation changed",
+     "at_start": "0 1.5 0",
+     "seen": "0 4.5 0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "a/twin-05.x3d": {
+   "intent_lines": 3,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 0.8s: Rocket.translation unchanged",
+     "at_start": "0 0 0",
+     "seen": "0 0 0",
+     "holds": true
+    },
+    {
+     "line": "after 3.0s: Rocket.translation changed",
+     "at_start": "0 0 0",
+     "seen": "0 7.132 0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "a/twin-06.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.5s: Head.rotation changed",
+     "at_start": "0 1 0 3.56728665618896",
+     "seen": "0 1 0 5.94704882097244",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "a/twin-07.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: Buoy.translation changed",
+     "at_start": "0 0.7324001 0",
+     "seen": "0 0.4635999 0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "a/twin-08.x3d": {
+   "intent_lines": 3,
+   "not_understood": [
+    "after 0.7s: HallLamp.intensity > 0.5",
+    "after 3.2s: HallLamp.intensity < 0.3"
+   ],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/twin-09.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/twin-10.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: WorkLamp.on changed",
+     "at_start": "true",
+     "seen": "false",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "a/twin-11.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/twin-12.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/twin-13.x3d": {
+   "intent_lines": 3,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.4s: Arm.rotation[3] < 1.0",
+     "at_start": "0 0 1 0",
+     "seen": "0 0 1 0.626225651931762",
+     "holds": true
+    },
+    {
+     "line": "after 3.8s: Arm.rotation[3] > 1.5",
+     "at_start": "0 0 1 0",
+     "seen": "0 0 1 1.5708",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "a/twin-14.x3d": {
+   "intent_lines": 3,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.6s: WarningLamp.on unchanged",
+     "at_start": "false",
+     "seen": "false",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 2,
+   "result": "all hold"
+  },
+  "a/twin-15.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/twin-16.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 3.0s: ReadingLight.on changed",
+     "at_start": "false",
+     "seen": "true",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "a/twin-17.x3d": {
+   "intent_lines": 3,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: Cart.translation unchanged",
+     "at_start": "-4 0 0",
+     "seen": "-4 0 0",
+     "holds": true
+    },
+    {
+     "line": "after 3.4s: Cart.translation[0] > 3.9",
+     "at_start": "-4 0 0",
+     "seen": "4 0 0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "a/twin-18.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: Crate.translation changed",
+     "at_start": "-3 0 0",
+     "seen": "-2 0 0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "a/twin-19.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "a/twin-20.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 2.5s: Turntable.rotation changed",
+     "at_start": "0 1.00000000000015 0 0.0392699625492038",
+     "seen": "0 1 0 2.01533638801575",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "b/decoy-01.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 0.5s: Hatch.rotation[3] < -1.5",
+     "at_start": "1 0 0 -1.5707963267949",
+     "seen": "1 0 0 -1.5707963267949",
+     "holds": true
+    },
+    {
+     "line": "after 0.5s: Hatch.rotation[3] > -1.6",
+     "at_start": "1 0 0 -1.5707963267949",
+     "seen": "1 0 0 -1.5707963267949",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "b/decoy-02.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/decoy-03.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 0.5s: Library.whichChoice == -1",
+     "at_start": "-1",
+     "seen": "-1",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "b/decoy-04.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/decoy-05.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 0.5s: Terrain.xSpacing == 1.5",
+     "at_start": "1.5",
+     "seen": "1.5",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "b/fault-01.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-02.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-03.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-04.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: StatueLOD.level_changed == 0",
+     "at_start": "1",
+     "seen": "1",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "result": "fails"
+  },
+  "b/fault-05.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-06.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-07.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-08.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-09.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-10.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.5s: Sign.origin[0] < -1",
+     "at_start": "0 0.7597656 0",
+     "seen": "0 0.7597656 0",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "result": "fails"
+  },
+  "b/fault-11.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-12.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-13.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-14.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-15.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-16.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-17.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-18.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-19.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/fault-20.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-01.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-02.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-03.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-04.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.0s: StatueLOD.level_changed == 0",
+     "at_start": "0",
+     "seen": "0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "b/twin-05.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-06.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-07.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-08.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-09.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-10.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 1.5s: Sign.origin[0] < -1",
+     "at_start": "-3.041016 0.7597656 0",
+     "seen": "-3.041016 0.7597656 0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "b/twin-11.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-12.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-13.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-14.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-15.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-16.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-17.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-18.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-19.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "b/twin-20.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/decoy-01.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/decoy-02.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 2s: Post.origin[0] < -0.5",
+     "at_start": "-1.6165 1.262 0",
+     "seen": "-1.6165 1.262 0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "c/decoy-03.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/decoy-04.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 3.5s: Beacon.level_changed == 2",
+     "at_start": "0",
+     "seen": "2",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "c/decoy-05.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-01.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-02.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-03.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-04.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-05.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-06.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-07.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-08.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-09.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-10.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 2s: Sign.textBounds[0] > 1",
+     "at_start": "4.76 0.789",
+     "seen": "4.76 0.789",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "c/fault-11.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 2s: Title.origin[0] < -0.5",
+     "at_start": "0 0.5672 0",
+     "seen": "0 0.5672 0",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "result": "fails"
+  },
+  "c/fault-12.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-13.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-14.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-15.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-16.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-17.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-18.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/fault-19.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 3.5s: TowerDetail.level_changed == 0",
+     "at_start": "2",
+     "seen": "2",
+     "holds": false
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "fails"
+  },
+  "c/fault-20.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-01.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-02.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-03.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-04.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-05.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-06.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-07.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-08.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-09.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-10.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 2s: Sign.textBounds[0] > 1",
+     "at_start": "4.76 0.789",
+     "seen": "4.76 0.789",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "c/twin-11.x3d": {
+   "intent_lines": 1,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 2s: Title.origin[0] < -0.5",
+     "at_start": "-1.6352 0.5672 0",
+     "seen": "-1.6352 0.5672 0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "result": "all hold"
+  },
+  "c/twin-12.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-13.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-14.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-15.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-16.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-17.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-18.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  },
+  "c/twin-19.x3d": {
+   "intent_lines": 2,
+   "not_understood": [],
+   "assertions": [
+    {
+     "line": "after 3.5s: TowerDetail.level_changed == 0",
+     "at_start": "2",
+     "seen": "0",
+     "holds": true
+    }
+   ],
+   "console_errors": 0,
+   "sent": 1,
+   "result": "all hold"
+  },
+  "c/twin-20.x3d": {
+   "intent_lines": 0,
+   "not_understood": [],
+   "assertions": [],
+   "console_errors": 0,
+   "result": "no assertion"
+  }
+ }
+}

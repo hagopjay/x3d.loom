@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content='A radio on a table at the far end of a long hall hums, and a visitor standing in front of the radio hears it.'/>
+  </head>
+  <Scene>
+    <Background skyColor='0.2 0.2 0.25'/>
+    <Viewpoint description='At the radio' position='40 1.2 4'/>
+    <Transform DEF='Radio' translation='40 1 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.6 0.1 0.1'/>
+        </Appearance>
+        <Box size='0.8 0.5 0.3'/>
+      </Shape>
+    </Transform>
+    <Transform DEF='Table' translation='40 0.35 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.5 0.35 0.2'/>
+        </Appearance>
+        <Box size='1.6 0.7 0.9'/>
+      </Shape>
+    </Transform>
+    <Sound DEF='Hum' minFront='2' minBack='2' maxFront='10' maxBack='10'>
+      <AudioClip DEF='HumClip' url='"helper-tone.wav"' loop='true'/>
+    </Sound>
+  </Scene>
+</X3D>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <component name='EventUtilities' level='1'/>
+    <meta name="intent:prose" content="When started, the gate first rises for a second and a half; only once the gate has finished rising does the cart roll through, taking one second."/>
+    <meta name="intent" content="send Raise.startTime = now at 0.2s"/>
+    <meta name="intent" content="after 1.0s: Cart.translation unchanged"/>
+    <meta name="intent" content="after 3.4s: Cart.translation[0] &gt; 3.9"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Crossing' position='0 1 12'/>
+    <Transform DEF='Gate' translation='0 0 0'>
+      <Shape><Appearance><Material diffuseColor='0.7 0.7 0.2'/></Appearance><Box size='0.2 2 2'/></Shape>
+    </Transform>
+    <Transform DEF='Cart' translation='-4 0 0'>
+      <Shape><Appearance><Material diffuseColor='0.2 0.5 0.8'/></Appearance><Box size='1 0.6 0.8'/></Shape>
+    </Transform>
+    <Transform translation='0 -2 2'>
+      <TouchSensor DEF='GoButton' description='start'/>
+      <Shape><Appearance><Material diffuseColor='0.1 0.7 0.2'/></Appearance><Sphere radius='0.3'/></Shape>
+    </Transform>
+    <TimeSensor DEF='Raise' cycleInterval='1.5'/>
+    <PositionInterpolator DEF='GatePath' key='0 1' keyValue='0 0 0  0 2.5 0'/>
+    <TimeSensor DEF='Roll' cycleInterval='1'/>
+    <PositionInterpolator DEF='CartPath' key='0 1' keyValue='-4 0 0  4 0 0'/>
+    <BooleanFilter DEF='Risen'/>
+    <TimeTrigger DEF='Next'/>
+    <ROUTE fromNode='GoButton' fromField='touchTime' toNode='Raise' toField='startTime'/>
+    <ROUTE fromNode='Raise' fromField='fraction_changed' toNode='GatePath' toField='set_fraction'/>
+    <ROUTE fromNode='GatePath' fromField='value_changed' toNode='Gate' toField='translation'/>
+    <ROUTE fromNode='Raise' fromField='isActive' toNode='Risen' toField='set_boolean'/>
+    <ROUTE fromNode='Risen' fromField='inputNegate' toNode='Next' toField='set_boolean'/>
+    <ROUTE fromNode='Next' fromField='triggerTime' toNode='Roll' toField='startTime'/>
+    <ROUTE fromNode='Roll' fromField='fraction_changed' toNode='CartPath' toField='set_fraction'/>
+    <ROUTE fromNode='CartPath' fromField='value_changed' toNode='Cart' toField='translation'/>
+  </Scene>
+</X3D>

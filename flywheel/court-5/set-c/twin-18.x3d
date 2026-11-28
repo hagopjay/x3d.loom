@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content='A globe is drawn as a smooth sphere when the viewer is close, as a simpler drum at middle distance and as a plain box from far away; the view starts close.'/>
+  </head>
+  <Scene>
+    <Background skyColor='0.1 0.1 0.15'/>
+    <Viewpoint description='Close' position='0 0 6'/>
+    <LOD DEF='Globe' range='12 30'>
+      <Shape DEF='GlobeFine'>
+        <Appearance>
+          <Material diffuseColor='0.2 0.5 0.9'/>
+        </Appearance>
+        <Sphere radius='1'/>
+      </Shape>
+      <Shape DEF='GlobeMedium'>
+        <Appearance>
+          <Material diffuseColor='0.2 0.5 0.9'/>
+        </Appearance>
+        <Cylinder radius='0.9' height='1.8'/>
+      </Shape>
+      <Shape DEF='GlobeCoarse'>
+        <Appearance>
+          <Material diffuseColor='0.2 0.5 0.9'/>
+        </Appearance>
+        <Box size='1.6 1.6 1.6'/>
+      </Shape>
+    </LOD>
+  </Scene>
+</X3D>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name="intent:prose" content="The blades of the desk fan, which is loaded from its own file, spin continuously."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Desk' position='0 1 6'/>
+    <Inline DEF='Fan' url='"helper-fan.x3d"'/>
+    <IMPORT inlineDEF='Fan' importedDEF='Blades'/>
+    <TimeSensor DEF='FanClock' cycleInterval='1' loop='true'/>
+    <OrientationInterpolator DEF='Spin' key='0 0.25 0.5 0.75 1' keyValue='0 0 1 0  0 0 1 1.5708  0 0 1 3.1416  0 0 1 4.7124  0 0 1 6.2832'/>
+    <ROUTE fromNode='FanClock' fromField='fraction_changed' toNode='Spin' toField='set_fraction'/>
+    <ROUTE fromNode='Spin' fromField='value_changed' toNode='Blades' toField='rotation'/>
+  </Scene>
+</X3D>

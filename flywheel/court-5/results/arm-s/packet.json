@@ -1,0 +1,807 @@
+[
+ {
+  "file": "s/decoy-01.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "geometry-colour",
+   "intent": "A thin grey slat hangs in space with one of its six faces painted blue.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s) and draws the described picture; prose intent only.",
+   "source": "S17",
+   "why_suspicious": "Per-face colours through colorIndex with colorPerVertex false, an empty Material, a rotation by a zero angle and nested Transforms with off-centre pivots; the author saw nothing and suspected the colour lists."
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/decoy-02.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "geometry-colour",
+   "intent": "Two overlapping bent sheets, each face in its own flat colour, are seen from both sides.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s) and draws the described picture; prose intent only.",
+   "source": "S18",
+   "why_suspicious": "ColorRGBA with every alpha at 1 on non-convex, non-solid face sets with no Appearance; the author doubted the alpha and two-sided settings."
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": [
+   {
+    "id": "d0001",
+    "level": "info",
+    "check": "shape-no-appearance",
+    "message": "Shape has no Appearance. The shape will render with a default white material."
+   }
+  ]
+ },
+ {
+  "file": "s/decoy-03.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "lighting",
+   "intent": "A narrow spotlight shines along a row of three framed squares in an otherwise unlit gallery.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s) and draws the described picture; prose intent only.",
+   "source": "S19",
+   "why_suspicious": "A very narrow SpotLight (beamWidth 0.2, cutOffAngle 0.4) with the headlight off; the author thought the squares were lit wrongly."
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/decoy-04.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "collision",
+   "intent": "A visitor walking through the hall is stopped by one plain invisible wall instead of by every pillar of the ornate screen.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s) and draws the described picture; prose intent only.",
+   "source": "S20",
+   "why_suspicious": "A Collision node that is enabled and also carries a proxy shape that is never drawn; the author asked whether that combination was a mistake."
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": [
+   {
+    "id": "d0002",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Pillar' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "d0003",
+    "level": "info",
+    "check": "shape-no-appearance",
+    "message": "Shape has no Appearance. The shape will render with a default white material."
+   }
+  ]
+ },
+ {
+  "file": "s/decoy-05.x3d",
+  "role": "decoy",
+  "manifest": {
+   "category": "texturing",
+   "intent": "A crate carries a tiny two-by-two red and yellow chequer pattern on every side.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s) and draws the described picture; prose intent only.",
+   "source": "S21",
+   "why_suspicious": "A 2x2 PixelTexture with no TextureProperties stretched over a whole crate; the author took the blurred result in some browsers for a defect."
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/fault-01.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "geometry-winding",
+   "fault": "Two faces of the solid are listed clockwise as seen from outside while solid and ccw keep their defaults.",
+   "viewer_sees": "Those two faces vanish when looked at from outside; the block looks open.",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 6473 of 120000 pixels.",
+   "engine_disagrees": false,
+   "twin": "twin-01.x3d",
+   "source": "S01",
+   "nearest_prior": "P105, same kind (a face wound the wrong way under default solid/ccw)"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/fault-02.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "scene-structure",
+   "fault": "The Inline is placed inside a Shape, under an Appearance, as if it were the Shape's geometry.",
+   "viewer_sees": "The inlined part never appears; only the marker post is shown.",
+   "spec": "error per the X3D standard (Shape has only appearance and geometry fields; Inline is a child node and must sit in a grouping node)",
+   "xsd_valid": false,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 2498 of 120000 pixels. X_ITE console on the fault: warning: XML Parser: Container field for node Inline not found. Unknown field 'children' in node class Shape.",
+   "engine_disagrees": false,
+   "twin": "twin-02.x3d",
+   "source": "S02",
+   "nearest_prior": "P021/P022 are also misplaced nodes but concern Material/Appearance; different node and slot"
+  },
+  "xsd_valid": false,
+  "xsd_valid_oldkernel": false,
+  "xsd_errors": [
+   "Line 20: Element 'Inline': This element is not expected. Expected is one of ( Box, Cone, Cylinder, IndexedFaceSet, IndexedLineSet, IndexedTriangleFanSet, IndexedTriangleSet, IndexedTriangleStripSet, LineSet, PointSet )."
+  ],
+  "diagnostics": [
+   {
+    "id": "d0004",
+    "level": "error",
+    "check": "containerfield-unknown",
+    "message": "Inline containerField='children' but Shape has no field named 'children'. Inline's default containerField is 'children', which does not fit a Shape -- an explicit containerField is required here."
+   },
+   {
+    "id": "d0005",
+    "level": "warning",
+    "check": "shape-no-geometry",
+    "message": "Shape has no geometry child. Add a geometry node like Box, Sphere, or IndexedFaceSet."
+   }
+  ]
+ },
+ {
+  "file": "s/fault-03.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "geometry-indexing",
+   "fault": "The IndexedFaceSet has a Coordinate node but no coordIndex at all.",
+   "viewer_sees": "Nothing is drawn.",
+   "spec": "legal, plays wrong (no faces are defined)",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 24843 of 120000 pixels.",
+   "engine_disagrees": false,
+   "twin": "twin-03.x3d",
+   "source": "S03",
+   "nearest_prior": "P025 lacks only the -1 terminators; here the whole index list is missing"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/fault-04.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "geometry-indexing",
+   "fault": "coordIndex lists only the first four of the eight outline points, and those four lie on one straight line.",
+   "viewer_sees": "Nothing is drawn: the single face has zero area.",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 6256 of 120000 pixels.",
+   "engine_disagrees": false,
+   "twin": "twin-04.x3d",
+   "source": "S04",
+   "nearest_prior": "none; P061/P104 are out-of-range indices, this one is in range but degenerate"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": [
+   {
+    "id": "d0006",
+    "level": "info",
+    "check": "mesh-unused-point",
+    "message": "Coordinate 4 of 8 point(s) are used by no index; they cost memory and skew bounds."
+   },
+   {
+    "id": "d0007",
+    "level": "warning",
+    "check": "mesh-zero-area-face",
+    "message": "IndexedFaceSet 1 of 1 face(s) have distinct corners on one line and no area (first: [0, 1, 2, 3]); their normal is undefined."
+   }
+  ]
+ },
+ {
+  "file": "s/fault-05.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "texturing",
+   "fault": "The TextureTransform rotates the picture without a center, so it turns about the texture origin (a corner) instead of the middle of the picture.",
+   "viewer_sees": "The badge swings out of the panel; one colour smears over most of it.",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 28654 of 120000 pixels.",
+   "engine_disagrees": false,
+   "twin": "twin-05.x3d",
+   "source": "S05",
+   "nearest_prior": "P112 is a TextureTransform scale misunderstanding; P120 is a missing Transform center; neither is the texture pivot"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": [
+   {
+    "id": "d0008",
+    "level": "error",
+    "check": "profile-component",
+    "message": "TextureProperties (component Texturing level 2, not declared) is outside profile 'Immersive'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "d0009",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Texturing' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   }
+  ]
+ },
+ {
+  "file": "s/fault-06.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "time-control",
+   "fault": "The script freezes the animation by switching TimeSensor.enabled off and on instead of sending pauseTime and resumeTime.",
+   "viewer_sees": "The planet freezes, but on the next press it does not carry on from where it stood (it jumps, or stays put, depending on the browser).",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 9346 of 120000 pixels. Intent assertions: fault at least one fails, twin all hold.",
+   "engine_disagrees": false,
+   "twin": "twin-06.x3d",
+   "source": "S06",
+   "nearest_prior": "none; P013/P050 concern enabled on other sensors, not pausing"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/fault-07.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "time-control",
+   "fault": "The TimeSensor has loop='true' although the motion is meant to play once and stop at the end.",
+   "viewer_sees": "The ball keeps jumping back and gliding again for ever, and is already moving before it is touched.",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 624 of 120000 pixels. Intent assertions: fault at least one fails, twin all hold.",
+   "engine_disagrees": false,
+   "twin": "twin-07.x3d",
+   "source": "S07",
+   "nearest_prior": "inverse of P044/P083 (those lack loop where repetition was wanted)"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/fault-08.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "lighting",
+   "fault": "The DirectionalLight sits in a Transform that holds no geometry and is left non-global (the default since X3D 3.2), so it lights nothing.",
+   "viewer_sees": "The ball stays black; the sweeping lamp has no effect.",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 9428 of 120000 pixels. Intent assertions: fault all hold, twin all hold.",
+   "engine_disagrees": false,
+   "twin": "twin-08.x3d",
+   "source": "S08",
+   "nearest_prior": "P077 (no light reaches the object) is the nearest; cause differs (light scope, not headlight)"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": [
+   {
+    "id": "d0010",
+    "level": "warning",
+    "check": "light-scope-empty",
+    "message": "DirectionalLight has global false (the default for DirectionalLight), so it lights only what sits under its parent Transform, and no Shape sits there: it lights nothing. Set global='true', or move the light into the group that holds the shapes."
+   }
+  ]
+ },
+ {
+  "file": "s/fault-09.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "scripting",
+   "fault": "The script builds the MFVec3f with a JavaScript array as its single argument, new MFVec3f([a, b]), instead of passing the values as arguments.",
+   "viewer_sees": "The rope is not stretched to the hook; it disappears or stays as it was.",
+   "spec": "error per the X3D ECMAScript binding (MFVec3f constructor takes SFVec3f arguments, not an array)",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 232 of 120000 pixels. Intent assertions: fault at least one fails, twin all hold.",
+   "engine_disagrees": false,
+   "twin": "twin-09.x3d",
+   "source": "S09",
+   "nearest_prior": "none"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/fault-10.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "scripting",
+   "fault": "The script assigns addChildren twice in the same handler; the second assignment replaces the first before either is processed.",
+   "viewer_sees": "Only the ball lands on the shelf; the crate is missing.",
+   "spec": "legal, plays wrong (one event per field per timestamp)",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 3136 of 120000 pixels. Shelf.children holds 1 node(s) on the fault and 2 on the twin.",
+   "engine_disagrees": false,
+   "twin": "twin-10.x3d",
+   "source": "S10",
+   "nearest_prior": "P017/P098 are fan-in by ROUTE; this is two writes to one input from one script"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": [
+   {
+    "id": "d0011",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Stocker' (Script) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   },
+   {
+    "id": "d0012",
+    "level": "warning",
+    "check": "empty-group",
+    "message": "Group (DEF='Shelf') has no children. Empty grouping nodes have no effect."
+   }
+  ]
+ },
+ {
+  "file": "s/fault-11.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "prototypes",
+   "fault": "The prototype body has two root nodes; only the first node of a ProtoBody is rendered.",
+   "viewer_sees": "Each instance shows only the red ball.",
+   "spec": "legal, plays wrong (X3D 4.3.4.3: only the first body node is rendered)",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 2906 of 120000 pixels.",
+   "engine_disagrees": false,
+   "twin": "twin-11.x3d",
+   "source": "S11",
+   "nearest_prior": "none; P066/P118 are about proto field names"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/fault-12.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "coordinates",
+   "fault": "The survey coordinates are used raw, hundreds of thousands and millions of units from the origin, where single precision cannot hold centimetres.",
+   "viewer_sees": "The outline is visibly distorted: corners snap to a coarse grid and edges are no longer where they were measured.",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 1764 of 120000 pixels.",
+   "engine_disagrees": false,
+   "twin": "twin-12.x3d",
+   "source": "S12",
+   "nearest_prior": "P037 (object far from origin); same family, here the symptom is precision loss rather than being out of sight"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": [
+   {
+    "id": "d0013",
+    "level": "warning",
+    "check": "coordinate-precision",
+    "message": "Coordinate has a value of 4.53376e+06 (4.53376e+06 m from the origin); in 32-bit floats neighbouring values there are 5.4e+02 mm apart, so the mesh will jitter. Move the origin near the geometry with a Transform, or use CoordinateDouble."
+   }
+  ]
+ },
+ {
+  "file": "s/fault-13.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "coordinates",
+   "fault": "The hut's coordinates are written with Z as the height (a Z-up source), while the ElevationGrid ground lies in the XZ plane with Y up.",
+   "viewer_sees": "The hut lies on its side, half above the ground at the wrong place.",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 9222 of 120000 pixels.",
+   "engine_disagrees": false,
+   "twin": "twin-13.x3d",
+   "source": "S13",
+   "nearest_prior": "none; P108/P113/P114 are other axis confusions"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/fault-14.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "def-use",
+   "fault": "USE='Paint' appears in the file before the node that carries DEF='Paint'.",
+   "viewer_sees": "In a strict browser the first post has no appearance (unlit white) or the file is rejected.",
+   "spec": "error per the X3D standard (a USE shall refer to a DEF that occurs earlier in the file)",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 0 of 120000 pixels. X_ITE resolves the reference anyway and draws the fault exactly like the twin.",
+   "engine_disagrees": true,
+   "twin": "twin-14.x3d",
+   "source": "S14",
+   "nearest_prior": "P072/P103 are case mismatches; here the name matches but the order is wrong"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": [
+   {
+    "id": "d0014",
+    "level": "error",
+    "check": "use-before-def",
+    "message": "USE='Paint' (Appearance) appears before its DEF in document order. A USE must follow the DEF it references."
+   }
+  ]
+ },
+ {
+  "file": "s/fault-15.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "point-rendering",
+   "fault": "pointSizeMinValue is raised to 5 while pointSizeMaxValue is left at its default 1, so minimum exceeds maximum.",
+   "viewer_sees": "The marks are drawn as barely visible single pixels.",
+   "spec": "error per the X3D standard (pointSizeMinValue shall be less than or equal to pointSizeMaxValue)",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 618 of 120000 pixels.",
+   "engine_disagrees": false,
+   "twin": "twin-15.x3d",
+   "source": "S15",
+   "nearest_prior": "P049 is the same shape of mistake (min above max) on another node"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/fault-16.x3d",
+  "role": "fault",
+  "manifest": {
+   "category": "lighting",
+   "fault": "The Appearance holds only the texture and no Material, so the surface is unlit and ignores the dim light.",
+   "viewer_sees": "The water glows at full brightness in the dark scene.",
+   "spec": "legal, plays wrong",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Rendered frames of fault and twin differ in 9543 of 120000 pixels.",
+   "engine_disagrees": false,
+   "twin": "twin-16.x3d",
+   "source": "S16",
+   "nearest_prior": "P021/P101 put the Material in the wrong place; here it is simply absent"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-01.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "geometry-winding",
+   "intent": "A closed wedge-shaped door stop is looked at from outside and every one of its five faces is seen.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); prose intent only, frame inspected by eye.",
+   "source": "S01"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-02.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "scene-structure",
+   "intent": "A bracket that is kept in a file of its own is shown standing next to a grey marker post.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); prose intent only, frame inspected by eye.",
+   "source": "S02"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-03.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "geometry-indexing",
+   "intent": "The L-shaped floor of a room is shown as one flat pale-yellow slab seen from above.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); prose intent only, frame inspected by eye.",
+   "source": "S03"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-04.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "geometry-indexing",
+   "intent": "A long blue ribbon, one unit wide and three long, is outlined by eight points along its edge and shown filled.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); prose intent only, frame inspected by eye.",
+   "source": "S04"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-05.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "texturing",
+   "intent": "The four-colour badge painted on a wall panel is turned an eighth of a turn about the middle of the picture, so its middle stays in the middle of the panel.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); prose intent only, frame inspected by eye.",
+   "source": "S05"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": [
+   {
+    "id": "d0015",
+    "level": "error",
+    "check": "profile-component",
+    "message": "TextureProperties (component Texturing level 2, not declared) is outside profile 'Immersive'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it."
+   },
+   {
+    "id": "d0016",
+    "level": "info",
+    "check": "profile-component-fix",
+    "message": "Add to <head>: <component name='Texturing' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything)."
+   }
+  ]
+ },
+ {
+  "file": "s/twin-06.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "time-control",
+   "intent": "A planet turns steadily once its clock is started; a press freezes it where it is and the next press lets it carry on from that same place.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); all 3 intent assertions hold.",
+   "source": "S06"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": [
+   {
+    "id": "d0017",
+    "level": "info",
+    "check": "timesensor-never-starts",
+    "message": "TimeSensor (DEF='Clock') has loop false and startTime 0, and nothing in this file ROUTEs to its startTime, enabled or loop, so it never starts and what it drives stays still. Set loop='true', or ROUTE a time such as a TouchSensor touchTime to set_startTime."
+   }
+  ]
+ },
+ {
+  "file": "s/twin-07.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "time-control",
+   "intent": "When the ball is touched it glides once from the left mark up to the right mark and then stays there.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); all 2 intent assertions hold.",
+   "source": "S07"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-08.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "lighting",
+   "intent": "With the headlight off, a lamp on a turning arm sweeps round the white ball and lights it from one side after another.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); all 1 intent assertions hold.",
+   "source": "S08"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-09.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "scripting",
+   "intent": "When told to, the script stretches the rope so that it runs from the peg at the origin to the hook at 2 1 0.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); all 1 intent assertions hold.",
+   "source": "S09"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-10.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "scripting",
+   "intent": "At start-up the script puts both a crate and a ball onto the empty shelf, so two things stand on it.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); prose intent only, frame inspected by eye.",
+   "source": "S10"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": [
+   {
+    "id": "d0018",
+    "level": "warning",
+    "check": "empty-group",
+    "message": "Group (DEF='Shelf') has no children. Empty grouping nodes have no effect."
+   },
+   {
+    "id": "d0019",
+    "level": "info",
+    "check": "unused-def",
+    "message": "DEF='Stocker' (Script) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI)."
+   }
+  ]
+ },
+ {
+  "file": "s/twin-11.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "prototypes",
+   "intent": "Each instance of the prototype shows a red ball with a green ball two units to its right.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); prose intent only, frame inspected by eye.",
+   "source": "S11"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-12.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "coordinates",
+   "intent": "A small flat building plot, about eight metres across and taken from a survey, is shown with crisp straight edges at the corners that were measured.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); prose intent only, frame inspected by eye.",
+   "source": "S12"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-13.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "coordinates",
+   "intent": "A hut six units tall stands upright on gently rolling ground.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); prose intent only, frame inspected by eye.",
+   "source": "S13"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-14.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "def-use",
+   "intent": "Two fence posts share one coat of green paint.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); prose intent only, frame inspected by eye.",
+   "source": "S14"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-15.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "point-rendering",
+   "intent": "Five survey marks are drawn as large dots, several pixels across, so they can be seen from the start view.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); prose intent only, frame inspected by eye.",
+   "source": "S15"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ },
+ {
+  "file": "s/twin-16.x3d",
+  "role": "twin",
+  "manifest": {
+   "category": "lighting",
+   "intent": "At night, with the headlight off and only a dim moon, the patterned water is nearly as dark as the rock beside it.",
+   "xsd_valid": true,
+   "witness": "x_ite-16.8.0",
+   "witness_note": "Loads with 0 console message(s); prose intent only, frame inspected by eye.",
+   "source": "S16"
+  },
+  "xsd_valid": true,
+  "xsd_valid_oldkernel": true,
+  "xsd_errors": [],
+  "diagnostics": []
+ }
+]

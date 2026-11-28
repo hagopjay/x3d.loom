@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name="intent:prose" content="Pressing the round pad at the foot of the pole hoists the flag to the top of the pole in two seconds."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Pole' position='0 2 10'/>
+    <Transform translation='-0.6 2 0'>
+      <Shape><Appearance><Material diffuseColor='0.7 0.7 0.7'/></Appearance><Cylinder radius='0.05' height='5'/></Shape>
+    </Transform>
+    <Transform DEF='Flag' translation='0 0 0'>
+      <Shape><Appearance><Material diffuseColor='0.8 0.1 0.1'/></Appearance><Box size='1 0.6 0.02'/></Shape>
+    </Transform>
+    <Transform translation='0 2 2'>
+      <TouchSensor DEF='Pad' description='hoist the flag'/>
+      <Shape><Appearance><Material diffuseColor='0.1 0.6 0.2'/></Appearance><Sphere radius='0.5'/></Shape>
+    </Transform>
+    <TimeSensor DEF='Hoist' cycleInterval='2'/>
+    <PositionInterpolator DEF='HoistPath' key='0 1' keyValue='0 0 0  0 4 0'/>
+    <ROUTE fromNode='Pad' fromField='touchTime' toNode='Hoist' toField='startTime'/>
+    <ROUTE fromNode='Hoist' fromField='fraction_changed' toNode='HoistPath' toField='set_fraction'/>
+    <ROUTE fromNode='HoistPath' fromField='value_changed' toNode='Flag' toField='translation'/>
+  </Scene>
+</X3D>

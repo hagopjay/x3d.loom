@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name="intent:prose" content="A marker glides round and round the four corners of a square track in one smooth, unbroken circuit."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Track' position='0 8 8' orientation='1 0 0 -0.7854'/>
+    <Shape><Appearance><Material diffuseColor='0.3 0.3 0.3'/></Appearance><Box size='5 0.05 5'/></Shape>
+    <Transform DEF='Marker' translation='2 0.3 2'>
+      <Shape><Appearance><Material diffuseColor='1 0.9 0.1'/></Appearance><Sphere radius='0.3'/></Shape>
+    </Transform>
+    <TimeSensor DEF='Lap' cycleInterval='4' loop='true'/>
+    <PositionInterpolator DEF='Circuit' key='0 0.3333 0.6667 1' keyValue='2 0.3 2  2 0.3 -2  -2 0.3 -2  -2 0.3 2'/>
+    <ROUTE fromNode='Lap' fromField='fraction_changed' toNode='Circuit' toField='set_fraction'/>
+    <ROUTE fromNode='Circuit' fromField='value_changed' toNode='Marker' toField='translation'/>
+  </Scene>
+</X3D>

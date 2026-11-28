@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content='A grey checkerboard tile repeated four times each way with crisp pixel edges, next to a zigzag made of one red and one green stroke.'/>
+  </head>
+  <Scene>
+    <Background skyColor='0.1 0.1 0.3'/>
+    <Viewpoint description='Tile and strokes' position='1.5 0 7'/>
+    <Shape DEF='Checker'>
+      <Appearance>
+        <PixelTexture image='2 2 1 0xFF 0x40 0x40 0xFF'>
+          <TextureProperties boundaryModeS='REPEAT' boundaryModeT='REPEAT' magnificationFilter='NEAREST_PIXEL' minificationFilter='NEAREST_PIXEL'/>
+        </PixelTexture>
+        <TextureTransform scale='4 4'/>
+      </Appearance>
+      <Box size='2 2 0.1'/>
+    </Shape>
+    <Shape DEF='Strokes'>
+      <IndexedLineSet colorPerVertex='false' coordIndex='0 1 2 -1 2 3 4 -1'>
+        <Coordinate point='2 -1 0 2.5 1 0 3 -1 0 3.5 1 0 4 -1 0'/>
+        <Color color='1 0 0 0 1 0'/>
+      </IndexedLineSet>
+    </Shape>
+  </Scene>
+</X3D>

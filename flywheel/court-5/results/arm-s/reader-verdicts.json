@@ -1,0 +1,155 @@
+{
+ "faults": {
+  "s/fault-01.x3d": {
+   "real": "real",
+   "reason": "Faces '3 2 5' and '0 3 5 4' have inward normals (computed +z on the z=-1 face, +x on the x=0 face) with default ccw/solid, so both are culled from outside; twin reverses exactly those two.",
+   "naming": [],
+   "repeats_prior": "P105",
+   "repeat_closeness": "close",
+   "intent_gives_it_away": false
+  },
+  "s/fault-02.x3d": {
+   "real": "real",
+   "reason": "Inline is a child node sitting in a Shape, which has only appearance/geometry slots; XSD rejects it and X_ITE drops it.",
+   "naming": [
+    "d0004",
+    "d0005"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "s/fault-03.x3d": {
+   "real": "real",
+   "reason": "IndexedFaceSet with six coordinates and no coordIndex defines no faces; nothing is drawn.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "s/fault-04.x3d": {
+   "real": "real",
+   "reason": "coordIndex '0 1 2 3' uses only four of eight points and those four are collinear (x=1, y=0), so the one face has zero area.",
+   "naming": [
+    "d0006",
+    "d0007"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "s/fault-05.x3d": {
+   "real": "real",
+   "reason": "TextureTransform rotation with default center 0 0 turns the picture about its corner; twin adds center='-0.5 -0.5' (X3D formula applies C then -C) and the witness frames differ strongly. Legal file, wrong only against the intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "s/fault-06.x3d": {
+   "real": "real",
+   "reason": "Toggling TimeSensor.enabled stops the clock and on re-enable the fraction is computed from the original startTime (or it stays inactive), so it does not resume where it froze; pauseTime/resumeTime is the pause mechanism. Legal file, wrong against the intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "s/fault-07.x3d": {
+   "real": "real",
+   "reason": "loop='true' with default startTime makes the clock run from load and repeat for ever, contradicting 'glides once and stays'. Legal file, wrong only against the intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "s/fault-08.x3d": {
+   "real": "real",
+   "reason": "DirectionalLight has global false by default and is the only child of the LampArm Transform, so it lights no shape; with headlight off the ball is black.",
+   "naming": [
+    "d0010"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "s/fault-09.x3d": {
+   "real": "real",
+   "reason": "new MFVec3f([peg, hook]) passes one Array where the ECMAScript binding takes SFVec3f arguments; the witness shows the rope is not set to the two points.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "s/fault-10.x3d": {
+   "real": "real",
+   "reason": "Two assignments to shelf.addChildren in one handler at one timestamp; only one event is delivered, witness shows 1 child instead of 2. Somewhat engine-dependent but a genuine authoring mistake.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "s/fault-11.x3d": {
+   "real": "real",
+   "reason": "ProtoBody has two root nodes (Shape and Transform); only the first root node of a prototype body is rendered, so the green ball never shows.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "s/fault-12.x3d": {
+   "real": "real",
+   "reason": "Coordinates around 4.5e5 / 4.5e6 in single-precision floats have a spacing of about 0.03-0.5 m, far coarser than the centimetre survey data on an 8 m plot.",
+   "naming": [
+    "d0013"
+   ],
+   "repeats_prior": "P037",
+   "repeat_closeness": "loose",
+   "intent_gives_it_away": false
+  },
+  "s/fault-13.x3d": {
+   "real": "real",
+   "reason": "Hut points use Z as height (z 0..6, y 8..12) while the ElevationGrid ground is in XZ with Y up, so the hut lies on its side off the ground. Legal file, wrong only against the intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "s/fault-14.x3d": {
+   "real": "real",
+   "reason": "USE='Paint' precedes DEF='Paint' in document order, which the X3D encodings do not allow; note the witness engine resolves it and draws no difference, so the visible harm is engine-dependent.",
+   "naming": [
+    "d0014"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "s/fault-15.x3d": {
+   "real": "real",
+   "reason": "pointSizeMinValue 5 with pointSizeMaxValue left at default 1: minimum above maximum, points clamp to tiny size (witness differs from twin). The XSD/object model do not state the min<=max rule themselves, but the contradiction and the visible effect are real.",
+   "naming": [],
+   "repeats_prior": "P049",
+   "repeat_closeness": "loose",
+   "intent_gives_it_away": false
+  },
+  "s/fault-16.x3d": {
+   "real": "real",
+   "reason": "Appearance with a texture and no Material is unlit in X3D 4.0, so the water shows at full texture brightness regardless of the dim light. Legal file, wrong only against the intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  }
+ },
+ "legal": {
+  "d0015": {
+   "verdict": "wrong",
+   "reason": "TextureProperties is Texturing level 2 and the Immersive profile includes the Texturing component at level 3, so no component statement is needed; the claim that X_ITE refuses the file is contradicted by the witness (twin-05 loads with 0 console messages). Caveat: the object model's informal Immersive node list omits TextureProperties."
+  },
+  "d0018": {
+   "verdict": "wrong",
+   "reason": "Group DEF='Shelf' is USEd in the Script's SFNode field and filled at run time through addChildren (directOutput true); an empty Group here is deliberate and does have an effect."
+  }
+ },
+ "notes": "Only two diagnostics on legal files required a verdict (d0015 error, d0018 warning); no info-level diagnostic on a twin or decoy has a check listed in new-checks.txt. Decoys drew only info notes (shape-no-appearance, unused-def). Not judged but worth recording: d0017 (info timesensor-never-starts on twin-06) is factually true of the file alone (nothing routes to Clock.startTime; the intent 'send' starts it) yet it fires on the twin and not on the fault, so it points the wrong way; d0016 is the fix line for the wrong d0015; d0008/d0009 on fault-05 are the same wrong profile complaint and do not name the fault; d0011/d0012 on fault-10 appear identically on twin-10 and do not name it. fault-02: d0005 (Shape has no geometry) was counted as naming because it is the direct consequence on the same Shape; d0004 is the precise one. fault-04: d0006 (4 of 8 points unused) was counted because it restates the manifest's first clause; d0007 is the precise one. fault-07 is the inverse of P044/P083 (loop set where it should not be), not counted as a repeat. fault-15 was missed although a 'low-above-high' check exists in new-checks.txt. Missed faults (no naming diagnostic): 01, 03, 05, 06, 07, 09, 10, 11, 13, 15, 16; six of these (05, 06, 07, 13, 16 and partly 10) are legal files that are wrong only against the stated intent, but 01 (winding), 03 (no coordIndex), 09 (MFVec3f array), 11 (two proto roots) and 15 (min>max) are statable from the file. No intent line states a corrected field value; fault-05's prose ('about the middle of the picture') comes closest to pointing at the pivot but describes purpose, not the value."
+}

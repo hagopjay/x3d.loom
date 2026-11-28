@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content='The camera flies in towards a tower that stands a hundred metres east of the origin, and on arrival the tower is shown in its finest version.'/>
+    <meta name='intent' content='send Approach.startTime = now at 0.2s'/>
+    <meta name='intent' content='after 3.5s: TowerDetail.level_changed == 0'/>
+  </head>
+  <Scene>
+    <Background skyColor='0.6 0.75 0.9'/>
+    <Viewpoint DEF='Camera' description='Approach' position='100 2 60'/>
+    <LOD DEF='TowerDetail' range='15 40'>
+      <Transform translation='100 0 0'>
+        <Shape>
+          <Appearance DEF='Stone'>
+            <Material diffuseColor='0.7 0.65 0.6'/>
+          </Appearance>
+          <Cylinder radius='1' height='4'/>
+        </Shape>
+        <Transform translation='0 2.75 0'>
+          <Shape>
+            <Appearance>
+              <Material diffuseColor='0.7 0.2 0.15'/>
+            </Appearance>
+            <Cone bottomRadius='1.3' height='1.5'/>
+          </Shape>
+        </Transform>
+      </Transform>
+      <Transform translation='100 0 0'>
+        <Shape>
+          <Appearance USE='Stone'/>
+          <Cylinder radius='1' height='4'/>
+        </Shape>
+      </Transform>
+      <Transform translation='100 0 0'>
+        <Shape>
+          <Appearance USE='Stone'/>
+          <Box size='2 4 2'/>
+        </Shape>
+      </Transform>
+    </LOD>
+    <TimeSensor DEF='Approach' cycleInterval='2'/>
+    <PositionInterpolator DEF='Path' key='0 1' keyValue='100 2 60 100 2 6'/>
+    <ROUTE fromNode='Approach' fromField='fraction_changed' toNode='Path' toField='set_fraction'/>
+    <ROUTE fromNode='Path' fromField='value_changed' toNode='Camera' toField='set_position'/>
+  </Scene>
+</X3D>

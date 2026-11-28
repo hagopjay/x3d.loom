@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content='The title GALLERY is centred left to right above the middle of the doorway.'/>
+    <meta name='intent' content='after 2s: Title.origin[0] &lt; -0.5'/>
+  </head>
+  <Scene>
+    <Background skyColor='0.25 0.2 0.15'/>
+    <Viewpoint description='Entrance' position='0 1.5 9'/>
+    <Transform DEF='Doorway' translation='0 1 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.4 0.25 0.1'/>
+        </Appearance>
+        <Box size='1.2 2 0.1'/>
+      </Shape>
+    </Transform>
+    <Transform translation='0 2.4 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='1 1 0.9'/>
+        </Appearance>
+        <Text DEF='Title' string='"GALLERY"'>
+          <FontStyle family='"SANS"' size='0.8' justify='"CENTER"'/>
+        </Text>
+      </Shape>
+    </Transform>
+  </Scene>
+</X3D>

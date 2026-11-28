@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name="intent:prose" content="As soon as the part file has finished loading, the turntable under it makes one slow full turn."/>
+    <meta name="intent" content="after 2.5s: Turntable.rotation changed"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Turntable' position='0 2 8'/>
+    <Transform DEF='Turntable'>
+      <Shape><Appearance><Material diffuseColor='0.5 0.5 0.55'/></Appearance><Cylinder radius='2' height='0.2'/></Shape>
+      <Inline DEF='Part' url='"helper-part.x3d"'/>
+    </Transform>
+    <LoadSensor DEF='PartReady'>
+      <Inline USE='Part'/>
+    </LoadSensor>
+    <TimeSensor DEF='TableClock' cycleInterval='8'/>
+    <OrientationInterpolator DEF='Revolve' key='0 0.25 0.5 0.75 1' keyValue='0 1 0 0  0 1 0 1.5708  0 1 0 3.1416  0 1 0 4.7124  0 1 0 6.2832'/>
+    <ROUTE fromNode='PartReady' fromField='loadTime' toNode='TableClock' toField='startTime'/>
+    <ROUTE fromNode='TableClock' fromField='fraction_changed' toNode='Revolve' toField='set_fraction'/>
+    <ROUTE fromNode='Revolve' fromField='value_changed' toNode='Turntable' toField='rotation'/>
+  </Scene>
+</X3D>

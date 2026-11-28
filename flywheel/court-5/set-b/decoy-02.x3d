@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='title' content='Railing with proxy'/>
+    <meta name="intent:prose" content="A detailed railing is drawn once and a second, purely invisible use of a plain slab stands in for it when the visitor bumps into it."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Balcony' position='0 1.6 8'/>
+    <Switch whichChoice='-1'>
+      <Shape DEF='PlainSlab'>
+        <Box size='6 1.1 0.1'/>
+      </Shape>
+    </Switch>
+    <Collision DEF='Railing'>
+      <Shape USE='PlainSlab' containerField='proxy'/>
+      <Transform translation='0 0.5 0'>
+        <Shape>
+          <Appearance><Material diffuseColor='0.6 0.6 0.6'/></Appearance>
+          <Box size='6 0.08 0.08'/>
+        </Shape>
+      </Transform>
+      <Transform translation='-2.9 0 0'>
+        <Shape DEF='Baluster'>
+          <Appearance><Material diffuseColor='0.6 0.6 0.6'/></Appearance>
+          <Cylinder height='1.1' radius='0.04'/>
+        </Shape>
+      </Transform>
+      <Transform translation='2.9 0 0'>
+        <Shape USE='Baluster'/>
+      </Transform>
+    </Collision>
+  </Scene>
+</X3D>

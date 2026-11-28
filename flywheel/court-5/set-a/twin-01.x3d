@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name="intent:prose" content="A lift platform that stands beside its shaft, five metres to the right of the origin, rides up two metres and back down again, over and over."/>
+    <meta name="intent" content="after 1.0s: Lift.translation[0] &gt; 4.9"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Lift' position='5 1.5 12' centerOfRotation='5 1 0'/>
+    <Transform translation='6.2 1.5 0'>
+      <Shape><Appearance><Material diffuseColor='0.4 0.4 0.45'/></Appearance><Box size='0.4 5 1.5'/></Shape>
+    </Transform>
+    <Transform DEF='Lift' translation='5 0 0'>
+      <Shape><Appearance><Material diffuseColor='0.9 0.6 0.1'/></Appearance><Box size='2 0.2 1.5'/></Shape>
+    </Transform>
+    <TimeSensor DEF='LiftClock' cycleInterval='4' loop='true'/>
+    <PositionInterpolator DEF='LiftPath' key='0 0.5 1' keyValue='5 0 0  5 2 0  5 0 0'/>
+    <ROUTE fromNode='LiftClock' fromField='fraction_changed' toNode='LiftPath' toField='set_fraction'/>
+    <ROUTE fromNode='LiftPath' fromField='value_changed' toNode='Lift' toField='translation'/>
+  </Scene>
+</X3D>

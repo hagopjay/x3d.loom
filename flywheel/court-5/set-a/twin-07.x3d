@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name="intent:prose" content="A buoy bobs gently up and down on the water without stopping."/>
+    <meta name="intent" content="after 1.0s: Buoy.translation changed"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Harbour' position='0 1 9'/>
+    <Shape><Appearance><Material diffuseColor='0.1 0.3 0.7'/></Appearance><Box size='12 0.05 6'/></Shape>
+    <TimeSensor DEF='Swell' cycleInterval='3' loop='true'/>
+    <PositionInterpolator DEF='Bob' key='0 0.5 1' keyValue='0 0.2 0  0 0.8 0  0 0.2 0'/>
+    <Transform DEF='Buoy' translation='0 0.2 0'>
+      <Shape><Appearance><Material diffuseColor='0.9 0.3 0.1'/></Appearance><Sphere radius='0.5'/></Shape>
+    </Transform>
+    <ROUTE fromNode='Swell' fromField='fraction_changed' toNode='Bob' toField='set_fraction'/>
+    <ROUTE fromNode='Bob' fromField='value_changed' toNode='Buoy' toField='translation'/>
+  </Scene>
+</X3D>

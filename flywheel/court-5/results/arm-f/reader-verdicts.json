@@ -1,0 +1,570 @@
+{
+ "faults": {
+  "a/fault-01.x3d": {
+   "real": "real",
+   "reason": "Interpolator keyValues are offsets but drive absolute translation, discarding the 5 m placement the prose asks for; twin differs only there.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-02.x3d": {
+   "real": "real",
+   "reason": "ROUTE from SFBool isActive to SFTime startTime: type mismatch, an error under the standard.",
+   "naming": [
+    "d0003"
+   ],
+   "repeats_prior": "P001",
+   "repeat_closeness": "loose",
+   "intent_gives_it_away": false
+  },
+  "a/fault-03.x3d": {
+   "real": "real",
+   "reason": "Sequencer keys 0 0.5 1 give the third state zero duration; contradicts 'equal thirds'. Legal file, wrong only against the stated intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-04.x3d": {
+   "real": "real",
+   "reason": "ProximitySensor sits outside the Transform that places the gatehouse, so its box is at the origin.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-05.x3d": {
+   "real": "real",
+   "reason": "Date.now() milliseconds written into an SFTime puts the start far in the future; real by the standard although X_ITE happens to start anyway.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-06.x3d": {
+   "real": "real",
+   "reason": "stopTime 20 > startTime 0 and both long past, so the looping clock is never active.",
+   "naming": [
+    "d0007"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-07.x3d": {
+   "real": "real",
+   "reason": "ROUTE precedes the DEF of its destination node; engine drops it.",
+   "naming": [
+    "d0008"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-08.x3d": {
+   "real": "real",
+   "reason": "Chaser starts from default 0 while the lamp is at 1, so the lamp snaps dark first; wrong against the stated intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-09.x3d": {
+   "real": "real",
+   "reason": "Nearer TouchSensor on the drawer masks the cabinet sensor, and only the cabinet sensor drives the lamp.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-10.x3d": {
+   "real": "real",
+   "reason": "BooleanTrigger.triggerTrue can only send TRUE, so the off button switches the lamp on.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-11.x3d": {
+   "real": "real",
+   "reason": "ROUTE names a node that lives in the Inline's scope with no IMPORT; error under the standard.",
+   "naming": [
+    "d0012"
+   ],
+   "repeats_prior": "P088",
+   "repeat_closeness": "loose",
+   "intent_gives_it_away": false
+  },
+  "a/fault-12.x3d": {
+   "real": "real",
+   "reason": "Looping path does not return to its first point, so the marker jumps 4 m at each wrap; wrong against the stated intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-13.x3d": {
+   "real": "real",
+   "reason": "Proto interface field 'period' has no IS/connect in the body, so the instance value is ignored.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-14.x3d": {
+   "real": "real",
+   "reason": "Resume button drives startTime, which a paused (still active) TimeSensor ignores; resumeTime was needed.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-15.x3d": {
+   "real": "real",
+   "reason": "ROUTE destination TimeSensor.isActive is outputOnly; error under the standard.",
+   "naming": [
+    "d0015",
+    "d0014",
+    "d0016"
+   ],
+   "repeats_prior": "P002",
+   "repeat_closeness": "loose",
+   "intent_gives_it_away": false
+  },
+  "a/fault-16.x3d": {
+   "real": "real",
+   "reason": "jump='false' on the bound Viewpoint leaves the viewer where it was, so the proximity zone is never entered.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-17.x3d": {
+   "real": "real",
+   "reason": "TimeTrigger fires on isActive TRUE (start of rise) instead of on its end; cart leaves at once.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-18.x3d": {
+   "real": "real",
+   "reason": "SFNode Script field given as value='Crate' string; field stays NULL and the script throws.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-19.x3d": {
+   "real": "real",
+   "reason": "autoOffset='false' makes each drag restart from zero offset, against the stated intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "a/fault-20.x3d": {
+   "real": "real",
+   "reason": "LoadSensor has no watched children, so it never reports.",
+   "naming": [
+    "d0020"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-01.x3d": {
+   "real": "real",
+   "reason": "Beacon nested inside the 0.01-scaled Transform, so its metre-sized offset and radius shrink a hundredfold.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-02.x3d": {
+   "real": "real",
+   "reason": "Wall Shape filed as Collision proxy, which is never drawn.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-03.x3d": {
+   "real": "real",
+   "reason": "USE appears before its DEF in document order; the standard resolves USE to a preceding DEF. X_ITE tolerates it.",
+   "naming": [
+    "d0037"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-04.x3d": {
+   "real": "real",
+   "reason": "LOD without center measures distance to the origin while the model is 100 m away; wrong level shown.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-05.x3d": {
+   "real": "real",
+   "reason": "USE inside a ProtoBody refers to a DEF in the outer scene, outside the prototype name scope.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-06.x3d": {
+   "real": "real",
+   "reason": "Only the first ProtoBody node is rendered; the second top-level Transform (globe) is dropped.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-07.x3d": {
+   "real": "real",
+   "reason": "Concave face with convex left TRUE; result undefined and the engine fills the notch.",
+   "naming": [
+    "d0040"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-08.x3d": {
+   "real": "real",
+   "reason": "Coordinate point holds 8 numbers (x-z pairs), not triples; XSD-invalid and indices run past the points.",
+   "naming": [
+    "d0041",
+    "d0042"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-09.x3d": {
+   "real": "real",
+   "reason": "Explicit normals point opposite to the winding/viewer, so the board lights black.",
+   "naming": [
+    "d0043"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-10.x3d": {
+   "real": "real",
+   "reason": "justify 'CENTER' is not a legal FontStyle value; XSD-invalid and text is not centred.",
+   "naming": [
+    "d0045",
+    "d0046"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-11.x3d": {
+   "real": "real",
+   "reason": "Rotation with zero-length axis gives no rotation; lid stays shut.",
+   "naming": [
+    "d0048"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-12.x3d": {
+   "real": "real",
+   "reason": "Box size written in millimetres; legal numbers, absurd scene against the stated intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-13.x3d": {
+   "real": "real",
+   "reason": "Inline url is an absolute file:/// path on one author's machine; fails to load.",
+   "naming": [
+    "d0050"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-14.x3d": {
+   "real": "real",
+   "reason": "SFImage declares 2x2 pixels but lists three.",
+   "naming": [
+    "d0052"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-15.x3d": {
+   "real": "real",
+   "reason": "Two nodes placed in the single-valued Shape.metadata field; XSD-invalid, one is dropped.",
+   "naming": [
+    "d0055"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-16.x3d": {
+   "real": "real",
+   "reason": "component name 'Geometry2d' is not a defined component (case); XSD-invalid, so ArcClose2D (level 2) is not covered by Immersive. X_ITE tolerates it.",
+   "naming": [
+    "d0059",
+    "d0058",
+    "d0057"
+   ],
+   "repeats_prior": "P117",
+   "repeat_closeness": "loose",
+   "intent_gives_it_away": false
+  },
+  "b/fault-17.x3d": {
+   "real": "real",
+   "reason": "Rectangle2D left in its X-Y plane, edge-on to the top-down camera; wrong against the stated intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-18.x3d": {
+   "real": "real",
+   "reason": "NurbsCurve order 4 with three control points; nothing is drawn.",
+   "naming": [
+    "d0062"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-19.x3d": {
+   "real": "real",
+   "reason": "IndexedQuadSet index contains -1 separators, which the field does not allow.",
+   "naming": [
+    "d0063",
+    "d0067",
+    "d0068"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "b/fault-20.x3d": {
+   "real": "real",
+   "reason": "GD coordinates written longitude first; marker lands thousands of km away.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": true
+  },
+  "c/fault-01.x3d": {
+   "real": "real",
+   "reason": "DirectionalLight with default global=false lights only its sibling subtree, not table or floor.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-02.x3d": {
+   "real": "real",
+   "reason": "PointLight radius 3 ends before the pillars 5 m away.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-03.x3d": {
+   "real": "real",
+   "reason": "PhysicalMaterial has no diffuseColor field (XSD-invalid); colour is dropped.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-04.x3d": {
+   "real": "real",
+   "reason": "Line colour put in diffuseColor; lines are unlit and use emissiveColor, so the curve is black on black.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-05.x3d": {
+   "real": "real",
+   "reason": "SFImage declares 2x2 pixels but lists three.",
+   "naming": [
+    "d0116"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-06.x3d": {
+   "real": "real",
+   "reason": "repeatS/T false clamps the texture, so the 4x4 tiling asked for cannot happen.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-07.x3d": {
+   "real": "real",
+   "reason": "Texture coordinates flipped vertically; picture upside down against the stated intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-08.x3d": {
+   "real": "real",
+   "reason": "RGBA 4-tuples in a Color node (MFColor triples); 16 numbers, XSD-invalid.",
+   "naming": [
+    "d0120"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-09.x3d": {
+   "real": "real",
+   "reason": "alphaMode MASK with alpha 0.3 below the default cutoff 0.5 discards the pane.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-10.x3d": {
+   "real": "real",
+   "reason": "Unquoted MFString is an encoding error under the standard, though X_ITE accepts it and renders the same.",
+   "naming": [
+    "d0125"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-11.x3d": {
+   "real": "real",
+   "reason": "justify 'CENTER' is not a legal FontStyle value; XSD-invalid and text is not centred.",
+   "naming": [
+    "d0129",
+    "d0130"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-12.x3d": {
+   "real": "real",
+   "reason": "Fog visibilityRange left at 0, which means no fog.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-13.x3d": {
+   "real": "real",
+   "reason": "skyColor listed horizon-first; field starts at the zenith, so the gradient is inverted against the stated intent.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-14.x3d": {
+   "real": "real",
+   "reason": "shadowIntensity set but shadows left false, so no shadow is cast.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-15.x3d": {
+   "real": "real",
+   "reason": "centerOfRotation left at origin while the vase is 30 m away; orbit pivots on empty space. Real by the standard, not witnessed by the harness.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-16.x3d": {
+   "real": "real",
+   "reason": "OrthoViewpoint fieldOfView components in the wrong order give min > max.",
+   "naming": [
+    "d0138"
+   ],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-17.x3d": {
+   "real": "real",
+   "reason": "visibilityLimit 25 clips the towers 60 m away.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-18.x3d": {
+   "real": "real",
+   "reason": "LOD children listed coarsest first, so the box shows up close.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-19.x3d": {
+   "real": "real",
+   "reason": "LOD without center measures to the origin while the tower is 100 m away; finest level never chosen.",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  },
+  "c/fault-20.x3d": {
+   "real": "real",
+   "reason": "Sound has no location and sits outside the radio's Transform, so it plays at the origin 40 m away. Real by the standard, not witnessed (no audio).",
+   "naming": [],
+   "repeats_prior": null,
+   "repeat_closeness": null,
+   "intent_gives_it_away": false
+  }
+ },
+ "legal": {
+  "d0083": {
+   "verdict": "wrong",
+   "reason": "Wrong: TextureProperties is Texturing level 2 and Immersive supports Texturing level 3 (MovieTexture, level 3, is an Immersive node), so no component statement is needed; X_ITE also loaded the file with a silent console, contrary to the message."
+  },
+  "d0098": {
+   "verdict": "wrong",
+   "reason": "Wrong: TextureProperties is Texturing level 2 and Immersive supports Texturing level 3 (MovieTexture, level 3, is an Immersive node), so no component statement is needed; X_ITE also loaded the file with a silent console, contrary to the message."
+  },
+  "d0164": {
+   "verdict": "wrong",
+   "reason": "Wrong: TextureProperties is Texturing level 2 and Immersive supports Texturing level 3 (MovieTexture, level 3, is an Immersive node), so no component statement is needed; X_ITE also loaded the file with a silent console, contrary to the message."
+  },
+  "d0158": {
+   "verdict": "wrong",
+   "reason": "Wrong: PhysicalMaterial is Shape level 2 and Immersive supports Shape level 2 (LineProperties, also level 2, is an Immersive node); X_ITE loaded and drew it with a silent console, contrary to the message."
+  },
+  "d0095": {
+   "verdict": "wrong",
+   "reason": "Wrong: an empty Group as the last LOD child is the standard way to draw nothing beyond the last range; it has an effect here."
+  },
+  "d0097": {
+   "verdict": "right",
+   "reason": "Right on the facts: loop false, startTime 0 and no ROUTE into the clock, so by the standard it never runs unless something outside the file (here only the test harness's send) starts it."
+  },
+  "d0189": {
+   "verdict": "right",
+   "reason": "Right on the facts: loop false, startTime 0 and no ROUTE into the clock, so the fly-in the prose describes never happens unless something outside the file starts it."
+  }
+ },
+ "notes": "All 60 faults judged real; about 25 are legal files that are wrong only against the stated intent. 23 faults have a naming diagnostic, 37 have none. a/fault-15: d0014/d0016 (enabled never routed) counted as naming because they state the direct consequence of the mis-aimed ROUTE; d0015 names it outright. b/fault-16: d0057-59 name the consequence of the misspelt component. c/fault-03: the only findings are a profile complaint about PhysicalMaterial, nothing about the XSD-invalid diffuseColor attribute. The profile-component check is wrong for TextureProperties and PhysicalMaterial under Immersive (4 errors on legal files, same errors on b/fault-14, c/fault-03, c/fault-05). timesensor-never-starts on c/decoy-04 and c/twin-19 is factually right: those legal scenes depend on an outside start. Immersive component levels are not tabulated in the kit; I inferred them from the Immersive node list in the object model (MovieTexture = Texturing 3, LineProperties = Shape 2). Repeats are all loose: a02~P001, a11~P088, a15~P002, b16~P117. Within this court three faults are duplicated across sets: b04~c19 (LOD center), b10~c11 (justify CENTER), b14~c05 (PixelTexture count). Intent: only b/fault-20 marked as giving the fault away (prose states the latitude and longitude numerals that are the corrected geoCoords; prose only, no testable line); b/fault-12, b/fault-14, a/fault-01 and c/fault-16 are borderline but describe the scene, not the field. no-viewpoint info fires on c/fault-16 and b/fault-20 although they have an OrthoViewpoint and a GeoViewpoint (info level, not judged)."
+}

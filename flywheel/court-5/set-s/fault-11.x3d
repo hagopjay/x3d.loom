@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content="Each instance of the prototype shows a red ball with a green ball two units to its right."/>
+  </head>
+  <Scene>
+    <ProtoDeclare name='BallPair'>
+      <ProtoBody>
+        <Shape>
+          <Appearance>
+            <Material diffuseColor='1 0 0'/>
+          </Appearance>
+          <Sphere radius='0.6'/>
+        </Shape>
+        <Transform translation='2 0 0'>
+          <Shape>
+            <Appearance>
+              <Material diffuseColor='0 1 0'/>
+            </Appearance>
+            <Sphere radius='0.6'/>
+          </Shape>
+        </Transform>
+      </ProtoBody>
+    </ProtoDeclare>
+    <Viewpoint description='Pairs' position='1 0 10'/>
+    <Transform translation='-2 1.5 0'>
+      <ProtoInstance name='BallPair'/>
+    </Transform>
+    <Transform translation='-2 -1.5 0'>
+      <ProtoInstance name='BallPair'/>
+    </Transform>
+  </Scene>
+</X3D>

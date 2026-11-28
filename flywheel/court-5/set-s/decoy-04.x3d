@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content="A visitor walking through the hall is stopped by one plain invisible wall instead of by every pillar of the ornate screen."/>
+  </head>
+  <Scene>
+    <NavigationInfo type='"WALK" "ANY"' avatarSize='0.25 1.6 0.75'/>
+    <Viewpoint description='Hall' position='0 1.6 10'/>
+    <Shape>
+      <Appearance>
+        <Material diffuseColor='0.4 0.35 0.3'/>
+      </Appearance>
+      <Box size='30 0.1 30'/>
+    </Shape>
+    <Collision enabled='true'>
+      <Transform DEF='Pillar' translation='-2 1.5 0'>
+        <Shape>
+          <Appearance DEF='Stone'>
+            <Material diffuseColor='0.7 0.7 0.65'/>
+          </Appearance>
+          <Cylinder height='3' radius='0.2'/>
+        </Shape>
+      </Transform>
+      <Transform translation='-1 1.5 0'>
+        <Shape>
+          <Appearance USE='Stone'/>
+          <Cone height='3' bottomRadius='0.3'/>
+        </Shape>
+      </Transform>
+      <Transform translation='0 1.5 0'>
+        <Shape>
+          <Appearance USE='Stone'/>
+          <Cylinder height='3' radius='0.2'/>
+        </Shape>
+      </Transform>
+      <Transform translation='1 1.5 0'>
+        <Shape>
+          <Appearance USE='Stone'/>
+          <Cone height='3' bottomRadius='0.3'/>
+        </Shape>
+      </Transform>
+      <Transform translation='2 1.5 0'>
+        <Shape>
+          <Appearance USE='Stone'/>
+          <Cylinder height='3' radius='0.2'/>
+        </Shape>
+      </Transform>
+      <Shape containerField='proxy'>
+        <Box size='5 3 0.4'/>
+      </Shape>
+    </Collision>
+  </Scene>
+</X3D>

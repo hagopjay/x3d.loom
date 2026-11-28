@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='title' content='Survey terrain'/>
+    <meta name="intent:prose" content="A small terrain patch of three by four posts, exported by a survey tool that writes commas and exponents, rises to a ridge along its middle."/>
+    <meta name="intent" content="after 0.5s: Terrain.xSpacing == 1.5"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Terrain' position='1.5 3 9' orientation='1 0 0 -0.3'/>
+    <Shape>
+      <Appearance><Material diffuseColor='0.4 0.6 0.3'/></Appearance>
+      <ElevationGrid DEF='Terrain' xDimension='3' zDimension='4' xSpacing='1.5E0' zSpacing='1e+0' solid='false' creaseAngle='.5'
+                     height='0, 5.0e-1, 0,
+                             0, 1.2E0, 0,
+                             0, 1.2e0, 0,
+                             0, +5e-1, 0'/>
+    </Shape>
+  </Scene>
+</X3D>

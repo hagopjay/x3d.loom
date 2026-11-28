@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name="intent:prose" content="Holding the pointer button down anywhere on the cabinet, its drawer front included, switches the cabinet lamp on for as long as it is held; merely hovering over the drawer front makes the drawer glow."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Cabinet' position='0 0 8'/>
+    <PointLight DEF='CabinetLamp' on='false' location='0 3 3'/>
+    <PointLight DEF='DrawerGlow' on='false' location='0 0 2' color='1 0.8 0.4'/>
+    <Group DEF='Cabinet'>
+      <TouchSensor DEF='CabinetTouch' description='cabinet lamp'/>
+      <Shape><Appearance><Material diffuseColor='0.5 0.35 0.2'/></Appearance><Box size='3 4 1'/></Shape>
+      <Transform DEF='Drawer' translation='0 0 0.6'>
+        <TouchSensor DEF='DrawerHover' description='drawer'/>
+        <Shape><Appearance><Material diffuseColor='0.7 0.55 0.35'/></Appearance><Box size='2 1 0.2'/></Shape>
+      </Transform>
+    </Group>
+    <ROUTE fromNode='CabinetTouch' fromField='isActive' toNode='CabinetLamp' toField='on'/>
+    <ROUTE fromNode='DrawerHover' fromField='isOver' toNode='DrawerGlow' toField='on'/>
+  </Scene>
+</X3D>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content='A two-line signpost with a blank line between NORTH and SOUTH, centred on its post and always facing the viewer.'/>
+    <meta name='intent' content='after 2s: Post.origin[0] &lt; -0.5'/>
+  </head>
+  <Scene>
+    <Background skyColor='0.2 0.3 0.2'/>
+    <Viewpoint description='Signpost' position='0 0 9'/>
+    <Billboard axisOfRotation='0 0 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0 0 0' emissiveColor='1 1 1'/>
+        </Appearance>
+        <Text DEF='Post' string='"NORTH" "" "SOUTH"'>
+          <FontStyle family='"SANS"' justify='"MIDDLE" "MIDDLE"' size='1' spacing='0.9'/>
+        </Text>
+      </Shape>
+    </Billboard>
+  </Scene>
+</X3D>

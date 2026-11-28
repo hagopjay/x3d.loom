@@ -1,0 +1,463 @@
+{
+ "fault-01.x3d": {
+  "category": "light scope",
+  "fault": "The DirectionalLight sits inside the lamp fixture's Transform with the default global='false', so it lights only the fixture's own children and not the table or floor.",
+  "viewer_sees": "Only the glowing lamp bulb; the table and floor stay black.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: table and floor black, only the bulb glows | twin: floor grey and table red-brown, lit. Pixels differing fault vs twin: 28.2%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-01.x3d",
+  "nearest_prior": "P077: there the scene has no light at all; here a light exists but its scope excludes the objects it is meant to light.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-01.x3d": {
+  "category": "light scope",
+  "intent": "A ceiling lamp fixture lights the table and the floor of a small room; the viewer's headlight is off.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; floor grey and table red-brown, lit. Intent: no testable intent line."
+ },
+ "fault-02.x3d": {
+  "category": "light radius",
+  "fault": "The PointLight radius is 3, less than the distance to any pillar, so the light reaches none of them.",
+  "viewer_sees": "The pillars are black against the dark sky; only the part of the pole near the lantern is lit.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: three pillars are black silhouettes | twin: pillars lit warm on the side facing the lantern. Pixels differing fault vs twin: 1.6%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-02.x3d",
+  "nearest_prior": "P077: closest listed lighting fault (no light at all); here the light is on but its radius ends before the lit objects.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-02.x3d": {
+  "category": "light radius",
+  "intent": "A lantern on a pole lights the three pillars standing five metres around it; the viewer's headlight is off.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; pillars lit warm on the side facing the lantern. Intent: no testable intent line."
+ },
+ "fault-03.x3d": {
+  "category": "physical material",
+  "fault": "PhysicalMaterial is given a diffuseColor attribute; it has no such field (its colour field is baseColor), so the colour is dropped.",
+  "viewer_sees": "A white ball instead of a copper one.",
+  "spec": "error per the X3D standard (PhysicalMaterial has no diffuseColor field; Shape component, PhysicalMaterial interface)",
+  "xsd_valid": false,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: ball renders white-grey (X_ITE ignores the unknown attribute silently) | twin: ball renders copper. Pixels differing fault vs twin: 20.8%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-03.x3d",
+  "nearest_prior": "P031: a PhysicalMaterial value out of range; here a field from the classic Material is used on the physical one.",
+  "engine_disagrees": false,
+  "testable_intent": false,
+  "xsd_error": "Element 'PhysicalMaterial', attribute 'diffuseColor': The attribute 'diffuseColor' is not allowed."
+ },
+ "twin-03.x3d": {
+  "category": "physical material",
+  "intent": "A copper-coloured ball with a physically based surface.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; ball renders copper. Intent: no testable intent line."
+ },
+ "fault-04.x3d": {
+  "category": "material on lines",
+  "fault": "The curve's colour is put in diffuseColor; lines are not lit and take their colour from emissiveColor, which is left black.",
+  "viewer_sees": "The axes are visible but the curve is black on black, so it cannot be seen.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: axes drawn, curve absent (black on black) | twin: yellow curve drawn. Pixels differing fault vs twin: 0.9%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-04.x3d",
+  "nearest_prior": "none: no listed mistake concerns the colour of line geometry.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-04.x3d": {
+  "category": "material on lines",
+  "intent": "A yellow line chart with two grey axes drawn against the default black background.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; yellow curve drawn. Intent: no testable intent line."
+ },
+ "fault-05.x3d": {
+  "category": "texture pixels",
+  "fault": "The PixelTexture image declares 2 x 2 pixels but lists only three pixel values.",
+  "viewer_sees": "No checker pattern (the texture is rejected or the last pixel is undefined).",
+  "spec": "error per the X3D standard (SFImage: width*height pixel values shall follow the three header numbers)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: tile renders plain white, no pattern | twin: red and white 2x2 checker. Pixels differing fault vs twin: 14.1%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-05.x3d",
+  "nearest_prior": "P067: a count mismatch in TextureCoordinate; here the mismatch is in the pixel data of the image itself.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-05.x3d": {
+  "category": "texture pixels",
+  "intent": "A square tile carries a two by two red and white checker pattern.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; red and white 2x2 checker. Intent: no testable intent line."
+ },
+ "fault-06.x3d": {
+  "category": "texture repeat",
+  "fault": "repeatS and repeatT are false, so texture coordinates beyond 0..1 are clamped and the picture cannot tile.",
+  "viewer_sees": "One small copy of the brick picture in a corner with its edge pixels smeared across the rest of the wall.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: one brick copy in the lower-left corner, the rest smeared with edge pixels | twin: 4x4 tiling. Pixels differing fault vs twin: 34.9%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-06.x3d",
+  "nearest_prior": "P112: there the TextureTransform scale was inverted; here the scale is right but repetition is switched off on the texture.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-06.x3d": {
+  "category": "texture repeat",
+  "intent": "A wall is covered with a brick picture repeated four times across and four times up.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; 4x4 tiling. Intent: no testable intent line."
+ },
+ "fault-07.x3d": {
+  "category": "texture coordinates",
+  "fault": "The texture coordinates assume the image origin is at the top left; X3D puts t=0 at the bottom, so the picture is mapped upside down.",
+  "viewer_sees": "The arrow points down.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: arrow points down, green strip on top | twin: arrow points up, green strip at the bottom. Pixels differing fault vs twin: 16.8%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-07.x3d",
+  "nearest_prior": "P067: too few texture coordinates; here the count is right but the vertical axis is inverted.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-07.x3d": {
+  "category": "texture coordinates",
+  "intent": "A signboard shows the arrow picture upright, with the arrow pointing up.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; arrow points up, green strip at the bottom. Intent: no testable intent line."
+ },
+ "fault-08.x3d": {
+  "category": "colour per vertex",
+  "fault": "Four-component RGBA values are written into a Color node, which holds three-component colours, so the 16 numbers are regrouped as five and a third wrong colours.",
+  "viewer_sees": "The corners show the wrong colours (red, yellow-ish, magenta, and so on) or the colours are rejected.",
+  "spec": "error per the X3D standard (MFColor values are triples; 16 numbers is not a whole number of colours)",
+  "xsd_valid": false,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: X_ITE warns 'Array length must be multiple of components size' and shows corners red, yellow-green, magenta, cyan-ish gradient | twin: red, green, blue, yellow corners. Pixels differing fault vs twin: 39.2%. Intent on fault: no testable intent line. Console (fault): ['warning: Array length must be multiple of components size, which is 3.']",
+  "twin": "twin-08.x3d",
+  "nearest_prior": "P106: colours applied per vertex instead of per face; here the colour tuples themselves have the wrong arity for the node.",
+  "engine_disagrees": false,
+  "testable_intent": false,
+  "xsd_error": "Element 'Color', attribute 'color': [facet 'pattern'] The value '1 0 0 1 0 1 0 1 0 0 1 1 1 1 0 1' is not accepted by the pattern '\\s*((([+-]?((0(\\.[0-9]*)?|\\.[0-9]+)|1(\\.0*)?)([Ee][+-]?[0-9]+)?)\\s+){2"
+ },
+ "twin-08.x3d": {
+  "category": "colour per vertex",
+  "intent": "A square panel whose four corners are red, green, blue and yellow, blending smoothly across the face.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; red, green, blue, yellow corners. Intent: no testable intent line."
+ },
+ "fault-09.x3d": {
+  "category": "transparency and blending",
+  "fault": "The pane's Appearance uses alphaMode MASK; with the default alphaCutoff 0.5 its alpha of 0.3 is below the cutoff, so the whole pane is discarded.",
+  "viewer_sees": "No pane at all: the ball is seen untinted against the bright background.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: no pane, ball plain yellow on light grey | twin: translucent blue pane over a dimmed ball. Pixels differing fault vs twin: 54.2%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-09.x3d",
+  "nearest_prior": "P111: transparency 1 used for opaque; here the transparency value is right but the alpha mode discards the surface.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-09.x3d": {
+  "category": "transparency and blending",
+  "intent": "A blue-tinted glass pane stands in front of a yellow ball, and the ball is seen through the tint.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; translucent blue pane over a dimmed ball. Intent: no testable intent line."
+ },
+ "fault-10.x3d": {
+  "category": "text string",
+  "fault": "The Text string is written as bare words; it is an MFString and each string must be enclosed in double quotes.",
+  "viewer_sees": "No sign text, or the words split into separate lines.",
+  "spec": "error per the X3D standard (XML encoding: MFString values are quoted strings)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault and twin render the same text; X_ITE accepts the unquoted value as one string and prints a console warning about MFString quoting. Pixels differing fault vs twin: 0.0%. Intent on fault: after 2s: Sign.textBounds[0] > 1 -> holds (got [4.76, 0.789]). Console (fault): [\"warning: XML Parser: Field 'string' is an MFString array and can have multiple values, so make sure to separate each individual string with double quotation marks!\"]",
+  "twin": "twin-10.x3d",
+  "nearest_prior": "none: no listed mistake concerns string quoting.",
+  "engine_disagrees": true,
+  "testable_intent": true
+ },
+ "twin-10.x3d": {
+  "category": "text string",
+  "intent": "A station sign shows the words Platform 9 on one line.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; fault and twin render the same text; X_ITE accepts the unquoted value as one string and prints a console warning about MFString quoting. Intent: after 2s: Sign.textBounds[0] > 1 -> holds (got [4.76, 0.789])."
+ },
+ "fault-11.x3d": {
+  "category": "font style",
+  "fault": "FontStyle justify is \"CENTER\", which is not one of the allowed values (BEGIN, FIRST, MIDDLE, END).",
+  "viewer_sees": "The title starts at the doorway's centre line and runs off to the right instead of being centred.",
+  "spec": "error per the X3D standard (FontStyle justify enumeration)",
+  "xsd_valid": false,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: title starts at the door's centre line and runs right (origin x = 0) | twin: title centred over the door (origin x = -1.64). Pixels differing fault vs twin: 1.8%. Intent on fault: after 2s: Title.origin[0] < -0.5 -> FAILS (got [0, 0.5671999999999999, 0]). Console (fault): none",
+  "twin": "twin-11.x3d",
+  "nearest_prior": "none: no listed mistake concerns FontStyle.",
+  "engine_disagrees": false,
+  "testable_intent": true,
+  "xsd_error": "Element 'FontStyle', attribute 'justify': [facet 'enumeration'] The value '\"CENTER\"' is not an element of the set {'\"MIDDLE\"', '\"MIDDLE\" \"BEGIN\"', '\"MIDDLE\" \"END\"', '\"MIDDLE\" \"FIRST\"', '\"MIDDLE\" \"MIDD"
+ },
+ "twin-11.x3d": {
+  "category": "font style",
+  "intent": "The title GALLERY is centred left to right above the middle of the doorway.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; title centred over the door (origin x = -1.64). Intent: after 2s: Title.origin[0] < -0.5 -> holds (got [-1.6352000000000002, 0.5671999999999999, 0])."
+ },
+ "fault-12.x3d": {
+  "category": "fog",
+  "fault": "The Fog has a colour and type but no visibilityRange; the default 0 means no fog at all.",
+  "viewer_sees": "All posts are equally vivid red; there is no mist.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: all five posts saturated red | twin: posts fade towards the background colour with distance. Pixels differing fault vs twin: 2.3%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-12.x3d",
+  "nearest_prior": "P094: a sensor left at a disabling default size; here the node and field are different (Fog range) though the pattern of a disabling default is similar.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-12.x3d": {
+  "category": "fog",
+  "intent": "A row of red posts recedes into pale mist, each post fainter than the one before, the farthest almost gone.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; posts fade towards the background colour with distance. Intent: no testable intent line."
+ },
+ "fault-13.x3d": {
+  "category": "background",
+  "fault": "The sky colours are listed from the horizon upward; skyColor starts at the zenith, so the gradient is upside down.",
+  "viewer_sees": "Deep blue at the horizon and orange straight overhead.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: horizon band deep blue, lighter above | twin: orange at the horizon turning blue-violet above. Pixels differing fault vs twin: 50.0%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-13.x3d",
+  "nearest_prior": "P039: the number of sky colours did not match the angles; here the count is right and the order is reversed.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-13.x3d": {
+  "category": "background",
+  "intent": "An evening sky: deep blue overhead fading to orange at the horizon, above dark ground.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; orange at the horizon turning blue-violet above. Intent: no testable intent line."
+ },
+ "fault-14.x3d": {
+  "category": "shadows",
+  "fault": "The light sets shadowIntensity but leaves shadows at its default false, so no shadow is cast.",
+  "viewer_sees": "The floor is evenly lit with no shadow under the ball.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: no shadow on the floor | twin: dark elliptical shadow on the floor beside the ball. Pixels differing fault vs twin: 0.6%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-14.x3d",
+  "nearest_prior": "none: no listed mistake concerns shadows.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-14.x3d": {
+  "category": "shadows",
+  "intent": "A ball hovers over a floor and the sun throws its shadow on the floor; the viewer's headlight is off.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; dark elliptical shadow on the floor beside the ball. Intent: no testable intent line."
+ },
+ "fault-15.x3d": {
+  "category": "viewpoint",
+  "fault": "The Viewpoint keeps the default centerOfRotation 0 0 0 although the vase is at 30 1 0, so examining orbits around empty space thirty metres away.",
+  "viewer_sees": "On the first drag the vase swings out of view instead of turning in place.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "views are identical at load; the difference appears only while orbiting, which the harness does not drive. Pixels differing fault vs twin: 0.0%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-15.x3d",
+  "nearest_prior": "P114: a viewpoint looking the wrong way; here the view is right at load and the orbit centre is wrong.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-15.x3d": {
+  "category": "viewpoint",
+  "intent": "A vase stands thirty metres east of the origin and the viewer examines it by orbiting around it.",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "Loads in X_ITE; views are identical at load; the difference appears only while orbiting, which the harness does not drive. Intent: no testable intent line."
+ },
+ "fault-16.x3d": {
+  "category": "orthographic viewpoint",
+  "fault": "The OrthoViewpoint fieldOfView is written as left right bottom top; the field order is minX minY maxX maxY, so the box is read as x from -4 to -3 and y from 4 to 3.",
+  "viewer_sees": "A distorted or empty view instead of the 8 by 6 plan with four corner blocks.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: empty light-grey view, no blocks | twin: four blue blocks and the orange drum in plan. Pixels differing fault vs twin: 12.5%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-16.x3d",
+  "nearest_prior": "P076: a perspective fieldOfView given in degrees; here it is the four-number orthographic window with its components in the wrong order.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-16.x3d": {
+  "category": "orthographic viewpoint",
+  "intent": "A floor plan seen straight from above in a parallel view eight metres wide and six metres deep, showing all four corner blocks.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; four blue blocks and the orange drum in plan. Intent: no testable intent line."
+ },
+ "fault-17.x3d": {
+  "category": "navigation settings",
+  "fault": "visibilityLimit is 25, so the far clipping plane lies in front of the towers at 60 metres.",
+  "viewer_sees": "The railing and empty sky; the towers are clipped away.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: only the railing, towers missing | twin: railing and both towers. Pixels differing fault vs twin: 4.7%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-17.x3d",
+  "nearest_prior": "P037: an object placed absurdly far away; here the object is at a sensible distance and the navigation setting cuts it off.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-17.x3d": {
+  "category": "navigation settings",
+  "intent": "From the terrace the viewer sees the near railing and, across the water, the two distant towers on the far shore.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; railing and both towers. Intent: no testable intent line."
+ },
+ "fault-18.x3d": {
+  "category": "level of detail",
+  "fault": "The LOD children are listed coarsest first; the first child is the one shown nearest, so the versions are used in reverse.",
+  "viewer_sees": "A box when close and the smooth sphere only when far away.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: a flat-looking box at the starting distance | twin: a shaded sphere. Pixels differing fault vs twin: 9.2%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-18.x3d",
+  "nearest_prior": "P060: the LOD range values were out of order; here the range is right and the children are in the wrong order.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-18.x3d": {
+  "category": "level of detail",
+  "intent": "A globe is drawn as a smooth sphere when the viewer is close, as a simpler drum at middle distance and as a plain box from far away; the view starts close.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; a shaded sphere. Intent: no testable intent line."
+ },
+ "fault-19.x3d": {
+  "category": "level of detail",
+  "fault": "The LOD keeps its default center 0 0 0 although every level is drawn a hundred metres away, so the distance is measured to the origin and never falls inside the first range.",
+  "viewer_sees": "The tower stays a plain box even when the camera is right in front of it.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "fault: plain box after arrival, level_changed = 2 | twin: tower with roof after arrival, level_changed = 0. Pixels differing fault vs twin: 18.1%. Intent on fault: after 3.5s: TowerDetail.level_changed == 0 -> FAILS (got [2]). Console (fault): none",
+  "twin": "twin-19.x3d",
+  "nearest_prior": "P120: a Transform turning about the wrong point because center was omitted; here it is the LOD's distance reference point, a different node and effect.",
+  "engine_disagrees": false,
+  "testable_intent": true
+ },
+ "twin-19.x3d": {
+  "category": "level of detail",
+  "intent": "The camera flies in towards a tower that stands a hundred metres east of the origin, and on arrival the tower is shown in its finest version.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads in X_ITE; tower with roof after arrival, level_changed = 0. Intent: after 3.5s: TowerDetail.level_changed == 0 -> holds (got [0])."
+ },
+ "fault-20.x3d": {
+  "category": "sound placement",
+  "fault": "The Sound is a sibling of the radio's Transform and has no location, so it is emitted at the origin with a ten-metre reach, forty metres from the radio and the visitor.",
+  "viewer_sees": "Silence at the radio; the hum is only heard near the empty origin.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "views are identical; the difference is audible only and the headless browser has no audio output to sample. Pixels differing fault vs twin: 0.0%. Intent on fault: no testable intent line. Console (fault): none",
+  "twin": "twin-20.x3d",
+  "nearest_prior": "P092: a sensor placed in the wrong part of the tree; here it is a sound source positioned away from the object it belongs to.",
+  "engine_disagrees": false,
+  "testable_intent": false
+ },
+ "twin-20.x3d": {
+  "category": "sound placement",
+  "intent": "A radio on a table at the far end of a long hall hums, and a visitor standing in front of the radio hears it.",
+  "xsd_valid": true,
+  "witness": "reasoned",
+  "witness_note": "Loads in X_ITE; views are identical; the difference is audible only and the headless browser has no audio output to sample. Intent: no testable intent line."
+ },
+ "decoy-01.x3d": {
+  "category": "light scope",
+  "intent": "Two display cases, each lit only by its own lamp, one warm and one cool; the viewer's headlight is off.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads with zero console errors and renders as intended in the screenshot; intent: no testable intent line. (The first page of the run logged GL driver performance warnings about ReadPixels from the software renderer; these are not scene messages.)",
+  "why_suspicious": "The headlight is off and both lights are non-global (the default), which often leaves a scene dark; here each light sits in the same group as the shape it is meant to light, so the scoping is exactly what is wanted."
+ },
+ "decoy-02.x3d": {
+  "category": "text",
+  "intent": "A two-line signpost with a blank line between NORTH and SOUTH, centred on its post and always facing the viewer.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads with zero console errors and renders as intended in the screenshot; intent: after 2s: Post.origin[0] < -0.5 -> holds (got [-1.6165, 1.262, 0]).",
+  "why_suspicious": "An empty string inside the MFString, a Billboard with axisOfRotation 0 0 0 and a diffuse-black emissive material all look like slips; the empty string is a legal blank line, the zero axis means viewer-aligned, and the emissive colour keeps the text bright."
+ },
+ "decoy-03.x3d": {
+  "category": "viewpoint and background",
+  "intent": "A telephoto view of a small red cube from eighty metres, under a sky with a single band and no far clipping limit.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads with zero console errors and renders as intended in the screenshot; intent: no testable intent line.",
+  "why_suspicious": "visibilityLimit 0 looks like a zero clip distance but means no limit; fieldOfView 0.05 looks like a typo but is a legal narrow angle that frames the cube from 80 m; one sky angle with two colours is the correct n+1 pairing."
+ },
+ "decoy-04.x3d": {
+  "category": "level of detail",
+  "intent": "A beacon is shown in detail up close, simplified further off, and not drawn at all once the camera has backed far away.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads with zero console errors and renders as intended in the screenshot; intent: after 3.5s: Beacon.level_changed == 2 -> holds (got [2]).",
+  "why_suspicious": "An empty Group as the last LOD child and two range values for three children look like an unfinished node; an empty last level is the standard way to cull by distance and n-1 ranges for n children is correct."
+ },
+ "decoy-05.x3d": {
+  "category": "texture and line colour",
+  "intent": "A grey checkerboard tile repeated four times each way with crisp pixel edges, next to a zigzag made of one red and one green stroke.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Loads with zero console errors and renders as intended in the screenshot; intent: no testable intent line.",
+  "why_suspicious": "A textured Shape with no Material, a PixelTexture with one-byte pixels, a line set with no Appearance at all and two colours for five vertices all look incomplete; each is legal: the texture is shown unlit, intensity pixels are one byte, and with colorPerVertex false there is one colour per polyline."
+ },
+ "helper-arrow.png": {
+  "category": "helper",
+  "intent": "media file used by a scene",
+  "witness": "reasoned",
+  "witness_note": "generated by harness/gen.py"
+ },
+ "helper-bricks.png": {
+  "category": "helper",
+  "intent": "media file used by a scene",
+  "witness": "reasoned",
+  "witness_note": "generated by harness/gen.py"
+ },
+ "helper-tone.wav": {
+  "category": "helper",
+  "intent": "media file used by a scene",
+  "witness": "reasoned",
+  "witness_note": "generated by harness/gen.py"
+ }
+}
