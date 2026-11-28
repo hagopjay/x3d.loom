@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content='A vase stands thirty metres east of the origin and the viewer examines it by orbiting around it.'/>
+  </head>
+  <Scene>
+    <NavigationInfo type='"EXAMINE" "ANY"'/>
+    <Background skyColor='0.3 0.3 0.35'/>
+    <Viewpoint DEF='VaseView' description='Vase' position='30 1 8' centerOfRotation='30 1 0'/>
+    <Transform DEF='Vase' translation='30 1 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.2 0.6 0.7'/>
+        </Appearance>
+        <Cylinder radius='0.6' height='2'/>
+      </Shape>
+      <Transform translation='0 1.3 0'>
+        <Shape>
+          <Appearance>
+            <Material diffuseColor='0.2 0.6 0.7'/>
+          </Appearance>
+          <Cone bottomRadius='0.9' height='0.6'/>
+        </Shape>
+      </Transform>
+    </Transform>
+  </Scene>
+</X3D>

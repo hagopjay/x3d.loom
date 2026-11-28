@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content='From the terrace the viewer sees the near railing and, across the water, the two distant towers on the far shore.'/>
+  </head>
+  <Scene>
+    <NavigationInfo type='"EXAMINE" "ANY"' visibilityLimit='25'/>
+    <Background skyColor='0.5 0.7 0.9'/>
+    <Viewpoint description='Terrace' position='0 1.6 0'/>
+    <Transform DEF='Railing' translation='0 0.9 -3'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.5 0.35 0.2'/>
+        </Appearance>
+        <Box size='6 0.1 0.1'/>
+      </Shape>
+    </Transform>
+    <Transform translation='-8 8 -60'>
+      <Shape DEF='Tower'>
+        <Appearance>
+          <Material diffuseColor='0.85 0.8 0.7'/>
+        </Appearance>
+        <Box size='4 16 4'/>
+      </Shape>
+    </Transform>
+    <Transform translation='8 8 -60'>
+      <Shape USE='Tower'/>
+    </Transform>
+  </Scene>
+</X3D>

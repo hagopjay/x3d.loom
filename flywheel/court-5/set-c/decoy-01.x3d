@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <component name='Lighting' level='3'/>
+    <meta name='intent:prose' content='Two display cases, each lit only by its own lamp, one warm and one cool; the viewer&apos;s headlight is off.'/>
+  </head>
+  <Scene>
+    <NavigationInfo headlight='false'/>
+    <Background skyColor='0.03 0.03 0.03'/>
+    <Viewpoint description='Cases' position='0 1 8'/>
+    <Transform DEF='WarmCase' translation='-2 0 0'>
+      <DirectionalLight direction='0.3 -1 -0.5' color='1 0.7 0.4'/>
+      <Shape>
+        <Appearance DEF='Plaster'>
+          <Material diffuseColor='0.9 0.9 0.9'/>
+        </Appearance>
+        <Sphere radius='1'/>
+      </Shape>
+    </Transform>
+    <Transform DEF='CoolCase' translation='2 0 0'>
+      <DirectionalLight direction='-0.3 -1 -0.5' color='0.4 0.7 1'/>
+      <Shape>
+        <Appearance USE='Plaster'/>
+        <Sphere radius='1'/>
+      </Shape>
+    </Transform>
+  </Scene>
+</X3D>

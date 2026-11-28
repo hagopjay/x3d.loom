@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <component name='EventUtilities' level='1'/>
+    <meta name="intent:prose" content="Each press of the pull cord flips the ceiling lamp: on if it was off, off if it was on; letting go of the cord does nothing."/>
+    <meta name="intent" content="send Flip.set_boolean = true at 0.2s"/>
+    <meta name="intent" content="send Flip.set_boolean = false at 0.5s"/>
+    <meta name="intent" content="after 1.0s: CeilingLamp.on changed"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Room' position='0 1 8'/>
+    <NavigationInfo headlight='false'/>
+    <PointLight DEF='CeilingLamp' on='false' location='0 3 1'/>
+    <DirectionalLight intensity='0.2' direction='0 -1 -1'/>
+    <Shape><Appearance><Material diffuseColor='0.7 0.7 0.7'/></Appearance><Box size='6 0.1 4'/></Shape>
+    <Transform translation='1 1.5 0'>
+      <TouchSensor DEF='Cord' description='pull the cord'/>
+      <Shape><Appearance><Material diffuseColor='0.9 0.9 0.8'/></Appearance><Cylinder radius='0.05' height='3'/></Shape>
+    </Transform>
+    <BooleanToggle DEF='Flip'/>
+    <ROUTE fromNode='Cord' fromField='isActive' toNode='Flip' toField='set_boolean'/>
+    <ROUTE fromNode='Flip' fromField='toggle' toNode='CeilingLamp' toField='on'/>
+  </Scene>
+</X3D>

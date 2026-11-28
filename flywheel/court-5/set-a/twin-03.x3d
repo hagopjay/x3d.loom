@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <component name='EventUtilities' level='1'/>
+    <meta name="intent:prose" content="Once started, the signal shows red, then amber, then green, each for an equal third of its three second run."/>
+    <meta name="intent" content="send SignalClock.startTime = now at 0.2s"/>
+    <meta name="intent" content="after 2.6s: Signal.whichChoice == 2"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Signal' position='0 0 6'/>
+    <Switch DEF='Signal' whichChoice='0'>
+      <Transform translation='0 1 0'><Shape><Appearance><Material diffuseColor='1 0 0'/></Appearance><Sphere radius='0.4'/></Shape></Transform>
+      <Transform translation='0 0 0'><Shape><Appearance><Material diffuseColor='1 0.7 0'/></Appearance><Sphere radius='0.4'/></Shape></Transform>
+      <Transform translation='0 -1 0'><Shape><Appearance><Material diffuseColor='0 0.8 0.2'/></Appearance><Sphere radius='0.4'/></Shape></Transform>
+    </Switch>
+    <Transform translation='2 0 0'>
+      <TouchSensor DEF='StartButton' description='run the signal'/>
+      <Shape><Appearance><Material diffuseColor='0.5 0.5 0.5'/></Appearance><Box size='0.6 0.6 0.6'/></Shape>
+    </Transform>
+    <TimeSensor DEF='SignalClock' cycleInterval='3'/>
+    <IntegerSequencer DEF='Phase' key='0 0.3333 0.6667' keyValue='0 1 2'/>
+    <ROUTE fromNode='StartButton' fromField='touchTime' toNode='SignalClock' toField='startTime'/>
+    <ROUTE fromNode='SignalClock' fromField='fraction_changed' toNode='Phase' toField='set_fraction'/>
+    <ROUTE fromNode='Phase' fromField='value_changed' toNode='Signal' toField='whichChoice'/>
+  </Scene>
+</X3D>

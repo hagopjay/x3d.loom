@@ -1,0 +1,627 @@
+{
+ "engine": "X_ITE 16.8.0",
+ "chromium": "158.0.8127.36",
+ "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+ "results": {
+  "decoy-01.x3d": {
+   "file": "decoy-01.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "decoy-02.x3d": {
+   "file": "decoy-02.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 3
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "decoy-03.x3d": {
+   "file": "decoy-03.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 6
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "decoy-04.x3d": {
+   "file": "decoy-04.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 4
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "decoy-05.x3d": {
+   "file": "decoy-05.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "fault-01.x3d": {
+   "file": "fault-01.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "fault-02.x3d": {
+   "file": "fault-02.x3d",
+   "loadError": null,
+   "console": [
+    "warning: XML Parser: Container field for node Inline not found. Unknown field 'children' in node class Shape."
+   ],
+   "probes": {
+    "rootNodes": 3
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "fault-03.x3d": {
+   "file": "fault-03.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "fault-04.x3d": {
+   "file": "fault-04.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "fault-05.x3d": {
+   "file": "fault-05.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "fault-06.x3d": {
+   "file": "fault-06.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 6
+   },
+   "intent": [
+    {
+     "send": "Clock.startTime=now",
+     "at": 0.2,
+     "r": "ok"
+    },
+    {
+     "send": "Switcher.press=true",
+     "at": 1.2,
+     "r": "ok"
+    },
+    {
+     "assert": "cmp Planet.rotation",
+     "at": 2.6,
+     "value": [
+      0,
+      1,
+      0,
+      0.6189
+     ],
+     "holds": true
+    },
+    {
+     "send": "Switcher.press=true",
+     "at": 3.2,
+     "r": "ok"
+    },
+    {
+     "assert": "cmp Planet.rotation",
+     "at": 3.9,
+     "value": [
+      0,
+      1,
+      0,
+      0.6189
+     ],
+     "holds": false
+    },
+    {
+     "assert": "cmp Planet.rotation",
+     "at": 3.9,
+     "value": [
+      0,
+      1,
+      0,
+      0.6189
+     ],
+     "holds": true
+    }
+   ],
+   "assertions": 3,
+   "allHold": false
+  },
+  "fault-07.x3d": {
+   "file": "fault-07.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 4
+   },
+   "intent": [
+    {
+     "send": "Clock.startTime=now",
+     "at": 0.2,
+     "r": "ok"
+    },
+    {
+     "assert": "eq Ball.translation",
+     "at": 3.3,
+     "value": [
+      -0.084,
+      1.458,
+      0
+     ],
+     "holds": false
+    },
+    {
+     "assert": "eq Ball.translation",
+     "at": 4.4,
+     "value": [
+      -2.784,
+      0.108,
+      0
+     ],
+     "holds": false
+    }
+   ],
+   "assertions": 2,
+   "allHold": false
+  },
+  "fault-08.x3d": {
+   "file": "fault-08.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 6
+   },
+   "intent": [
+    {
+     "assert": "changed LampArm.rotation",
+     "at": 1.5,
+     "value": [
+      0,
+      1,
+      0,
+      0.954
+     ],
+     "holds": true
+    }
+   ],
+   "assertions": 1,
+   "allHold": true
+  },
+  "fault-09.x3d": {
+   "file": "fault-09.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 4
+   },
+   "intent": [
+    {
+     "send": "Maker.go=now",
+     "at": 0.3,
+     "r": "ok"
+    },
+    {
+     "assert": "eq Rope.point",
+     "at": 1.2,
+     "value": [
+      null,
+      null,
+      null
+     ],
+     "holds": false
+    }
+   ],
+   "assertions": 1,
+   "allHold": false
+  },
+  "fault-10.x3d": {
+   "file": "fault-10.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 4,
+    "shelfChildren": 1
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "fault-11.x3d": {
+   "file": "fault-11.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 3
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "fault-12.x3d": {
+   "file": "fault-12.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "fault-13.x3d": {
+   "file": "fault-13.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 3
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "fault-14.x3d": {
+   "file": "fault-14.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 3
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "fault-15.x3d": {
+   "file": "fault-15.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "fault-16.x3d": {
+   "file": "fault-16.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 5
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "twin-01.x3d": {
+   "file": "twin-01.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "twin-02.x3d": {
+   "file": "twin-02.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 3
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "twin-03.x3d": {
+   "file": "twin-03.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "twin-04.x3d": {
+   "file": "twin-04.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "twin-05.x3d": {
+   "file": "twin-05.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "twin-06.x3d": {
+   "file": "twin-06.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 6
+   },
+   "intent": [
+    {
+     "send": "Clock.startTime=now",
+     "at": 0.2,
+     "r": "ok"
+    },
+    {
+     "send": "Switcher.press=true",
+     "at": 1.2,
+     "r": "ok"
+    },
+    {
+     "assert": "cmp Planet.rotation",
+     "at": 2.6,
+     "value": [
+      0,
+      1,
+      0,
+      0.6233
+     ],
+     "holds": true
+    },
+    {
+     "send": "Switcher.press=true",
+     "at": 3.2,
+     "r": "ok"
+    },
+    {
+     "assert": "cmp Planet.rotation",
+     "at": 3.9,
+     "value": [
+      0,
+      1,
+      0,
+      1.0568
+     ],
+     "holds": true
+    },
+    {
+     "assert": "cmp Planet.rotation",
+     "at": 3.9,
+     "value": [
+      0,
+      1,
+      0,
+      1.0568
+     ],
+     "holds": true
+    }
+   ],
+   "assertions": 3,
+   "allHold": true
+  },
+  "twin-07.x3d": {
+   "file": "twin-07.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 4
+   },
+   "intent": [
+    {
+     "send": "Clock.startTime=now",
+     "at": 0.2,
+     "r": "ok"
+    },
+    {
+     "assert": "eq Ball.translation",
+     "at": 3.3,
+     "value": [
+      3,
+      3,
+      0
+     ],
+     "holds": true
+    },
+    {
+     "assert": "eq Ball.translation",
+     "at": 4.4,
+     "value": [
+      3,
+      3,
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "assertions": 2,
+   "allHold": true
+  },
+  "twin-08.x3d": {
+   "file": "twin-08.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 6
+   },
+   "intent": [
+    {
+     "assert": "changed LampArm.rotation",
+     "at": 1.5,
+     "value": [
+      0,
+      1,
+      0,
+      5.5428
+     ],
+     "holds": true
+    }
+   ],
+   "assertions": 1,
+   "allHold": true
+  },
+  "twin-09.x3d": {
+   "file": "twin-09.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 4
+   },
+   "intent": [
+    {
+     "send": "Maker.go=now",
+     "at": 0.3,
+     "r": "ok"
+    },
+    {
+     "assert": "eq Rope.point",
+     "at": 1.2,
+     "value": [
+      0,
+      0,
+      0,
+      2,
+      1,
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "assertions": 1,
+   "allHold": true
+  },
+  "twin-10.x3d": {
+   "file": "twin-10.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 4,
+    "shelfChildren": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "twin-11.x3d": {
+   "file": "twin-11.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 3
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "twin-12.x3d": {
+   "file": "twin-12.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "twin-13.x3d": {
+   "file": "twin-13.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 3
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "twin-14.x3d": {
+   "file": "twin-14.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 3
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "twin-15.x3d": {
+   "file": "twin-15.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 2
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  },
+  "twin-16.x3d": {
+   "file": "twin-16.x3d",
+   "loadError": null,
+   "console": [],
+   "probes": {
+    "rootNodes": 5
+   },
+   "intent": [],
+   "assertions": 0,
+   "allHold": true
+  }
+ }
+}

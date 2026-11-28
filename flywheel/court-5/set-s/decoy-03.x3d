@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content="A narrow spotlight shines along a row of three framed squares in an otherwise unlit gallery."/>
+  </head>
+  <Scene>
+    <NavigationInfo headlight='false'/>
+    <Viewpoint description='Gallery' position='0 0 9'/>
+    <SpotLight location='-5 0 1.5' direction='1 0 -0.3' beamWidth='0.2' cutOffAngle='0.4' radius='30' global='true'/>
+    <Transform translation='-2.5 0 0'>
+      <Shape DEF='Frame'>
+        <Appearance>
+          <Material diffuseColor='0.9 0.9 0.8'/>
+        </Appearance>
+        <Box size='1.6 1.6 0.05'/>
+      </Shape>
+    </Transform>
+    <Transform translation='0 0 0'>
+      <Shape USE='Frame'/>
+    </Transform>
+    <Transform translation='2.5 0 0'>
+      <Shape USE='Frame'/>
+    </Transform>
+  </Scene>
+</X3D>

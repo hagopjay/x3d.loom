@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <component name='EventUtilities' level='1'/>
+    <meta name="intent:prose" content="The green button switches the work lamp on and the red button switches it off."/>
+    <meta name="intent" content="send TurnOff.set_triggerTime = now at 0.3s"/>
+    <meta name="intent" content="after 1.0s: WorkLamp.on changed"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Bench' position='0 1 8'/>
+    <NavigationInfo headlight='false'/>
+    <PointLight DEF='WorkLamp' on='true' location='0 3 2'/>
+    <Shape><Appearance><Material diffuseColor='0.6 0.5 0.4'/></Appearance><Box size='6 0.2 3'/></Shape>
+    <Transform translation='-1 0.6 0'>
+      <TouchSensor DEF='GreenButton' description='lamp on'/>
+      <Shape><Appearance><Material diffuseColor='0 0.7 0.1'/></Appearance><Cylinder radius='0.3' height='0.2'/></Shape>
+    </Transform>
+    <Transform translation='1 0.6 0'>
+      <TouchSensor DEF='RedButton' description='lamp off'/>
+      <Shape><Appearance><Material diffuseColor='0.8 0 0'/></Appearance><Cylinder radius='0.3' height='0.2'/></Shape>
+    </Transform>
+    <BooleanTrigger DEF='TurnOn'/>
+    <BooleanTrigger DEF='TurnOff'/>
+    <BooleanFilter DEF='Invert'/>
+    <ROUTE fromNode='GreenButton' fromField='touchTime' toNode='TurnOn' toField='set_triggerTime'/>
+    <ROUTE fromNode='TurnOn' fromField='triggerTrue' toNode='WorkLamp' toField='on'/>
+    <ROUTE fromNode='RedButton' fromField='touchTime' toNode='TurnOff' toField='set_triggerTime'/>
+    <ROUTE fromNode='TurnOff' fromField='triggerTrue' toNode='Invert' toField='set_boolean'/>
+    <ROUTE fromNode='Invert' fromField='inputNegate' toNode='WorkLamp' toField='on'/>
+  </Scene>
+</X3D>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name="intent:prose" content="Each press of the button nudges the crate one metre further to the right."/>
+    <meta name="intent" content="send Mover.nudge = true at 0.3s"/>
+    <meta name="intent" content="after 1.0s: Crate.translation changed"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Floor' position='0 1 10'/>
+    <Transform DEF='Crate' translation='-3 0 0'>
+      <Shape><Appearance><Material diffuseColor='0.6 0.4 0.2'/></Appearance><Box size='1 1 1'/></Shape>
+    </Transform>
+    <Transform translation='0 -2 0'>
+      <TouchSensor DEF='Button' description='nudge the crate'/>
+      <Shape><Appearance><Material diffuseColor='0.2 0.6 0.9'/></Appearance><Sphere radius='0.4'/></Shape>
+    </Transform>
+    <Script DEF='Mover' directOutput='true'>
+      <field name='nudge' type='SFBool' accessType='inputOnly'/>
+      <field name='target' type='SFNode' accessType='initializeOnly' value='Crate'/>
+      <![CDATA[ecmascript:
+function nudge (value)
+{
+   if (value)
+      target .translation = new SFVec3f (target .translation .x + 1, 0, 0);
+}
+]]>
+    </Script>
+    <ROUTE fromNode='Button' fromField='isActive' toNode='Mover' toField='nudge'/>
+  </Scene>
+</X3D>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <component name='EventUtilities' level='1'/>
+    <meta name="intent:prose" content="The shuttle runs back and forth; the red button freezes it where it is and lights the warning lamp, and the green button lets it carry on from that spot and puts the lamp out."/>
+    <meta name="intent" content="send FreezeNow.set_boolean = true at 0.3s"/>
+    <meta name="intent" content="send CarryOn.set_boolean = true at 0.9s"/>
+    <meta name="intent" content="after 1.6s: WarningLamp.on unchanged"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Shuttle' position='0 0 10'/>
+    <PointLight DEF='WarningLamp' on='false' color='1 0.2 0.2' location='0 2 2'/>
+    <Transform DEF='Shuttle' translation='-3 0 0'>
+      <Shape><Appearance><Material diffuseColor='0.2 0.4 0.9'/></Appearance><Box size='1 0.6 0.6'/></Shape>
+    </Transform>
+    <Transform translation='-1 -2 0'>
+      <TouchSensor DEF='RedButton' description='freeze'/>
+      <Shape><Appearance><Material diffuseColor='0.9 0.1 0.1'/></Appearance><Sphere radius='0.35'/></Shape>
+    </Transform>
+    <Transform translation='1 -2 0'>
+      <TouchSensor DEF='GreenButton' description='carry on'/>
+      <Shape><Appearance><Material diffuseColor='0.1 0.8 0.2'/></Appearance><Sphere radius='0.35'/></Shape>
+    </Transform>
+    <TimeSensor DEF='Run' cycleInterval='6' loop='true'/>
+    <PositionInterpolator DEF='Track' key='0 0.5 1' keyValue='-3 0 0  3 0 0  -3 0 0'/>
+    <BooleanFilter DEF='RedPressed'/>
+    <TimeTrigger DEF='FreezeNow'/>
+    <BooleanFilter DEF='GreenPressed'/>
+    <TimeTrigger DEF='CarryOn'/>
+    <ROUTE fromNode='Run' fromField='fraction_changed' toNode='Track' toField='set_fraction'/>
+    <ROUTE fromNode='Track' fromField='value_changed' toNode='Shuttle' toField='translation'/>
+    <ROUTE fromNode='RedButton' fromField='isActive' toNode='RedPressed' toField='set_boolean'/>
+    <ROUTE fromNode='RedPressed' fromField='inputTrue' toNode='FreezeNow' toField='set_boolean'/>
+    <ROUTE fromNode='FreezeNow' fromField='triggerTime' toNode='Run' toField='pauseTime'/>
+    <ROUTE fromNode='GreenButton' fromField='isActive' toNode='GreenPressed' toField='set_boolean'/>
+    <ROUTE fromNode='GreenPressed' fromField='inputTrue' toNode='CarryOn' toField='set_boolean'/>
+    <ROUTE fromNode='CarryOn' fromField='triggerTime' toNode='Run' toField='resumeTime'/>
+    <ROUTE fromNode='Run' fromField='isPaused' toNode='WarningLamp' toField='on'/>
+  </Scene>
+</X3D>

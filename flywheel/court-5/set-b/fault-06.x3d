@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='title' content='Set b scene 06'/>
+    <meta name="intent:prose" content="A lamp-post prototype draws a grey pole with a glowing globe on top, and one lamp-post stands in the scene."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Street' position='0 1.5 8'/>
+    <ProtoDeclare name='LampPost'>
+      <ProtoInterface>
+        <field name='glow' type='SFColor' accessType='initializeOnly' value='1 0.9 0.6'/>
+      </ProtoInterface>
+      <ProtoBody>
+        <Transform translation='0 1.5 0'>
+          <Shape>
+            <Appearance><Material diffuseColor='0.5 0.5 0.5'/></Appearance>
+            <Cylinder height='3' radius='0.08'/>
+          </Shape>
+        </Transform>
+        <Transform translation='0 3.2 0'>
+          <Shape>
+            <Appearance>
+              <Material diffuseColor='0 0 0'>
+                <IS>
+                  <connect nodeField='emissiveColor' protoField='glow'/>
+                </IS>
+              </Material>
+            </Appearance>
+            <Sphere radius='0.3'/>
+          </Shape>
+        </Transform>
+      </ProtoBody>
+    </ProtoDeclare>
+    <ProtoInstance name='LampPost' DEF='Lamp1'/>
+  </Scene>
+</X3D>

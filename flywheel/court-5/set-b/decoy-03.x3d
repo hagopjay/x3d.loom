@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='title' content='Bolt library'/>
+    <meta name="intent:prose" content="A hidden parts library holds one bolt that is never shown where it is defined and is placed three times on a flange."/>
+    <meta name="intent" content="after 0.5s: Library.whichChoice == -1"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Flange' position='0 0 7'/>
+    <Switch DEF='Library' whichChoice='-1'>
+      <Transform DEF='Bolt' rotation='1 0 0 1.5708'>
+        <Shape>
+          <Appearance><Material diffuseColor='0.8 0.8 0.2'/></Appearance>
+          <Cylinder height='0.6' radius='0.15'/>
+        </Shape>
+      </Transform>
+    </Switch>
+    <Shape>
+      <Appearance><Material diffuseColor='0.3 0.3 0.4'/></Appearance>
+      <Box size='4 4 0.2'/>
+    </Shape>
+    <Transform translation='-1.5 1.5 0.2'>
+      <Transform USE='Bolt'/>
+    </Transform>
+    <Transform translation='1.5 1.5 0.2'>
+      <Transform USE='Bolt'/>
+    </Transform>
+    <Transform translation='0 -1.5 0.2'>
+      <Transform USE='Bolt'/>
+    </Transform>
+  </Scene>
+</X3D>

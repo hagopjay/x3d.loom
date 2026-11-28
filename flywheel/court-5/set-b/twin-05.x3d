@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='title' content='Set b scene 05'/>
+    <meta name="intent:prose" content="A reusable bollard prototype is painted with the site's standard yellow, and two bollards are placed either side of a path."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Path' position='0 0.5 6'/>
+    <Transform translation='0 -0.55 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='1 0.8 0'/>
+        </Appearance>
+        <Box size='6 0.1 2'/>
+      </Shape>
+    </Transform>
+    <ProtoDeclare name='Bollard'>
+      <ProtoInterface>
+        <field name='position' type='SFVec3f' accessType='initializeOnly' value='0 0 0'/>
+      </ProtoInterface>
+      <ProtoBody>
+        <Transform>
+          <IS>
+            <connect nodeField='translation' protoField='position'/>
+          </IS>
+          <Shape>
+            <Appearance DEF='SiteYellow'>
+              <Material diffuseColor='1 0.8 0'/>
+            </Appearance>
+            <Cylinder height='1' radius='0.15'/>
+          </Shape>
+        </Transform>
+      </ProtoBody>
+    </ProtoDeclare>
+    <ProtoInstance name='Bollard'>
+      <fieldValue name='position' value='-1 0 0'/>
+    </ProtoInstance>
+    <ProtoInstance name='Bollard'>
+      <fieldValue name='position' value='1 0 0'/>
+    </ProtoInstance>
+  </Scene>
+</X3D>

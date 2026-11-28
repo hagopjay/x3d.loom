@@ -1,0 +1,442 @@
+{
+ "fault-01.x3d": {
+  "category": "interpolators",
+  "fault": "The PositionInterpolator keyValues are written as offsets from the platform's resting place (0 0 0 to 0 2 0), but they are routed to Transform.translation, which is absolute, so the animation overwrites the 5 m placement.",
+  "viewer_sees": "The platform leaves its shaft and rides up and down at the origin, five metres to the left of where it belongs.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.0s: Lift.translation[0] > 4.9 -> [0, 1.285, 0] (fails); console errors: 0",
+  "twin": "twin-01.x3d",
+  "nearest_prior": "none: closest is P120 (a rotation that ignores where the hinge is); here an animated translation discards the object's static placement",
+  "testable_intent_lines": 1
+ },
+ "twin-01.x3d": {
+  "category": "interpolators",
+  "intent": "A lift platform that stands beside its shaft, five metres to the right of the origin, rides up two metres and back down again, over and over.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.0s: Lift.translation[0] > 4.9 -> [5, 0.05900002, 0] (holds); console errors: 0"
+ },
+ "fault-02.x3d": {
+  "category": "event types",
+  "fault": "TouchSensor.isActive (SFBool) is routed to TimeSensor.startTime (SFTime); the time-valued output touchTime was needed.",
+  "viewer_sees": "Clicking the pad does nothing; the flag stays at the foot of the pole.",
+  "spec": "error per the X3D standard (ISO/IEC 19775-1 4.4.8.2 Routes: source and destination fields shall have the same type)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "probe (real pointer / frame tracking): {\"flag_after_click\": [0, 0, 0]}; console errors: 0; messages: XML Parser: Bad ROUTE specification: source field type must match destination field type of fields named \"isActive\" and \"startTime\".",
+  "twin": "twin-02.x3d",
+  "nearest_prior": "P001: that is a float routed into a vector on an interpolator-to-Transform ROUTE; this is a boolean routed into a time on a sensor-to-clock ROUTE",
+  "testable_intent_lines": 0
+ },
+ "twin-02.x3d": {
+  "category": "event types",
+  "intent": "Pressing the round pad at the foot of the pole hoists the flag to the top of the pole in two seconds.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "probe (real pointer / frame tracking): {\"flag_after_click\": [0, 4, 0]}; console errors: 0"
+ },
+ "fault-03.x3d": {
+  "category": "sequencers",
+  "fault": "The IntegerSequencer keys are 0 0.5 1 for three states; a sequencer holds each value until the next key, so the last state is only reached at fraction 1 and gets no share of the run.",
+  "viewer_sees": "Red and amber each show for a second and a half; green appears only at the very end instead of for the last second.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 2.6s: Signal.whichChoice == 2 -> [1] (fails); console errors: 0",
+  "twin": "twin-03.x3d",
+  "nearest_prior": "P009: there the last key can never be reached; here it is reached but, with step semantics, lasts no time",
+  "testable_intent_lines": 2
+ },
+ "twin-03.x3d": {
+  "category": "sequencers",
+  "intent": "Once started, the signal shows red, then amber, then green, each for an equal third of its three second run.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 2.6s: Signal.whichChoice == 2 -> [2] (holds); console errors: 0"
+ },
+ "fault-04.x3d": {
+  "category": "environment sensors",
+  "fault": "The ProximitySensor sits outside the Transform that places the gatehouse at x=20, so its box is centred on the world origin and not on the doorway.",
+  "viewer_sees": "Arriving at the gate does nothing: the door stays shut (it would open only if the visitor walked to the empty origin).",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 3.0s: Door.translation changed -> [0, 1.5, 0] (fails); console errors: 0",
+  "twin": "twin-04.x3d",
+  "nearest_prior": "P052: there the sensor box has zero size; here the size is right but the sensor is in the wrong coordinate frame",
+  "testable_intent_lines": 2
+ },
+ "twin-04.x3d": {
+  "category": "environment sensors",
+  "intent": "When the visitor arrives at the gatehouse, twenty metres east of the start, its door slides upward out of the way.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 3.0s: Door.translation changed -> [0, 4.5, 0] (holds); console errors: 0"
+ },
+ "fault-05.x3d": {
+  "category": "scripts",
+  "fault": "The Script computes the start time from Date.now(), which is wall-clock milliseconds, instead of the event timestamp in seconds; the SFTime it sends is a thousand times too large.",
+  "viewer_sees": "By the standard the rocket never lifts off (start time is tens of thousands of years ahead).",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "X_ITE does not hold the clock back: with the huge start time its internal start timer misfires and the rocket still lifts off, at an arbitrary moment between about 0.6 s and 1.6 s after the press (three runs: 4.8, 8.0 and 7.9 m climbed at 3.0 s, twin 7.1 m every time). The intent assertions therefore hold on the fault in X_ITE. after 0.8s: Rocket.translation unchanged -> [0, 0, 0] (holds); after 3.0s: Rocket.translation changed -> [0, 6.340289, 0] (holds); console errors: 0",
+  "twin": "twin-05.x3d",
+  "nearest_prior": "P084: that is a TimeSensor duration typed in milliseconds; this is a Script mixing the JavaScript wall clock (ms) into an SFTime event",
+  "testable_intent_lines": 3,
+  "engine_disagrees": true
+ },
+ "twin-05.x3d": {
+  "category": "scripts",
+  "intent": "One second after the plunger is pressed, the rocket lifts off and climbs for two seconds.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 0.8s: Rocket.translation unchanged -> [0, 0, 0] (holds); after 3.0s: Rocket.translation changed -> [0, 7.168, 0] (holds); console errors: 0"
+ },
+ "fault-06.x3d": {
+  "category": "clocks and timing",
+  "fault": "stopTime='20' was written as if it meant 'run for twenty seconds'; times are absolute seconds since 1970, so stopTime is later than startTime (0) and long past, and the looping clock never becomes active.",
+  "viewer_sees": "The beacon head never turns.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.5s: Head.rotation changed -> [0, 0, 1, 0] (fails); console errors: 0",
+  "twin": "twin-06.x3d",
+  "nearest_prior": "P005: there stopTime is earlier than startTime; here it is later than startTime but both lie in the distant past, a relative-versus-absolute confusion",
+  "testable_intent_lines": 1
+ },
+ "twin-06.x3d": {
+  "category": "clocks and timing",
+  "intent": "The beacon head turns steadily about its mast from the moment the scene is loaded.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.5s: Head.rotation changed -> [0, 1, 0, 2.55569137229919] (holds); console errors: 0"
+ },
+ "fault-07.x3d": {
+  "category": "routes",
+  "fault": "A ROUTE statement appears before the node it names as its destination has been defined (the interpolator's DEF comes two lines later).",
+  "viewer_sees": "The buoy sits still; the browser reports an unknown node for the ROUTE and drops it.",
+  "spec": "error per the X3D standard (ISO/IEC 19776-1 XML encoding, ROUTE statement: both nodes shall already have been DEF-named before the ROUTE)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.0s: Buoy.translation changed -> [0, 0.2, 0] (fails); console errors: 0; messages: XML Parser: Unknown named or imported node 'Bob'.",
+  "twin": "twin-07.x3d",
+  "nearest_prior": "P088: there the name does not exist anywhere; here the name exists but is defined after the ROUTE that uses it",
+  "testable_intent_lines": 1
+ },
+ "twin-07.x3d": {
+  "category": "routes",
+  "intent": "A buoy bobs gently up and down on the water without stopping.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.0s: Buoy.translation changed -> [0, 0.3808002, 0] (holds); console errors: 0"
+ },
+ "fault-08.x3d": {
+  "category": "followers",
+  "fault": "The ScalarChaser is left with its default initialValue/initialDestination of 0 although the lamp it drives starts at intensity 1, so the first fade starts from 0 instead of from the lamp's present level.",
+  "viewer_sees": "On pressing the plate the lamp snaps to black and then brightens up to a fifth, instead of fading down from full.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 0.7s: HallLamp.intensity > 0.5 -> [0.024954326484373537] (fails); after 3.2s: HallLamp.intensity < 0.3 -> [0.2] (holds); console errors: 0",
+  "twin": "twin-08.x3d",
+  "nearest_prior": "P099: there the destination is fed to the wrong input; here the inputs are right but the follower's starting value does not match the field it drives",
+  "testable_intent_lines": 3
+ },
+ "twin-08.x3d": {
+  "category": "followers",
+  "intent": "The hall lamp burns at full strength until the wall plate is pressed, then fades smoothly down to a fifth of its strength over two seconds.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 0.7s: HallLamp.intensity > 0.5 -> [0.9055182361200909] (holds); after 3.2s: HallLamp.intensity < 0.3 -> [0.2] (holds); console errors: 0"
+ },
+ "fault-09.x3d": {
+  "category": "pointing sensors",
+  "fault": "The drawer front has its own TouchSensor deeper in the hierarchy; a pointing sensor nearer the geometry takes the pointer and the ancestor's sensor is ignored, but only the cabinet's sensor is routed to the lamp.",
+  "viewer_sees": "Pressing on the drawer front does not light the lamp, although pressing anywhere else on the cabinet does.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "probe (real pointer / frame tracking): {\"glow_on_hover_drawer\": [1], \"lamp_while_held_on_drawer\": [0], \"lamp_while_held_on_body\": [1], \"lamp_after_release\": [0]}; console errors: 0",
+  "twin": "twin-09.x3d",
+  "nearest_prior": "P092: there one sensor is grouped with the wrong geometry; here both sensors are grouped correctly and the deeper one masks the outer one",
+  "testable_intent_lines": 0
+ },
+ "twin-09.x3d": {
+  "category": "pointing sensors",
+  "intent": "Holding the pointer button down anywhere on the cabinet, its drawer front included, switches the cabinet lamp on for as long as it is held; merely hovering over the drawer front makes the drawer glow.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "probe (real pointer / frame tracking): {\"glow_on_hover_drawer\": [1], \"lamp_while_held_on_drawer\": [1], \"lamp_while_held_on_body\": [1], \"lamp_after_release\": [0]}; console errors: 0"
+ },
+ "fault-10.x3d": {
+  "category": "triggers",
+  "fault": "The 'off' button is wired through a BooleanTrigger straight to the lamp; BooleanTrigger.triggerTrue always sends TRUE, so the off button switches the lamp on.",
+  "viewer_sees": "The red button never puts the lamp out.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.0s: WorkLamp.on changed -> [1] (fails); console errors: 0",
+  "twin": "twin-10.x3d",
+  "nearest_prior": "P014: there an output is never routed; here it is routed but the node can only ever emit TRUE",
+  "testable_intent_lines": 2
+ },
+ "twin-10.x3d": {
+  "category": "triggers",
+  "intent": "The green button switches the work lamp on and the red button switches it off.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.0s: WorkLamp.on changed -> [0] (holds); console errors: 0"
+ },
+ "fault-11.x3d": {
+  "category": "inline name scope",
+  "fault": "A ROUTE in the parent scene names a node that is DEF-named inside the Inline's file; without an IMPORT statement that name is not visible in the parent scene.",
+  "viewer_sees": "The fan blades stay still; the browser reports an unknown node for the ROUTE.",
+  "spec": "error per the X3D standard (ISO/IEC 19775-1 4.4.6 Run-time name scope and 4.4.6.2 IMPORT: nodes in an Inline are only reachable through IMPORT/EXPORT)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "probe (real pointer / frame tracking): {\"blades_rotation_t0\": \"Error: no node Blades\", \"blades_rotation_t1\": \"Error: no node Blades\"}; console errors: 0; messages: XML Parser: Unknown named or imported node 'Blades'.",
+  "twin": "twin-11.x3d",
+  "nearest_prior": "P088: there the ROUTE names a node that exists nowhere; here the node exists and is exported, but in another file's name scope and it is never imported",
+  "testable_intent_lines": 0
+ },
+ "twin-11.x3d": {
+  "category": "inline name scope",
+  "intent": "The blades of the desk fan, which is loaded from its own file, spin continuously.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "probe (real pointer / frame tracking): {\"blades_rotation_t0\": [0, 0, 1, 2.13000471611023], \"blades_rotation_t1\": [0, 0, 1, 6.0004570186615]}; console errors: 0"
+ },
+ "fault-12.x3d": {
+  "category": "interpolators",
+  "fault": "The looping path is not closed: the last keyValue is the fourth corner, not the first corner again, so at each wrap of the clock the value jumps from the end of the path back to its start.",
+  "viewer_sees": "The marker runs along three sides of the square and then teleports four metres back to the start corner instead of gliding along the fourth side.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "probe (real pointer / frame tracking): {\"frames\": 287, \"max_frame_to_frame_jump\": 4.000450064684722}; console errors: 0",
+  "twin": "twin-12.x3d",
+  "nearest_prior": "P085: there a keyValue is missing so counts disagree; here keys and keyValues agree in number but the loop has a seam",
+  "testable_intent_lines": 0
+ },
+ "twin-12.x3d": {
+  "category": "interpolators",
+  "intent": "A marker glides round and round the four corners of a square track in one smooth, unbroken circuit.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "probe (real pointer / frame tracking): {\"frames\": 278, \"max_frame_to_frame_jump\": 0.10400000000000009}; console errors: 0"
+ },
+ "fault-13.x3d": {
+  "category": "prototypes",
+  "fault": "The prototype declares a period field and the instance sets it, but the body has no IS connection from that field to the clock's cycleInterval, so the value is never used.",
+  "viewer_sees": "The barrier arm snaps up in one second (the clock's default) instead of rising slowly over three.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.4s: Arm.rotation[3] < 1.0 -> [0, 0, 1, 1.5708] (fails); after 3.8s: Arm.rotation[3] > 1.5 -> [0, 0, 1, 1.5708] (holds); console errors: 0",
+  "twin": "twin-13.x3d",
+  "nearest_prior": "P118: there the instance uses a field name the interface lacks; here the name is right but the interface field is not connected to anything in the body",
+  "testable_intent_lines": 3
+ },
+ "twin-13.x3d": {
+  "category": "prototypes",
+  "intent": "A reusable sweep clock is given a period of three seconds, so that when it is started the barrier arm swings slowly up through a quarter turn, taking three seconds over it.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.4s: Arm.rotation[3] < 1.0 -> [0, 0, 1, 0.619942407989501] (holds); after 3.8s: Arm.rotation[3] > 1.5 -> [0, 0, 1, 1.5708] (holds); console errors: 0"
+ },
+ "fault-14.x3d": {
+  "category": "clocks and timing",
+  "fault": "The 'carry on' button is routed to the clock's startTime; a paused TimeSensor is still active and ignores startTime, so nothing resumes (resumeTime was needed).",
+  "viewer_sees": "After the red button the shuttle stays frozen for good and the warning lamp stays lit; the green button does nothing.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.6s: WarningLamp.on unchanged -> [1] (fails); console errors: 0",
+  "twin": "twin-14.x3d",
+  "nearest_prior": "P050: that clock runs when it should wait; this one cannot be restarted after a pause because the wrong time field is driven",
+  "testable_intent_lines": 3
+ },
+ "twin-14.x3d": {
+  "category": "clocks and timing",
+  "intent": "The shuttle runs back and forth; the red button freezes it where it is and lights the warning lamp, and the green button lets it carry on from that spot and puts the lamp out.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.6s: WarningLamp.on unchanged -> [0] (holds); console errors: 0"
+ },
+ "fault-15.x3d": {
+  "category": "routes",
+  "fault": "The ROUTE's destination is TimeSensor.isActive, an outputOnly field; the author meant to gate the clock through enabled.",
+  "viewer_sees": "Holding the lever does nothing; the wheel never turns.",
+  "spec": "error per the X3D standard (ISO/IEC 19775-1 4.4.8.2 Routes: the destination shall be an inputOnly or inputOutput field)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "probe (real pointer / frame tracking): {\"before\": [0, 0, 1, 0], \"held\": [0, 0, 1, 0], \"released_a\": [0, 0, 1, 0], \"released_b\": [0, 0, 1, 0]}; console errors: 0; messages: XML Parser: Bad ROUTE specification: destination field \"isActive\" must be an input.",
+  "twin": "twin-15.x3d",
+  "nearest_prior": "P002: there the destination is an initializeOnly field of a geometry node; here it is an outputOnly field of a clock",
+  "testable_intent_lines": 0
+ },
+ "twin-15.x3d": {
+  "category": "routes",
+  "intent": "The wheel turns only while the lever is held down with the pointer, and stands still otherwise.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "probe (real pointer / frame tracking): {\"before\": [0, 0, 1, 0], \"held\": [0, 0, 1.00000000000023, 6.22350943222047], \"released_a\": [0, 0, 1.00000000000023, 6.22350943222047], \"released_b\": [0, 0, 1.00000000000023, 6.22350943222047]}; console errors: 0"
+ },
+ "fault-16.x3d": {
+  "category": "viewpoint binding",
+  "fault": "The close-up Viewpoint has jump='false', so binding it does not move the viewer to it.",
+  "viewer_sees": "Clicking the plaque appears to do nothing: the camera stays at the overview and the reading light never comes on.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 3.0s: ReadingLight.on changed -> [0] (fails); console errors: 0",
+  "twin": "twin-16.x3d",
+  "nearest_prior": "P100: there the viewpoint is unbound again on release; here it is bound and stays bound but, with jump off, the viewer is not moved",
+  "testable_intent_lines": 2
+ },
+ "twin-16.x3d": {
+  "category": "viewpoint binding",
+  "intent": "Clicking the plaque carries the visitor from the far overview to the close-up position in front of the plaque, where the reading zone switches the reading light on.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 3.0s: ReadingLight.on changed -> [1] (holds); console errors: 0"
+ },
+ "fault-17.x3d": {
+  "category": "triggers",
+  "fault": "The first clock's isActive is routed straight to the TimeTrigger, which fires when isActive becomes TRUE, that is when the gate starts to rise, not when it has finished (the falling edge had to be turned into a TRUE first).",
+  "viewer_sees": "The cart sets off at the same moment as the gate and drives into it while it is still down.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.0s: Cart.translation unchanged -> [2.328001, 0, 0] (fails); after 3.4s: Cart.translation[0] > 3.9 -> [4, 0, 0] (holds); console errors: 0",
+  "twin": "twin-17.x3d",
+  "nearest_prior": "P097: there a script reacts to both edges of isActive; here a trigger node reacts to the rising edge where the falling edge was wanted",
+  "testable_intent_lines": 3
+ },
+ "twin-17.x3d": {
+  "category": "triggers",
+  "intent": "When started, the gate first rises for a second and a half; only once the gate has finished rising does the cart roll through, taking one second.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.0s: Cart.translation unchanged -> [-4, 0, 0] (holds); after 3.4s: Cart.translation[0] > 3.9 -> [4, 0, 0] (holds); console errors: 0"
+ },
+ "fault-18.x3d": {
+  "category": "scripts",
+  "fault": "The Script's SFNode field is given as value='Crate', a name in an attribute, instead of a contained node (USE); the field stays NULL.",
+  "viewer_sees": "Pressing the button does nothing; the script throws on the null node each time.",
+  "spec": "error per the X3D standard (ISO/IEC 19776-1 XML encoding, field statement: SFNode/MFNode values are contained elements, the value attribute does not apply)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.0s: Crate.translation changed -> [-3, 0, 0] (fails); console errors: 2; messages: JavaScript Error in Script 'Mover', in function 'nudge' | TypeError: Cannot read properties of null (reading 'translation')",
+  "twin": "twin-18.x3d",
+  "nearest_prior": "P020: there the script has no code; here the code is fine but its node reference is written as a string attribute and is null",
+  "testable_intent_lines": 2
+ },
+ "twin-18.x3d": {
+  "category": "scripts",
+  "intent": "Each press of the button nudges the crate one metre further to the right.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.0s: Crate.translation changed -> [-2, 0, 0] (holds); console errors: 0"
+ },
+ "fault-19.x3d": {
+  "category": "drag sensors",
+  "fault": "The PlaneSensor has autoOffset='false', so every drag starts again from zero offset instead of from where the last drag ended.",
+  "viewer_sees": "At the start of each new drag the magnet snaps back to the middle of the board.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "probe (real pointer / frame tracking): {\"end_of_drag_1\": [1.366904, 0, 0], \"start_of_drag_2\": [-4.440892e-16, 0.1366904, 0], \"end_of_drag_2\": [-4.440892e-16, 0.8201426, 0]}; console errors: 0",
+  "twin": "twin-19.x3d",
+  "nearest_prior": "P093: there the wrong output field is routed; here the right output is routed but the sensor forgets its offset between drags",
+  "testable_intent_lines": 0
+ },
+ "twin-19.x3d": {
+  "category": "drag sensors",
+  "intent": "The magnet can be dragged about the board, and every new drag carries on from wherever the magnet was left by the drag before.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "probe (real pointer / frame tracking): {\"end_of_drag_1\": [1.366904, 0, 0], \"start_of_drag_2\": [1.366904, 0.1366904, 0], \"end_of_drag_2\": [1.366904, 0.8201426, 0]}; console errors: 0"
+ },
+ "fault-20.x3d": {
+  "category": "load sensing",
+  "fault": "The LoadSensor has nothing in its watch list (the Inline is not referenced inside it), so it never reports a load.",
+  "viewer_sees": "The part loads but the turntable never moves.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 2.5s: Turntable.rotation changed -> [0, 0, 1, 0] (fails); console errors: 0",
+  "twin": "twin-20.x3d",
+  "nearest_prior": "P058: there the watched Inline is told not to load; here the Inline loads but the sensor is not watching it",
+  "testable_intent_lines": 1
+ },
+ "twin-20.x3d": {
+  "category": "load sensing",
+  "intent": "As soon as the part file has finished loading, the turntable under it makes one slow full turn.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 2.5s: Turntable.rotation changed -> [0, 1, 0, 2.19911996254921] (holds); console errors: 0"
+ },
+ "decoy-01.x3d": {
+  "category": "routes",
+  "intent": "A lead ball slides from side to side while changing colour, and a second ball below copies every move the lead ball makes.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.2s: Follower.translation changed -> [-0.7560005, 0, 0] (holds); console errors: 0",
+  "why_suspicious": "ROUTE statements nested inside a Transform in mid-scene, set_ and _changed spellings of inputOutput fields, one clock fanned out to two interpolators, and a Transform-to-Transform ROUTE that looks like the start of a loop.",
+  "why_correct": "ROUTEs may appear wherever a child node may once both nodes are named; set_xxx / xxx_changed are the standard alternate names of inputOutput fields; fan-out is legal; the copy ROUTE is one-way."
+ },
+ "decoy-02.x3d": {
+  "category": "clocks and timing",
+  "intent": "A rotor spins quickly and without pause about its vertical axle, two full turns every second.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 0.8s: Rotor.rotation changed -> [0, 1, 0, 2.38776751057115] (holds); console errors: 0",
+  "why_suspicious": "A full turn written as four keys ending at 6.2832, a clock and its ROUTEs nested inside the Transform they animate, negative startTime and stopTime, and a very short cycleInterval.",
+  "why_correct": "Each step is 120 degrees so the turn direction is unambiguous; sensors may sit anywhere in the graph; stopTime not later than startTime is ignored and a looping clock with a past startTime runs."
+ },
+ "decoy-03.x3d": {
+  "category": "toggles",
+  "intent": "Each press of the pull cord flips the ceiling lamp: on if it was off, off if it was on; letting go of the cord does nothing.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.0s: CeilingLamp.on changed -> [1] (holds); console errors: 0",
+  "why_suspicious": "TouchSensor.isActive, which fires on press and on release, is routed straight into a BooleanToggle.",
+  "why_correct": "BooleanToggle only flips when it receives TRUE, so the FALSE on release is ignored and one click is one flip."
+ },
+ "decoy-04.x3d": {
+  "category": "sequencers",
+  "intent": "Nothing is shown until the flip-book is started; it then steps through frames one, two, three, two, one, a fifth of its four second run each, ending on frame one.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 2.2s: Frames.whichChoice == 2 -> [2] (holds); after 3.4s: Frames.whichChoice == 1 -> [1] (holds); console errors: 0",
+  "why_suspicious": "Switch starts at whichChoice -1, the sequencer has a repeated final value at key 1, values go up and back down, and ROUTEs use set_startTime and set_whichChoice.",
+  "why_correct": "-1 legitimately shows nothing until started; repeating the last value at key 1 is the standard way to give the last step its share; set_ names are the legal alternates."
+ },
+ "decoy-05.x3d": {
+  "category": "scripts",
+  "intent": "A level controller stretches the gauge bar to the height it is told, working directly on the bar it was handed.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after 1.0s: Bar.scale[1] > 1.9 -> [1, 2, 1] (holds); console errors: 0",
+  "why_suspicious": "Script input named set_level with a handler of the same name, an output named level_changed that is routed nowhere, an SFNode field holding a USE, directOutput writing a field of another node, and a clock that never starts.",
+  "why_correct": "The handler name equals the field name; unrouted outputs are harmless; directOutput='true' permits writing through the node reference; the scene is driven from outside by design."
+ },
+ "helper-fan.x3d": {
+  "category": "helper",
+  "intent": "Helper: a desk fan whose blade assembly is offered to the scene that loads it.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loaded through the pair that uses it"
+ },
+ "helper-part.x3d": {
+  "category": "helper",
+  "intent": "Helper: a machined part shown on a turntable.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loaded through the pair that uses it"
+ }
+}

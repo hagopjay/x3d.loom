@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content="When told to, the script stretches the rope so that it runs from the peg at the origin to the hook at 2 1 0."/>
+    <meta name='intent' content="send Maker.go = now at 0.3s"/>
+    <meta name='intent' content="after 1.2s: Rope.point == 0 0 0 2 1 0"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Rope' position='1 0.5 6'/>
+    <Shape>
+      <Appearance>
+        <Material emissiveColor='1 0.8 0.2'/>
+      </Appearance>
+      <IndexedLineSet coordIndex='0 1 -1'>
+        <Coordinate DEF='Rope' point='0 0 0  0.5 0 0'/>
+      </IndexedLineSet>
+    </Shape>
+    <Transform translation='2 1 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.7 0.7 0.7'/>
+        </Appearance>
+        <Sphere radius='0.1'/>
+      </Shape>
+    </Transform>
+    <Script DEF='Maker'>
+      <field name='go' type='SFTime' accessType='inputOnly'/>
+      <field name='ends' type='MFVec3f' accessType='outputOnly'/>
+      <![CDATA[ecmascript:
+function go (value, time)
+{
+   var peg  = new SFVec3f (0, 0, 0);
+   var hook = new SFVec3f (2, 1, 0);
+
+   ends = new MFVec3f (peg, hook);
+}
+]]>
+    </Script>
+    <ROUTE fromNode='Maker' fromField='ends' toNode='Rope' toField='point'/>
+  </Scene>
+</X3D>

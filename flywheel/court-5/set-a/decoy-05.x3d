@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name="intent:prose" content="A level controller stretches the gauge bar to the height it is told, working directly on the bar it was handed."/>
+    <meta name="intent" content="send Controller.set_level = 2 at 0.2s"/>
+    <meta name="intent" content="after 1.0s: Bar.scale[1] &gt; 1.9"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Gauge' position='0 1 8'/>
+    <Transform DEF='Bar' center='0 -0.5 0'>
+      <Shape><Appearance><Material diffuseColor='0.2 0.8 0.3'/></Appearance><Box size='0.5 1 0.5'/></Shape>
+    </Transform>
+    <Script DEF='Controller' directOutput='true'>
+      <field name='set_level' type='SFFloat' accessType='inputOnly'/>
+      <field name='level_changed' type='SFFloat' accessType='outputOnly'/>
+      <field name='bar' type='SFNode' accessType='initializeOnly'>
+        <Transform USE='Bar'/>
+      </field>
+      <![CDATA[ecmascript:
+function set_level (value)
+{
+   if (value < 0.1) value = 0.1;
+   bar .scale = new SFVec3f (1, value, 1);
+   level_changed = value;
+}
+]]>
+    </Script>
+    <Transform DEF='Needle' translation='1.5 0 0'>
+      <Shape><Appearance><Material diffuseColor='0.9 0.9 0.2'/></Appearance><Sphere radius='0.2'/></Shape>
+    </Transform>
+    <ScalarInterpolator DEF='Ramp' key='0 1' keyValue='0.5 3'/>
+    <TimeSensor DEF='Sweep' cycleInterval='5'/>
+    <ROUTE fromNode='Sweep' fromField='fraction_changed' toNode='Ramp' toField='set_fraction'/>
+    <ROUTE fromNode='Ramp' fromField='value_changed' toNode='Controller' toField='set_level'/>
+  </Scene>
+</X3D>

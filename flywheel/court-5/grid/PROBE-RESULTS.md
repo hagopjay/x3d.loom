@@ -114,3 +114,27 @@ Kernel `d446f94` was a branch commit. It reached x3d_mcp main in two squash merg
 
 `probe-kernel-2943b78.json` and `probe-kernel-d446f94.json` are those summaries for the two kernels. `grid.json` holds the
 state, the probe and the catching check of every cell for the new kernel.
+
+## Third pass (28 November, after the author sets were sealed, before the freeze)
+
+The three classes left unprobed, on kernel `4040fe1` against `2943b78`:
+
+| Class | Cells | Old kernel closed | New kernel closes | Ruled, not open | No probe |
+|---|---|---|---|---|---|
+| F08 address: a file of the wrong kind | 25 | 0 | 21 (`url-wrong-kind`) | 0 | 4 (the node may point at any kind of file) |
+| F09 time | 128 | 15 | 76 | 52 | 0 |
+| N03 bindable | 7 | 0 | 4 (`bindable-never-bound`, a note) | 3 (a browser lists viewpoints for the user) | 0 |
+
+F09 in detail: `stopTime` and `pauseTime` as a small number are a moment in 1970; the kernel knew that for
+TimeSensor only, and 28 cells on the other 14 time-dependent nodes were missed. `autoRefreshTimeLimit` below
+`autoRefresh` (28 cells) stops reloading before the first reload. Ruled out as mistakes: a `resumeTime` with no
+later pause (15), a past `startTime` on a node with no loop field (11), and 26 lengths of time where any value that
+is not negative is a choice.
+
+A warning about the first table this pass produced: the class-wide rulings were applied to the old kernel's misses
+too, so the old kernel first appeared to miss nothing in F09. The count above compares cell by cell.
+
+Whole grid at the freeze: 6,502 cells, 4,845 caught, 811 xsd, 0 missed, 97 needs-intent, 39 not-a-mistake, 28
+probe-broken, 682 no-probe. The old kernel closes 5,394 of the 5,656 cells the frozen one closes. Sweep of the new
+checks over 1,685 real scenes: 0 findings, after `bindable-never-bound` learned to skip the X3D 4.0
+`Viewpoint.navigationInfo` child (16 false alarms).

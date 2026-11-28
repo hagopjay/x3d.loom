@@ -1,0 +1,431 @@
+{
+ "fault-01.x3d": {
+  "category": "grouping and transforms",
+  "fault": "The beacon's Transform is nested inside the Transform that scales the centimetre model by 0.01, so its 2 m offset and 15 cm radius are scaled a hundredfold down.",
+  "viewer_sees": "No red ball above the bench; the beacon is a 3 mm speck 2 cm above the floor, hidden inside the bench.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 0.21% (lit: fault 3.47%, twin 3.68%); fault console silent",
+  "twin": "twin-01.x3d",
+  "nearest_prior": "P036: that is a zero scale on one axis; here a correct scale is inherited by a child that was authored in the outer units",
+  "testable_intent": false
+ },
+ "twin-01.x3d": {
+  "category": "grouping and transforms",
+  "intent": "A bench imported from a model drawn in centimetres is scaled into metres, and a red beacon ball of 15 cm radius floats two metres above the floor, over the bench.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 3.68% of the frame"
+ },
+ "fault-02.x3d": {
+  "category": "grouping and transforms",
+  "fault": "The visible wall Shape carries containerField='proxy', so it becomes the Collision node's undrawn proxy geometry instead of one of its children.",
+  "viewer_sees": "The wall is not drawn at all; only the floor is visible, yet the visitor still bumps into something invisible.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 31.70% (lit: fault 0.00%, twin 31.70%); fault console silent",
+  "twin": "twin-02.x3d",
+  "nearest_prior": "P053: there the shape sat outside the Collision; here it is inside but in the proxy slot, which is never rendered",
+  "testable_intent": false
+ },
+ "twin-02.x3d": {
+  "category": "grouping and transforms",
+  "intent": "A grey partition wall stands in the gallery; visitors see it and cannot walk through it.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 31.70% of the frame"
+ },
+ "fault-03.x3d": {
+  "category": "DEF and USE",
+  "fault": "The Appearance USE='RedPaint' appears in the document before the node that carries DEF='RedPaint'.",
+  "viewer_sees": "A conforming loader finds no node of that name when it reaches the USE, so the first post has no appearance (unlit white) or the file is rejected.",
+  "spec": "error per the X3D standard (XML encoding 19776-1, 4.3.3 and abstract 4.4.3: a DEF name shall be defined before it is USEd, in document order)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 0.00% (lit: fault 6.25%, twin 6.25%); fault console silent; X_ITE loads and draws the fault exactly like the twin and says nothing, so the fault rests on the standard, not on this engine",
+  "twin": "twin-03.x3d",
+  "nearest_prior": "P103: there the name never matches; here it matches but the USE comes first",
+  "testable_intent": false,
+  "engine_disagrees": true
+ },
+ "twin-03.x3d": {
+  "category": "DEF and USE",
+  "intent": "Two posts share one red paint so that repainting one repaints both.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 6.25% of the frame"
+ },
+ "fault-04.x3d": {
+  "category": "level of detail",
+  "fault": "The LOD has no center, so viewer distance is measured to the origin although both versions of the statue are placed 100 m away at x=100.",
+  "viewer_sees": "From the entry viewpoint 8 m in front of the statue the plain grey block is shown instead of the detailed statue.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 7.38% (lit: fault 7.37%, twin 3.34%); fault console silent; intent on fault: after 1.0s: StatueLOD.level_changed == 0 -> FAILS (read [1])",
+  "twin": "twin-04.x3d",
+  "nearest_prior": "P038/P060/P062: those are about the range list; here the range is fine and the centre is missing",
+  "testable_intent": true
+ },
+ "twin-04.x3d": {
+  "category": "level of detail",
+  "intent": "A statue stands a hundred metres east of the origin; from the entry viewpoint eight metres in front of it the visitor sees the detailed version, and the plain block only from far away.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 3.34% of the frame; after 1.0s: StatueLOD.level_changed == 0 -> holds (read [0])"
+ },
+ "fault-05.x3d": {
+  "category": "prototypes",
+  "fault": "The prototype body refers with USE to an Appearance whose DEF is in the main scene, outside the prototype's own name scope.",
+  "viewer_sees": "The bollards get no appearance (unlit white instead of yellow); a strict loader rejects the unresolved USE.",
+  "spec": "error per the X3D standard (19775-1 4.4.4.3 prototype scoping rules: a prototype body is its own name scope, DEF names outside it are not visible)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 1.98% (lit: fault 4.48%, twin 4.39%); fault console: warning: XML Parser: Named or imported node 'SiteYellow' not found.",
+  "twin": "twin-05.x3d",
+  "nearest_prior": "P072/P103: those are misspelt names; here the name is spelt right but lives in another name scope",
+  "testable_intent": false
+ },
+ "twin-05.x3d": {
+  "category": "prototypes",
+  "intent": "A reusable bollard prototype is painted with the site's standard yellow, and two bollards are placed either side of a path.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 4.39% of the frame"
+ },
+ "fault-06.x3d": {
+  "category": "prototypes",
+  "fault": "The prototype body has two top-level Transforms; only the first node of a ProtoBody is the instance's rendered node, the rest are not part of the scene graph where the instance stands.",
+  "viewer_sees": "Only the grey pole is drawn; the glowing globe on top is missing.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 0.51% (lit: fault 0.77%, twin 1.24%); fault console silent",
+  "twin": "twin-06.x3d",
+  "nearest_prior": "P066/P118: those are wrong field names on the instance; here the body structure itself drops half of the model",
+  "testable_intent": false
+ },
+ "twin-06.x3d": {
+  "category": "prototypes",
+  "intent": "A lamp-post prototype draws a grey pole with a glowing globe on top, and one lamp-post stands in the scene.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 1.24% of the frame"
+ },
+ "fault-07.x3d": {
+  "category": "polygon geometry",
+  "fault": "The single four-vertex face is concave (a notched chevron) but convex is left at its default TRUE.",
+  "viewer_sees": "The notch is filled in: a solid triangle is drawn instead of an arrow-head with a cut-out back.",
+  "spec": "legal, plays wrong (the standard leaves the result undefined when a non-convex face is declared convex)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 6.94% (lit: fault 15.52%, twin 8.70%); fault console silent",
+  "twin": "twin-07.x3d",
+  "nearest_prior": "P068: that is a self-crossing extrusion outline; here a simple concave face is declared convex",
+  "testable_intent": false
+ },
+ "twin-07.x3d": {
+  "category": "polygon geometry",
+  "intent": "A flat blue arrow-head (a chevron with a notch cut into its back edge) is drawn as one polygon facing the viewer.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 8.70% of the frame"
+ },
+ "fault-08.x3d": {
+  "category": "coordinate arrays",
+  "fault": "The Coordinate point list is written as four x-z pairs (8 numbers) instead of four x-y-z triples.",
+  "viewer_sees": "The floor is missing: the eight numbers are read as two 3D points plus leftovers, so the face indexes points that do not exist.",
+  "spec": "error per the X3D standard (MFVec3f is a sequence of 3-tuples; 19776-1 5.x field encoding) and coordIndex then exceeds the coordinates",
+  "xsd_valid": false,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 8.89% (lit: fault 0.67%, twin 9.51%); fault console: warning: Array length must be multiple of components size, which is 3.",
+  "twin": "twin-08.x3d",
+  "nearest_prior": "P061/P026: there one index is too large for a correct array; here the array itself has the wrong tuple size",
+  "testable_intent": false
+ },
+ "twin-08.x3d": {
+  "category": "coordinate arrays",
+  "intent": "A square green floor four metres on a side lies in the ground plane under a small crate.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 9.51% of the frame"
+ },
+ "fault-09.x3d": {
+  "category": "normals",
+  "fault": "The four explicit normals point along -Z, away from the side the face is wound to show and away from the viewer.",
+  "viewer_sees": "The board is drawn black: the headlight shines on a surface whose normals face away from it.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 29.20% (lit: fault 0.00%, twin 29.20%); fault console silent",
+  "twin": "twin-09.x3d",
+  "nearest_prior": "P064: that is a wrong number of normals; P105 is a winding error. Here count and winding are right and the vectors are inverted",
+  "testable_intent": false
+ },
+ "twin-09.x3d": {
+  "category": "normals",
+  "intent": "A white notice board faces the visitor and is lit by the headlight, with smooth shading from normals supplied by the modelling tool.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 29.20% of the frame"
+ },
+ "fault-10.x3d": {
+  "category": "text",
+  "fault": "FontStyle justify is written \"CENTER\", which is not one of the allowed values (the centring value is \"MIDDLE\").",
+  "viewer_sees": "The text is not centred: it starts at the doorway axis and runs off to the right.",
+  "spec": "error per the X3D standard (19775-1 15.4.1 FontStyle: justify values are BEGIN, END, FIRST, MIDDLE)",
+  "xsd_valid": false,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 3.37% (lit: fault 1.69%, twin 2.40%); fault console silent; intent on fault: after 1.5s: Sign.origin[0] < -1 -> FAILS (read [0, 0.759765625, 0])",
+  "twin": "twin-10.x3d",
+  "nearest_prior": "none: no listed mistake concerns text layout or an enumerated string value",
+  "testable_intent": true
+ },
+ "twin-10.x3d": {
+  "category": "text",
+  "intent": "A sign shows the words Exit this way in white letters, centred left-to-right on the doorway axis in front of the visitor.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 2.40% of the frame; after 1.5s: Sign.origin[0] < -1 -> holds (read [-3.041015625, 0.759765625, 0])"
+ },
+ "fault-11.x3d": {
+  "category": "units and angles",
+  "fault": "The rotation is given with a zero-length axis (0 0 0) and a quarter-turn angle.",
+  "viewer_sees": "The lid lies closed on the chest instead of standing open; a zero axis gives no rotation.",
+  "spec": "legal, plays wrong (a rotation needs a normalised axis; a zero axis is commonly treated as no rotation)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 5.26% (lit: fault 6.67%, twin 10.23%); fault console silent",
+  "twin": "twin-11.x3d",
+  "nearest_prior": "P035/P075/P109: those have a good axis and an angle in degrees; here the angle is right and the axis is null",
+  "testable_intent": false
+ },
+ "twin-11.x3d": {
+  "category": "units and angles",
+  "intent": "The lid of a chest stands open, tipped a quarter turn back about its rear hinge edge.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 10.23% of the frame"
+ },
+ "fault-12.x3d": {
+  "category": "units and angles",
+  "fault": "The table top's Box size is given in millimetres (2000 40 900) although X3D lengths are metres.",
+  "viewer_sees": "A slab two kilometres wide engulfs the camera, which sits inside it; the table and its leg are not recognisable.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 1.15% (lit: fault 0.37%, twin 1.49%); fault console silent",
+  "twin": "twin-12.x3d",
+  "nearest_prior": "P084: milliseconds in a time field; P037: an object placed far away. Here a size is in the wrong length unit",
+  "testable_intent": false
+ },
+ "twin-12.x3d": {
+  "category": "units and angles",
+  "intent": "A table top two metres long, ninety centimetres deep and four centimetres thick is seen from a viewpoint five metres away.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 1.49% of the frame"
+ },
+ "fault-13.x3d": {
+  "category": "Inline and addresses",
+  "fault": "The Inline url is an absolute file:/// path into one author's Windows home folder instead of an address relative to the scene.",
+  "viewer_sees": "The bracket never appears; only the base plate is drawn.",
+  "spec": "legal, plays wrong (the address is well formed but resolves nowhere except on the author's machine)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 4.75% (lit: fault 3.62%, twin 8.38%); fault console: error: Fetch API cannot load file:///C:/Users/dana/Documents/models/helper-bracket.x3d. URL scheme \"file\" is not supported. / error: Inline: Couldn't load URL 'file:///C:/Users/dana/Documents/models/helper-bracket.x3d'. TypeError: Failed to fetch",
+  "twin": "twin-13.x3d",
+  "nearest_prior": "P116: a misspelt relative file name; here the name is right but the address is a machine-specific absolute path",
+  "testable_intent": false
+ },
+ "twin-13.x3d": {
+  "category": "Inline and addresses",
+  "intent": "A steel bracket kept in its own file next to this one is brought into the assembly beside a blue base plate.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 8.38% of the frame"
+ },
+ "fault-14.x3d": {
+  "category": "texture data",
+  "fault": "The PixelTexture image declares 2 by 2 texels with 3 components but supplies only three pixel values.",
+  "viewer_sees": "The checker is not shown: the tile is plain white (no texture) instead of four coloured texels.",
+  "spec": "error per the X3D standard (19775-1 5.3.6 SFImage: width*height pixel values shall follow the header)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 29.79% (lit: fault 39.72%, twin 39.65%); fault console silent",
+  "twin": "twin-14.x3d",
+  "nearest_prior": "P028/P069: a short height array on an ElevationGrid; here the short array is the pixel list of an SFImage",
+  "testable_intent": false
+ },
+ "twin-14.x3d": {
+  "category": "texture data",
+  "intent": "A square tile carries a two-by-two checker of red, green, blue and white texels drawn without smoothing.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 39.65% of the frame"
+ },
+ "fault-15.x3d": {
+  "category": "metadata",
+  "fault": "Two metadata nodes are both placed in the Shape's single-valued metadata field.",
+  "viewer_sees": "Nothing changes on screen, but only one of the two facts is attached: the alloy name is dropped and only the mass remains.",
+  "spec": "error per the X3D standard (19775-1 7.2.4: metadata is an SFNode field and holds one node; several facts need a MetadataSet)",
+  "xsd_valid": false,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 0.00% (lit: fault 9.38%, twin 9.38%); fault console silent; SAI metadata of the shape: fault MetadataFloat:massKg, twin MetadataSet:partsList:2 entries",
+  "twin": "twin-15.x3d",
+  "nearest_prior": "P119: a wrong containerField inside a MetadataSet; here there is no set and two nodes compete for one slot",
+  "testable_intent": false
+ },
+ "twin-15.x3d": {
+  "category": "metadata",
+  "intent": "A machined bracket carries two facts as metadata for the parts list: the alloy it is made of and its mass in kilograms.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 9.38% of the frame"
+ },
+ "fault-16.x3d": {
+  "category": "profile and component statements",
+  "fault": "The component statement names 'Geometry2d'; component names are case sensitive and the component is 'Geometry2D'.",
+  "viewer_sees": "A conforming loader does not know the named component, so the level-2 arc node is unsupported under the declared profile and the wedge may be refused.",
+  "spec": "error per the X3D standard (19775-1 7.2.5.4 COMPONENT statement: the name shall be a defined component)",
+  "xsd_valid": false,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 0.00% (lit: fault 9.53%, twin 9.53%); fault console silent; X_ITE loads and draws the fault exactly like the twin and says nothing, so the fault rests on the standard, not on this engine",
+  "twin": "twin-16.x3d",
+  "nearest_prior": "P071/P089/P117: the statement is absent there; here it is present but names a component that does not exist",
+  "testable_intent": false,
+  "engine_disagrees": true
+ },
+ "twin-16.x3d": {
+  "category": "profile and component statements",
+  "intent": "A flat orange pie wedge covering a quarter of a circle is drawn facing the viewer.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 9.53% of the frame"
+ },
+ "fault-17.x3d": {
+  "category": "2D geometry",
+  "fault": "The Rectangle2D is left in its native X-Y plane (no rotation on its Transform), so it stands upright instead of lying on the ground.",
+  "viewer_sees": "From the top-down camera the mat is seen exactly edge-on and nothing is drawn.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 10.44% (lit: fault 0.00%, twin 10.44%); fault console silent",
+  "twin": "twin-17.x3d",
+  "nearest_prior": "P120/P114: a missing centre and a camera facing away; here a 2D node is assumed to lie in the ground plane",
+  "testable_intent": false
+ },
+ "twin-17.x3d": {
+  "category": "2D geometry",
+  "intent": "A flat blue floor mat, three metres by two, lies on the ground and is seen from a camera looking straight down on it.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 10.44% of the frame"
+ },
+ "fault-18.x3d": {
+  "category": "NURBS",
+  "fault": "The NurbsCurve has order 4 but only three control points; the order may not exceed the number of control points.",
+  "viewer_sees": "No curve is drawn.",
+  "spec": "error per the X3D standard (19775-1 27.4.4 NurbsCurve / 27.2: at least order control points are required)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 0.69% (lit: fault 0.00%, twin 0.69%); fault console silent",
+  "twin": "twin-18.x3d",
+  "nearest_prior": "P070: a knot vector of the wrong length; here the order itself is too high for the control points",
+  "testable_intent": false
+ },
+ "twin-18.x3d": {
+  "category": "NURBS",
+  "intent": "A smooth yellow arch is drawn as a single curve bent by three control points.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 0.69% of the frame"
+ },
+ "fault-19.x3d": {
+  "category": "CAD geometry",
+  "fault": "The IndexedQuadSet index list is written with -1 separators after each quad, as if it were an IndexedFaceSet coordIndex.",
+  "viewer_sees": "Only the flat plate is drawn; the standing plate is missing or garbled, because every group of four indices after the first is shifted and contains -1.",
+  "spec": "error per the X3D standard (19775-1 32.4.5 IndexedQuadSet: index holds groups of four non-negative indices with no separators)",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 6.61% (lit: fault 3.49%, twin 10.06%); fault console silent",
+  "twin": "twin-19.x3d",
+  "nearest_prior": "P025: there the -1 terminators are missing where required; here they are present where forbidden, on a different node",
+  "testable_intent": false
+ },
+ "twin-19.x3d": {
+  "category": "CAD geometry",
+  "intent": "An angle bracket is described as a CAD part whose single face is built from two quadrilateral plates, one lying flat and one standing up, meeting along an edge.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 10.06% of the frame"
+ },
+ "fault-20.x3d": {
+  "category": "geospatial",
+  "fault": "geoCoords is written longitude first (2.2945 48.8584) although the declared GD system reads latitude first.",
+  "viewer_sees": "The camera looks down on empty ground; the marker is thousands of kilometres away near the equator.",
+  "spec": "legal, plays wrong",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "screenshot pixels differing fault vs twin: 3.00% (lit: fault 0.00%, twin 3.00%); fault console silent",
+  "twin": "twin-20.x3d",
+  "nearest_prior": "P037: an absurd distance from the origin; here both numbers are plausible and only their order is wrong",
+  "testable_intent": false
+ },
+ "twin-20.x3d": {
+  "category": "geospatial",
+  "intent": "A sixty-metre red marker block sits on the ground at latitude 48.8584 north, longitude 2.2945 east, and the camera hovers four hundred metres straight above it looking down.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads, console: silent; lit 3.00% of the frame"
+ },
+ "decoy-01.x3d": {
+  "category": "units and angles",
+  "intent": "A hatch stands open a quarter turn; angles are written in degrees and a unit statement in the head declares it.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads with zero console errors (4 GPU driver performance warnings from the screenshot read-back, none from X_ITE); lit 6.45% of the frame; after 0.5s: Hatch.rotation[3] < -1.5 -> holds (read [1, 0, 0, -1.5707963267948966]), after 0.5s: Hatch.rotation[3] > -1.6 -> holds (read [1, 0, 0, -1.5707963267948966])",
+  "why_suspicious": "A rotation angle of -90 looks like the classic degrees mistake, but the head carries a UNIT statement for angles, which makes degrees legal."
+ },
+ "decoy-02.x3d": {
+  "category": "grouping and transforms",
+  "intent": "A railing is drawn in detail while an undrawn plain slab is its collision proxy.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads with zero console errors and zero warnings; lit 1.27% of the frame",
+  "why_suspicious": "A Shape with no Appearance sits in a Switch that shows nothing and is then USEd with containerField='proxy': it looks like a lost, invisible wall, but an undrawn proxy is exactly what is wanted."
+ },
+ "decoy-03.x3d": {
+  "category": "DEF and USE",
+  "intent": "A bolt defined in a hidden library is placed three times.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads with zero console errors and zero warnings; lit 36.57% of the frame; after 0.5s: Library.whichChoice == -1 -> holds (read [-1])",
+  "why_suspicious": "Switch whichChoice='-1' hides its only child and a Transform is USEd by three parents; both look like mistakes and are the standard library idiom."
+ },
+ "decoy-04.x3d": {
+  "category": "polygon geometry",
+  "intent": "A two-triangle pinwheel coloured per face, visible from both sides.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads with zero console errors and zero warnings; lit 9.19% of the frame",
+  "why_suspicious": "coordIndex has no final -1, five points serve two faces through a shared vertex, and two colours are given for five vertices; the last terminator is optional and colorPerVertex='false' makes two colours correct."
+ },
+ "decoy-05.x3d": {
+  "category": "coordinate arrays",
+  "intent": "A small survey terrain with a ridge.",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loads with zero console errors and zero warnings; lit 5.99% of the frame; after 0.5s: Terrain.xSpacing == 1.5 -> holds (read [1.5])",
+  "why_suspicious": "Numbers use commas, exponents, a leading plus sign and a bare leading dot, and xDimension differs from zDimension; all of it is legal and the 12 heights match 3 by 4."
+ },
+ "helper-bracket.x3d": {
+  "category": "helper",
+  "intent": "the part that scene 13 brings in",
+  "xsd_valid": true,
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loaded through twin-13"
+ }
+}

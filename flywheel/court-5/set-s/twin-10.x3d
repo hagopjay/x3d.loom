@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content="At start-up the script puts both a crate and a ball onto the empty shelf, so two things stand on it."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Shelf' position='0 0.5 7'/>
+    <Transform translation='0 -0.6 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.5 0.35 0.2'/>
+        </Appearance>
+        <Box size='5 0.2 1.5'/>
+      </Shape>
+    </Transform>
+    <Group DEF='Shelf'/>
+    <Script DEF='Stocker' directOutput='true'>
+      <field name='shelf' type='SFNode' accessType='initializeOnly'>
+        <Group USE='Shelf'/>
+      </field>
+      <field name='crate' type='MFNode' accessType='initializeOnly'>
+        <Transform translation='-1.2 0 0'>
+          <Shape>
+            <Appearance>
+              <Material diffuseColor='1 1 0'/>
+            </Appearance>
+            <Box size='1 1 1'/>
+          </Shape>
+        </Transform>
+      </field>
+      <field name='ball' type='MFNode' accessType='initializeOnly'>
+        <Transform translation='1.2 0 0'>
+          <Shape>
+            <Appearance>
+              <Material diffuseColor='0 1 1'/>
+            </Appearance>
+            <Sphere radius='0.5'/>
+          </Shape>
+        </Transform>
+      </field>
+      <![CDATA[ecmascript:
+function initialize ()
+{
+   var both = new MFNode (crate [0], ball [0]);
+
+   shelf .addChildren = both;
+}
+]]>
+    </Script>
+  </Scene>
+</X3D>

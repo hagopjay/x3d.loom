@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <component name='Followers' level='1'/>
+    <meta name="intent:prose" content="The hall lamp burns at full strength until the wall plate is pressed, then fades smoothly down to a fifth of its strength over two seconds."/>
+    <meta name="intent" content="send Fade.set_destination = 0.2 at 0.2s"/>
+    <meta name="intent" content="after 0.7s: HallLamp.intensity &gt; 0.5"/>
+    <meta name="intent" content="after 3.2s: HallLamp.intensity &lt; 0.3"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Hall' position='0 1.5 9'/>
+    <NavigationInfo headlight='false'/>
+    <PointLight DEF='HallLamp' location='0 3 2' intensity='1'/>
+    <Shape><Appearance><Material diffuseColor='0.8 0.8 0.75'/></Appearance><Box size='8 0.1 6'/></Shape>
+    <Transform translation='-2 1.2 0'>
+      <TouchSensor DEF='WallPlate' description='dim the lamp'/>
+      <Shape><Appearance><Material diffuseColor='0.9 0.9 0.9'/></Appearance><Box size='0.5 0.8 0.1'/></Shape>
+    </Transform>
+    <Script DEF='DimLevel'>
+      <field name='press' type='SFBool' accessType='inputOnly'/>
+      <field name='level' type='SFFloat' accessType='outputOnly'/>
+      <![CDATA[ecmascript:
+function press (value)
+{
+   if (value)
+      level = 0.2;
+}
+]]>
+    </Script>
+    <ScalarChaser DEF='Fade' duration='2' initialValue='1' initialDestination='1'/>
+    <ROUTE fromNode='WallPlate' fromField='isActive' toNode='DimLevel' toField='press'/>
+    <ROUTE fromNode='DimLevel' fromField='level' toNode='Fade' toField='set_destination'/>
+    <ROUTE fromNode='Fade' fromField='value_changed' toNode='HallLamp' toField='intensity'/>
+  </Scene>
+</X3D>

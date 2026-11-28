@@ -72,22 +72,17 @@ repeats of court 3: the new kernel names 18 of those and 5 of the 21 that are ne
 expectations four held. The set is now seen and is a regression set from here on. The next court should give its
 authors the list of mistakes already planted and take its headline from new mistakes only.
 
-## Blind court 5: the standing plan (28 November 2026, no result yet)
+## Blind court 5 (28 November 2026): 20 of 56 for both kernels, and what did move
 
-[`court-5/PLAN.md`](court-5/PLAN.md) is the plan for the next sealed test and the scaffold to run it. It changes
-five things, in this order: the headline is taken from new mistakes only (authors get the 120 mistakes already
-planted and may repeat none); new rules are written from a grid of 6,434 places where the X3D 4.0 object model
-says a mistake can occur, and each new check is labelled by where it came from; a scene may state its intent in
-lines a headless play test checks, scored as a separate arm; a catch must be proven against the corrected twin by
-machine; and a slot is kept for a set written by a stranger. It lists twelve tricks the court may not use. Every
-script has been run on a dummy set (`court-5/dry-run/run.sh`). Nothing is sealed, nothing is frozen, and there is
-no court 5 score.
+[`court-5/RESULTS.md`](court-5/RESULTS.md). Sixty new mistakes by three blind authors (behaviour, structure and
+data, look) and sixteen real ones rebuilt from public bug reports were sealed before the kernel was frozen, and
+opened once. On the 56 that repeat no earlier planted mistake the old kernel (`2943b78`) proved 20 and the new
+kernel (`4040fe1`) proved 20; on the real ones, 4 of 13 each. Twenty-one new or widened checks, written from a
+grid over the X3D 4.0 object model that the new kernel closes completely
+([`court-5/grid/PROBE-RESULTS.md`](court-5/grid/PROBE-RESULTS.md)), gained nothing. Five of the eight
+pre-registered expectations failed ([`court-5/PREREG.md`](court-5/PREREG.md)).
 
-Two passes of the kernel turn, same day ([`court-5/grid/PROBE-RESULTS.md`](court-5/grid/PROBE-RESULTS.md)): a
-generator builds a wrong file and its corrected twin for each grid cell. Of 5,552 cells the file alone decides,
-the old kernel (`2943b78`) and the schema closed 5,379, missed 167 and the kernel crashed on 6; the new kernel
-(`d446f94`) closes all of them with five checks read from the object model and fixes to four older ones. The
-starting point is the finding: classes about one field at a time were 97.4% closed already, the two classes about
-a relation between fields only 40% (19 of 47). The gap on new mistakes lies in relations, and the ones only the
-standard's prose states are next. A stranger set of 16 real mistakes rebuilt from public reports is sealed
-(sha256 `74b80378…fa899b`) and unopened.
+What moved was the separate intent arm: where a scene states what it is for in a line a machine can test, playing
+it in X_ITE 16.8.0 caught 11 of the 12 such mistakes the kernel missed, and kernel or play test together reach 31
+of 56. The plan the court ran under, with its twelve banned tricks, is [`court-5/PLAN.md`](court-5/PLAN.md).
+Court 5 is now a seen set.

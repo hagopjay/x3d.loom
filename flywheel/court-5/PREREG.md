@@ -1,8 +1,8 @@
-# Blind court 5: pre-registration (DRAFT, not binding)
+# Blind court 5: pre-registration
 
-This is the form. At gate G4 every `TO FILL` is completed, the file is renamed `PREREG.md`, and it is committed
-and pushed with the frozen kernel before any archive is opened. Until then nothing here is a commitment, and
-`PLAN.md` may still change. After the rename, neither may.
+Completed and committed on 28 November 2026, with the kernel frozen at x3d_mcp `4040fe1`, before any of the four
+sealed archives was opened. From this commit on, neither this file nor `PLAN.md`, nor any check, script or catch
+rule, may change until the results are written. A script edit forced by a crash is listed in the results.
 
 ## What is sealed
 
@@ -37,15 +37,24 @@ of 16 in arm S. It will be reported as counts, per set, and set a carries it.
 
 | Kernel | Commit | What it is |
 |---|---|---|
-| Old | x3d_mcp TO FILL | main before this court's kernel turn |
-| New | x3d_mcp TO FILL | old plus the checks listed in `score/provenance.json` |
+| Old | x3d_mcp `2943b78` | main before this court's kernel turn |
+| New | x3d_mcp `4040fe1` (main after #44, #45, #46) | old plus the checks listed in `score/provenance.json` |
 
-Checks added: TO FILL labelled `grid`, TO FILL labelled `misses`. Source hashes at the freeze: TO FILL. Kernel
-suite: TO FILL. Scripts in this folder at commit TO FILL; `dry-run/run.sh` passed on them with the frozen kernel:
-TO FILL.
+Checks added or widened: 15 labelled `grid` (11 new, 4 older checks widened) and 6 labelled `misses`, as listed in
+`score/provenance.json`. Source hashes at the freeze (sha256, first 16 hex): `model_checks.py` 983a9c9ab56ea8e7,
+`court4_checks.py` 807ded532c175bc5, `semantic.py` 6df3b0f80fa11d1f, `plays_checks.py` 13eae5f93be99d7e,
+`usd_checks.py` 267f08ccb1387365, `data_checks.py` ccaf5c464b1b7952. Kernel suite: 2135 passed, 28 skipped, 1
+xfailed (run on branch commit `152edf8`, whose tree is the same as `4040fe1`). Scripts in this folder at the commit
+that adds this file; `dry-run/run.sh` passed on them with the frozen kernel: yes ("headline proven old 2 new 2 of
+3, play caught 2", X_ITE 16.8.0).
 
-Grid at the freeze (`grid/grid.json`): TO FILL cells probed of 6,434; of those TO FILL caught, TO FILL xsd, TO FILL
-missed, TO FILL needs-intent, TO FILL not-a-mistake.
+The last rule pass (x3d_mcp #46) was written after sets a, b, c and s were sealed and before any was opened. The
+owner chose "One more rule pass, then freeze" on 28 November 2026 at 14:16 UTC. A face-winding check from court 4's
+misses was written in that pass and left out of the kernel: 18 findings on 1,685 real scenes, none verified.
+
+Grid at the freeze (`grid/grid.json`, `grid/probe-kernel-4040fe1.json`): 6,502 cells, every class probed; 4,845
+caught, 811 xsd, 0 missed, 97 needs-intent, 39 not-a-mistake, 28 probe-broken, 682 no-probe. The old kernel
+closes 5,394 of the 5,656 cells the new one closes.
 
 ## How a catch is counted
 
@@ -72,9 +81,16 @@ Beside the headline, for scale only: court 4's new kernel proved 5 of 21 new mis
 Warning carried from `grid/PROBE-RESULTS.md`: the grid's field-at-a-time classes were 97.4% closed before this
 turn, while court 4's kernel named 5 of 21 new mistakes. Closing the grid is not a forecast of the score.
 
-Forecast, a guess and labelled as one: old kernel TO FILL to TO FILL of TO FILL new mistakes; new kernel TO FILL
-to TO FILL. The grid's own prediction (share of probed, file-stateable cells the frozen kernel closes): TO FILL.
+Forecast, a guess and labelled as one. Arm F, assuming the reader marks about 55 of the 60 as new: old kernel 6
+to 12 proven, new kernel 9 to 17. Arm S, 16 real mistakes: old kernel 3 to 7, new kernel 4 to 8. The editor's
+single best guess for the headline is old 9, new 12. The grid's own prediction (share of probed, file-stateable
+cells the frozen kernel closes): 5,656 of 5,656, 100%, which predicts a score no court has come near; the grid is
+recorded here as a predictor expected to fail.
 
 ## What this cannot show
 
-As `PLAN.md`, last section, plus anything learned between now and the freeze: TO FILL.
+As `PLAN.md`, last section, plus what was learned before the freeze: the intent arm is 19 pairs of 60 and 14 of
+them are in the behaviour set, so H7 speaks for behaviour only; four pairs are marked by their authors as ones
+where X_ITE did not behave as expected; the authors and the collector are of one model family with the rule
+writer; and the six `misses` checks were written from court 4, which authors were told not to repeat, so they are
+expected to gain little here by design.

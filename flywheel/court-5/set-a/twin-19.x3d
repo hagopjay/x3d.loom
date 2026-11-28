@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name="intent:prose" content="The magnet can be dragged about the board, and every new drag carries on from wherever the magnet was left by the drag before."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Board' position='0 0 10'/>
+    <Transform translation='0 0 -0.2'>
+      <Shape><Appearance><Material diffuseColor='0.9 0.9 0.9'/></Appearance><Box size='8 5 0.1'/></Shape>
+    </Transform>
+    <Group>
+      <PlaneSensor DEF='Drag' description='drag the magnet' minPosition='-3.5 -2' maxPosition='3.5 2'/>
+      <Transform DEF='Magnet'>
+        <Shape><Appearance><Material diffuseColor='0.8 0.1 0.1'/></Appearance><Box size='1 1 0.2'/></Shape>
+      </Transform>
+    </Group>
+    <ROUTE fromNode='Drag' fromField='translation_changed' toNode='Magnet' toField='translation'/>
+  </Scene>
+</X3D>

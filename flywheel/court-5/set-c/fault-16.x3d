@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <component name='Navigation' level='3'/>
+    <meta name='intent:prose' content='A floor plan seen straight from above in a parallel view eight metres wide and six metres deep, showing all four corner blocks.'/>
+  </head>
+  <Scene>
+    <Background skyColor='0.95 0.95 0.95'/>
+    <OrthoViewpoint DEF='Plan' description='Plan' position='0 10 0' orientation='1 0 0 -1.5708' fieldOfView='-4 4 -3 3'/>
+    <Transform translation='-3 0.5 -2'>
+      <Shape DEF='Block'>
+        <Appearance>
+          <Material diffuseColor='0.2 0.3 0.8'/>
+        </Appearance>
+        <Box size='1 1 1'/>
+      </Shape>
+    </Transform>
+    <Transform translation='3 0.5 -2'>
+      <Shape USE='Block'/>
+    </Transform>
+    <Transform translation='-3 0.5 2'>
+      <Shape USE='Block'/>
+    </Transform>
+    <Transform translation='3 0.5 2'>
+      <Shape USE='Block'/>
+    </Transform>
+    <Transform translation='0 0.5 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.8 0.5 0.1'/>
+        </Appearance>
+        <Cylinder radius='0.8' height='1'/>
+      </Shape>
+    </Transform>
+  </Scene>
+</X3D>

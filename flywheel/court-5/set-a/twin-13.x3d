@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name="intent:prose" content="A reusable sweep clock is given a period of three seconds, so that when it is started the barrier arm swings slowly up through a quarter turn, taking three seconds over it."/>
+    <meta name="intent" content="send Drive.startTime = now at 0.2s"/>
+    <meta name="intent" content="after 1.4s: Arm.rotation[3] &lt; 1.0"/>
+    <meta name="intent" content="after 3.8s: Arm.rotation[3] &gt; 1.5"/>
+  </head>
+  <Scene>
+    <ProtoDeclare name='SweepClock'>
+      <ProtoInterface>
+        <field name='period' type='SFTime' accessType='initializeOnly' value='1'/>
+        <field name='startTime' type='SFTime' accessType='inputOutput' value='0'/>
+        <field name='fraction' type='SFFloat' accessType='outputOnly'/>
+      </ProtoInterface>
+      <ProtoBody>
+        <TimeSensor DEF='Ticker'>
+          <IS>
+            <connect nodeField='cycleInterval' protoField='period'/>
+            <connect nodeField='startTime' protoField='startTime'/>
+            <connect nodeField='fraction_changed' protoField='fraction'/>
+          </IS>
+        </TimeSensor>
+      </ProtoBody>
+    </ProtoDeclare>
+    <Viewpoint description='Barrier' position='0 1 9'/>
+    <Transform translation='-2 0.5 0'><Shape><Appearance><Material diffuseColor='0.4 0.4 0.4'/></Appearance><Box size='0.3 1 0.3'/></Shape></Transform>
+    <Transform DEF='Arm' translation='-2 1 0' center='0 0 0'>
+      <Transform translation='2 0 0'><Shape><Appearance><Material diffuseColor='0.9 0.1 0.1'/></Appearance><Box size='4 0.15 0.15'/></Shape></Transform>
+    </Transform>
+    <ProtoInstance DEF='Drive' name='SweepClock'>
+      <fieldValue name='period' value='3'/>
+    </ProtoInstance>
+    <Transform translation='-2 0.5 1'>
+      <TouchSensor DEF='Ticket' description='raise the barrier'/>
+      <Shape><Appearance><Material diffuseColor='0.2 0.5 0.9'/></Appearance><Box size='0.4 0.4 0.4'/></Shape>
+    </Transform>
+    <OrientationInterpolator DEF='Swing' key='0 1' keyValue='0 0 1 0  0 0 1 1.5708'/>
+    <ROUTE fromNode='Ticket' fromField='touchTime' toNode='Drive' toField='startTime'/>
+    <ROUTE fromNode='Drive' fromField='fraction' toNode='Swing' toField='set_fraction'/>
+    <ROUTE fromNode='Swing' fromField='value_changed' toNode='Arm' toField='rotation'/>
+  </Scene>
+</X3D>

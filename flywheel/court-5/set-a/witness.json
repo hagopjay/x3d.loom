@@ -1,0 +1,1548 @@
+{
+ "chromium": "158.0.8127.36",
+ "results": {
+  "decoy-01.x3d": {
+   "file": "decoy-01.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [
+    "[.WebGL-0x2114003bc800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x2114003bc800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x2114003bc800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x2114003bc800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+   ],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Follower.translation": [
+     1.932,
+     0,
+     0
+    ]
+   },
+   "sends": [],
+   "asserts": [
+    {
+     "line": "after 1.2s: Follower.translation changed",
+     "value": [
+      -0.7560005,
+      0,
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "decoy-02.x3d": {
+   "file": "decoy-02.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Rotor.rotation": [
+     0,
+     1,
+     0,
+     4.90075905123281
+    ]
+   },
+   "sends": [],
+   "asserts": [
+    {
+     "line": "after 0.8s: Rotor.rotation changed",
+     "value": [
+      0,
+      1,
+      0,
+      2.38776751057115
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "decoy-03.x3d": {
+   "file": "decoy-03.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "CeilingLamp.on": [
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send Flip.set_boolean = true at 0.2s",
+     "error": null
+    },
+    {
+     "line": "send Flip.set_boolean = false at 0.5s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 1.0s: CeilingLamp.on changed",
+     "value": [
+      1
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "decoy-04.x3d": {
+   "file": "decoy-04.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Frames.whichChoice": [
+     -1
+    ]
+   },
+   "sends": [
+    {
+     "line": "send FlipClock.startTime = now at 0.2s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 2.2s: Frames.whichChoice == 2",
+     "value": [
+      2
+     ],
+     "holds": true
+    },
+    {
+     "line": "after 3.4s: Frames.whichChoice == 1",
+     "value": [
+      1
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "decoy-05.x3d": {
+   "file": "decoy-05.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Bar.scale": [
+     1,
+     1,
+     1
+    ]
+   },
+   "sends": [
+    {
+     "line": "send Controller.set_level = 2 at 0.2s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 1.0s: Bar.scale[1] > 1.9",
+     "value": [
+      1,
+      2,
+      1
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "fault-01.x3d": {
+   "file": "fault-01.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Lift.translation": [
+     0,
+     0.2850001,
+     0
+    ]
+   },
+   "sends": [],
+   "asserts": [
+    {
+     "line": "after 1.0s: Lift.translation[0] > 4.9",
+     "value": [
+      0,
+      1.285,
+      0
+     ],
+     "holds": false
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "fault-02.x3d": {
+   "file": "fault-02.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [
+    "XML Parser: Bad ROUTE specification: source field type must match destination field type of fields named \"isActive\" and \"startTime\"."
+   ],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {},
+   "sends": [],
+   "asserts": [],
+   "probe": {
+    "flag_after_click": [
+     0,
+     0,
+     0
+    ]
+   },
+   "all_intent_hold": null
+  },
+  "fault-03.x3d": {
+   "file": "fault-03.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Signal.whichChoice": [
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send SignalClock.startTime = now at 0.2s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 2.6s: Signal.whichChoice == 2",
+     "value": [
+      1
+     ],
+     "holds": false
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "fault-04.x3d": {
+   "file": "fault-04.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Door.translation": [
+     0,
+     1.5,
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send AtGate.set_bind = true at 0.3s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 3.0s: Door.translation changed",
+     "value": [
+      0,
+      1.5,
+      0
+     ],
+     "holds": false
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "fault-05.x3d": {
+   "file": "fault-05.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Rocket.translation": [
+     0,
+     0,
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send Fuse.press = true at 0.2s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 0.8s: Rocket.translation unchanged",
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "holds": true
+    },
+    {
+     "line": "after 3.0s: Rocket.translation changed",
+     "value": [
+      0,
+      6.340289,
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "fault-06.x3d": {
+   "file": "fault-06.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Head.rotation": [
+     0,
+     0,
+     1,
+     0
+    ]
+   },
+   "sends": [],
+   "asserts": [
+    {
+     "line": "after 1.5s: Head.rotation changed",
+     "value": [
+      0,
+      0,
+      1,
+      0
+     ],
+     "holds": false
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "fault-07.x3d": {
+   "file": "fault-07.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [
+    "XML Parser: Unknown named or imported node 'Bob'."
+   ],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Buoy.translation": [
+     0,
+     0.2,
+     0
+    ]
+   },
+   "sends": [],
+   "asserts": [
+    {
+     "line": "after 1.0s: Buoy.translation changed",
+     "value": [
+      0,
+      0.2,
+      0
+     ],
+     "holds": false
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "fault-08.x3d": {
+   "file": "fault-08.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "HallLamp.intensity": [
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send Fade.set_destination = 0.2 at 0.2s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 0.7s: HallLamp.intensity > 0.5",
+     "value": [
+      0.024954326484373537
+     ],
+     "holds": false
+    },
+    {
+     "line": "after 3.2s: HallLamp.intensity < 0.3",
+     "value": [
+      0.2
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "fault-09.x3d": {
+   "file": "fault-09.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {},
+   "sends": [],
+   "asserts": [],
+   "probe": {
+    "glow_on_hover_drawer": [
+     1
+    ],
+    "lamp_while_held_on_drawer": [
+     0
+    ],
+    "lamp_while_held_on_body": [
+     1
+    ],
+    "lamp_after_release": [
+     0
+    ]
+   },
+   "all_intent_hold": null
+  },
+  "fault-10.x3d": {
+   "file": "fault-10.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "WorkLamp.on": [
+     1
+    ]
+   },
+   "sends": [
+    {
+     "line": "send TurnOff.set_triggerTime = now at 0.3s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 1.0s: WorkLamp.on changed",
+     "value": [
+      1
+     ],
+     "holds": false
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "fault-11.x3d": {
+   "file": "fault-11.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [
+    "XML Parser: Unknown named or imported node 'Blades'."
+   ],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {},
+   "sends": [],
+   "asserts": [],
+   "probe": {
+    "blades_rotation_t0": "Error: no node Blades",
+    "blades_rotation_t1": "Error: no node Blades"
+   },
+   "all_intent_hold": null
+  },
+  "fault-12.x3d": {
+   "file": "fault-12.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {},
+   "sends": [],
+   "asserts": [],
+   "probe": {
+    "frames": 287,
+    "max_frame_to_frame_jump": 4.000450064684722
+   },
+   "all_intent_hold": null
+  },
+  "fault-13.x3d": {
+   "file": "fault-13.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Arm.rotation": [
+     0,
+     0,
+     1,
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send Drive.startTime = now at 0.2s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 1.4s: Arm.rotation[3] < 1.0",
+     "value": [
+      0,
+      0,
+      1,
+      1.5708
+     ],
+     "holds": false
+    },
+    {
+     "line": "after 3.8s: Arm.rotation[3] > 1.5",
+     "value": [
+      0,
+      0,
+      1,
+      1.5708
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "fault-14.x3d": {
+   "file": "fault-14.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "WarningLamp.on": [
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send FreezeNow.set_boolean = true at 0.3s",
+     "error": null
+    },
+    {
+     "line": "send CarryOn.set_boolean = true at 0.9s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 1.6s: WarningLamp.on unchanged",
+     "value": [
+      1
+     ],
+     "holds": false
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "fault-15.x3d": {
+   "file": "fault-15.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [
+    "XML Parser: Bad ROUTE specification: destination field \"isActive\" must be an input."
+   ],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {},
+   "sends": [],
+   "asserts": [],
+   "probe": {
+    "before": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "held": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "released_a": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "released_b": [
+     0,
+     0,
+     1,
+     0
+    ]
+   },
+   "all_intent_hold": null
+  },
+  "fault-16.x3d": {
+   "file": "fault-16.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "ReadingLight.on": [
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send GoClose.set_triggerTime = now at 0.3s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 3.0s: ReadingLight.on changed",
+     "value": [
+      0
+     ],
+     "holds": false
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "fault-17.x3d": {
+   "file": "fault-17.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Cart.translation": [
+     -4,
+     0,
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send Raise.startTime = now at 0.2s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 1.0s: Cart.translation unchanged",
+     "value": [
+      2.328001,
+      0,
+      0
+     ],
+     "holds": false
+    },
+    {
+     "line": "after 3.4s: Cart.translation[0] > 3.9",
+     "value": [
+      4,
+      0,
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "fault-18.x3d": {
+   "file": "fault-18.x3d",
+   "consoleErrors": [
+    "JavaScript Error in Script 'Mover', in function 'nudge'\nworld url is 'http://127.0.0.1:38269/author-a/fault-18.x3d':",
+    "TypeError: Cannot read properties of null (reading 'translation')\n    at Proxy.nudge (eval at <anonymous> (eval at ue (http://127.0.0.1:38269/kit/x_ite/assets/components/ScriptingComponent.min.js:2:1526)), <anonymous>:5:50)\n    at Oe.set_field__ (http://127.0.0.1:38269/kit/x_ite/assets/components/Sc"
+   ],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Crate.translation": [
+     -3,
+     0,
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send Mover.nudge = true at 0.3s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 1.0s: Crate.translation changed",
+     "value": [
+      -3,
+      0,
+      0
+     ],
+     "holds": false
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "fault-19.x3d": {
+   "file": "fault-19.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {},
+   "sends": [],
+   "asserts": [],
+   "probe": {
+    "end_of_drag_1": [
+     1.366904,
+     0,
+     0
+    ],
+    "start_of_drag_2": [
+     -4.440892e-16,
+     0.1366904,
+     0
+    ],
+    "end_of_drag_2": [
+     -4.440892e-16,
+     0.8201426,
+     0
+    ]
+   },
+   "all_intent_hold": null
+  },
+  "fault-20.x3d": {
+   "file": "fault-20.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Turntable.rotation": [
+     0,
+     0,
+     1,
+     0
+    ]
+   },
+   "sends": [],
+   "asserts": [
+    {
+     "line": "after 2.5s: Turntable.rotation changed",
+     "value": [
+      0,
+      0,
+      1,
+      0
+     ],
+     "holds": false
+    }
+   ],
+   "all_intent_hold": false
+  },
+  "twin-01.x3d": {
+   "file": "twin-01.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Lift.translation": [
+     5,
+     0.941,
+     0
+    ]
+   },
+   "sends": [],
+   "asserts": [
+    {
+     "line": "after 1.0s: Lift.translation[0] > 4.9",
+     "value": [
+      5,
+      0.05900002,
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-02.x3d": {
+   "file": "twin-02.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {},
+   "sends": [],
+   "asserts": [],
+   "probe": {
+    "flag_after_click": [
+     0,
+     4,
+     0
+    ]
+   },
+   "all_intent_hold": null
+  },
+  "twin-03.x3d": {
+   "file": "twin-03.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Signal.whichChoice": [
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send SignalClock.startTime = now at 0.2s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 2.6s: Signal.whichChoice == 2",
+     "value": [
+      2
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-04.x3d": {
+   "file": "twin-04.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Door.translation": [
+     0,
+     1.5,
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send AtGate.set_bind = true at 0.3s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 3.0s: Door.translation changed",
+     "value": [
+      0,
+      4.5,
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-05.x3d": {
+   "file": "twin-05.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Rocket.translation": [
+     0,
+     0,
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send Fuse.press = true at 0.2s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 0.8s: Rocket.translation unchanged",
+     "value": [
+      0,
+      0,
+      0
+     ],
+     "holds": true
+    },
+    {
+     "line": "after 3.0s: Rocket.translation changed",
+     "value": [
+      0,
+      7.168,
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-06.x3d": {
+   "file": "twin-06.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Head.rotation": [
+     0,
+     1.00000000000001,
+     0,
+     0.199491372299192
+    ]
+   },
+   "sends": [],
+   "asserts": [
+    {
+     "line": "after 1.5s: Head.rotation changed",
+     "value": [
+      0,
+      1,
+      0,
+      2.55569137229919
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-07.x3d": {
+   "file": "twin-07.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Buoy.translation": [
+     0,
+     0.4123999,
+     0
+    ]
+   },
+   "sends": [],
+   "asserts": [
+    {
+     "line": "after 1.0s: Buoy.translation changed",
+     "value": [
+      0,
+      0.3808002,
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-08.x3d": {
+   "file": "twin-08.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "HallLamp.intensity": [
+     1
+    ]
+   },
+   "sends": [
+    {
+     "line": "send Fade.set_destination = 0.2 at 0.2s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 0.7s: HallLamp.intensity > 0.5",
+     "value": [
+      0.9055182361200909
+     ],
+     "holds": true
+    },
+    {
+     "line": "after 3.2s: HallLamp.intensity < 0.3",
+     "value": [
+      0.2
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-09.x3d": {
+   "file": "twin-09.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {},
+   "sends": [],
+   "asserts": [],
+   "probe": {
+    "glow_on_hover_drawer": [
+     1
+    ],
+    "lamp_while_held_on_drawer": [
+     1
+    ],
+    "lamp_while_held_on_body": [
+     1
+    ],
+    "lamp_after_release": [
+     0
+    ]
+   },
+   "all_intent_hold": null
+  },
+  "twin-10.x3d": {
+   "file": "twin-10.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "WorkLamp.on": [
+     1
+    ]
+   },
+   "sends": [
+    {
+     "line": "send TurnOff.set_triggerTime = now at 0.3s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 1.0s: WorkLamp.on changed",
+     "value": [
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-11.x3d": {
+   "file": "twin-11.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {},
+   "sends": [],
+   "asserts": [],
+   "probe": {
+    "blades_rotation_t0": [
+     0,
+     0,
+     1,
+     2.13000471611023
+    ],
+    "blades_rotation_t1": [
+     0,
+     0,
+     1,
+     6.0004570186615
+    ]
+   },
+   "all_intent_hold": null
+  },
+  "twin-12.x3d": {
+   "file": "twin-12.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {},
+   "sends": [],
+   "asserts": [],
+   "probe": {
+    "frames": 278,
+    "max_frame_to_frame_jump": 0.10400000000000009
+   },
+   "all_intent_hold": null
+  },
+  "twin-13.x3d": {
+   "file": "twin-13.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Arm.rotation": [
+     0,
+     0,
+     1,
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send Drive.startTime = now at 0.2s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 1.4s: Arm.rotation[3] < 1.0",
+     "value": [
+      0,
+      0,
+      1,
+      0.619942407989501
+     ],
+     "holds": true
+    },
+    {
+     "line": "after 3.8s: Arm.rotation[3] > 1.5",
+     "value": [
+      0,
+      0,
+      1,
+      1.5708
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-14.x3d": {
+   "file": "twin-14.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "WarningLamp.on": [
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send FreezeNow.set_boolean = true at 0.3s",
+     "error": null
+    },
+    {
+     "line": "send CarryOn.set_boolean = true at 0.9s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 1.6s: WarningLamp.on unchanged",
+     "value": [
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-15.x3d": {
+   "file": "twin-15.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {},
+   "sends": [],
+   "asserts": [],
+   "probe": {
+    "before": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "held": [
+     0,
+     0,
+     1.00000000000023,
+     6.22350943222047
+    ],
+    "released_a": [
+     0,
+     0,
+     1.00000000000023,
+     6.22350943222047
+    ],
+    "released_b": [
+     0,
+     0,
+     1.00000000000023,
+     6.22350943222047
+    ]
+   },
+   "all_intent_hold": null
+  },
+  "twin-16.x3d": {
+   "file": "twin-16.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "ReadingLight.on": [
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send GoClose.set_triggerTime = now at 0.3s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 3.0s: ReadingLight.on changed",
+     "value": [
+      1
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-17.x3d": {
+   "file": "twin-17.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Cart.translation": [
+     -4,
+     0,
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send Raise.startTime = now at 0.2s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 1.0s: Cart.translation unchanged",
+     "value": [
+      -4,
+      0,
+      0
+     ],
+     "holds": true
+    },
+    {
+     "line": "after 3.4s: Cart.translation[0] > 3.9",
+     "value": [
+      4,
+      0,
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-18.x3d": {
+   "file": "twin-18.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Crate.translation": [
+     -3,
+     0,
+     0
+    ]
+   },
+   "sends": [
+    {
+     "line": "send Mover.nudge = true at 0.3s",
+     "error": null
+    }
+   ],
+   "asserts": [
+    {
+     "line": "after 1.0s: Crate.translation changed",
+     "value": [
+      -2,
+      0,
+      0
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  },
+  "twin-19.x3d": {
+   "file": "twin-19.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {},
+   "sends": [],
+   "asserts": [],
+   "probe": {
+    "end_of_drag_1": [
+     1.366904,
+     0,
+     0
+    ],
+    "start_of_drag_2": [
+     1.366904,
+     0.1366904,
+     0
+    ],
+    "end_of_drag_2": [
+     1.366904,
+     0.8201426,
+     0
+    ]
+   },
+   "all_intent_hold": null
+  },
+  "twin-20.x3d": {
+   "file": "twin-20.x3d",
+   "consoleErrors": [],
+   "consoleWarnings": [],
+   "engine": {
+    "name": "X_ITE",
+    "version": "16.8.0"
+   },
+   "gl": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "unknown_intent_lines": [],
+   "baseline": {
+    "Turntable.rotation": [
+     0,
+     1.00000000000001,
+     0,
+     0.223053537082669
+    ]
+   },
+   "sends": [],
+   "asserts": [
+    {
+     "line": "after 2.5s: Turntable.rotation changed",
+     "value": [
+      0,
+      1,
+      0,
+      2.19911996254921
+     ],
+     "holds": true
+    }
+   ],
+   "all_intent_hold": true
+  }
+ }
+}

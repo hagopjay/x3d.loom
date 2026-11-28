@@ -24,13 +24,12 @@
 "P02-array-not-rising": 33
 },
 "cells_by_state": {
-"caught": 4742,
-"needs-intent": 68,
-"no-probe": 678,
-"not-a-mistake": 16,
+"caught": 4845,
+"needs-intent": 97,
+"no-probe": 682,
+"not-a-mistake": 39,
 "probe-broken": 28,
-"unprobed": 160,
-"xsd": 810
+"xsd": 811
 },
 "read_this_first": "A count of cells is a count of this grid, which holds only the classes in classes.json. It is not a count of the ways an X3D scene can be wrong.",
 "cells": [
@@ -656,7 +655,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "Analyser.resumeTime:F06-route-type",
@@ -678,7 +681,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "Analyser.smoothingTimeConstant:F01-range",
@@ -723,7 +728,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"note": "on a node with no loop field a start long past still plays: there is no cycle to have ended"
 },
 {
 "cell": "Analyser.stopTime:F06-route-type",
@@ -745,7 +752,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "Analyser.style:F06-route-type",
@@ -790,7 +801,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.tailTime 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "Analyser.minDecibels:P01-low-above-high",
@@ -924,7 +937,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "Anchor.autoRefreshTimeLimit:F01-range",
@@ -956,7 +973,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "Anchor.bboxCenter:F04-route-to-non-input",
@@ -1174,7 +1195,8 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "no-probe",
+"probe": "the node may point at a file of any kind, so no address is of the wrong kind"
 },
 {
 "cell": "Anchor.visible:F06-route-type",
@@ -2066,7 +2088,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "AudioClip.autoRefreshTimeLimit:F01-range",
@@ -2098,7 +2124,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "AudioClip.class:F06-route-type",
@@ -2371,7 +2401,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "AudioClip.pitch:F01-range",
@@ -2416,7 +2450,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "AudioClip.startTime:F06-route-type",
@@ -2438,7 +2474,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"check": [
+"clock-start-in-past"
+]
 },
 {
 "cell": "AudioClip.stopTime:F06-route-type",
@@ -2460,7 +2500,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "AudioClip.style:F06-route-type",
@@ -2495,7 +2539,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.url names a .png file against a .wav file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "AudioClip.startTime:P01-low-above-high",
@@ -2505,9 +2553,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "P01-low-above-high",
-"state": "not-a-mistake",
+"state": "caught",
 "probe": "startTime=2 with stopTime=1, against the two swapped",
-"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
+"check": [
+"clock-start-in-past"
+]
 },
 {
 "cell": "AudioClip:N04-def-use",
@@ -2886,7 +2936,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.backUrl names a .x3d file against a .png file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "Background.bindTime:F04-route-to-non-input",
@@ -2934,7 +2988,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.bottomUrl names a .x3d file against a .png file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "Background.class:F06-route-type",
@@ -2969,7 +3027,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.frontUrl names a .x3d file against a .png file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "Background.groundAngle:F01-range",
@@ -3082,7 +3144,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.leftUrl names a .x3d file against a .png file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "Background.metadata:F03-child-type",
@@ -3114,7 +3180,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.rightUrl names a .x3d file against a .png file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "Background.set_bind:F05-route-from-non-output",
@@ -3228,7 +3298,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.topUrl names a .x3d file against a .png file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "Background.transparency:F01-range",
@@ -3283,7 +3357,11 @@
 "cell": "Background:N03-bindable",
 "node": "Background",
 "class": "N03-bindable",
-"state": "unprobed"
+"state": "caught",
+"probe": "a second Background, with no DEF and no ROUTE, after a first Background, against one alone",
+"check": [
+"bindable-never-bound"
+]
 },
 {
 "cell": "Background:N04-def-use",
@@ -4122,7 +4200,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "BiquadFilter.qualityFactor:F01-range",
@@ -4167,7 +4249,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "BiquadFilter.startTime:F06-route-type",
@@ -4189,7 +4273,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"note": "on a node with no loop field a start long past still plays: there is no cycle to have ended"
 },
 {
 "cell": "BiquadFilter.stopTime:F06-route-type",
@@ -4211,7 +4297,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "BiquadFilter.style:F06-route-type",
@@ -4256,7 +4346,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.tailTime 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "BiquadFilter.type:F02-enumeration",
@@ -5900,7 +5992,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "BufferAudioSource.autoRefreshTimeLimit:F01-range",
@@ -5932,7 +6028,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "BufferAudioSource.buffer:F01-range",
@@ -5990,7 +6090,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.bufferDuration 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "BufferAudioSource.bufferlength:F04-route-to-non-input",
@@ -6453,7 +6555,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "BufferAudioSource.playbackRate:F06-route-type",
@@ -6488,7 +6594,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "BufferAudioSource.sampleRate:F01-range",
@@ -6533,7 +6641,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"check": [
+"clock-start-in-past"
+]
 },
 {
 "cell": "BufferAudioSource.stopTime:F06-route-type",
@@ -6555,7 +6667,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "BufferAudioSource.style:F06-route-type",
@@ -6590,7 +6706,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.url names a .png file against a .wav file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "BufferAudioSource.loopStart:P01-low-above-high",
@@ -6612,9 +6732,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "P01-low-above-high",
-"state": "not-a-mistake",
+"state": "caught",
 "probe": "startTime=2 with stopTime=1, against the two swapped",
-"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
+"check": [
+"clock-start-in-past"
+]
 },
 {
 "cell": "BufferAudioSource:N04-def-use",
@@ -10936,7 +11058,11 @@
 "type": "SFTime",
 "accessType": "initializeOnly",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.duration 0 against 1 (a length of time, not a moment)",
+"check": [
+"follower-no-smoothing"
+]
 },
 {
 "cell": "ColorChaser.id:F06-route-type",
@@ -11525,7 +11651,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.tau 0 against 1 (a length of time, not a moment)",
+"check": [
+"follower-no-smoothing"
+]
 },
 {
 "cell": "ColorDamper.tolerance:F06-route-type",
@@ -14214,7 +14344,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "Convolver.resumeTime:F06-route-type",
@@ -14236,7 +14370,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "Convolver.startTime:F06-route-type",
@@ -14258,7 +14394,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"note": "on a node with no loop field a start long past still plays: there is no cycle to have ended"
 },
 {
 "cell": "Convolver.stopTime:F06-route-type",
@@ -14280,7 +14418,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "Convolver.style:F06-route-type",
@@ -14325,7 +14467,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.tailTime 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "Convolver.startTime:P01-low-above-high",
@@ -14569,7 +14713,11 @@
 "type": "SFTime",
 "accessType": "initializeOnly",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.duration 0 against 1 (a length of time, not a moment)",
+"check": [
+"follower-no-smoothing"
+]
 },
 {
 "cell": "CoordinateChaser.id:F06-route-type",
@@ -15068,7 +15216,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.tau 0 against 1 (a length of time, not a moment)",
+"check": [
+"follower-no-smoothing"
+]
 },
 {
 "cell": "CoordinateDamper.tolerance:F06-route-type",
@@ -16554,7 +16706,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "DISEntityTypeMapping.autoRefreshTimeLimit:F01-range",
@@ -16586,7 +16742,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "DISEntityTypeMapping.category:F01-range",
@@ -16948,7 +17108,8 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "no-probe",
+"probe": "the node may point at a file of any kind, so no address is of the wrong kind"
 },
 {
 "cell": "DISEntityTypeMapping:N04-def-use",
@@ -17128,7 +17289,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.delayTime 2 above maxDelayTime 1, against 1 and 2",
+"check": [
+"low-above-high"
+]
 },
 {
 "cell": "Delay.description:F06-route-type",
@@ -17313,7 +17478,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.delayTime 2 above maxDelayTime 1, against 1 and 2",
+"check": [
+"low-above-high"
+]
 },
 {
 "cell": "Delay.metadata:F03-child-type",
@@ -17345,7 +17514,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "Delay.resumeTime:F06-route-type",
@@ -17367,7 +17540,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "Delay.startTime:F06-route-type",
@@ -17389,7 +17564,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"note": "on a node with no loop field a start long past still plays: there is no cycle to have ended"
 },
 {
 "cell": "Delay.stopTime:F06-route-type",
@@ -17411,7 +17588,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "Delay.style:F06-route-type",
@@ -17456,7 +17637,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.tailTime 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "Delay.startTime:P01-low-above-high",
@@ -18572,7 +18755,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.attack 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "DynamicsCompressor.channelCount:F04-route-to-non-input",
@@ -18875,7 +19060,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "DynamicsCompressor.ratio:F01-range",
@@ -18966,7 +19155,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.release 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "DynamicsCompressor.resumeTime:F06-route-type",
@@ -18988,7 +19179,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "DynamicsCompressor.startTime:F06-route-type",
@@ -19010,7 +19203,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"note": "on a node with no loop field a start long past still plays: there is no cycle to have ended"
 },
 {
 "cell": "DynamicsCompressor.stopTime:F06-route-type",
@@ -19032,7 +19227,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "DynamicsCompressor.style:F06-route-type",
@@ -19077,7 +19276,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.tailTime 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "DynamicsCompressor.threshold:F01-range",
@@ -21363,7 +21564,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.readInterval 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "EspduTransform.removeChildren:F03-child-type",
@@ -21787,7 +21990,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.writeInterval 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "EspduTransform:N01-sensor-unheard",
@@ -23131,7 +23336,11 @@
 "cell": "Fog:N03-bindable",
 "node": "Fog",
 "class": "N03-bindable",
-"state": "unprobed"
+"state": "caught",
+"probe": "a second Fog, with no DEF and no ROUTE, after a first Fog, against one alone",
+"check": [
+"bindable-never-bound"
+]
 },
 {
 "cell": "Fog:N04-def-use",
@@ -23958,7 +24167,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "Gain.resumeTime:F06-route-type",
@@ -23980,7 +24193,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "Gain.startTime:F06-route-type",
@@ -24002,7 +24217,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"note": "on a node with no loop field a start long past still plays: there is no cycle to have ended"
 },
 {
 "cell": "Gain.stopTime:F06-route-type",
@@ -24024,7 +24241,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "Gain.style:F06-route-type",
@@ -24069,7 +24290,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.tailTime 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "Gain.startTime:P01-low-above-high",
@@ -25209,7 +25432,11 @@
 "type": "MFString",
 "accessType": "initializeOnly",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.child1Url names a .png file against a .x3d file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "GeoLOD.child2Url:F04-route-to-non-input",
@@ -25244,7 +25471,11 @@
 "type": "MFString",
 "accessType": "initializeOnly",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.child2Url names a .png file against a .x3d file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "GeoLOD.child3Url:F04-route-to-non-input",
@@ -25279,7 +25510,11 @@
 "type": "MFString",
 "accessType": "initializeOnly",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.child3Url names a .png file against a .x3d file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "GeoLOD.child4Url:F04-route-to-non-input",
@@ -25314,7 +25549,11 @@
 "type": "MFString",
 "accessType": "initializeOnly",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.child4Url names a .png file against a .x3d file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "GeoLOD.children:F03-child-type",
@@ -25563,7 +25802,11 @@
 "type": "MFString",
 "accessType": "initializeOnly",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.rootUrl names a .png file against a .x3d file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "GeoLOD.style:F06-route-type",
@@ -26004,7 +26247,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "GeoMetadata.autoRefreshTimeLimit:F01-range",
@@ -26036,7 +26283,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "GeoMetadata.class:F06-route-type",
@@ -26169,7 +26420,8 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "no-probe",
+"probe": "the node may point at a file of any kind, so no address is of the wrong kind"
 },
 {
 "cell": "GeoMetadata:N04-def-use",
@@ -28293,7 +28545,9 @@
 "cell": "GeoViewpoint:N03-bindable",
 "node": "GeoViewpoint",
 "class": "N03-bindable",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "a second GeoViewpoint, with no DEF and no ROUTE, after a first GeoViewpoint, against one alone",
+"note": "a browser lists every viewpoint for the user to pick, so a later one is reachable without a ROUTE"
 },
 {
 "cell": "GeoViewpoint:N04-def-use",
@@ -30023,7 +30277,8 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "xsd",
+"probe": "A.frameDuration 0 against 1 (a length of time, not a moment)"
 },
 {
 "cell": "HAnimMotion.frameIncrement:F06-route-type",
@@ -31048,7 +31303,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "ImageCubeMapTexture.autoRefreshTimeLimit:F01-range",
@@ -31080,7 +31339,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "ImageCubeMapTexture.class:F06-route-type",
@@ -31224,7 +31487,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.url names a .x3d file against a .png file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "ImageCubeMapTexture:N04-def-use",
@@ -31312,7 +31579,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "ImageTexture.autoRefreshTimeLimit:F01-range",
@@ -31344,7 +31615,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "ImageTexture.class:F06-route-type",
@@ -31539,7 +31814,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.url names a .x3d file against a .png file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "ImageTexture:N04-def-use",
@@ -31627,7 +31906,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "ImageTexture3D.autoRefreshTimeLimit:F01-range",
@@ -31659,7 +31942,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "ImageTexture3D.class:F06-route-type",
@@ -31880,7 +32167,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.url names a .x3d file against a .nrrd file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "ImageTexture3D:N04-def-use",
@@ -34461,7 +34752,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "Inline.autoRefreshTimeLimit:F01-range",
@@ -34493,7 +34788,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "Inline.bboxCenter:F04-route-to-non-input",
@@ -34681,7 +34980,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.url names a .png file against a .x3d file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "Inline.visible:F06-route-type",
@@ -38268,7 +38571,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "ListenerPointSource.position:F06-route-type",
@@ -38303,7 +38610,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "ListenerPointSource.startTime:F06-route-type",
@@ -38325,7 +38634,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"note": "on a node with no loop field a start long past still plays: there is no cycle to have ended"
 },
 {
 "cell": "ListenerPointSource.stopTime:F06-route-type",
@@ -38347,7 +38658,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "ListenerPointSource.style:F06-route-type",
@@ -38675,7 +38990,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.timeOut 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "LoadSensor:N01-sensor-unheard",
@@ -40716,7 +41033,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "MicrophoneSource.resumeTime:F06-route-type",
@@ -40738,7 +41059,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "MicrophoneSource.startTime:F06-route-type",
@@ -40760,7 +41083,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"note": "on a node with no loop field a start long past still plays: there is no cycle to have ended"
 },
 {
 "cell": "MicrophoneSource.stopTime:F06-route-type",
@@ -40782,7 +41107,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "MicrophoneSource.style:F06-route-type",
@@ -41430,7 +41759,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "MovieTexture.autoRefreshTimeLimit:F01-range",
@@ -41462,7 +41795,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "MovieTexture.class:F06-route-type",
@@ -41735,7 +42072,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "MovieTexture.pitch:F01-range",
@@ -41832,7 +42173,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "MovieTexture.speed:F06-route-type",
@@ -41867,7 +42210,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"check": [
+"clock-start-in-past"
+]
 },
 {
 "cell": "MovieTexture.stopTime:F06-route-type",
@@ -41889,7 +42236,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "MovieTexture.style:F06-route-type",
@@ -41954,7 +42305,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.url names a .x3d file against a .mp4 file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "MovieTexture.startTime:P01-low-above-high",
@@ -41964,9 +42319,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "P01-low-above-high",
-"state": "not-a-mistake",
+"state": "caught",
 "probe": "startTime=2 with stopTime=1, against the two swapped",
-"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
+"check": [
+"clock-start-in-past"
+]
 },
 {
 "cell": "MovieTexture:N04-def-use",
@@ -42716,7 +43073,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.transitionTime 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "NavigationInfo.transitionType:F06-route-type",
@@ -42771,7 +43130,11 @@
 "cell": "NavigationInfo:N03-bindable",
 "node": "NavigationInfo",
 "class": "N03-bindable",
-"state": "unprobed"
+"state": "caught",
+"probe": "a second NavigationInfo, with no DEF and no ROUTE, after a first NavigationInfo, against one alone",
+"check": [
+"bindable-never-bound"
+]
 },
 {
 "cell": "NavigationInfo:N04-def-use",
@@ -46790,7 +47153,11 @@
 "type": "SFTime",
 "accessType": "initializeOnly",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.duration 0 against 1 (a length of time, not a moment)",
+"check": [
+"follower-no-smoothing"
+]
 },
 {
 "cell": "OrientationChaser.id:F06-route-type",
@@ -47289,7 +47656,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.tau 0 against 1 (a length of time, not a moment)",
+"check": [
+"follower-no-smoothing"
+]
 },
 {
 "cell": "OrientationDamper.tolerance:F06-route-type",
@@ -47883,7 +48254,9 @@
 "cell": "OrthoViewpoint:N03-bindable",
 "node": "OrthoViewpoint",
 "class": "N03-bindable",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "a second OrthoViewpoint, with no DEF and no ROUTE, after a first OrthoViewpoint, against one alone",
+"note": "a browser lists every viewpoint for the user to pick, so a later one is reachable without a ROUTE"
 },
 {
 "cell": "OrthoViewpoint:N04-def-use",
@@ -48186,7 +48559,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "OscillatorSource.periodicWave:F03-child-type",
@@ -48218,7 +48595,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "OscillatorSource.startTime:F06-route-type",
@@ -48240,7 +48619,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"note": "on a node with no loop field a start long past still plays: there is no cycle to have ended"
 },
 {
 "cell": "OscillatorSource.stopTime:F06-route-type",
@@ -48262,7 +48643,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "OscillatorSource.style:F06-route-type",
@@ -48402,7 +48787,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "PackagedShader.autoRefreshTimeLimit:F01-range",
@@ -48434,7 +48823,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "PackagedShader.class:F06-route-type",
@@ -48633,7 +49026,8 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "no-probe",
+"probe": "the node may point at a file of any kind, so no address is of the wrong kind"
 },
 {
 "cell": "PackagedShader:N04-def-use",
@@ -52875,7 +53269,11 @@
 "type": "SFTime",
 "accessType": "initializeOnly",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.duration 0 against 1 (a length of time, not a moment)",
+"check": [
+"follower-no-smoothing"
+]
 },
 {
 "cell": "PositionChaser.id:F06-route-type",
@@ -53183,7 +53581,9 @@
 "type": "SFTime",
 "accessType": "initializeOnly",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.duration 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "PositionChaser2D.id:F06-route-type",
@@ -53682,7 +54082,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.tau 0 against 1 (a length of time, not a moment)",
+"check": [
+"follower-no-smoothing"
+]
 },
 {
 "cell": "PositionDamper.tolerance:F06-route-type",
@@ -54026,7 +54430,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.tau 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "PositionDamper2D.tolerance:F06-route-type",
@@ -56419,7 +56825,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.readInterval 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "ReceiverPdu.receivedPower:F06-route-type",
@@ -56641,7 +57049,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.writeInterval 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "ReceiverPdu:N01-sensor-unheard",
@@ -57063,7 +57473,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.disableTime 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "RigidBody.enabled:F06-route-type",
@@ -57610,7 +58022,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.disableTime 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "RigidBodyCollection.enabled:F06-route-type",
@@ -57912,7 +58326,11 @@
 "type": "SFTime",
 "accessType": "initializeOnly",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.duration 0 against 1 (a length of time, not a moment)",
+"check": [
+"follower-no-smoothing"
+]
 },
 {
 "cell": "ScalarChaser.id:F06-route-type",
@@ -58407,7 +58825,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.tau 0 against 1 (a length of time, not a moment)",
+"check": [
+"follower-no-smoothing"
+]
 },
 {
 "cell": "ScalarDamper.tolerance:F06-route-type",
@@ -59235,7 +59657,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "Script.autoRefreshTimeLimit:F01-range",
@@ -59267,7 +59693,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "Script.class:F06-route-type",
@@ -59454,7 +59884,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.url names a .png file against a .js file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "Script:N04-def-use",
@@ -60020,7 +60454,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "ShaderPart.autoRefreshTimeLimit:F01-range",
@@ -60052,7 +60490,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "ShaderPart.class:F06-route-type",
@@ -60202,7 +60644,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.url names a .png file against a .glsl file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "ShaderPart:N04-def-use",
@@ -60290,7 +60736,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "ShaderProgram.autoRefreshTimeLimit:F01-range",
@@ -60322,7 +60772,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A reloads every 10 s but stops reloading after 5 s, against after 60 s",
+"check": [
+"refresh-limit-below-interval"
+]
 },
 {
 "cell": "ShaderProgram.class:F06-route-type",
@@ -60482,7 +60936,11 @@
 "type": "MFString",
 "accessType": "inputOutput",
 "class": "F08-address",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.url names a .png file against a .glsl file",
+"check": [
+"url-wrong-kind"
+]
 },
 {
 "cell": "ShaderProgram:N04-def-use",
@@ -61271,7 +61729,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.readInterval 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "SignalPdu.rtpHeaderExpected:F06-route-type",
@@ -61454,7 +61914,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.writeInterval 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "SignalPdu:N01-sensor-unheard",
@@ -65697,7 +66159,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "StreamAudioSource.resumeTime:F06-route-type",
@@ -65719,7 +66185,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "StreamAudioSource.startTime:F06-route-type",
@@ -65741,7 +66209,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"note": "on a node with no loop field a start long past still plays: there is no cycle to have ended"
 },
 {
 "cell": "StreamAudioSource.stopTime:F06-route-type",
@@ -65763,7 +66233,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "StreamAudioSource.streamIdentifier:F06-route-type",
@@ -66678,7 +67152,9 @@
 "type": "SFTime",
 "accessType": "initializeOnly",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.duration 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "TexCoordChaser2D.id:F06-route-type",
@@ -67177,7 +67653,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.tau 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "TexCoordDamper2D.tolerance:F06-route-type",
@@ -67903,7 +68381,11 @@
 "cell": "TextureBackground:N03-bindable",
 "node": "TextureBackground",
 "class": "N03-bindable",
-"state": "unprobed"
+"state": "caught",
+"probe": "a second TextureBackground, with no DEF and no ROUTE, after a first Background, against one alone",
+"check": [
+"bindable-never-bound"
+]
 },
 {
 "cell": "TextureBackground:N04-def-use",
@@ -70236,7 +70718,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.cycleInterval 0 against 1 (a length of time, not a moment)",
+"check": [
+"cycle-interval-zero"
+]
 },
 {
 "cell": "TimeSensor.cycleTime:F01-range",
@@ -70483,7 +70969,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"timesensor-paused-forever"
+]
 },
 {
 "cell": "TimeSensor.resumeTime:F06-route-type",
@@ -70505,7 +70995,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "TimeSensor.startTime:F06-route-type",
@@ -70527,7 +71019,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"check": [
+"timesensor-start-in-past"
+]
 },
 {
 "cell": "TimeSensor.stopTime:F06-route-type",
@@ -70549,7 +71045,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"timesensor-stopped-in-past"
+]
 },
 {
 "cell": "TimeSensor.style:F06-route-type",
@@ -72686,7 +73186,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.readInterval 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "TransmitterPdu.relativeAntennaLocation:F06-route-type",
@@ -72869,7 +73371,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.writeInterval 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "TransmitterPdu:N01-sensor-unheard",
@@ -75220,7 +75724,9 @@
 "cell": "Viewpoint:N03-bindable",
 "node": "Viewpoint",
 "class": "N03-bindable",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "a second Viewpoint, with no DEF and no ROUTE, after a first Viewpoint, against one alone",
+"note": "a browser lists every viewpoint for the user to pick, so a later one is reachable without a ROUTE"
 },
 {
 "cell": "Viewpoint:N04-def-use",
@@ -77247,7 +77753,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.pauseTime 3 (paused since 1970) against none",
+"check": [
+"clock-paused-forever"
+]
 },
 {
 "cell": "WaveShaper.resumeTime:F06-route-type",
@@ -77269,7 +77779,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.resumeTime 0 against 1 (a length of time, not a moment)",
+"note": "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"
 },
 {
 "cell": "WaveShaper.startTime:F06-route-type",
@@ -77291,7 +77803,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "not-a-mistake",
+"probe": "A.startTime 3 with loop false against a looping clock",
+"note": "on a node with no loop field a start long past still plays: there is no cycle to have ended"
 },
 {
 "cell": "WaveShaper.stopTime:F06-route-type",
@@ -77313,7 +77827,11 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "caught",
+"probe": "A.stopTime 5 (stopped in 1970) against none",
+"check": [
+"clock-stopped-in-past"
+]
 },
 {
 "cell": "WaveShaper.style:F06-route-type",
@@ -77358,7 +77876,9 @@
 "type": "SFTime",
 "accessType": "inputOutput",
 "class": "F09-time",
-"state": "unprobed"
+"state": "needs-intent",
+"probe": "A.tailTime 0 against 1 (a length of time, not a moment)",
+"note": "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01"
 },
 {
 "cell": "WaveShaper.startTime:P01-low-above-high",

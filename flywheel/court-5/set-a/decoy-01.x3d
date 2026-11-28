@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name="intent:prose" content="A lead ball slides from side to side while changing colour, and a second ball below copies every move the lead ball makes."/>
+    <meta name="intent" content="after 1.2s: Follower.translation changed"/>
+  </head>
+  <Scene>
+    <Viewpoint description='Pair' position='0 0 10'/>
+    <TimeSensor DEF='Clock' cycleInterval='3' loop='true'/>
+    <PositionInterpolator DEF='Slide' key='0 0.5 1' keyValue='-3 0 0  3 0 0  -3 0 0'/>
+    <ColorInterpolator DEF='Tint' key='0 0.5 1' keyValue='1 0 0  0 0 1  1 0 0'/>
+    <Transform translation='0 1 0'>
+      <Transform DEF='Leader'>
+        <Shape><Appearance><Material DEF='LeadPaint' diffuseColor='1 0 0'/></Appearance><Sphere radius='0.5'/></Shape>
+        <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Slide' toField='set_fraction'/>
+        <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Tint' toField='set_fraction'/>
+      </Transform>
+    </Transform>
+    <Transform translation='0 -1 0'>
+      <Transform DEF='Follower'>
+        <Shape><Appearance><Material diffuseColor='0.6 0.6 0.6'/></Appearance><Sphere radius='0.5'/></Shape>
+      </Transform>
+    </Transform>
+    <ROUTE fromNode='Slide' fromField='value_changed' toNode='Leader' toField='set_translation'/>
+    <ROUTE fromNode='Tint' fromField='value_changed' toNode='LeadPaint' toField='set_diffuseColor'/>
+    <ROUTE fromNode='Leader' fromField='translation_changed' toNode='Follower' toField='set_translation'/>
+  </Scene>
+</X3D>

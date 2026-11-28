@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <component name='CADGeometry' level='2'/>
+    <meta name='title' content='Set b scene 19'/>
+    <meta name="intent:prose" content="An angle bracket is described as a CAD part whose single face is built from two quadrilateral plates, one lying flat and one standing up, meeting along an edge."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Bracket' position='3 3 6' orientation='-0.63 0.76 0.17 0.6'/>
+    <CADAssembly DEF='BracketAssembly' name='BracketAssembly'>
+      <CADPart DEF='Angle' name='Angle'>
+        <CADFace name='Plates'>
+          <Shape containerField='shape'>
+            <Appearance><Material diffuseColor='0.6 0.6 0.7'/></Appearance>
+            <IndexedQuadSet solid='false' index='0 1 2 3 4 5 6 7'>
+              <Coordinate point='-1 0 1, 1 0 1, 1 0 -1, -1 0 -1, -1 0 -1, 1 0 -1, 1 2 -1, -1 2 -1'/>
+            </IndexedQuadSet>
+          </Shape>
+        </CADFace>
+      </CADPart>
+    </CADAssembly>
+  </Scene>
+</X3D>

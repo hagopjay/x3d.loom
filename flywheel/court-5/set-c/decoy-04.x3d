@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='intent:prose' content='A beacon is shown in detail up close, simplified further off, and not drawn at all once the camera has backed far away.'/>
+    <meta name='intent' content='send Retreat.startTime = now at 0.2s'/>
+    <meta name='intent' content='after 3.5s: Beacon.level_changed == 2'/>
+  </head>
+  <Scene>
+    <Background skyColor='0.1 0.1 0.2'/>
+    <Viewpoint DEF='Camera' description='Retreat' position='0 0 5'/>
+    <LOD DEF='Beacon' range='20 50' forceTransitions='true'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0 0 0' emissiveColor='1 0.6 0.1'/>
+        </Appearance>
+        <Sphere radius='0.8'/>
+      </Shape>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0 0 0' emissiveColor='1 0.6 0.1'/>
+        </Appearance>
+        <Box size='1.2 1.2 1.2'/>
+      </Shape>
+      <Group/>
+    </LOD>
+    <TimeSensor DEF='Retreat' cycleInterval='2'/>
+    <PositionInterpolator DEF='Path' key='0 1' keyValue='0 0 5 0 0 90'/>
+    <ROUTE fromNode='Retreat' fromField='fraction_changed' toNode='Path' toField='set_fraction'/>
+    <ROUTE fromNode='Path' fromField='value_changed' toNode='Camera' toField='set_position'/>
+  </Scene>
+</X3D>

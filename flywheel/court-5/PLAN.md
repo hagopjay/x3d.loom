@@ -3,7 +3,7 @@
 28 November 2026. Asked for by the project owner: "do we have and can we strengthen fortify the strategy for
 closing the gap properly, scientifically without tricks", then "pls continue with specifyin and scaffolding Court
 5's standing plan". This file is the plan. It is not a pre-registration: no set is sealed and no kernel is frozen
-yet. `PREREG-DRAFT.md` is the form that becomes binding at the freeze. Everything in the folder beside this file
+yet. `PREREG.md` is the form that becomes binding at the freeze. Everything in the folder beside this file
 is scaffold that has been run once on a dummy set (`dry-run/`), and nothing here is a result.
 
 ## The gap, in the numbers we already have
@@ -112,14 +112,14 @@ above or a gate below, except P6, which only arm S addresses.
 | Gate | Done when | State |
 |---|---|---|
 | G0 plan | this folder is merged | this pull request |
-| G1 kernel turn | grid probed class by class, checks written, each labelled in `provenance.json`; the nine file-stateable court 4 misses handled as `misses` | two passes done 28 Nov (`grid/PROBE-RESULTS.md`): 14 of 17 classes probed, old kernel `2943b78` left 167 cells missed and crashed on 6, new kernel `d446f94` (x3d_mcp pull request 44) closes all; one-field classes were 97.4% closed before, the two relation classes 40%; still to do: relations from the standard's prose, three unprobed classes, the nine court 4 misses |
-| G2 dry run | `dry-run/run.sh` passes on the frozen scripts with the frozen kernel | passes today on the scaffold (old `ebe969b`, new `2943b78`, X_ITE 16.8.0) |
-| G3 seal | three fresh authors, forbidden every repository and memory, return the fixed form and a hash | DONE 28 Nov: arm S and sets a, b, c sealed (owner's go 13:49 UTC); hashes and the authors' counts are in `PREREG-DRAFT.md`; 60 faults, 60 twins, 15 decoys in arm F |
-| G4 freeze | kernel commit and `PREREG.md` pushed before any archive is opened | |
-| G5 open | intent stripped, both kernels run once, play test run once | |
-| G6 read | a fresh second reader, blind to which kernel said what, and the editor's reading written first | |
-| G7 results | `RESULTS.md`, ledger turn, fold-back to x3d.docs | |
-| G8 retire | the set is marked seen | |
+| G1 kernel turn | grid probed class by class, checks written, each labelled in `provenance.json`; the nine file-stateable court 4 misses handled as `misses` | two passes done 28 Nov (`grid/PROBE-RESULTS.md`): 14 of 17 classes probed, old kernel `2943b78` left 167 cells missed and crashed on 6, new kernel `d446f94` (x3d_mcp pull request 44) closes all; one-field classes were 97.4% closed before, the two relation classes 40%; still to do: relations from the standard's prose, three unprobed classes, the nine court 4 misses Third pass 28 Nov after the seal and before the freeze: all 17 classes probed, 86 more cells closed (addresses, time, bindable nodes), six `misses` checks from court 4; frozen kernel `4040fe1` closes 5,656 cells, none missed. |
+| G2 dry run | `dry-run/run.sh` passes on the frozen scripts with the frozen kernel | passes today on the scaffold (old `ebe969b`, new `2943b78`, X_ITE 16.8.0); passed again 28 Nov on the frozen kernel (old `2943b78`, new `4040fe1`) |
+| G3 seal | three fresh authors, forbidden every repository and memory, return the fixed form and a hash | DONE 28 Nov: arm S and sets a, b, c sealed (owner's go 13:49 UTC); hashes and the authors' counts are in `PREREG.md`; 60 faults, 60 twins, 15 decoys in arm F |
+| G4 freeze | kernel commit and `PREREG.md` pushed before any archive is opened | DONE 28 Nov: x3d_mcp `4040fe1`, `PREREG.md` in the commit that carries this line |
+| G5 open | intent stripped, both kernels run once, play test run once | DONE 28 Nov: four archives opened after the freeze, hashes matched |
+| G6 read | a fresh second reader, blind to which kernel said what, and the editor's reading written first | DONE 28 Nov: two blind readers, one per arm, `results/arm-*/reader-verdicts.json`; the editor's reading was NOT written first (a departure, listed in `RESULTS.md`) |
+| G7 results | `RESULTS.md`, ledger turn, fold-back to x3d.docs | DONE 28 Nov: `RESULTS.md`; headline 20 of 56 for both kernels |
+| G8 retire | the set is marked seen | court 5 is a seen set from 28 Nov |
 
 ## The stranger arm: open, and the owner's choice
 
@@ -157,7 +157,7 @@ authors write both the scene and the statement of what it is for.
 | Path | What | Run today |
 |---|---|---|
 | `PLAN.md` | this plan | |
-| `PREREG-DRAFT.md` | the form to complete and rename at the freeze | |
+| `PREREG.md` | the form to complete and rename at the freeze | |
 | `prior/build_prior.py`, `prior-mistakes.json`, `prior-mistakes.txt` | the 120 earlier planted mistakes, one line each | yes |
 | `grid/classes.json`, `grid/build_grid.py`, `grid/grid.json` | 17 classes, the builder, 6,502 cells with the state of each on the new kernel | yes |
 | `grid/probe.py`, `grid/PROBE-RESULTS.md`, `grid/probe-kernel-*.json` | the probe generator, what it found, and its summary on the old and the new kernel | yes |

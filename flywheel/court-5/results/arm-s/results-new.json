@@ -1,0 +1,457 @@
+{
+ "kernel": "4040fe1152d83d56ad2bde0d9987404a561424c4",
+ "dirty": false,
+ "reads_the_folder": true,
+ "src_sha256": {
+  "__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "autofix.py": "79500c73b7d1a95ad0c4ba42f04860ca8a50f38bdc0abd5f581d5dfa73763072",
+  "court4_checks.py": "807ded532c175bc5567a2610e847611bc366e09fd7dc48d10c166d74c7fdadb2",
+  "data_checks.py": "ccaf5c464b1b795265f8bb329a7ad4fbc50377c280d4f03340c6fbae448a4f38",
+  "defuse.py": "615356ab67783894d10e39866c3fd429f71e4798e50e1afe6e43d4f5290c7285",
+  "hints.py": "42d6f194e76ee55a2be202a119e021339796a241c699dbf8eb2a49a39d11d520",
+  "inert_checks.py": "e1a568f0e75eb45e314d128d71df56617afe52bdc867f082b2619f29fd790814",
+  "listvalues.py": "9b5ad661b0f12efedb0cde0c6b7c64cd1ffc5b70a667f7c2b48ebdd02d473cf4",
+  "llm_schema.py": "7197fd54f4464dbe0ea9619de281de50d58ef535ab4969ae5ee30eeb188a5e7f",
+  "model_checks.py": "983a9c9ab56ea8e7c3f0988334234919bad6a88ef93425111917df73709b2c8f",
+  "oversize.py": "8e80d694d7f63daf0ccf6fb149c7a71b7857f7642b8a1477eecf9760c946bd23",
+  "plays_checks.py": "13eae5f93be99d7e9b0b45b0a3138249ec852085221743972de6b8cb54940384",
+  "profile.py": "fc716b832034d728892cabf9960a4de22e9a4d58bde1833af25f0eee71f8f5f6",
+  "repair.py": "f9e38d26aaabf9d1cffb0dc7cc07d6a7f287f9211ae6b287034ce372d9e541d1",
+  "semantic.py": "6df3b0f80fa11d1f61d5c6da0b5e331fe6da4e746bb81058949b014dc725750c",
+  "simready_checks.py": "8d6e1d792b72c1218d56678cf867bce524fa51f4339545710c9a99d4acd9669a",
+  "simready_vocab.py": "cbc7214a120c810d61d3ffb0de48a4e2ac4b00b553410c331c42ba9d00ae4f21",
+  "splat_arrays.py": "88692a03a68df7688e49cd73b5c2d4715c252d4fc6a350c9d11200d9c6c44160",
+  "usd_checks.py": "267f08ccb13873656e881a6acae528ccff6ca6a7625c46ce72863bb55a7d1c58",
+  "validate.py": "bbae82aa7ae930acf1e632bec18b785ab106cdf63757077304b4718377870959"
+ },
+ "files": {
+  "s/decoy-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/decoy-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "shape-no-appearance",
+     "message": "Shape has no Appearance. The shape will render with a default white material.",
+     "node": "Shape",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "shape-no-appearance",
+     "message": "Shape has no Appearance. The shape will render with a default white material.",
+     "node": "Shape",
+     "DEF": ""
+    }
+   ]
+  },
+  "s/decoy-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/decoy-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Pillar' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Pillar"
+    },
+    {
+     "level": "info",
+     "check": "shape-no-appearance",
+     "message": "Shape has no Appearance. The shape will render with a default white material.",
+     "node": "Shape",
+     "DEF": ""
+    }
+   ]
+  },
+  "s/decoy-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/fault-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/fault-02.x3d": {
+   "xsd": {
+    "valid": false,
+    "errors": [
+     "Line 20: Element 'Inline': This element is not expected. Expected is one of ( Box, Cone, Cylinder, IndexedFaceSet, IndexedLineSet, IndexedTriangleFanSet, IndexedTriangleSet, IndexedTriangleStripSet, LineSet, PointSet )."
+    ]
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "containerfield-unknown",
+     "message": "Inline containerField='children' but Shape has no field named 'children'. Inline's default containerField is 'children', which does not fit a Shape -- an explicit containerField is required here.",
+     "node": "Inline",
+     "DEF": ""
+    },
+    {
+     "level": "warning",
+     "check": "shape-no-geometry",
+     "message": "Shape has no geometry child. Add a geometry node like Box, Sphere, or IndexedFaceSet.",
+     "node": "Shape",
+     "DEF": ""
+    }
+   ]
+  },
+  "s/fault-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/fault-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "warning",
+     "check": "mesh-zero-area-face",
+     "message": "IndexedFaceSet 1 of 1 face(s) have distinct corners on one line and no area (first: [0, 1, 2, 3]); their normal is undefined.",
+     "node": "IndexedFaceSet",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "mesh-unused-point",
+     "message": "Coordinate 4 of 8 point(s) are used by no index; they cost memory and skew bounds.",
+     "node": "Coordinate",
+     "DEF": ""
+    }
+   ]
+  },
+  "s/fault-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "TextureProperties (component Texturing level 2, not declared) is outside profile 'Immersive'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "TextureProperties",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Texturing' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "s/fault-06.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/fault-07.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/fault-08.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "warning",
+     "check": "light-scope-empty",
+     "message": "DirectionalLight has global false (the default for DirectionalLight), so it lights only what sits under its parent Transform, and no Shape sits there: it lights nothing. Set global='true', or move the light into the group that holds the shapes.",
+     "node": "DirectionalLight",
+     "DEF": ""
+    }
+   ]
+  },
+  "s/fault-09.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/fault-10.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Stocker' (Script) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Script",
+     "DEF": "Stocker"
+    },
+    {
+     "level": "warning",
+     "check": "empty-group",
+     "message": "Group (DEF='Shelf') has no children. Empty grouping nodes have no effect.",
+     "node": "Group",
+     "DEF": "Shelf"
+    }
+   ]
+  },
+  "s/fault-11.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/fault-12.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "warning",
+     "check": "coordinate-precision",
+     "message": "Coordinate has a value of 4.53376e+06 (4.53376e+06 m from the origin); in 32-bit floats neighbouring values there are 5.4e+02 mm apart, so the mesh will jitter. Move the origin near the geometry with a Transform, or use CoordinateDouble.",
+     "node": "Coordinate",
+     "DEF": ""
+    }
+   ]
+  },
+  "s/fault-13.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/fault-14.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "use-before-def",
+     "message": "USE='Paint' (Appearance) appears before its DEF in document order. A USE must follow the DEF it references.",
+     "node": "Appearance",
+     "DEF": "Paint"
+    }
+   ]
+  },
+  "s/fault-15.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/fault-16.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/helper-bracket.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "no-viewpoint",
+     "message": "Scene has no Viewpoint node. The browser will use a default camera. Consider adding a Viewpoint for a defined initial view.",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "s/twin-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/twin-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/twin-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/twin-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/twin-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "TextureProperties (component Texturing level 2, not declared) is outside profile 'Immersive'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "TextureProperties",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Texturing' level='2'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "s/twin-06.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "timesensor-never-starts",
+     "message": "TimeSensor (DEF='Clock') has loop false and startTime 0, and nothing in this file ROUTEs to its startTime, enabled or loop, so it never starts and what it drives stays still. Set loop='true', or ROUTE a time such as a TouchSensor touchTime to set_startTime.",
+     "node": "TimeSensor",
+     "DEF": "Clock"
+    }
+   ]
+  },
+  "s/twin-07.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/twin-08.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/twin-09.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/twin-10.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Stocker' (Script) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Script",
+     "DEF": "Stocker"
+    },
+    {
+     "level": "warning",
+     "check": "empty-group",
+     "message": "Group (DEF='Shelf') has no children. Empty grouping nodes have no effect.",
+     "node": "Group",
+     "DEF": "Shelf"
+    }
+   ]
+  },
+  "s/twin-11.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/twin-12.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/twin-13.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/twin-14.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/twin-15.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "s/twin-16.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  }
+ }
+}
