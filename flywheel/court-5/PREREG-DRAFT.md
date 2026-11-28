@@ -8,13 +8,30 @@ and pushed with the frozen kernel before any archive is opened. Until then nothi
 
 | Set | Brief | Files | Archive sha256 | Sealed (UTC) |
 |---|---|---|---|---|
-| a | behaviour | TO FILL | TO FILL | TO FILL |
-| b | structure and data | TO FILL | TO FILL | TO FILL |
-| c | look | TO FILL | TO FILL | TO FILL |
+| a | behaviour | 20 faults, 20 twins, 5 decoys, 2 helpers | `02d8c77133cde2124f87f35d45ffeb5ace1b8e6bf6964b00e3c8ca45da4f4ed8` | 28 Nov 2026, about 14:14 |
+| b | structure and data | 20 faults, 20 twins, 5 decoys, 1 helper | `c448a7c46b918d9ca277f91a28ef7a8038399b89996840f9002e0fbc54569db5` | 28 Nov 2026, about 14:05 |
+| c | look | 20 faults, 20 twins, 5 decoys, 3 helpers | `bf62b8a3e035db0ff5ce45f8bda599519e7aa05150814d0121844bd18c2c7bcb` | 28 Nov 2026, about 14:07 |
 | s | stranger arm: real mistakes rebuilt from public reports | 16 faults, 16 twins, 5 decoys, 1 helper | `74b80378310398856cead31a9d2a802aa8a7a1c7f7fe0e947e16ca4c56fa899b` | 28 Nov 2026, about 13:32 |
 
-Authors' own counts from the fixed form, not yet checked: TO FILL. Anything an author's report said beyond the
-form: TO FILL, or "nothing".
+Authors' own counts from the fixed form, not yet checked:
+
+| Set | Faults that fail the XSD | Pairs played in X_ITE 16.8.0 | Pairs reasoned only | Pairs with a testable intent | Decoys with zero console errors | Pairs where the engine disagreed |
+|---|---|---|---|---|---|---|
+| a | 0 | 20 | 0 | 14 | 5 of 5 | 1 |
+| b | 4 | 20 | 0 | 2 | 5 of 5 | 2 |
+| c | 3 | 18 | 2 | 3 | 5 of 5 | 1 |
+| s | 1 | 16 | 0 | 4 | not on its form | 1 |
+
+Anything an author's report said beyond the form: nothing. All four reported no blocker. All four used Python
+3.13.18, lxml 6.1.3, Node 22.23.5, Playwright 1.63.0, Chromium 158.0.8127.36 and software GL (SwiftShader).
+
+When the sets were sealed, x3d_mcp main stood at `15081e6`. The kernel is NOT frozen: rule work goes on until gate
+G4, and no rule writer has opened any archive. The sets were written before the freeze on purpose, so that a
+sealed hash older than the last rule shows the sets could not have been shaped by the rules, and the rules could
+only have been shaped by the sets through a breach of blindness.
+
+Known before opening, from the forms alone: the intent arm has 19 pairs of 60 in arm F (14 of them in set a) and 4
+of 16 in arm S. It will be reported as counts, per set, and set a carries it.
 
 ## What is frozen
 
