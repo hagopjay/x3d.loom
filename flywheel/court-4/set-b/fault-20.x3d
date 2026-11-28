@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='description' content='A doorway with posts at x = 0 and x = 1 and a door leaf, hinged along its left edge at the x = 0 post, swung open a quarter turn towards the viewer about that hinge.'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='DoorView' description='Doorway from front above' position='1.5 3.5 5' orientation='-0.91591 0.39099 0.09069 0.49607'/>
+    <Transform DEF='HingePost' translation='-0.05 1 0'>
+      <Shape DEF='PostShape'>
+        <Appearance>
+          <Material diffuseColor='0.35 0.35 0.4'/>
+        </Appearance>
+        <Box size='0.1 2 0.1'/>
+      </Shape>
+    </Transform>
+    <Transform DEF='LatchPost' translation='1.05 1 0'>
+      <Shape USE='PostShape'/>
+    </Transform>
+    <Transform DEF='DoorLeafOpenQuarterTurn' translation='0.5 1 0' rotation='0 1 0 -1.5708'>
+      <Shape DEF='DoorLeaf'>
+        <Appearance>
+          <Material diffuseColor='0.7 0.3 0.15'/>
+        </Appearance>
+        <Box size='1 2 0.06'/>
+      </Shape>
+    </Transform>
+  </Scene>
+</X3D>

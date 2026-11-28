@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A gate that slides open when the visitor is within five metres of it. The visitor starts three metres away, so the gate opens straight away."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Visitor' position='0 1.6 3'/>
+    <Transform DEF='Gate' translation='0 1 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.3 0.3 0.35'/>
+        </Appearance>
+        <Box size='2 2 0.1'/>
+      </Shape>
+    </Transform>
+    <ProximitySensor DEF='GateZone' center='0 1 0' size='10 4 10'/>
+    <TimeSensor DEF='GateClock' cycleInterval='2'/>
+    <PositionInterpolator DEF='GateSlide' key='0 1' keyValue='0 1 0 2 1 0'/>
+    <ROUTE fromNode='GateZone' fromField='enterTime' toNode='GateClock' toField='set_startTime'/>
+    <ROUTE fromNode='GateClock' fromField='fraction_changed' toNode='GateSlide' toField='set_fraction'/>
+    <ROUTE fromNode='GateSlide' fromField='value_changed' toNode='Gate' toField='set_translation'/>
+  </Scene>
+</X3D>

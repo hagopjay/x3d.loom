@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="Click the round red button in the middle to make the bulb above it glow yellow. Clicking the floor does nothing."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 10'/>
+    <Transform DEF='Floor' translation='0 -3 0'>
+      <TouchSensor DEF='ButtonTouch' description='switch the bulb on'/>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.4 0.4 0.4'/>
+        </Appearance>
+        <Box size='8 0.2 4'/>
+      </Shape>
+    </Transform>
+    <Transform DEF='RedButton'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.8 0 0'/>
+        </Appearance>
+        <Sphere radius='0.6'/>
+      </Shape>
+    </Transform>
+    <Transform DEF='Bulb' translation='0 3 0'>
+      <Shape>
+        <Appearance>
+          <Material DEF='BulbMaterial' diffuseColor='0.3 0.3 0.3' emissiveColor='0 0 0'/>
+        </Appearance>
+        <Sphere radius='0.4'/>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF='GlowClock' cycleInterval='0.5'/>
+    <ColorInterpolator DEF='GlowUp' key='0 1' keyValue='0 0 0 1 0.9 0.2'/>
+    <ROUTE fromNode='ButtonTouch' fromField='touchTime' toNode='GlowClock' toField='set_startTime'/>
+    <ROUTE fromNode='GlowClock' fromField='fraction_changed' toNode='GlowUp' toField='set_fraction'/>
+    <ROUTE fromNode='GlowUp' fromField='value_changed' toNode='BulbMaterial' toField='set_emissiveColor'/>
+  </Scene>
+</X3D>

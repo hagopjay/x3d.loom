@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A ball that pulses: it swells to one and a half times its size and shrinks back, once every two seconds, forever."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 8'/>
+    <Transform DEF='PulsingBall'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.9 0.3 0.2'/>
+        </Appearance>
+        <Sphere/>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF='PulseClock' cycleInterval='2' loop='true'/>
+    <PositionInterpolator DEF='PulseSize' key='0 0.5 1' keyValue='1 1 1 1.5 1.5 1.5 1 1 1'/>
+    <ROUTE fromNode='PulseClock' fromField='fraction_changed' toNode='PulseSize' toField='set_fraction'/>
+    <ROUTE fromNode='PulseSize' fromField='value_changed' toNode='PulsingBall' toField='set_scale'/>
+  </Scene>
+</X3D>

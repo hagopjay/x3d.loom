@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="Drag the green puck across the table: wherever you grab it, it moves by exactly as much as the pointer moves, without jumping."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 10'/>
+    <Group>
+      <PlaneSensor DEF='PuckDrag' description='drag the puck'/>
+      <Transform DEF='Puck'>
+        <Shape>
+          <Appearance>
+            <Material diffuseColor='0.1 0.7 0.2'/>
+          </Appearance>
+          <Box size='3 3 0.2'/>
+        </Shape>
+      </Transform>
+    </Group>
+    <ROUTE fromNode='PuckDrag' fromField='translation_changed' toNode='Puck' toField='set_translation'/>
+  </Scene>
+</X3D>

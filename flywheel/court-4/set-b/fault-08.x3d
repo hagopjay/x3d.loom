@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='description' content='A terrain patch with one straight ridge running along the X axis: 5 height samples along X (1 m apart) and 3 rows along Z (2 m apart), the middle row raised 2 m.'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='TerrainView' description='Terrain overview' position='5 6 8' orientation='-0.67286 0.71415 0.19297 0.76375'/>
+    <Transform DEF='CentredTerrain' translation='-2 0 -2'>
+      <Shape DEF='RidgeTerrain'>
+        <Appearance>
+          <Material diffuseColor='0.45 0.6 0.3'/>
+        </Appearance>
+        <ElevationGrid DEF='RidgeHeights' solid='false' xDimension='3' zDimension='5' xSpacing='1' zSpacing='2'
+          height='0 0 0 0 0
+                  2 2 2 2 2
+                  0 0 0 0 0'/>
+      </Shape>
+    </Transform>
+  </Scene>
+</X3D>

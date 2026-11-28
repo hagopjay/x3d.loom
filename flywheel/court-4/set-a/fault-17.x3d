@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A light switch: each click on the plate flips the lamp. The first click turns it on, the next click turns it off, and so on."/>
+  </head>
+  <Scene>
+    <NavigationInfo headlight='false'/>
+    <Viewpoint description='Front' position='0 0 8'/>
+    <DirectionalLight DEF='Lamp' on='false' direction='0 -0.3 -1'/>
+    <Group>
+      <TouchSensor DEF='PlateTouch' description='flip the lamp'/>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.8 0.8 0.8' emissiveColor='0.15 0.15 0.15'/>
+        </Appearance>
+        <Box size='1.5 2 0.2'/>
+      </Shape>
+    </Group>
+    <Script DEF='Flipper'>
+      <field name='set_pressed' type='SFBool' accessType='inputOnly'/>
+      <field name='lit' type='SFBool' accessType='initializeOnly' value='false'/>
+      <field name='lamp_changed' type='SFBool' accessType='outputOnly'/>
+<![CDATA[ecmascript:
+function set_pressed (value)
+{
+   lit = !lit;
+   lamp_changed = lit;
+}
+]]>
+    </Script>
+    <ROUTE fromNode='PlateTouch' fromField='isActive' toNode='Flipper' toField='set_pressed'/>
+    <ROUTE fromNode='Flipper' fromField='lamp_changed' toNode='Lamp' toField='set_on'/>
+  </Scene>
+</X3D>

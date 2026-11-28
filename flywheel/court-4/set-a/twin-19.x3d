@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <component name='Followers' level='1'/>
+    <meta name='description' content="A marker that glides smoothly, never jumping, to whichever of two posts is the current target. The target swaps between the left and the right post every two seconds."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 10'/>
+    <Transform DEF='LeftPost' translation='-2 -1 0'>
+      <Shape DEF='Post'>
+        <Appearance>
+          <Material diffuseColor='0.5 0.5 0.5'/>
+        </Appearance>
+        <Cylinder height='1' radius='0.1'/>
+      </Shape>
+    </Transform>
+    <Transform DEF='RightPost' translation='2 -1 0'>
+      <Shape USE='Post'/>
+    </Transform>
+    <Transform DEF='Marker' translation='-2 0 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.9 0.1 0.1'/>
+        </Appearance>
+        <Sphere radius='0.3'/>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF='SwapClock' cycleInterval='4' loop='true'/>
+    <PositionInterpolator DEF='Target' key='0 0.5 0.5 1' keyValue='-2 0 0 -2 0 0 2 0 0 2 0 0'/>
+    <PositionDamper DEF='Glide' tau='0.15' initialValue='-2 0 0' initialDestination='-2 0 0'/>
+    <ROUTE fromNode='SwapClock' fromField='fraction_changed' toNode='Target' toField='set_fraction'/>
+    <ROUTE fromNode='Target' fromField='value_changed' toNode='Glide' toField='set_destination'/>
+    <ROUTE fromNode='Glide' fromField='value_changed' toNode='Marker' toField='set_translation'/>
+  </Scene>
+</X3D>
