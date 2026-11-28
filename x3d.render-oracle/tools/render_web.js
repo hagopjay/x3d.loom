@@ -26,6 +26,8 @@ const srv = http.createServer((q, r) => {
   const u = q.url.split('?')[0];
   if (files[u]) { r.writeHead(200, { 'content-type': mime[path.extname(u)] || 'text/html' }); return r.end(files[u]); }
   for (const [p, d] of Object.entries(dirs)) if (u.startsWith(p)) { const f = path.join(d, u.slice(p.length)); if (fs.existsSync(f)) { r.writeHead(200, { 'content-type': mime[path.extname(f)] || 'application/octet-stream' }); return r.end(fs.readFileSync(f)); } }
+  const sf = path.join(path.dirname(path.resolve(scenes[0])), path.basename(u)); // files the scenes name (x.png, x.wav) sit beside the scenes
+  if (path.basename(u) && fs.existsSync(sf) && fs.statSync(sf).isFile()) { r.writeHead(200, { 'content-type': mime[path.extname(sf)] || 'application/octet-stream' }); return r.end(fs.readFileSync(sf)); }
   r.writeHead(404); r.end();
 }).listen(0, '127.0.0.1');
 (async () => {
