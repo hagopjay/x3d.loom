@@ -1,0 +1,26 @@
+{
+ "node": "ImageTexture",
+ "mode": "scene",
+ "note": "a 4x4 four-quadrant PNG (data URI) on an IndexedFaceSet quad: orientation and the hard texels X_ITE uses under 16 x 16, compared with X_ITE in the picture",
+ "tone": "none",
+ "steps": [
+  {
+   "settle": 1.2
+  },
+  {
+   "shot": "main"
+  }
+ ],
+ "compare": {
+  "main": {
+   "iou": 0.94,
+   "mad": 2,
+   "fg": 8
+  }
+ },
+ "gaps": [
+  "the same image on a Box is upside down in the Babylon body (V turned) while an IndexedFaceSet quad is right way up: seen in the picture against X_ITE 16.6.0 on the render-oracle scene ImageTexture (MAE 91 of 255 before the hard-texel fix); the cause is not isolated (turning the mesh UV and geometryData uv did nothing); Cylinder, Cone and Sphere are not checked",
+  "an image of 16 x 16 or more keeps the trilinear filter"
+ ],
+ "lookNote": "the silhouette is one pixel smaller than X_ITE's on every side (IoU 0.95 measured, Chromium 158 SwiftShader, X_ITE 16.6.0): the edge texels of a hard-texel image; mean abs diff 1.65 of 255"
+}

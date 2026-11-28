@@ -1121,3 +1121,16 @@ R.bridge.winding = (mesh) => {   // +1 when the first triangles run counter-cloc
   const _gcn = Body.prototype.geometryChanged;
   Body.prototype.geometryChanged = function (n) { _gcn.call(this, n); if (n.type === 'Coordinate') for (const c of this.world.nodes) if (c.type === 'NurbsCurve' && c.f.controlPoint === n) { this.regeo(c); BR.nurbs.redrawUsers(this, c); } };
 }
+
+/* ImageTexture on the stock path (batch 5, found by the 260-scene render oracle and the new ImageTexture fixture; picture compared with X_ITE 16.6.0):
+   1. X_ITE magnifies an image smaller than 16 x 16 with hard texels; the stock Texture is trilinear, so a 4 x 4 image came out as a smeared blur (MAE 91 of 255 against X_ITE on the oracle scene).
+   NOT fixed, found in the same picture: on a Box the image is upside down against X_ITE (an IndexedFaceSet quad with texture coordinates is right way up). Turning the V of the mesh UVs and of geometryData's uv /
+   uvw changed nothing (MAD identical to 0.01), so the flip is made somewhere else (Suspected: the right-handed scene or a later texture-matrix step); Cylinder, Cone and Sphere are not checked. Logged as a gap. */
+{
+  const _tex5 = Body.prototype.tex;
+  Body.prototype.tex = function (texNode) {
+    const had = texNode && this.texCache.get(texNode.id), t = _tex5.call(this, texNode);
+    if (t && !had && texNode.type === 'ImageTexture' && t.onLoadObservable) t.onLoadObservable.addOnce(() => { const z = t.getSize(); if (z.width < 16 && z.height < 16) t.updateSamplingMode(BABYLON.Texture.NEAREST_SAMPLINGMODE); });
+    return t;
+  };
+}
