@@ -1,4 +1,4 @@
-# URDF → X3D, held to MuJoCo's forward kinematics (v0.1, 28 Nov 2026)
+# URDF → X3D, held to MuJoCo's forward kinematics; ROS 2 recordings replayed (v0.2, 28 Nov 2026)
 
 Gap 3 of the bridge gap map (URDF and ROS 2). `urdf2x3d.py` turns a URDF robot into one X3D 4.0 file: the kinematic
 tree as nested Transforms, each joint's type, axis and limits as typed Metadata, and the collision STL meshes as
@@ -64,11 +64,63 @@ python3 fk_check.py ROBOT.urdf scenes/NAME.x3d --out results/NAME-fk-receipt.jso
 `urdf2x3d.py` is standard library only. `package://pkg/path` resolves against `--mesh-root`, with and without the
 package name.
 
+## ROS 2 recordings drive the joints (28 Nov 2026)
+
+`ros2_replay.py` reads a ROS 2 MCAP recording with x3d_mcp's standard-library reader (ROS 2 CDR, hagopjay/x3d_mcp#43)
+and adds to a bridge scene one `TimeSensor DEF="REPLAY"` plus, per moving joint, an `OrientationInterpolator`
+(prismatic: `PositionInterpolator`) keyed at the message stamps, ROUTEd to the joint Transform. No script, no
+runtime: any X3D 4.0 browser plays the recording.
+
+```
+/joint_states (MCAP, CDR, zstd) ─ x3d_mcp mcap_reader ─ ros2_replay.py ─▶ TimeSensor ─▶ Interpolators ─ROUTE─▶ joint Transforms
+```
+
+**The SLERP trap.** `OrientationInterpolator` takes the shortest arc between neighbouring keys (X3D 4.0, 19.4.7).
+For one fixed axis that equals the joint moving linearly only while the step between keys is under π. A wrist that
+turns more than π between two messages plays **backwards**. `ros2_replay.py` splits every step of π/2 or more into
+equal sub-steps with extra keys; `--no-split` turns that off, and is the control.
+
+**Recordings** (`recordings/`, written by `make_recordings.py` with mcap-ros2-support 0.6.0, zstd chunks, its
+default; synthetic, not from a robot): `ur5-sweep.mcap` 30 Hz for 12 s (smooth sweeps, wrist 3 turns 4π one way) and
+`ur5-jerk-2hz.mcap` 2 Hz for 6 s (wrist 3 jumps 4 rad each message, more than π).
+
+| witness | recording | samples (messages + midpoints) | worst position | worst rotation | pass |
+|---|---|---|---|---|---|
+| `replay_check.py`: X3D interpolators as the spec defines them, MuJoCo 4.0.1 from the recording | sweep | 721 | 4.1e-12 m | 1.2e-11 rad | yes (1e-9) |
+| same | jerk | 25 | 3.2e-16 m | 1.6e-11 rad | yes (1e-9) |
+| `browser/xite_replay.py`: **X_ITE 16.7.1's own interpolators and ROUTEs**, Playwright Chromium headless, SwiftShader | sweep | 721 | 2.7e-7 m | 9.0e-7 rad | yes (1e-5) |
+| same | jerk | 25 | 1.5e-15 m | 9.5e-7 rad | yes (1e-5) |
+
+The 1e-11 in the Python witness is the 12 significant digits the keys are written with. The 1e-6 rad in X_ITE is
+the format, not the browser: SFRotation and MFRotation are single precision in X3D 4.0, and X_ITE keeps them in
+Float32Arrays (float32 at 2 rad is 2.4e-7). That is why the browser leg is judged at 1e-5.
+
+**Controls** (each must fail):
+
+| control | Python witness | X_ITE 16.7.1 |
+|---|---|---|
+| keys not split (`--no-split`), jerk recording | midpoints off by **3.14159 rad**: the wrist plays backwards | midpoints off by **3.14159 rad**: X_ITE plays it backwards too |
+| keys not split, sweep recording | not applicable: no step reaches π at 30 Hz, so the split adds 0 keys | |
+| one ROUTE sent to the wrong joint | 0.66 m (sweep), 1.0 rad (jerk) | |
+| keys shifted by one message | 0.031 m (sweep), 1.33 rad (jerk) | |
+
+Animated scenes `scenes/ur5-sweep.x3d` and `scenes/ur5-jerk-2hz.x3d` are XSD-valid with 0 errors and 0 semantic
+errors (x3d_mcp 64a91d1). Recordings are zstd like real ROS 2 bags, so reading them on Python before 3.14 needs the
+`zstandard` (or `backports.zstd`) module; without it the reader refuses rather than skipping silently.
+
+```bash
+python3 make_recordings.py recordings                                  # needs mcap, mcap-ros2-support
+python3 ros2_replay.py recordings/ur5-sweep.mcap scenes/ur5_robot.x3d scenes/ur5-sweep.x3d
+python3 replay_check.py ur5_robot.urdf recordings/ur5-sweep.mcap scenes/ur5-sweep.x3d --base scenes/ur5_robot.x3d --out results/ur5-sweep-replay-receipt.json
+python3 browser/xite_replay.py ur5_robot.urdf recordings/ur5-sweep.mcap scenes/ur5-sweep.x3d --xite DIR_WITH_x_ite --out results/ur5-sweep-xite-receipt.json
+```
+
 ## Not claimed
 
 Dynamics (masses and inertias are not carried), collision behaviour, visual meshes in DAE or OBJ, Gazebo and
-transmission tags, SRDF, xacro (expand it first), ROS 2 topics. The ROS 2 leg (a CDR decoder so that `/joint_states`
-from an MCAP recording can drive these Transforms) is the next step and is not here yet.
+transmission tags, SRDF, xacro (expand it first). ROS 2: only `sensor_msgs/JointState` from a recording; no live
+topic (no DDS, no rosbridge), no `/tf`, recordings synthetic rather than from a robot, X_ITE only (no other browser),
+and no frame-time or visual check of the playback.
 
 ## Data attribution and takedown
 

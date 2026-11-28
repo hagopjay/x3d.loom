@@ -1,0 +1,43 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>replay witness</title>
+<script src="x_ite/x_ite.min.js"></script>
+<style>html,body{margin:0;height:100%;background:#000}x3d-canvas{position:fixed;inset:0;width:100%;height:100%}</style></head>
+<body><x3d-canvas id="c" splashScreen="false" contextMenu="false" notifications="false" timings="false"></x3d-canvas>
+<script>
+// Replay witness page. Query: scene=<url>. The test driver calls window.sample([f0, f1, ...]); for each fraction the
+// page stops the REPLAY TimeSensor, sends set_fraction to every interpolator, lets X_ITE run its event cascade (the
+// ROUTEs carry value_changed to the joint Transforms), then reads every ROUTEd joint Transform's rotation/translation.
+(async () => {
+  window.__ready = null;
+  const R = { errors: [] };
+  try {
+    await customElements.whenDefined('x3d-canvas');
+    const B = document.getElementById('c').browser;
+    await B.loadURL(new X3D.MFString(new URLSearchParams(location.search).get('scene')));
+    const scene = B.currentScene, raf = () => new Promise(r => requestAnimationFrame(() => r()));
+    scene.getNamedNode('REPLAY').enabled = false;
+    await raf();
+    const interps = [], targets = [];
+    for (const r of scene.routes) {
+      if (r.sourceField === 'value_changed') { interps.push(r.sourceNode); targets.push([r.destinationNode, r.destinationField]); }
+    }
+    R.routes = targets.map(([n, f]) => n.getNodeName() + '.' + f);
+    window.sample = async (fs) => {
+      const out = [];
+      for (const f of fs) {
+        for (const i of interps) i.set_fraction = f;
+        await raf(); await raf();
+        const row = {};
+        for (const [n, fld] of targets) {
+          row[n.getNodeName()] = fld === 'set_rotation' ? [n.rotation.x, n.rotation.y, n.rotation.z, n.rotation.angle]
+                                                        : [n.translation.x, n.translation.y, n.translation.z];
+        }
+        out.push(row);
+      }
+      return out;
+    };
+    R.version = X3D.getBrowser ? (X3D.getBrowser().version || null) : null;
+  } catch (e) { R.errors.push('EXC ' + (e && e.stack || e)); }
+  window.__ready = R;
+})();
+</script></body></html>

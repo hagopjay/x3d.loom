@@ -1,0 +1,57 @@
+{
+ "schema": "x3d.loom/ros2-replay-receipt/1",
+ "urdf": "ur5_robot.urdf",
+ "recording": "ur5-jerk-2hz.mcap",
+ "recording_sha256": "4e0014ea96a544af87ab2369beb4afd4b9e5e2b006e0279939fec018601bcf4e",
+ "recording_info": {
+  "messages": 13,
+  "problems": [],
+  "chunks": [
+   "zstd"
+  ],
+  "profile": "ros2",
+  "library": "mcap-python/1.6.0 mcap-ros2-support/0.6.0"
+ },
+ "x3d": "ur5-jerk-2hz.x3d",
+ "x3d_sha256": "2a619c49cb98cd71f649e2aacc99905ce39a04d46a469722f8f65526888befee",
+ "mujoco": "4.0.1",
+ "tolerance": {
+  "position_m": 1e-09,
+  "rotation_rad": 1e-09
+ },
+ "result": {
+  "samples": 25,
+  "messages": 13,
+  "links": 11,
+  "worst_at_messages": {
+   "position_m": 3.188872858294072e-16,
+   "rotation_rad": 1.600316544650094e-11
+  },
+  "worst_at_midpoints": {
+   "position_m": 2.5438405243138006e-16,
+   "rotation_rad": 1.600058329475495e-11
+  },
+  "pass": true
+ },
+ "controls": [
+  {
+   "control": "keys not split for SLERP (--no-split)",
+   "caught": true,
+   "worst_at_midpoints_m": 2.5438405243138006e-16,
+   "worst_at_midpoints_rad": 3.141592653589793,
+   "note": null
+  },
+  {
+   "control": "one ROUTE sent to the wrong joint",
+   "caught": true,
+   "worst_at_messages_m": 0.47687673275643183,
+   "worst_at_messages_rad": 1.0000000000111493
+  },
+  {
+   "control": "keys shifted by one message",
+   "caught": true,
+   "worst_at_messages_m": 3.188872858294072e-16,
+   "worst_at_messages_rad": 1.333333333349003
+  }
+ ]
+}
