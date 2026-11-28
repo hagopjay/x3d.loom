@@ -33,7 +33,7 @@ So the gap has three parts, and each needs its own instrument:
    it. The number to stand beside is court 4's 5 of 21.
 2. **Rules come from the standard's object model, not from the last set.** `grid/build_grid.py` reads X3DUOM 4.0
    (sha256 `7e426a238656c21a…`, the copy in x3d_mcp) and lists every place where one of 15 classes of mistake can
-   occur: 6,434 cells over 260 nodes (`grid/grid.json`). A cell is closed by a probe pair, a wrong file and its
+   occur: 6,502 cells over 260 nodes in 17 classes after two relation classes were added (`grid/grid.json`). A cell is closed by a probe pair, a wrong file and its
    corrected twin made mechanically, on which the kernel names the mistake and stays silent on the twin. Every
    check the new kernel adds is labelled `grid` or `misses` in `provenance.json` at the freeze, and the scorer
    prints which label made each gain.
@@ -112,7 +112,7 @@ above or a gate below, except P6, which only arm S addresses.
 | Gate | Done when | State |
 |---|---|---|
 | G0 plan | this folder is merged | this pull request |
-| G1 kernel turn | grid probed class by class, checks written, each labelled in `provenance.json`; the nine file-stateable court 4 misses handled as `misses` | first pass done 28 Nov (`grid/PROBE-RESULTS.md`): 12 of 15 classes probed, old kernel `2943b78` left 139 cells missed and crashed on 6, new kernel `ae1243e` (x3d_mcp pull request) closes all; still to do: relation classes, three unprobed classes, the nine court 4 misses |
+| G1 kernel turn | grid probed class by class, checks written, each labelled in `provenance.json`; the nine file-stateable court 4 misses handled as `misses` | two passes done 28 Nov (`grid/PROBE-RESULTS.md`): 14 of 17 classes probed, old kernel `2943b78` left 167 cells missed and crashed on 6, new kernel `d446f94` (x3d_mcp pull request 44) closes all; one-field classes were 97.4% closed before, the two relation classes 40%; still to do: relations from the standard's prose, three unprobed classes, the nine court 4 misses |
 | G2 dry run | `dry-run/run.sh` passes on the frozen scripts with the frozen kernel | passes today on the scaffold (old `ebe969b`, new `2943b78`, X_ITE 16.8.0) |
 | G3 seal | three fresh authors, forbidden every repository and memory, return the fixed form and a hash | arm S sealed 28 Nov (see below); sets a, b, c need the owner's go |
 | G4 freeze | kernel commit and `PREREG.md` pushed before any archive is opened | |
@@ -159,7 +159,7 @@ authors write both the scene and the statement of what it is for.
 | `PLAN.md` | this plan | |
 | `PREREG-DRAFT.md` | the form to complete and rename at the freeze | |
 | `prior/build_prior.py`, `prior-mistakes.json`, `prior-mistakes.txt` | the 120 earlier planted mistakes, one line each | yes |
-| `grid/classes.json`, `grid/build_grid.py`, `grid/grid.json` | 15 classes, the builder, 6,434 cells with the state of each on the new kernel | yes |
+| `grid/classes.json`, `grid/build_grid.py`, `grid/grid.json` | 17 classes, the builder, 6,502 cells with the state of each on the new kernel | yes |
 | `grid/probe.py`, `grid/PROBE-RESULTS.md`, `grid/probe-kernel-*.json` | the probe generator, what it found, and its summary on the old and the new kernel | yes |
 | `score/provenance.json` | where each new check came from | |
 | `intent/INTENT.md`, `intent/strip_intent.py` | the intent form, and the tool that removes it for the kernel | yes |

@@ -3,7 +3,7 @@
 "model_sha256": "7e426a238656c21a4a444b989276494329da363625c36f0a719b15d89416bee3",
 "model_version": "4.0",
 "nodes": 260,
-"cells_total": 6434,
+"cells_total": 6502,
 "cells_by_class": {
 "F01-range": 450,
 "F02-enumeration": 68,
@@ -19,12 +19,15 @@
 "N02-parallel-arrays": 15,
 "N03-bindable": 7,
 "N04-def-use": 260,
-"N05-component": 260
+"N05-component": 260,
+"P01-low-above-high": 35,
+"P02-array-not-rising": 33
 },
 "cells_by_state": {
-"caught": 4695,
-"needs-intent": 63,
+"caught": 4742,
+"needs-intent": 68,
 "no-probe": 678,
+"not-a-mistake": 16,
 "probe-broken": 28,
 "unprobed": 160,
 "xsd": 810
@@ -788,6 +791,32 @@
 "accessType": "inputOutput",
 "class": "F09-time",
 "state": "unprobed"
+},
+{
+"cell": "Analyser.minDecibels:P01-low-above-high",
+"node": "Analyser",
+"field": "minDecibels",
+"partner": "maxDecibels",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "minDecibels=0.75 with maxDecibels=0.25, against the two swapped",
+"check": [
+"low-above-high"
+]
+},
+{
+"cell": "Analyser.startTime:P01-low-above-high",
+"node": "Analyser",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
 },
 {
 "cell": "Analyser:N04-def-use",
@@ -1653,6 +1682,18 @@
 ]
 },
 {
+"cell": "Arc2D.startAngle:P01-low-above-high",
+"node": "Arc2D",
+"field": "startAngle",
+"partner": "endAngle",
+"type": "SFFloat",
+"accessType": "initializeOnly",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startAngle=0.75 with endAngle=0.25, against the two swapped",
+"note": "an arc may run from a larger angle round to a smaller one"
+},
+{
 "cell": "Arc2D:N04-def-use",
 "node": "Arc2D",
 "class": "N04-def-use",
@@ -1926,6 +1967,18 @@
 "check": [
 "route-type-mismatch"
 ]
+},
+{
+"cell": "ArcClose2D.startAngle:P01-low-above-high",
+"node": "ArcClose2D",
+"field": "startAngle",
+"partner": "endAngle",
+"type": "SFFloat",
+"accessType": "initializeOnly",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startAngle=0.75 with endAngle=0.25, against the two swapped",
+"note": "an arc may run from a larger angle round to a smaller one"
 },
 {
 "cell": "ArcClose2D:N04-def-use",
@@ -2443,6 +2496,18 @@
 "accessType": "inputOutput",
 "class": "F08-address",
 "state": "unprobed"
+},
+{
+"cell": "AudioClip.startTime:P01-low-above-high",
+"node": "AudioClip",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
 },
 {
 "cell": "AudioClip:N04-def-use",
@@ -3186,6 +3251,32 @@
 "probe": "A.transparency (SFFloat) routed to Transform.translation against Background.transparency",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "Background.groundAngle:P02-array-not-rising",
+"node": "Background",
+"field": "groundAngle",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "groundAngle='0 1 0.5' against '0 0.5 1'",
+"check": [
+"background-angles-not-rising"
+]
+},
+{
+"cell": "Background.skyAngle:P02-array-not-rising",
+"node": "Background",
+"field": "skyAngle",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "skyAngle='0 1 0.5' against '0 0.5 1'",
+"check": [
+"background-angles-not-rising"
 ]
 },
 {
@@ -4191,6 +4282,18 @@
 ]
 },
 {
+"cell": "BiquadFilter.startTime:P01-low-above-high",
+"node": "BiquadFilter",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
+},
+{
 "cell": "BiquadFilter:N04-def-use",
 "node": "BiquadFilter",
 "class": "N04-def-use",
@@ -4912,6 +5015,19 @@
 "probe": "A.value_changed (SFBool) routed to Transform.translation against Analyser.enabled",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "BooleanSequencer.key:P02-array-not-rising",
+"node": "BooleanSequencer",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
 ]
 },
 {
@@ -6475,6 +6591,30 @@
 "accessType": "inputOutput",
 "class": "F08-address",
 "state": "unprobed"
+},
+{
+"cell": "BufferAudioSource.loopStart:P01-low-above-high",
+"node": "BufferAudioSource",
+"field": "loopStart",
+"partner": "loopEnd",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "needs-intent",
+"probe": "loopStart=0.75 with loopEnd=0.25, against the two swapped",
+"note": "Web Audio defines a loop start after the loop end as looping the whole buffer"
+},
+{
+"cell": "BufferAudioSource.startTime:P01-low-above-high",
+"node": "BufferAudioSource",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
 },
 {
 "cell": "BufferAudioSource:N04-def-use",
@@ -11645,6 +11785,19 @@
 ]
 },
 {
+"cell": "ColorInterpolator.key:P02-array-not-rising",
+"node": "ColorInterpolator",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
+]
+},
+{
 "cell": "ColorInterpolator:N02-parallel-arrays",
 "node": "ColorInterpolator",
 "class": "N02-parallel-arrays",
@@ -14175,6 +14328,18 @@
 "state": "unprobed"
 },
 {
+"cell": "Convolver.startTime:P01-low-above-high",
+"node": "Convolver",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
+},
+{
 "cell": "Convolver:N04-def-use",
 "node": "Convolver",
 "class": "N04-def-use",
@@ -15248,6 +15413,19 @@
 ]
 },
 {
+"cell": "CoordinateInterpolator.key:P02-array-not-rising",
+"node": "CoordinateInterpolator",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
+]
+},
+{
 "cell": "CoordinateInterpolator:N02-parallel-arrays",
 "node": "CoordinateInterpolator",
 "class": "N02-parallel-arrays",
@@ -15438,6 +15616,19 @@
 "probe": "A.value_changed (MFVec2f) routed to Transform.translation against EaseInEaseOut.easeInEaseOut",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "CoordinateInterpolator2D.key:P02-array-not-rising",
+"node": "CoordinateInterpolator2D",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
 ]
 },
 {
@@ -16046,6 +16237,20 @@
 "probe": "A.trackPoint_changed (SFVec3f) routed to Transform.rotation against Billboard.axisOfRotation",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "CylinderSensor.minAngle:P01-low-above-high",
+"node": "CylinderSensor",
+"field": "minAngle",
+"partner": "maxAngle",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "minAngle=0.75 with maxAngle=0.25, against the two swapped",
+"check": [
+"drag-limits-swapped"
 ]
 },
 {
@@ -17254,6 +17459,18 @@
 "state": "unprobed"
 },
 {
+"cell": "Delay.startTime:P01-low-above-high",
+"node": "Delay",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
+},
+{
 "cell": "Delay:N04-def-use",
 "node": "Delay",
 "class": "N04-def-use",
@@ -17716,6 +17933,20 @@
 "probe": "A.style (SFString) routed to Transform.translation against Disk2D.style",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "Disk2D.innerRadius:P01-low-above-high",
+"node": "Disk2D",
+"field": "innerRadius",
+"partner": "outerRadius",
+"type": "SFFloat",
+"accessType": "initializeOnly",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "innerRadius=0.75 with outerRadius=0.25, against the two swapped",
+"check": [
+"low-above-high"
 ]
 },
 {
@@ -18245,6 +18476,18 @@
 "check": [
 "route-type-mismatch"
 ]
+},
+{
+"cell": "DoubleAxisHingeJoint.minAngle1:P01-low-above-high",
+"node": "DoubleAxisHingeJoint",
+"field": "minAngle1",
+"partner": "maxAngle1",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "needs-intent",
+"probe": "minAngle1=0.75 with maxAngle1=0.25, against the two swapped",
+"note": "on a joint, a low stop above the high stop is how some engines switch the stop off"
 },
 {
 "cell": "DoubleAxisHingeJoint:N04-def-use",
@@ -18860,6 +19103,18 @@
 ]
 },
 {
+"cell": "DynamicsCompressor.startTime:P01-low-above-high",
+"node": "DynamicsCompressor",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
+},
+{
 "cell": "DynamicsCompressor:N04-def-use",
 "node": "DynamicsCompressor",
 "class": "N04-def-use",
@@ -19040,6 +19295,19 @@
 "probe": "A.style (SFString) routed to Transform.translation against EaseInEaseOut.style",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "EaseInEaseOut.key:P02-array-not-rising",
+"node": "EaseInEaseOut",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
 ]
 },
 {
@@ -23804,6 +24072,18 @@
 "state": "unprobed"
 },
 {
+"cell": "Gain.startTime:P01-low-above-high",
+"node": "Gain",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
+},
+{
 "cell": "Gain:N04-def-use",
 "node": "Gain",
 "class": "N04-def-use",
@@ -26332,6 +26612,19 @@
 ]
 },
 {
+"cell": "GeoPositionInterpolator.key:P02-array-not-rising",
+"node": "GeoPositionInterpolator",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
+]
+},
+{
 "cell": "GeoPositionInterpolator:N02-parallel-arrays",
 "node": "GeoPositionInterpolator",
 "class": "N02-parallel-arrays",
@@ -27980,6 +28273,20 @@
 "probe": "A.viewAll (SFBool) routed to Transform.translation against GeoViewpoint.viewAll",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "GeoViewpoint.nearDistance:P01-low-above-high",
+"node": "GeoViewpoint",
+"field": "nearDistance",
+"partner": "farDistance",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "nearDistance=0.75 with farDistance=0.25, against the two swapped",
+"check": [
+"clip-distance"
 ]
 },
 {
@@ -29941,6 +30248,18 @@
 "check": [
 "route-type-mismatch"
 ]
+},
+{
+"cell": "HAnimMotion.startFrame:P01-low-above-high",
+"node": "HAnimMotion",
+"field": "startFrame",
+"partner": "endFrame",
+"type": "SFInt32",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "needs-intent",
+"probe": "startFrame=2 with endFrame=1, against the two swapped",
+"note": "a motion may be meant to play from a later frame back to an earlier one"
 },
 {
 "cell": "HAnimMotion:N04-def-use",
@@ -34630,6 +34949,19 @@
 ]
 },
 {
+"cell": "IntegerSequencer.key:P02-array-not-rising",
+"node": "IntegerSequencer",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
+]
+},
+{
 "cell": "IntegerSequencer:N02-parallel-arrays",
 "node": "IntegerSequencer",
 "class": "N02-parallel-arrays",
@@ -35837,6 +36169,19 @@
 "state": "needs-intent",
 "probe": "visible='false' with nothing routed to it",
 "note": "hiding a node for good is common and meant (collision proxies, parts kept for later)"
+},
+{
+"cell": "LOD.range:P02-array-not-rising",
+"node": "LOD",
+"field": "range",
+"type": "MFFloat",
+"accessType": "initializeOnly",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "range='0 1 0.5' against '0 0.5 1'",
+"check": [
+"lod-range-order"
+]
 },
 {
 "cell": "LOD:N04-def-use",
@@ -38029,6 +38374,18 @@
 "check": [
 "route-type-mismatch"
 ]
+},
+{
+"cell": "ListenerPointSource.startTime:P01-low-above-high",
+"node": "ListenerPointSource",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
 },
 {
 "cell": "ListenerPointSource:N04-def-use",
@@ -40441,6 +40798,18 @@
 ]
 },
 {
+"cell": "MicrophoneSource.startTime:P01-low-above-high",
+"node": "MicrophoneSource",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
+},
+{
 "cell": "MicrophoneSource:N04-def-use",
 "node": "MicrophoneSource",
 "class": "N04-def-use",
@@ -41588,6 +41957,18 @@
 "state": "unprobed"
 },
 {
+"cell": "MovieTexture.startTime:P01-low-above-high",
+"node": "MovieTexture",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
+},
+{
 "cell": "MovieTexture:N04-def-use",
 "node": "MovieTexture",
 "class": "N04-def-use",
@@ -42709,6 +43090,19 @@
 ]
 },
 {
+"cell": "NormalInterpolator.key:P02-array-not-rising",
+"node": "NormalInterpolator",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
+]
+},
+{
 "cell": "NormalInterpolator:N02-parallel-arrays",
 "node": "NormalInterpolator",
 "class": "N02-parallel-arrays",
@@ -42961,6 +43355,19 @@
 ]
 },
 {
+"cell": "NurbsCurve.knot:P02-array-not-rising",
+"node": "NurbsCurve",
+"field": "knot",
+"type": "MFDouble",
+"accessType": "initializeOnly",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "knot='0 1 0.5' against '0 0.5 1'",
+"check": [
+"nurbs-knot-order"
+]
+},
+{
 "cell": "NurbsCurve:N04-def-use",
 "node": "NurbsCurve",
 "class": "N04-def-use",
@@ -43206,6 +43613,19 @@
 ]
 },
 {
+"cell": "NurbsCurve2D.knot:P02-array-not-rising",
+"node": "NurbsCurve2D",
+"field": "knot",
+"type": "MFDouble",
+"accessType": "initializeOnly",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "knot='0 1 0.5' against '0 0.5 1'",
+"check": [
+"nurbs-knot-order"
+]
+},
+{
 "cell": "NurbsCurve2D:N04-def-use",
 "node": "NurbsCurve2D",
 "class": "N04-def-use",
@@ -43418,6 +43838,19 @@
 "probe": "A.weight (MFDouble) routed to Transform.translation against NurbsOrientationInterpolator.weight",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "NurbsOrientationInterpolator.knot:P02-array-not-rising",
+"node": "NurbsOrientationInterpolator",
+"field": "knot",
+"type": "MFDouble",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "knot='0 1 0.5' against '0 0.5 1'",
+"check": [
+"nurbs-knot-order"
 ]
 },
 {
@@ -43875,6 +44308,32 @@
 ]
 },
 {
+"cell": "NurbsPatchSurface.uKnot:P02-array-not-rising",
+"node": "NurbsPatchSurface",
+"field": "uKnot",
+"type": "MFDouble",
+"accessType": "initializeOnly",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "uKnot='0 1 0.5' against '0 0.5 1'",
+"check": [
+"nurbs-knot-order"
+]
+},
+{
+"cell": "NurbsPatchSurface.vKnot:P02-array-not-rising",
+"node": "NurbsPatchSurface",
+"field": "vKnot",
+"type": "MFDouble",
+"accessType": "initializeOnly",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "vKnot='0 1 0.5' against '0 0.5 1'",
+"check": [
+"nurbs-knot-order"
+]
+},
+{
 "cell": "NurbsPatchSurface:N04-def-use",
 "node": "NurbsPatchSurface",
 "class": "N04-def-use",
@@ -44090,6 +44549,19 @@
 "probe": "A.weight (MFDouble) routed to Transform.translation against NurbsPositionInterpolator.weight",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "NurbsPositionInterpolator.knot:P02-array-not-rising",
+"node": "NurbsPositionInterpolator",
+"field": "knot",
+"type": "MFDouble",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "knot='0 1 0.5' against '0 0.5 1'",
+"check": [
+"nurbs-knot-order"
 ]
 },
 {
@@ -44775,6 +45247,32 @@
 "probe": "A.weight (MFDouble) routed to Transform.translation against NurbsSurfaceInterpolator.weight",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "NurbsSurfaceInterpolator.uKnot:P02-array-not-rising",
+"node": "NurbsSurfaceInterpolator",
+"field": "uKnot",
+"type": "MFDouble",
+"accessType": "initializeOnly",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "uKnot='0 1 0.5' against '0 0.5 1'",
+"check": [
+"nurbs-knot-order"
+]
+},
+{
+"cell": "NurbsSurfaceInterpolator.vKnot:P02-array-not-rising",
+"node": "NurbsSurfaceInterpolator",
+"field": "vKnot",
+"type": "MFDouble",
+"accessType": "initializeOnly",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "vKnot='0 1 0.5' against '0 0.5 1'",
+"check": [
+"nurbs-knot-order"
 ]
 },
 {
@@ -45484,6 +45982,32 @@
 ]
 },
 {
+"cell": "NurbsTextureCoordinate.uKnot:P02-array-not-rising",
+"node": "NurbsTextureCoordinate",
+"field": "uKnot",
+"type": "MFDouble",
+"accessType": "initializeOnly",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "uKnot='0 1 0.5' against '0 0.5 1'",
+"check": [
+"nurbs-knot-order"
+]
+},
+{
+"cell": "NurbsTextureCoordinate.vKnot:P02-array-not-rising",
+"node": "NurbsTextureCoordinate",
+"field": "vKnot",
+"type": "MFDouble",
+"accessType": "initializeOnly",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "vKnot='0 1 0.5' against '0 0.5 1'",
+"check": [
+"nurbs-knot-order"
+]
+},
+{
 "cell": "NurbsTextureCoordinate:N04-def-use",
 "node": "NurbsTextureCoordinate",
 "class": "N04-def-use",
@@ -45988,6 +46512,32 @@
 "probe": "A.weight (MFDouble) routed to Transform.translation against NurbsTrimmedSurface.weight",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "NurbsTrimmedSurface.uKnot:P02-array-not-rising",
+"node": "NurbsTrimmedSurface",
+"field": "uKnot",
+"type": "MFDouble",
+"accessType": "initializeOnly",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "uKnot='0 1 0.5' against '0 0.5 1'",
+"check": [
+"nurbs-knot-order"
+]
+},
+{
+"cell": "NurbsTrimmedSurface.vKnot:P02-array-not-rising",
+"node": "NurbsTrimmedSurface",
+"field": "vKnot",
+"type": "MFDouble",
+"accessType": "initializeOnly",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "vKnot='0 1 0.5' against '0 0.5 1'",
+"check": [
+"nurbs-knot-order"
 ]
 },
 {
@@ -46966,6 +47516,19 @@
 ]
 },
 {
+"cell": "OrientationInterpolator.key:P02-array-not-rising",
+"node": "OrientationInterpolator",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
+]
+},
+{
 "cell": "OrientationInterpolator:N02-parallel-arrays",
 "node": "OrientationInterpolator",
 "class": "N02-parallel-arrays",
@@ -47300,6 +47863,20 @@
 "probe": "A.viewAll (SFBool) routed to Transform.translation against OrthoViewpoint.viewAll",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "OrthoViewpoint.nearDistance:P01-low-above-high",
+"node": "OrthoViewpoint",
+"field": "nearDistance",
+"partner": "farDistance",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "nearDistance=0.75 with farDistance=0.25, against the two swapped",
+"check": [
+"clip-distance"
 ]
 },
 {
@@ -47699,6 +48276,18 @@
 "check": [
 "route-type-mismatch"
 ]
+},
+{
+"cell": "OscillatorSource.startTime:P01-low-above-high",
+"node": "OscillatorSource",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
 },
 {
 "cell": "OscillatorSource:N04-def-use",
@@ -50301,6 +50890,20 @@
 ]
 },
 {
+"cell": "PlaneSensor.minPosition:P01-low-above-high",
+"node": "PlaneSensor",
+"field": "minPosition",
+"partner": "maxPosition",
+"type": "SFVec2f",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "minPosition=0.75 0.75 with maxPosition=0.25 0.25, against the two swapped",
+"check": [
+"drag-limits-swapped"
+]
+},
+{
 "cell": "PlaneSensor:N01-sensor-unheard",
 "node": "PlaneSensor",
 "class": "N01-sensor-unheard",
@@ -51385,6 +51988,20 @@
 "probe": "A.style (SFString) routed to Transform.translation against PointProperties.style",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "PointProperties.pointSizeMinValue:P01-low-above-high",
+"node": "PointProperties",
+"field": "pointSizeMinValue",
+"partner": "pointSizeMaxValue",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "pointSizeMinValue=0.75 with pointSizeMaxValue=0.25, against the two swapped",
+"check": [
+"low-above-high"
 ]
 },
 {
@@ -53636,6 +54253,19 @@
 ]
 },
 {
+"cell": "PositionInterpolator.key:P02-array-not-rising",
+"node": "PositionInterpolator",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
+]
+},
+{
 "cell": "PositionInterpolator:N02-parallel-arrays",
 "node": "PositionInterpolator",
 "class": "N02-parallel-arrays",
@@ -53826,6 +54456,19 @@
 "probe": "A.value_changed (SFVec2f) routed to Transform.translation against NurbsSurfaceInterpolator.set_fraction",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "PositionInterpolator2D.key:P02-array-not-rising",
+"node": "PositionInterpolator2D",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
 ]
 },
 {
@@ -57991,6 +58634,19 @@
 ]
 },
 {
+"cell": "ScalarInterpolator.key:P02-array-not-rising",
+"node": "ScalarInterpolator",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
+]
+},
+{
 "cell": "ScalarInterpolator:N02-parallel-arrays",
 "node": "ScalarInterpolator",
 "class": "N02-parallel-arrays",
@@ -61336,6 +61992,18 @@
 ]
 },
 {
+"cell": "SingleAxisHingeJoint.minAngle:P01-low-above-high",
+"node": "SingleAxisHingeJoint",
+"field": "minAngle",
+"partner": "maxAngle",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "needs-intent",
+"probe": "minAngle=0.75 with maxAngle=0.25, against the two swapped",
+"note": "on a joint, a low stop above the high stop is how some engines switch the stop off"
+},
+{
 "cell": "SingleAxisHingeJoint:N04-def-use",
 "node": "SingleAxisHingeJoint",
 "class": "N04-def-use",
@@ -61599,6 +62267,18 @@
 "check": [
 "route-type-mismatch"
 ]
+},
+{
+"cell": "SliderJoint.minSeparation:P01-low-above-high",
+"node": "SliderJoint",
+"field": "minSeparation",
+"partner": "maxSeparation",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "needs-intent",
+"probe": "minSeparation=0.75 with maxSeparation=0.25, against the two swapped",
+"note": "on a joint, a low stop above the high stop is how some engines switch the stop off"
 },
 {
 "cell": "SliderJoint:N04-def-use",
@@ -61939,6 +62619,34 @@
 "probe": "A.style (SFString) routed to Transform.translation against Sound.style",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "Sound.minBack:P01-low-above-high",
+"node": "Sound",
+"field": "minBack",
+"partner": "maxBack",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "minBack=0.75 with maxBack=0.25, against the two swapped",
+"check": [
+"low-above-high"
+]
+},
+{
+"cell": "Sound.minFront:P01-low-above-high",
+"node": "Sound",
+"field": "minFront",
+"partner": "maxFront",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "minFront=0.75 with maxFront=0.25, against the two swapped",
+"check": [
+"low-above-high"
 ]
 },
 {
@@ -62381,6 +63089,20 @@
 "probe": "A.style (SFString) routed to Transform.translation against SpatialSound.style",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "SpatialSound.coneInnerAngle:P01-low-above-high",
+"node": "SpatialSound",
+"field": "coneInnerAngle",
+"partner": "coneOuterAngle",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "coneInnerAngle=0.75 with coneOuterAngle=0.25, against the two swapped",
+"check": [
+"low-above-high"
 ]
 },
 {
@@ -63057,6 +63779,19 @@
 ]
 },
 {
+"cell": "SplinePositionInterpolator.key:P02-array-not-rising",
+"node": "SplinePositionInterpolator",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
+]
+},
+{
 "cell": "SplinePositionInterpolator:N02-parallel-arrays",
 "node": "SplinePositionInterpolator",
 "class": "N02-parallel-arrays",
@@ -63286,6 +64021,19 @@
 "probe": "A.value_changed (SFVec2f) routed to Transform.translation against NurbsSurfaceInterpolator.set_fraction",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "SplinePositionInterpolator2D.key:P02-array-not-rising",
+"node": "SplinePositionInterpolator2D",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
 ]
 },
 {
@@ -63520,6 +64268,19 @@
 "probe": "A.value_changed (SFFloat) routed to Transform.translation against Analyser.gain",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "SplineScalarInterpolator.key:P02-array-not-rising",
+"node": "SplineScalarInterpolator",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
 ]
 },
 {
@@ -64098,6 +64859,19 @@
 "probe": "A.value_changed (SFRotation) routed to Transform.translation against CADPart.rotation",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "SquadOrientationInterpolator.key:P02-array-not-rising",
+"node": "SquadOrientationInterpolator",
+"field": "key",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "key='0 1 0.5' against '0 0.5 1'",
+"check": [
+"interpolator-key-order"
 ]
 },
 {
@@ -65016,6 +65790,18 @@
 "check": [
 "route-type-mismatch"
 ]
+},
+{
+"cell": "StreamAudioSource.startTime:P01-low-above-high",
+"node": "StreamAudioSource",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
 },
 {
 "cell": "StreamAudioSource:N04-def-use",
@@ -67088,6 +67874,32 @@
 ]
 },
 {
+"cell": "TextureBackground.groundAngle:P02-array-not-rising",
+"node": "TextureBackground",
+"field": "groundAngle",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "groundAngle='0 1 0.5' against '0 0.5 1'",
+"check": [
+"background-angles-not-rising"
+]
+},
+{
+"cell": "TextureBackground.skyAngle:P02-array-not-rising",
+"node": "TextureBackground",
+"field": "skyAngle",
+"type": "MFFloat",
+"accessType": "inputOutput",
+"class": "P02-array-not-rising",
+"state": "caught",
+"probe": "skyAngle='0 1 0.5' against '0 0.5 1'",
+"check": [
+"background-angles-not-rising"
+]
+},
+{
 "cell": "TextureBackground:N03-bindable",
 "node": "TextureBackground",
 "class": "N03-bindable",
@@ -68057,6 +68869,20 @@
 ]
 },
 {
+"cell": "TextureProjector.nearDistance:P01-low-above-high",
+"node": "TextureProjector",
+"field": "nearDistance",
+"partner": "farDistance",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "nearDistance=0.75 with farDistance=0.25, against the two swapped",
+"check": [
+"low-above-high"
+]
+},
+{
 "cell": "TextureProjector:N04-def-use",
 "node": "TextureProjector",
 "class": "N04-def-use",
@@ -68460,6 +69286,20 @@
 "probe": "A.upVector (SFVec3f) routed to Transform.rotation against TextureProjectorParallel.upVector",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "TextureProjectorParallel.nearDistance:P01-low-above-high",
+"node": "TextureProjectorParallel",
+"field": "nearDistance",
+"partner": "farDistance",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "nearDistance=0.75 with farDistance=0.25, against the two swapped",
+"check": [
+"low-above-high"
 ]
 },
 {
@@ -69758,6 +70598,20 @@
 "probe": "A.time (SFTime) routed to Transform.translation against Analyser.pauseTime",
 "check": [
 "route-type-mismatch"
+]
+},
+{
+"cell": "TimeSensor.startTime:P01-low-above-high",
+"node": "TimeSensor",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"check": [
+"timesensor-stop-ignored"
 ]
 },
 {
@@ -74349,6 +75203,20 @@
 ]
 },
 {
+"cell": "Viewpoint.nearDistance:P01-low-above-high",
+"node": "Viewpoint",
+"field": "nearDistance",
+"partner": "farDistance",
+"type": "SFFloat",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "caught",
+"probe": "nearDistance=0.75 with farDistance=0.25, against the two swapped",
+"check": [
+"clip-distance"
+]
+},
+{
 "cell": "Viewpoint:N03-bindable",
 "node": "Viewpoint",
 "class": "N03-bindable",
@@ -76491,6 +77359,18 @@
 "accessType": "inputOutput",
 "class": "F09-time",
 "state": "unprobed"
+},
+{
+"cell": "WaveShaper.startTime:P01-low-above-high",
+"node": "WaveShaper",
+"field": "startTime",
+"partner": "stopTime",
+"type": "SFTime",
+"accessType": "inputOutput",
+"class": "P01-low-above-high",
+"state": "not-a-mistake",
+"probe": "startTime=2 with stopTime=1, against the two swapped",
+"note": "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"
 },
 {
 "cell": "WaveShaper:N04-def-use",

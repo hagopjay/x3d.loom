@@ -33,9 +33,17 @@ RULINGS = {
     ("N01-sensor-unheard", None): "a page that hosts the scene can listen to a sensor through the SAI: in the sweep a "
                                   "check for sensors with no ROUTE fired 2,300 times, 2,069 of them on TouchSensors",
     ("F10-switched-off", "visible"): "hiding a node for good is common and meant (collision proxies, parts kept for later)",
+    ("P01-low-above-high", "startTime"): ("not-a-mistake", "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"),
+    ("P01-low-above-high", "startAngle"): ("not-a-mistake", "an arc may run from a larger angle round to a smaller one"),
+    ("P01-low-above-high", "minAngle"): "on a joint, a low stop above the high stop is how some engines switch the stop off",
+    ("P01-low-above-high", "minAngle1"): "on a joint, a low stop above the high stop is how some engines switch the stop off",
+    ("P01-low-above-high", "minSeparation"): "on a joint, a low stop above the high stop is how some engines switch the stop off",
+    ("P01-low-above-high", "startFrame"): "a motion may be meant to play from a later frame back to an earlier one",
+    ("P01-low-above-high", "loopStart"): "Web Audio defines a loop start after the loop end as looping the whole buffer",
 }
 PROBED = ["F01-range", "F02-enumeration", "F03-child-type", "F04-route-to-non-input", "F05-route-from-non-output", "F06-route-type",
-          "F07-index", "F10-switched-off", "N01-sensor-unheard", "N02-parallel-arrays", "N04-def-use", "N05-component"]
+          "F07-index", "F10-switched-off", "N01-sensor-unheard", "N02-parallel-arrays", "N04-def-use", "N05-component",
+          "P01-low-above-high", "P02-array-not-rising"]
 HEAD = ('<?xml version="1.0" encoding="UTF-8"?>\n<X3D profile="Full" version="4.0" '
         'xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" '
         'xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">\n'
@@ -192,6 +200,22 @@ def build(m, cell):
                 return None, None, "a range on a field that holds no numbers"
             bad, good = (" ".join([number(v, T)] * ts) for v in (bad, good))
         return scene(A(f" {fn}={quoteattr(bad)}")), scene(A(f" {fn}={quoteattr(good)}")), f"{fn}={bad} against {fn}={good}"
+    if cls == "P01-low-above-high":
+        ts, other = m.types.get(T, 1), cell["partner"]
+        lo, hi = (" ".join([v] * ts) for v in (("1", "2") if "Int" in T or "Time" in T else ("0.25", "0.75")))
+        return (scene(A(f" {fn}='{hi}' {other}='{lo}'")), scene(A(f" {fn}='{lo}' {other}='{hi}'")),
+                f"{fn}={hi} with {other}={lo}, against the two swapped")
+    if cls == "P02-array-not-rising":
+        if acc not in ("inputOutput", "initializeOnly"):
+            return None, None, "the field cannot be written in a file"
+        extra = ""
+        if fn == "key" and "keyValue" in m.nodes[node]:
+            kt = m.nodes[node]["keyValue"].get("type")
+            one = "true" if kt == "MFBool" else "0 0 1 0" if kt == "MFRotation" else " ".join(["0"] * m.types.get(kt, 1))
+            extra = f" keyValue='{' '.join([one] * 3)}'"
+        if fn in ("skyAngle", "groundAngle"):
+            extra = f" {fn.replace('Angle', 'Color')}='0 0 1 0 0 0.6 0 0 0.3 0 0 0'"
+        return (scene(A(f" {fn}='0 1 0.5'{extra}")), scene(A(f" {fn}='0 0.5 1'{extra}")), f"{fn}='0 1 0.5' against '0 0.5 1'")
     if cls == "F03-child-type":
         if acc not in ("inputOutput", "initializeOnly") or fn in ("IS", "field"):
             return None, None, "not a field a file can put a node in"
@@ -333,9 +357,10 @@ def main():
                 except Exception as e:                      # the kernel itself fell over on a probe file
                     state = "kernel-crash"
                     cell["note"] = f"{type(e).__name__}: {e}"[:160]
-        ruling = RULINGS.get((cell["class"], cell.get("field"))) or RULINGS.get((cell["class"], None))
+        ruling = (RULINGS.get((cell["class"], cell["node"], cell.get("field"))) or RULINGS.get((cell["class"], cell.get("field")))
+                  or RULINGS.get((cell["class"], None)))
         if state == "missed" and ruling:
-            state, cell["note"] = "needs-intent", ruling
+            state, cell["note"] = (ruling if isinstance(ruling, tuple) else ("needs-intent", ruling))
         cell["state"] = state
         tally.setdefault(cell["class"], {}).setdefault(state, 0)
         tally[cell["class"]][state] += 1

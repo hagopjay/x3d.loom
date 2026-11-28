@@ -1,5 +1,5 @@
 {
- "kernel": "ae1243e",
+ "kernel": "d446f94",
  "kernel_has_uncommitted_changes": false,
  "model_sha256": "7e426a238656c21a4a444b989276494329da363625c36f0a719b15d89416bee3",
  "nodes_placed": 253,
@@ -24,7 +24,9 @@
   "N01-sensor-unheard",
   "N02-parallel-arrays",
   "N04-def-use",
-  "N05-component"
+  "N05-component",
+  "P01-low-above-high",
+  "P02-array-not-rising"
  ],
  "by_class": {
   "F01-range": {
@@ -78,12 +80,21 @@
   "N05-component": {
    "caught": 208,
    "no-probe": 52
+  },
+  "P01-low-above-high": {
+   "caught": 14,
+   "not-a-mistake": 16,
+   "needs-intent": 5
+  },
+  "P02-array-not-rising": {
+   "caught": 33
   }
  },
  "all_cells": {
-  "caught": 4695,
-  "needs-intent": 63,
+  "caught": 4742,
+  "needs-intent": 68,
   "no-probe": 678,
+  "not-a-mistake": 16,
   "probe-broken": 28,
   "unprobed": 160,
   "xsd": 810

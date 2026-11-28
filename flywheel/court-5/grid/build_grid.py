@@ -14,6 +14,9 @@ from pathlib import Path
 
 H = Path(__file__).resolve().parent
 OFF = {"enabled", "on", "visible", "load"}
+PAIRS = (("min", "max"), ("inner", "outer"), ("start", "stop"), ("start", "end"), ("near", "far"))
+RISING = {"key", "knot", "uKnot", "vKnot", "range", "skyAngle", "groundAngle"}
+NOT_NUMBERS = {"SFNode", "MFNode", "SFString", "MFString", "SFBool", "MFBool"}
 
 
 def ancestors(root):
@@ -66,6 +69,21 @@ def build(model):
             if ft == "SFBool" and acc in ("inputOutput", "initializeOnly") and fn in OFF:
                 hit.append("F10-switched-off")
             cells += [{"cell": f"{name}.{fn}:{c}", "node": name, "field": fn, "type": ft, "accessType": acc, "class": c} for c in hit]
+        byname = {f.get("name"): f for f in fields}
+        for fn in sorted(byname):
+            f = byname[fn]
+            if f.get("type") in ("MFFloat", "MFDouble") and fn in RISING:
+                cells.append({"cell": f"{name}.{fn}:P02-array-not-rising", "node": name, "field": fn, "type": f.get("type"),
+                              "accessType": f.get("accessType"), "class": "P02-array-not-rising"})
+            for lo, hi in PAIRS:
+                if not (fn.startswith(lo) or lo.capitalize() in fn) or fn == "munitionStartPoint":
+                    continue
+                other = fn.replace(lo, hi, 1) if fn.startswith(lo) else fn.replace(lo.capitalize(), hi.capitalize(), 1)
+                g = byname.get(other)
+                if (g is not None and other != fn and g.get("type") == f.get("type") and f.get("type") not in NOT_NUMBERS
+                        and f.get("accessType") in ("inputOutput", "initializeOnly")):
+                    cells.append({"cell": f"{name}.{fn}:P01-low-above-high", "node": name, "field": fn, "partner": other,
+                                  "type": f.get("type"), "accessType": f.get("accessType"), "class": "P01-low-above-high"})
         a = anc(name)
         hit = ["N04-def-use", "N05-component"]
         if "X3DSensorNode" in a:
