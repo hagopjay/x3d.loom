@@ -1,0 +1,226 @@
+{
+ "schema": "loom.springbone-witnesses/1",
+ "core": "0.1.0",
+ "node": "v22.23.5",
+ "platform": "linux-x64",
+ "rows": [
+  {
+   "id": "W1-POSITION",
+   "claim": "One stretchy particle, POSITION model, d=0.1 e=0.1: the solver's path equals the closed-form two-term recurrence for 600 steps",
+   "source": "closed form y[n] = r^n (C cos n th + D sin n th) from SPEC.md section 4",
+   "value": 6.245004513516506e-17,
+   "limit": 1e-12,
+   "pass": true,
+   "unit": "m, max |sim - closed form|",
+   "control": {
+    "planted": "dampingSquared",
+    "value": 0.01638032424879636,
+    "failedAsItMust": true
+   }
+  },
+  {
+   "id": "W1-FORCE",
+   "claim": "One stretchy particle, FORCE model, d=0.1 e=0.1: the solver's path equals the closed-form two-term recurrence for 600 steps",
+   "source": "closed form y[n] = r^n (C cos n th + D sin n th) from SPEC.md section 4",
+   "value": 7.28583859910259e-17,
+   "limit": 1e-12,
+   "pass": true,
+   "unit": "m, max |sim - closed form|",
+   "control": {
+    "planted": "dampingSquared",
+    "value": 0.024912243519693025,
+    "failedAsItMust": true
+   }
+  },
+  {
+   "id": "W2",
+   "claim": "FORCE model tuned to 2 Hz, damping ratio 0.1 at 60 Hz: samples equal the continuous damped oscillator through the same two starting samples, 10 s",
+   "source": "x(t) = e^{-zeta w t}(C cos wd t + D sin wd t), wd = w sqrt(1-zeta^2)",
+   "value": 3.0574501264091225e-16,
+   "limit": 1e-12,
+   "pass": true,
+   "unit": "m, max |sim - oscillator|",
+   "extra": {
+    "measuredPeriod": 0.5025194485888986,
+    "analyticPeriod": 0.502518907629606,
+    "periodRelErr": 0.000001076495400212601,
+    "damping": 0.04102272606396773,
+    "elasticity": 0.04280209994217543
+   },
+   "control": {
+    "planted": "wrongRate",
+    "value": 0.030254169101190605,
+    "failedAsItMust": true
+   }
+  },
+  {
+   "id": "W2b",
+   "claim": "POSITION model has a damping-ratio floor: 2 Hz at 60 Hz cannot go below the d=0 ratio; asking for 0.1 is reported infeasible",
+   "source": "S - P = 1 - e, 1 - d = P/(S - P) (SPEC.md section 4)",
+   "value": 0.10433753300928657,
+   "limit": 0.1,
+   "pass": true,
+   "unit": "lowest reachable damping ratio at 2 Hz, 60 Hz",
+   "extra": {
+    "askedDamping": -0.0018589404323809955,
+    "askedElasticity": 0.04280209994217543
+   }
+  },
+  {
+   "id": "W3",
+   "claim": "Rigid 0.5 m pendulum, 30 deg, g = 9.81 m/s^2, no damping: period converges at first order to 4 sqrt(L/g) K(sin 15 deg); Richardson from 960 and 1920 Hz within 1e-4",
+   "source": "complete elliptic integral K by AGM",
+   "value": 0.00003763720202475204,
+   "limit": 0.0001,
+   "pass": true,
+   "unit": "relative error of the extrapolated period",
+   "extra": {
+    "exact": 1.4431977912121594,
+    "periods": {
+     "240 Hz": 1.4368913706098418,
+     "480 Hz": 1.439682076759117,
+     "960 Hz": 1.4413379503037695,
+     "1920 Hz": 1.4422407117945497
+    },
+    "relErrors": {
+     "240 Hz": 0.004369754887873494,
+     "480 Hz": 0.002436058643139655,
+     "960 Hz": 0.0012886943977566386,
+     "1920 Hz": 0.0006631657998906953
+    },
+    "observedOrder": 0.9584686694834621
+   },
+   "control": {
+    "planted": "gravityPerSecond",
+    "value": 0.9869210637092926,
+    "failedAsItMust": true
+   }
+  },
+  {
+   "id": "W3b",
+   "claim": "Numerical damping of rigid bones: share of a 30 deg swing left after 6 s with damping = 0, at 60 and 240 Hz",
+   "source": "same pendulum as W3; reported, not a pass mark",
+   "value": 0.48195971503061186,
+   "limit": null,
+   "pass": true,
+   "unit": "amplitude ratio at 60 Hz (240 Hz in extra)",
+   "extra": {
+    "at240": 0.8289869156854892
+   }
+  },
+  {
+   "id": "W4",
+   "claim": "FIXED mode at updateRate 60: the tip at t = 1, 2, 3 s is identical whether the page draws at 60, 120 or 240 fps",
+   "source": "equality of the solver state at shared instants (bitwise)",
+   "value": 0,
+   "limit": 0,
+   "pass": true,
+   "unit": "m, largest tip difference across display rates",
+   "control": {
+    "planted": "variable",
+    "value": 0.04288929853950834,
+    "failedAsItMust": true
+   }
+  },
+  {
+   "id": "W4b",
+   "claim": "VARIABLE mode (the asset default, one step per frame scaled by dt): tip disagreement between 30 and 240 fps at t = 2 s",
+   "source": "same scene as W4; reported, not a pass mark",
+   "value": 0.07130142939797271,
+   "limit": null,
+   "pass": true,
+   "unit": "m (VARIABLE); FIXED for comparison in extra",
+   "extra": {
+    "fixedSameScene": 0.00032939814735936435
+   }
+  },
+  {
+   "id": "W5",
+   "claim": "inert = 1, reference moving at 1 m/s: every particle keeps its rest offset from the root to 1e-12 m over 2 s",
+   "source": "rigid carry: x[n] - root[n] constant",
+   "value": 0,
+   "limit": 1e-12,
+   "pass": true,
+   "unit": "m, worst offset drift",
+   "control": {
+    "planted": "inertZero",
+    "value": 0.11523416376207964,
+    "failedAsItMust": true
+   }
+  },
+  {
+   "id": "W6",
+   "claim": "Round-cone (tapered capsule) push-out: 2,000 random points end exactly on the surface, checked by brute force over 20,001 swept spheres",
+   "source": "distance to a round cone = min over t of |p - c(t)| - r(t), sampled",
+   "value": 1.5135594305659694e-9,
+   "limit": 0.000001,
+   "pass": true,
+   "unit": "m, worst |distance to surface| over 497 pushed points (brute-force step 6e-5 m)",
+   "control": {
+    "planted": "naiveCone",
+    "value": 0.010245479993485962,
+    "failedAsItMust": true
+   }
+  },
+  {
+   "id": "W7",
+   "claim": "stiffness = 1 under strong gravity: the tip never leaves its animated place (1e-12 m) over 2 s",
+   "source": "max-distance clamp with zero allowance",
+   "value": 1.1102230246251565e-16,
+   "limit": 1e-12,
+   "pass": true,
+   "unit": "m",
+   "control": {
+    "planted": "looser",
+    "value": 0.1198096803537145,
+    "failedAsItMust": true
+   }
+  },
+  {
+   "id": "W8",
+   "claim": "angleLimit 20 deg under a strong side force: no bone swings more than 20 deg from its animated direction",
+   "source": "angle between rest and simulated bone directions",
+   "value": 19.999999999999993,
+   "limit": 20.000001,
+   "pass": true,
+   "unit": "deg, worst swing (each joint vs animated -Y; parents here stay near -Y)",
+   "control": {
+    "planted": "noLimit",
+    "value": 157.40848434970042,
+    "failedAsItMust": true
+   }
+  },
+  {
+   "id": "W9",
+   "claim": "Replay: 600 frames of jittered dt replayed give the same FNV state hash; the control changes one dt by 1 us",
+   "source": "FNV-1a over positions rounded to 1 nm",
+   "value": 0,
+   "limit": 0,
+   "pass": true,
+   "unit": "hash mismatches",
+   "extra": {
+    "hashA": "e0554fec",
+    "hashB": "e0554fec"
+   },
+   "control": {
+    "planted": "perturb",
+    "value": 1,
+    "failedAsItMust": true
+   }
+  },
+  {
+   "id": "W10",
+   "claim": "affineFromFields equals T(t) T(c) R SO S SO^-1 T(-c) built by 4x4 products, 500 random Transforms",
+   "source": "X3D 4.0 Part 1 clause 10.4.4 (Transform) matrix order",
+   "value": 6.661338147750939e-16,
+   "limit": 1e-12,
+   "pass": true,
+   "unit": "max element difference",
+   "control": {
+    "planted": "soNotInverted",
+    "value": 2.7489255934279866,
+    "failedAsItMust": true
+   }
+  }
+ ]
+}

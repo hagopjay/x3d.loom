@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+<head>
+  <component name='HAnim' level='1'/>
+  <component name='Scripting' level='1'/>
+  <meta name='title' content='tail.x3d'/>
+  <meta name='creator' content='x3d.loom x3d.springbone (own code and geometry, CC0)'/>
+  <meta name='license' content='CC0-1.0'/>
+</head>
+<Scene>
+  <ExternProtoDeclare name='SpringBoneCollider' url='"../SpringBone.x3d#SpringBoneCollider"'>
+    <field name='enabled' type='SFBool' accessType='inputOutput'/>
+    <field name='shape' type='SFString' accessType='inputOutput'/>
+    <field name='bound' type='SFString' accessType='inputOutput'/>
+    <field name='center' type='SFVec3f' accessType='inputOutput'/>
+    <field name='radius' type='SFFloat' accessType='inputOutput'/>
+    <field name='radius2' type='SFFloat' accessType='inputOutput'/>
+    <field name='height' type='SFFloat' accessType='inputOutput'/>
+    <field name='direction' type='SFString' accessType='inputOutput'/>
+    <field name='ancestors' type='MFNode' accessType='inputOutput'/>
+  </ExternProtoDeclare>
+  <ExternProtoDeclare name='SpringBoneChain' url='"../SpringBone.x3d#SpringBoneChain"'>
+    <field name='enabled' type='SFBool' accessType='inputOutput'/>
+    <field name='clock' type='SFBool' accessType='inputOutput'/>
+    <field name='roots' type='MFNode' accessType='inputOutput'/>
+    <field name='ancestors' type='MFNode' accessType='inputOutput'/>
+    <field name='reference' type='MFNode' accessType='inputOutput'/>
+    <field name='colliders' type='MFNode' accessType='inputOutput'/>
+    <field name='exclusions' type='MFNode' accessType='inputOutput'/>
+    <field name='boneTypes' type='MFString' accessType='inputOutput'/>
+    <field name='updateRate' type='SFFloat' accessType='inputOutput'/>
+    <field name='timeMode' type='SFString' accessType='inputOutput'/>
+    <field name='maxSubsteps' type='SFInt32' accessType='inputOutput'/>
+    <field name='interpolate' type='SFBool' accessType='inputOutput'/>
+    <field name='springModel' type='SFString' accessType='inputOutput'/>
+    <field name='damping' type='SFFloat' accessType='inputOutput'/>
+    <field name='elasticity' type='SFFloat' accessType='inputOutput'/>
+    <field name='stiffness' type='SFFloat' accessType='inputOutput'/>
+    <field name='inert' type='SFFloat' accessType='inputOutput'/>
+    <field name='friction' type='SFFloat' accessType='inputOutput'/>
+    <field name='radius' type='SFFloat' accessType='inputOutput'/>
+    <field name='angleLimit' type='SFFloat' accessType='inputOutput'/>
+    <field name='stretch' type='SFFloat' accessType='inputOutput'/>
+    <field name='dampingCurve' type='MFVec2f' accessType='inputOutput'/>
+    <field name='elasticityCurve' type='MFVec2f' accessType='inputOutput'/>
+    <field name='stiffnessCurve' type='MFVec2f' accessType='inputOutput'/>
+    <field name='inertCurve' type='MFVec2f' accessType='inputOutput'/>
+    <field name='frictionCurve' type='MFVec2f' accessType='inputOutput'/>
+    <field name='radiusCurve' type='MFVec2f' accessType='inputOutput'/>
+    <field name='angleLimitCurve' type='MFVec2f' accessType='inputOutput'/>
+    <field name='stretchCurve' type='MFVec2f' accessType='inputOutput'/>
+    <field name='frequency' type='SFFloat' accessType='inputOutput'/>
+    <field name='dampingRatio' type='SFFloat' accessType='inputOutput'/>
+    <field name='endLength' type='SFFloat' accessType='inputOutput'/>
+    <field name='endOffset' type='SFVec3f' accessType='inputOutput'/>
+    <field name='gravity' type='SFVec3f' accessType='inputOutput'/>
+    <field name='force' type='SFVec3f' accessType='inputOutput'/>
+    <field name='forceUnits' type='SFString' accessType='inputOutput'/>
+    <field name='gravityRestCompensation' type='SFBool' accessType='inputOutput'/>
+    <field name='wind' type='SFVec3f' accessType='inputOutput'/>
+    <field name='windTurbulence' type='SFFloat' accessType='inputOutput'/>
+    <field name='windFrequency' type='SFFloat' accessType='inputOutput'/>
+    <field name='seed' type='SFInt32' accessType='inputOutput'/>
+    <field name='freezeAxis' type='SFString' accessType='inputOutput'/>
+    <field name='branchMode' type='SFString' accessType='inputOutput'/>
+    <field name='weight' type='SFFloat' accessType='inputOutput'/>
+    <field name='resetDistance' type='SFFloat' accessType='inputOutput'/>
+    <field name='substepRoots' type='SFBool' accessType='inputOutput'/>
+    <field name='set_reset' type='SFBool' accessType='inputOnly'/>
+    <field name='set_time' type='SFTime' accessType='inputOnly'/>
+    <field name='stateHash' type='SFString' accessType='outputOnly'/>
+    <field name='steps' type='SFInt32' accessType='outputOnly'/>
+    <field name='droppedTime' type='SFTime' accessType='outputOnly'/>
+    <field name='collided' type='SFBool' accessType='outputOnly'/>
+    <field name='positions' type='MFVec3f' accessType='outputOnly'/>
+    <field name='equivalentFrequency' type='SFFloat' accessType='outputOnly'/>
+    <field name='equivalentDampingRatio' type='SFFloat' accessType='outputOnly'/>
+  </ExternProtoDeclare>
+  <NavigationInfo type='"EXAMINE" "ANY"'/>
+  <Viewpoint description='Tail' position='0 -0.3 2.2' centerOfRotation='0 -0.35 0'/>
+  <Background skyColor='0.12 0.13 0.16'/>
+  <DirectionalLight direction='-0.4 -1 -0.6'/>
+  <Transform DEF='Base'>
+    <Shape><Appearance><Material diffuseColor='0.8 0.8 0.85'/></Appearance><Box size='0.25 0.05 0.25'/></Shape>
+    <Transform DEF='Tail0' rotation='0 0 1 1.0471975512'>
+      <Group><Transform translation='0 -0.06 0'><Shape><Appearance><Material diffuseColor='0.95 0.55 0.2'/></Appearance><Cylinder radius='0.0350' height='0.12'/></Shape></Transform>
+      <Shape><Appearance><Material diffuseColor='0.95 0.55 0.2'/></Appearance><Sphere radius='0.0350'/></Shape></Group>
+      <Transform DEF='Tail1' translation='0 -0.12 0'>
+        <Group><Transform translation='0 -0.06 0'><Shape><Appearance><Material diffuseColor='0.95 0.55 0.2'/></Appearance><Cylinder radius='0.0308' height='0.12'/></Shape></Transform>
+        <Shape><Appearance><Material diffuseColor='0.95 0.55 0.2'/></Appearance><Sphere radius='0.0308'/></Shape></Group>
+        <Transform DEF='Tail2' translation='0 -0.12 0'>
+          <Group><Transform translation='0 -0.06 0'><Shape><Appearance><Material diffuseColor='0.95 0.55 0.2'/></Appearance><Cylinder radius='0.0266' height='0.12'/></Shape></Transform>
+          <Shape><Appearance><Material diffuseColor='0.95 0.55 0.2'/></Appearance><Sphere radius='0.0266'/></Shape></Group>
+          <Transform DEF='Tail3' translation='0 -0.12 0'>
+            <Group><Transform translation='0 -0.06 0'><Shape><Appearance><Material diffuseColor='0.95 0.55 0.2'/></Appearance><Cylinder radius='0.0224' height='0.12'/></Shape></Transform>
+            <Shape><Appearance><Material diffuseColor='0.95 0.55 0.2'/></Appearance><Sphere radius='0.0224'/></Shape></Group>
+            <Transform DEF='Tail4' translation='0 -0.12 0'>
+              <Group><Transform translation='0 -0.06 0'><Shape><Appearance><Material diffuseColor='0.95 0.55 0.2'/></Appearance><Cylinder radius='0.0182' height='0.12'/></Shape></Transform>
+              <Shape><Appearance><Material diffuseColor='0.95 0.55 0.2'/></Appearance><Sphere radius='0.0182'/></Shape></Group>
+              <Transform DEF='Tail5' translation='0 -0.12 0'>
+                <Group><Transform translation='0 -0.06 0'><Shape><Appearance><Material diffuseColor='0.95 0.55 0.2'/></Appearance><Cylinder radius='0.0140' height='0.12'/></Shape></Transform>
+                <Shape><Appearance><Material diffuseColor='0.95 0.55 0.2'/></Appearance><Sphere radius='0.0140'/></Shape></Group>
+              </Transform>
+            </Transform>
+          </Transform>
+        </Transform>
+      </Transform>
+    </Transform>
+  </Transform>
+  <Transform DEF='Ball' translation='0.12 -0.55 0'>
+    <Shape><Appearance><Material diffuseColor='0.3 0.6 0.9' transparency='0.3'/></Appearance><Sphere radius='0.1'/></Shape>
+  </Transform>
+  <TimeSensor DEF='SwayClock' cycleInterval='2.5' loop='false'/>
+  <PositionInterpolator DEF='Sway' key='0 0.25 0.5 0.75 1' keyValue='0 0 0 0.25 0 0 0 0 0 -0.25 0 0 0 0 0'/>
+  <ROUTE fromNode='SwayClock' fromField='fraction_changed' toNode='Sway' toField='set_fraction'/>
+  <ROUTE fromNode='Sway' fromField='value_changed' toNode='Base' toField='set_translation'/>
+  <ProtoInstance name='SpringBoneCollider' DEF='BallCollider'>
+    <fieldValue name='shape' value='SPHERE'/>
+    <fieldValue name='radius' value='0.1'/>
+    <fieldValue name='ancestors'><Transform USE='Ball'/></fieldValue>
+  </ProtoInstance>
+  <ProtoInstance name='SpringBoneChain' DEF='TailSpring'>
+    <fieldValue name='roots'><Transform USE='Tail0'/></fieldValue>
+    <fieldValue name='ancestors'><Transform USE='Base'/></fieldValue>
+    <fieldValue name='colliders'><ProtoInstance name='SpringBoneCollider' USE='BallCollider'/></fieldValue>
+    <fieldValue name='damping' value='0.08'/>
+    <fieldValue name='elasticity' value='0.04'/>
+    <fieldValue name='stiffness' value='0.05'/>
+    <fieldValue name='radius' value='0.03'/>
+    <fieldValue name='endLength' value='1'/>
+    <fieldValue name='gravity' value='0 -0.0006 0'/>
+    <fieldValue name='gravityRestCompensation' value='false'/>
+    <fieldValue name='clock' value='false'/>
+  </ProtoInstance>
+</Scene>
+</X3D>
