@@ -21,7 +21,7 @@ Instruments behind every number in this file (unless a row says otherwise):
 
 ```sh
 # render one file (camera = framed from the ORIGINAL, so original and optimised share it)
-node render/render.mjs --engine three|babylon|xite --glb OPT.glb --frame-from ORIG.glb --out OPT.png \
+node render/render.mjs --engine three|babylon|xite|playcanvas --glb OPT.glb --frame-from ORIG.glb --out OPT.png \
      [--size 512] [--json receipt.json] [--timeout-ms 60000]
 
 # or pass the camera yourself (fov = vertical, radians)
@@ -216,6 +216,31 @@ triangles); Babylon builds 10 meshes with thin instances; X_ITE builds 8 `Instan
   into `InstancedShape`. The Draco, meshopt, KTX2 and instanced files I checked (stilllife draco/meshopt/ktx2/all, prismatica draco/all) reach it as ordinary `IndexedTriangleSet` after decoding.
 * Timings on this box (stilllife, `timing.loadMs`): three about 50 ms, Babylon about 80 to 110 ms, X_ITE about 1.0 to 1.2 s (its component scripts are loaded lazily);
   one CLI call including Chromium start is 1.3 s (three), 2.1 s (Babylon), 3.5 s (X_ITE).
+
+## PlayCanvas, a fourth engine (28 Nov 2026)
+
+`--engine playcanvas`: PlayCanvas engine **2.24.1** (`playcanvas`, UMD build, WebGL2), page `pages/playcanvas.js`, same
+contract as the other three: shared camera (vertical fov), `TONEMAP_NONE`, `GAMMA_SRGB`, clear #20242c, glb lights or
+the fallback (a white directional light of 2.2 on the camera, plus `scene.ambientLight` 0.5 grey because PlayCanvas
+has no hemisphere light). Draco uses the same Google decoder as the three.js and Babylon pages; meshopt uses the
+meshoptimizer package's decoder through `pc.meshoptInitialize` (call counter in the receipt); KTX2 is left unconfigured.
+Rig: Chromium 158.0.8127.36 headless, ANGLE on SwiftShader, 256 px. Full four-engine run:
+`receipts/render-matrix-4engines-20261128.{md,json}`.
+
+| source | variants that load | mean delta vs original (meshopt / draco / quantize / dracoCoarse) | triangles reported |
+|---|---|---|---|
+| stilllife | 7 of 10 (not ktx2, ktx2Uastc, all) | 0.022 / 0.010 / 0.005 / **0.592** | 27 560 in every loaded cell |
+| prismatica | 9 of 9 (instance: 10 mesh instances drawing 600 976 triangles, so EXT_mesh_gpu_instancing is honoured) | 0.056 / 0.022 / 0.054 / **0.938** | 600 976 in every loaded cell |
+
+The coarse-Draco control moves the PlayCanvas picture 59x (stilllife) and 43x (prismatica) more than ordinary Draco, as
+in the other engines. The render tests now include PlayCanvas: 25 tests, all pass.
+
+**Findings (Confirmed by reading `playcanvas.js` 2.24.1 and by the picture):**
+- PlayCanvas imports `KHR_lights_punctual` lights **switched off** (`createLight` sets `enabled: false`), and clamps
+  their intensity to 0..2 (its own TODO, engine issue #3252). Loaded as is, the lit stilllife renders black
+  (5 distinct colours). The page turns them on and records it (`lighting.importedDisabled`, `enabledByPage`).
+- KTX2 fails with "Basis module not found": PlayCanvas needs its own Basis transcoder build, which the npm package
+  does not ship. Recorded as a failure, like Babylon's CDN decoder; not hidden.
 
 ## Known limits
 
