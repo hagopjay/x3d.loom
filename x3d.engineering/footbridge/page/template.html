@@ -1,0 +1,282 @@
+<title>Footbridge Workbench</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/x_ite@16.5.1/dist/x_ite.min.js"></script>
+<!-- X_ITE 16.5.1 stylesheet (MIT, copyright 2009 Holger Seelig and other contributors), icons and fonts removed.
+     A viewer that blocks the CDN stylesheet leaves the 3D surface hidden; the page adopts this copy into the player. -->
+<script type="text/x-css" id="xite-css">
+/*__XITE_CSS__*/
+</script>
+<style>
+/* Layout: a workbench. One dark 3D stage beside one instrument panel; findings and the audit trail below, in a measured column grid. */
+:root {
+  --bg: #f2f4f8; --panel: #ffffff; --ink: #131a26; --muted: #556176; --line: #d3dae6; --soft: #e8ecf3;
+  --tension: #1c69cf; --compression: #bf4a28; --ok: #17805a; --warn: #a86a12; --bad: #bd3327; --stage: #0b1019; --stage-ink: #dfe7f5;
+  --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif; --body: "Inter", "Segoe UI", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c1017; --panel: #141a25; --ink: #e7edf6; --muted: #94a1b6; --line: #273142; --soft: #1b2331;
+  --tension: #68aaff; --compression: #f08663; --ok: #4fc592; --warn: #e2b04a; --bad: #ff7466; --stage: #070a10; --stage-ink: #dfe7f5; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c1017; --panel: #141a25; --ink: #e7edf6; --muted: #94a1b6; --line: #273142; --soft: #1b2331;
+  --tension: #68aaff; --compression: #f08663; --ok: #4fc592; --warn: #e2b04a; --bad: #ff7466; --stage: #070a10; --stage-ink: #dfe7f5; color-scheme: dark }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(28px, 4.2vw, 44px); line-height: 1.05; font-weight: 700; }
+h2 { font-size: 22px; font-weight: 600; }
+h3 { font-size: 16px; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--tension); }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.lede { max-width: 66ch; color: var(--muted); font-size: 16px; }
+.head { display: flex; flex-direction: column; gap: 12px; }
+.c { color: var(--compression); font-weight: 600; } .t { color: var(--tension); font-weight: 600; }
+.note { font-size: 13px; color: var(--muted); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+.bench { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 880px) { .bench { grid-template-columns: minmax(0, 1fr); } }
+.stage { position: relative; background: var(--stage); border-radius: 10px; overflow: hidden; aspect-ratio: 7 / 4; max-height: 70vh; width: 100%; min-width: 0; }
+
+.stage img.poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.stage x3d-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.stage .hud { position: absolute; left: 12px; right: 12px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: space-between; pointer-events: none; }
+.stage .hud > * { pointer-events: auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; font: 12px/1.2 var(--mono); color: var(--stage-ink); background: rgba(7, 10, 16, 0.72); padding: 6px 9px; border-radius: 6px; }
+.legend i { display: inline-block; width: 18px; height: 4px; border-radius: 2px; vertical-align: middle; margin-right: 5px; }
+.views { display: flex; gap: 4px; }
+.views button { font: 12px/1 var(--mono); color: var(--stage-ink); background: rgba(7, 10, 16, 0.72); border: 1px solid rgba(223, 231, 245, 0.25); border-radius: 6px; padding: 6px 8px; cursor: pointer; }
+.views button[aria-pressed="true"] { border-color: var(--stage-ink); }
+.stage .msg { position: absolute; top: 10px; left: 12px; right: 12px; font: 12px/1.35 var(--mono); color: var(--stage-ink); background: rgba(7, 10, 16, 0.72); padding: 6px 9px; border-radius: 6px; }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; min-width: 0; }
+.tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+.tabs button { font: 600 13px/1.25 var(--display); color: var(--muted); background: none; border: 0; border-bottom: 3px solid transparent; padding: 12px 8px 10px; cursor: pointer; text-align: left; }
+.tabs button small { display: block; font: 400 11px/1.3 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 3px; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--compression); }
+.lesson { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.ctl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: baseline; }
+.ctl label { font-weight: 500; }
+.ctl output { font: 500 14px/1 var(--mono); font-variant-numeric: tabular-nums; }
+.ctl input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: var(--compression); margin: 4px 0 0; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.seg { display: flex; flex-wrap: wrap; gap: 4px; }
+.seg button, .btn { font: 500 13px/1 var(--body); color: var(--ink); background: var(--soft); border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--tension); outline-offset: 2px; }
+.gauge { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; align-items: center; }
+.gauge .bar { height: 10px; background: var(--soft); border-radius: 5px; overflow: hidden; }
+.gauge .bar i { display: block; height: 100%; background: var(--tension); border-radius: 5px; width: 0; }
+.gauge .cap { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+.say { border-left: 3px solid var(--line); padding: 2px 0 2px 12px; }
+.say.on { border-left-color: var(--ok); }
+.say.off { border-left-color: var(--warn); }
+.read { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.read div { background: var(--panel); padding: 8px 10px; min-width: 0; }
+.read dt { font: 400 11px/1.3 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.read dd { margin: 2px 0 0; font: 500 17px/1.2 var(--mono); font-variant-numeric: tabular-nums; }
+.read dd small { font-size: 12px; color: var(--muted); font-weight: 400; }
+dl { margin: 0; }
+.chips { display: flex; flex-direction: column; gap: 6px; }
+.chip { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 13px; padding: 6px 9px; border-radius: 6px; background: var(--soft); }
+.chip b { font: 600 11px/1 var(--mono); letter-spacing: 0.08em; padding: 4px 6px; border-radius: 4px; color: var(--panel); background: var(--muted); }
+.chip.ok b { background: var(--ok); } .chip.bad b { background: var(--bad); }
+.chip span.v { font: 13px/1 var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+.window { position: relative; height: 26px; background: var(--soft); border-radius: 6px; }
+.window .band { position: absolute; top: 0; bottom: 0; background: color-mix(in srgb, var(--ok) 32%, transparent); border-left: 2px solid var(--ok); border-right: 2px solid var(--ok); }
+.window .pin { position: absolute; top: -4px; bottom: -4px; width: 3px; background: var(--ink); border-radius: 2px; transform: translateX(-1px); }
+.window span { position: absolute; top: 5px; font: 11px/16px var(--mono); color: var(--ink); white-space: nowrap; }
+.chart { width: 100%; height: auto; display: block; }
+.chart text { font: 10px var(--mono); fill: var(--muted); }
+.chart .ax { stroke: var(--line); stroke-width: 1; fill: none; }
+.chart .cv { stroke: var(--compression); stroke-width: 2; fill: none; }
+.chart .tg { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 3; fill: none; }
+.chart .dot { fill: var(--ink); }
+
+.find { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px 28px; }
+.find article { display: flex; flex-direction: column; gap: 6px; border-top: 2px solid var(--ink); padding-top: 10px; min-width: 0; }
+.find .big { font: 600 26px/1.1 var(--mono); font-variant-numeric: tabular-nums; color: var(--compression); }
+.find article:nth-child(even) .big { color: var(--tension); }
+.find p { color: var(--muted); }
+.find p strong { color: var(--ink); font-weight: 600; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 11px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td.mono { white-space: nowrap; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px 28px; }
+.two ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); }
+.foot { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+section { display: flex; flex-direction: column; gap: 14px; }
+
+/* footbridge additions: the stage spans the page (the bridge is seven times longer than tall); lessons sit below in two columns */
+.lesson { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 22px; align-items: start; }
+.lesson > .col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+@media (max-width: 820px) { .lesson { grid-template-columns: minmax(0, 1fr); } }
+.lesson[hidden] { display: none; }
+select { font: 500 14px/1.2 var(--body); color: var(--ink); background: var(--soft); border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; max-width: 100%; }
+.chart .fillT { fill: color-mix(in srgb, var(--tension) 38%, transparent); stroke: none; }
+.chart .fillC { fill: color-mix(in srgb, var(--compression) 38%, transparent); stroke: none; }
+.chart .dim { opacity: 0.35; }
+.chart .cv { stroke: var(--ink); }
+.chart .band { fill: color-mix(in srgb, var(--warn) 28%, transparent); }
+.read > dl { display: flex; } .read > dl > div { flex: 1; }
+@media (max-width: 600px) { .stage { aspect-ratio: 5 / 4; } }
+.read.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 520px) { .read.three { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.read dd { font-size: 16px; overflow-wrap: anywhere; }
+.grade { font: 500 11px/1 var(--mono); letter-spacing: 0.06em; padding: 3px 6px; border-radius: 4px; background: var(--soft); color: var(--muted); white-space: nowrap; }
+.grade.l { color: var(--ok); } .grade.s { color: var(--warn); }
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div class="eyebrow">X3D engineering study D · not for construction</div>
+    <h1>Footbridge Workbench</h1>
+    <p class="lede">A 30 m steel truss footbridge, solved the way a bridge engineer would start: not "how strong is it under a full deck" but "<strong>where must the crowd stand to hurt each member most</strong>". The answer is a shape, one per member, called an influence line. Pick a member, see its shape, then walk a crowd across and watch eight members change from <span class="t">pull</span> to <span class="c">push</span>.</p>
+  </header>
+
+  <div class="bench">
+    <div class="stage" id="stage">
+      <img class="poster" id="poster" alt="A steel truss footbridge between two abutments, members coloured from blue to red by how hard they work" src="__POSTER__">
+      <x3d-canvas id="xc" splashScreen="false" contextMenu="false" notifications="false" timings="false"></x3d-canvas>
+      <div class="msg" id="msg" hidden></div>
+      <div class="hud">
+        <div class="legend" id="legend"></div>
+        <div class="views" role="group" aria-label="Camera">
+          <button type="button" id="view-0" aria-pressed="true">3/4</button><button type="button" id="view-1" aria-pressed="false">Side</button><button type="button" id="view-2" aria-pressed="false">Deck</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="tabs" role="tablist" aria-label="Lessons">
+        <button type="button" role="tab" id="tab-line" aria-selected="true" aria-controls="lesson-line"><small>Lesson 1</small>One member, one shape</button>
+        <button type="button" role="tab" id="tab-walk" aria-selected="false" aria-controls="lesson-walk"><small>Lesson 2</small>The crowd walks on</button>
+        <button type="button" role="tab" id="tab-depth" aria-selected="false" aria-controls="lesson-depth"><small>Lesson 3</small>Depth and footfall</button>
+      </div>
+
+      <div class="lesson" id="lesson-line" role="tabpanel" aria-labelledby="tab-line">
+        <div class="col">
+          <p>Stand one newton on the deck and note the force it puts in one member. Move it along and plot that force against where it stands. That plot is the member's influence line. A crowd is many newtons, so its effect is the area under the line where people stand.</p>
+          <div class="row"><label for="member">Member</label><select id="member"></select></div>
+          <div class="seg" id="quick" role="group" aria-label="Members worth a look">
+            <button type="button" data-id="D5">Midspan diagonal</button><button type="button" data-id="V4">A vertical</button><button type="button" data-id="TC5">Top chord</button><button type="button" data-id="EP1">End post</button><button type="button" data-id="V5">The idle one</button>
+          </div>
+          <div class="row"><span class="note">Put the crowd where it</span>
+            <div class="seg" id="mode" role="group" aria-label="Crowd placement"><button type="button" data-m="tension" aria-pressed="true">pulls most</button><button type="button" data-m="compression" aria-pressed="false">pushes most</button><button type="button" data-m="full" aria-pressed="false">fills the deck</button></div></div>
+          <div class="say" id="m-say"></div>
+        </div>
+        <div class="col">
+          <svg class="chart" id="il" role="img" aria-label="Influence line of the chosen member along the 30 m deck"></svg>
+          <div class="read three">
+            <dl><div><dt>Section</dt><dd id="m-sec"></dd></div></dl><dl><div><dt>Worst pull</dt><dd id="m-max"></dd></div></dl><dl><div><dt>Worst push</dt><dd id="m-min"></dd></div></dl>
+            <dl><div><dt>Full deck only</dt><dd id="m-full"></dd></div></dl><dl><div><dt>Strength + / −</dt><dd id="m-cap"></dd></div></dl><dl><div><dt>Utilisation</dt><dd id="m-u"></dd></div></dl>
+          </div>
+          <p class="note">Forces are factored: 1.25 or 0.90 on dead load, 1.75 on the crowd. Blue area pulls, red area pushes.</p>
+        </div>
+      </div>
+
+      <div class="lesson" id="lesson-walk" role="tabpanel" aria-labelledby="tab-walk" hidden>
+        <div class="col">
+          <p>Now let the crowd come on from the left bank. Blue members are being pulled, red ones pushed, and the colour scale is fixed to each member's own strength. Watch the diagonals near the middle as the front passes them.</p>
+          <div class="ctl"><label for="front">Front of the crowd</label><output id="front-out" for="front"></output>
+            <input type="range" id="front" min="0" max="30" step="0.25" value="12"></div>
+          <div class="row"><button class="btn" type="button" id="play">Walk the crowd on</button>
+            <label for="member2" class="note">Follow</label><select id="member2"></select></div>
+          <div class="row"><span class="note">Sag drawn</span><div class="seg" id="exag" role="group" aria-label="Sag enlargement"><button type="button" data-x="1">true size</button><button type="button" data-x="40" aria-pressed="true">× 40</button><button type="button" data-x="100">× 100</button></div></div>
+          <div class="say" id="w-say"></div>
+        </div>
+        <div class="col">
+          <svg class="chart" id="wk" role="img" aria-label="Force in the followed member as the crowd front advances"></svg>
+          <div class="read">
+            <dl><div><dt id="w-name">Force now</dt><dd id="w-force"></dd></div></dl><dl><div><dt>Midspan sag from the crowd</dt><dd id="w-sag"></dd></div></dl>
+            <dl><div><dt>Members on the wrong side of their full-deck sign</dt><dd id="w-flip"></dd></div></dl><dl><div><dt>Sag as a ratio</dt><dd id="w-ratio"></dd></div></dl>
+          </div>
+          <p class="note">No load factors in this lesson: these are the forces the steel would actually feel. Limit on sag: span / 360 = __DEFL_LIMIT__ mm.</p>
+        </div>
+      </div>
+
+      <div class="lesson" id="lesson-depth" role="tabpanel" aria-labelledby="tab-depth" hidden>
+        <div class="col">
+          <p>A bridge can be strong enough and still be unpleasant. People walk at about two steps a second. A deck whose own frequency sits there gets pumped like a swing. The picture shows the first vertical mode, enlarged and slowed.</p>
+          <div class="row"><span class="note">Truss depth</span><div class="seg" id="depth" role="group" aria-label="Truss depth"><button type="button">2.0 m</button><button type="button">2.5 m</button><button type="button" aria-pressed="true">3.0 m</button><button type="button">3.5 m</button><button type="button">4.0 m</button></div></div>
+          <div class="read">
+            <dl><div><dt>Sections, top · bottom · post · vertical · diagonal</dt><dd id="d-sec" style="font-size:13px"></dd></div></dl><dl><div><dt>Steel</dt><dd id="d-steel"></dd></div></dl>
+            <dl><div><dt>Sag under the full crowd</dt><dd id="d-defl"></dd></div></dl><dl><div><dt>First frequency</dt><dd><span id="d-f"></span><br><span id="d-fc"></span></dd></div></dl>
+          </div>
+          <p class="note">Each depth was sized again from the same catalogue. The 3D view and the chart stay on the 3.0 m design.</p>
+        </div>
+        <div class="col">
+          <div class="ctl"><label for="crowd">People standing on the 3.0 m design</label><output id="crowd-out" for="crowd"></output>
+            <input type="range" id="crowd" min="0" max="100" step="1" value="0"></div>
+          <svg class="chart" id="fq" role="img" aria-label="First vertical frequency against the share of the design crowd on the deck"></svg>
+          <div class="read"><dl><div><dt>First vertical frequency now</dt><dd id="d-now"></dd></div></dl><dl><div><dt>The design crowd</dt><dd>__CROWD_KG__ <small>kg/m², __PEOPLE__ people/m²</small></dd></div></dl></div>
+          <div class="say" id="d-say"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <h2>What the mathematics says</h2>
+    <div class="find">
+      <article><div class="big">__N_REV__ of 37</div><h3>Members that change sign</h3><p>Under a full deck no member reverses. Under a crowd that stops part-way, __N_REV__ do: the four diagonals and four verticals nearest midspan. <strong>The midspan diagonal D5 sees __D5_MAX__ kN of pull and __D5_MIN__ kN of push</strong>, where a full-deck analysis shows only __D5_FULL__ kN of pull. That is __D5_RATIO__ times too little, and no push at all.</p></article>
+      <article><div class="big">line = shape</div><h3>An influence line is a deflected shape</h3><p>Lengthen one member by one unit, keep the rest rigid, and the deck moves into exactly that member's influence line. This is Müller-Breslau's principle. It was solved here from the transpose of the equilibrium matrix and agrees with the 37 lines found from unit loads to __MB__. <strong>Statics and geometry are the same matrix read two ways.</strong></p></article>
+      <article><div class="big">__GOV_U__</div><h3>The end post decides</h3><p>Every newton on the deck leaves through the two sloping end posts. __GOV__ is the most used member at __GOV_U__ of its buckling strength, so the bridge has __RESERVE__% of spare crowd load before the first member is over. <strong>Chords are sized by the full deck, webs by the partial one.</strong></p></article>
+      <article><div class="big">span / __DEFL_RATIO__</div><h3>Strength governs, not stiffness</h3><p>The full crowd sags the middle __DEFL__ mm against a limit of __DEFL_LIMIT__ mm. At a depth of one tenth of the span the truss is stiff with room to spare. Dead load alone sags it __CAMBER__ mm, which a builder would take out with camber.</p></article>
+      <article><div class="big">__F1__ → __F1C__ Hz</div><h3>The crowd is heavier than the bridge</h3><p>Empty, the first vertical frequency is __F1__ Hz and passes the 3 Hz line. The design crowd is __CROWD_KG__ kg on every square metre. On the deck it weighs __CROWD_T__ t against __DEAD_T__ t of bridge, and <strong>the frequency falls to __F1C__ Hz, inside walking pace</strong>. The rule checks the empty bridge. A packed crowd shuffles and does not march, which is the usual defence, and it is a judgment, not a calculation.</p></article>
+      <article><div class="big">0 kN</div><h3>The member that carries nothing</h3><p>The centre vertical V5 takes no crowd load at all. Remove it and the top chord's free length doubles: its slenderness goes from __V5_SL__ to __V5_SL2__ (limit 120) and its strength from __V5_CAP__ to __V5_CAP2__ kN against a demand of __TC_DEMAND__ kN. <strong>It holds no load and the bridge fails without it.</strong></p></article>
+      <article><div class="big">__DEPTH_F_LO__ to __DEPTH_F_HI__ Hz</div><h3>Depth buys stiffness, not savings</h3><p>From 2 m to 4 m deep the steel goes from __DEPTH_KG_LO__ to __DEPTH_KG_HI__ kg per truss, with no clear trend, because lighter chords are paid for with longer webs. Sag goes from __DEPTH_D_LO__ to __DEPTH_D_HI__ mm and frequency from __DEPTH_F_LO__ to __DEPTH_F_HI__ Hz. <strong>Choose depth for how the bridge feels.</strong></p></article>
+      <article><div class="big">1 wrong guess</div><h3>What the study card got wrong</h3><p>Before any run, the card predicted that 60 × 4 mm diagonals would fail on strength and on slenderness. They fail on slenderness only: the worst diagonal push is __D5_MIN_ABS__ kN against __THIN_CAP__ kN. The prediction is recorded as wrong and the limit was not moved.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>The design</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Group</th><th>Section, mm</th><th>Most used member</th><th>Factored demand</th><th>Design strength</th><th>Utilisation</th><th>Slenderness</th></tr></thead>
+      <tbody>__DESIGN_ROWS__</tbody>
+    </table></div>
+    <p class="note">Pratt through truss, 10 panels of 3 m, 3 m deep, two trusses 3 m apart, each carrying half the deck. Square hollow sections with sharp corners, yield 345 MPa. __STEEL__ kg of steel per truss before connections.</p>
+  </section>
+
+  <section>
+    <h2>How it was checked</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Check</th><th>Agreement</th><th>Can it fail?</th></tr></thead>
+      <tbody>
+        <tr><td>Every requirement and reference on the study card</td><td class="mono">__GATES__ of __GATES__ gates</td><td>__CONTROLS__ of __CONTROLS__ planted faults caught, each breaking the gate it names</td></tr>
+        <tr><td>Joint equilibrium against the stiffness method, 37 members</td><td class="mono">__JS__ N</td><td>Yes: a flipped sign in the stiffness forces is rejected</td></tr>
+        <tr><td>OpenSeesPy __OPS__, an independent finite element code: forces, sag, frequency</td><td class="mono">__OPS_F__ N · __OPS_D__ m · __OPS_HZ__ Hz</td><td>Yes: a wrong chord area is rejected, on sag and frequency only, because forces in this truss do not depend on areas</td></tr>
+        <tr><td>Influence lines from unit loads against the stretch-one-member shape</td><td class="mono">__MB__</td><td>Yes: the opposite sign is rejected</td></tr>
+        <tr><td>Patterned areas by exact integration against a scan of 3,000 short loads</td><td class="mono">__SCAN__ m</td><td>Yes: loading whole panels is rejected</td></tr>
+        <tr><td>This page's solver (the script below, unchanged) against the numpy bank</td><td class="mono">under 1 mN, the bank's rounding</td><td>Yes: whole-panel loading misses by __PAGE_CTL__ kN</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>What this is not</h2>
+    <div class="two">
+      <div><h3>Assumed, not designed</h3><ul>__LIMITS__</ul></div>
+      <div><h3>Where each rule was read</h3><ul>__CODES__</ul></div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <div>Every number is measured by the thread that built it and stays Likely until someone else recomputes it. No licensed engineer has reviewed this. Do not build from it.</div>
+    <div>Numbers: Python __PY__, numpy __NP__, OpenSeesPy __OPS__, from x3d.loom <span class="mono">x3d.engineering/footbridge</span>. Page solver checked under Node __NODE__. 3D view: X_ITE 16.5.1, unpatched, with its stylesheet carried in the page. Walking band 1.6 to 2.4 Hz is recalled from memory.</div>
+  </div>
+</div>
+
+<script>
+/*__SOLVER__*/
+</script>
+<script>
+const DATA = /*__DATA__*/;
+/*__APP__*/
+</script>

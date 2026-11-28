@@ -1,0 +1,442 @@
+{
+ "schema": "loom.eng-card/1",
+ "study": "footbridge",
+ "label": "[FTB]",
+ "title": "A 30 m steel truss footbridge: moving crowd load, influence lines, member sizing, deflection and footfall frequency",
+ "question": "For a 30 m simply supported Pratt through-truss footbridge with a 3 m deck, which arrangement of crowd governs each member, what sections does each group need, how far does it deflect, and how close is its first vertical frequency to walking pace?",
+ "written": "28 November 2026, before any solver for this bridge was run. The only number computed beforehand was a back-of-envelope first frequency of about 6 Hz from the beam formula, to see whether the 3 Hz limit was within reach. No limit below was changed after the run of record.",
+ "not_for_construction": "A worked study. No licensed engineer has reviewed it. A plane model of one truss: nothing here covers wind, lateral vibration, connections, fatigue, the deck, bearings or foundations.",
+ "units": {
+  "length": "m",
+  "force": "N",
+  "mass": "kg",
+  "stress": "Pa",
+  "frame": "solver: x along the span, y up, one truss in its own plane. Scene: X3D metres, x along the span, y up, z across the deck"
+ },
+ "params": {
+  "span": {
+   "value": 30.0,
+   "unit": "m"
+  },
+  "panels": {
+   "value": 10
+  },
+  "depth": {
+   "value": 3.0,
+   "unit": "m",
+   "note": "centre to centre of chords, span/10"
+  },
+  "deck_width": {
+   "value": 3.0,
+   "unit": "m",
+   "note": "between truss centre lines; each truss carries half"
+  },
+  "floor_dead": {
+   "value": 1500.0,
+   "unit": "Pa",
+   "note": "deck, stringers, floor beams and railings, assumed. A study value, not taken from a product"
+  },
+  "connection_allowance": {
+   "value": 1.1,
+   "note": "steel self-weight multiplied by this for gussets and bolts, assumed"
+  },
+  "pedestrian": {
+   "value": 4309.0,
+   "unit": "Pa",
+   "note": "90 lbf/ft2 = 4309.2 Pa"
+  },
+  "E": {
+   "value": 200000000000.0,
+   "unit": "Pa"
+  },
+  "Fy": {
+   "value": 345000000.0,
+   "unit": "Pa",
+   "note": "ASTM A500 Grade C square HSS, 50 ksi, recalled from memory"
+  },
+  "density": {
+   "value": 7850.0,
+   "unit": "kg/m3"
+  },
+  "g": {
+   "value": 9.80665,
+   "unit": "m/s2"
+  },
+  "gamma_dc_max": {
+   "value": 1.25
+  },
+  "gamma_dc_min": {
+   "value": 0.9
+  },
+  "gamma_pl": {
+   "value": 1.75
+  },
+  "phi_t": {
+   "value": 0.9
+  },
+  "phi_c": {
+   "value": 0.9
+  },
+  "slender_compression": {
+   "value": 120.0
+  },
+  "slender_tension": {
+   "value": 200.0
+  },
+  "wall_limit_const": {
+   "value": 1.4
+  },
+  "deflection_ratio": {
+   "value": 360.0
+  },
+  "frequency_min": {
+   "value": 3.0,
+   "unit": "Hz"
+  }
+ },
+ "catalogue": {
+  "note": "Square hollow sections b x t in mm with sharp corners (no corner radius): A = b^2 - (b-2t)^2, I = (b^4 - (b-2t)^4)/12. A study list, not a mill catalogue.",
+  "sizes": [
+   [
+    60,
+    4
+   ],
+   [
+    80,
+    4
+   ],
+   [
+    80,
+    5
+   ],
+   [
+    100,
+    5
+   ],
+   [
+    100,
+    6
+   ],
+   [
+    120,
+    6
+   ],
+   [
+    150,
+    6
+   ],
+   [
+    150,
+    8
+   ],
+   [
+    180,
+    8
+   ],
+   [
+    200,
+    8
+   ],
+   [
+    200,
+    10
+   ],
+   [
+    250,
+    10
+   ],
+   [
+    250,
+    12
+   ]
+  ]
+ },
+ "codes": [
+  {
+   "clause": "AASHTO LRFD Guide Specifications for the Design of Pedestrian Bridges (Dec 2009), pedestrian loading",
+   "text": "uniform pedestrian loading of 90 psf, patterned to produce the maximum load effects; no dynamic load allowance",
+   "read_from": "web search summary of the NCHRP 20-07 Task 244 draft and a WSDOT design memorandum, 28 Nov 2026. The published guide was not opened",
+   "grade": "Likely"
+  },
+  {
+   "clause": "Strength I, pedestrian live load factor",
+   "text": "1.75 on the pedestrian load",
+   "read_from": "same search summary (1.75 x 90 = 158 psf)",
+   "grade": "Likely"
+  },
+  {
+   "clause": "Strength I, dead load factors",
+   "text": "1.25 maximum and 0.90 minimum on component dead load",
+   "read_from": "memory of AASHTO LRFD Table 3.4.1-2",
+   "grade": "Suspected"
+  },
+  {
+   "clause": "Deflection limit span/360",
+   "text": "under unfactored pedestrian live load",
+   "read_from": "memory of the pedestrian guide; the search did not return it",
+   "grade": "Suspected"
+  },
+  {
+   "clause": "Vertical frequency at least 3.0 Hz",
+   "text": "fundamental vertical frequency without live load above 3.0 Hz to stay clear of the first harmonic of walking; otherwise a dynamic evaluation",
+   "read_from": "memory of the pedestrian guide; the search did not return it",
+   "grade": "Suspected"
+  },
+  {
+   "clause": "AISC 360 E3, flexural buckling",
+   "text": "Fe = pi^2 E/(KL/r)^2; Fcr = 0.658^(Fy/Fe) Fy when KL/r <= 4.71 sqrt(E/Fy), else 0.877 Fe; phi_c = 0.90",
+   "read_from": "course notes quoting the specification, as in the roof truss study [IFT]",
+   "grade": "Likely"
+  },
+  {
+   "clause": "AISC 360 D2(a), tensile yielding",
+   "text": "Pn = Fy Ag; phi_t = 0.90. Net section rupture is not checked because no connection is designed",
+   "read_from": "memory",
+   "grade": "Suspected"
+  },
+  {
+   "clause": "Slenderness limits 120 and 200",
+   "text": "KL/r at most 120 for a main member in compression, 200 for a member in tension",
+   "read_from": "memory of AASHTO LRFD 6.9.3 and 6.8.4, used here as study criteria",
+   "grade": "Suspected"
+  },
+  {
+   "clause": "HSS wall slenderness",
+   "text": "flat width over thickness at most 1.40 sqrt(E/Fy) for a wall that is not slender; flat width taken as b - 3t",
+   "read_from": "memory of AISC 360 Table B4.1a",
+   "grade": "Suspected"
+  },
+  {
+   "clause": "Mixing two codes",
+   "text": "loads and factors from AASHTO, member strength from AISC 360",
+   "read_from": "a choice made for this study so the strength formulas are the ones already checked in [IFT]. A real design uses one code throughout",
+   "grade": "study criterion"
+  }
+ ],
+ "load_cases": [
+  {
+   "id": "DC",
+   "what": "steel self-weight times the connection allowance, plus the floor dead load on half the deck width, at the panel points"
+  },
+  {
+   "id": "PL-pattern",
+   "what": "pedestrian load on half the deck width, placed for each member on exactly the lengths of deck where that member's influence line is positive (largest tension) and, separately, where it is negative (largest compression)"
+  },
+  {
+   "id": "PL-full",
+   "what": "pedestrian load on the whole span, for deflection and as the comparison that shows what patterning adds"
+  },
+  {
+   "id": "PL-walk",
+   "what": "the crowd fills the deck from the left end to a front at x, for x from 0 to 30 m: the animation and the reversal plot"
+  }
+ ],
+ "combinations": [
+  {
+   "id": "Strength-max",
+   "text": "gamma N_DC + 1.75 w A_plus, with gamma 1.25 when dead load adds and 0.90 when it relieves"
+  },
+  {
+   "id": "Strength-min",
+   "text": "gamma N_DC + 1.75 w A_minus, same rule"
+  },
+  {
+   "id": "Service",
+   "text": "N_DC + w A, unfactored, for deflection"
+  }
+ ],
+ "requirements": [
+  {
+   "id": "R1",
+   "shall": "Every member's factored demand, in tension and in compression, under the patterned crowd shall be at most its design strength (utilisation at most 1.00)."
+  },
+  {
+   "id": "R2",
+   "shall": "Every member that can go into compression under any arrangement shall have KL/r at most 120, every other member at most 200, and every section's walls shall not be slender."
+  },
+  {
+   "id": "R3",
+   "shall": "The midspan deflection under the unfactored pedestrian load on the whole span shall be at most span/360 = 83.3 mm."
+  },
+  {
+   "id": "R4",
+   "shall": "The first vertical natural frequency of the bridge without people on it shall be at least 3.0 Hz."
+  },
+  {
+   "id": "R5",
+   "shall": "The envelope shall come from the patterned load for all 37 members, and each member's governing arrangement shall be recorded as lengths of deck."
+  },
+  {
+   "id": "R6",
+   "shall": "The truss shall be statically determinate and stable: 37 members = 2 x 20 joints - 3, and the equilibrium matrix shall have full rank."
+  },
+  {
+   "id": "R7",
+   "shall": "Every number written into the X3D scene for a member shall equal the bank."
+  }
+ ],
+ "references": [
+  {
+   "id": "REF1",
+   "what": "member forces under dead load from joint equilibrium (statics only) equal those from the stiffness method"
+  },
+  {
+   "id": "REF2",
+   "what": "OpenSeesPy 3.8, an independent finite element code, gives the same forces, the same midspan deflection and the same first frequency"
+  },
+  {
+   "id": "REF3",
+   "what": "method of sections: under a full uniform load the chord forces at midspan equal the beam moment over the depth"
+  },
+  {
+   "id": "REF4",
+   "what": "Mueller-Breslau: the influence line of a member's force found from unit loads equals minus the deflected shape of the deck when that member alone is lengthened by one unit (solved from the transpose of the equilibrium matrix)"
+  },
+  {
+   "id": "REF5",
+   "what": "closed forms: the midspan top chord influence line peaks at -a b/(L h) = -2.5; a diagonal's influence line changes sign inside its own panel"
+  },
+  {
+   "id": "REF6",
+   "what": "the patterned areas from exact integration equal a brute-force scan with 3,000 point loads"
+  },
+  {
+   "id": "REF7",
+   "what": "midspan deflection by virtual work equals the stiffness method's displacement"
+  },
+  {
+   "id": "REF8",
+   "what": "the first frequency lies between 0.75 and 1.00 of the Euler-Bernoulli beam formula built from the chords alone, because web shear flexibility can only lower it"
+  },
+  {
+   "id": "REF9",
+   "what": "the E3 buckling curve is continuous at KL/r = 4.71 sqrt(E/Fy)"
+  }
+ ],
+ "envelope": {
+  "claimed": "the design at 90 psf",
+  "probes": [
+   "crowd load multiplied by 1.25, 1.5, 2.0 and to first failure, sections held",
+   "truss depth 2.0, 2.5, 3.0, 3.5, 4.0 m with sections chosen again each time: steel mass, deflection, frequency",
+   "frequency with a full crowd's mass on the deck"
+  ]
+ },
+ "controls": [
+  {
+   "id": "full-span-only",
+   "expect_fail": [
+    "R5"
+   ],
+   "what": "envelope built from the crowd on the whole span only, no patterning"
+  },
+  {
+   "id": "whole-panels-only",
+   "expect_fail": [
+    "REF6"
+   ],
+   "what": "patterning by whole panels: the part of a panel beyond the influence line's zero is loaded too"
+  },
+  {
+   "id": "no-dead-relief",
+   "expect_fail": [
+    "R5"
+   ],
+   "what": "dead load factor 1.25 everywhere, never 0.90 where dead load relieves"
+  },
+  {
+   "id": "stiffness-sign",
+   "expect_fail": [
+    "REF1"
+   ],
+   "what": "the stiffness solver's member force with its sign flipped"
+  },
+  {
+   "id": "sections-wrong-depth",
+   "expect_fail": [
+    "REF3"
+   ],
+   "what": "the hand formula with depth 2.7 m"
+  },
+  {
+   "id": "mueller-breslau-sign",
+   "expect_fail": [
+    "REF4"
+   ],
+   "what": "the deflected shape taken with the wrong sign"
+  },
+  {
+   "id": "thin-diagonals",
+   "expect_fail": [
+    "R2"
+   ],
+   "what": "diagonals forced to 60 x 4 mm"
+  },
+  {
+   "id": "both-trusses-load-on-one",
+   "expect_fail": [
+    "R1"
+   ],
+   "what": "the whole 3 m deck width given to one truss"
+  },
+  {
+   "id": "truss-in-millimetres",
+   "expect_fail": [
+    "R2",
+    "R3"
+   ],
+   "what": "node coordinates 1000 times too large with loads unchanged"
+  },
+  {
+   "id": "mass-in-newtons",
+   "expect_fail": [
+    "R4",
+    "REF8"
+   ],
+   "what": "weight used as mass: the division by g left out"
+  },
+  {
+   "id": "remove-a-diagonal",
+   "expect_fail": [
+    "R6"
+   ],
+   "what": "one diagonal deleted: a mechanism, to be reported and not solved"
+  },
+  {
+   "id": "transposed-471",
+   "expect_fail": [
+    "REF9"
+   ],
+   "what": "the E3 limit typed as 4.17"
+  },
+  {
+   "id": "typed-utilisation",
+   "expect_fail": [
+    "R7"
+   ],
+   "what": "one member's utilisation in the scene edited by hand"
+  },
+  {
+   "id": "opensees-wrong-area",
+   "expect_fail": [
+    "REF2"
+   ],
+   "what": "the independent model given the top chord's area for the bottom chord"
+  }
+ ],
+ "limits": [
+  "plane model of one truss; the two trusses are assumed to share the deck load equally",
+  "pinned joints, loads at panel points, stringers simply supported between floor beams",
+  "K = 1.0 with the member length as the buckling length: the top chord is assumed braced sideways at every panel point by overhead bracing that is not designed",
+  "no wind, no lateral frequency or lateral crowd lock-in, no fatigue, no temperature, no vehicle",
+  "no connection, bearing, deck, railing or foundation is designed",
+  "sections have sharp corners; real HSS has less area",
+  "eight of ten code lines are recalled or chosen, see codes"
+ ],
+ "amendments": [
+  {
+   "when": "28 November 2026, after the first run of the controls",
+   "what": "control thin-diagonals: expectation narrowed from R1 and R2 to R2",
+   "why": "The card predicted that 60 x 4 mm diagonals would fail strength and slenderness. They fail slenderness (185 against 120) and pass strength: the worst diagonal compression is 37.0 kN against a buckling strength of 40.7 kN. The prediction was wrong, the control and every limit are unchanged, and the slenderness limit is what stops this section."
+  }
+ ]
+}
