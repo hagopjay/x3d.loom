@@ -33,6 +33,10 @@ RULINGS = {
     ("N01-sensor-unheard", None): "a page that hosts the scene can listen to a sensor through the SAI: in the sweep a "
                                   "check for sensors with no ROUTE fired 2,300 times, 2,069 of them on TouchSensors",
     ("F10-switched-off", "visible"): "hiding a node for good is common and meant (collision proxies, parts kept for later)",
+    ("F09-time", "resumeTime"): ("not-a-mistake", "a resumeTime with no later pauseTime has no effect; the pauseTime cell carries the mistake"),
+    ("F09-time", "startTime"): ("not-a-mistake", "on a node with no loop field a start long past still plays: there is no cycle to have ended"),
+    ("F09-time", None): "a length of time (duration, tau, tailTime, an interval): any value that is not negative is a choice, and negative values are class F01",
+    ("N03-bindable", None): "a browser lists every viewpoint for the user to pick, so a later one is reachable without a ROUTE",
     ("P01-low-above-high", "startTime"): ("not-a-mistake", "a stopTime at or before startTime is legal and is ignored (19775-1 8.2.4.3)"),
     ("P01-low-above-high", "startAngle"): ("not-a-mistake", "an arc may run from a larger angle round to a smaller one"),
     ("P01-low-above-high", "minAngle"): "on a joint, a low stop above the high stop is how some engines switch the stop off",
@@ -41,9 +45,13 @@ RULINGS = {
     ("P01-low-above-high", "startFrame"): "a motion may be meant to play from a later frame back to an earlier one",
     ("P01-low-above-high", "loopStart"): "Web Audio defines a loop start after the loop end as looping the whole buffer",
 }
+URL_FAMILY = {"ImageTexture": ("png", "x3d"), "ImageCubeMapTexture": ("png", "x3d"), "ImageTexture3D": ("nrrd", "x3d"),
+              "Background": ("png", "x3d"), "MovieTexture": ("mp4", "x3d"), "AudioClip": ("wav", "png"),
+              "BufferAudioSource": ("wav", "png"), "Inline": ("x3d", "png"), "GeoLOD": ("x3d", "png"), "Script": ("js", "png"),
+              "ShaderPart": ("glsl", "png"), "ShaderProgram": ("glsl", "png")}
 PROBED = ["F01-range", "F02-enumeration", "F03-child-type", "F04-route-to-non-input", "F05-route-from-non-output", "F06-route-type",
           "F07-index", "F10-switched-off", "N01-sensor-unheard", "N02-parallel-arrays", "N04-def-use", "N05-component",
-          "P01-low-above-high", "P02-array-not-rising"]
+          "P01-low-above-high", "P02-array-not-rising", "F08-address", "F09-time", "N03-bindable"]
 HEAD = ('<?xml version="1.0" encoding="UTF-8"?>\n<X3D profile="Full" version="4.0" '
         'xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" '
         'xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">\n'
@@ -175,6 +183,39 @@ def build(m, cell):
     T, acc = (f.get("type"), f.get("accessType")) if f is not None else (None, None)
     scene = lambda body: HEAD + body + TAIL
     A = lambda attrs="", inner="": m.place(node, ' DEF="A"' + attrs, inner)
+    if cls == "F08-address":
+        fam = URL_FAMILY.get(node)
+        if not fam:
+            return None, None, "the node may point at a file of any kind, so no address is of the wrong kind"
+        good, bad = fam
+        return (scene(A(f" {fn}='\"probe.{bad}\"'")), scene(A(f" {fn}='\"probe.{good}\"'")),
+                f"A.{fn} names a .{bad} file against a .{good} file")
+    if cls == "F09-time":
+        has_loop = m.nodes[node].get("loop") is not None
+        listen = ""
+        if node == "TimeSensor":                 # the kernel judges a TimeSensor only when something listens to it
+            listen = ('    <PositionInterpolator DEF="B" key="0 1" keyValue="0 0 0 1 0 0"/>\n    <Transform DEF="C"/>\n'
+                      + route("A", "fraction_changed", "B", "set_fraction") + route("B", "value_changed", "C", "translation"))
+        loop = ' loop="true"' if has_loop else ""
+        if fn == "stopTime":
+            return scene(A(loop + ' stopTime="5"') + listen), scene(A(loop) + listen), "A.stopTime 5 (stopped in 1970) against none"
+        if fn == "pauseTime":
+            return scene(A(loop + ' pauseTime="3"') + listen), scene(A(loop) + listen), "A.pauseTime 3 (paused since 1970) against none"
+        if fn == "startTime":
+            return scene(A(' startTime="3"') + listen), scene(A(loop) + listen), "A.startTime 3 with loop false against a looping clock"
+        if fn in ("autoRefresh", "autoRefreshTimeLimit"):
+            return (scene(A(' autoRefresh="10" autoRefreshTimeLimit="5"')), scene(A(' autoRefresh="10" autoRefreshTimeLimit="60"')),
+                    "A reloads every 10 s but stops reloading after 5 s, against after 60 s")
+        if fn == "delayTime" or fn == "maxDelayTime":
+            return (scene(A(' delayTime="2" maxDelayTime="1"')), scene(A(' delayTime="1" maxDelayTime="2"')),
+                    "A.delayTime 2 above maxDelayTime 1, against 1 and 2")
+        return scene(A(f' {fn}="0"')), scene(A(f' {fn}="1"')), f"A.{fn} 0 against 1 (a length of time, not a moment)"
+    if cls == "N03-bindable":
+        first = {"TextureBackground": "Background"}.get(node, node)
+        if node not in m.chain or first not in m.chain:
+            return None, None, "the node could not be placed"
+        return (scene(m.place(first, ' DEF="B"') + m.place(node, "")), scene(m.place(node, "")),
+                f"a second {node}, with no DEF and no ROUTE, after a first {first}, against one alone")
     if cls in ("F01-range", "F02-enumeration"):
         if acc not in ("inputOutput", "initializeOnly"):
             return None, None, "the field cannot be written in a file"
