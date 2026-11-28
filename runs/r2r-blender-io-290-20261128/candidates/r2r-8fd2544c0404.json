@@ -1,0 +1,587 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+  "closure": "untested",
+  "closure_reason": "too few probes outside the rule to say",
+  "grade": "S",
+  "grade_word": "Suspected",
+  "missed_seen": 0,
+  "reasons": [
+   "fires on degenerate files: empty file, whitespace, not XML, truncated"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-8fd2544c0404",
+ "instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "le:depth_max:0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the deepest nesting in the file is at most 0."
+   },
+   {
+    "rule": {
+     "all": [
+      "le:max_children:0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the most children of one element is at most 0."
+   },
+   {
+    "rule": {
+     "all": [
+      "le:max_nattrs:0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the most attributes on one element is at most 0."
+   },
+   {
+    "rule": {
+     "all": [
+      "le:n_elements:0"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the number of elements is at most 0."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 0,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 0,
+   "probes": 0,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 0
+  },
+  "degenerate_fired_on": [
+   "empty file",
+   "whitespace",
+   "not XML",
+   "truncated"
+  ],
+  "existing_traps": {
+   "any": 0,
+   "by_trap": {},
+   "checked": 34
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 0,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1112
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.9.0 importer (bpy 5.3.0)",
+  "intervals": [],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1152
+  },
+  "normative_reading": [
+   {
+    "literal": "x:not_wellformed",
+    "means": "the file is not well-formed XML",
+    "passing_files_with_it_inside_the_fence": 0
+   }
+  ],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 0,
+    "round": 1,
+    "rules_tested": [
+     "doc[x:not_wellformed]"
+    ],
+    "tally": {}
+   },
+   {
+    "fed_back": false,
+    "probes": 0,
+    "round": "audit",
+    "rules_tested": [
+     "doc[x:not_wellformed]"
+    ],
+    "tally": {}
+   }
+  ],
+  "rule": {
+   "all": [
+    "x:not_wellformed"
+   ],
+   "kind": "doc"
+  },
+  "rule_id": "r2r-8fd2544c0404",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "(document)"
+  ],
+  "sentence": "For the file as a whole: the file is not well-formed XML.",
+  "signature": "import returned CANCELLED",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 34,
+   "explained_by_this_rule": 34,
+   "failures": 34,
+   "families": {
+    "natural-sweep": 34
+   },
+   "observed_by": {
+    "tool": 34
+   },
+   "with_known_good_twin": 0
+  },
+  "strays": {},
+  "tier": 1,
+  "trace": [
+   "seed x:not_wellformed, fenced to (anywhere): explains 34, false alarms 0"
+  ],
+  "unfenced": null,
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "x:not_wellformed"
+  ],
+  "kind": "doc"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "For the file as a whole: the file is not well-formed XML.",
+ "signature": "import returned CANCELLED",
+ "sources": [
+  {
+   "event": "ev-21032102273e",
+   "family": "natural-sweep",
+   "file": "week:x3d.demo/tools/assurance/controls/malformed/scenes/b.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 865
+   },
+   "sha256": "7af5dd01f19e7b34f959cd8a50a4f58d6091919c4f40d9e5dd8d5000c12ffd76",
+   "twin": null
+  },
+  {
+   "event": "ev-5fd4e38c8c8e",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/gpt-oss-20b/oneshot/hanim-03.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1758
+   },
+   "sha256": "b9e25d5441fc4fb0a22063bac9fa774657659bf7018d9497dca7279e4d01fca9",
+   "twin": null
+  },
+  {
+   "event": "ev-c53cfb7be610",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/qwen2.5-coder-14b-awq/grounded/anim-01.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1771
+   },
+   "sha256": "e5eb0d7d7db9da6ca0e134d36dbb676a17730dad9f2dcb74674a6f5f925457c2",
+   "twin": null
+  },
+  {
+   "event": "ev-1e4ee0b81cb2",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/qwen2.5-coder-14b-awq/oneshot/int-05.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1824
+   },
+   "sha256": "2351b7dec76871c2c9001149834b7b738fd98682cca85bfb4c4e3dc39f346122",
+   "twin": null
+  },
+  {
+   "event": "ev-5fdaa57ef0bb",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/qwen3-8b/oneshot/anim-02.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1856
+   },
+   "sha256": "b1d64d21b63326e064d4782f33b5fbe43810fd0f09e682b34d56d4d98550e577",
+   "twin": null
+  },
+  {
+   "event": "ev-bba5a80a626b",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/qwen3-8b/oneshot/anim-04.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1858
+   },
+   "sha256": "43f8e75be984fa555d99d52ee8fb295c3d87b3ae4a50780ee2958a6b3088eab9",
+   "twin": null
+  },
+  {
+   "event": "ev-b0371c1cfb4c",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/qwen3-8b/oneshot/asm-01.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1860
+   },
+   "sha256": "c54644e620c7a0e2482ddc3bf9c14773b0ccf1f91bc633bdcbfe2ccf5fd0a6f2",
+   "twin": null
+  },
+  {
+   "event": "ev-ef0129b7519d",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/qwen3-8b/oneshot/asm-05.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1864
+   },
+   "sha256": "e12875468fbd9d3f992aabff51e83ae714ba2e5e20fa12dc024e94136520fc69",
+   "twin": null
+  },
+  {
+   "event": "ev-56487693eb78",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/qwen3-8b/oneshot/geo-03.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1867
+   },
+   "sha256": "99714e590766ccb19fa985952ecd7b538abcc25afbe6df097d8260674387673f",
+   "twin": null
+  },
+  {
+   "event": "ev-05eb7495da71",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/qwen3-8b/oneshot/int-03.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1877
+   },
+   "sha256": "3066b98ff61a4c8d82b0e2fbd76e398d4791b05ba9e6b53f9ddabd4f6d24e3a3",
+   "twin": null
+  },
+  {
+   "event": "ev-57bb43d25c05",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/qwen3-8b/oneshot/int-05.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1879
+   },
+   "sha256": "f458e179ece01c888f581e9a5f3b1d2444ad84667ec50741511a74f4b2633fa5",
+   "twin": null
+  },
+  {
+   "event": "ev-3d513acd999c",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/qwen3-8b/oneshot/obj-03.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1882
+   },
+   "sha256": "855c7e120a3562d9aeb10c4fadeb6d83155ef86851e6502af32ea1e1f17602fd",
+   "twin": null
+  },
+  {
+   "event": "ev-27dd7e803b7b",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/gpu-phase/qwen3-8b/oneshot/obj-04.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1883
+   },
+   "sha256": "771c64673370f3448ad6e9540b569dd6ec664edf56892fc9bc6b1cc14a469716",
+   "twin": null
+  },
+  {
+   "event": "ev-28fd61bdb315",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.1-pro-preview/geo-05_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1903
+   },
+   "sha256": "414a770fd2ad3e03091357cd967484ed6f937c9d46e01ab94bca81d4df94e327",
+   "twin": null
+  },
+  {
+   "event": "ev-60ec479c607b",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.1-pro-preview/hanim-02_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1905
+   },
+   "sha256": "a840336052705dcb61e6036818d01c0743640ed267aec690172f1ba58236e7a5",
+   "twin": null
+  },
+  {
+   "event": "ev-4fabd9a7aa62",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.1-pro-preview/hanim-03_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1908
+   },
+   "sha256": "c2523f6d4027a15db34bafbdf768828884fbb8144625de97d2287fbbcb1c2976",
+   "twin": null
+  },
+  {
+   "event": "ev-9658000750a2",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.1-pro-preview/hanim-04_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1910
+   },
+   "sha256": "0a41079cae5ac4cb49be14f04f7f9b0b09f262cbe6034e5c73ab1c384454a74a",
+   "twin": null
+  },
+  {
+   "event": "ev-650f4c78921a",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.1-pro-preview/hanim-05_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1913
+   },
+   "sha256": "980e47652d6a20cf268e27e9fbfb8dc919c1a55d772b5b0fcb59e9519a89dfd1",
+   "twin": null
+  },
+  {
+   "event": "ev-c5c8eca7a2bb",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.1-pro-preview/sp-03_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1932
+   },
+   "sha256": "0404c10fabed56dc8edf3a55521b79b0f32011b37ba4d07974b0cdfa2251f8f6",
+   "twin": null
+  },
+  {
+   "event": "ev-ca721fa1a5aa",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.1-pro-preview/sp-17_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1953
+   },
+   "sha256": "7c4fc89ab621925832593b968f026e0537ab99d345ee4f7adc15962bece110e6",
+   "twin": null
+  },
+  {
+   "event": "ev-7caac4b63d6f",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.1-pro-preview/sp-17_a2.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1954
+   },
+   "sha256": "b7266030a5412e64af440f19542867b099a0a066526eac3865a611855817f35d",
+   "twin": null
+  },
+  {
+   "event": "ev-b01a1eb8e075",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.1-pro-preview/sp-18_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1956
+   },
+   "sha256": "4489ca0d46c3cd9272eeea99577d930fec8693991700975face65de7b1b76a39",
+   "twin": null
+  },
+  {
+   "event": "ev-a6894153aeb9",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.1-pro-preview/sp-19_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1959
+   },
+   "sha256": "bd68207038be7eba404889fc9e386235bba507f19eb42e0a2a2fe3c79589856c",
+   "twin": null
+  },
+  {
+   "event": "ev-1e37d2277240",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.1-pro-preview/sp-20_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1961
+   },
+   "sha256": "ae525f6e8da86c20a453a435c7d33d769b5bd079c63d23ba857818d031c32be8",
+   "twin": null
+  },
+  {
+   "event": "ev-ab3d15255ef8",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.8-flash/geo-05_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1987
+   },
+   "sha256": "633c1248619e90d1012018ccfb6b9c65eaf8ff50214d121a4871579932577d41",
+   "twin": null
+  },
+  {
+   "event": "ev-679853bbbc9a",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.8-flash/geo-05_a3.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1989
+   },
+   "sha256": "d415487e05646cfb2e13cff87284fb02cb3666986d0609157be571aa497cfe58",
+   "twin": null
+  },
+  {
+   "event": "ev-f91671c2ee41",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.8-flash/hanim-02_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1992
+   },
+   "sha256": "d37df16fcf98bf7858fcc77c00e62317cd729f6957adad755c94b366685ca7a1",
+   "twin": null
+  },
+  {
+   "event": "ev-75aa4cf028a2",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/gemini-3.8-flash/hanim-04_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 1996
+   },
+   "sha256": "d1b577ba6bcded6c59e244e861845434b6a491df264cacdca5a67059a201892d",
+   "twin": null
+  },
+  {
+   "event": "ev-c5ebc7cbc35b",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/nvidia_nemotron-3-super-120b-a12b/hanim-04_a3.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 2141
+   },
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "twin": null
+  },
+  {
+   "event": "ev-876fe35e2bf3",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/nvidia_nemotron-3-super-120b-a12b/int-02_a2.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 2149
+   },
+   "sha256": "cc740da6ea0a4a26a6550b6addf4440e4c39d299b41a154121ff11fedc53ccdb",
+   "twin": null
+  },
+  {
+   "event": "ev-2019f682446c",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/nvidia_nemotron-3-super-120b-a12b/sp-03_a3.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 2171
+   },
+   "sha256": "e2fea1d58069b1f218923810d65114390e153d151a9c842fe3f3dd6cdfd32f5c",
+   "twin": null
+  },
+  {
+   "event": "ev-906ba498878b",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/nvidia_nemotron-3-super-120b-a12b/sp-07_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 2179
+   },
+   "sha256": "41349440940548acebce1391819daaa227ae76caefe42677739504dad589a0c3",
+   "twin": null
+  },
+  {
+   "event": "ev-4cd52f3add69",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/nvidia_nemotron-3-super-120b-a12b/sp-07_a2.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 2180
+   },
+   "sha256": "780da7128e0711e8ce1382b81a171ce9589d0b502e99e80f5c678b9c6c3e269c",
+   "twin": null
+  },
+  {
+   "event": "ev-acde479b3ef1",
+   "family": "natural-sweep",
+   "file": "week:x3d.ml/runs/live-2026-10-17/x3d/nvidia_nemotron-3-super-120b-a12b/sp-17_a1.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-import.jsonl",
+    "row": 2194
+   },
+   "sha256": "75f47972446e47b7ca60275da401b0d42a08fe69f3a14d66380c5e346960d039",
+   "twin": null
+  }
+ ],
+ "sources_total": 34,
+ "status": "candidate"
+}
