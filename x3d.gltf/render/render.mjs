@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Render ORACLE: draws one glb in headless Chromium (WebGL2 via ANGLE/SwiftShader) with three, Babylon or X_ITE.
 //
-//   node render/render.mjs --engine three|babylon|xite --glb FILE.glb --out FILE.png
+//   node render/render.mjs --engine three|babylon|xite|playcanvas --glb FILE.glb --out FILE.png
 //        [--size 512] [--camera JSON | --frame-from ORIG.glb] [--json receipt.json]
 //        [--timeout-ms 60000]
 //
@@ -25,6 +25,7 @@ export const ENGINES = {
   three: { page: 'three.html', pkg: 'three', label: 'three.js' },
   babylon: { page: 'babylon.html', pkg: 'babylonjs', label: 'Babylon.js' },
   xite: { page: 'xite.html', pkg: 'x_ite', label: 'X_ITE' },
+  playcanvas: { page: 'playcanvas.html', pkg: 'playcanvas', label: 'PlayCanvas' },
 };
 export const TIMEOUT_MS = 60_000;
 
@@ -51,7 +52,7 @@ export async function renderGlb(opts) {
   const t00 = Date.now();
   const { engine, glb, out = null, size = 512, json = null, timeoutMs = TIMEOUT_MS } = opts;
   const eng = ENGINES[engine];
-  if (!eng) throw new UsageError(`unknown --engine ${engine} (three|babylon|xite)`);
+  if (!eng) throw new UsageError(`unknown --engine ${engine} (three|babylon|xite|playcanvas)`);
   if (!glb || !fs.existsSync(glb)) throw new UsageError(`--glb ${glb} does not exist`);
   if (!Number.isInteger(size) || size < 16 || size > 4096) throw new UsageError('--size must be an integer in 16..4096');
 
@@ -216,7 +217,7 @@ export async function renderGlb(opts) {
       const { engine: _e, version: _v, ...rest } = pageResult;
       if (rest.notes) receipt.notes.push(...rest.notes);
       delete rest.notes;
-      Object.assign(receipt, pickDefined(rest, ['lighting', 'colour', 'decoderConfig', 'stats', 'loaderErrors', 'glInfo', 'ktx2', 'xite', 'babylon']));
+      Object.assign(receipt, pickDefined(rest, ['lighting', 'colour', 'decoderConfig', 'stats', 'loaderErrors', 'glInfo', 'ktx2', 'xite', 'babylon', 'engineInfo']));
       receipt.timing.loadMs = round1(rest.loadMs);
       receipt.timing.settleMs = round1(rest.settleMs);
       receipt.decoders = rest.decoders;
@@ -301,7 +302,7 @@ function writeReceipt(file, receipt) {
 
 export class UsageError extends Error {}
 
-const USAGE = `usage: node render/render.mjs --engine three|babylon|xite --glb FILE.glb --out FILE.png
+const USAGE = `usage: node render/render.mjs --engine three|babylon|xite|playcanvas --glb FILE.glb --out FILE.png
          [--size 512] [--camera JSON | --frame-from ORIG.glb] [--json receipt.json] [--timeout-ms 60000]
 camera JSON: {"position":[x,y,z],"target":[x,y,z],"up":[0,1,0],"fov":0.7854}   (fov = vertical, radians)
 exit: 0 ok, 1 usage, 2 load failed (receipt written, no PNG), 3 chromium cannot launch`;

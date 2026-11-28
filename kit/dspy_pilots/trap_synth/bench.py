@@ -134,6 +134,32 @@ def shader_raw(root, lawful, body="#version 300 es\nvoid main() { }"):
     return _shader(root, ("data:text/plain," + body) if lawful else body)
 
 
+def loop_seam(root, lawful, end="last"):
+    """A looping TimeSensor routed to an interpolator that spans 0..1. lawful closes the loop (last value = first value);
+    unlawful leaves the seam open by moving one component of the last ('last') or of the first ('first') value by 0.7. It edits
+    keyValue tokens in place, so every other digit of the scene is untouched."""
+    defs = {}
+    for e in root.iter():
+        if e.get("DEF") and e.get("DEF") not in defs: defs[e.get("DEF")] = e
+    for r in els(root, "ROUTE"):
+        clock, interp = defs.get(r.get("fromNode")), defs.get(r.get("toNode"))
+        if clock is None or interp is None or local(clock.tag) != "TimeSensor" or clock.get("loop") != "true": continue
+        if r.get("fromField") != "fraction_changed" or not local(interp.tag).endswith("Interpolator"): continue
+        try:
+            k = [float(t) for t in interp.get("key", "").replace(",", " ").split()]
+        except ValueError: continue
+        tok = interp.get("keyValue", "").replace(",", " ").split()
+        if len(k) < 2 or not tok or len(tok) % len(k) or k[0] > 1e-6 or k[-1] < 1 - 1e-6: continue
+        n = len(tok) // len(k)
+        try:
+            if lawful: tok[-n:] = tok[:n]
+            elif end == "last": tok[-1] = repr(float(tok[-1]) + 0.7)
+            else: tok[n - 1] = repr(float(tok[n - 1]) + 0.7)
+        except ValueError: continue
+        interp.set("keyValue", " ".join(tok)); return interp
+    return None
+
+
 P = __import__("functools").partial
 # rule -> [dev, sealed...]
 VARIANTS = {
@@ -148,9 +174,12 @@ VARIANTS = {
     "metadata-containerfield": [metadata, P(metadata, tag="MetadataDouble"), P(metadata, tag="MetadataInteger")],
     "glsl-reserved-active": [glsl_active, P(glsl_active, decl="uniform vec3 active;"),
                              P(glsl_active, decl="uniform   float   active;"), P(glsl_active, decl="in vec2 active;")],
+    "loop-seam": [loop_seam, P(loop_seam, end="first")],
     "shader-raw-source": [shader_raw, P(shader_raw, body="void main() { }\n#version 300 es"), P(shader_raw, body="#version 300 es\nprecision highp float;\nvoid main(){}")],
 }
-NATURAL_ONLY = ["loop-seam"]            # no mutator; real hits in the corpus are the positives
+# loop-seam had no mutator, so it entered the benchmark by accident once the corpus held six real hits (28 Nov: the flywheel
+# court scenes) and then failed the audit: no sealed variant, and a ROUTE keyword rule scored 0.84 because every real hit has a
+# ROUTE. It now has a dev mutator and a sealed variant like the other rules, and lawful near-miss twins.
 NOT_COVERED = {"color-keys-sparse": "needs a night-sky colour interpolator pair the mutators do not build",
                "xite-light-zero-pop": "needs a light fade through a ROUTE graph", "xite-transparent-shadow": "same",
                "no-script-under-host": "depends on a host profile, not on the file alone"}

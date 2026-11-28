@@ -52,7 +52,7 @@ def pose_x3d(root, q):
             continue
         ax = jm["axis"]; n = math.sqrt(sum(a * a for a in ax))
         if jm["type"] == "prismatic":
-            t.set("translation", " ".join(repr(a * q[t.get("DEF")]) for a in ax))
+            t.set("translation", " ".join(repr(a / n * q[t.get("DEF")]) for a in ax))  # unit axis, as URDF
         else:
             t.set("rotation", " ".join(repr(a / n) for a in ax) + " " + repr(q[t.get("DEF")]))
 

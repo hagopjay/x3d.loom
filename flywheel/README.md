@@ -71,3 +71,23 @@ or error on the 50 legal files. The target was 30 and was missed. A second reade
 repeats of court 3: the new kernel names 18 of those and 5 of the 21 that are new (the old one 16 and 3). Of five
 expectations four held. The set is now seen and is a regression set from here on. The next court should give its
 authors the list of mistakes already planted and take its headline from new mistakes only.
+
+## Blind court 5: the standing plan (28 November 2026, no result yet)
+
+[`court-5/PLAN.md`](court-5/PLAN.md) is the plan for the next sealed test and the scaffold to run it. It changes
+five things, in this order: the headline is taken from new mistakes only (authors get the 120 mistakes already
+planted and may repeat none); new rules are written from a grid of 6,434 places where the X3D 4.0 object model
+says a mistake can occur, and each new check is labelled by where it came from; a scene may state its intent in
+lines a headless play test checks, scored as a separate arm; a catch must be proven against the corrected twin by
+machine; and a slot is kept for a set written by a stranger. It lists twelve tricks the court may not use. Every
+script has been run on a dummy set (`court-5/dry-run/run.sh`). Nothing is sealed, nothing is frozen, and there is
+no court 5 score.
+
+Two passes of the kernel turn, same day ([`court-5/grid/PROBE-RESULTS.md`](court-5/grid/PROBE-RESULTS.md)): a
+generator builds a wrong file and its corrected twin for each grid cell. Of 5,552 cells the file alone decides,
+the old kernel (`2943b78`) and the schema closed 5,379, missed 167 and the kernel crashed on 6; the new kernel
+(`d446f94`) closes all of them with five checks read from the object model and fixes to four older ones. The
+starting point is the finding: classes about one field at a time were 97.4% closed already, the two classes about
+a relation between fields only 40% (19 of 47). The gap on new mistakes lies in relations, and the ones only the
+standard's prose states are next. A stranger set of 16 real mistakes rebuilt from public reports is sealed
+(sha256 `74b80378…fa899b`) and unopened.

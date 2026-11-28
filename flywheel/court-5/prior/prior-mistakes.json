@@ -1,0 +1,962 @@
+[
+ {
+  "id": "P001",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-01.x3d",
+  "family": "",
+  "planted_mistake": "SFFloat output of ScalarInterpolator routed to SFVec3f translation."
+ },
+ {
+  "id": "P002",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-02.x3d",
+  "family": "",
+  "planted_mistake": "ROUTE targets Cylinder.radius, an initializeOnly field."
+ },
+ {
+  "id": "P003",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-03.x3d",
+  "family": "",
+  "planted_mistake": "ROUTE source is PositionInterpolator.set_fraction, an inputOnly field."
+ },
+ {
+  "id": "P004",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-04.x3d",
+  "family": "",
+  "planted_mistake": "Misspelled event name fraction_change (should be fraction_changed)."
+ },
+ {
+  "id": "P005",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-05.x3d",
+  "family": "",
+  "planted_mistake": "stopTime (2) earlier than startTime (5), loop false."
+ },
+ {
+  "id": "P006",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-06.x3d",
+  "family": "",
+  "planted_mistake": "cycleInterval is 0."
+ },
+ {
+  "id": "P007",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-07.x3d",
+  "family": "",
+  "planted_mistake": "Interpolator has 3 keys but 2 keyValues."
+ },
+ {
+  "id": "P008",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-08.x3d",
+  "family": "",
+  "planted_mistake": "Keys not ascending (0.8 then 0.4)."
+ },
+ {
+  "id": "P009",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-09.x3d",
+  "family": "",
+  "planted_mistake": "Keys extend to 2 but TimeSensor fraction only reaches 1; last key never reached."
+ },
+ {
+  "id": "P010",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-10.x3d",
+  "family": "",
+  "planted_mistake": "Orientation step of 4 rad (>pi) between two keys."
+ },
+ {
+  "id": "P011",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-11.x3d",
+  "family": "",
+  "planted_mistake": "Full 0..2pi spin written as one step."
+ },
+ {
+  "id": "P012",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-12.x3d",
+  "family": "",
+  "planted_mistake": "TouchSensor lives in its own Group, sibling of no geometry."
+ },
+ {
+  "id": "P013",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-13.x3d",
+  "family": "",
+  "planted_mistake": "TouchSensor enabled=false is the only trigger for the timer."
+ },
+ {
+  "id": "P014",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-14.x3d",
+  "family": "",
+  "planted_mistake": "BooleanToggle output (toggle) is never routed anywhere."
+ },
+ {
+  "id": "P015",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-15.x3d",
+  "family": "",
+  "planted_mistake": "IntegerSequencer value 3 drives Switch with only 2 children (and routes to whichChoice, which is inputOutput)."
+ },
+ {
+  "id": "P016",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-16.x3d",
+  "family": "",
+  "planted_mistake": "Sequencer has keys and input but no ROUTE out."
+ },
+ {
+  "id": "P017",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-17.x3d",
+  "family": "",
+  "planted_mistake": "Two interpolators drive Transform.translation simultaneously (fan-in)."
+ },
+ {
+  "id": "P018",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-18.x3d",
+  "family": "",
+  "planted_mistake": "ROUTE cycle between two transforms with no break."
+ },
+ {
+  "id": "P019",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-19.x3d",
+  "family": "",
+  "planted_mistake": "ProximitySensor size 0 0 0 (disabled)."
+ },
+ {
+  "id": "P020",
+  "court": "court-2",
+  "brief": "behaviour",
+  "file": "fault-20.x3d",
+  "family": "",
+  "planted_mistake": "Script has no url/source and routed outputs."
+ },
+ {
+  "id": "P021",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-01.x3d",
+  "family": "structure",
+  "planted_mistake": "Material placed directly under Shape instead of inside Appearance"
+ },
+ {
+  "id": "P022",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-02.x3d",
+  "family": "structure",
+  "planted_mistake": "Appearance outside a Shape, as direct Scene child"
+ },
+ {
+  "id": "P023",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-03.x3d",
+  "family": "DEF/USE",
+  "planted_mistake": "USE of a Sphere DEF inside an Appearance slot (wrong type)"
+ },
+ {
+  "id": "P024",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-04.x3d",
+  "family": "DEF/USE",
+  "planted_mistake": "Duplicate DEF name A on two different shapes"
+ },
+ {
+  "id": "P025",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-05.x3d",
+  "family": "geometry",
+  "planted_mistake": "coordIndex lacks -1 face terminators"
+ },
+ {
+  "id": "P026",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-06.x3d",
+  "family": "geometry",
+  "planted_mistake": "coordIndex 4 is one past end of 4 points"
+ },
+ {
+  "id": "P027",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-07.x3d",
+  "family": "geometry",
+  "planted_mistake": "creaseAngle 30 given in degrees (radians expected)"
+ },
+ {
+  "id": "P028",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-08.x3d",
+  "family": "geometry",
+  "planted_mistake": "ElevationGrid 3x3 needs 9 heights, 8 given"
+ },
+ {
+  "id": "P029",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-09.x3d",
+  "family": "geometry",
+  "planted_mistake": "Extrusion with a single spine point"
+ },
+ {
+  "id": "P030",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-10.x3d",
+  "family": "appearance",
+  "planted_mistake": "transparency 1 on the only object"
+ },
+ {
+  "id": "P031",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-11.x3d",
+  "family": "appearance",
+  "planted_mistake": "PhysicalMaterial roughness 2 (range 0..1)"
+ },
+ {
+  "id": "P032",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-12.x3d",
+  "family": "appearance",
+  "planted_mistake": "Colour given as 255 0 0"
+ },
+ {
+  "id": "P033",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-13.x3d",
+  "family": "viewing",
+  "planted_mistake": "fieldOfView 45 in degrees (radians, max <pi)"
+ },
+ {
+  "id": "P034",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-14.x3d",
+  "family": "lights",
+  "planted_mistake": "SpotLight cutOffAngle < beamWidth"
+ },
+ {
+  "id": "P035",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-15.x3d",
+  "family": "units",
+  "planted_mistake": "rotation angle 90 written in degrees (radians expected)"
+ },
+ {
+  "id": "P036",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-16.x3d",
+  "family": "units",
+  "planted_mistake": "scale 0 on one axis, degenerate flat box"
+ },
+ {
+  "id": "P037",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-17.x3d",
+  "family": "units",
+  "planted_mistake": "Object 10000 km from origin"
+ },
+ {
+  "id": "P038",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-18.x3d",
+  "family": "misc",
+  "planted_mistake": "LOD range not ascending"
+ },
+ {
+  "id": "P039",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-19.x3d",
+  "family": "misc",
+  "planted_mistake": "Background skyAngle has 3 values but 2 skyColors (needs n+1=4 colours for 3 angles)"
+ },
+ {
+  "id": "P040",
+  "court": "court-2b",
+  "brief": "structure",
+  "file": "fault-20.x3d",
+  "family": "lights",
+  "planted_mistake": "DirectionalLight direction 0 0 0"
+ },
+ {
+  "id": "P041",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-01.x3d",
+  "family": "route-wiring",
+  "planted_mistake": "TimeSensor ROUTE source field is misspelt fraction_change instead of fraction_changed"
+ },
+ {
+  "id": "P042",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-02.x3d",
+  "family": "route-type",
+  "planted_mistake": "The interpolator SFVec3f output is routed to Lamp set_rotation (SFRotation) instead of set_translation"
+ },
+ {
+  "id": "P043",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-03.x3d",
+  "family": "route-access",
+  "planted_mistake": "ROUTE fromField is Leader set_translation (an inputOnly event) instead of translation_changed"
+ },
+ {
+  "id": "P044",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-04.x3d",
+  "family": "timing-loop",
+  "planted_mistake": "TimeSensor has loop=false with a startTime long in the past, though the pulse is meant to repeat forever"
+ },
+ {
+  "id": "P045",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-05.x3d",
+  "family": "route-wiring",
+  "planted_mistake": "ROUTE toNode is door but the node is DEF Door (case mismatch)"
+ },
+ {
+  "id": "P046",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-06.x3d",
+  "family": "interpolator-keys",
+  "planted_mistake": "PositionInterpolator has three keys but only two keyValue triples"
+ },
+ {
+  "id": "P047",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-07.x3d",
+  "family": "interpolator-keys",
+  "planted_mistake": "ScalarInterpolator key list 0 0.8 0.5 is not non-decreasing (should be 0 0.5 1)"
+ },
+ {
+  "id": "P048",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-08.x3d",
+  "family": "pointing-sensor",
+  "planted_mistake": "TouchSensor sits in a different Group from the sphere, so it is not a sibling of the geometry it should sense"
+ },
+ {
+  "id": "P049",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-09.x3d",
+  "family": "drag-sensor",
+  "planted_mistake": "PlaneSensor minPosition 2 0 and maxPosition 0 0 are swapped (min greater than max leaves x unconstrained)"
+ },
+ {
+  "id": "P050",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-10.x3d",
+  "family": "trigger-toggle",
+  "planted_mistake": "The clock is left enabled (default) so the spinner runs from load, though it should wait for the first click"
+ },
+ {
+  "id": "P051",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-11.x3d",
+  "family": "follower",
+  "planted_mistake": "PositionDamper tau is 0 (no smoothing) instead of 0.5"
+ },
+ {
+  "id": "P052",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-12.x3d",
+  "family": "environment-sensor",
+  "planted_mistake": "ProximitySensor size is 0 0 0 (disabled) instead of 30 30 30"
+ },
+ {
+  "id": "P053",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-13.x3d",
+  "family": "environment-sensor",
+  "planted_mistake": "The Wall Shape is a sibling of the Collision node instead of its child"
+ },
+ {
+  "id": "P054",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-14.x3d",
+  "family": "key-sensor",
+  "planted_mistake": "StringSensor enteredText is routed to the label instead of finalText"
+ },
+ {
+  "id": "P055",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-15.x3d",
+  "family": "switch-sequencer",
+  "planted_mistake": "IntegerSequencer last keyValue is 3 but the Switch has only choices 0..2"
+ },
+ {
+  "id": "P056",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-16.x3d",
+  "family": "script",
+  "planted_mistake": "Script handler function is named onTick but the inputOnly field is named tick, so it is never called"
+ },
+ {
+  "id": "P057",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-17.x3d",
+  "family": "viewpoint-binding",
+  "planted_mistake": "The Closeup Viewpoint is listed before Overview, so Closeup is bound at load"
+ },
+ {
+  "id": "P058",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-18.x3d",
+  "family": "load-sensor",
+  "planted_mistake": "The watched Inline has load=false so it never loads and LoadSensor never reports isLoaded"
+ },
+ {
+  "id": "P059",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-19.x3d",
+  "family": "anchor-navigation",
+  "planted_mistake": "Anchor url fragment is #Closeup but the Viewpoint is DEF CloseUp (case mismatch)"
+ },
+ {
+  "id": "P060",
+  "court": "court-3",
+  "brief": "behaviour",
+  "file": "fault-20.x3d",
+  "family": "lod",
+  "planted_mistake": "LOD range is 20 5 (decreasing) instead of 5 20"
+ },
+ {
+  "id": "P061",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-01.x3d",
+  "family": "geometry-indices",
+  "planted_mistake": "One face of the indexed face set references vertex index 8 but only vertices 0 to 7 exist."
+ },
+ {
+  "id": "P062",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-02.x3d",
+  "family": "lod-switch",
+  "planted_mistake": "LOD range has three entries for three children; it must have one fewer entry than children."
+ },
+ {
+  "id": "P063",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-03.x3d",
+  "family": "winding",
+  "planted_mistake": "ccw is set to false although the faces are wound counter-clockwise seen from outside."
+ },
+ {
+  "id": "P064",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-04.x3d",
+  "family": "normals",
+  "planted_mistake": "Six per-face normals are supplied while normalPerVertex is true and there are eight vertices."
+ },
+ {
+  "id": "P065",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-05.x3d",
+  "family": "colour",
+  "planted_mistake": "Colour components are written on a 0 to 255 scale instead of 0 to 1."
+ },
+ {
+  "id": "P066",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-06.x3d",
+  "family": "proto",
+  "planted_mistake": "The ProtoInstance sets a field called towerColour but the prototype declares towerColor."
+ },
+ {
+  "id": "P067",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-07.x3d",
+  "family": "texture-coordinates",
+  "planted_mistake": "The TextureCoordinate holds three points for a four-vertex face."
+ },
+ {
+  "id": "P068",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-08.x3d",
+  "family": "extrusion",
+  "planted_mistake": "The cross-section points are ordered so the outline crosses itself (a bow-tie) instead of tracing the square."
+ },
+ {
+  "id": "P069",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-09.x3d",
+  "family": "elevationgrid",
+  "planted_mistake": "height lists 11 values but xDimension times zDimension is 12."
+ },
+ {
+  "id": "P070",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-10.x3d",
+  "family": "nurbs",
+  "planted_mistake": "The uKnot vector has six values but uDimension plus uOrder needs seven."
+ },
+ {
+  "id": "P071",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-11.x3d",
+  "family": "profile-component",
+  "planted_mistake": "The scene uses a NURBS node but neither the profile nor a component statement provides the NURBS component."
+ },
+ {
+  "id": "P072",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-12.x3d",
+  "family": "def-use",
+  "planted_mistake": "USE refers to wheel but the node was defined as Wheel; names are case sensitive."
+ },
+ {
+  "id": "P073",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-13.x3d",
+  "family": "def-use",
+  "planted_mistake": "The blue ball reuses the DEF name RedPost, so the later USE resolves to the ball."
+ },
+ {
+  "id": "P074",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-14.x3d",
+  "family": "containment",
+  "planted_mistake": "Material is placed directly in Shape instead of inside Appearance."
+ },
+ {
+  "id": "P075",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-15.x3d",
+  "family": "angle-units",
+  "planted_mistake": "The rotation angle is written as 90, which X3D reads as ninety radians."
+ },
+ {
+  "id": "P076",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-16.x3d",
+  "family": "angle-units",
+  "planted_mistake": "fieldOfView is given as 60 (degrees) but is in radians and must be in (0, pi)."
+ },
+ {
+  "id": "P077",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-17.x3d",
+  "family": "navigation-lighting",
+  "planted_mistake": "The headlight is switched off and the scene has no other light, so the lit sphere is unlit."
+ },
+ {
+  "id": "P078",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-18.x3d",
+  "family": "lod-switch",
+  "planted_mistake": "whichChoice is 3, counted from one, but choices are indexed from zero so index 3 selects nothing."
+ },
+ {
+  "id": "P079",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-19.x3d",
+  "family": "material-range",
+  "planted_mistake": "shininess is 50 where the legal range is 0 to 1."
+ },
+ {
+  "id": "P080",
+  "court": "court-3",
+  "brief": "structure",
+  "file": "fault-20.x3d",
+  "family": "lights",
+  "planted_mistake": "The DirectionalLight direction is the zero vector."
+ },
+ {
+  "id": "P081",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-01.x3d",
+  "family": "route-type",
+  "planted_mistake": "The size animation uses a ScalarInterpolator, so an SFFloat value_changed is routed to Transform.set_scale, which is SFVec3f."
+ },
+ {
+  "id": "P082",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-02.x3d",
+  "family": "route-access",
+  "planted_mistake": "The grow animation is routed to Box.size, an initializeOnly field that cannot receive events, instead of to the enclosing Transform's scale."
+ },
+ {
+  "id": "P083",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-03.x3d",
+  "family": "timesensor",
+  "planted_mistake": "The TimeSensor that should run forever has no loop='true'; with the default startTime of 0 and loop FALSE it never becomes active."
+ },
+ {
+  "id": "P084",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-04.x3d",
+  "family": "timesensor",
+  "planted_mistake": "cycleInterval is written in milliseconds (500) although the field is in seconds, so one flash takes 500 s instead of 0.5 s."
+ },
+ {
+  "id": "P085",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-05.x3d",
+  "family": "interpolator-keys",
+  "planted_mistake": "The PositionInterpolator has four keys but only three keyValues; the second 'top' position that makes the platform wait is missing."
+ },
+ {
+  "id": "P086",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-06.x3d",
+  "family": "orientation-interpolation",
+  "planted_mistake": "The full turn is given as two keys, angle 0 and angle 6.2832 about the same axis; these are the same orientation, and an OrientationInterpolator takes the shortest path between them, which is no motion."
+ },
+ {
+  "id": "P087",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-07.x3d",
+  "family": "def-names",
+  "planted_mistake": "Both TimeSensors carry the same DEF name (copy-paste); the ROUTEs at the end both resolve to one of them, so both lanterns share one clock."
+ },
+ {
+  "id": "P088",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-08.x3d",
+  "family": "route-endpoint",
+  "planted_mistake": "The first ROUTE names fromNode='DoorTimer', but no node has that DEF; the clock is called DoorClock."
+ },
+ {
+  "id": "P089",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-09.x3d",
+  "family": "profile-component",
+  "planted_mistake": "The scene declares profile Immersive only, but uses a ColorChaser, which belongs to the Followers component that Immersive does not include; the component statement is missing."
+ },
+ {
+  "id": "P090",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-10.x3d",
+  "family": "route-endpoint",
+  "planted_mistake": "The first ROUTE uses fromField='fraction'; TimeSensor has no such field, the output is fraction_changed."
+ },
+ {
+  "id": "P091",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-11.x3d",
+  "family": "switch-index",
+  "planted_mistake": "The IntegerSequencer counts 1, 2, 3 while the Switch children are numbered 0, 1, 2."
+ },
+ {
+  "id": "P092",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-12.x3d",
+  "family": "pointing-sensor-scope",
+  "planted_mistake": "The TouchSensor sits among the floor's children instead of beside the button's geometry, so it senses the floor and not the button."
+ },
+ {
+  "id": "P093",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-13.x3d",
+  "family": "drag-sensor",
+  "planted_mistake": "The PlaneSensor's trackPoint_changed is routed to the puck instead of translation_changed, so the puck's centre is put at the pointer's hit point instead of moving by the drag distance."
+ },
+ {
+  "id": "P094",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-14.x3d",
+  "family": "environment-sensor",
+  "planted_mistake": "The ProximitySensor has no size, and the default size 0 0 0 disables the sensor."
+ },
+ {
+  "id": "P095",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-15.x3d",
+  "family": "key-sensor",
+  "planted_mistake": "The script compares actionKeyPress against browser DOM key codes (39 and 37); the X3D action-key codes for right and left arrow are 20 and 19."
+ },
+ {
+  "id": "P096",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-16.x3d",
+  "family": "script",
+  "planted_mistake": "The script's function is named clicked, but the input field is named set_clicked; a Script handler must have exactly the field's name, so it is never called."
+ },
+ {
+  "id": "P097",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-17.x3d",
+  "family": "script",
+  "planted_mistake": "TouchSensor.isActive sends TRUE on press and FALSE on release, and the script flips its state on every event without looking at the value, so each click flips the lamp twice."
+ },
+ {
+  "id": "P098",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-18.x3d",
+  "family": "route-fan-in",
+  "planted_mistake": "Both PositionInterpolators are routed to the same inner Transform's translation in the same timestamp, so one overwrites the other; the crossing should drive the outer BeePath Transform."
+ },
+ {
+  "id": "P099",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-19.x3d",
+  "family": "follower",
+  "planted_mistake": "The target position is routed to the damper's set_value, which sets the output immediately, instead of to set_destination, which it would glide towards."
+ },
+ {
+  "id": "P100",
+  "court": "court-4",
+  "brief": "behaviour",
+  "file": "fault-20.x3d",
+  "family": "viewpoint-binding",
+  "planted_mistake": "TouchSensor.isActive is routed straight to Viewpoint.set_bind, so the FALSE sent on release unbinds the close-up viewpoint again."
+ },
+ {
+  "id": "P101",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-01.x3d",
+  "family": "containment",
+  "planted_mistake": "Material is placed directly inside Shape instead of inside an Appearance node."
+ },
+ {
+  "id": "P102",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-02.x3d",
+  "family": "def-use",
+  "planted_mistake": "Two Transform USE elements carry their own translation attributes, as if USE made an editable copy; a USE is the same node and other attributes are ignored."
+ },
+ {
+  "id": "P103",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-03.x3d",
+  "family": "def-use",
+  "planted_mistake": "USE='brassLook' does not match the declared DEF='BrassLook' (names are case sensitive), so the reference dangles."
+ },
+ {
+  "id": "P104",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-04.x3d",
+  "family": "geometry-indices",
+  "planted_mistake": "coordIndex is written 1-based: every index is one too high, so index 6 is out of range for the six coordinates and every face uses the wrong corners."
+ },
+ {
+  "id": "P105",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-05.x3d",
+  "family": "geometry-winding",
+  "planted_mistake": "The lid face is listed clockwise (3 7 6 2) while all other faces are counter-clockwise, with ccw and solid at TRUE, so the lid is back-face culled and its normal points inward."
+ },
+ {
+  "id": "P106",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-06.x3d",
+  "family": "geometry-per-face-data",
+  "planted_mistake": "Five colours are meant one per face, but colorPerVertex is left at its default TRUE, so the five colours are applied to the five vertices and blended across faces."
+ },
+ {
+  "id": "P107",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-07.x3d",
+  "family": "parametric-geometry",
+  "planted_mistake": "The Extrusion crossSection is not closed (the first point is not repeated at the end), so only three of the four side walls are generated."
+ },
+ {
+  "id": "P108",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-08.x3d",
+  "family": "parametric-geometry",
+  "planted_mistake": "xDimension and zDimension are swapped (3 and 5 instead of 5 and 3) while the 15 heights are laid out as 3 rows of 5, so the heights are re-read as 5 rows of 3."
+ },
+ {
+  "id": "P109",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-09.x3d",
+  "family": "units-angles",
+  "planted_mistake": "The rotation angle is given in degrees (-90) but SFRotation angles are radians; -90 rad is about a 117 degree turn the other way round."
+ },
+ {
+  "id": "P110",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-10.x3d",
+  "family": "value-ranges",
+  "planted_mistake": "diffuseColor is written on a 0-255 scale (255 128 0); colour components must be in 0..1."
+ },
+ {
+  "id": "P111",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-11.x3d",
+  "family": "appearance-material",
+  "planted_mistake": "transparency='1' was written where full opacity was meant (transparency is the inverse of opacity/alpha), making the ball completely invisible."
+ },
+ {
+  "id": "P112",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-12.x3d",
+  "family": "appearance-texture",
+  "planted_mistake": "TextureTransform scale='0.25 0.25' was used to repeat the tile four times; the transform acts on texture coordinates, so 0.25 magnifies the image fourfold and 4 is needed to repeat it."
+ },
+ {
+  "id": "P113",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-13.x3d",
+  "family": "lights",
+  "planted_mistake": "DirectionalLight direction='0 1 0' was written as if it were the place the light comes from; direction is the way the light travels, so the sun shines upward from below."
+ },
+ {
+  "id": "P114",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-14.x3d",
+  "family": "viewpoint",
+  "planted_mistake": "The camera is moved to z=-8 behind the statue but keeps the default orientation, which looks along -Z, away from the statue."
+ },
+ {
+  "id": "P115",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-15.x3d",
+  "family": "switch",
+  "planted_mistake": "whichChoice='2' was used for the second child; choices are numbered from 0, so 2 is out of range for two children and nothing is chosen."
+ },
+ {
+  "id": "P116",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-16.x3d",
+  "family": "inline-url",
+  "planted_mistake": "The Inline url says support_bracket.x3d (underscore) but the file is support-bracket.x3d (hyphen), so the reference cannot be resolved."
+ },
+ {
+  "id": "P117",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-17.x3d",
+  "family": "profile-component",
+  "planted_mistake": "The scene uses a NURBS surface node under profile Immersive without a <component name='NURBS' level='1'/> statement; Immersive does not include the NURBS component."
+ },
+ {
+  "id": "P118",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-18.x3d",
+  "family": "proto",
+  "planted_mistake": "The first ProtoInstance sets fieldValue name='color', but the prototype interface declares the field as 'pillarColor'; the value is discarded and the default grey is used."
+ },
+ {
+  "id": "P119",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-19.x3d",
+  "family": "metadata",
+  "planted_mistake": "The third entry of the MetadataSet has containerField='metadata' instead of 'value', so priceEUR becomes metadata about the set itself rather than one of its payload entries."
+ },
+ {
+  "id": "P120",
+  "court": "court-4",
+  "brief": "structure",
+  "file": "fault-20.x3d",
+  "family": "transform-hierarchy",
+  "planted_mistake": "The door Transform rotates about its own origin (the middle of the leaf) because no center is given for the hinge edge."
+ }
+]

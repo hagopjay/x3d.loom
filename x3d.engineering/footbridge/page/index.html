@@ -1,0 +1,640 @@
+<title>Footbridge Workbench</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/x_ite@16.5.1/dist/x_ite.min.js"></script>
+<!-- X_ITE 16.5.1 stylesheet (MIT, copyright 2009 Holger Seelig and other contributors), icons and fonts removed.
+     A viewer that blocks the CDN stylesheet leaves the 3D surface hidden; the page adopts this copy into the player. -->
+<script type="text/x-css" id="xite-css">
+:host,X3DCanvas{--red:#d71f1f;--orange:#ff9230;--orange-filter:brightness(0) saturate(100%) invert(71%) sepia(100%) saturate(1647%) hue-rotate(335deg) brightness(101%) contrast(101%);--text-color:#fff;--text-color-dark:#fff;--text-shadow-color:#000;--link-color:var(--orange);--progress-background:#fff;--splash-screen-background:#0f0f0f;--splash-screen-image:none;--gradient:linear-gradient(180deg,rgba(35,37,40,.553) 0%,rgba(13,16,21,.831));--border:4px solid rgba(43,45,47,.675);--button-border:1px solid hsla(0,0%,100%,.1);--tint-color:rgba(50,50,50,.44);--tint-hover-color:rgba(64,64,64,.44);--table-tint-color:hsla(0,0%,100%,.083);--icon-filter:none}@media (prefers-color-scheme:light){:host(:not([theme=dark])),X3DCanvas:not([theme=dark]){--red:#e12b2b;--orange-filter:brightness(0) saturate(100%) invert(71%) sepia(100%) saturate(2647%) hue-rotate(335deg) brightness(70%) contrast(121%);--text-color:#000;--text-shadow-color:#fff;--link-color:var(--red);--progress-background:#000;--splash-screen-background:#fcfcfc;--splash-screen-image:none;--gradient:linear-gradient(180deg,rgba(247,247,252,.642) 0%,hsla(252,8%,88%,.6));--border:4px solid rgba(229,229,234,.66);--button-border:1px solid hsla(0,0%,100%,.49);--tint-color:hsla(0,0%,100%,.37);--tint-hover-color:hsla(0,0%,100%,.46);--table-tint-color:var(--tint-color);--icon-filter:invert(100%)}}:host([theme=light]),X3DCanvas[theme=light]{--red:#e12b2b;--orange-filter:brightness(0) saturate(100%) invert(71%) sepia(100%) saturate(2647%) hue-rotate(335deg) brightness(70%) contrast(121%);--text-color:#000;--text-shadow-color:#fff;--link-color:var(--red);--progress-background:#000;--splash-screen-background:#fcfcfc;--splash-screen-image:none;--gradient:linear-gradient(180deg,rgba(247,247,252,.642) 0%,hsla(252,8%,88%,.6));--border:4px solid rgba(229,229,234,.66);--button-border:1px solid hsla(0,0%,100%,.49);--tint-color:hsla(0,0%,100%,.37);--tint-hover-color:hsla(0,0%,100%,.46);--table-tint-color:var(--tint-color);--icon-filter:invert(100%)}:host,X3DCanvas{all:initial;display:inline-block;height:150px;overflow:hidden;-webkit-user-select:none;user-select:none;width:300px}:host(.x_ite-fullscreen),X3DCanvas.x_ite-fullscreen{height:100vh!important;width:100vw!important}X3DCanvas>:not(.x_ite-private-browser,.x_ite-private-menu){display:none}.x_ite-private-browser,.x_ite-private-browser *,.x_ite-private-menu,.x_ite-private-menu *{all:revert}.x_ite-private-browser{height:100%;outline:none;overflow:hidden;position:relative;-webkit-user-select:none;user-select:none}.x_ite-private-surface{height:100%}.x_ite-private-canvas{height:100%;width:100%}.x_ite-private-notification{backdrop-filter:blur(8px);background:var(--gradient);background-clip:padding-box;border:var(--border);border-bottom-left-radius:16px;border-right:none;border-top-left-radius:16px;color:var(--text-color);font-family:X_ITE PT Sans,sans-serif;font-size:10pt;line-height:1.1;padding:5px 0 3px 7px;pointer-events:none;position:absolute;right:0;top:20px;visibility:hidden;white-space:pre;width:0}.x_ite-private-notification span{background:none no-repeat top -1px left 0;background-size:17px 17px;display:inline-block;padding:0 16px 2px 22px;position:relative;top:-1px}.x_ite-private-browser-timings{backdrop-filter:blur(8px);background:var(--gradient);background-clip:padding-box;border-right:var(--border);border-top:var(--border);border-top-right-radius:12px;bottom:0;color:var(--text-color);font-family:X_ITE PT Sans,sans-serif;font-size:9pt;left:0;padding:8px 12px 10px;pointer-events:none;position:absolute;white-space:pre}.x_ite-private-browser-timings :is(table,thead,tbody,tfoot,tr,th,td){box-sizing:border-box;color:var(--text-color);font-size:inherit;line-height:1.1;text-align:left}.x_ite-private-browser-timings table{border-collapse:separate;border-spacing:2px;empty-cells:show;max-width:100%;overflow:hidden;width:100%}.x_ite-private-browser-timings thead th{background:none no-repeat -1px 1px;background-size:17px 17px;color:var(--text-color-dark);filter:var(--icon-filter);font-weight:700;padding-bottom:5px;padding-left:20px;padding-top:3px}.x_ite-private-browser-timings td:first-child{padding-right:10px}.x_ite-private-browser-timings table.more tr.x_ite-private-more td{padding-bottom:5px}.x_ite-private-browser-timings table.less tr.x_ite-private-more~tr{display:none}.x_ite-private-browser-timings td{padding-bottom:2px}.x_ite-private-browser-timings td.pointer{pointer-events:all}.x_ite-private-browser-timings tfoot td:first-child{padding-right:0}.x_ite-private-browser-timings tfoot td{padding-top:4px}.x_ite-private-browser-timings button{background:var(--tint-color);border:var(--button-border);border-radius:10px;box-sizing:border-box;color:var(--text-color);cursor:pointer;font-family:X_ITE PT Sans,sans-serif;font-size:9pt;font-style:italic;height:14pt;line-height:1.1;margin-top:2px;padding:0;pointer-events:all;text-align:center;width:100%}.x_ite-private-browser-timings button:hover{background-color:var(--tint-hover-color)}.x_ite-private-world-info-overlay{inset:0;position:absolute}.x_ite-private-world-info{backdrop-filter:blur(8px);background:var(--gradient);background-clip:padding-box;border:var(--border);border-radius:15px;inset:0;margin:21pt;overflow-y:auto;padding:0 21pt 21pt;position:absolute}.x_ite-private-world-info .x_ite-private-world-info-buttons{border-bottom:4px solid var(--table-tint-color);margin-bottom:12pt}.x_ite-private-world-info button{background:none;border:none;color:var(--text-color);height:21pt;width:100pt}.x_ite-private-world-info button:hover{background-color:var(--table-tint-color)}.x_ite-private-world-info button.active{font-weight:700}.x_ite-private-world-info :is(.x_ite-private-world-info-top,.x_ite-private-world-info-title,.x_ite-private-world-info-info,p){box-sizing:border-box;color:var(--text-color);font-family:X_ITE PT Sans,sans-serif;font-style:normal;line-height:1.3;text-align:left}.x_ite-private-world-info .x_ite-private-world-info-top{font-size:9pt;font-style:italic;font-weight:700;margin:.3em 0}.x_ite-private-world-info .x_ite-private-world-info-title{font-size:16pt;font-weight:700;margin:.3em 0;overflow-wrap:break-word;word-break:break-word}.x_ite-private-world-info .x_ite-private-world-info-info,.x_ite-private-world-info .x_ite-private-world-info-info p{font-size:11pt;margin:.5em 0;overflow-wrap:break-word;word-break:break-word}.x_ite-private-world-info table{border-collapse:collapse;line-height:1.3;margin:.5em 0;width:100%}.x_ite-private-world-info tr:nth-child(odd){background-color:var(--table-tint-color)}.x_ite-private-world-info td{color:var(--text-color);font-family:X_ITE PT Sans,sans-serif;font-size:10pt;overflow-wrap:break-word;padding:4pt;vertical-align:top;word-break:break-word}.x_ite-private-world-info td:first-child{min-width:70px}.x_ite-private-world-info a{color:var(--link-color)}.x_ite-private-menu.context-menu-layer{inset:0;position:fixed;z-index:10000}.x_ite-private-menu .context-menu-list,.x_ite-private-menu.context-menu-list{border:4px solid transparent;border-radius:12px;box-sizing:border-box;color:var(--text-color);display:none;font-family:X_ITE PT Sans,sans-serif;font-size:10pt;line-height:1.2;list-style-type:none;margin:0 0 0 1px;min-width:120px;overscroll-behavior:none;padding:5px 10px 6px 9px;white-space:pre}.x_ite-private-menu.context-menu-list{isolation:isolate;position:fixed;z-index:10000}.x_ite-private-menu .context-menu-list{position:absolute;top:-13px}.x_ite-private-menu .context-menu-background{backdrop-filter:blur(8px);background:var(--gradient);background-clip:padding-box;border:var(--border);border-radius:12px;box-sizing:border-box;inset:0;margin:0 0 0 1px;min-width:120px;outline:none;padding:5px 10px 9px 9px;position:absolute}.x_ite-private-menu .context-menu-item{border-radius:12px;cursor:pointer;font-size:10pt;line-height:1;margin:0;margin:0 4px;padding:0 2px;position:relative;text-align:left}.x_ite-private-menu .context-menu-item:first-of-type{margin-top:4px}.x_ite-private-menu .context-menu-item:last-of-type{margin-bottom:4px}.x_ite-private-menu .context-menu-item:hover:not(.context-menu-not-selectable){background-color:var(--red)}.x_ite-private-menu .context-menu-item:hover>.context-menu-list{display:block}.x_ite-private-menu .context-menu-not-selectable{cursor:default}.x_ite-private-menu .context-menu-separator{border-bottom:1px solid #8a8a8a;border-top:0;cursor:default;margin:2px 0;padding-bottom:0;padding-top:0}.x_ite-private-menu .context-menu-separator+.context-menu-separator{display:none!important}.x_ite-private-menu .context-menu-submenu:after{border-color:transparent transparent transparent #e8eaed;border-style:solid;border-width:4px 0 4px 5px;content:"";display:block;filter:var(--icon-filter);height:0;margin-right:2px;position:absolute;right:4px;top:8px;width:0}.x_ite-private-menu .context-menu-item>span,.x_ite-private-menu label{display:block;padding:5px 24px;width:100%}.x_ite-private-menu label{box-sizing:border-box;cursor:pointer;font-size:10pt;font-weight:400;line-height:1;margin:0}.x_ite-private-menu label span{color:var(--text-color-dark);filter:var(--icon-filter)}.x_ite-private-menu label:has(>input[type=radio]:checked){font-weight:700}.x_ite-private-menu label>*{font-size:10pt;line-height:1;vertical-align:top}.x_ite-private-menu input{appearance:none;cursor:pointer}.x_ite-private-menu input[type=checkbox],.x_ite-private-menu input[type=radio]{background:none no-repeat left 0 top 0;background-size:17px 17px;display:inline-block;filter:var(--icon-filter);height:17px;margin:0 0 0 -22px;padding:0;position:absolute;top:3px;width:17px}.x_ite-private-menu input:checked{filter:var(--orange-filter)}.x_ite-private-menu .context-menu-input:hover input:checked{filter:var(--icon-filter)}.x_ite-private-menu input[type=checkbox]:checked{background-image:none}.x_ite-private-menu input[type=radio]:checked{background-image:none}.x_ite-private-menu span{padding-left:0}.x_ite-private-menu .context-menu-title{font-weight:700}.x_ite-private-menu .context-menu-icon>span{background-position:2px 3px;background-repeat:no-repeat;background-size:17px 17px;color:var(--text-color-dark);display:block;filter:var(--icon-filter)}.x_ite-private-menu .x_ite-private-icon-logo>span{background-image:none;background-position:2px 4px;color:var(--text-color);filter:none}.x_ite-private-icon-viewpoint>span{background-image:none}.x_ite-private-menu .x_ite-private-viewpoint input{background-image:none}.x_ite-private-menu .x_ite-private-viewpoint input:checked{background-image:none}.x_ite-private-icon-viewer>span{background-image:none}.x_ite-private-menu .x_ite-private-examine-viewer :is(input,input:checked){background-image:none}.x_ite-private-menu .x_ite-private-walk-viewer :is(input,input:checked){background-image:none}.x_ite-private-menu .x_ite-private-fly-viewer :is(input,input:checked){background-image:none}.x_ite-private-menu .x_ite-private-plane-viewer :is(input,input:checked){background-image:none}.x_ite-private-menu .x_ite-private-lookat-viewer :is(input,input:checked){background-image:none}.x_ite-private-menu .x_ite-private-none-viewer :is(input,input:checked){background-image:none}.x_ite-private-icon-primitive-quality>span{background-image:none}.x_ite-private-icon-texture-quality>span{background-image:none}.x_ite-private-icon-shading>span{background-image:none}.x_ite-private-icon-animations>span{background-image:none}.x_ite-private-icon-play>span{background-image:none}.x_ite-private-icon-stop>span{background-image:none}.x_ite-private-icon-enter-fullscreen>span{background-image:none}.x_ite-private-icon-leave-fullscreen>span{background-image:none}.x_ite-private-icon-world-info>span{background-image:none}.x_ite-private-icon-info>span{background-image:none}.x_ite-private-splash-screen{background:var(--splash-screen-image) var(--splash-screen-background);background-position:calc(50% - 30px) calc(50% + 58px);inset:0;pointer-events:none;position:absolute}.x_ite-private-spinner{--offset-x:100px;--offset-y:-48px;--size:32px;--padding:8px;--center-x:calc(var(--size)*0.44727 + var(--padding));--center-y:calc(var(--size)*0.52637 + var(--padding));animation:x_ite-spinner-animation 8s linear infinite;background:none no-repeat 50%;background-size:var(--size) var(--size);height:var(--size);left:calc(50% - var(--size)/2 + var(--size)/2 - var(--center-x) + var(--offset-x));padding:var(--padding);position:absolute;top:calc(50% - var(--size)/2 + var(--size)/2 - var(--center-y) + var(--offset-y));transform-origin:var(--center-x) var(--center-y);width:var(--size)}@keyframes x_ite-spinner-animation{to{transform:rotate(1turn)}}.x_ite-private-progress{left:calc(50% - 100px);position:absolute;top:calc(50% - 39pt);width:195px}.x_ite-private-x_ite{color:var(--text-color);font-family:X_ITE PT Sans,sans-serif;font-size:32pt;text-align:center;text-shadow:1px 1px 0 var(--text-shadow-color)}.x_ite-private-x_ite b{font-family:X_ITE PT Sans,sans-serif;font-weight:700}.x_ite-private-spinner-text{color:var(--text-color);font-family:X_ITE PT Sans,sans-serif;font-size:11pt;text-align:center;text-shadow:1px 1px 0 var(--text-shadow-color)}.x_ite-private-progressbar{background:var(--progress-background);border-radius:4px;height:8px;margin:8px;overflow:hidden}.x_ite-private-progressbar div{background:var(--red);height:100%;width:0}.x_ite-private-buttons{align-items:center;background:var(--gradient);background-clip:padding-box;border:var(--border);border-radius:32px;bottom:10px;display:flex;gap:16px;justify-content:center;padding:0 24px 0 16px;position:absolute;right:-16px}.x_ite-private-buttons:is(:empty,:not(:has(:not(.x_ite-private-hidden)))){display:none;opacity:0}.x_ite-private-button{background-repeat:no-repeat;background-size:30px 30px;cursor:pointer;filter:var(--icon-filter);height:30px;width:30px}.x_ite-private-button:hover{scale:1.2}.x_ite-private-no-sound-button{background-image:none;order:1}.x_ite-private-xr-button{background-image:none;order:2}.x_ite-private-fade{opacity:1;transition:display allow-discrete .3s,opacity .3s ease-in-out}@starting-style{.x_ite-private-fade{opacity:0}}.x_ite-private-hidden{display:none;opacity:0}.x_ite-private-splash-screen.x_ite-private-fade{transition:none}.x_ite-private-splash-screen.x_ite-private-hidden{transition:display allow-discrete .2s,opacity .2s ease-in-out}.x_ite-private-button.x_ite-private-fade{transition:display allow-discrete 0s .3s,opacity .3s ease-in-out,scale .2s ease-in-out}@-moz-document url-prefix(){.x_ite-private-fade{transition:visibility .3s,opacity .3s ease-in-out}.x_ite-private-hidden{display:block;transition:visibility 0s .3s,opacity .3s ease-in-out;visibility:hidden}.x_ite-private-splash-screen.x_ite-private-hidden{transition:visibility 0s .2s,opacity .2s ease-in-out}.x_ite-private-button.x_ite-private-fade{transition:visibility 0s .3s,opacity .3s ease-in-out,scale .2s ease-in-out}.x_ite-private-button.x_ite-private-hidden{display:none}}
+</script>
+<style>
+/* Layout: a workbench. One dark 3D stage beside one instrument panel; findings and the audit trail below, in a measured column grid. */
+:root {
+  --bg: #f2f4f8; --panel: #ffffff; --ink: #131a26; --muted: #556176; --line: #d3dae6; --soft: #e8ecf3;
+  --tension: #1c69cf; --compression: #bf4a28; --ok: #17805a; --warn: #a86a12; --bad: #bd3327; --stage: #0b1019; --stage-ink: #dfe7f5;
+  --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif; --body: "Inter", "Segoe UI", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c1017; --panel: #141a25; --ink: #e7edf6; --muted: #94a1b6; --line: #273142; --soft: #1b2331;
+  --tension: #68aaff; --compression: #f08663; --ok: #4fc592; --warn: #e2b04a; --bad: #ff7466; --stage: #070a10; --stage-ink: #dfe7f5; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c1017; --panel: #141a25; --ink: #e7edf6; --muted: #94a1b6; --line: #273142; --soft: #1b2331;
+  --tension: #68aaff; --compression: #f08663; --ok: #4fc592; --warn: #e2b04a; --bad: #ff7466; --stage: #070a10; --stage-ink: #dfe7f5; color-scheme: dark }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(28px, 4.2vw, 44px); line-height: 1.05; font-weight: 700; }
+h2 { font-size: 22px; font-weight: 600; }
+h3 { font-size: 16px; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--tension); }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.lede { max-width: 66ch; color: var(--muted); font-size: 16px; }
+.head { display: flex; flex-direction: column; gap: 12px; }
+.c { color: var(--compression); font-weight: 600; } .t { color: var(--tension); font-weight: 600; }
+.note { font-size: 13px; color: var(--muted); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+.bench { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 880px) { .bench { grid-template-columns: minmax(0, 1fr); } }
+.stage { position: relative; background: var(--stage); border-radius: 10px; overflow: hidden; aspect-ratio: 7 / 4; max-height: 70vh; width: 100%; min-width: 0; }
+
+.stage img.poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.stage x3d-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.stage .hud { position: absolute; left: 12px; right: 12px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: space-between; pointer-events: none; }
+.stage .hud > * { pointer-events: auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; font: 12px/1.2 var(--mono); color: var(--stage-ink); background: rgba(7, 10, 16, 0.72); padding: 6px 9px; border-radius: 6px; }
+.legend i { display: inline-block; width: 18px; height: 4px; border-radius: 2px; vertical-align: middle; margin-right: 5px; }
+.views { display: flex; gap: 4px; }
+.views button { font: 12px/1 var(--mono); color: var(--stage-ink); background: rgba(7, 10, 16, 0.72); border: 1px solid rgba(223, 231, 245, 0.25); border-radius: 6px; padding: 6px 8px; cursor: pointer; }
+.views button[aria-pressed="true"] { border-color: var(--stage-ink); }
+.stage .msg { position: absolute; top: 10px; left: 12px; right: 12px; font: 12px/1.35 var(--mono); color: var(--stage-ink); background: rgba(7, 10, 16, 0.72); padding: 6px 9px; border-radius: 6px; }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; min-width: 0; }
+.tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+.tabs button { font: 600 13px/1.25 var(--display); color: var(--muted); background: none; border: 0; border-bottom: 3px solid transparent; padding: 12px 8px 10px; cursor: pointer; text-align: left; }
+.tabs button small { display: block; font: 400 11px/1.3 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 3px; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--compression); }
+.lesson { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.ctl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: baseline; }
+.ctl label { font-weight: 500; }
+.ctl output { font: 500 14px/1 var(--mono); font-variant-numeric: tabular-nums; }
+.ctl input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: var(--compression); margin: 4px 0 0; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.seg { display: flex; flex-wrap: wrap; gap: 4px; }
+.seg button, .btn { font: 500 13px/1 var(--body); color: var(--ink); background: var(--soft); border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--tension); outline-offset: 2px; }
+.gauge { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; align-items: center; }
+.gauge .bar { height: 10px; background: var(--soft); border-radius: 5px; overflow: hidden; }
+.gauge .bar i { display: block; height: 100%; background: var(--tension); border-radius: 5px; width: 0; }
+.gauge .cap { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+.say { border-left: 3px solid var(--line); padding: 2px 0 2px 12px; }
+.say.on { border-left-color: var(--ok); }
+.say.off { border-left-color: var(--warn); }
+.read { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.read div { background: var(--panel); padding: 8px 10px; min-width: 0; }
+.read dt { font: 400 11px/1.3 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.read dd { margin: 2px 0 0; font: 500 17px/1.2 var(--mono); font-variant-numeric: tabular-nums; }
+.read dd small { font-size: 12px; color: var(--muted); font-weight: 400; }
+dl { margin: 0; }
+.chips { display: flex; flex-direction: column; gap: 6px; }
+.chip { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 13px; padding: 6px 9px; border-radius: 6px; background: var(--soft); }
+.chip b { font: 600 11px/1 var(--mono); letter-spacing: 0.08em; padding: 4px 6px; border-radius: 4px; color: var(--panel); background: var(--muted); }
+.chip.ok b { background: var(--ok); } .chip.bad b { background: var(--bad); }
+.chip span.v { font: 13px/1 var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+.window { position: relative; height: 26px; background: var(--soft); border-radius: 6px; }
+.window .band { position: absolute; top: 0; bottom: 0; background: color-mix(in srgb, var(--ok) 32%, transparent); border-left: 2px solid var(--ok); border-right: 2px solid var(--ok); }
+.window .pin { position: absolute; top: -4px; bottom: -4px; width: 3px; background: var(--ink); border-radius: 2px; transform: translateX(-1px); }
+.window span { position: absolute; top: 5px; font: 11px/16px var(--mono); color: var(--ink); white-space: nowrap; }
+.chart { width: 100%; height: auto; display: block; }
+.chart text { font: 10px var(--mono); fill: var(--muted); }
+.chart .ax { stroke: var(--line); stroke-width: 1; fill: none; }
+.chart .cv { stroke: var(--compression); stroke-width: 2; fill: none; }
+.chart .tg { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 3; fill: none; }
+.chart .dot { fill: var(--ink); }
+
+.find { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px 28px; }
+.find article { display: flex; flex-direction: column; gap: 6px; border-top: 2px solid var(--ink); padding-top: 10px; min-width: 0; }
+.find .big { font: 600 26px/1.1 var(--mono); font-variant-numeric: tabular-nums; color: var(--compression); }
+.find article:nth-child(even) .big { color: var(--tension); }
+.find p { color: var(--muted); }
+.find p strong { color: var(--ink); font-weight: 600; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 11px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td.mono { white-space: nowrap; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px 28px; }
+.two ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); }
+.foot { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+section { display: flex; flex-direction: column; gap: 14px; }
+
+/* footbridge additions: the stage spans the page (the bridge is seven times longer than tall); lessons sit below in two columns */
+.lesson { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 22px; align-items: start; }
+.lesson > .col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+@media (max-width: 820px) { .lesson { grid-template-columns: minmax(0, 1fr); } }
+.lesson[hidden] { display: none; }
+select { font: 500 14px/1.2 var(--body); color: var(--ink); background: var(--soft); border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; max-width: 100%; }
+.chart .fillT { fill: color-mix(in srgb, var(--tension) 38%, transparent); stroke: none; }
+.chart .fillC { fill: color-mix(in srgb, var(--compression) 38%, transparent); stroke: none; }
+.chart .dim { opacity: 0.35; }
+.chart .cv { stroke: var(--ink); }
+.chart .band { fill: color-mix(in srgb, var(--warn) 28%, transparent); }
+.read > dl { display: flex; } .read > dl > div { flex: 1; }
+@media (max-width: 600px) { .stage { aspect-ratio: 5 / 4; } }
+.read.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 520px) { .read.three { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.read dd { font-size: 16px; overflow-wrap: anywhere; }
+.grade { font: 500 11px/1 var(--mono); letter-spacing: 0.06em; padding: 3px 6px; border-radius: 4px; background: var(--soft); color: var(--muted); white-space: nowrap; }
+.grade.l { color: var(--ok); } .grade.s { color: var(--warn); }
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div class="eyebrow">X3D engineering study D · not for construction</div>
+    <h1>Footbridge Workbench</h1>
+    <p class="lede">A 30 m steel truss footbridge, solved the way a bridge engineer would start: not "how strong is it under a full deck" but "<strong>where must the crowd stand to hurt each member most</strong>". The answer is a shape, one per member, called an influence line. Pick a member, see its shape, then walk a crowd across and watch eight members change from <span class="t">pull</span> to <span class="c">push</span>.</p>
+  </header>
+
+  <div class="bench">
+    <div class="stage" id="stage">
+      <img class="poster" id="poster" alt="A steel truss footbridge between two abutments, members coloured from blue to red by how hard they work" src="data:image/webp;base64,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">
+      <x3d-canvas id="xc" splashScreen="false" contextMenu="false" notifications="false" timings="false"></x3d-canvas>
+      <div class="msg" id="msg" hidden></div>
+      <div class="hud">
+        <div class="legend" id="legend"></div>
+        <div class="views" role="group" aria-label="Camera">
+          <button type="button" id="view-0" aria-pressed="true">3/4</button><button type="button" id="view-1" aria-pressed="false">Side</button><button type="button" id="view-2" aria-pressed="false">Deck</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="tabs" role="tablist" aria-label="Lessons">
+        <button type="button" role="tab" id="tab-line" aria-selected="true" aria-controls="lesson-line"><small>Lesson 1</small>One member, one shape</button>
+        <button type="button" role="tab" id="tab-walk" aria-selected="false" aria-controls="lesson-walk"><small>Lesson 2</small>The crowd walks on</button>
+        <button type="button" role="tab" id="tab-depth" aria-selected="false" aria-controls="lesson-depth"><small>Lesson 3</small>Depth and footfall</button>
+      </div>
+
+      <div class="lesson" id="lesson-line" role="tabpanel" aria-labelledby="tab-line">
+        <div class="col">
+          <p>Stand one newton on the deck and note the force it puts in one member. Move it along and plot that force against where it stands. That plot is the member's influence line. A crowd is many newtons, so its effect is the area under the line where people stand.</p>
+          <div class="row"><label for="member">Member</label><select id="member"></select></div>
+          <div class="seg" id="quick" role="group" aria-label="Members worth a look">
+            <button type="button" data-id="D5">Midspan diagonal</button><button type="button" data-id="V4">A vertical</button><button type="button" data-id="TC5">Top chord</button><button type="button" data-id="EP1">End post</button><button type="button" data-id="V5">The idle one</button>
+          </div>
+          <div class="row"><span class="note">Put the crowd where it</span>
+            <div class="seg" id="mode" role="group" aria-label="Crowd placement"><button type="button" data-m="tension" aria-pressed="true">pulls most</button><button type="button" data-m="compression" aria-pressed="false">pushes most</button><button type="button" data-m="full" aria-pressed="false">fills the deck</button></div></div>
+          <div class="say" id="m-say"></div>
+        </div>
+        <div class="col">
+          <svg class="chart" id="il" role="img" aria-label="Influence line of the chosen member along the 30 m deck"></svg>
+          <div class="read three">
+            <dl><div><dt>Section</dt><dd id="m-sec"></dd></div></dl><dl><div><dt>Worst pull</dt><dd id="m-max"></dd></div></dl><dl><div><dt>Worst push</dt><dd id="m-min"></dd></div></dl>
+            <dl><div><dt>Full deck only</dt><dd id="m-full"></dd></div></dl><dl><div><dt>Strength + / −</dt><dd id="m-cap"></dd></div></dl><dl><div><dt>Utilisation</dt><dd id="m-u"></dd></div></dl>
+          </div>
+          <p class="note">Forces are factored: 1.25 or 0.90 on dead load, 1.75 on the crowd. Blue area pulls, red area pushes.</p>
+        </div>
+      </div>
+
+      <div class="lesson" id="lesson-walk" role="tabpanel" aria-labelledby="tab-walk" hidden>
+        <div class="col">
+          <p>Now let the crowd come on from the left bank. Blue members are being pulled, red ones pushed, and the colour scale is fixed to each member's own strength. Watch the diagonals near the middle as the front passes them.</p>
+          <div class="ctl"><label for="front">Front of the crowd</label><output id="front-out" for="front"></output>
+            <input type="range" id="front" min="0" max="30" step="0.25" value="12"></div>
+          <div class="row"><button class="btn" type="button" id="play">Walk the crowd on</button>
+            <label for="member2" class="note">Follow</label><select id="member2"></select></div>
+          <div class="row"><span class="note">Sag drawn</span><div class="seg" id="exag" role="group" aria-label="Sag enlargement"><button type="button" data-x="1">true size</button><button type="button" data-x="40" aria-pressed="true">× 40</button><button type="button" data-x="100">× 100</button></div></div>
+          <div class="say" id="w-say"></div>
+        </div>
+        <div class="col">
+          <svg class="chart" id="wk" role="img" aria-label="Force in the followed member as the crowd front advances"></svg>
+          <div class="read">
+            <dl><div><dt id="w-name">Force now</dt><dd id="w-force"></dd></div></dl><dl><div><dt>Midspan sag from the crowd</dt><dd id="w-sag"></dd></div></dl>
+            <dl><div><dt>Members on the wrong side of their full-deck sign</dt><dd id="w-flip"></dd></div></dl><dl><div><dt>Sag as a ratio</dt><dd id="w-ratio"></dd></div></dl>
+          </div>
+          <p class="note">No load factors in this lesson: these are the forces the steel would actually feel. Limit on sag: span / 360 = 83.3 mm.</p>
+        </div>
+      </div>
+
+      <div class="lesson" id="lesson-depth" role="tabpanel" aria-labelledby="tab-depth" hidden>
+        <div class="col">
+          <p>A bridge can be strong enough and still be unpleasant. People walk at about two steps a second. A deck whose own frequency sits there gets pumped like a swing. The picture shows the first vertical mode, enlarged and slowed.</p>
+          <div class="row"><span class="note">Truss depth</span><div class="seg" id="depth" role="group" aria-label="Truss depth"><button type="button">2.0 m</button><button type="button">2.5 m</button><button type="button" aria-pressed="true">3.0 m</button><button type="button">3.5 m</button><button type="button">4.0 m</button></div></div>
+          <div class="read">
+            <dl><div><dt>Sections, top · bottom · post · vertical · diagonal</dt><dd id="d-sec" style="font-size:13px"></dd></div></dl><dl><div><dt>Steel</dt><dd id="d-steel"></dd></div></dl>
+            <dl><div><dt>Sag under the full crowd</dt><dd id="d-defl"></dd></div></dl><dl><div><dt>First frequency</dt><dd><span id="d-f"></span><br><span id="d-fc"></span></dd></div></dl>
+          </div>
+          <p class="note">Each depth was sized again from the same catalogue. The 3D view and the chart stay on the 3.0 m design.</p>
+        </div>
+        <div class="col">
+          <div class="ctl"><label for="crowd">People standing on the 3.0 m design</label><output id="crowd-out" for="crowd"></output>
+            <input type="range" id="crowd" min="0" max="100" step="1" value="0"></div>
+          <svg class="chart" id="fq" role="img" aria-label="First vertical frequency against the share of the design crowd on the deck"></svg>
+          <div class="read"><dl><div><dt>First vertical frequency now</dt><dd id="d-now"></dd></div></dl><dl><div><dt>The design crowd</dt><dd>439 <small>kg/m², 5.5 people/m²</small></dd></div></dl></div>
+          <div class="say" id="d-say"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <h2>What the mathematics says</h2>
+    <div class="find">
+      <article><div class="big">8 of 37</div><h3>Members that change sign</h3><p>Under a full deck no member reverses. Under a crowd that stops part-way, 8 do: the four diagonals and four verticals nearest midspan. <strong>The midspan diagonal D5 sees 74.5 kN of pull and 37.0 kN of push</strong>, where a full-deck analysis shows only 31.9 kN of pull. That is 2.3 times too little, and no push at all.</p></article>
+      <article><div class="big">line = shape</div><h3>An influence line is a deflected shape</h3><p>Lengthen one member by one unit, keep the rest rigid, and the deck moves into exactly that member's influence line. This is Müller-Breslau's principle. It was solved here from the transpose of the equilibrium matrix and agrees with the 37 lines found from unit loads to 8.9e-16. <strong>Statics and geometry are the same matrix read two ways.</strong></p></article>
+      <article><div class="big">0.996</div><h3>The end post decides</h3><p>Every newton on the deck leaves through the two sloping end posts. EP1 is the most used member at 0.996 of its buckling strength, so the bridge has 0.5% of spare crowd load before the first member is over. <strong>Chords are sized by the full deck, webs by the partial one.</strong></p></article>
+      <article><div class="big">span / 770</div><h3>Strength governs, not stiffness</h3><p>The full crowd sags the middle 39.0 mm against a limit of 83.3 mm. At a depth of one tenth of the span the truss is stiff with room to spare. Dead load alone sags it 17.9 mm, which a builder would take out with camber.</p></article>
+      <article><div class="big">4.02 → 2.26 Hz</div><h3>The crowd is heavier than the bridge</h3><p>Empty, the first vertical frequency is 4.02 Hz and passes the 3 Hz line. The design crowd is 439 kg on every square metre. On the deck it weighs 19.8 t against 8.9 t of bridge, and <strong>the frequency falls to 2.26 Hz, inside walking pace</strong>. The rule checks the empty bridge. A packed crowd shuffles and does not march, which is the usual defence, and it is a judgment, not a calculation.</p></article>
+      <article><div class="big">0 kN</div><h3>The member that carries nothing</h3><p>The centre vertical V5 takes no crowd load at all. Remove it and the top chord's free length doubles: its slenderness goes from 64 to 129 (limit 120) and its strength from 627 to 257 kN against a demand of 563 kN. <strong>It holds no load and the bridge fails without it.</strong></p></article>
+      <article><div class="big">3.18 to 4.51 Hz</div><h3>Depth buys stiffness, not savings</h3><p>From 2 m to 4 m deep the steel goes from 1,825 to 2,389 kg per truss, with no clear trend, because lighter chords are paid for with longer webs. Sag goes from 66 to 27 mm and frequency from 3.18 to 4.51 Hz. <strong>Choose depth for how the bridge feels.</strong></p></article>
+      <article><div class="big">1 wrong guess</div><h3>What the study card got wrong</h3><p>Before any run, the card predicted that 60 × 4 mm diagonals would fail on strength and on slenderness. They fail on slenderness only: the worst diagonal push is 37.0 kN against 40.7 kN. The prediction is recorded as wrong and the limit was not moved.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>The design</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Group</th><th>Section, mm</th><th>Most used member</th><th>Factored demand</th><th>Design strength</th><th>Utilisation</th><th>Slenderness</th></tr></thead>
+      <tbody><tr><td>Top chord</td><td class="mono">120 × 6</td><td class="mono">TC5</td><td class="mono">-563 kN</td><td class="mono">627 kN in compression</td><td class="mono">0.90</td><td class="mono">64 of 120</td></tr><tr><td>Bottom chord</td><td class="mono">100 × 5</td><td class="mono">BC5</td><td class="mono">+541 kN</td><td class="mono">590 kN in tension</td><td class="mono">0.92</td><td class="mono">77 of 200</td></tr><tr><td>End posts</td><td class="mono">100 × 6</td><td class="mono">EP1</td><td class="mono">-286 kN</td><td class="mono">288 kN in compression</td><td class="mono">1.00</td><td class="mono">110 of 120</td></tr><tr><td>Verticals</td><td class="mono">80 × 4</td><td class="mono">V2</td><td class="mono">-122 kN</td><td class="mono">191 kN in compression</td><td class="mono">0.64</td><td class="mono">97 of 120</td></tr><tr><td>Diagonals</td><td class="mono">100 × 5</td><td class="mono">D2</td><td class="mono">+226 kN</td><td class="mono">590 kN in tension</td><td class="mono">0.38</td><td class="mono">109 of 200</td></tr></tbody>
+    </table></div>
+    <p class="note">Pratt through truss, 10 panels of 3 m, 3 m deep, two trusses 3 m apart, each carrying half the deck. Square hollow sections with sharp corners, yield 345 MPa. 1,877 kg of steel per truss before connections.</p>
+  </section>
+
+  <section>
+    <h2>How it was checked</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Check</th><th>Agreement</th><th>Can it fail?</th></tr></thead>
+      <tbody>
+        <tr><td>Every requirement and reference on the study card</td><td class="mono">17 of 17 gates</td><td>14 of 14 planted faults caught, each breaking the gate it names</td></tr>
+        <tr><td>Joint equilibrium against the stiffness method, 37 members</td><td class="mono">1.3e-9 N</td><td>Yes: a flipped sign in the stiffness forces is rejected</td></tr>
+        <tr><td>OpenSeesPy 3.8.0, an independent finite element code: forces, sag, frequency</td><td class="mono">2.1e-9 N · 3.7e-16 m · 7.1e-13 Hz</td><td>Yes: a wrong chord area is rejected, on sag and frequency only, because forces in this truss do not depend on areas</td></tr>
+        <tr><td>Influence lines from unit loads against the stretch-one-member shape</td><td class="mono">8.9e-16</td><td>Yes: the opposite sign is rejected</td></tr>
+        <tr><td>Patterned areas by exact integration against a scan of 3,000 short loads</td><td class="mono">2.4e-6 m</td><td>Yes: loading whole panels is rejected</td></tr>
+        <tr><td>This page's solver (the script below, unchanged) against the numpy bank</td><td class="mono">under 1 mN, the bank's rounding</td><td>Yes: whole-panel loading misses by 17.1 kN</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>What this is not</h2>
+    <div class="two">
+      <div><h3>Assumed, not designed</h3><ul><li>Plane model of one truss; the two trusses are assumed to share the deck load equally</li><li>Pinned joints, loads at panel points, stringers simply supported between floor beams</li><li>K = 1.0 with the member length as the buckling length: the top chord is assumed braced sideways at every panel point by overhead bracing that is not designed</li><li>No wind, no lateral frequency or lateral crowd lock-in, no fatigue, no temperature, no vehicle</li><li>No connection, bearing, deck, railing or foundation is designed</li><li>Sections have sharp corners; real HSS has less area</li><li>Eight of ten code lines are recalled or chosen, see codes</li></ul></div>
+      <div><h3>Where each rule was read</h3><ul><li>AASHTO LRFD Guide Specifications for the Design of Pedestrian Bridges (Dec 2009), pedestrian loading <span class="grade l">Likely</span></li><li>Strength I, pedestrian live load factor <span class="grade l">Likely</span></li><li>Strength I, dead load factors <span class="grade s">Suspected</span></li><li>Deflection limit span/360 <span class="grade s">Suspected</span></li><li>Vertical frequency at least 3.0 Hz <span class="grade s">Suspected</span></li><li>AISC 360 E3, flexural buckling <span class="grade l">Likely</span></li><li>AISC 360 D2(a), tensile yielding <span class="grade s">Suspected</span></li><li>Slenderness limits 120 and 200 <span class="grade s">Suspected</span></li><li>HSS wall slenderness <span class="grade s">Suspected</span></li><li>Mixing two codes <span class="grade s">study criterion</span></li></ul></div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <div>Every number is measured by the thread that built it and stays Likely until someone else recomputes it. No licensed engineer has reviewed this. Do not build from it.</div>
+    <div>Numbers: Python 3.13.18, numpy 2.5.3, OpenSeesPy 3.8.0, from x3d.loom <span class="mono">x3d.engineering/footbridge</span>. Page solver checked under Node v22.23.5. 3D view: X_ITE 16.5.1, unpatched, with its stylesheet carried in the page. Walking band 1.6 to 2.4 Hz is recalled from memory.</div>
+  </div>
+</div>
+
+<script>
+// Footbridge statics for the teaching page: joint equilibrium as one matrix, influence lines, patterned crowd areas,
+// the factored envelope and member strengths. Plain JavaScript, no dependency. page_solver_check.js holds this file
+// against results/bank.json, which the numpy code wrote; the page carries this file unchanged.
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory(); else root.Footbridge = factory();
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  function solve(A, b) {                               // Gaussian elimination with partial pivoting; A and b are copied
+    const n = b.length, M = A.map((r, i) => r.concat([b[i]]));
+    for (let c = 0; c < n; c++) {
+      let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+      if (Math.abs(M[p][c]) < 1e-12) throw new Error('mechanism');
+      [M[c], M[p]] = [M[p], M[c]];
+      for (let r = c + 1; r < n; r++) { const f = M[r][c] / M[c][c]; if (f) for (let k = c; k <= n; k++) M[r][k] -= f * M[c][k]; }
+    }
+    const x = new Array(n).fill(0);
+    for (let r = n - 1; r >= 0; r--) { let s = M[r][n]; for (let k = r + 1; k < n; k++) s -= M[r][k] * x[k]; x[r] = s / M[r][r]; }
+    return x;
+  }
+  // geom: { joints: {name: [x, y]}, members: [{id, a, b, group}], supports: [[joint, axis]], deck: [names] }
+  function build(geom) {
+    const names = Object.keys(geom.joints), at = {}; names.forEach((n, i) => { at[n] = i; });
+    const fixed = new Set(geom.supports.map(([j, a]) => 2 * at[j] + a));
+    const free = []; for (let d = 0; d < 2 * names.length; d++) if (!fixed.has(d)) free.push(d);
+    const members = geom.members.map((m) => {
+      const pa = geom.joints[m.a], pb = geom.joints[m.b], L = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]);
+      return { id: m.id, a: m.a, b: m.b, group: m.group, L, c: (pb[0] - pa[0]) / L, s: (pb[1] - pa[1]) / L };
+    });
+    const row = {}; free.forEach((d, i) => { row[d] = i; });
+    const A = free.map(() => new Array(members.length).fill(0));
+    members.forEach((m, k) => {                        // a member in tension pulls joint a toward b
+      const ia = at[m.a], ib = at[m.b];
+      [[2 * ia, -m.c], [2 * ia + 1, -m.s], [2 * ib, m.c], [2 * ib + 1, m.s]].forEach(([d, v]) => { if (d in row) A[row[d]][k] = v; });
+    });
+    if (A.length !== members.length) throw new Error('mechanism');
+    return { names, at, free, members, A, deck: geom.deck, xs: geom.deck.map((j) => geom.joints[j][0]), joints: geom.joints, supports: geom.supports };
+  }
+  function forces(mdl, down) {                         // down: {joint: downward N}
+    const F = mdl.free.map((d) => { const j = mdl.names[d >> 1]; return (d & 1) && down[j] ? -down[j] : 0; });
+    return solve(mdl.A, F);
+  }
+  function influence(mdl) {                            // eta[k][i]: force in member k, unit load at deck joint i
+    const eta = mdl.members.map(() => new Array(mdl.deck.length).fill(0));
+    mdl.deck.forEach((j, i) => {
+      if (mdl.supports.some(([sj, a]) => sj === j && a === 1)) return;
+      const N = forces(mdl, { [j]: 1 }); N.forEach((v, k) => { eta[k][i] = v; });
+    });
+    return eta;
+  }
+  function areaBetween(xs, row, x0, x1) {              // integral of a piecewise-linear line from x0 to x1
+    let t = 0;
+    for (let i = 0; i < xs.length - 1; i++) {
+      const a = Math.max(x0, xs[i]), b = Math.min(x1, xs[i + 1]); if (b <= a) continue;
+      const y = (x) => row[i] + (row[i + 1] - row[i]) * (x - xs[i]) / (xs[i + 1] - xs[i]);
+      t += 0.5 * (y(a) + y(b)) * (b - a);
+    }
+    return t;
+  }
+  function signedAreas(xs, row, wholePanels) {         // areas and loaded lengths of the positive and negative parts
+    let plus = 0, minus = 0; const sp = [], sm = [], eps = 1e-12;
+    const push = (list, a, b) => { if (list.length && Math.abs(list[list.length - 1][1] - a) < 1e-9) list[list.length - 1][1] = b; else list.push([a, b]); };
+    for (let i = 0; i < xs.length - 1; i++) {
+      const x0 = xs[i], x1 = xs[i + 1], y0 = row[i], y1 = row[i + 1], full = 0.5 * (y0 + y1) * (x1 - x0);
+      if (wholePanels) { if (Math.max(y0, y1) > eps) { plus += full; push(sp, x0, x1); } if (Math.min(y0, y1) < -eps) { minus += full; push(sm, x0, x1); } continue; }
+      if (y0 >= -eps && y1 >= -eps) { if (Math.max(y0, y1) > eps) { plus += full; push(sp, x0, x1); } }
+      else if (y0 <= eps && y1 <= eps) { minus += full; push(sm, x0, x1); }
+      else {
+        const xz = x0 + (x1 - x0) * y0 / (y0 - y1), a0 = 0.5 * y0 * (xz - x0), a1 = 0.5 * y1 * (x1 - xz);
+        if (y0 > 0) { plus += a0; minus += a1; push(sp, x0, xz); push(sm, xz, x1); } else { minus += a0; plus += a1; push(sm, x0, xz); push(sp, xz, x1); }
+      }
+    }
+    return { plus, minus, forTension: sp, forCompression: sm };
+  }
+  function fcr(Fy, E, sl) { const Fe = Math.PI * Math.PI * E / (sl * sl); return sl <= 4.71 * Math.sqrt(E / Fy) ? Math.pow(0.658, Fy / Fe) * Fy : 0.877 * Fe; }
+  function strengths(sec, L, P) { const sl = L / sec.r; return { tension: P.phi_t * P.Fy * sec.A, compression: P.phi_c * fcr(P.Fy, P.E, sl) * sec.A, slenderness: sl }; }
+  function deadLoads(mdl, sections, P, floorLine) {    // panel-point loads from the floor, and half of each member's weight at each end
+    const n = mdl.deck.length - 1, a = mdl.xs[1] - mdl.xs[0], down = {};
+    mdl.deck.forEach((j, i) => { down[j] = floorLine * a * (i === 0 || i === n ? 0.5 : 1); });
+    mdl.members.forEach((m) => { const w = P.density * sections[m.group].A * m.L * P.connection_allowance * P.g; down[m.a] = (down[m.a] || 0) + w / 2; down[m.b] = (down[m.b] || 0) + w / 2; });
+    return down;
+  }
+  // opts: { patterned (default true), wholePanels, crowdFactor }
+  function envelope(mdl, sections, P, lines, opts) {
+    opts = opts || {}; const w = lines.crowd * (opts.crowdFactor || 1);
+    const Ndc = forces(mdl, deadLoads(mdl, sections, P, lines.floor)), eta = influence(mdl), rows = {};
+    mdl.members.forEach((m, k) => {
+      const s = signedAreas(mdl.xs, eta[k], opts.wholePanels); let ap = s.plus, am = s.minus; const full = ap + am;
+      if (opts.patterned === false) { ap = Math.max(full, 0); am = Math.min(full, 0); }
+      const nd = Ndc[k], cap = strengths(sections[m.group], m.L, P);
+      const nmax = (nd > 0 ? P.gamma_dc_max : P.gamma_dc_min) * nd + P.gamma_pl * w * ap;
+      const nmin = (nd < 0 ? P.gamma_dc_max : P.gamma_dc_min) * nd + P.gamma_pl * w * am;
+      const ut = Math.max(nmax, 0) / cap.tension, uc = Math.max(-nmin, 0) / cap.compression;
+      rows[m.id] = { k, N_dc: nd, area_plus: ap, area_minus: am, area_full: full, N_max: nmax, N_min: nmin, cap_t: cap.tension, cap_c: cap.compression,
+        slenderness: cap.slenderness, utilisation: Math.max(ut, uc), governs: uc > ut ? 'compression' : 'tension', forTension: s.forTension, forCompression: s.forCompression,
+        reverses: nmax > 1e-6 && nmin < -1e-6, eta: eta[k] };
+    });
+    return rows;
+  }
+  function midspanInfluence(mdl, sections, P, eta) {   // deflection at midspan per unit load at each deck joint, by virtual work
+    const mid = mdl.deck[(mdl.deck.length - 1) >> 1], n = forces(mdl, { [mid]: 1 });
+    return mdl.deck.map((_, i) => mdl.members.reduce((t, m, k) => t + eta[k][i] * n[k] * m.L / (P.E * sections[m.group].A), 0));
+  }
+  return { solve, build, forces, influence, areaBetween, signedAreas, fcr, strengths, deadLoads, envelope, midspanInfluence };
+});
+
+</script>
+<script>
+const DATA = {"params":{"E":200000000000.0,"Fy":345000000.0,"density":7850.0,"g":9.80665,"connection_allowance":1.1,"gamma_dc_max":1.25,"gamma_dc_min":0.9,"gamma_pl":1.75,"phi_t":0.9,"phi_c":0.9,"deck_width":3.0,"frequency_min":3.0},"geom":{"joints":{"B0":[0.0,0.0],"B1":[3.0,0.0],"B2":[6.0,0.0],"B3":[9.0,0.0],"B4":[12.0,0.0],"B5":[15.0,0.0],"B6":[18.0,0.0],"B7":[21.0,0.0],"B8":[24.0,0.0],"B9":[27.0,0.0],"B10":[30.0,0.0],"T1":[3.0,3.0],"T2":[6.0,3.0],"T3":[9.0,3.0],"T4":[12.0,3.0],"T5":[15.0,3.0],"T6":[18.0,3.0],"T7":[21.0,3.0],"T8":[24.0,3.0],"T9":[27.0,3.0]},"members":[{"id":"BC1","a":"B0","b":"B1","group":"bottom"},{"id":"BC2","a":"B1","b":"B2","group":"bottom"},{"id":"BC3","a":"B2","b":"B3","group":"bottom"},{"id":"BC4","a":"B3","b":"B4","group":"bottom"},{"id":"BC5","a":"B4","b":"B5","group":"bottom"},{"id":"BC6","a":"B5","b":"B6","group":"bottom"},{"id":"BC7","a":"B6","b":"B7","group":"bottom"},{"id":"BC8","a":"B7","b":"B8","group":"bottom"},{"id":"BC9","a":"B8","b":"B9","group":"bottom"},{"id":"BC10","a":"B9","b":"B10","group":"bottom"},{"id":"TC2","a":"T1","b":"T2","group":"top"},{"id":"TC3","a":"T2","b":"T3","group":"top"},{"id":"TC4","a":"T3","b":"T4","group":"top"},{"id":"TC5","a":"T4","b":"T5","group":"top"},{"id":"TC6","a":"T5","b":"T6","group":"top"},{"id":"TC7","a":"T6","b":"T7","group":"top"},{"id":"TC8","a":"T7","b":"T8","group":"top"},{"id":"TC9","a":"T8","b":"T9","group":"top"},{"id":"EP1","a":"B0","b":"T1","group":"endpost"},{"id":"EP2","a":"B10","b":"T9","group":"endpost"},{"id":"V1","a":"B1","b":"T1","group":"vertical"},{"id":"V2","a":"B2","b":"T2","group":"vertical"},{"id":"V3","a":"B3","b":"T3","group":"vertical"},{"id":"V4","a":"B4","b":"T4","group":"vertical"},{"id":"V5","a":"B5","b":"T5","group":"vertical"},{"id":"V6","a":"B6","b":"T6","group":"vertical"},{"id":"V7","a":"B7","b":"T7","group":"vertical"},{"id":"V8","a":"B8","b":"T8","group":"vertical"},{"id":"V9","a":"B9","b":"T9","group":"vertical"},{"id":"D2","a":"T1","b":"B2","group":"diagonal"},{"id":"D3","a":"T2","b":"B3","group":"diagonal"},{"id":"D4","a":"T3","b":"B4","group":"diagonal"},{"id":"D5","a":"T4","b":"B5","group":"diagonal"},{"id":"D6","a":"T6","b":"B5","group":"diagonal"},{"id":"D7","a":"T7","b":"B6","group":"diagonal"},{"id":"D8","a":"T8","b":"B7","group":"diagonal"},{"id":"D9","a":"T9","b":"B8","group":"diagonal"}],"supports":[["B0",0],["B0",1],["B10",1]],"deck":["B0","B1","B2","B3","B4","B5","B6","B7","B8","B9","B10"]},"sections":{"top":{"name":"SHS 120x6","b":0.12,"A":0.002736,"r":0.0466047208},"bottom":{"name":"SHS 100x5","b":0.1,"A":0.0019,"r":0.0388372673},"endpost":{"name":"SHS 100x6","b":0.1,"A":0.002256,"r":0.038453435},"vertical":{"name":"SHS 80x4","b":0.08,"A":0.001216,"r":0.0310698139},"diagonal":{"name":"SHS 100x5","b":0.1,"A":0.0019,"r":0.0388372673}},"lines":{"floor":2250.0,"crowd":6463.5},"disp":{"B0":{"x":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"y":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},"B1":{"x":[0.0,7.10526316e-09,6.31578947e-09,5.52631579e-09,4.73684211e-09,3.94736842e-09,3.15789474e-09,2.36842105e-09,1.57894737e-09,7.89473684e-10,0.0],"y":[0.0,-6.97829787e-08,-8.15259814e-08,-9.36692033e-08,-9.64483902e-08,-9.12012613e-08,-8.04716763e-08,-6.4391214e-08,-4.42975939e-08,-2.27620878e-08,0.0]},"B2":{"x":[0.0,1.42105263e-08,1.26315789e-08,1.10526316e-08,9.47368421e-09,7.89473684e-09,6.31578947e-09,4.73684211e-09,3.15789474e-09,1.57894737e-09,0.0],"y":[0.0,-8.15259814e-08,-1.53239309e-07,-1.78752335e-07,-1.8553729e-07,-1.76269614e-07,-1.56037026e-07,-1.25102683e-07,-8.61420244e-08,-4.42975939e-08,0.0]},"B3":{"x":[0.0,2.05263158e-08,2.52631579e-08,2.21052632e-08,1.89473684e-08,1.57894737e-08,1.26315789e-08,9.47368421e-09,6.31578947e-09,3.15789474e-09,0.0],"y":[0.0,-9.36692033e-08,-1.78752335e-07,-2.53742264e-07,-2.65974874e-07,-2.54128537e-07,-2.25834831e-07,-1.81488494e-07,-1.25102683e-07,-6.4391214e-08,0.0]},"B4":{"x":[0.0,2.60526316e-08,3.63157895e-08,3.86842105e-08,3.31578947e-08,2.76315789e-08,2.21052632e-08,1.65789474e-08,1.10526316e-08,5.52631579e-09,0.0],"y":[0.0,-9.64483902e-08,-1.8553729e-07,-2.65974874e-07,-3.22333511e-07,-3.1192167e-07,-2.79580005e-07,-2.25834831e-07,-1.56037026e-07,-8.04716763e-08,0.0]},"B5":{"x":[0.0,3.07894737e-08,4.57894737e-08,5.28947368e-08,5.21052632e-08,4.34210526e-08,3.47368421e-08,2.60526316e-08,1.73684211e-08,8.68421053e-09,0.0],"y":[0.0,-9.12012613e-08,-1.76269614e-07,-2.54128537e-07,-3.1192167e-07,-3.42960418e-07,-3.1192167e-07,-2.54128537e-07,-1.76269614e-07,-9.12012613e-08,0.0]},"B6":{"x":[0.0,3.39473684e-08,5.21052632e-08,6.23684211e-08,6.47368421e-08,5.92105263e-08,5.36842105e-08,4.02631579e-08,2.68421053e-08,1.34210526e-08,0.0],"y":[0.0,-8.04716763e-08,-1.56037026e-07,-2.25834831e-07,-2.79580005e-07,-3.1192167e-07,-3.22333511e-07,-2.65974874e-07,-1.8553729e-07,-9.64483902e-08,0.0]},"B7":{"x":[0.0,3.63157895e-08,5.68421053e-08,6.94736842e-08,7.42105263e-08,7.10526316e-08,6.78947368e-08,5.68421053e-08,3.78947368e-08,1.89473684e-08,0.0],"y":[0.0,-6.4391214e-08,-1.25102683e-07,-1.81488494e-07,-2.25834831e-07,-2.54128537e-07,-2.65974874e-07,-2.53742264e-07,-1.78752335e-07,-9.36692033e-08,0.0]},"B8":{"x":[0.0,3.78947368e-08,6e-08,7.42105263e-08,8.05263158e-08,7.89473684e-08,7.73684211e-08,6.78947368e-08,5.05263158e-08,2.52631579e-08,0.0],"y":[0.0,-4.42975939e-08,-8.61420244e-08,-1.25102683e-07,-1.56037026e-07,-1.76269614e-07,-1.8553729e-07,-1.78752335e-07,-1.53239309e-07,-8.15259814e-08,0.0]},"B9":{"x":[0.0,3.86842105e-08,6.15789474e-08,7.65789474e-08,8.36842105e-08,8.28947368e-08,8.21052632e-08,7.34210526e-08,5.68421053e-08,3.23684211e-08,0.0],"y":[0.0,-2.27620878e-08,-4.42975939e-08,-6.4391214e-08,-8.04716763e-08,-9.12012613e-08,-9.64483902e-08,-9.36692033e-08,-8.15259814e-08,-6.97829787e-08,0.0]},"B10":{"x":[0.0,3.94736842e-08,6.31578947e-08,7.89473684e-08,8.68421053e-08,8.68421053e-08,8.68421053e-08,7.89473684e-08,6.31578947e-08,3.94736842e-08,0.0],"y":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},"T1":{"x":[0.0,4.05220241e-08,6.64811562e-08,8.05049813e-08,8.51647714e-08,8.17982456e-08,7.29492637e-08,5.87494046e-08,4.05363876e-08,2.08814847e-08,0.0],"y":[0.0,-5.74474524e-08,-8.15259814e-08,-9.36692033e-08,-9.64483902e-08,-9.12012613e-08,-8.04716763e-08,-6.4391214e-08,-4.42975939e-08,-2.27620878e-08,0.0]},"T2":{"x":[0.0,3.61360592e-08,5.77092264e-08,7.28295427e-08,7.8585824e-08,7.63157895e-08,6.85632988e-08,5.54599309e-08,3.83434052e-08,1.97849935e-08,0.0],"y":[0.0,-8.02924287e-08,-1.50772204e-07,-1.87387203e-07,-1.92938606e-07,-1.82437377e-07,-1.60971236e-07,-1.28803341e-07,-8.86091296e-08,-4.55311465e-08,0.0]},"T3":{"x":[0.0,3.22983399e-08,5.00337878e-08,6.13163849e-08,6.8717403e-08,6.80921053e-08,6.19843514e-08,5.05257204e-08,3.50539315e-08,1.81402566e-08,0.0],"y":[0.0,-9.24356507e-08,-1.76285229e-07,-2.50041606e-07,-2.7337619e-07,-2.602963e-07,-2.30769042e-07,-1.85189152e-07,-1.27569788e-07,-6.56247667e-08,0.0]},"T4":{"x":[0.0,2.90088662e-08,4.34548404e-08,5.14479638e-08,5.55595082e-08,5.7127193e-08,5.32124216e-08,4.3946773e-08,3.06679666e-08,1.59472742e-08,0.0],"y":[0.0,-9.52148376e-08,-1.83070185e-07,-2.62274216e-07,-3.173993e-07,-3.18089433e-07,-2.84514216e-07,-2.29535489e-07,-1.58504131e-07,-8.17052289e-08,0.0]},"T5":{"x":[0.0,2.62676381e-08,3.79723843e-08,4.32242796e-08,4.45945959e-08,4.34210526e-08,4.22475093e-08,3.57230888e-08,2.51855104e-08,1.32060461e-08,0.0],"y":[0.0,-9.12012613e-08,-1.76269614e-07,-2.54128537e-07,-3.1192167e-07,-3.42960418e-07,-3.1192167e-07,-2.54128537e-07,-1.76269614e-07,-9.12012613e-08,0.0]},"T6":{"x":[0.0,2.35264101e-08,3.24899282e-08,3.50005954e-08,3.36296837e-08,2.97149123e-08,3.1282597e-08,2.74994046e-08,1.97030543e-08,1.0464818e-08,0.0],"y":[0.0,-8.17052289e-08,-1.58504131e-07,-2.29535489e-07,-2.84514216e-07,-3.18089433e-07,-3.173993e-07,-2.62274216e-07,-1.83070185e-07,-9.52148376e-08,0.0]},"T7":{"x":[0.0,2.13334276e-08,2.81039632e-08,2.8421648e-08,2.48577538e-08,1.875e-08,1.81247023e-08,1.76309836e-08,1.31241069e-08,7.17534433e-09,0.0],"y":[0.0,-6.56247667e-08,-1.27569788e-07,-1.85189152e-07,-2.30769042e-07,-2.602963e-07,-2.7337619e-07,-2.50041606e-07,-1.76285229e-07,-9.24356507e-08,0.0]},"T8":{"x":[0.0,1.96886908e-08,2.48144896e-08,2.34874375e-08,1.82788065e-08,1.05263158e-08,8.25628126e-09,6.11782567e-09,5.44866833e-09,3.33762503e-09,0.0],"y":[0.0,-4.55311465e-08,-8.86091296e-08,-1.28803341e-07,-1.60971236e-07,-1.82437377e-07,-1.92938606e-07,-1.87387203e-07,-1.50772204e-07,-8.02924287e-08,0.0]},"T9":{"x":[0.0,1.85921995e-08,2.26215071e-08,2.01979638e-08,1.38928415e-08,5.04385965e-09,1.67733389e-09,-1.55761292e-09,-3.32326149e-09,-1.04833988e-09,0.0],"y":[0.0,-2.27620878e-08,-4.42975939e-08,-6.4391214e-08,-8.04716763e-08,-9.12012613e-08,-9.64483902e-08,-9.36692033e-08,-8.15259814e-08,-5.74474524e-08,0.0]}},"freq":{"crowd_fraction":[0,0.1,0.25,0.5,0.75,1.0],"f1_vs_crowd":[4.02005535,3.64294199,3.23483409,2.78150723,2.47732965,2.25514158],"mode1_shape":{"B0":[0.0,0.0],"B1":[-0.0221313646,0.317404378],"B2":[-0.0441787591,0.589320614],"B3":[-0.0790562499,0.818076925],"B4":[-0.123915463,0.959275665],"B5":[-0.174823904,0.99931824],"B6":[-0.224717387,0.952081869],"B7":[-0.26692008,0.804857168],"B8":[-0.297570358,0.573035812],"B9":[-0.31391105,0.302725842],"B10":[-0.32906071,0.0],"T1":[-0.281191689,0.315522681],"T2":[-0.262026501,0.605986507],"T3":[-0.235600344,0.829089739],"T4":[-0.204531681,0.963546431],"T5":[-0.171887286,1.0],"T6":[-0.139190807,0.956799865],"T7":[-0.108125704,0.816260334],"T8":[-0.0817360504,0.589994781],"T9":[-0.0625984048,0.300931165]}},"depth":[{"depth":2.0,"sections":{"top":"SHS 150x6","bottom":"SHS 120x6","endpost":"SHS 100x6","vertical":"SHS 60x4","diagonal":"SHS 80x4"},"steel_kg":1825.08614,"deflection_pl":0.0656287979,"span_over_deflection":457.116403,"f1":3.18322143,"f1_crowded":1.78140317},{"depth":2.5,"sections":{"top":"SHS 150x6","bottom":"SHS 100x6","endpost":"SHS 100x6","vertical":"SHS 80x4","diagonal":"SHS 100x5"},"steel_kg":2001.45029,"deflection_pl":0.0451783499,"span_over_deflection":664.034877,"f1":3.73085119,"f1_crowded":2.10599278},{"depth":3.0,"sections":{"top":"SHS 120x6","bottom":"SHS 100x5","endpost":"SHS 100x6","vertical":"SHS 80x4","diagonal":"SHS 100x5"},"steel_kg":1877.14643,"deflection_pl":0.0389749551,"span_over_deflection":769.725069,"f1":4.02005535,"f1_crowded":2.25514158},{"depth":3.5,"sections":{"top":"SHS 120x6","bottom":"SHS 80x5","endpost":"SHS 120x6","vertical":"SHS 80x4","diagonal":"SHS 100x5"},"steel_kg":1917.45051,"deflection_pl":0.0330227663,"span_over_deflection":908.46417,"f1":4.25897212,"f1_crowded":2.38891256},{"depth":4.0,"sections":{"top":"SHS 100x6","bottom":"SHS 80x5","endpost":"SHS 120x6","vertical":"SHS 100x5","diagonal":"SHS 120x6"},"steel_kg":2389.1004,"deflection_pl":0.0272353241,"span_over_deflection":1101.51067,"f1":4.50730946,"f1_crowded":2.58032439}],"walk_band":[1.6,2.4]};
+// The footbridge workbench. Statics, influence lines, patterning and strengths come from solver.js (inlined above, the
+// file Node checks against the bank). Joint displacements, the mode shape, the depth sweep and the frequency curve are
+// DATA, which build_page.py copies out of results/bank.json.
+(() => {
+  'use strict';
+  const F = globalThis.Footbridge, D = DATA, P = D.params, $ = (id) => document.getElementById(id);
+  const num = (x, d) => x.toLocaleString('en-US', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+  const kN = (x, d) => (x >= 0 ? '+' : '−') + num(Math.abs(x) / 1e3, d === undefined ? 1 : d);
+  const mdl = F.build(D.geom), ROWS = F.envelope(mdl, D.sections, P, D.lines), FULL = F.envelope(mdl, D.sections, P, D.lines, { patterned: false });
+  const IDS = mdl.members.map((m) => m.id), SPAN = mdl.xs[mdl.xs.length - 1], HALF = P.deck_width / 2, W = D.lines.crowd;
+  const ETA_MID = F.midspanInfluence(mdl, D.sections, P, IDS.map((i) => ROWS[i].eta));
+  const S = { lesson: 'line', member: 'D5', mode: 'tension', front: 12, exag: 40, depth: 2, crowd: 0, view: 0, playing: false };
+  const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let br = null, world = null, raf = 0;
+
+  // ---------------------------------------------------------------- colours
+  function ramp(u) {                                  // utilisation 0..1 on a fixed scale: blue, teal, amber, red
+    u = Math.max(0, Math.min(1, u));
+    const st = [[0, [0.25, 0.55, 0.95]], [0.5, [0.35, 0.85, 0.75]], [0.8, [0.98, 0.72, 0.20]], [1, [0.95, 0.20, 0.15]]];
+    for (let i = 0; i < st.length - 1; i++) if (u <= st[i + 1][0]) { const w = (u - st[i][0]) / (st[i + 1][0] - st[i][0]); return st[i][1].map((c, k) => c + w * (st[i + 1][1][k] - c)); }
+    return st[3][1];
+  }
+  const SIGN_FULL = 0.45;                             // unfactored force at 0.45 of design strength is drawn fully saturated
+  function signed(s) {
+    const t = Math.max(-1, Math.min(1, s / SIGN_FULL)), k = Math.pow(Math.abs(t), 0.7), base = [0.40, 0.42, 0.46], end = t > 0 ? [0.10, 0.42, 1.0] : [1.0, 0.22, 0.08];
+    return base.map((c, i) => c + k * (end[i] - c));
+  }
+
+  // ---------------------------------------------------------------- the 3D world, built once and posed through the SAI
+  function lookAt(pos, target) {
+    const f = [target[0] - pos[0], target[1] - pos[1], target[2] - pos[2]], fl = Math.hypot(...f); f.forEach((_, i) => { f[i] /= fl; });
+    let r = [-f[2], 0, f[0]]; const rl = Math.hypot(...r) || 1; r = r.map((c) => c / rl);
+    const u = [r[1] * f[2] - r[2] * f[1], r[2] * f[0] - r[0] * f[2], r[0] * f[1] - r[1] * f[0]];
+    const R = [[r[0], u[0], -f[0]], [r[1], u[1], -f[1]], [r[2], u[2], -f[2]]];
+    const ang = Math.acos(Math.max(-1, Math.min(1, (R[0][0] + R[1][1] + R[2][2] - 1) / 2)));
+    if (ang < 1e-9) return [0, 1, 0, 0];
+    const s = 2 * Math.sin(ang); return [(R[2][1] - R[1][2]) / s, (R[0][2] - R[2][0]) / s, (R[1][0] - R[0][1]) / s, ang];
+  }
+  const VIEWS = [[[-7, 6.5, 17], [SPAN / 2 - 2.5, 0.6, 0]], [[SPAN / 2, 1.6, 37], [SPAN / 2, 0.4, 0]], [[-5.5, 1.9, 0.4], [SPAN / 2, 1.3, 0]]];
+  function worldXML() {
+    const f = (x) => (Math.abs(x) < 5e-7 ? '0' : x.toFixed(5)), v = (p) => p.map(f).join(' ');
+    let s = '<X3D profile="Immersive" version="4.0"><Scene>' +
+      '<Background skyColor="0.035 0.05 0.085, 0.07 0.10 0.16, 0.16 0.21 0.30" skyAngle="1.2, 1.5708"/>' +
+      '<NavigationInfo type=\'"EXAMINE" "ANY"\' headlight="true" transitionTime="0.6"/>' +
+      '<DirectionalLight direction="-0.35 -0.8 -0.5" intensity="0.55" ambientIntensity="0.3"/><DirectionalLight direction="0.5 -0.3 0.8" intensity="0.2"/>';
+    VIEWS.forEach(([p, t], i) => { const o = lookAt(p, t); s += `<Viewpoint DEF="V${i}" position="${v(p)}" orientation="${v(o)}" centerOfRotation="${v(t)}" fieldOfView="0.6"/>`; });
+    for (const x of [-0.9, SPAN + 0.9]) s += `<Transform translation="${f(x)} -0.95 0"><Shape><Appearance><Material diffuseColor="0.30 0.31 0.33" specularColor="0.05 0.05 0.05"/></Appearance><Box size="1.8 1.6 ${f(2 * HALF + 1.6)}"/></Shape></Transform>`;
+    for (let i = 0; i < mdl.deck.length - 1; i++) s += `<Transform DEF="DP${i}"><Shape><Appearance><Material diffuseColor="0.33 0.28 0.23" specularColor="0.06 0.06 0.06"/></Appearance><Box size="1 0.10 ${f(2 * HALF - 0.25)}"/></Shape></Transform>`;
+    mdl.names.filter((n) => n[0] === 'T').forEach((n) => { s += `<Transform DEF="X${n}"><Shape><Appearance><Material diffuseColor="0.30 0.32 0.36"/></Appearance><Box size="0.07 0.07 ${f(2 * HALF)}"/></Shape></Transform>`; });
+    mdl.members.forEach((m, k) => {
+      const b = D.sections[m.group].b;
+      s += `<Transform DEF="N${k}"><Shape><Appearance><Material DEF="C${k}" diffuseColor="0.4 0.42 0.46" specularColor="0.12 0.12 0.12" shininess="0.2"/></Appearance><Box size="${f(b)} 1 ${f(b)}"/></Shape></Transform>` +
+        `<Transform DEF="Q${k}"><Shape><Appearance><Material USE="C${k}"/></Appearance><Box size="${f(b)} 1 ${f(b)}"/></Shape></Transform>`;
+    });
+    for (let i = 0; i < 2; i++) s += `<Transform DEF="CR${i}" scale="0.0001 1 1"><Shape><Appearance><Material diffuseColor="0.98 0.80 0.30" emissiveColor="0.25 0.18 0.03" transparency="0.62"/></Appearance><Box size="1 1.5 ${f(2 * HALF - 0.3)}"/></Shape></Transform>`;
+    return s + '</Scene></X3D>';
+  }
+  async function ensureWorld() {
+    if (!br || world) return;
+    const scene = await br.createX3DFromString(worldXML());
+    await br.replaceWorld(scene);
+    const get = (n) => scene.getNamedNode(n);
+    world = { N: IDS.map((_, k) => get('N' + k)), Q: IDS.map((_, k) => get('Q' + k)), C: IDS.map((_, k) => get('C' + k)), DP: mdl.deck.slice(1).map((_, i) => get('DP' + i)),
+      X: mdl.names.filter((n) => n[0] === 'T').map((n) => [n, get('X' + n)]), CR: [get('CR0'), get('CR1')], V: [0, 1, 2].map((i) => get('V' + i)) };
+    dress(); setTimeout(() => { $('poster').hidden = true; }, 500);
+    render();
+  }
+  function pose(J, cols, crowd) {                     // J: {joint: [x, y]}; cols: per member; crowd: [[x0, x1], ...] at most two
+    if (!world) return;
+    mdl.members.forEach((m, k) => {
+      const a = J[m.a], b = J[m.b], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy), th = Math.atan2(-dx, dy);
+      for (const [node, z] of [[world.N[k], HALF], [world.Q[k], -HALF]]) {
+        node.translation = new X3D.SFVec3f((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, z); node.rotation = new X3D.SFRotation(0, 0, 1, th); node.scale = new X3D.SFVec3f(1, L, 1);
+      }
+      world.C[k].diffuseColor = new X3D.SFColor(cols[k][0], cols[k][1], cols[k][2]);
+    });
+    world.DP.forEach((node, i) => {
+      const a = J[mdl.deck[i]], b = J[mdl.deck[i + 1]], dx = b[0] - a[0], dy = b[1] - a[1];
+      node.translation = new X3D.SFVec3f((a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 0.16, 0); node.rotation = new X3D.SFRotation(0, 0, 1, Math.atan2(dy, dx)); node.scale = new X3D.SFVec3f(Math.hypot(dx, dy), 1, 1);
+    });
+    world.X.forEach(([n, node]) => { node.translation = new X3D.SFVec3f(J[n][0], J[n][1], 0); });
+    world.CR.forEach((node, i) => {
+      const seg = crowd && crowd[i];
+      if (!seg || seg[1] - seg[0] < 1e-3) { node.scale = new X3D.SFVec3f(0.0001, 1, 1); node.translation = new X3D.SFVec3f(0, -50, 0); return; }
+      node.translation = new X3D.SFVec3f((seg[0] + seg[1]) / 2, 0.96, 0); node.scale = new X3D.SFVec3f(seg[1] - seg[0], 1, 1);
+    });
+  }
+  const REST = mdl.joints;
+
+  // ---------------------------------------------------------------- small SVG kit
+  function svgLine(id, w, h, pad, xr, yr, body) {
+    const X = (x) => pad[3] + (x - xr[0]) / (xr[1] - xr[0]) * (w - pad[1] - pad[3]), Y = (y) => pad[0] + (yr[1] - y) / (yr[1] - yr[0]) * (h - pad[0] - pad[2]);
+    $(id).setAttribute('viewBox', `0 0 ${w} ${h}`); $(id).innerHTML = body(X, Y);
+  }
+  const path = (pts, X, Y) => pts.map((p, i) => (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join(' ');
+
+  // ---------------------------------------------------------------- lesson 1: one member, one shape
+  function arrangement(r) { return S.mode === 'tension' ? r.forTension : S.mode === 'compression' ? r.forCompression : [[0, SPAN]]; }
+  const spanText = (segs) => (segs.length ? segs.map((s) => `${num(s[0], 1)} to ${num(s[1], 1)} m`).join(' and ') : 'nowhere');
+  function showLine() {
+    const r = ROWS[S.member], fo = FULL[S.member], segs = arrangement(r);
+    const cols = IDS.map((i) => (i === S.member ? [1.0, 0.86, 0.30] : [0.27, 0.30, 0.35]));
+    pose(REST, cols, segs);
+    legend([['#ffdb4d', 'the member you picked'], ['rgba(250,204,77,0.55)', 'where the crowd stands']]);
+    const ymax = Math.max(0.3, ...r.eta.map(Math.abs)) * 1.15, pts = mdl.xs.map((x, i) => [x, r.eta[i]]);
+    svgLine('il', 520, 190, [14, 12, 24, 40], [0, SPAN], [-ymax, ymax], (X, Y) => {
+      let s = '';
+      const fill = (segl, cls) => segl.forEach(([a, b]) => {
+        const inner = pts.filter((p) => p[0] > a + 1e-9 && p[0] < b - 1e-9), y = (x) => { for (let i = 0; i < mdl.xs.length - 1; i++) if (x <= mdl.xs[i + 1] + 1e-9) return r.eta[i] + (r.eta[i + 1] - r.eta[i]) * (x - mdl.xs[i]) / (mdl.xs[i + 1] - mdl.xs[i]); return 0; };
+        const poly = [[a, 0], [a, y(a)], ...inner, [b, y(b)], [b, 0]]; s += `<path class="${cls}" d="${path(poly, X, Y)} Z"/>`;
+      });
+      fill(r.forTension, 'fillT' + (S.mode === 'compression' ? ' dim' : '')); fill(r.forCompression, 'fillC' + (S.mode === 'tension' ? ' dim' : ''));
+      s += `<line class="ax" x1="${X(0)}" y1="${Y(0)}" x2="${X(SPAN)}" y2="${Y(0)}"/>`;
+      mdl.xs.forEach((x) => { s += `<line class="ax" x1="${X(x)}" y1="${Y(0) - 3}" x2="${X(x)}" y2="${Y(0) + 3}"/>`; });
+      s += `<path class="cv" d="${path(pts, X, Y)}"/>`;
+      s += `<text x="${X(0)}" y="186" text-anchor="start">0 m</text><text x="${X(SPAN)}" y="186" text-anchor="end">${num(SPAN)} m</text><text x="${X(SPAN / 2)}" y="186" text-anchor="middle">where one newton stands</text>`;
+      s += `<text x="34" y="${Y(ymax * 0.8) + 3}" text-anchor="end">+${num(ymax * 0.8, 2)}</text><text x="34" y="${Y(-ymax * 0.8) + 3}" text-anchor="end">−${num(ymax * 0.8, 2)}</text><text x="34" y="${Y(0) + 3}" text-anchor="end">0</text>`;
+      return s;
+    });
+    $('m-sec').textContent = D.sections[mdl.members[r.k].group].name.replace('SHS ', '') + ' mm';
+    $('m-max').innerHTML = kN(r.N_max) + ' <small>kN</small>'; $('m-min').innerHTML = kN(r.N_min) + ' <small>kN</small>';
+    $('m-full').innerHTML = kN(fo.N_max) + ' <small>kN</small>'; $('m-u').textContent = num(r.utilisation, 2);
+    $('m-cap').innerHTML = `+${num(r.cap_t / 1e3)} / −${num(r.cap_c / 1e3)} <small>kN</small>`;
+    const say = $('m-say');
+    if (Math.abs(r.area_plus) < 1e-9 && Math.abs(r.area_minus) < 1e-9) { say.className = 'say'; say.innerHTML = `<strong>${S.member} carries nothing from the crowd.</strong> Its influence line is flat zero. It is there to hold the top chord at mid-length, which halves the chord's buckling length.`; }
+    else if (r.forTension.length && r.forCompression.length) {
+      say.className = 'say ' + (r.reverses ? 'off' : 'on');
+      say.innerHTML = `<strong>${S.member} has a line that changes sign.</strong> A crowd on ${spanText(r.forTension)} pulls it, a crowd on ${spanText(r.forCompression)} pushes it. ` +
+        (r.reverses ? `With factors it swings from ${kN(r.N_max)} kN to ${kN(r.N_min)} kN. A full deck would only ever show ${kN(fo.N_max)} kN.` : `Dead load keeps it on one side: ${kN(r.N_min)} to ${kN(r.N_max)} kN.`);
+    } else { say.className = 'say on'; say.innerHTML = `<strong>${S.member} has a one-signed line</strong>, so the worst crowd is the whole deck: ${kN(r.governs === 'tension' ? r.N_max : r.N_min)} kN with factors. That is true of every chord and of the end posts.`; }
+    $('member').value = S.member;
+    document.querySelectorAll('#mode button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.m === S.mode ? 'true' : 'false'));
+  }
+
+  // ---------------------------------------------------------------- lesson 2: the crowd walks on
+  const forceAt = (id, front) => ROWS[id].N_dc + W * F.areaBetween(mdl.xs, ROWS[id].eta, 0, front);
+  function sagged(front, ex) {
+    const J = {};
+    for (const n of mdl.names) { const d = D.disp[n]; J[n] = [REST[n][0] + ex * W * F.areaBetween(mdl.xs, d.x, 0, front), REST[n][1] + ex * W * F.areaBetween(mdl.xs, d.y, 0, front)]; }
+    return J;
+  }
+  function showWalk() {
+    const fr = S.front, cols = IDS.map((i) => { const n = forceAt(i, fr), r = ROWS[i]; return signed(n >= 0 ? n / r.cap_t : n / r.cap_c); });
+    pose(sagged(fr, S.exag), cols, [[0, fr]]);
+    legend([['#1a6bff', 'tension'], ['#ff3814', 'compression'], ['#666b75', 'near zero']]);
+    $('front-out').textContent = num(fr, 1) + ' m';
+    const sag = W * F.areaBetween(mdl.xs, ETA_MID, 0, fr), n = forceAt(S.member, fr), n0 = ROWS[S.member].N_dc;
+    $('w-sag').innerHTML = num(sag * 1e3, 1) + ' <small>mm</small>'; $('w-force').innerHTML = kN(n) + ' <small>kN</small>'; $('w-name').textContent = 'Force in ' + S.member + ' now';
+    const flipped = IDS.filter((i) => forceAt(i, fr) * forceAt(i, SPAN) < -1).length;
+    $('w-flip').textContent = flipped; $('w-ratio').innerHTML = sag > 1e-6 ? 'span / ' + num(SPAN / sag) : '<small>no crowd yet</small>';
+    const curve = []; for (let q = 0; q <= 60; q++) curve.push([SPAN * q / 60, forceAt(S.member, SPAN * q / 60) / 1e3]);
+    const lo = Math.min(0, ...curve.map((p) => p[1])), hi = Math.max(0, ...curve.map((p) => p[1])), padY = (hi - lo) * 0.12 || 1;
+    svgLine('wk', 520, 170, [12, 12, 24, 44], [0, SPAN], [lo - padY, hi + padY], (X, Y) =>
+      `<line class="ax" x1="${X(0)}" y1="${Y(0)}" x2="${X(SPAN)}" y2="${Y(0)}"/><path class="cv" d="${path(curve, X, Y)}"/>` +
+      `<line class="tg" x1="${X(fr)}" y1="12" x2="${X(fr)}" y2="146"/><circle class="dot" cx="${X(fr)}" cy="${Y(n / 1e3)}" r="4"/>` +
+      `<text x="38" y="${Y(hi) + 3}" text-anchor="end">${num(hi, 0)}</text><text x="38" y="${Y(lo) + 3}" text-anchor="end">${num(lo, 0)}</text><text x="38" y="${Y(0) + 3}" text-anchor="end">0</text>` +
+      `<text x="${X(SPAN / 2)}" y="166" text-anchor="middle">front of the crowd, 0 to ${num(SPAN)} m · force in ${S.member}, kN</text>`);
+    const say = $('w-say'), crosses = curve.some((p) => p[1] < -0.05) && curve.some((p) => p[1] > 0.05);
+    say.className = 'say ' + (crosses ? 'off' : 'on');
+    say.innerHTML = crosses ? `<strong>${S.member} changes sign as the crowd arrives.</strong> It starts at ${kN(n0)} kN under dead load, and the half-loaded bridge takes it through zero. No full-deck analysis sees this.`
+      : `<strong>${S.member} only grows</strong> as the crowd fills the deck, from ${kN(n0)} kN to ${kN(forceAt(S.member, SPAN))} kN (no factors). Try D5 or V4.`;
+    $('member2').value = S.member; $('play').textContent = S.playing ? 'Pause' : 'Walk the crowd on';
+    document.querySelectorAll('#exag button').forEach((b) => b.setAttribute('aria-pressed', Number(b.dataset.x) === S.exag ? 'true' : 'false'));
+  }
+  function tick(t0) {
+    const step = (now) => {
+      if (!S.playing || S.lesson !== 'walk') { raf = 0; return; }
+      S.front = Math.min(SPAN, S.front + (now - t0) / 1000 * 4); t0 = now; $('front').value = S.front;
+      if (S.front >= SPAN) S.playing = false;
+      showWalk(); raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+  }
+
+  // ---------------------------------------------------------------- lesson 3: depth, stiffness and footfall
+  function f1At(c) { const xs = D.freq.crowd_fraction, ys = D.freq.f1_vs_crowd; for (let i = 0; i < xs.length - 1; i++) if (c <= xs[i + 1]) return ys[i] + (ys[i + 1] - ys[i]) * (c - xs[i]) / (xs[i + 1] - xs[i]); return ys[ys.length - 1]; }
+  function modeShape(amp) { const J = {}; for (const n of mdl.names) J[n] = [REST[n][0] + amp * D.freq.mode1_shape[n][0], REST[n][1] + amp * D.freq.mode1_shape[n][1]]; return J; }
+  function showDepth() {
+    const d = D.depth[S.depth], f = f1At(S.crowd), band = D.walk_band;
+    $('d-sec').textContent = ['top', 'bottom', 'endpost', 'vertical', 'diagonal'].map((g) => d.sections[g].replace('SHS ', '')).join(' · ');
+    $('d-steel').innerHTML = num(d.steel_kg) + ' <small>kg per truss</small>'; $('d-defl').innerHTML = num(d.deflection_pl * 1e3, 1) + ' <small>mm, span / ' + num(d.span_over_deflection) + '</small>';
+    $('d-f').innerHTML = num(d.f1, 2) + ' <small>Hz empty</small>'; $('d-fc').innerHTML = num(d.f1_crowded, 2) + ' <small>Hz full crowd</small>';
+    document.querySelectorAll('#depth button').forEach((b, i) => b.setAttribute('aria-pressed', i === S.depth ? 'true' : 'false'));
+    $('crowd-out').textContent = num(S.crowd * 100) + ' % of the design crowd'; $('d-now').innerHTML = num(f, 2) + ' <small>Hz</small>';
+    const inBand = f >= band[0] && f <= band[1], say = $('d-say'); say.className = 'say ' + (inBand ? 'off' : 'on');
+    say.innerHTML = inBand ? `<strong>${num(f, 2)} Hz is inside the walking band</strong> (${band[0]} to ${band[1]} Hz). The people who lower the frequency are the ones keeping time with it.`
+      : f >= P.frequency_min ? `<strong>${num(f, 2)} Hz clears the ${num(P.frequency_min, 1)} Hz line.</strong> That check is made on the empty bridge. Add people and watch.`
+        : `<strong>${num(f, 2)} Hz is under the ${num(P.frequency_min, 1)} Hz line</strong> and heading for the walking band (${band[0]} to ${band[1]} Hz).`;
+    const pts = []; for (let q = 0; q <= 40; q++) pts.push([q / 40, f1At(q / 40)]);
+    svgLine('fq', 520, 180, [12, 12, 24, 40], [0, 1], [1.2, 4.4], (X, Y) =>
+      `<rect class="band" x="${X(0)}" y="${Y(band[1])}" width="${X(1) - X(0)}" height="${Y(band[0]) - Y(band[1])}"/>` +
+      `<line class="tg" x1="${X(0)}" y1="${Y(P.frequency_min)}" x2="${X(1)}" y2="${Y(P.frequency_min)}"/><path class="cv" d="${path(pts, X, Y)}"/>` +
+      `<circle class="dot" cx="${X(S.crowd)}" cy="${Y(f)}" r="4"/><line class="ax" x1="${X(0)}" y1="${Y(1.2)}" x2="${X(1)}" y2="${Y(1.2)}"/>` +
+      `<text x="34" y="${Y(4) + 3}" text-anchor="end">4 Hz</text><text x="34" y="${Y(3) + 3}" text-anchor="end">3</text><text x="34" y="${Y(2) + 3}" text-anchor="end">2</text>` +
+      `<text x="${X(0.98)}" y="${Y((band[0] + band[1]) / 2) + 3}" text-anchor="end">walking pace</text><text x="${X(0.5)}" y="176" text-anchor="middle">share of the design crowd standing on the deck, 0 to 100 %</text>`);
+    legend([['#59d9bf', 'first vertical mode, shape enlarged'], ['#666b75', 'slowed to about 1 Hz']]);
+    const cols = IDS.map(() => [0.35, 0.85, 0.75]);
+    if (still || !world) { pose(modeShape(0.5), cols, null); return; }
+    if (!raf) {
+      const loop = (now) => { if (S.lesson !== 'depth') { raf = 0; return; } pose(modeShape(0.55 * Math.sin(now / 1000 * 2 * Math.PI * 0.9)), cols, null); raf = requestAnimationFrame(loop); };
+      raf = requestAnimationFrame(loop);
+    }
+  }
+
+  // ---------------------------------------------------------------- shell
+  function legend(items) { $('legend').innerHTML = items.map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join(''); }
+  function markView() { [0, 1, 2].forEach((i) => $('view-' + i).setAttribute('aria-pressed', i === S.view ? 'true' : 'false')); }
+  function render() { ({ line: showLine, walk: showWalk, depth: showDepth })[S.lesson](); }
+  function dress() {                                  // give the player its stylesheet and unhide its surface
+    const root = $('xc').shadowRoot; if (!root) return;
+    if (!root.__dressed) {
+      const css = $('xite-css').textContent;
+      try { const sh = new CSSStyleSheet(); sh.replaceSync(css); root.adoptedStyleSheets = [...root.adoptedStyleSheets, sh]; }
+      catch (e) { const st = document.createElement('style'); st.textContent = css; root.prepend(st); }
+      root.__dressed = true;
+    }
+    const surf = root.querySelector('.x_ite-private-browser'); if (surf) surf.style.display = '';
+  }
+  const groups = { 'Top chord': 'top', 'Bottom chord': 'bottom', 'End posts': 'endpost', 'Verticals': 'vertical', 'Diagonals': 'diagonal' };
+  for (const sel of ['member', 'member2']) {
+    $(sel).innerHTML = Object.entries(groups).map(([lab, g]) => `<optgroup label="${lab}">` + mdl.members.filter((m) => m.group === g).map((m) => `<option value="${m.id}">${m.id}${ROWS[m.id].reverses ? ' (reverses)' : ''}</option>`).join('') + '</optgroup>').join('');
+    $(sel).addEventListener('change', (e) => { S.member = e.target.value; render(); });
+  }
+  document.querySelectorAll('#quick button').forEach((b) => b.addEventListener('click', () => { S.member = b.dataset.id; if (ROWS[S.member].forTension.length === 0) S.mode = 'compression'; else if (ROWS[S.member].forCompression.length === 0) S.mode = 'tension'; render(); }));
+  document.querySelectorAll('#mode button').forEach((b) => b.addEventListener('click', () => { S.mode = b.dataset.m; render(); }));
+  document.querySelectorAll('#exag button').forEach((b) => b.addEventListener('click', () => { S.exag = Number(b.dataset.x); render(); }));
+  document.querySelectorAll('#depth button').forEach((b, i) => b.addEventListener('click', () => { S.depth = i; render(); }));
+  $('front').addEventListener('input', (e) => { S.front = Number(e.target.value); S.playing = false; render(); });
+  $('crowd').addEventListener('input', (e) => { S.crowd = Number(e.target.value) / 100; render(); });
+  $('play').addEventListener('click', () => {
+    if (S.playing) { S.playing = false; render(); return; }
+    if (S.front >= SPAN - 1e-6) S.front = 0;
+    S.playing = true; render(); tick(performance.now());
+  });
+  for (const name of ['line', 'walk', 'depth']) $('tab-' + name).addEventListener('click', () => {
+    S.lesson = name; S.playing = false;
+    for (const n of ['line', 'walk', 'depth']) { $('tab-' + n).setAttribute('aria-selected', n === name ? 'true' : 'false'); $('lesson-' + n).hidden = n !== name; }
+    render();
+  });
+  [0, 1, 2].forEach((i) => $('view-' + i).addEventListener('click', () => { if (world) { world.V[i].set_bind = true; S.view = i; markView(); } }));
+
+  async function boot() {
+    render();                                         // numbers first: they do not need the 3D player
+    try {
+      if (typeof X3D === 'undefined') throw new Error('player script missing');
+      br = $('xc').browser; dress();
+      let tries = 0; const keep = setInterval(() => { dress(); if (++tries > 20) clearInterval(keep); }, 250);
+      await ensureWorld();
+    } catch (e) {
+      const m = $('msg'); m.hidden = false; m.textContent = 'The 3D player did not load here, so the picture is a still. Every control, chart and number still works.';
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+
+</script>

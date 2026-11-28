@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile="Interactive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head>
+    <meta name="title" content="twin-01"/>
+    <meta name="description" content="DUMMY file for the dry run of court 5 scripts. Written by the kernel editor. Not a sealed test."/>
+    <meta name="intent:prose" content="The ball swells and shrinks once every two seconds."/>
+    <meta name="intent" content="after 0.7s: Ball.scale changed"/>
+  </head>
+  <Scene>
+    <Viewpoint description="Front" position="0 0 8"/>
+    <Transform DEF="Ball">
+      <Shape><Appearance><Material diffuseColor="0.8 0.2 0.2"/></Appearance><Sphere/></Shape>
+    </Transform>
+    <TimeSensor DEF="Clock" cycleInterval="2" loop="true"/>
+    <PositionInterpolator DEF="Pulse" key="0 0.5 1" keyValue="1 1 1 2 2 2 1 1 1"/>
+    <ROUTE fromNode="Clock" fromField="fraction_changed" toNode="Pulse" toField="set_fraction"/>
+    <ROUTE fromNode="Pulse" fromField="value_changed" toNode="Ball" toField="set_scale"/>
+  </Scene>
+</X3D>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile="Interactive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd">
+  <head>
+    <meta name="title" content="twin-02"/>
+    <meta name="description" content="DUMMY file for the dry run of court 5 scripts. Written by the kernel editor. Not a sealed test."/>
+    <meta name="intent:prose" content="When the door is told to open it swings a quarter turn about its hinge within one second."/>
+    <meta name="intent" content="send Opener.startTime = now at 0.2s"/>
+    <meta name="intent" content="after 1.6s: Door.rotation[3] &gt; 1.4"/>
+  </head>
+  <Scene>
+    <Viewpoint description="Front" position="0 1 8"/>
+    <Transform DEF="Door" center="-0.5 0 0">
+      <Shape><Appearance><Material diffuseColor="0.5 0.3 0.1"/></Appearance><Box size="1 2 0.1"/></Shape>
+    </Transform>
+    <TimeSensor DEF="Opener" cycleInterval="1" loop="false"/>
+    <OrientationInterpolator DEF="Swing" key="0 1" keyValue="0 1 0 0 0 1 0 1.5708"/>
+    <ROUTE fromNode="Opener" fromField="fraction_changed" toNode="Swing" toField="set_fraction"/>
+    <ROUTE fromNode="Swing" fromField="value_changed" toNode="Door" toField="set_rotation"/>
+  </Scene>
+</X3D>

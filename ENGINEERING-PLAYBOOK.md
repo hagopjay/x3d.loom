@@ -6,6 +6,8 @@ Start from [SCIENCE-PLAYBOOK.md](SCIENCE-PLAYBOOK.md) when the subject is a nume
 
 **Added later on 28 November: a third study, `[TNS]`,** a tensegrity prism and the six-strut classic ([x3d.engineering/tensegrity/](x3d.engineering/tensegrity/), end of section 5). It was built after the playbook and under it, so it tests the spine and did not pay for it. It added no pattern and six failure modes (526 to 531).
 
+**Added later still on 28 November: a fourth study, `[FTB]`,** a 30 m truss footbridge under a moving crowd ([x3d.engineering/footbridge/](x3d.engineering/footbridge/), end of section 5). Built under the playbook; it added no pattern and failure modes 545 to 550. Failure mode 544 is a fault it led back to in the roof truss of `[IFT]`.
+
 **What is written and what is not.** The spine (section 2) and two chapters, Mechanical and Civil/AEC, are written from studies that ran. Six more disciplines have one page each (section 6) that names the first study that would pay for a chapter. Nothing in those six pages is a result.
 
 Grades as in LOOM-v1.md: **C** measured here by the thread that built it, **L** read or reasoned, **S** suspected. Every number below is C on the rig named beside it unless marked. Under law 44 all of them stay Likely until someone who did not write them has recomputed them, and nobody has.
@@ -280,6 +282,35 @@ The window, by bisection, is 489 N to 1,114 N. It is a window and not a threshol
 
 **Assumptions and limits** (all on the card): pinned frictionless joints, straight weightless members, linear elastic material, static loads only, supports that remove exactly the six rigid motions. **The rope's area, modulus and breaking load and the tube's modulus and yield are recalled from memory (S)**; the conclusions scale with them. No dynamics, no fatigue, no creep of the rope, no joint or end-fitting design, no engine cross-check (MuJoCo tendons or PhysX distance joints would be the independent one, and neither was run). The history lines on the page (Snelson 1948, Fuller's name, Calladine 1978) were checked on the web; Calladine's paper was located by its record and not read.
 
+### A fourth study: a truss footbridge under a moving crowd `[FTB]`
+
+The roof truss of `[IFT]` carried loads that stay put. A bridge carries people who do not, so the question changes from "how strong under the load" to "where must the load stand". Files in [x3d.engineering/footbridge/](x3d.engineering/footbridge/). Rig: Python 3.13.18, numpy 2.5.3, OpenSeesPy 3.8.0, Node v22.23.5. **17 of 17 gates, 14 of 14 controls caught.** The card with its limits and controls was committed before any solver for this bridge ran.
+
+**The bridge.** 30 m simply supported Pratt through truss, 10 panels of 3 m, 3 m deep, two trusses 3 m apart each taking half the deck. 37 members and 20 joints per truss, statically determinate. Crowd 90 psf (4.31 kPa) patterned, factors 1.25 or 0.90 on dead load and 1.75 on the crowd (AASHTO pedestrian guide; grades on the card), member strength by AISC 360.
+
+**Influence lines carry the whole study (C).** One unit load at each deck joint gives each member a piecewise-linear line. The area of its positive part times the crowd is the worst pull, the negative part the worst push, and the lengths of deck under each part are the governing arrangement.
+
+| Finding | Number | Held by |
+|---|---|---|
+| Members that reverse under a part-loaded deck | 8 of 37 (D4 to D7, V3, V4, V6, V7); 0 under a full deck | exact areas against a 3,000-point scan, 2.4e-6 m |
+| Midspan diagonal D5 | +74.5 and −37.0 kN patterned; +31.9 kN full deck only | the control "full-span-only" fails R5 |
+| An influence line is a deflected shape (Müller-Breslau) | lines from unit loads equal the deck shape when one member is lengthened by one unit, 37 members, 8.9e-16 | solved from the transpose of the equilibrium matrix; opposite sign rejected |
+| Sizing | top 120 × 6, bottom 100 × 5, end posts 100 × 6, verticals 80 × 4, diagonals 100 × 5 mm; end post governs at 0.996; first failure at 1.005 times the crowd | joint equilibrium against stiffness 1.3e-9 N, against OpenSeesPy 2.1e-9 N |
+| Deflection | 39.0 mm under the full crowd, span/770 against span/360; dead-load sag 17.9 mm | stiffness, virtual work and OpenSeesPy agree |
+| First vertical frequency | 4.02 Hz empty (limit 3.0); 2.26 Hz with the design crowd's mass | own eigen-solve against OpenSeesPy 7e-13 Hz; 0.885 of the chord-only beam formula |
+| The idle member V5 | carries 0 kN from the crowd; without it the top chord's slenderness goes 64 to 129 (limit 120) and its strength 627 to 257 kN against a demand of 563 kN | bank `probes.V5` |
+| Depth 2 to 4 m, sized again each time | steel 1,825 to 2,389 kg with no trend; frequency 3.18 to 4.51 Hz; sag 66 to 27 mm | bank `probes.depth` |
+
+**Two things the envelope pattern (E8) caught.** The frequency requirement is written for the empty bridge and passes. The same bridge with the crowd it is designed to carry sits at 2.26 Hz. The design crowd is 439 kg/m², 19.8 t on a deck whose truss, floor and steel weigh 8.9 t. Reporting the requirement at one mass state alone would have hidden that (failure mode 548). And a full-deck analysis, the natural first run, shows no member reversing at all (547).
+
+**A prediction that was wrong.** The card said 60 × 4 mm diagonals would fail strength and slenderness. They fail slenderness only (185 against 120); the worst push is 37.0 kN against 40.7 kN. The card carries a dated amendment narrowing that control's expectation; no limit moved (546).
+
+**What X3D held** (E6). Member centre lines and widths (read back and compared), 13 numbers and labels per member as metadata, and the crowd walk as colours keyed from 21 static solutions. Not held: supports, loads, factors, the influence lines, wall thickness, deflection, the mode shape. X3D 4.0 has no node for a load, a support or a section property.
+
+**A page that solves, held to the bank.** The teaching page ([x3d.engineering/footbridge/page/](x3d.engineering/footbridge/page/)) carries its own statics in JavaScript (Gaussian elimination on the equilibrium matrix, influence lines, patterning, strengths). `page_solver_check.js` holds it to the bank on 37 members and 21 crowd positions: forces within 1 mN, which is the bank's nine-digit rounding and not a measurement of the solver (failure mode 531); whole-panel patterning misses by 17.1 kN.
+
+**Assumptions and limits** (all on the card): a plane model of one truss; pinned joints; K = 1.0 with the top chord braced at every panel point by overhead bracing that is not designed; sharp-cornered sections. **No wind, no lateral frequency or lateral crowd lock-in, no fatigue, no connection, bearing, deck or foundation.** Loads and factors from one code and strength from another is a study choice. Eight of ten code lines are Suspected or chosen.
+
 ## 6. Six disciplines, one page each
 
 None of these is a chapter. Each names what exists in the repos today, the references a study could hold itself to, and the one study that would pay for the chapter. "Exists" is from the survey of 27 November 2026 (x3d.loom 4a8dcd2 and seven sibling repos); node counts are tallied from `x3d.threejs/bridge/NODES.md` (260 nodes, 36 components).
@@ -340,7 +371,7 @@ None of these is a chapter. Each names what exists in the repos today, the refer
 | Card | [kit/templates/ENGINEERING-STUDY-CARD.md](kit/templates/ENGINEERING-STUDY-CARD.md); each study's `card.json` | requirements, load cases, envelope, limits, code clauses with grades, the two exchange lists, controls |
 | Profile | `kit/profiles/x3d-engineering.json` (`x3d-engineering/v1`) | grammar, meaning, traps, and a `requirements` witness; four witnesses visibly not run |
 | Witness | each study's `check.py`, run by `kit/loom command --name requirements` | exit 0 only when every gate passes and every control is caught |
-| Runner | `x3d.engineering/accept.sh fourbar`, `ifc-truss` or `tensegrity` | build, witnesses, accept, receipt, stale-witness control |
+| Runner | `x3d.engineering/accept.sh fourbar`, `ifc-truss`, `tensegrity` or `footbridge` | build, witnesses, accept, receipt, stale-witness control |
 
 There is no `kit/loom engineering` subcommand. The `requirements` witness is the study's own script run through the kit's generic command adapter, so the kit proves the script ran green on this exact candidate and nothing more. A kit witness that reads a `loom.eng-card/1` and checks that every requirement has a gate and every control names one is the obvious next piece, and it is not built.
 
@@ -358,7 +389,8 @@ There is no `kit/loom engineering` subcommand. The `requirements` witness is the
 | Validator and the name rule | `ifc-truss/results/validator-note.json` |
 | Third study `[TNS]`: form, count, window, two solvers | `tensegrity/card.json`, `results/bank.json`, `results/verdict.json`, `results/loss.json` |
 | A page's solver held to the bank | `tensegrity/page_solver_check.js`, `results/page-solver.json`, `page/build_page.py` |
-| Receipts | `runs/engineering-fourbar-20261128/`, `runs/engineering-ifc-truss-20261128/`, `runs/engineering-tensegrity-20261128/` |
+| Fourth study `[FTB]`: influence lines, patterning, sizing, frequency | `footbridge/card.json` (with its amendment), `results/bank.json`, `results/verdict.json`, `page_solver_check.js` |
+| Receipts | `runs/engineering-fourbar-20261128/`, `runs/engineering-ifc-truss-20261128/`, `runs/engineering-tensegrity-20261128/`, `runs/engineering-footbridge-20261128/` |
 | Stills and their rig | each study's `stills/rig.json` |
 
 ## 9. Open
@@ -373,4 +405,6 @@ There is no `kit/loom engineering` subcommand. The `requirements` witness is the
 - **`[FBR]` changed a measure and narrowed its claim after exploration.** The card says so, the limits are derived from the part, and the failing probes are kept. That the limits were not fitted to the numbers is the author's word (S).
 - **`[TNS]` material values are Suspected**, and it has no dynamics and no second engine. A cross-check on MuJoCo tendons or PhysX distance joints is the next rung of its ladder.
 - **X3D has no member that only pulls.** Whether a rope or distance-limit joint belongs in the rigid-body component is a question for the standard's authors; nothing has been sent to anyone.
+- **The roof truss meshes were inside out until 28 November** (failure mode 544): fixed in the writer by measured volume, scenes rebuilt, receipt re-issued. The three truss stills predate the fix and were not re-rendered.
+- **`[FTB]` is a plane model.** Lateral vibration under a crowd, wind, fatigue and every connection are outside it, and its frequency rule, deflection limit and dead-load factors are recalled, not read.
 - **Six disciplines** have a page and no study.

@@ -1,0 +1,313 @@
+{
+ "schema": "loom.eng-verdict/1",
+ "study": "footbridge",
+ "rig": {
+  "python": "3.13.18",
+  "numpy": "2.5.3",
+  "openseespy": "3.8.0"
+ },
+ "gates": {
+  "R6": true,
+  "R1": true,
+  "R2": true,
+  "R3": true,
+  "R4": true,
+  "R5": true,
+  "R7": true,
+  "REF1": true,
+  "REF2": true,
+  "REF3": true,
+  "REF4": true,
+  "REF5": true,
+  "REF6": true,
+  "REF7": true,
+  "REF8": true,
+  "REF9": true,
+  "bank-reproduces": true
+ },
+ "detail": {
+  "R6": {
+   "b": 37,
+   "j": 20,
+   "count_ok": true,
+   "rank": 37,
+   "full_rank": true,
+   "sigma_min_over_max": 0.0197891212
+  },
+  "R1": {
+   "pass": true,
+   "worst": 0.996136444
+  },
+  "R2": {
+   "pass": true,
+   "worst_ratio": 0.91943253
+  },
+  "R3": {
+   "pass": true,
+   "deflection": 0.0389749551,
+   "limit": 0.0833333333
+  },
+  "R4": {
+   "pass": true,
+   "hz": 4.02005535
+  },
+  "R5": {
+   "members": 37,
+   "largest_difference_N": 0.0266605774,
+   "arrangements_recorded": true
+  },
+  "R7": {
+   "members_read": 37,
+   "mismatches": []
+  },
+  "REF1": {
+   "largest_difference_N": 1.25146471e-09
+  },
+  "REF2": {
+   "force_N": 2.13913154e-09,
+   "deflection_m": 3.74700271e-16,
+   "f1_hz": 7.06101844e-13
+  },
+  "REF3": {
+   "bottom": 0.0,
+   "top": 0.0
+  },
+  "REF4": {
+   "largest_difference": 8.8817842e-16,
+   "members": 37
+  },
+  "REF5": {
+   "top_chord_peak": -2.5,
+   "closed_form": -2.5,
+   "diagonal_zeros_m": {
+    "D2": 3.33333333,
+    "D3": 6.66666667,
+    "D4": 10.0,
+    "D5": 13.3333333
+   }
+  },
+  "REF6": {
+   "largest_difference_m": 2.35702261e-06,
+   "scan_points": 3000
+  },
+  "REF7": {
+   "virtual_work": 0.0389749551,
+   "stiffness": 0.0389749551
+  },
+  "REF8": {
+   "f1": 4.02005535,
+   "beam": 4.54020764,
+   "ratio": 0.88543425
+  },
+  "REF9": {
+   "jump_over_Fy": 0.000148547362
+  }
+ },
+ "controls": [
+  {
+   "id": "full-span-only",
+   "what": "envelope built from the crowd on the whole span only, no patterning",
+   "expected_to_fail": [
+    "R5"
+   ],
+   "failed": [
+    "R5"
+   ],
+   "caught": true,
+   "note": ""
+  },
+  {
+   "id": "whole-panels-only",
+   "what": "patterning by whole panels: the part of a panel beyond the influence line's zero is loaded too",
+   "expected_to_fail": [
+    "REF6"
+   ],
+   "failed": [
+    "R5",
+    "REF6"
+   ],
+   "caught": true,
+   "note": ""
+  },
+  {
+   "id": "no-dead-relief",
+   "what": "dead load factor 1.25 everywhere, never 0.90 where dead load relieves",
+   "expected_to_fail": [
+    "R5"
+   ],
+   "failed": [
+    "R5"
+   ],
+   "caught": true,
+   "note": ""
+  },
+  {
+   "id": "stiffness-sign",
+   "what": "the stiffness solver's member force with its sign flipped",
+   "expected_to_fail": [
+    "REF1"
+   ],
+   "failed": [
+    "REF1"
+   ],
+   "caught": true,
+   "note": ""
+  },
+  {
+   "id": "sections-wrong-depth",
+   "what": "the hand formula with depth 2.7 m",
+   "expected_to_fail": [
+    "REF3"
+   ],
+   "failed": [
+    "REF3"
+   ],
+   "caught": true,
+   "note": ""
+  },
+  {
+   "id": "mueller-breslau-sign",
+   "what": "the deflected shape taken with the wrong sign",
+   "expected_to_fail": [
+    "REF4"
+   ],
+   "failed": [
+    "REF4"
+   ],
+   "caught": true,
+   "note": ""
+  },
+  {
+   "id": "thin-diagonals",
+   "what": "diagonals forced to 60 x 4 mm",
+   "expected_to_fail": [
+    "R2"
+   ],
+   "failed": [
+    "R2"
+   ],
+   "caught": true,
+   "note": ""
+  },
+  {
+   "id": "both-trusses-load-on-one",
+   "what": "the whole 3 m deck width given to one truss",
+   "expected_to_fail": [
+    "R1"
+   ],
+   "failed": [
+    "R1",
+    "REF8"
+   ],
+   "caught": true,
+   "note": ""
+  },
+  {
+   "id": "truss-in-millimetres",
+   "what": "node coordinates 1000 times too large with loads unchanged",
+   "expected_to_fail": [
+    "R2",
+    "R3"
+   ],
+   "failed": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "REF6"
+   ],
+   "caught": true,
+   "note": ""
+  },
+  {
+   "id": "mass-in-newtons",
+   "what": "weight used as mass: the division by g left out",
+   "expected_to_fail": [
+    "R4",
+    "REF8"
+   ],
+   "failed": [
+    "R4",
+    "REF8"
+   ],
+   "caught": true,
+   "note": ""
+  },
+  {
+   "id": "remove-a-diagonal",
+   "what": "one diagonal deleted: a mechanism, to be reported and not solved",
+   "expected_to_fail": [
+    "R6"
+   ],
+   "failed": [
+    "R6"
+   ],
+   "caught": true,
+   "note": "reported as a mechanism; nothing else was solved"
+  },
+  {
+   "id": "transposed-471",
+   "what": "the E3 limit typed as 4.17",
+   "expected_to_fail": [
+    "REF9"
+   ],
+   "failed": [
+    "REF9"
+   ],
+   "caught": true,
+   "note": ""
+  },
+  {
+   "id": "typed-utilisation",
+   "what": "one member's utilisation in the scene edited by hand",
+   "expected_to_fail": [
+    "R7"
+   ],
+   "failed": [
+    "R7"
+   ],
+   "caught": true,
+   "note": ""
+  },
+  {
+   "id": "opensees-wrong-area",
+   "what": "the independent model given the top chord's area for the bottom chord",
+   "expected_to_fail": [
+    "REF2"
+   ],
+   "failed": [
+    "REF2"
+   ],
+   "caught": true,
+   "note": ""
+  }
+ ],
+ "findings": {
+  "members_that_reverse": [
+   "D4",
+   "D5",
+   "D6",
+   "D7",
+   "V3",
+   "V4",
+   "V6",
+   "V7"
+  ],
+  "members_that_reverse_under_full_span_only": [],
+  "opensees_wrong_area_fails_only": [
+   "REF2"
+  ],
+  "strength_or_stiffness_governs": "strength",
+  "f1_empty_hz": 4.02005535,
+  "f1_full_crowd_hz": 2.25514158
+ },
+ "summary": {
+  "gates": 17,
+  "gates_passed": 17,
+  "controls": 14,
+  "controls_caught": 14,
+  "failures": [],
+  "grade": "C measured here; Likely until a second reader recomputes (law 44)"
+ }
+}

@@ -22,7 +22,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 window.load = async (xml) => { await window.sceneReady; const sc = await X3DSAI.B.createX3DFromString(xml); await X3DSAI.B.replaceWorld(sc); for (let i = 0; i < 6; i++) await X3DSAI.B.nextFrame(); await sleep(window.__settle || 400);
   const b = window.__body; return BABYLON.Tools.CreateScreenshotUsingRenderTargetAsync(b.engine, b.scene.activeCamera, { width: ${W}, height: ${H} }); };</script>`,
 };
-const srv = http.createServer((q, r) => { const u = q.url.split('?')[0]; if (files[u]) { r.writeHead(200, { 'content-type': u.endsWith('.js') ? 'text/javascript' : 'text/html' }); return r.end(files[u]); } r.writeHead(404); r.end(); }).listen(0, '127.0.0.1');
+const srv = http.createServer((q, r) => { const u = q.url.split('?')[0]; if (files[u]) { r.writeHead(200, { 'content-type': u.endsWith('.js') ? 'text/javascript' : 'text/html' }); return r.end(files[u]); } const sf = path.join(path.dirname(path.resolve(scenes[0])), path.basename(u)); if (path.basename(u) && fs.existsSync(sf) && fs.statSync(sf).isFile()) { r.writeHead(200, { 'content-type': u.endsWith('.png') ? 'image/png' : 'application/octet-stream' }); return r.end(fs.readFileSync(sf)); } r.writeHead(404); r.end(); }).listen(0, '127.0.0.1');
 (async () => {
   await new Promise((r) => srv.once('listening', r));
   const b = await chromium.launch({ args: ['--enable-unsafe-webgpu', '--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--use-webgpu-adapter=swiftshader'] });

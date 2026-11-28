@@ -53,23 +53,92 @@ HAND = {
  'TextureProperties': '<Shape><Appearance><Material/><ImageTexture url=\'"x.png"\'><TextureProperties containerField="textureProperties" magnificationFilter="NEAREST_PIXEL"/></ImageTexture></Appearance><Box/></Shape>',
  'ViewpointGroup': '<ViewpointGroup description="g"><Viewpoint position="0 0 6"/></ViewpointGroup>' + BOX,
 }
+
+# ---- batch 3: scenes in which the node ACTS on geometry a camera can see (batch 1 left about half of the visible scenes blank in X_ITE, so AGREE there meant nothing) ----
+def _m(c, **k): return '<Material diffuseColor="%s" %s/>' % (c, ' '.join('%s="%s"' % kv for kv in k.items()))
+def _t(tr, geo, mat='0.85 0.3 0.2', extra=''): return '<Transform translation="%s"><Shape><Appearance>%s%s</Appearance>%s</Shape></Transform>' % (tr, _m(mat), extra, geo)
+STAGE = _t('-1.3 0 0', '<Box size="1.6 1.6 1.6"/>') + _t('1.3 0 0', '<Sphere radius="1"/>', '0.2 0.7 0.3')
+NOHL = '<NavigationInfo headlight="false" type=\'"NONE"\'/>'
+VOXELS = '<PixelTexture3D containerField="voxels" image="1 2 2 2 0 255 255 0 255 0 0 255"/>'
+def _vol(style, tag='VolumeData', extra=''): return '<%s dimensions="2 2 2" %s>%s%s</%s>' % (tag, extra, VOXELS, style, tag)
+VISIBLE = {
+ 'DirectionalLight': NOHL + '<DirectionalLight direction="-0.5 -0.6 -0.6"/>' + STAGE,
+ 'PointLight': NOHL + '<PointLight location="0 2 3" radius="30"/>' + STAGE,
+ 'SpotLight': NOHL + '<SpotLight location="0 3 4" direction="0 -0.6 -1" beamWidth="0.5" cutOffAngle="0.9" radius="30"/>' + STAGE,
+ 'Fog': '<Fog color="0.7 0.75 0.85" visibilityRange="10"/>' + _t('-1 0 -2', '<Box/>') + _t('1 0 -8', '<Box/>'),
+ 'LocalFog': '<Group><LocalFog color="0.7 0.75 0.85" visibilityRange="6"/>' + _t('-1 0 -2', '<Box/>') + _t('1 0 -8', '<Box/>') + '</Group>',
+ 'Background': '<Background skyColor="0.1 0.3 0.8 0.9 0.9 1" skyAngle="1.5708" groundColor="0.3 0.2 0.1 0.1 0.3 0.1" groundAngle="1.5708"/>' + _t('0 0 0', '<Box/>'),
+ 'TextureBackground': '<TextureBackground transparency="0"><PixelTexture containerField="frontTexture" image="2 2 3 0xff0000 0x00ff00 0x0000ff 0xffff00"/></TextureBackground>' + _t('0 0 -3', '<Sphere/>', '0.5 0.5 0.5'),
+ 'ElevationGrid': '<Shape><Appearance>' + _m('0.3 0.7 0.4') + '</Appearance><ElevationGrid xDimension="3" zDimension="3" xSpacing="1" zSpacing="1" height="0 1 0 1 2 1 0 1 0"/></Shape>',
+ 'ClipPlane': '<Group><ClipPlane plane="1 0 0 0"/>' + _t('0 0 0', '<Sphere radius="1.5"/>') + '</Group>',
+ 'Switch': '<Switch whichChoice="1">' + _t('-1.3 0 0', '<Box/>') + _t('1.3 0 0', '<Sphere/>', '0.2 0.7 0.3') + '</Switch>',
+ 'LineProperties': '<Shape><Appearance><Material emissiveColor="1 1 0"/><LineProperties linewidthScaleFactor="4"/></Appearance><IndexedLineSet coordIndex="0 1 2 0 -1"><Coordinate point="-1 -1 0 1 -1 0 0 1 0"/></IndexedLineSet></Shape>',
+ 'FontStyle': '<Shape><Appearance>' + _m('1 1 1') + '</Appearance><Text string=\'"Ag"\'><FontStyle size="2" justify=\'"MIDDLE" "MIDDLE"\' style="BOLD"/></Text></Shape>',
+ 'Viewpoint': '<Viewpoint position="3 2 6" orientation="0.3 1 0.1 0.4" description="side"/>' + STAGE,
+ 'OrthoViewpoint': '<OrthoViewpoint position="0 0 6" fieldOfView="-3 -3 3 3"/>' + STAGE,
+ 'ViewpointGroup': '<ViewpointGroup description="g"><Viewpoint position="2 1 6" orientation="0 1 0 0.2"/></ViewpointGroup>' + STAGE,
+ 'NavigationInfo': NOHL + STAGE,
+ 'LayerSet': '<LayerSet order="1 2" activeLayer="1"><Layer containerField="layers">' + _t('-1 0 0', '<Box/>') + '</Layer><Layer containerField="layers">' + _t('1 0 0', '<Sphere/>', '0.2 0.7 0.3') + '</Layer></LayerSet>',
+ 'Layer': '<LayerSet order="1"><Layer containerField="layers">' + STAGE + '</Layer></LayerSet>',
+ 'Viewport': '<LayerSet order="1"><LayoutLayer containerField="layers"><Viewport containerField="viewport" clipBoundary="0 0.5 0 0.5"/>' + STAGE + '</LayoutLayer></LayerSet>',
+ 'Layout': '<LayerSet order="1"><LayoutLayer containerField="layers"><Layout containerField="layout" align=\'"LEFT" "BOTTOM"\' size="0.5 0.5" sizeUnits=\'"FRACTION" "FRACTION"\'/>' + STAGE + '</LayoutLayer></LayerSet>',
+ 'LayoutLayer': '<LayerSet order="1"><LayoutLayer containerField="layers">' + STAGE + '</LayoutLayer></LayerSet>',
+ 'HAnimHumanoid': '<HAnimHumanoid name="h" version="2.0"><HAnimJoint containerField="skeleton" name="humanoid_root" DEF="R"><HAnimSegment name="sacrum"><Shape><Appearance><Material/></Appearance><Box size="1 2 1"/></Shape></HAnimSegment></HAnimJoint></HAnimHumanoid>',
+ 'TextureCoordinateGenerator': '<Shape><Appearance><Material/><PixelTexture image="2 2 3 0xff0000 0x00ff00 0x0000ff 0xffff00"/></Appearance><IndexedFaceSet coordIndex="0 1 2 3 -1 4 5 6 7 -1"><Coordinate point="-1 -1 0 1 -1 0 1 1 0 -1 1 0 -1 -1 -1 1 -1 -1 1 1 -1 -1 1 -1"/><TextureCoordinateGenerator containerField="texCoord" mode="SPHERE"/></IndexedFaceSet></Shape>',
+ 'GeneratedCubeMapTexture': _t('0 0 0', '<Sphere radius="1"/>', '1 1 1', '<GeneratedCubeMapTexture containerField="texture" update="ALWAYS" size="64"/>') .replace('</Appearance>', '</Appearance>', 1),
+ 'OpacityMapVolumeStyle': _vol('<OpacityMapVolumeStyle containerField="renderStyle"/>'),
+ 'ShadedVolumeStyle': _vol('<ShadedVolumeStyle containerField="renderStyle" lighting="true"/>'),
+ 'CartoonVolumeStyle': _vol('<CartoonVolumeStyle containerField="renderStyle" colorSteps="3"/>'),
+ 'BoundaryEnhancementVolumeStyle': _vol('<BoundaryEnhancementVolumeStyle containerField="renderStyle" boundaryOpacity="0.9"/>'),
+ 'EdgeEnhancementVolumeStyle': _vol('<EdgeEnhancementVolumeStyle containerField="renderStyle"/>'),
+ 'SilhouetteEnhancementVolumeStyle': _vol('<SilhouetteEnhancementVolumeStyle containerField="renderStyle"/>'),
+ 'ToneMappedVolumeStyle': _vol('<ToneMappedVolumeStyle containerField="renderStyle"/>'),
+ 'ProjectionVolumeStyle': _vol('<ProjectionVolumeStyle containerField="renderStyle" type="MAX"/>'),
+ 'ComposedVolumeStyle': _vol('<ComposedVolumeStyle containerField="renderStyle"><OpacityMapVolumeStyle containerField="renderStyle"/><ToneMappedVolumeStyle containerField="renderStyle"/></ComposedVolumeStyle>'),
+ 'BlendedVolumeStyle': _vol('<BlendedVolumeStyle containerField="renderStyle" weightConstant1="0.5" weightConstant2="0.5"><PixelTexture3D containerField="voxels" image="1 2 2 2 255 0 0 255 0 255 255 0"/></BlendedVolumeStyle>'),
+ 'IsoSurfaceVolumeData': '<IsoSurfaceVolumeData dimensions="2 2 2" surfaceValues="0.5">' + VOXELS + '<OpacityMapVolumeStyle containerField="renderStyle"/></IsoSurfaceVolumeData>',
+}
+# Nodes with no pixels by nature: audio graph, scripting-side Geo sensors, motions. Graded by parse/handled, never AGREE/NEAR/FAR.
+AUDIBLE = {'Analyser', 'AudioClip', 'AudioDestination', 'BiquadFilter', 'BufferAudioSource', 'ChannelMerger', 'ChannelSelector', 'ChannelSplitter', 'Convolver', 'Delay', 'DynamicsCompressor', 'Gain',
+           'ListenerPointSource', 'MicrophoneSource', 'OscillatorSource', 'PeriodicWave', 'Sound', 'SpatialSound', 'StreamAudioDestination', 'StreamAudioSource', 'WaveShaper',
+           'GeoMetadata', 'GeoPositionInterpolator', 'GeoProximitySensor', 'GeoTouchSensor', 'HAnimMotion'}
+
+VISIBLE.update({
+ 'Color': '<Shape><Appearance><Material/></Appearance><IndexedFaceSet coordIndex="0 1 2 3 -1"><Coordinate point="-1 -1 0 1 -1 0 1 1 0 -1 1 0"/><Color color="1 0 0 0 1 0 0 0 1 1 1 0"/></IndexedFaceSet></Shape>',
+ 'HAnimJoint': VISIBLE['HAnimHumanoid'],
+ 'NavigationInfo': NOHL + '<Transform translation="-1.3 0 0"><Shape><Appearance><Material emissiveColor="0.2 0.8 0.3"/></Appearance><Box/></Shape></Transform>' + _t('1.3 0 0', '<Box/>'),
+ 'ColorRGBA': '<Shape><Appearance><Material/></Appearance><IndexedFaceSet coordIndex="0 1 2 3 -1"><Coordinate point="-1 -1 0 1 -1 0 1 1 0 -1 1 0"/><ColorRGBA color="1 0 0 1 0 1 0 1 0 0 1 1 1 1 0 1"/></IndexedFaceSet></Shape>',
+ 'MultiTexture': '<Shape><Appearance><Material/><MultiTexture mode=\'"MODULATE"\'><PixelTexture image="2 2 3 0xff0000 0x00ff00 0x0000ff 0xffff00"/><PixelTexture image="2 2 3 0xffffff 0x808080 0x808080 0xffffff"/></MultiTexture></Appearance><Box/></Shape>',
+ 'GeneratedCubeMapTexture': _t('1.6 0 0', '<Box/>') + '<Shape><Appearance><Material/><GeneratedCubeMapTexture update="ALWAYS" size="64"/></Appearance><IndexedFaceSet coordIndex="0 1 2 3 -1"><Coordinate point="-2 -1 0 0 -1 0 0 1 0 -2 1 0"/><TextureCoordinateGenerator containerField="texCoord" mode="CAMERASPACEREFLECTIONVECTOR"/></IndexedFaceSet></Shape>',
+ 'TextureCoordinate3D': '<Shape><Appearance><Material/><PixelTexture3D image="1 2 2 2 0 255 255 0 255 0 0 255"/></Appearance><IndexedFaceSet coordIndex="0 1 2 3 -1"><Coordinate point="-1 -1 0 1 -1 0 1 1 0 -1 1 0"/><TextureCoordinate3D point="0 0 0 1 0 0 1 1 1 0 1 1"/></IndexedFaceSet></Shape>',
+ 'GeoOrigin': '<GeoLocation geoCoords="0 0 0"><GeoOrigin containerField="geoOrigin" geoCoords="0 0 0"/>' + _t('0 0 0', '<Box/>') + '</GeoLocation>',
+ 'GeoLocation': '<GeoLocation geoCoords="0 0 0"><GeoOrigin containerField="geoOrigin" geoCoords="0 0 0"/>' + _t('0 0 0', '<Box/>') + '</GeoLocation>',
+ 'GeoLOD': '<GeoLOD center="0 0 0" range="10"><GeoOrigin containerField="geoOrigin" geoCoords="0 0 0"/><Shape containerField="rootNode"><Appearance><Material/></Appearance><Box/></Shape></GeoLOD>',
+ 'GeoCoordinate': '<Viewpoint position="6 0 0" orientation="0 1 0 1.5708"/><Shape><Appearance><Material/></Appearance><IndexedFaceSet coordIndex="0 1 2 3 -1" solid="false"><GeoCoordinate containerField="coord" geoSystem=\'"GD"\' point="0 0 0 0 0.00002 0 0.00002 0.00002 0 0.00002 0 0"><GeoOrigin containerField="geoOrigin" geoCoords="0 0 0"/></GeoCoordinate></IndexedFaceSet></Shape>',
+ 'GeoElevationGrid': '<Shape><Appearance><Material/></Appearance><GeoElevationGrid xDimension="3" zDimension="3" xSpacing="0.00001" zSpacing="0.00001" height="0 1 0 1 2 1 0 1 0" solid="false"><GeoOrigin containerField="geoOrigin" geoCoords="0 0 0"/></GeoElevationGrid></Shape>',
+ 'GeoViewpoint': '<GeoViewpoint position="0 0 30" description="g"><GeoOrigin containerField="geoOrigin" geoCoords="0 0 0"/></GeoViewpoint><GeoLocation geoCoords="0 0 0"><GeoOrigin containerField="geoOrigin" geoCoords="0 0 0"/>' + _t('0 0 0', '<Box/>') + '</GeoLocation>',
+})
+# Visible by nature but needing time (particles), a shader, or layout design that batch 3 did not do: listed as 'deferred', not graded AGREE/NEAR/FAR yet.
+DEFERRED = {'ParticleSystem', 'ConeEmitter', 'ExplosionEmitter', 'PointEmitter', 'PolylineEmitter', 'SurfaceEmitter', 'VolumeEmitter', 'BoundedPhysicsModel', 'ForcePhysicsModel', 'WindPhysicsModel',
+            'GeoLOD', 'GeoViewpoint', 'HAnimDisplacer', 'ShaderPart', 'ScreenFontStyle', 'LayoutGroup'}
 index = {}
 for name in sorted(uom['nodes']):
     info = uom['nodes'][name]
-    if name in HAND: body = HAND[name]
+    if name in VISIBLE: body = VISIBLE[name]
+    elif name in HAND: body = HAND[name]
     elif name in P.OVERRIDES: body = P.OVERRIDES[name][1]
     elif reach.get(name): body = P.snippet(name, reach, True, tuple(info['bases']))
     else: body = None
     if body is None:
         index[name] = {'file': None, 'component': info['component'], 'level': info['level'], 'valid': False, 'reason': 'no legal parent chain found in the object model'}
         continue
-    vis = info['component'] in VISIBLE_COMPONENTS and name not in INVISIBLE_NAMES and not name.startswith('Metadata')
+    vis = info['component'] in VISIBLE_COMPONENTS and name not in INVISIBLE_NAMES and name not in AUDIBLE and not name.startswith('Metadata')
     head = '<?xml version="1.0" encoding="UTF-8"?>\n<X3D profile="Full" version="4.0" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"><head><meta name="title" content="%s"/><meta name="description" content="one node under test: %s (%s, level %s)"/></head><Scene>\n' % (name, name, info['component'], info['level'])
-    view = '' if name in ('Viewpoint', 'OrthoViewpoint', 'GeoViewpoint') else '<Viewpoint position="0 0 6"/>\n'
+    view = '' if name in ('Viewpoint', 'OrthoViewpoint', 'GeoViewpoint', 'ViewpointGroup', 'GeoCoordinate') else '<Viewpoint position="0 0 6"/>\n'
     text = head + view + body + '\n</Scene></X3D>\n'
     (out / f'{name}.x3d').write_text(text)
     doc = etree.fromstring(text.encode()); ok = xsd.validate(doc)
-    index[name] = {'file': f'{name}.x3d', 'component': info['component'], 'level': info['level'], 'kind': 'visible' if vis else 'invisible', 'valid': bool(ok),
+    index[name] = {'file': f'{name}.x3d', 'component': info['component'], 'level': info['level'], 'kind': 'deferred' if name in DEFERRED else 'visible' if vis else 'invisible', 'valid': bool(ok),
                    'xsd_blocked': (not ok) and name in XSD_BLOCKED, 'reason': '' if ok else XSD_BLOCKED.get(name) or str(xsd.error_log.last_error)[:200]}
 json.dump(index, open(out / 'index.json', 'w'), indent=1)
 v = sum(1 for r in index.values() if r['valid']); print(len(index), 'nodes;', v, 'valid against', pathlib.Path(a.xsd).name)
