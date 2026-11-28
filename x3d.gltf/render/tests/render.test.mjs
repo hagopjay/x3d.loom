@@ -25,7 +25,7 @@ const COMPARE_CLI = path.join(HERE, '..', 'compare.mjs');
 const BLENDER_IO = process.env.X3D_BLENDER_IO || path.join(HERE, '..', '..', '..', '..', 'x3d-blender-io');   // a checkout of x3d-blender-io, a sibling of x3d.loom by default
 const STILL = path.join(BLENDER_IO, 'docs/brag/showpieces/stilllife/stilllife-addon.glb');
 const PRISM = path.join(BLENDER_IO, 'docs/brag/showpieces/prismatica/prismatica-aurora-cathedral.glb');
-const ENGINE_IDS = Object.keys(ENGINES); // three, babylon, xite
+const ENGINE_IDS = Object.keys(ENGINES); // three, babylon, xite, playcanvas
 
 const probe = await probeChromium();
 const skip = probe.ok ? false : `Chromium cannot launch: ${probe.error}`;
