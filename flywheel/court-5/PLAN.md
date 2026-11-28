@@ -112,9 +112,9 @@ above or a gate below, except P6, which only arm S addresses.
 | Gate | Done when | State |
 |---|---|---|
 | G0 plan | this folder is merged | this pull request |
-| G1 kernel turn | grid probed class by class, checks written, each labelled in `provenance.json`; the nine file-stateable court 4 misses handled as `misses` | not started; `grid/probe.py` is not written yet |
+| G1 kernel turn | grid probed class by class, checks written, each labelled in `provenance.json`; the nine file-stateable court 4 misses handled as `misses` | first pass done 28 Nov (`grid/PROBE-RESULTS.md`): 12 of 15 classes probed, old kernel `2943b78` left 139 cells missed and crashed on 6, new kernel `ae1243e` (x3d_mcp pull request) closes all; still to do: relation classes, three unprobed classes, the nine court 4 misses |
 | G2 dry run | `dry-run/run.sh` passes on the frozen scripts with the frozen kernel | passes today on the scaffold (old `ebe969b`, new `2943b78`, X_ITE 16.8.0) |
-| G3 seal | three fresh authors, forbidden every repository and memory, return the fixed form and a hash | needs the owner's go |
+| G3 seal | three fresh authors, forbidden every repository and memory, return the fixed form and a hash | arm S sealed 28 Nov (see below); sets a, b, c need the owner's go |
 | G4 freeze | kernel commit and `PREREG.md` pushed before any archive is opened | |
 | G5 open | intent stripped, both kernels run once, play test run once | |
 | G6 read | a fresh second reader, blind to which kernel said what, and the editor's reading written first | |
@@ -134,7 +134,15 @@ Ranked by how much independence each buys.
    Needs a spending decision.
 4. **The owner or a colleague writes ten by hand.**
 
-Without one of these, court 5 runs arms F and I and says in its first paragraph that arm S is empty.
+**Chosen 28 November 2026: option 2**, by the owner on a decision card ("Start, and add public bug reports"). A
+blind collector, forbidden every repository and memory folder, read public reports and rebuilt each mistake as a
+new small scene with its corrected twin. It returned only the fixed form: 16 faults, 16 twins, 5 decoys, 1 helper
+file, 21 source rows on 4 sites, 16 of 16 pairs witnessed in X_ITE 16.8.0, 4 pairs with a testable intent, 1 pair
+where the engine disagreed with the report, 1 fault that fails the XSD. Archive sha256
+`74b80378310398856cead31a9d2a802aa8a7a1c7f7fe0e947e16ca4c56fa899b`. Nobody on the kernel side has opened it, and
+it is not in this repository until gate G5. It asked for 20 pairs and stopped at 16 when its time ran out. Its
+`SOURCES.md` carries a link, the site's stated licence and a takedown notice for every row; that file is published
+with the set when it is opened. Sixteen is a small arm: it will be reported as a count, not a rate.
 
 ## What court 5 cannot show, even if everything goes well
 
@@ -151,7 +159,9 @@ authors write both the scene and the statement of what it is for.
 | `PLAN.md` | this plan | |
 | `PREREG-DRAFT.md` | the form to complete and rename at the freeze | |
 | `prior/build_prior.py`, `prior-mistakes.json`, `prior-mistakes.txt` | the 120 earlier planted mistakes, one line each | yes |
-| `grid/classes.json`, `grid/build_grid.py`, `grid/grid.json` | 15 classes, the builder, 6,434 cells, all `unprobed` | yes |
+| `grid/classes.json`, `grid/build_grid.py`, `grid/grid.json` | 15 classes, the builder, 6,434 cells with the state of each on the new kernel | yes |
+| `grid/probe.py`, `grid/PROBE-RESULTS.md`, `grid/probe-kernel-*.json` | the probe generator, what it found, and its summary on the old and the new kernel | yes |
+| `score/provenance.json` | where each new check came from | |
 | `intent/INTENT.md`, `intent/strip_intent.py` | the intent form, and the tool that removes it for the kernel | yes |
 | `play/play.mjs` | the headless play test | yes |
 | `briefs/author.txt`, `briefs/categories.txt`, `briefs/reader.txt` | what the authors and the second reader will be told | |

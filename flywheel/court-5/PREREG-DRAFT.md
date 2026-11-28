@@ -11,7 +11,7 @@ and pushed with the frozen kernel before any archive is opened. Until then nothi
 | a | behaviour | TO FILL | TO FILL | TO FILL |
 | b | structure and data | TO FILL | TO FILL | TO FILL |
 | c | look | TO FILL | TO FILL | TO FILL |
-| s | stranger arm | TO FILL, or "empty" with the reason | | |
+| s | stranger arm: real mistakes rebuilt from public reports | 16 faults, 16 twins, 5 decoys, 1 helper | `74b80378310398856cead31a9d2a802aa8a7a1c7f7fe0e947e16ca4c56fa899b` | 28 Nov 2026, about 13:32 |
 
 Authors' own counts from the fixed form, not yet checked: TO FILL. Anything an author's report said beyond the
 form: TO FILL, or "nothing".
@@ -51,6 +51,9 @@ Written by the kernel editor, who has not seen the set.
 | H8 | No twin or decoy fails its own intent in the play test | 1 or more |
 
 Beside the headline, for scale only: court 4's new kernel proved 5 of 21 new mistakes (24%).
+
+Warning carried from `grid/PROBE-RESULTS.md`: the grid's field-at-a-time classes were 97.4% closed before this
+turn, while court 4's kernel named 5 of 21 new mistakes. Closing the grid is not a forecast of the score.
 
 Forecast, a guess and labelled as one: old kernel TO FILL to TO FILL of TO FILL new mistakes; new kernel TO FILL
 to TO FILL. The grid's own prediction (share of probed, file-stateable cells the frozen kernel closes): TO FILL.

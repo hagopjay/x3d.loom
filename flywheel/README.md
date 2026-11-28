@@ -82,3 +82,11 @@ lines a headless play test checks, scored as a separate arm; a catch must be pro
 machine; and a slot is kept for a set written by a stranger. It lists twelve tricks the court may not use. Every
 script has been run on a dummy set (`court-5/dry-run/run.sh`). Nothing is sealed, nothing is frozen, and there is
 no court 5 score.
+
+First pass of the kernel turn, same day ([`court-5/grid/PROBE-RESULTS.md`](court-5/grid/PROBE-RESULTS.md)): a
+generator builds a wrong file and its corrected twin for each grid cell. Of 5,505 cells the file alone decides,
+the old kernel (`2943b78`) and the schema closed 5,360, missed 139 and the kernel crashed on 6; the new kernel
+(`ae1243e`) closes all of them with three checks read from the object model. That 97.4% starting point is the
+finding: mistakes a grid can list one field at a time were nearly covered already, so the gap on new mistakes
+lies in relations between fields and nodes, and the grid needs those classes next. A stranger set of 16 real
+mistakes rebuilt from public reports is sealed (sha256 `74b80378…fa899b`) and unopened.
