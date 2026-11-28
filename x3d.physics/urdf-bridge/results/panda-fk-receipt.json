@@ -1,0 +1,42 @@
+{
+ "schema": "x3d.loom/urdf-fk-receipt/1",
+ "urdf": "panda.urdf",
+ "urdf_sha256": "63792d2679f22c4e41cda2c4d9d903644e628970ad0656b9eec8485113941555",
+ "x3d": "panda.x3d",
+ "x3d_sha256": "c1a8e139dc510d5dcea02724b4e868a60978a09f584436700a671f66bc4f8296",
+ "seed": 7,
+ "tolerance": {
+  "position_m": 1e-09,
+  "rotation_rad": 1e-09
+ },
+ "result": {
+  "poses": 100,
+  "links_compared": 13,
+  "links_in_urdf": 13,
+  "missing_in_x3d": [],
+  "worst_position_m": 5.551115123125783e-16,
+  "worst_rotation_rad": 9.932789786086367e-16,
+  "pass": true,
+  "mujoco": "4.0.1",
+  "bodies_in_mujoco": 13
+ },
+ "controls": [
+  {
+   "control": "one joint axis reversed",
+   "caught": true,
+   "worst_position_m": 1.262490231709329
+  },
+  {
+   "control": "one origin rotation axis permuted",
+   "caught": true,
+   "worst_position_m": 0.07913893381310066
+  },
+  {
+   "control": "one fixed joint offset dropped",
+   "caught": true,
+   "worst_position_m": 0.10700000000000019
+  }
+ ],
+ "controls_caught": 3,
+ "controls_total": 3
+}
