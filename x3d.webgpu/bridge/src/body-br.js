@@ -174,8 +174,8 @@
   const pointsSpec = (g) => { const s = R.bridge.specs.get(g.type); return s && s.points ? s : null; };
   const _mats = Body.prototype.materialsFor;
   Body.prototype.materialsFor = function (shape, g, app) {
-    const pp = g.type === 'PointSet' && app && app.f.pointProperties;       // a PointSet with PointProperties is drawn here, sized by them; a plain PointSet is left to the body that draws it
-    if (!pointsSpec(g) && !pp) return _mats.call(this, shape, g, app);
+    const pp = g.type === 'PointSet' && app && app.f.pointProperties;       // a PointSet is drawn here, sized by its PointProperties when it has them (a plain PointSet was left to the base body, which skips it: nothing was drawn)
+    if (!pointsSpec(g) && g.type !== 'PointSet') return _mats.call(this, shape, g, app);
     const mat = app && app.f.material; return [{ kind: 'points', mat, pp: pp || null, deps: [g, mat, pp].filter(Boolean) }];
   };
   // a PointSet drawn here bakes its points, colours and sizes into the mesh, so a change of its Coordinate, Color, PointProperties or Material builds it again

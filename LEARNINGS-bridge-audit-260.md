@@ -25,4 +25,8 @@ Rig for every pixel number: 128x128, scene's own Viewpoint, no tone mapping; Chr
 5. **The corpus must ship what it names.**
 
 ## Open
-Box texture flip in Babylon (cause), Cylinder, Cone and Sphere UV orientation, TextureCoordinateGenerator fails in the Babylon fixture on unchanged code in this rig (MAD 22.35, S), lines and points in Babylon, 3D and cube textures far on three.js and Babylon, MultiTexture far on all three engines, the engine to X3D exporters, and the 14 deferred and 5 XSD-blocked scenes.
+Box texture flip in Babylon (cause), Cylinder, Cone and Sphere UV orientation, TextureCoordinateGenerator fails in the Babylon fixture on unchanged code in this rig (MAD 22.35, S), lines in Babylon (the MAE gap is 1 px placement, FM 601; needs a silhouette judge), 3D and cube textures far on three.js and Babylon, MultiTexture far on all three engines, the engine to X3D exporters, and the 14 deferred and 5 XSD-blocked scenes.
+
+
+## Update: PointSet (FM 601)
+Plain `PointSet` was undrawn in Babylon (base body skips it); fixed in `x3d.webgpu/bridge/src/body-br.js` `materialsFor`, fixture and receipt added.
