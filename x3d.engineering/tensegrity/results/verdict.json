@@ -1,0 +1,734 @@
+{
+ "schema": "loom.eng-verdict/1",
+ "study": "tensegrity",
+ "label": "A worked study. Not a certified design and not for manufacture. Material values are from memory; see each source.",
+ "rig": {
+  "python": "3.13.18",
+  "numpy": "2.5.3",
+  "node_for_REF9": "v22.23.5"
+ },
+ "pass": true,
+ "gates_passed": "17 of 17",
+ "controls_caught": "17 of 17",
+ "gates": {
+  "R1": {
+   "value": {
+    "self_stress_states": 1,
+    "mechanisms": 1,
+    "cables_pull_struts_push": true
+   },
+   "limit": 1,
+   "pass": true
+  },
+  "R2": {
+   "value": {
+    "softest_N_per_m": 977.516571631758,
+    "next_N_per_m": 54368.4793648363,
+    "softest_at_zero_prestress": 3e-11
+   },
+   "limit": 100.0,
+   "pass": true
+  },
+  "R3": {
+   "value": {
+    "least_fraction_of_prestress": 0.412168028649,
+    "case": "press-on-J4"
+   },
+   "limit": 0.1,
+   "pass": true,
+   "prestress_N": 600
+  },
+  "R4": {
+   "value": {
+    "worst_strut_N": 1938.047997465037,
+    "case": "press-on-J3",
+    "buckling_utilisation": 0.945519280573,
+    "yield_utilisation": 0.04859009432
+   },
+   "limit": 1.0,
+   "pass": true,
+   "prestress_N": 1000
+  },
+  "R5": {
+   "value": {
+    "worst_cable_N": 1565.515319902769,
+    "case": "press-on-J4",
+    "utilisation": 0.939309191942
+   },
+   "limit": 1.0,
+   "pass": true,
+   "prestress_N": 1000
+  },
+  "R6": {
+   "value": {
+    "press_drop_mm": 6.450040304474,
+    "press_turn_deg": 4.658979435846,
+    "push_move_mm": 1.071042916801,
+    "push_case": "push-in-J4"
+   },
+   "limit": {
+    "drop_mm": 10.0,
+    "turn_deg": 5.0,
+    "push_mm": 5.0
+   },
+   "pass": true,
+   "prestress_N": 600
+  },
+  "R7": {
+   "value": {
+    "joints_by_name": "6 of 6",
+    "members_by_name": "12 of 12",
+    "identity_equal": true,
+    "joint_position_max_m": 1.62e-07,
+    "member_end_to_joint_max_m": 1.74844e-07,
+    "force_max_N": 0.000496759
+   },
+   "limit": {
+    "position_m": 1e-05,
+    "force_N": 0.01
+   },
+   "pass": true
+  },
+  "REF1": {
+   "value": {
+    "n_3_to_6_max_rad": 1e-12,
+    "other_proportions_max_rad": 1e-12
+   },
+   "limit": 1e-06,
+   "pass": true
+  },
+  "REF2": {
+   "value": 0.0,
+   "limit": 1e-09,
+   "pass": true
+  },
+  "REF3": {
+   "value": {
+    "nullity_n_3_to_6": [
+     4,
+     4,
+     4,
+     4
+    ],
+    "D_x_max": 0.0
+   },
+   "limit": {
+    "nullity": 4,
+    "D_x": 1e-09
+   },
+   "pass": true
+  },
+  "REF4": {
+   "value": [
+    {
+     "shape": "prism n=3",
+     "b": 12,
+     "j": 6,
+     "s": 1,
+     "m": 1,
+     "count": 0,
+     "s_minus_m": 0
+    },
+    {
+     "shape": "prism n=4",
+     "b": 16,
+     "j": 8,
+     "s": 1,
+     "m": 3,
+     "count": -2,
+     "s_minus_m": -2
+    },
+    {
+     "shape": "prism n=5",
+     "b": 20,
+     "j": 10,
+     "s": 1,
+     "m": 5,
+     "count": -4,
+     "s_minus_m": -4
+    },
+    {
+     "shape": "prism n=6",
+     "b": 24,
+     "j": 12,
+     "s": 1,
+     "m": 7,
+     "count": -6,
+     "s_minus_m": -6
+    },
+    {
+     "shape": "six-strut",
+     "b": 30,
+     "j": 12,
+     "s": 1,
+     "m": 1,
+     "count": 0,
+     "s_minus_m": 0
+    },
+    {
+     "shape": "prism n=3, twist 140 deg",
+     "b": 12,
+     "j": 6,
+     "s": 0,
+     "m": 0,
+     "count": 0,
+     "s_minus_m": 0
+    }
+   ],
+   "limit": "b - 3j + 6 = s - m, with m counted from the null space after the rigid motions are removed",
+   "pass": true
+  },
+  "REF5": {
+   "value": 1.14e-10,
+   "limit": 1e-05,
+   "pass": true
+  },
+  "REF6": {
+   "value": {
+    "max_position_diff_m": 5.2e-11,
+    "case": "push-in-J3",
+    "cases": 14
+   },
+   "limit": 1e-08,
+   "pass": true
+  },
+  "REF7": {
+   "value": {
+    "softest_N_per_m": {
+     "300": 489.005626591225,
+     "600": 977.516571631758,
+     "1200": 1953.048883825855
+    },
+    "ratios": [
+     1.998988392927,
+     1.997970101484
+    ]
+   },
+   "limit": [
+    1.99,
+    2.01
+   ],
+   "pass": true
+  },
+  "REF8": {
+   "value": {
+    "gap_root_over_L": 0.499999999985,
+    "self_stress_states": 1,
+    "mechanisms": 1,
+    "cable_over_strut_length": 0.612372435696,
+    "strut_over_cable_force": 2.449489742783,
+    "cables_pull_struts_push": true
+   },
+   "limit": {
+    "gap": "L / 2",
+    "length_ratio": "sqrt(6) / 4",
+    "force_ratio": "sqrt(6)"
+   },
+   "pass": true
+  },
+  "REF9": {
+   "value": {
+    "cases": 5,
+    "max_position_diff_m": 5.82e-10,
+    "closed_form_stress_vs_null_vector": 4.16e-10,
+    "node": "v22.23.5",
+    "control_wrong_density_diff_m": 0.0013,
+    "control_caught": true
+   },
+   "limit": 1e-06,
+   "pass": true
+  },
+  "bank-is-current": {
+   "value": 4.96e-10,
+   "limit": 2e-09,
+   "pass": true
+  }
+ },
+ "controls": [
+  {
+   "id": "twist-5deg-off",
+   "what": "the prism is built with a twist of 155 degrees",
+   "expect_fail": [
+    "R1"
+   ],
+   "failed": [
+    "R1"
+   ],
+   "caught": true,
+   "evidence": {
+    "R1": {
+     "self_stress_states": 0,
+     "mechanisms": 0,
+     "cables_pull_struts_push": false
+    }
+   }
+  },
+  {
+   "id": "one-cable-cut",
+   "what": "side cable V0 is removed: with s = 1 there is no spare",
+   "expect_fail": [
+    "R1"
+   ],
+   "failed": [
+    "R1"
+   ],
+   "caught": true,
+   "evidence": {
+    "R1": {
+     "self_stress_states": 0,
+     "mechanisms": 1,
+     "cables_pull_struts_push": false
+    }
+   }
+  },
+  {
+   "id": "kinds-swapped",
+   "what": "struts are labelled cables and side cables are labelled struts",
+   "expect_fail": [
+    "R1"
+   ],
+   "failed": [
+    "R1"
+   ],
+   "caught": true,
+   "evidence": {
+    "R1": {
+     "self_stress_states": 1,
+     "mechanisms": 1,
+     "cables_pull_struts_push": false
+    }
+   }
+  },
+  {
+   "id": "no-prestress",
+   "what": "prestress 0 N",
+   "expect_fail": [
+    "R2"
+   ],
+   "failed": [
+    "R2"
+   ],
+   "caught": true,
+   "evidence": {
+    "R2": {
+     "softest_N_per_m": 3e-11,
+     "next_N_per_m": 54216.77012327539,
+     "softest_at_zero_prestress": 3e-11
+    }
+   }
+  },
+  {
+   "id": "low-prestress",
+   "what": "prestress 150 N",
+   "expect_fail": [
+    "R3"
+   ],
+   "failed": [
+    "R3",
+    "R6"
+   ],
+   "caught": true,
+   "evidence": {
+    "R3": {
+     "least_fraction_of_prestress": 0.0,
+     "case": "push-in-J4"
+    }
+   }
+  },
+  {
+   "id": "thin-strut",
+   "what": "strut wall 1 mm instead of 2",
+   "expect_fail": [
+    "R4"
+   ],
+   "failed": [
+    "R4"
+   ],
+   "caught": true,
+   "evidence": {
+    "R4": {
+     "worst_strut_N": 1576.980491001337,
+     "case": "press-on-J5",
+     "buckling_utilisation": 1.362166411433,
+     "yield_utilisation": 0.075780265792
+    }
+   }
+  },
+  {
+   "id": "thin-cable",
+   "what": "a 2 mm rope: breaking load 2,200 N, area 1.9 mm2",
+   "expect_fail": [
+    "R5"
+   ],
+   "failed": [
+    "R5",
+    "R6"
+   ],
+   "caught": true,
+   "evidence": {
+    "R5": {
+     "worst_cable_N": 1184.405109821784,
+     "case": "press-on-J4",
+     "utilisation": 1.61509787703
+    }
+   }
+  },
+  {
+   "id": "double-load",
+   "what": "press of 1,600 N",
+   "expect_fail": [
+    "R6"
+   ],
+   "failed": [
+    "R3",
+    "R4",
+    "R5",
+    "R6"
+   ],
+   "caught": true,
+   "evidence": {
+    "R6": {
+     "press_drop_mm": 9.194125124391,
+     "press_turn_deg": 6.671324697466,
+     "push_move_mm": 2.153718337231,
+     "push_case": "push-in-J4"
+    }
+   }
+  },
+  {
+   "id": "scene-joint-moved",
+   "what": "joint J4 is 20 mm off in the scene; the bank is unchanged",
+   "expect_fail": [
+    "R7"
+   ],
+   "failed": [
+    "R7"
+   ],
+   "caught": true,
+   "evidence": {
+    "R7": {
+     "joints_by_name": "6 of 6",
+     "members_by_name": "12 of 12",
+     "identity_equal": true,
+     "joint_position_max_m": 0.02,
+     "member_end_to_joint_max_m": 0.020000066099,
+     "force_max_N": 0.000496759
+    }
+   }
+  },
+  {
+   "id": "scene-force-edited",
+   "what": "the scene says cable V1 carries 1 N more than the bank",
+   "expect_fail": [
+    "R7"
+   ],
+   "failed": [
+    "R7"
+   ],
+   "caught": true,
+   "evidence": {
+    "R7": {
+     "joints_by_name": "6 of 6",
+     "members_by_name": "12 of 12",
+     "identity_equal": true,
+     "joint_position_max_m": 1.62e-07,
+     "member_end_to_joint_max_m": 1.74844e-07,
+     "force_max_N": 1.0
+    }
+   }
+  },
+  {
+   "id": "twist-closed-form-wrong",
+   "what": "closed form taken as pi/2 - pi/n",
+   "expect_fail": [
+    "REF1"
+   ],
+   "failed": [
+    "REF1"
+   ],
+   "caught": true,
+   "evidence": {
+    "REF1": {
+     "n_3_to_6_max_rad": 2.094395102392,
+     "other_proportions_max_rad": 2.094395102392
+    }
+   }
+  },
+  {
+   "id": "density-ratio-wrong",
+   "what": "polygon cables given the side cables' force density",
+   "expect_fail": [
+    "REF2",
+    "REF3"
+   ],
+   "failed": [
+    "REF2",
+    "REF3"
+   ],
+   "caught": true,
+   "evidence": {
+    "REF2": 0.42264973081,
+    "REF3": {
+     "nullity_n_3_to_6": [
+      2,
+      2,
+      2,
+      4
+     ],
+     "D_x_max": 0.507179676972
+    }
+   }
+  },
+  {
+   "id": "maxwell-miscount",
+   "what": "the count is made with 3j - 3 (a plane frame's rigid motions) instead of 3j - 6",
+   "expect_fail": [
+    "REF4"
+   ],
+   "failed": [
+    "REF4"
+   ],
+   "caught": true,
+   "evidence": {
+    "REF4": [
+     {
+      "shape": "prism n=3",
+      "b": 12,
+      "j": 6,
+      "s": 1,
+      "m": 1,
+      "count": -3,
+      "s_minus_m": 0
+     },
+     {
+      "shape": "prism n=4",
+      "b": 16,
+      "j": 8,
+      "s": 1,
+      "m": 3,
+      "count": -5,
+      "s_minus_m": -2
+     },
+     {
+      "shape": "prism n=5",
+      "b": 20,
+      "j": 10,
+      "s": 1,
+      "m": 5,
+      "count": -7,
+      "s_minus_m": -4
+     },
+     {
+      "shape": "prism n=6",
+      "b": 24,
+      "j": 12,
+      "s": 1,
+      "m": 7,
+      "count": -9,
+      "s_minus_m": -6
+     },
+     {
+      "shape": "six-strut",
+      "b": 30,
+      "j": 12,
+      "s": 1,
+      "m": 1,
+      "count": -3,
+      "s_minus_m": 0
+     },
+     {
+      "shape": "prism n=3, twist 140 deg",
+      "b": 12,
+      "j": 6,
+      "s": 0,
+      "m": 0,
+      "count": -3,
+      "s_minus_m": 0
+     }
+    ]
+   }
+  },
+  {
+   "id": "prestress-term-sign",
+   "what": "the prestress term of the stiffness matrix with its sign flipped",
+   "expect_fail": [
+    "REF5"
+   ],
+   "failed": [
+    "REF5"
+   ],
+   "caught": true,
+   "evidence": {
+    "REF5": 0.014170637169
+   }
+  },
+  {
+   "id": "relaxation-stopped-early",
+   "what": "the second solver stops at 1 N out of balance",
+   "expect_fail": [
+    "REF6"
+   ],
+   "failed": [
+    "REF6"
+   ],
+   "caught": true,
+   "evidence": {
+    "REF6": {
+     "max_position_diff_m": 0.000148127867,
+     "case": "press",
+     "cases": 14
+    }
+   }
+  },
+  {
+   "id": "material-only-stiffness",
+   "what": "the prestress term left out of the stiffness, so doubling prestress changes nothing",
+   "expect_fail": [
+    "REF7"
+   ],
+   "failed": [
+    "REF7"
+   ],
+   "caught": true,
+   "evidence": {
+    "REF7": {
+     "softest_N_per_m": {
+      "300": 1.45e-10,
+      "600": -6.26e-10,
+      "1200": -2.48e-10
+     },
+     "ratios": [
+      null,
+      null
+     ]
+    }
+   }
+  },
+  {
+   "id": "six-gap-0.45",
+   "what": "six-strut built with the parallel struts 0.45 L apart",
+   "expect_fail": [
+    "REF8"
+   ],
+   "failed": [
+    "REF8"
+   ],
+   "caught": true,
+   "evidence": {
+    "REF8": {
+     "gap_root_over_L": 0.499999999985,
+     "self_stress_states": 0,
+     "mechanisms": 0
+    }
+   }
+  }
+ ],
+ "findings": {
+  "every_cable_tightens_and_every_strut_loads_up": {
+   "cases": {
+    "press": true,
+    "lift": true,
+    "torque+": true,
+    "torque-": true
+   },
+   "count": "4 of 4",
+   "what": "at the design prestress, with the load on all three top joints"
+  },
+  "lift_strut_compression_N": {
+   "at_rest": 742.51572060281,
+   "under_lift": 756.671759485812
+  }
+ },
+ "envelope": [
+  {
+   "prestress_N": 50,
+   "claimed": false,
+   "pass": false,
+   "failed": [
+    "R3",
+    "R6"
+   ]
+  },
+  {
+   "prestress_N": 100,
+   "claimed": false,
+   "pass": false,
+   "failed": [
+    "R3",
+    "R6"
+   ]
+  },
+  {
+   "prestress_N": 200,
+   "claimed": false,
+   "pass": false,
+   "failed": [
+    "R3",
+    "R6"
+   ]
+  },
+  {
+   "prestress_N": 400,
+   "claimed": false,
+   "pass": false,
+   "failed": [
+    "R6"
+   ]
+  },
+  {
+   "prestress_N": 600,
+   "claimed": true,
+   "pass": true,
+   "failed": []
+  },
+  {
+   "prestress_N": 800,
+   "claimed": true,
+   "pass": true,
+   "failed": []
+  },
+  {
+   "prestress_N": 1000,
+   "claimed": true,
+   "pass": true,
+   "failed": []
+  },
+  {
+   "prestress_N": 1200,
+   "claimed": false,
+   "pass": false,
+   "failed": [
+    "R4",
+    "R5"
+   ]
+  },
+  {
+   "prestress_N": 1400,
+   "claimed": false,
+   "pass": false,
+   "failed": [
+    "R4",
+    "R5"
+   ]
+  }
+ ],
+ "window": {
+  "floor_N": {
+   "last_fail": 487.5,
+   "first_pass": 489.0625
+  },
+  "ceiling_N": {
+   "last_pass": 1114.0625,
+   "first_fail": 1115.625
+  },
+  "resolution_N": 2.0
+ },
+ "not_run": [
+  "second reader",
+  "paired visual review",
+  "strict host copy",
+  "licensed engineer's review",
+  "dynamics (no mass model, no natural frequency measured)",
+  "strut buckling as a member with end fittings, cable terminations, fatigue, creep and temperature"
+ ]
+}
