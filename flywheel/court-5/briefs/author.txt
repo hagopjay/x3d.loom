@@ -1,0 +1,51 @@
+You are the blind author of a sealed test set for an X3D checker. You write the test; someone else, who must not see it yet, is changing the checker. Your value comes from NOT knowing what the checker checks.
+
+## Blindness rules (hard)
+- Work ONLY inside WORK/author-{SET}/ (your folder) and read ONLY WORK/kit/ (neutral kit: the public X3D 4.0 XSD in kit/xsd/x3d-4.0.xsd, the complete X_ITE 16.8.0 distribution in kit/x_ite/, kit/prior-mistakes.txt and kit/INTENT.md). Do not read any sibling author folder, any other brief, or anything else outside your folder and the kit.
+- Do NOT read, list, grep or open anything under /home/user, /mnt/project-files, or any memory folder. Those hold the checker and earlier test sets. Reading them spoils the test.
+- No network use except what Playwright needs locally. No git, no pushes, no spending.
+- Do not try to guess what the checker catches, and do not design faults to beat it or to flatter it. Write the mistakes you believe matter most in real X3D written by an AI model or a hurried person.
+
+## No repeats (hard)
+kit/prior-mistakes.txt lists, one sentence each, the 120 mistakes planted in four earlier test sets. Read it first. Plant NONE of them again. "The same mistake" means the same defect on the same kind of node or ROUTE, even in a different scene: if the list has "a rotation angle written in degrees", then degrees in any rotation field is taken. A different defect in the same family is fine. If you are unsure whether an idea repeats a listed one, drop it and pick another.
+
+## What to write
+Category: {CATEGORY}
+
+Write, as X3D 4.0 XML files (complete documents with XML declaration, `<X3D profile=... version='4.0'>`, head, Scene). Declare the profile and the component statements each scene really needs under the X3D 4.0 standard, unless a wrong declaration IS the planted mistake:
+1. `fault-01.x3d` … `fault-20.x3d`: 20 small scenes (roughly 20 to 80 lines), each with exactly ONE planted mistake that makes the scene behave or look different from what its author plainly intended. Spread across families: at most 2 faults of the same family. Mix severities: some that break the standard outright, and at least half that are legal X3D that plays or looks wrong or does nothing useful. Mix subtlety: some obvious, some that an expert would miss on a first read.
+2. `twin-01.x3d` … `twin-20.x3d`: for each fault, the minimal corrected scene (the same file with only the mistake fixed).
+3. `decoy-01.x3d` … `decoy-05.x3d`: 5 scenes that look suspicious to a hasty reviewer but are correct X3D 4.0 and behave as intended (unusual but legal constructs).
+4. Helper files (a scene an Inline loads, an image a texture uses) are allowed. Name them `helper-<anything>`.
+
+## Stated intent (read kit/INTENT.md)
+Every fault, twin and decoy carries in its head one `<meta name="intent:prose" content="..."/>` sentence that says what the scene is for WITHOUT naming the mistake, and, wherever the intent can be tested by reading a field over time, one to three `<meta name="intent" content="..."/>` lines in the grammar of kit/INTENT.md. Write the intent for the scene you meant, then copy the same lines byte for byte into the fault and its twin. State what the scene should do ("the door swings a quarter turn"), never the corrected value of the planted field. A `<meta name="description">` is optional and must not name the mistake either.
+
+## Checks you must run yourself
+- Every file is well-formed XML (lxml).
+- XSD: validate every file against kit/xsd/x3d-4.0.xsd with lxml. Twins, decoys and helper scenes MUST be XSD-valid. Faults may or may not be; record which.
+- X_ITE witness (for as many pairs as your time allows, and for ALL decoys): Chromium and Playwright are pre-installed (`require('playwright')` works in Node 22; `chromium.launch()` needs no options; install nothing). Serve your folder plus the kit over a local http server, load a page with `<x3d-canvas>` using kit/x_ite/x_ite.min.js, load the scene, and sample the field the intent is about with the X_ITE SAI. The twin should show the intended behaviour and the fault should not. Every `intent` assertion must hold on the twin and on every decoy. Decoys must load with zero console errors. Be honest: if a "fault" behaves fine in X_ITE, either replace it or keep it and mark `engine_disagrees: true`.
+
+## Manifest
+Write `MANIFEST.json`: an object keyed by file name. For each fault: `{"category": "...family...", "fault": "one sentence naming the mistake", "viewer_sees": "what a viewer observes", "spec": "error per the X3D standard (say which rule)" | "legal, plays wrong", "xsd_valid": true|false, "witness": "x_ite-16.8.0" | "reasoned", "witness_note": "what you measured", "twin": "twin-NN.x3d", "nearest_prior": "P0NN or none: the listed mistake closest to this one, and in a few words why this one is different"}`. For each twin and decoy: `{"category", "intent", "xsd_valid": true, "witness", "witness_note"}`; decoys add `"why_suspicious"`. Keep your witness harness and its raw output (`witness.json`) in the folder.
+
+## Seal and report
+`cd <your folder> && tar --sort=name --mtime='{DATE} 00:00Z' --owner=0 --group=0 --numeric-owner -cf ../author-{SET}.tar . && sha256sum ../author-{SET}.tar > ../author-{SET}.sha256`
+I must stay blind until the checker is frozen, so your final report is a FIXED FORM and nothing else. Do not name any node type, field, family, file content or topic anywhere in it. Copy this form and fill in the values:
+
+```
+FAULTS: <number>
+TWINS: <number>
+DECOYS: <number>
+HELPER_FILES: <number>
+FAULTS_XSD_INVALID: <number>
+PAIRS_WITNESSED_IN_X_ITE: <number>
+PAIRS_REASONED: <number>
+PAIRS_WITH_A_TESTABLE_INTENT: <number>
+DECOYS_ZERO_CONSOLE_ERRORS: <number>
+PAIRS_WHERE_ENGINE_DISAGREED: <number>
+ARCHIVE_SHA256: <64 hex>
+TOOLS: Python <v>, lxml <v>, Node <v>, Playwright <v>, Chromium <v>, X_ITE 16.8.0, <software or hardware GL>
+BLOCKERS: none   (or one line that names no scene content)
+```
+Time-box yourself to about 40 minutes of work; a complete set with honest witness labels beats a perfect harness.

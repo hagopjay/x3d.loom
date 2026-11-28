@@ -71,3 +71,14 @@ or error on the 50 legal files. The target was 30 and was missed. A second reade
 repeats of court 3: the new kernel names 18 of those and 5 of the 21 that are new (the old one 16 and 3). Of five
 expectations four held. The set is now seen and is a regression set from here on. The next court should give its
 authors the list of mistakes already planted and take its headline from new mistakes only.
+
+## Blind court 5: the standing plan (28 November 2026, no result yet)
+
+[`court-5/PLAN.md`](court-5/PLAN.md) is the plan for the next sealed test and the scaffold to run it. It changes
+five things, in this order: the headline is taken from new mistakes only (authors get the 120 mistakes already
+planted and may repeat none); new rules are written from a grid of 6,434 places where the X3D 4.0 object model
+says a mistake can occur, and each new check is labelled by where it came from; a scene may state its intent in
+lines a headless play test checks, scored as a separate arm; a catch must be proven against the corrected twin by
+machine; and a slot is kept for a set written by a stranger. It lists twelve tricks the court may not use. Every
+script has been run on a dummy set (`court-5/dry-run/run.sh`). Nothing is sealed, nothing is frozen, and there is
+no court 5 score.
