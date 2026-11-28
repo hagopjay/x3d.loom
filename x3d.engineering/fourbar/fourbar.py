@@ -167,6 +167,56 @@ def physics_scene(title, a, b, c, d, omega2, th2_0=math.radians(60), pins="ball"
             f'{frame}{crank}{coupler}{rocker}{joints}</RigidBodyCollection>\n</Scene></X3D>\n')
 
 
+def _ramp(u):
+    """Utilisation 0..1 to a colour: slate, teal, amber, red."""
+    stops = [(0.0, (0.30, 0.38, 0.52)), (0.4, (0.16, 0.66, 0.62)), (0.75, (0.93, 0.74, 0.25)), (1.0, (0.86, 0.22, 0.20))]
+    u = max(0.0, min(1.0, u))
+    for (u0, c0), (u1, c1) in zip(stops, stops[1:]):
+        if u <= u1:
+            f = (u - u0) / (u1 - u0)
+            return tuple(c0[i] + f * (c1[i] - c0[i]) for i in range(3))
+    return stops[-1][1]
+
+
+def view_scene(a, b, c, d, rows, forces, cap, step=5):
+    """A scene to look at, not an instrument: the closed-form poses played by interpolators (no physics engine), one crank
+    turn per cycle at 1 rad/s. The coupler's colour is its utilisation against the governing capacity at that crank angle."""
+    idx = list(range(0, 360, step)) + [0]
+    key = " ".join(_f(i / (len(idx) - 1)) for i in range(len(idx)))
+    gov = min(cap["coupler_yield_N"], cap["coupler_buckling_N"], cap["pin_double_shear_N"])
+    th2 = [math.radians(rows[i]["deg"]) for i in idx]; th2[-1] = 2 * math.pi
+    rot = lambda angs: ", ".join(f"0 0 1 {_f(x)}" for x in angs)
+    posB = ", ".join(f"{_f(a * math.cos(t))} {_f(a * math.sin(t))} 0.02" for t in th2)
+    col = ", ".join(" ".join(_f(x) for x in _ramp(forces[i] / gov)) for i in idx)
+    bar = lambda L, w, t, colr, mat="": (f'<Transform translation="{_f(L / 2)} 0 0"><Shape><Appearance><Material {mat} diffuseColor="{colr}" specularColor="0.25 0.25 0.25" shininess="0.4"/></Appearance>'
+                                           f'<Box size="{_f(L + w)} {_f(w)} {_f(t)}"/></Shape></Transform>')
+    pin = lambda x, y: (f'<Transform translation="{_f(x)} {_f(y)} 0.02" rotation="1 0 0 1.57079633"><Shape><Appearance><Material diffuseColor="0.85 0.85 0.88" specularColor="0.5 0.5 0.5" shininess="0.6"/></Appearance>'
+                        f'<Cylinder radius="0.016" height="0.07"/></Shape></Transform>')
+    worst = max(range(360), key=lambda i: forces[i])
+    return (f'<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">\n'
+            f'<X3D profile="Immersive" version="4.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="https://www.web3d.org/specifications/x3d-4.0.xsd"><head>'
+            f'<meta name="title" content="fourbar-view"/><meta name="description" content="Four-bar a={a:g} b={b:g} c={c:g} d={d:g} m, closed-form poses every {step} degrees, one crank turn in 6.283 s (1 rad/s). '
+            f'Coupler colour is utilisation against the governing capacity; the highest is {forces[worst] / gov:.3f} at crank {rows[worst]["deg"]} degrees. A viewing scene: no physics engine runs here."/>'
+            f'<meta name="generator" content="x3d.engineering/fourbar/fourbar.py"/></head><Scene>\n'
+            f'<Background skyColor="0.05 0.07 0.10, 0.10 0.13 0.18" skyAngle="1.57"/><NavigationInfo type=\'"EXAMINE" "ANY"\' headlight="true"/>'
+            f'<Viewpoint DEF="FrontView" description="Front" position="{_f(d / 2)} -0.28 2.05" centerOfRotation="{_f(d / 2)} -0.28 0"/>\n'
+            f'<TimeSensor DEF="Clock" cycleInterval="6.283185307" loop="true"/>\n'
+            f'<Transform translation="0 0 -0.02">{bar(d, 0.05, 0.01, "0.22 0.25 0.30")}</Transform>{pin(0, 0)}{pin(d, 0)}\n'
+            f'<Transform DEF="CrankT">{bar(a, 0.03, 0.01, "0.80 0.55 0.25")}</Transform>\n'
+            f'<Transform DEF="CouplerT" translation="{_f(a)} 0 0.02"><Transform translation="{_f(b / 2)} 0 0"><Shape><Appearance><Material DEF="CouplerMat" diffuseColor="0.3 0.38 0.52" specularColor="0.25 0.25 0.25" shininess="0.4"/></Appearance>'
+            f'<Box size="{_f(b + 0.03)} 0.03 0.01"/></Shape></Transform></Transform>\n'
+            f'<Transform DEF="RockerT" translation="{_f(d)} 0 0">{bar(c, 0.03, 0.01, "0.55 0.62 0.72")}</Transform>\n'
+            f'<OrientationInterpolator DEF="CrankRot" key="{key}" keyValue="{rot(th2)}"/>'
+            f'<PositionInterpolator DEF="CouplerPos" key="{key}" keyValue="{posB}"/>'
+            f'<OrientationInterpolator DEF="CouplerRot" key="{key}" keyValue="{rot([rows[i]["th3"] for i in idx])}"/>'
+            f'<OrientationInterpolator DEF="RockerRot" key="{key}" keyValue="{rot([rows[i]["th4"] for i in idx])}"/>'
+            f'<ColorInterpolator DEF="CouplerCol" key="{key}" keyValue="{col}"/>\n'
+            + "".join(f'<ROUTE fromNode="Clock" fromField="fraction_changed" toNode="{n}" toField="set_fraction"/>' for n in ("CrankRot", "CouplerPos", "CouplerRot", "RockerRot", "CouplerCol"))
+            + '<ROUTE fromNode="CrankRot" fromField="value_changed" toNode="CrankT" toField="set_rotation"/><ROUTE fromNode="CouplerPos" fromField="value_changed" toNode="CouplerT" toField="set_translation"/>'
+              '<ROUTE fromNode="CouplerRot" fromField="value_changed" toNode="CouplerT" toField="set_rotation"/><ROUTE fromNode="RockerRot" fromField="value_changed" toNode="RockerT" toField="set_rotation"/>'
+              '<ROUTE fromNode="CouplerCol" fromField="value_changed" toNode="CouplerMat" toField="set_diffuseColor"/>\n</Scene></X3D>\n')
+
+
 def build():
     a, b, c, d = P["a"], P["b"], P["c"], P["d"]
     (HERE / "bank").mkdir(exist_ok=True); (HERE / "scenes").mkdir(exist_ok=True)
@@ -188,7 +238,8 @@ def build():
         (HERE / "scenes" / f"{m['id']}.x3d").write_text(physics_scene(m["id"], la, lb, lc, ld, m["omega2"], pins=m.get("pins", "ball")))
         cases.append({"id": m["id"], "kind": "mutant", "omega2": m["omega2"], "links": [la, lb, lc, ld], "expect_fail": m["expect_fail"], "pins": m.get("pins", "ball")})
     (HERE / "bank" / "cases.json").write_text(json.dumps(cases, indent=1))
-    print(f"bank: {len(rows)} crank angles; scenes: {len(cases)}; worst case {bank['worst_case']}")
+    (HERE / "scenes" / "fourbar-view.x3d").write_text(view_scene(a, b, c, d, rows, forces, cap))
+    print(f"bank: {len(rows)} crank angles; scenes: {len(cases) + 1}; worst case {bank['worst_case']}")
 
 
 if __name__ == "__main__":
