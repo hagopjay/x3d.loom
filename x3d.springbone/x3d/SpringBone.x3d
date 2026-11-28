@@ -24,6 +24,7 @@
       <field name='radius2' type='SFFloat' accessType='inputOutput' value='0' appinfo='capsule radius at the +direction end (0: same as radius): a tapered capsule, solved exactly'/>
       <field name='height' type='SFFloat' accessType='inputOutput' value='0' appinfo='capsule length, caps included'/>
       <field name='direction' type='SFString' accessType='inputOutput' value='Y' appinfo='capsule axis, or plane normal: X, Y or Z of the frame'/>
+      <field name='axis' type='SFVec3f' accessType='inputOutput' value='0 0 0' appinfo='capsule axis or plane normal as a vector in the frame; overrides direction when not zero'/>
       <field name='ancestors' type='MFNode' accessType='inputOutput' appinfo='the nodes from the scene root down to the node the collider rides on, outermost first'/>
       </ProtoInterface>
       <ProtoBody>
@@ -91,7 +92,7 @@
       <ProtoBody>
         <Group>
           <TimeSensor DEF='SpringClock' loop='true'/>
-          <Script DEF='SpringSolver' directOutput='true' mustEvaluate='true' url='"springbone-script.js" "https://hagopjay.github.io/x3d.demo/demos/spring-bones/v1/x3d/springbone-script.js"'>
+          <Script DEF='SpringSolver' directOutput='true' mustEvaluate='true' url='"springbone-script.js" "https://hagopjay.github.io/x3d.demo/demos/spring-bone/v1/x3d/springbone-script.js"'>
           <field name='enabled' type='SFBool' accessType='inputOutput' value='true'/>
           <field name='clock' type='SFBool' accessType='inputOutput' value='true'/>
           <field name='roots' type='MFNode' accessType='inputOutput'/>

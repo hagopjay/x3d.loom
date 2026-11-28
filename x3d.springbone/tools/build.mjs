@@ -68,6 +68,7 @@ export const COLLIDER_FIELDS = [
   ['radius2', 'SFFloat', '0', 'capsule radius at the +direction end (0: same as radius): a tapered capsule, solved exactly'],
   ['height', 'SFFloat', '0', 'capsule length, caps included'],
   ['direction', 'SFString', 'Y', 'capsule axis, or plane normal: X, Y or Z of the frame'],
+  ['axis', 'SFVec3f', '0 0 0', 'capsule axis or plane normal as a vector in the frame; overrides direction when not zero'],
   ['ancestors', 'MFNode', null, 'the nodes from the scene root down to the node the collider rides on, outermost first'],
 ];
 
@@ -132,7 +133,7 @@ ${chainIface}
       <ProtoBody>
         <Group>
           <TimeSensor DEF='SpringClock' loop='true'/>
-          <Script DEF='SpringSolver' directOutput='true' mustEvaluate='true' url='"springbone-script.js" "https://hagopjay.github.io/x3d.demo/demos/spring-bones/v1/x3d/springbone-script.js"'>
+          <Script DEF='SpringSolver' directOutput='true' mustEvaluate='true' url='"springbone-script.js" "https://hagopjay.github.io/x3d.demo/demos/spring-bone/v1/x3d/springbone-script.js"'>
 ${scriptFields}
             <IS>
 ${connects.replace(new RegExp(S + '  ', 'g'), S + '    ')}

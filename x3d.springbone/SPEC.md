@@ -62,7 +62,7 @@ Two findings fall out (grade Confirmed by W2b and W3b, Node 22.23.5):
 A collider rides on a frame (`ancestors` of the collider, outermost first); sizes scale with that frame's x-axis scale.
 
 * **SPHERE** `center`, `radius`.
-* **CAPSULE** along `direction` (X, Y or Z of the frame), total length `height` with caps included, so the two sphere centres are `height - radius - radius2` apart; `radius2 > 0` makes it a **round cone** (tapered capsule). The nearest swept sphere is found exactly: with axis coordinate `t'`, radial distance `q` and taper `k = (r0 - r1)/len`, the nearest sphere sits at `t = t' - k q / sqrt(1 - k²)`, clamped to the segment (W6: 2,000 points land on the surface to 1.5e-9 m by brute force; the tempting shortcut of interpolating the radius at the nearest axis point misses by 10 mm).
+* **CAPSULE** along `direction` (X, Y or Z of the frame), total length `height` with caps included and centred on `center`: `radius` at the -axis end, `radius2` at the +axis end, so the sphere centres sit at -(height/2 - radius) and +(height/2 - radius2); `radius2 > 0` makes it a **round cone** (tapered capsule). The nearest swept sphere is found exactly: with axis coordinate `t'`, radial distance `q` and taper `k = (r0 - r1)/len`, the nearest sphere sits at `t = t' - k q / sqrt(1 - k²)`, clamped to the segment (W6: 2,000 points land on the surface to 1.5e-9 m by brute force; the tempting shortcut of interpolating the radius at the nearest axis point misses by 10 mm).
 * **PLANE** through `center` with normal = the frame's `direction` axis.
 * `bound` OUTSIDE keeps particles out; INSIDE keeps them in (a skirt inside a hoop, a tail inside a tube).
 

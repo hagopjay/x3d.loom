@@ -99,7 +99,7 @@ function colliderList() {
     var c = colliders[i];
     if (!c || (c.enabled !== undefined && !c.enabled)) continue;
     var anc = c.ancestors, W = frameOf(anc);
-    out.push({ shape: c.shape, bound: c.bound, center: v3(c.center), radius: c.radius, radius2: c.radius2, height: c.height, direction: c.direction, world: W });
+    out.push({ shape: c.shape, bound: c.bound, center: v3(c.center), radius: c.radius, radius2: c.radius2, height: c.height, direction: c.direction, axis: v3(c.axis), world: W });
   }
   return out;
 }

@@ -185,17 +185,19 @@
   function prepareCollider(c) {
     const W = c.world || IDENTITY, sc = len(m3col(W.L, 0));
     const center = applyPoint(W, c.center || [0, 0, 0]);
-    const ax = AXIS[c.direction || 'Y'];
-    const dir = unit(m3col(W.L, ax));
+    // `axis` (a vector in the frame) overrides `direction` (X, Y or Z of the frame) when it is not zero
+    const axv = c.axis || [0, 0, 0];
+    const dir = (axv[0] || axv[1] || axv[2]) ? unit(m3v(W.L, axv)) : unit(m3col(W.L, AXIS[c.direction || 'Y']));
     const r0 = (c.radius !== undefined ? c.radius : 0.5) * sc;
     const r1 = (c.radius2 !== undefined && c.radius2 > 0 ? c.radius2 : (c.radius !== undefined ? c.radius : 0.5)) * sc;
     const h = (c.height || 0) * sc;
-    const out = { shape: c.shape || 'SPHERE', inside: (c.bound || 'OUTSIDE') === 'INSIDE', center, dir, r0, r1 };
+    const out = { shape: c.shape || 'SPHERE', inside: (c.bound || 'OUTSIDE') === 'INSIDE', center, dir, r0, r1, prepared: true };
     if (out.shape === 'CAPSULE') {
-      // `height` is the whole length, end caps included: the sphere centres are height - r0 - r1 apart
+      // `height` is the whole length, end caps included, centred on `center`: radius at the -axis end, radius2 at
+      // the +axis end, so the sphere centres sit at -(height/2 - r0) and +(height/2 - r1)
       const segLen = Math.max(h - r0 - r1, 0);
-      out.a = add(center, mul(dir, -segLen / 2));
-      out.b = add(center, mul(dir, segLen / 2));
+      out.a = add(center, mul(dir, -(h / 2 - r0)));
+      out.b = add(center, mul(dir, h / 2 - r1));
       out.segLen = segLen;
       if (segLen <= 0) { out.shape = 'SPHERE'; out.r0 = Math.max(r0, r1); }
     }
@@ -711,7 +713,7 @@ function colliderList() {
     var c = colliders[i];
     if (!c || (c.enabled !== undefined && !c.enabled)) continue;
     var anc = c.ancestors, W = frameOf(anc);
-    out.push({ shape: c.shape, bound: c.bound, center: v3(c.center), radius: c.radius, radius2: c.radius2, height: c.height, direction: c.direction, world: W });
+    out.push({ shape: c.shape, bound: c.bound, center: v3(c.center), radius: c.radius, radius2: c.radius2, height: c.height, direction: c.direction, axis: v3(c.axis), world: W });
   }
   return out;
 }
