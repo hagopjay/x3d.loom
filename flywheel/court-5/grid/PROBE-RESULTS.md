@@ -110,5 +110,7 @@ python3 flywheel/court-5/grid/build_grid.py <x3d_mcp>/src/validation/schemas/X3d
 python3 flywheel/court-5/grid/probe.py <x3d_mcp checkout> --summary out.json
 ```
 
+Kernel `d446f94` was a branch commit. It reached x3d_mcp main in two squash merges, #44 (`3d29e6b`) and #45 (`15081e6`); `git diff d446f94 15081e6` is empty, so every number here for `d446f94` holds for main at `15081e6`.
+
 `probe-kernel-2943b78.json` and `probe-kernel-d446f94.json` are those summaries for the two kernels. `grid.json` holds the
 state, the probe and the catching check of every cell for the new kernel.
