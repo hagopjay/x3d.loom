@@ -1,0 +1,333 @@
+{
+ "grade": {
+  "against": "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)",
+  "closure": "closed-so-far",
+  "closure_reason": "14 audit probe(s) outside the rule all passed",
+  "grade": "L",
+  "grade_word": "Likely",
+  "missed_seen": 0,
+  "reasons": [
+   "nothing unseen has confirmed it: 0 audit probe(s) confirmed (need 5); 0 held-out failure(s) (need 5)"
+  ],
+  "thresholds": {
+   "min_known_good": 30,
+   "min_recall": 0.9,
+   "min_unseen": 5
+  }
+ },
+ "id": "r2r-c5884565c319",
+ "instrument": "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)",
+ "made_by": {
+  "engine": "loomkit.r2r",
+  "proposer": "inductive (no language model)",
+  "proposer_uses_a_model": false,
+  "version": "0.1.0"
+ },
+ "promoted": false,
+ "proof": {
+  "ablation": [
+   {
+    "dropped": "ge:depth_max:9",
+    "failures_explained_without_it": 8,
+    "false_alarms_without_it": 4,
+    "role": "test"
+   },
+   {
+    "dropped": "ge:n_elements:2819",
+    "failures_explained_without_it": 8,
+    "false_alarms_without_it": 35,
+    "role": "test"
+   },
+   {
+    "dropped": "ge:n_routes:3",
+    "failures_explained_without_it": 8,
+    "false_alarms_without_it": 3,
+    "role": "test"
+   }
+  ],
+  "alternates": [
+   {
+    "rule": {
+     "all": [
+      "ge:bytes:125021",
+      "ge:depth_max:9",
+      "ge:max_children:100",
+      "ge:n_elements:2819"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the file size in bytes is at least 125021 and the deepest nesting in the file is at least 9 and the most children of one element is at least 100 and the number of elements is at least 2819."
+   },
+   {
+    "rule": {
+     "all": [
+      "ge:depth_max:9",
+      "ge:max_children:100",
+      "ge:n_defs:61",
+      "ge:n_elements:2819"
+     ],
+     "kind": "doc"
+    },
+    "sentence": "For the file as a whole: the deepest nesting in the file is at least 9 and the most children of one element is at least 100 and the number of DEF names is at least 61 and the number of elements is at least 2819."
+   }
+  ],
+  "audit": {
+   "caught_by_sibling_rule": 0,
+   "confirmed": 0,
+   "missed": 0,
+   "missed_examples": [],
+   "other_failure": 0,
+   "probes": 14,
+   "refuted": 0,
+   "refuted_examples": [],
+   "silent_ok": 14
+  },
+  "degenerate_fired_on": [],
+  "existing_traps": {
+   "any": 3,
+   "by_trap": {
+    "color-keys-sparse": 2,
+    "loop-seam": 3
+   },
+   "checked": 8
+  },
+  "held_out": {
+   "caught": 0,
+   "dropped_as_same_bytes_as_training": 0,
+   "failures": 0,
+   "false_alarm_examples": [],
+   "false_alarms": 0,
+   "missed_examples": [],
+   "passing_files": 1108
+  },
+  "idle_literals": [],
+  "instrument": "x3d-blender-io 2.9.0 import then export (bpy 5.3.0)",
+  "intervals": [
+   {
+    "first_failing": 9.0,
+    "last_passing": 8,
+    "literal": "ge:depth_max:9",
+    "number": "depth_max",
+    "passing_values_compared": 4,
+    "untested": [
+     8,
+     9.0
+    ]
+   },
+   {
+    "first_failing": 2819.0,
+    "last_passing": 2065,
+    "literal": "ge:n_elements:2819",
+    "number": "n_elements",
+    "passing_values_compared": 35,
+    "untested": [
+     2065,
+     2819.0
+    ]
+   },
+   {
+    "first_failing": 3.0,
+    "last_passing": 2,
+    "literal": "ge:n_routes:3",
+    "number": "n_routes",
+    "passing_values_compared": 3,
+    "untested": [
+     2,
+     3.0
+    ]
+   }
+  ],
+  "known_good": {
+   "false_alarm_files": [],
+   "false_alarms": 0,
+   "passing_files": 1199
+  },
+  "normative_reading": [],
+  "probe_rounds": [
+   {
+    "fed_back": true,
+    "probes": 16,
+    "round": 1,
+    "rules_tested": [
+     "doc[ge:depth_max:9 & ge:max_children:100 & ge:n_elements:2819]"
+    ],
+    "tally": {
+     "alternate/refuted": 2,
+     "bisect/silent-ok": 6,
+     "near/silent-ok": 8
+    }
+   },
+   {
+    "fed_back": true,
+    "probes": 14,
+    "round": 2,
+    "rules_tested": [
+     "doc[ge:depth_max:9 & ge:n_elements:2819 & ge:n_routes:3]"
+    ],
+    "tally": {
+     "bisect/silent-ok": 6,
+     "near/silent-ok": 8
+    }
+   },
+   {
+    "fed_back": false,
+    "probes": 14,
+    "round": "audit",
+    "rules_tested": [
+     "doc[ge:depth_max:9 & ge:n_elements:2819 & ge:n_routes:3]"
+    ],
+    "tally": {
+     "bisect/silent-ok": 6,
+     "near/silent-ok": 8
+    }
+   }
+  ],
+  "rule": {
+   "all": [
+    "ge:depth_max:9",
+    "ge:n_elements:2819",
+    "ge:n_routes:3"
+   ],
+   "kind": "doc"
+  },
+  "rule_id": "r2r-c5884565c319",
+  "schema": "loom.rule-proof/1",
+  "seen_at": [
+   "(document)"
+  ],
+  "sentence": "For the file as a whole: the deepest nesting in the file is at least 9 and the number of elements is at least 2819 and the number of ROUTEs is at least 3.",
+  "signature": "no answer in 60 s (sweep runner stopped the process)",
+  "sources": {
+   "explained_by_any_rule_of_the_cluster": 8,
+   "explained_by_this_rule": 8,
+   "failures": 8,
+   "families": {
+    "natural-sweep": 8
+   },
+   "observed_by": {
+    "tool": 8
+   },
+   "with_known_good_twin": 0
+  },
+  "strays": {},
+  "tier": 2,
+  "trace": [
+   "seed ge:depth_max:9, fenced to (anywhere): explains 8, false alarms 144",
+   "+ ge:n_elements:2819: explains 8, false alarms 3 (gain 30.31)",
+   "+ ge:n_routes:3: explains 8, false alarms 0 (gain 3.68)"
+  ],
+  "unfenced": null,
+  "vocabulary_gap": false
+ },
+ "rule": {
+  "all": [
+   "ge:depth_max:9",
+   "ge:n_elements:2819",
+   "ge:n_routes:3"
+  ],
+  "kind": "doc"
+ },
+ "schema": "loom.rule-candidate/1",
+ "sentence": "For the file as a whole: the deepest nesting in the file is at least 9 and the number of elements is at least 2819 and the number of ROUTEs is at least 3.",
+ "signature": "no answer in 60 s (sweep runner stopped the process)",
+ "sources": [
+  {
+   "event": "ev-1ce7d2c6a60f",
+   "family": "natural-sweep",
+   "file": "week:x3d.accrete/examples/demo-96/world.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-reexport.jsonl",
+    "row": 123
+   },
+   "sha256": "f3da21709edc991ca580db5fc178a3c56aa56218429a6725e049d47e53a86ab9",
+   "twin": null
+  },
+  {
+   "event": "ev-dd03399a6aa0",
+   "family": "natural-sweep",
+   "file": "week:x3d.demo/docs/demos/gobbler-worlds-within/v1/source/bird.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-reexport.jsonl",
+    "row": 763
+   },
+   "sha256": "904ce6a3541cd3720cb6a3aa2374388ffe614464594585ff8df0b91da1ae49e3",
+   "twin": null
+  },
+  {
+   "event": "ev-547112d40294",
+   "family": "natural-sweep",
+   "file": "week:x3d.demo/docs/demos/segment-sphere/v1/assets/segment-sphere.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-reexport.jsonl",
+    "row": 812
+   },
+   "sha256": "632e93ad78a2c75640fc8d992f7204549d02b15ed7b2125ed46a9a8386791e84",
+   "twin": null
+  },
+  {
+   "event": "ev-5de9cc25156c",
+   "family": "natural-sweep",
+   "file": "week:x3d.gobbler/gobbler-flyte/observatory.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-reexport.jsonl",
+    "row": 908
+   },
+   "sha256": "c2f8ca8e4a8352221fe27c79d6df74aa086769c2991876f5a3ce5f0e61d0f9af",
+   "twin": null
+  },
+  {
+   "event": "ev-315821af343e",
+   "family": "natural-sweep",
+   "file": "week:x3d.gobbler/gobbler-flyte/scene.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-reexport.jsonl",
+    "row": 909
+   },
+   "sha256": "de5e5a51e63c13c1126b3853a9e5e7b9ea01888a57bef8543d7dfe059be5b85a",
+   "twin": null
+  },
+  {
+   "event": "ev-2ed770bac050",
+   "family": "natural-sweep",
+   "file": "week:x3d.loom/x3d.platformer/levels/1-1-tinker-meadow.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-reexport.jsonl",
+    "row": 1214
+   },
+   "sha256": "d2abd75ab2e78c2a0e4ed18a5e83b5ef45f8c1145b1525907b05e8aa8fed00d6",
+   "twin": null
+  },
+  {
+   "event": "ev-4f0dc7e2f7bc",
+   "family": "natural-sweep",
+   "file": "week:x3d.loom/x3d.platformer/levels/2-1-pendulum-gorge.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-reexport.jsonl",
+    "row": 1215
+   },
+   "sha256": "983dd6475655d4ad3e8a6048e38a82f69f843c71f26e9ad2f1e628cf6962fcc4",
+   "twin": null
+  },
+  {
+   "event": "ev-7cbf13fea221",
+   "family": "natural-sweep",
+   "file": "week:x3d.loom/x3d.platformer/levels/3-1-clockwork-spire.x3d",
+   "note": "",
+   "receipt": {
+    "path": "sweep:2.9.0-reexport.jsonl",
+    "row": 1216
+   },
+   "sha256": "6014829be38faf12a39ba01f0de2c0a5aebc712a647b5ab2a8a1f797e52405d1",
+   "twin": null
+  }
+ ],
+ "sources_total": 8,
+ "status": "candidate"
+}
