@@ -1,0 +1,33 @@
+{
+ "schema": "loom.eng-note/1",
+ "what": "The validator's naming-convention rule reports whitespace in any name attribute as an error. On CADAssembly, CADPart and CADFace the X3D 4.0 object model types name as a plain SFString label, and the X3D 4.0 schema accepts the file.",
+ "validator": "x3d_mcp fa4a8e3, src/validation/semantic.py _check_naming_conventions",
+ "object_model": "x3d_mcp fa4a8e3, src/validation/schemas/X3dUnifiedObjectModel-4.0.xml: CADAssembly, CADPart, CADFace, CADLayer name = SFString, no simpleType; HAnimJoint name = SFString with baseType xs:NMTOKEN",
+ "measured": {
+  "controls/truss-spaced-names.x3d": {
+   "sha256": "63ab502bf107ce340107850204be0a2a5551c263c916e56b1a44a0b40ba68b36",
+   "xsd_valid": true,
+   "semantic_errors": 34,
+   "by_check": {
+    "naming-convention": 34
+   },
+   "warnings": 0
+  },
+  "scenes/truss.x3d": {
+   "sha256": "f658dcc10b28266bcec24f1294febcde46d796bb980c930285048b155e4dc498",
+   "xsd_valid": true,
+   "semantic_errors": 0,
+   "by_check": {},
+   "warnings": 0
+  },
+  "scenes/truss-in-court.x3d": {
+   "sha256": "37625824cb296a31db5fe2637b4cfb49206b6aa7c22cf07e0241ece293552014",
+   "xsd_valid": true,
+   "semantic_errors": 0,
+   "by_check": {},
+   "warnings": 0
+  }
+ },
+ "what_we_did": "Shipped scenes use names without spaces (BC1_body, CourtCanopyTruss); the spaced original is kept in controls/ so the count can be reproduced. IFC names with spaces (Column -4/1) travel as MetadataString values, which the rule does not read.",
+ "grade": "Confirmed that the rule and the object model disagree; Likely that the rule is the one to change (an authoring hint may still prefer plain tokens)"
+}

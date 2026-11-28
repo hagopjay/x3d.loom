@@ -1,6 +1,6 @@
 // Step every scene in bank/cases.json on the three engines behind the x3d.loom bridge reader and record the poses.
 // Uses x3d.physics/rigid-engines (npm install there first). Node only: no browser, no GPU.
-//   node run_engines.js [--explore]      writes results/trajectories.json (or results/exploration-trajectories.json)
+//   node run_engines.js [--explore]      writes .work/trajectories.json (or .work/exploration-trajectories.json); .work is scratch, never shipped
 const fs = require('node:fs'), path = require('node:path');
 const RE = path.resolve(__dirname, '..', '..', 'x3d.physics', 'rigid-engines');
 const { record } = require(path.join(RE, 'lib', 'record.js'));
@@ -19,6 +19,6 @@ const PROBES = ['Crank', 'Coupler', 'Rocker'];
       console.log(c.id.padEnd(26), eng.padEnd(8), 'T', T, 'samples', r.tr.Crank.t.length, r.notes.length ? 'NOTES ' + r.notes.join('; ') : '');
     }
   }
-  fs.mkdirSync(path.join(__dirname, 'results'), { recursive: true });
-  fs.writeFileSync(path.join(__dirname, 'results', explore ? 'exploration-trajectories.json' : 'trajectories.json'), JSON.stringify(out));
+  fs.mkdirSync(path.join(__dirname, '.work'), { recursive: true });
+  fs.writeFileSync(path.join(__dirname, '.work', explore ? 'exploration-trajectories.json' : 'trajectories.json'), JSON.stringify(out));
 })().catch((e) => { console.error(e); process.exit(1); });

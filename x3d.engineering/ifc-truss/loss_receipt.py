@@ -45,30 +45,50 @@ def rot_axis_angle(ax, v):
     return [v[i] * c + cr[i] * s + (x, y, z)[i] * d * (1 - c) for i in range(3)]
 
 
-def read_x3d(path: Path):
-    """Every element Transform under IFC_ZUP_TO_YUP: its metadata and its mesh, in the IFC frame (z up, metres)."""
+def read_x3d(path: Path, undo_frame=True, mutate=None):
+    """Every element under IFC_ZUP_TO_YUP that carries a MetadataSet with a guid: its metadata and its mesh, in the
+    IFC frame (z up, metres). Handles Transform or CADPart, IndexedTriangleSet or IndexedFaceSet, DEF/USE.
+    undo_frame=False returns the coordinates as X3D sees them (y up): the control that skips the frame.
+    mutate(root) lets a control edit the parsed scene before it is read."""
     root = ET.parse(path).getroot()
+    if mutate:
+        mutate(root)
     defs = {e.get("DEF"): e for e in root.iter() if e.get("DEF")}
     resolve = lambda e: defs[e.get("USE")] if e is not None and e.get("USE") else e
     frame = defs["IFC_ZUP_TO_YUP"]
+    frame_rot = [float(x) for x in frame.get("rotation").split()]
     out = {}
-    for t in frame.findall("Transform"):
-        meta = {m.get("name"): m.get("value").strip('"') for m in t.find("MetadataSet")}
-        its = resolve(t.find("Shape").find("IndexedTriangleSet"))
-        coord = resolve(its.find("Coordinate"))
+    for t in frame.iter():
+        ms = t.find("MetadataSet")
+        if ms is None or t.tag not in ("Transform", "CADPart"):
+            continue
+        meta = {m.get("name"): m.get("value").strip('"') for m in ms}
+        if "guid" not in meta:
+            continue
+        geo = next((resolve(g) for g in t.iter() if g.tag in ("IndexedTriangleSet", "IndexedFaceSet")), None)
+        coord = resolve(geo.find("Coordinate"))
         pts = [float(x) for x in coord.get("point").replace(",", " ").split()]
-        idx = [int(x) for x in its.get("index").split()]
+        if geo.tag == "IndexedTriangleSet":
+            idx = [int(x) for x in geo.get("index").split()]
+            tris = [tuple(idx[i:i + 3]) for i in range(0, len(idx), 3)]
+        else:
+            tris, poly = [], []
+            for x in (int(v) for v in geo.get("coordIndex").replace(",", " ").split()):
+                if x == -1:
+                    tris += [(poly[0], poly[i], poly[i + 1]) for i in range(1, len(poly) - 1)]; poly = []
+                else:
+                    poly.append(x)
         tr = [float(x) for x in t.get("translation", "0 0 0").split()]
         ro = [float(x) for x in t.get("rotation", "0 0 1 0").split()]
         sc = [float(x) for x in t.get("scale", "1 1 1").split()]
         verts = []
         for i in range(0, len(pts), 3):
-            v = [pts[i] * sc[0], pts[i + 1] * sc[1], pts[i + 2] * sc[2]]
-            v = rot_axis_angle(ro, v)
-            verts.append([v[j] + tr[j] for j in range(3)])
-        tris = [tuple(idx[i:i + 3]) for i in range(0, len(idx), 3)]
+            v = rot_axis_angle(ro, [pts[i] * sc[0], pts[i + 1] * sc[1], pts[i + 2] * sc[2]])
+            v = [v[j] + tr[j] for j in range(3)]
+            verts.append(v if undo_frame else rot_axis_angle(frame_rot, v))
+        app = next((a for a in t.iter("Appearance")), None)
         out[meta["guid"]] = {"meta": meta, "q": tri_quantities(verts, tris), "triangles": len(tris), "def": t.get("DEF"),
-                             "appearance": (t.find("Shape").find("Appearance").get("DEF") or t.find("Shape").find("Appearance").get("USE"))}
+                             "appearance": None if app is None else (app.get("DEF") or app.get("USE"))}
     return out, {"frame_rotation": frame.get("rotation"), "version": root.get("version"), "profile": root.get("profile"),
                  "head_meta": {m.get("name"): m.get("content") for m in root.find("head").findall("meta")}}
 

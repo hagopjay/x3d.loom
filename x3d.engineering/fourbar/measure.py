@@ -60,7 +60,7 @@ def measure_run(run, links, card_links, branch=+1):
 if __name__ == "__main__":
     import sys
     name = sys.argv[1] if len(sys.argv) > 1 else "exploration-trajectories.json"
-    data = json.loads((HERE / "results" / name).read_text())
+    data = json.loads((HERE / ".work" / name).read_text())
     cases = {c["id"]: c for c in json.loads((HERE / "bank" / "cases.json").read_text())}
     card = [fb.P[k] for k in "abcd"]
     print(f"{'case':26} {'engine':8} {'revs':>6} {'rocker err deg':>15} {'pin gap mm':>11} {'tilt rad':>10} {'out-of-plane mm':>16}")

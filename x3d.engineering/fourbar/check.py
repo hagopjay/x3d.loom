@@ -6,7 +6,7 @@ trajectories; judges every requirement; runs every control and requires it to FA
 Writes results/verdict.json and results/loss.json. Standard library only.
 """
 from __future__ import annotations
-import json, math, sys
+import hashlib, json, math, sys
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -87,10 +87,12 @@ def qualify(m):
 
 def main():
     card_links = [P[k] for k in "abcd"]
-    traj = json.loads((HERE / "results" / "trajectories.json").read_text())
+    traj = json.loads((HERE / ".work" / "trajectories.json").read_text())
     cases = {c["id"]: c for c in json.loads((HERE / "bank" / "cases.json").read_text())}
     verdict = {"schema": "loom.eng-verdict/1", "study": CARD["study"], "rig": traj["rig"], "label": CARD["label"], "gates": {}, "engines": {}, "controls": [], "probes": {}}
     fails = []
+    # a hash of every recorded pose (not of wall times), so a re-run can be compared with this one
+    verdict["poses_sha256"] = hashlib.sha256(json.dumps([[r["case"], r["engine"], r["tr"]] for r in traj["runs"]], separators=(",", ":")).encode()).hexdigest()
 
     # 1. the design, on paper
     an = analytic(card_links)
