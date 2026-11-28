@@ -101,7 +101,7 @@ def main():
            "cells": cells}
     text = json.dumps(doc, indent=0, ensure_ascii=False) + "\n"
     if "--check" in sys.argv:
-        if not out.exists() or out.read_text() != text:
+        if not out.exists() or json.loads(out.read_text()) != doc:      # same cells and states, whatever the key order
             sys.exit("grid.json is stale: rerun build_grid.py without --check")
         print("grid.json is current")
     else:
