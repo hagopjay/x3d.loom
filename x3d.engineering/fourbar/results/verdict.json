@@ -1,0 +1,1261 @@
+{
+ "schema": "loom.eng-verdict/1",
+ "study": "fourbar",
+ "rig": {
+  "node": "v22.23.5",
+  "rapier": "0.21.0",
+  "cannon": "0.20.0",
+  "sample_hz": 60
+ },
+ "label": "A worked study. Not a certified design and not for manufacture.",
+ "gates": {
+  "R1-analytic": true,
+  "R3": true,
+  "R4": true,
+  "REF2": true,
+  "REF3": true,
+  "REF4": true,
+  "REF5": true,
+  "R1-R2-R5-R6@1rad/s": true
+ },
+ "engines": {
+  "fourbar-w1": {
+   "builtin": {
+    "measure": {
+     "samples": 981,
+     "crank_revolutions": 3.0052642769754576,
+     "max_rocker_error_rad": 0.00022747367799258456,
+     "max_rocker_error_deg": 0.013033281699293011,
+     "error_at_t": 3.9166666666666665,
+     "max_pin_gap_mm": 0.07932616058034232,
+     "max_tilt_rad": 0.007321358281148454,
+     "max_out_of_plane_mm": 2.1968403998714745,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": true,
+    "checks": {
+     "revolutions": {
+      "value": 3.0052642769754576,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.5026321384877288
+     },
+     "rocker_error_deg": {
+      "value": 0.013033281699293011,
+      "limit": 0.5,
+      "pass": true,
+      "margin": 0.973933436601414
+     },
+     "pin_gap_mm": {
+      "value": 0.07932616058034232,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.9206738394196576
+     },
+     "out_of_plane_mm": {
+      "value": 2.1968403998714745,
+      "limit": 5.0,
+      "pass": true,
+      "margin": 0.560631920025705
+     }
+    },
+    "notes": []
+   },
+   "rapier": {
+    "measure": {
+     "samples": 981,
+     "crank_revolutions": 3.0073065079591976,
+     "max_rocker_error_rad": 2.4520242343228915e-06,
+     "max_rocker_error_deg": 0.0001404906398904989,
+     "error_at_t": 14.75,
+     "max_pin_gap_mm": 0.0008713892770622041,
+     "max_tilt_rad": 6.093167724856534e-05,
+     "max_out_of_plane_mm": 0.01827950576533615,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": true,
+    "checks": {
+     "revolutions": {
+      "value": 3.0073065079591976,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.5036532539795988
+     },
+     "rocker_error_deg": {
+      "value": 0.0001404906398904989,
+      "limit": 0.5,
+      "pass": true,
+      "margin": 0.999719018720219
+     },
+     "pin_gap_mm": {
+      "value": 0.0008713892770622041,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.9991286107229378
+     },
+     "out_of_plane_mm": {
+      "value": 0.01827950576533615,
+      "limit": 5.0,
+      "pass": true,
+      "margin": 0.9963440988469328
+     }
+    },
+    "notes": [
+     "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+    ]
+   },
+   "cannon": {
+    "measure": {
+     "samples": 981,
+     "crank_revolutions": 3.0005011319738095,
+     "max_rocker_error_rad": 0.0006382070449881816,
+     "max_rocker_error_deg": 0.036566570133338666,
+     "error_at_t": 3.933333333333333,
+     "max_pin_gap_mm": 0.21619238063743743,
+     "max_tilt_rad": 0.016546014259130562,
+     "max_out_of_plane_mm": 4.965136179779537,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": true,
+    "checks": {
+     "revolutions": {
+      "value": 3.0005011319738095,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.5002505659869048
+     },
+     "rocker_error_deg": {
+      "value": 0.036566570133338666,
+      "limit": 0.5,
+      "pass": true,
+      "margin": 0.9268668597333227
+     },
+     "pin_gap_mm": {
+      "value": 0.21619238063743743,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.7838076193625626
+     },
+     "out_of_plane_mm": {
+      "value": 4.965136179779537,
+      "limit": 5.0,
+      "pass": true,
+      "margin": 0.006972764044092528
+     }
+    },
+    "notes": []
+   }
+  },
+  "fourbar-w3": {
+   "builtin": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 3.005068705981357,
+     "max_rocker_error_rad": 0.001402015840818116,
+     "max_rocker_error_deg": 0.0803295904893635,
+     "error_at_t": 3.1333333333333333,
+     "max_pin_gap_mm": 0.42694715043502773,
+     "max_tilt_rad": 0.02244214746325314,
+     "max_out_of_plane_mm": 6.734438172280088,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 3.005068705981357,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.5025343529906785
+     },
+     "rocker_error_deg": {
+      "value": 0.0803295904893635,
+      "limit": 0.5,
+      "pass": true,
+      "margin": 0.839340819021273
+     },
+     "pin_gap_mm": {
+      "value": 0.42694715043502773,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.5730528495649723
+     },
+     "out_of_plane_mm": {
+      "value": 6.734438172280088,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -0.34688763445601767
+     }
+    },
+    "notes": []
+   },
+   "rapier": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 3.014726578216521,
+     "max_rocker_error_rad": 1.9770924103656995e-05,
+     "max_rocker_error_deg": 0.001132790508213016,
+     "error_at_t": 1.3166666666666667,
+     "max_pin_gap_mm": 0.007923847768512075,
+     "max_tilt_rad": 0.0006037832327927314,
+     "max_out_of_plane_mm": 0.18113552206740155,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": true,
+    "checks": {
+     "revolutions": {
+      "value": 3.014726578216521,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.5073632891082605
+     },
+     "rocker_error_deg": {
+      "value": 0.001132790508213016,
+      "limit": 0.5,
+      "pass": true,
+      "margin": 0.997734418983574
+     },
+     "pin_gap_mm": {
+      "value": 0.007923847768512075,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.9920761522314879
+     },
+     "out_of_plane_mm": {
+      "value": 0.18113552206740155,
+      "limit": 5.0,
+      "pass": true,
+      "margin": 0.9637728955865197
+     }
+    },
+    "notes": [
+     "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+    ]
+   },
+   "cannon": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 2.9499718864793594,
+     "max_rocker_error_rad": 0.0037136902834338237,
+     "max_rocker_error_deg": 0.21277877965950057,
+     "error_at_t": 1.35,
+     "max_pin_gap_mm": 1.1076773230285117,
+     "max_tilt_rad": 0.03543184381562915,
+     "max_out_of_plane_mm": 10.654246815078903,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 2.9499718864793594,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.4749859432396797
+     },
+     "rocker_error_deg": {
+      "value": 0.21277877965950057,
+      "limit": 0.5,
+      "pass": true,
+      "margin": 0.5744424406809989
+     },
+     "pin_gap_mm": {
+      "value": 1.1076773230285117,
+      "limit": 1.0,
+      "pass": false,
+      "margin": -0.10767732302851174
+     },
+     "out_of_plane_mm": {
+      "value": 10.654246815078903,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -1.1308493630157805
+     }
+    },
+    "notes": []
+   }
+  },
+  "fourbar-w10": {
+   "builtin": {
+    "measure": {
+     "samples": 151,
+     "crank_revolutions": 4.167361151400345,
+     "max_rocker_error_rad": 0.010190244577573448,
+     "max_rocker_error_deg": 0.583858006501031,
+     "error_at_t": 0.43333333333333335,
+     "max_pin_gap_mm": 2.9188252570308815,
+     "max_tilt_rad": 0.05476314242975604,
+     "max_out_of_plane_mm": 17.013609767278215,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 4.167361151400345,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 1.0836805757001726
+     },
+     "rocker_error_deg": {
+      "value": 0.583858006501031,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -0.16771601300206207
+     },
+     "pin_gap_mm": {
+      "value": 2.9188252570308815,
+      "limit": 1.0,
+      "pass": false,
+      "margin": -1.9188252570308815
+     },
+     "out_of_plane_mm": {
+      "value": 17.013609767278215,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -2.402721953455643
+     }
+    },
+    "notes": []
+   },
+   "rapier": {
+    "measure": {
+     "samples": 151,
+     "crank_revolutions": 4.596119502402245,
+     "max_rocker_error_rad": 0.0001976608146883052,
+     "max_rocker_error_deg": 0.011325130456757359,
+     "error_at_t": 0.95,
+     "max_pin_gap_mm": 0.08454313220321089,
+     "max_tilt_rad": 0.006866630668116691,
+     "max_out_of_plane_mm": 2.0604703640190944,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": true,
+    "checks": {
+     "revolutions": {
+      "value": 4.596119502402245,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 1.2980597512011225
+     },
+     "rocker_error_deg": {
+      "value": 0.011325130456757359,
+      "limit": 0.5,
+      "pass": true,
+      "margin": 0.9773497390864853
+     },
+     "pin_gap_mm": {
+      "value": 0.08454313220321089,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.9154568677967891
+     },
+     "out_of_plane_mm": {
+      "value": 2.0604703640190944,
+      "limit": 5.0,
+      "pass": true,
+      "margin": 0.5879059271961811
+     }
+    },
+    "notes": [
+     "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+    ]
+   },
+   "cannon": {
+    "measure": {
+     "samples": 151,
+     "crank_revolutions": 2.440468860273365,
+     "max_rocker_error_rad": 0.047272200453335245,
+     "max_rocker_error_deg": 2.7084975742725264,
+     "error_at_t": 1.6,
+     "max_pin_gap_mm": 8.312499300031073,
+     "max_tilt_rad": 0.5586438769986737,
+     "max_out_of_plane_mm": 169.06814171900973,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 2.440468860273365,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.22023443013668254
+     },
+     "rocker_error_deg": {
+      "value": 2.7084975742725264,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -4.416995148545053
+     },
+     "pin_gap_mm": {
+      "value": 8.312499300031073,
+      "limit": 1.0,
+      "pass": false,
+      "margin": -7.312499300031073
+     },
+     "out_of_plane_mm": {
+      "value": 169.06814171900973,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -32.813628343801945
+     }
+    },
+    "notes": []
+   }
+  },
+  "fourbar-w30": {
+   "builtin": {
+    "measure": {
+     "samples": 151,
+     "crank_revolutions": 0.4520217140012854,
+     "max_rocker_error_rad": 0.1516436991087251,
+     "max_rocker_error_deg": 8.688543948681712,
+     "error_at_t": 0.65,
+     "max_pin_gap_mm": 23.90673570796801,
+     "max_tilt_rad": 0.9503326718997255,
+     "max_out_of_plane_mm": 274.73947465854184,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 0.4520217140012854,
+      "limit": 2.0,
+      "pass": false,
+      "margin": -0.7739891429993573
+     },
+     "rocker_error_deg": {
+      "value": 8.688543948681712,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -16.377087897363424
+     },
+     "pin_gap_mm": {
+      "value": 23.90673570796801,
+      "limit": 1.0,
+      "pass": false,
+      "margin": -22.90673570796801
+     },
+     "out_of_plane_mm": {
+      "value": 274.73947465854184,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -53.94789493170837
+     }
+    },
+    "notes": []
+   },
+   "rapier": {
+    "measure": {
+     "samples": 151,
+     "crank_revolutions": 9.812108347185438,
+     "max_rocker_error_rad": 0.004072343754454977,
+     "max_rocker_error_deg": 0.23332810985673022,
+     "error_at_t": 1.2,
+     "max_pin_gap_mm": 0.9567225352329624,
+     "max_tilt_rad": 0.11685550552615581,
+     "max_out_of_plane_mm": 34.97638730623634,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 9.812108347185438,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 3.906054173592719
+     },
+     "rocker_error_deg": {
+      "value": 0.23332810985673022,
+      "limit": 0.5,
+      "pass": true,
+      "margin": 0.5333437802865395
+     },
+     "pin_gap_mm": {
+      "value": 0.9567225352329624,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.04327746476703764
+     },
+     "out_of_plane_mm": {
+      "value": 34.97638730623634,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -5.995277461247268
+     }
+    },
+    "notes": [
+     "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+    ]
+   },
+   "cannon": {
+    "measure": {
+     "samples": 151,
+     "crank_revolutions": 2.0668616962357644,
+     "max_rocker_error_rad": 0.19056042962651887,
+     "max_rocker_error_deg": 10.918308359799266,
+     "error_at_t": 0.6166666666666667,
+     "max_pin_gap_mm": 42.514943236909666,
+     "max_tilt_rad": 1.0684120848144867,
+     "max_out_of_plane_mm": 239.60823939545406,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 2.0668616962357644,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.03343084811788222
+     },
+     "rocker_error_deg": {
+      "value": 10.918308359799266,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -20.83661671959853
+     },
+     "pin_gap_mm": {
+      "value": 42.514943236909666,
+      "limit": 1.0,
+      "pass": false,
+      "margin": -41.514943236909666
+     },
+     "out_of_plane_mm": {
+      "value": 239.60823939545406,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -46.92164787909081
+     }
+    },
+    "notes": []
+   }
+  },
+  "mutant-coupler-plus2pct": {
+   "builtin": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 3.021448689103571,
+     "max_rocker_error_rad": 0.03444228194990462,
+     "max_rocker_error_deg": 1.9733973925291501,
+     "error_at_t": 3.183333333333333,
+     "max_pin_gap_mm": 0.43172004259783003,
+     "max_tilt_rad": 0.02151699145398651,
+     "max_out_of_plane_mm": 6.460186707131145,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 3.021448689103571,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.5107243445517855
+     },
+     "rocker_error_deg": {
+      "value": 1.9733973925291501,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -2.9467947850583003
+     },
+     "pin_gap_mm": {
+      "value": 0.43172004259783003,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.56827995740217
+     },
+     "out_of_plane_mm": {
+      "value": 6.460186707131145,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -0.29203734142622895
+     }
+    },
+    "notes": []
+   },
+   "rapier": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 3.0320049807821854,
+     "max_rocker_error_rad": 0.033813199160235285,
+     "max_rocker_error_deg": 1.9373536037167813,
+     "error_at_t": 5,
+     "max_pin_gap_mm": 0.008028397461929888,
+     "max_tilt_rad": 0.0006174556269908861,
+     "max_out_of_plane_mm": 0.18523669473874474,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 3.0320049807821854,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.5160024903910927
+     },
+     "rocker_error_deg": {
+      "value": 1.9373536037167813,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -2.8747072074335627
+     },
+     "pin_gap_mm": {
+      "value": 0.008028397461929888,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.9919716025380702
+     },
+     "out_of_plane_mm": {
+      "value": 0.18523669473874474,
+      "limit": 5.0,
+      "pass": true,
+      "margin": 0.9629526610522511
+     }
+    },
+    "notes": [
+     "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+    ]
+   },
+   "cannon": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 2.9622369754191933,
+     "max_rocker_error_rad": 0.036910490976946875,
+     "max_rocker_error_deg": 2.114815352734763,
+     "error_at_t": 1.3666666666666667,
+     "max_pin_gap_mm": 1.1216892675397572,
+     "max_tilt_rad": 0.03543688992526501,
+     "max_out_of_plane_mm": 10.65609054143932,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 2.9622369754191933,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.48111848770959664
+     },
+     "rocker_error_deg": {
+      "value": 2.114815352734763,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -3.2296307054695257
+     },
+     "pin_gap_mm": {
+      "value": 1.1216892675397572,
+      "limit": 1.0,
+      "pass": false,
+      "margin": -0.12168926753975717
+     },
+     "out_of_plane_mm": {
+      "value": 10.65609054143932,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -1.131218108287864
+     }
+    },
+    "notes": []
+   }
+  },
+  "mutant-nongrashof": {
+   "builtin": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 0.0995984578041194,
+     "max_rocker_error_rad": 1.796396829799999,
+     "max_rocker_error_deg": 102.92595667822081,
+     "error_at_t": 0.9166666666666666,
+     "max_pin_gap_mm": 2.200330657561894,
+     "max_tilt_rad": 0.07650031608832529,
+     "max_out_of_plane_mm": 49.693127553635016,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 0.0995984578041194,
+      "limit": 2.0,
+      "pass": false,
+      "margin": -0.9502007710979403
+     },
+     "rocker_error_deg": {
+      "value": 102.92595667822081,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -204.85191335644163
+     },
+     "pin_gap_mm": {
+      "value": 2.200330657561894,
+      "limit": 1.0,
+      "pass": false,
+      "margin": -1.200330657561894
+     },
+     "out_of_plane_mm": {
+      "value": 49.693127553635016,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -8.938625510727004
+     }
+    },
+    "notes": []
+   },
+   "rapier": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 0.046218657557883,
+     "max_rocker_error_rad": 3.1352582174462027,
+     "max_rocker_error_deg": 179.63706354337714,
+     "error_at_t": 1.6333333333333333,
+     "max_pin_gap_mm": 0.03264844007501279,
+     "max_tilt_rad": 0.00047652337211475526,
+     "max_out_of_plane_mm": 0.30983785762149496,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 0.046218657557883,
+      "limit": 2.0,
+      "pass": false,
+      "margin": -0.9768906712210585
+     },
+     "rocker_error_deg": {
+      "value": 179.63706354337714,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -358.2741270867543
+     },
+     "pin_gap_mm": {
+      "value": 0.03264844007501279,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.9673515599249872
+     },
+     "out_of_plane_mm": {
+      "value": 0.30983785762149496,
+      "limit": 5.0,
+      "pass": true,
+      "margin": 0.938032428475701
+     }
+    },
+    "notes": [
+     "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+    ]
+   },
+   "cannon": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 0.1077019270540027,
+     "max_rocker_error_rad": 3.1371415290289466,
+     "max_rocker_error_deg": 179.74496934857646,
+     "error_at_t": 1.5333333333333332,
+     "max_pin_gap_mm": 3.9004157575884446,
+     "max_tilt_rad": 0.10752289248348243,
+     "max_out_of_plane_mm": 60.184953352918484,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 0.1077019270540027,
+      "limit": 2.0,
+      "pass": false,
+      "margin": -0.9461490364729986
+     },
+     "rocker_error_deg": {
+      "value": 179.74496934857646,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -358.4899386971529
+     },
+     "pin_gap_mm": {
+      "value": 3.9004157575884446,
+      "limit": 1.0,
+      "pass": false,
+      "margin": -2.9004157575884446
+     },
+     "out_of_plane_mm": {
+      "value": 60.184953352918484,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -11.036990670583696
+     }
+    },
+    "notes": []
+   }
+  },
+  "mutant-low-transmission": {
+   "builtin": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 2.878040961611984,
+     "max_rocker_error_rad": 0.18436867386849443,
+     "max_rocker_error_deg": 10.56354688708864,
+     "error_at_t": 3.3,
+     "max_pin_gap_mm": 0.5076828903650696,
+     "max_tilt_rad": 0.029702708031376132,
+     "max_out_of_plane_mm": 11.88340306656049,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 2.878040961611984,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.4390204808059921
+     },
+     "rocker_error_deg": {
+      "value": 10.56354688708864,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -20.12709377417728
+     },
+     "pin_gap_mm": {
+      "value": 0.5076828903650696,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.49231710963493036
+     },
+     "out_of_plane_mm": {
+      "value": 11.88340306656049,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -1.376680613312098
+     }
+    },
+    "notes": []
+   },
+   "rapier": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 2.886430093525813,
+     "max_rocker_error_rad": 0.18256655051164916,
+     "max_rocker_error_deg": 10.460292824579458,
+     "error_at_t": 1.3833333333333333,
+     "max_pin_gap_mm": 0.010378608807646841,
+     "max_tilt_rad": 0.0005560370403724269,
+     "max_out_of_plane_mm": 0.22244219257900807,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 2.886430093525813,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.4432150467629066
+     },
+     "rocker_error_deg": {
+      "value": 10.460292824579458,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -19.920585649158916
+     },
+     "pin_gap_mm": {
+      "value": 0.010378608807646841,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.9896213911923532
+     },
+     "out_of_plane_mm": {
+      "value": 0.22244219257900807,
+      "limit": 5.0,
+      "pass": true,
+      "margin": 0.9555115614841984
+     }
+    },
+    "notes": [
+     "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+    ]
+   },
+   "cannon": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 2.8339224574118527,
+     "max_rocker_error_rad": 0.18695946523481588,
+     "max_rocker_error_deg": 10.71198829797779,
+     "error_at_t": 1.4,
+     "max_pin_gap_mm": 1.3889473866088788,
+     "max_tilt_rad": 0.033921476748913174,
+     "max_out_of_plane_mm": 13.599163642140024,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 2.8339224574118527,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.41696122870592633
+     },
+     "rocker_error_deg": {
+      "value": 10.71198829797779,
+      "limit": 0.5,
+      "pass": false,
+      "margin": -20.42397659595558
+     },
+     "pin_gap_mm": {
+      "value": 1.3889473866088788,
+      "limit": 1.0,
+      "pass": false,
+      "margin": -0.38894738660887884
+     },
+     "out_of_plane_mm": {
+      "value": 13.599163642140024,
+      "limit": 5.0,
+      "pass": false,
+      "margin": -1.7198327284280048
+     }
+    },
+    "notes": []
+   }
+  },
+  "control-four-hinges": {
+   "builtin": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 0.20632448227832365,
+     "max_rocker_error_rad": 0.0034680855142483757,
+     "max_rocker_error_deg": 0.19870666295688966,
+     "error_at_t": 0.8666666666666667,
+     "max_pin_gap_mm": 1.9356919812293465,
+     "max_tilt_rad": 0.007690482091275709,
+     "max_out_of_plane_mm": 2.3845695740165525,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": false,
+    "checks": {
+     "revolutions": {
+      "value": 0.20632448227832365,
+      "limit": 2.0,
+      "pass": false,
+      "margin": -0.8968377588608382
+     },
+     "rocker_error_deg": {
+      "value": 0.19870666295688966,
+      "limit": 0.5,
+      "pass": true,
+      "margin": 0.6025866740862207
+     },
+     "pin_gap_mm": {
+      "value": 1.9356919812293465,
+      "limit": 1.0,
+      "pass": false,
+      "margin": -0.9356919812293465
+     },
+     "out_of_plane_mm": {
+      "value": 2.3845695740165525,
+      "limit": 5.0,
+      "pass": true,
+      "margin": 0.5230860851966895
+     }
+    },
+    "notes": []
+   },
+   "rapier": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 3.0146415613859996,
+     "max_rocker_error_rad": 5.540121414515653e-06,
+     "max_rocker_error_deg": 0.0003174255750417946,
+     "error_at_t": 1.3166666666666667,
+     "max_pin_gap_mm": 0.002796011810462377,
+     "max_tilt_rad": 2.3375125950439044e-07,
+     "max_out_of_plane_mm": 0.0002844549324004797,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": true,
+    "checks": {
+     "revolutions": {
+      "value": 3.0146415613859996,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.5073207806929998
+     },
+     "rocker_error_deg": {
+      "value": 0.0003174255750417946,
+      "limit": 0.5,
+      "pass": true,
+      "margin": 0.9993651488499165
+     },
+     "pin_gap_mm": {
+      "value": 0.002796011810462377,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.9972039881895376
+     },
+     "out_of_plane_mm": {
+      "value": 0.0002844549324004797,
+      "limit": 5.0,
+      "pass": true,
+      "margin": 0.9999431090135199
+     }
+    },
+    "notes": [
+     "SingleAxisHingeJoint PinA: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinB: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+    ]
+   },
+   "cannon": {
+    "measure": {
+     "samples": 328,
+     "crank_revolutions": 2.948941296967057,
+     "max_rocker_error_rad": 0.0035144979260621767,
+     "max_rocker_error_deg": 0.20136589827084359,
+     "error_at_t": 1.35,
+     "max_pin_gap_mm": 0.9421380509711506,
+     "max_tilt_rad": 0.008258574274693942,
+     "max_out_of_plane_mm": 3.1589875642710727,
+     "samples_card_cannot_assemble": 0
+    },
+    "qualifies": true,
+    "checks": {
+     "revolutions": {
+      "value": 2.948941296967057,
+      "limit": 2.0,
+      "pass": true,
+      "margin": 0.4744706484835286
+     },
+     "rocker_error_deg": {
+      "value": 0.20136589827084359,
+      "limit": 0.5,
+      "pass": true,
+      "margin": 0.5972682034583128
+     },
+     "pin_gap_mm": {
+      "value": 0.9421380509711506,
+      "limit": 1.0,
+      "pass": true,
+      "margin": 0.057861949028849446
+     },
+     "out_of_plane_mm": {
+      "value": 3.1589875642710727,
+      "limit": 5.0,
+      "pass": true,
+      "margin": 0.3682024871457854
+     }
+    },
+    "notes": []
+   }
+  }
+ },
+ "controls": [
+  {
+   "id": "mutant-coupler-plus2pct",
+   "what": "the scene's coupler is 2 % long; the card is unchanged",
+   "expected_to_fail": [
+    "R2"
+   ],
+   "failed": [
+    "R2"
+   ],
+   "caught": true
+  },
+  {
+   "id": "mutant-nongrashof",
+   "what": "crank 0.65 m: shortest plus longest exceeds the other two",
+   "expected_to_fail": [
+    "R1"
+   ],
+   "failed": [
+    "R1",
+    "R2",
+    "R3"
+   ],
+   "caught": true
+  },
+  {
+   "id": "mutant-low-transmission",
+   "what": "crank 0.40 m: the transmission angle dips under 45 degrees",
+   "expected_to_fail": [
+    "R3"
+   ],
+   "failed": [
+    "R2",
+    "R3"
+   ],
+   "caught": true
+  },
+  {
+   "id": "control-four-hinges",
+   "what": "all four pins are SingleAxisHingeJoints. X3D 4.0 clause 37.4.12 stops a hinge pi radians from its initial position, so an engine that follows the standard cannot turn the crank",
+   "expected_to_fail": [
+    "R1-on-a-standard-engine"
+   ],
+   "failed": [
+    "R1-on-a-standard-engine"
+   ],
+   "caught": true
+  },
+  {
+   "id": "crossed-branch",
+   "what": "compare the engines with the other assembly branch of the closed form",
+   "expected_to_fail": [
+    "R2"
+   ],
+   "failed": [
+    "R2"
+   ],
+   "caught": true
+  },
+  {
+   "id": "thin-coupler",
+   "what": "coupler thickness 5 mm instead of 10",
+   "expected_to_fail": [
+    "R4"
+   ],
+   "failed": [
+    "R4"
+   ],
+   "caught": true
+  },
+  {
+   "id": "velocity-sign",
+   "what": "rocker velocity ratio with its sign flipped",
+   "expected_to_fail": [
+    "REF5"
+   ],
+   "failed": [
+    "REF5"
+   ],
+   "caught": true
+  },
+  {
+   "id": "newton-wrong-link",
+   "what": "Newton solver given a rocker 1 mm long",
+   "expected_to_fail": [
+    "REF2"
+   ],
+   "failed": [
+    "REF2"
+   ],
+   "caught": true
+  }
+ ],
+ "probes": {
+  "1": {
+   "qualifying_engines": [
+    "builtin",
+    "rapier",
+    "cannon"
+   ],
+   "count": 3,
+   "gated": true
+  },
+  "3": {
+   "qualifying_engines": [
+    "rapier"
+   ],
+   "count": 1,
+   "gated": false
+  },
+  "10": {
+   "qualifying_engines": [
+    "rapier"
+   ],
+   "count": 1,
+   "gated": false
+  },
+  "30": {
+   "qualifying_engines": [],
+   "count": 0,
+   "gated": false
+  }
+ },
+ "poses_sha256": "8c0fbc91794710a00caf5f1a04c0e8d8ec351e2435c3ce28c42969bfe46e647c",
+ "analytic": {
+  "R1-analytic": {
+   "value": {
+    "s_plus_l": 1.3,
+    "p_plus_q": 1.6,
+    "grashof": true,
+    "crank_is_shortest": true,
+    "margin_m": 0.30000000000000004
+   },
+   "pass": true
+  },
+  "R3": {
+   "value": {
+    "min_deg": 49.99479911513978,
+    "max_deg": 108.03053539333796,
+    "at_min_crank_deg": 0
+   },
+   "limit": {
+    "min": 45.0,
+    "max": 135.0,
+    "why": "R3"
+   },
+   "pass": true
+  },
+  "REF2": {
+   "value": 8.881784197001252e-16,
+   "limit": 1e-09,
+   "pass": true
+  },
+  "REF3": {
+   "value": 1.9984014443252818e-15,
+   "limit": 1e-12,
+   "pass": true
+  },
+  "REF4": {
+   "value": 2.2882287675842893e-14,
+   "limit": 1e-09,
+   "pass": true
+  },
+  "REF5": {
+   "value": 6.293071619367652e-11,
+   "limit": 1e-06,
+   "pass": true
+  },
+  "R4": {
+   "value": {
+    "demand_N": 2238.011539776753,
+    "at_crank_deg": 0,
+    "capacity_N": {
+     "coupler_yield": 37500.0,
+     "coupler_buckling": 3046.174197867086,
+     "pin_double_shear": 7255.19745693687
+    },
+    "utilisation": {
+     "coupler_yield": 0.05968030772738008,
+     "coupler_buckling": 0.7346958494178685,
+     "pin_double_shear": 0.3084701075415854
+    },
+    "governing": "coupler_buckling",
+    "margin": 0.36110745799413935
+   },
+   "limit": 1.0,
+   "pass": true
+  }
+ },
+ "hinge_stop": {
+  "clause": "X3D 4.0 (ISO/IEC 19775-1) 37.4.12",
+  "max_travel_rad": {
+   "builtin": 3.144674282808127,
+   "rapier": 18.94155156491344,
+   "cannon": 18.528744628838528
+  },
+  "engines_that_stop": [
+   "builtin"
+  ],
+  "engines_that_ignore_the_stop": [
+   "rapier",
+   "cannon"
+  ]
+ },
+ "summary": {
+  "gates": 8,
+  "gates_passed": 8,
+  "controls": 8,
+  "controls_caught": 8,
+  "failures": [],
+  "grade": "C measured here; Likely until a second reader recomputes (law 44)"
+ }
+}

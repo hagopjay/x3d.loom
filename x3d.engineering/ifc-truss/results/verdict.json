@@ -1,0 +1,380 @@
+{
+ "schema": "loom.eng-verdict/1",
+ "study": "ifc-truss",
+ "label": "A worked study. Not a certified design and not for construction. No engineer of record has reviewed it.",
+ "gates": {
+  "R1-building": true,
+  "R2-building": true,
+  "frame-building": true,
+  "R1-truss": true,
+  "R2-truss": true,
+  "frame-truss": true,
+  "R3": true,
+  "R3-carried-arrived-equal": true,
+  "R3-lost-is-absent": true,
+  "R4": true,
+  "R4-coverage": true,
+  "R5": true,
+  "R6": true,
+  "R7": true,
+  "REF1": true,
+  "REF2": true,
+  "REF3": true,
+  "REF4": true,
+  "REF5": true,
+  "numbers-in-IFC-equal-the-bank": true,
+  "numbers-in-X3D-equal-the-bank": true,
+  "design.json-reproduces": true
+ },
+ "controls": [
+  {
+   "id": "swap-two-guids",
+   "what": "two X3D elements exchange their GlobalIds: every count still matches, the quantities do not",
+   "expected_to_fail": [
+    "R2"
+   ],
+   "failed": [
+    "R2"
+   ],
+   "caught": true
+  },
+  {
+   "id": "drop-one-element",
+   "what": "one element removed from the X3D",
+   "expected_to_fail": [
+    "R1"
+   ],
+   "failed": [
+    "R1"
+   ],
+   "caught": true
+  },
+  {
+   "id": "millimetres-read-as-metres",
+   "what": "the X3D coordinates compared without the unit scale",
+   "expected_to_fail": [
+    "R2"
+   ],
+   "failed": [
+    "R2"
+   ],
+   "caught": true
+  },
+  {
+   "id": "skip-the-frame",
+   "what": "the X3D read in its y-up frame, without undoing IFC_ZUP_TO_YUP",
+   "expected_to_fail": [
+    "R2"
+   ],
+   "failed": [
+    "R2"
+   ],
+   "caught": true
+  },
+  {
+   "id": "unlisted-key",
+   "what": "the loss list without Pset_Bridge.Role",
+   "expected_to_fail": [
+    "R3"
+   ],
+   "failed": [
+    "R3"
+   ],
+   "caught": true
+  },
+  {
+   "id": "remove-a-diagonal",
+   "what": "one diagonal deleted: the truss is a mechanism and must be reported as one, not solved",
+   "expected_to_fail": [
+    "REF1"
+   ],
+   "failed": [
+    "REF1"
+   ],
+   "caught": true
+  },
+  {
+   "id": "stiffness-sign",
+   "what": "the stiffness solver's member force with its sign flipped",
+   "expected_to_fail": [
+    "REF1"
+   ],
+   "failed": [
+    "REF1"
+   ],
+   "caught": true
+  },
+  {
+   "id": "sections-wrong-depth",
+   "what": "the hand formula with depth 0.9 m",
+   "expected_to_fail": [
+    "REF2"
+   ],
+   "failed": [
+    "REF2"
+   ],
+   "caught": true
+  },
+  {
+   "id": "thin-web",
+   "what": "web members 25 x 25 x 2 mm",
+   "expected_to_fail": [
+    "R4"
+   ],
+   "failed": [
+    "R4"
+   ],
+   "caught": true
+  },
+  {
+   "id": "drop-pattern-case",
+   "what": "LC3 left out: the envelope no longer covers every declared case",
+   "expected_to_fail": [
+    "R4-coverage"
+   ],
+   "failed": [
+    "R4-coverage"
+   ],
+   "caught": true
+  },
+  {
+   "id": "truss-in-millimetres",
+   "what": "node coordinates 1000 times too large with the loads unchanged: a determinate truss keeps the same forces, so only capacity and deflection can see it",
+   "expected_to_fail": [
+    "R4",
+    "R6"
+   ],
+   "failed": [
+    "R4",
+    "R5",
+    "R6"
+   ],
+   "caught": true
+  },
+  {
+   "id": "transposed-471",
+   "what": "the E3 limit typed as 4.17 instead of 4.71",
+   "expected_to_fail": [
+    "REF5"
+   ],
+   "failed": [
+    "REF5"
+   ],
+   "caught": true
+  },
+  {
+   "id": "typed-span",
+   "what": "span typed as 8.4 m instead of read from the columns",
+   "expected_to_fail": [
+    "R7"
+   ],
+   "failed": [
+    "R7"
+   ],
+   "caught": true
+  }
+ ],
+ "values": {
+  "building": {
+   "R1": {
+    "ifc_with_geometry": 111,
+    "matched_by_GlobalId": 111,
+    "x3d_not_in_ifc": 0,
+    "names_equal": 111,
+    "classes_equal": 111,
+    "pass": true
+   },
+   "R2": {
+    "elements": 111,
+    "worst_bbox_diff_mm": 5.311957762543784e-06,
+    "worst_area_rel": 2.5459943659581346e-08,
+    "worst_volume_rel": 8.148101396152047e-09,
+    "pass": true
+   },
+   "total_ifc_volume_m3": 300.95265625198084,
+   "ifc_source_hash_in_x3d_matches": true
+  },
+  "R3": {
+   "keys": [
+    "Elevation",
+    "GlobalId",
+    "IfcBuilding",
+    "IfcBuildingStorey",
+    "IfcExtrudedAreaSolid",
+    "IfcRelAggregates",
+    "IfcRelContainedInSpatialStructure",
+    "IfcRelDefinesByProperties",
+    "IfcSite",
+    "IfcTriangulatedFaceSet",
+    "Name",
+    "ObjectType",
+    "Pset_Bridge.EditablePlacement",
+    "Pset_Bridge.Role",
+    "Pset_Bridge.Status",
+    "Pset_Bridge.Surface",
+    "Pset_LoomTruss.CapacityN",
+    "Pset_LoomTruss.DemandN",
+    "Pset_LoomTruss.GoverningCase",
+    "Pset_LoomTruss.Role",
+    "Pset_LoomTruss.Section",
+    "Pset_LoomTruss.Utilisation"
+   ],
+   "aliases": {
+    "ObjectType": "Pset_LoomTruss.Role",
+    "Elevation": "IfcBuildingStorey",
+    "IfcTriangulatedFaceSet": "geometry"
+   },
+   "unclassified": [],
+   "on_both_lists": [],
+   "pass": true,
+   "carried_measured": {
+    "Pset_Bridge.Status": 111,
+    "Pset_Bridge.Surface": 111,
+    "Pset_Bridge.EditablePlacement": 0,
+    "Pset_Bridge.Role": 0
+   },
+   "carried_arrived_equal": true,
+   "lost_is_absent": true
+  },
+  "truss": {
+   "span_from_ifc": {
+    "west": {
+     "guid": "0mtO8SgNjVJx$EG34wq5Li",
+     "cx": -4.0,
+     "cy": 1.0,
+     "top": 4.1000000000000005
+    },
+    "east": {
+     "guid": "2jv1dsX5LQG9LB0NV87I8Q",
+     "cx": 4.0,
+     "cy": 1.0,
+     "top": 4.1000000000000005
+    },
+    "span_m": 8.0,
+    "x0_m": -4.0,
+    "bearing_z_m": 4.1000000000000005,
+    "line_y_m": 1.0,
+    "tops_differ_m": 0.0
+   },
+   "members": 33,
+   "R1": {
+    "ifc_with_geometry": 33,
+    "matched_by_GlobalId": 33,
+    "x3d_not_in_ifc": 0,
+    "names_equal": 33,
+    "classes_equal": 33,
+    "pass": true
+   },
+   "R2": {
+    "elements": 33,
+    "worst_bbox_diff_mm": 4.376270901218504e-06,
+    "worst_area_rel": 1.7366405775118692e-07,
+    "worst_volume_rel": 9.969905811055414e-08,
+    "pass": true
+   },
+   "checks": {
+    "solver_agreement_rel": 1.5842600708838673e-14,
+    "sections_rel": 2.4187176654715533e-16,
+    "equilibrium_rel": 1.6612243840021772e-16,
+    "deflection_rel": 1.4459630948066733e-14,
+    "sls_deflection_m": 0.007418563916859409,
+    "deflection_ratio": 1078.3758271353868,
+    "cases_run": [
+     "LC1",
+     "LC2",
+     "LC3",
+     "SLS"
+    ],
+    "self_weight_N": 1797.9414004504981
+   },
+   "e3_continuity_rel": 0.00038072151368293315,
+   "governing_member": {
+    "id": "V0",
+    "role": "vertical",
+    "section": "SHS 40x40x3",
+    "a": "B0",
+    "b": "T0",
+    "L_m": 1.0,
+    "max_tension_N": 0,
+    "max_compression_N": 43736.8711494603,
+    "design_tension_N": 99899.99999999999,
+    "design_compression_N": 79309.41301838322,
+    "slenderness": 65.98588053218756,
+    "sees_compression": true,
+    "utilisation": 0.5514713762831971,
+    "governing": "compression",
+    "governing_case": "LC2",
+    "demand_N": 43736.8711494603,
+    "capacity_N": 79309.41301838322,
+    "margin": 0.8133307420954339
+   },
+   "max_compression_slenderness": 93.31812717375044,
+   "members_that_reverse": [
+    "D4"
+   ],
+   "numbers_equal_bank": {
+    "ifc": 33,
+    "x3d": 33
+   },
+   "cases": {
+    "LC1": {
+     "total_load_N": 30517.117960630694,
+     "midspan_deflection_mm": 3.7533741432161967
+    },
+    "LC2": {
+     "total_load_N": 87597.52968054061,
+     "midspan_deflection_mm": 10.797309654627576
+    },
+    "LC3": {
+     "total_load_N": 56877.5296805406,
+     "midspan_deflection_mm": 7.0072437458350105
+    },
+    "SLS": {
+     "total_load_N": 60197.941400450494,
+     "midspan_deflection_mm": 7.4185639168594095
+    }
+   },
+   "by_role": {
+    "top chord": {
+     "count": 8,
+     "max_utilisation": 0.48042042067539553,
+     "min_margin": 1.08151018766887
+    },
+    "bottom chord": {
+     "count": 8,
+     "max_utilisation": 0.40716384655435545,
+     "min_margin": 1.4560137361471317
+    },
+    "diagonal": {
+     "count": 8,
+     "max_utilisation": 0.5422705597377193,
+     "min_margin": 0.8440978991809389
+    },
+    "vertical": {
+     "count": 9,
+     "max_utilisation": 0.5514713762831971,
+     "min_margin": 0.8133307420954339
+    }
+   }
+  },
+  "mechanism_message": "35 unknowns for 36 equations: not statically determinate",
+  "thin_web_worst_utilisation": 1.9085218532374326,
+  "millimetre_truss": {
+   "worst_utilisation": 7555357.1341981,
+   "deflection_ratio": 36.248994298423376,
+   "note": "coordinates in millimetres read as metres: every length, weight and slenderness is 1000 times too large"
+  }
+ },
+ "instruments": {
+  "ifc_reader": "IfcOpenShell 0.9.0.post1",
+  "python": "3.13.18"
+ },
+ "summary": {
+  "gates": 22,
+  "gates_passed": 22,
+  "controls": 13,
+  "controls_caught": 13,
+  "failures": [],
+  "grade": "C measured here; Likely until a second reader recomputes (law 44)"
+ }
+}

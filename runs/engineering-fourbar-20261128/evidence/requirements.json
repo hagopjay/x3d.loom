@@ -1,0 +1,38 @@
+{
+  "coverage": {},
+  "development": false,
+  "environment": {
+    "optimized": false,
+    "python": "3.13.18"
+  },
+  "evidence": [
+    {
+      "path": "requirements.log",
+      "sha256": "4c5e9109385b055b5f3bbb798adb73ac35d2accebb057c3bbe49bbbf94b4aa3f"
+    }
+  ],
+  "finished_at": "2026-11-28T00:18:47+00:00",
+  "grade": "C",
+  "instrument": {
+    "command": [
+      "python3",
+      "-I",
+      "check.py"
+    ],
+    "kit_commit": "3e930463412553ca8330d508c013625ca2a43c2f",
+    "kit_dirty": false,
+    "kit_sha256": "a0bdfb27c94e53a84644e9b1a795afcfdf356ab407ebea2ad232319a960d94ac",
+    "tool": "project gate (adapter)"
+  },
+  "limitations": [],
+  "measurements": {
+    "exit_code": 0,
+    "stdout_tail": "F4\n  PASS  REF5\n  PASS  R1-R2-R5-R6@1rad/s\n  caught   mutant-coupler-plus2pct: expected ['R2'], failed ['R2']\n  caught   mutant-nongrashof: expected ['R1'], failed ['R1', 'R2', 'R3']\n  caught   mutant-low-transmission: expected ['R3'], failed ['R2', 'R3']\n  caught   control-four-hinges: expected ['R1-on-a-standard-engine'], failed ['R1-on-a-standard-engine']\n  caught   crossed-branch: expected ['R2'], failed ['R2']\n  caught   thin-coupler: expected ['R4'], failed ['R4']\n  caught   velocity-sign: expected ['REF5'], failed ['REF5']\n  caught   newton-wrong-link: expected ['REF2'], failed ['REF2']"
+  },
+  "origin": "executed",
+  "reason": "",
+  "schema": "loom.witness/1",
+  "status": "pass",
+  "subject_sha256": "71bd923151680da4fb3206d25cdc7f8931f9d27747c29863ffc29816d63a0205",
+  "witness": "requirements"
+}

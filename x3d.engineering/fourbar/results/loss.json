@@ -1,0 +1,40 @@
+{
+ "schema": "loom.eng-loss/1",
+ "format": "X3D 4.0 RigidBodyPhysics, read by the x3d.loom bridge reader",
+ "items": [
+  {
+   "field": "SingleAxisHingeJoint minAngle / maxAngle defaults (-pi, pi)",
+   "lost_in": [
+    "rapier",
+    "cannon"
+   ],
+   "kept_in": [
+    "builtin"
+   ],
+   "evidence": {
+    "builtin": 3.144674282808127,
+    "rapier": 18.94155156491344,
+    "cannon": 18.528744628838528
+   },
+   "note": "The adapters read the default range as 'no stop' and write no note. Under clause 37.4.12 the stop is the standard's behaviour."
+  },
+  {
+   "field": "RigidBody inertia",
+   "lost_in": [
+    "builtin",
+    "rapier",
+    "cannon"
+   ],
+   "kept_in": [],
+   "note": "Inertia is derived from the collision shapes in all three (LOOM-v1 failure mode 140). The kinematic checks here do not depend on it."
+  },
+  {
+   "field": "pin clearance, friction, bar elasticity",
+   "lost_in": [
+    "the model"
+   ],
+   "kept_in": [],
+   "note": "Left out on purpose: rigid bars, ideal pins. The strength checks are separate hand formulas, not an engine result."
+  }
+ ]
+}

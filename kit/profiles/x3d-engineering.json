@@ -1,0 +1,25 @@
+{
+  "schema": "loom.profile/1",
+  "name": "x3d-engineering/v1",
+  "purpose": "First Loom profile for an engineering study behind an X3D scene (x3d.engineering, 28 Nov 2026: a four-bar linkage on three rigid-body engines, and an IFC building with a designed roof truss). Accepting under it means: every scene the study ships is grammatical and meaningful on the named validator and carries no known scene trap; and the study's own witness (check.py, run from the study folder) exited 0, which it does only when every requirement on the study's card passed against limits the card stated before the run and every control on the card failed the check it names. It says nothing about whether the requirements were the right ones, whether a quoted code clause was read from the code itself (each clause carries its own grade on the card), a second reader, a real GPU, or the look of the thing.",
+  "required": [
+    {"witness": "grammar"},
+    {"witness": "meaning"},
+    {"witness": "traps", "coverage": {"rules_include": ["route-before-def", "route-undefined", "color-range", "color-emissive-white", "version-fits-nodes", "no-script-under-host", "metadata-containerfield"]}, "instrument": "loomkit.traps"},
+    {"witness": "requirements"}
+  ],
+  "visible_not_run": ["second-reader", "eyes", "host", "licensed-engineer-review"],
+  "gate_map": {
+    "ENG-GRAMMAR": "grammar and meaning on every scene under scenes/",
+    "ENG-TRAPS": "traps on every scene under scenes/",
+    "ENG-REQUIREMENTS": "requirements: the study's check.py exits 0 only when every gate on the card passes and every control on the card is caught (playbook patterns E1, E2, E7, E9)",
+    "ENG-SECOND-READER": "visible_not_run: nobody outside the session has recomputed the numbers (law 44); every number stays Likely until one does",
+    "ENG-LICENSED-REVIEW": "visible_not_run: no licensed engineer has reviewed the design; the truss is a study, not a design for construction"
+  },
+  "limitations": [
+    "Grammar and Meaning need the x3d_mcp fork checkout (set LOOM_FORK or X3D_MCP); the witness records which checkout it used.",
+    "The requirements witness is the study's own script. The gate proves the script ran green on this candidate; the controls on the card are what show the script can fail.",
+    "A code clause on a card is only as good as its read_from line. A clause quoted from memory is Suspected and the card says so.",
+    "Unsigned receipt: it shows drift; it does not authenticate authorship."
+  ]
+}
