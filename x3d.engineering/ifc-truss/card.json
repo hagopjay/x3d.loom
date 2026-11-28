@@ -1,0 +1,99 @@
+{
+ "schema": "loom.eng-card/1",
+ "study": "ifc-truss",
+ "title": "One building, one truss: an IFC loss receipt and a roof truss with a margin on every member",
+ "question": "What does the Confluence building lose on its way from IFC to X3D, and can a canopy truss be designed over its court, checked by two solvers, and carried through IFC and X3D with every member's identity and numbers intact?",
+ "label": "A worked study. Not a certified design and not for construction. No engineer of record has reviewed it.",
+ "units": {"length": "m in the analysis; mm in the IFC files (IfcSIUnit MILLI METRE, declared explicitly); m in X3D", "force": "N", "stress": "Pa", "frame": "IFC: z up. X3D: y up, reached by one Transform named IFC_ZUP_TO_YUP with rotation 1 0 0 -pi/2"},
+ "inputs": {
+  "ifc": "x3d.demo/docs/demos/confluence-ifc/v1/snapshot/model.ifc (sha256 32dc7211...eef0fb, 500,619 bytes), HagopJay's own model",
+  "x3d": "x3d.demo/docs/demos/confluence-ifc/v1/snapshot/scene-0.x3d, written from that IFC by the Confluence studio server"
+ },
+ "params": {
+  "panels": {"value": 8, "unit": "1", "what": "equal panels in a parallel-chord Pratt truss", "source": "chosen"},
+  "depth": {"value": 1.0, "unit": "m", "what": "centre to centre of the chords", "source": "chosen (span / 8)"},
+  "truss_line_y": {"value": 1.0, "unit": "m", "what": "the truss sits on the column line y = 1", "source": "IFC columns 'Column -4/1' and 'Column 4/1'"},
+  "tributary_width": {"value": 5.0, "unit": "m", "what": "half the bay to each neighbouring column line (y = -4 and y = 6)", "source": "IFC column lines 5 m apart"},
+  "chord_b": {"value": 0.060, "unit": "m", "what": "chords: square hollow section, outside width", "source": "chosen"},
+  "chord_t": {"value": 0.004, "unit": "m", "what": "chords: wall thickness", "source": "chosen"},
+  "web_b": {"value": 0.040, "unit": "m", "what": "verticals and diagonals: outside width", "source": "chosen"},
+  "web_t": {"value": 0.003, "unit": "m", "what": "verticals and diagonals: wall thickness", "source": "chosen"},
+  "Fy": {"value": 250e6, "unit": "Pa", "what": "yield strength", "source": "ASTM A36/A36M, 36 ksi [250 MPa]; search summary, 27 Nov 2026: Likely. A real hollow section would be another grade; kept at 250 MPa so both studies share one number"},
+  "E": {"value": 200e9, "unit": "Pa", "what": "Young's modulus", "source": "29,000 ksi in AISC 360: from memory, Likely"},
+  "rho": {"value": 7850.0, "unit": "kg/m3", "what": "steel density, for self-weight", "source": "textbook, Likely"},
+  "g": {"value": 9.80665, "unit": "m/s2", "what": "standard gravity", "source": "defined value"},
+  "dead_roof": {"value": 500.0, "unit": "Pa", "what": "canopy glazing and purlins", "source": "assumed, chosen on this card"},
+  "live_roof": {"value": 960.0, "unit": "Pa", "what": "roof live load, 20 psf", "source": "ASCE/SEI 7 minimum roof live load as remembered; the table was not read: Suspected"},
+  "K": {"value": 1.0, "unit": "1", "what": "effective length factor, every member pinned at both ends, braced at every panel point", "source": "assumed"}
+ },
+ "codes": [
+  {"clause": "AISC 360 E3, flexural buckling", "text": "Fe = pi^2 E / (KL/r)^2; Fcr = 0.658^(Fy/Fe) Fy when KL/r <= 4.71 sqrt(E/Fy), else 0.877 Fe; phi_c = 0.90", "read_from": "Purdue CE 470 course notes quoting the specification (search summary, 27 Nov 2026). The 360-22 text itself was not opened", "grade": "Likely"},
+  {"clause": "AISC 360 D2(a), tensile yielding", "text": "Pn = Fy Ag; phi_t = 0.90", "read_from": "memory; no source returned it", "grade": "Suspected"},
+  {"clause": "AISC 360 E2 user note", "text": "KL/r preferably not above 200 for compression members", "read_from": "memory", "grade": "Suspected"},
+  {"clause": "ASCE/SEI 7-16 2.3.1, combinations 1 and 3", "text": "1.4D; 1.2D + 1.6(Lr or S or R) + (L or 0.5W)", "read_from": "memory. A search for the 7-22 text returned a forum transcription in another form, and 7-22 changed the snow factor; the roof live factor 1.6 is the same in both as far as I can tell", "grade": "Suspected"},
+  {"clause": "Deflection limit L/240", "text": "roof member under D + Lr", "read_from": "memory of IBC Table 1604.3; treated as a study criterion", "grade": "Suspected"}
+ ],
+ "load_cases": [
+  {"id": "LC1", "what": "1.4 D", "factors": {"D": 1.4}},
+  {"id": "LC2", "what": "1.2 D + 1.6 Lr on the whole span", "factors": {"D": 1.2, "Lr": 1.6}},
+  {"id": "LC3", "what": "1.2 D + 1.6 Lr on the west half only (pattern loading, chosen: it is what reverses the web members)", "factors": {"D": 1.2, "Lr_west": 1.6}},
+  {"id": "SLS", "what": "D + Lr, for deflection only", "factors": {"D": 1.0, "Lr": 1.0}, "serviceability": true}
+ ],
+ "requirements": [
+  {"id": "R1", "shall": "Every IFC product that has geometry shall be found in the X3D file by its GlobalId, with the same name and class, for the building (111) and for the truss (33). Nothing in the X3D shall be absent from the IFC."},
+  {"id": "R2", "shall": "For every matched element the bounding box, surface area and volume recomputed from the X3D mesh shall equal those recomputed from the IFC by IfcOpenShell."},
+  {"id": "R3", "shall": "Every IFC attribute, property and relationship kind shall be either carried into X3D or named on the loss list. A key on neither list fails."},
+  {"id": "R4", "shall": "Under the envelope of LC1, LC2 and LC3, demand shall not exceed design strength in any member (tension: D2 yielding; compression: E3)."},
+  {"id": "R5", "shall": "Every member that sees compression in any case shall have KL/r no greater than 200."},
+  {"id": "R6", "shall": "Midspan deflection under D + Lr shall not exceed span / 240."},
+  {"id": "R7", "shall": "The span and the bearing level shall be read from the IFC columns, not typed."}
+ ],
+ "references": [
+  {"id": "REF1", "kind": "second-solver", "what": "member forces: joint equilibrium (36 equations, own elimination) against the direct stiffness method"},
+  {"id": "REF2", "kind": "closed-form", "what": "method of sections for the two balanced cases: chord = M / h, diagonal = V sqrt(p^2 + h^2) / h"},
+  {"id": "REF3", "kind": "identity", "what": "the sum of the reactions equals the sum of the loads"},
+  {"id": "REF4", "kind": "second-solver", "what": "midspan deflection: unit-load (virtual work) sum against the stiffness solution"},
+  {"id": "REF5", "kind": "identity", "what": "the two branches of E3 meet at KL/r = 4.71 sqrt(E/Fy)"},
+  {"id": "REF6", "kind": "cross-implementation", "what": "geometry: IfcOpenShell's reading of the IFC against this study's reading of the X3D"}
+ ],
+ "exchange": {
+  "identity": "IFC GlobalId, carried as MetadataString name='guid' in MetadataSet name='IFC'",
+  "carried": ["GlobalId", "Name", "class", "Pset_Bridge.Status", "Pset_Bridge.Surface", "geometry", "placement", "length unit", "up axis", "source hash",
+              "Pset_LoomTruss.Role", "Pset_LoomTruss.Section", "Pset_LoomTruss.DemandN", "Pset_LoomTruss.CapacityN", "Pset_LoomTruss.Utilisation", "Pset_LoomTruss.GoverningCase"],
+  "lost": ["Pset_Bridge.EditablePlacement", "Pset_Bridge.Role", "IfcSite", "IfcBuilding", "IfcBuildingStorey", "IfcRelAggregates", "IfcRelContainedInSpatialStructure",
+           "IfcRelDefinesByProperties (flattened into metadata)", "IfcExtrudedAreaSolid (parametric profile becomes triangles)", "IfcRectangleHollowProfileDef (becomes a mesh)", "IfcOwnerHistory", "IfcProject"]
+ },
+ "controls": [
+  {"id": "swap-two-guids", "expect_fail": ["R2"], "what": "two X3D elements exchange their GlobalIds: every count still matches, the quantities do not"},
+  {"id": "drop-one-element", "expect_fail": ["R1"], "what": "one element removed from the X3D"},
+  {"id": "millimetres-read-as-metres", "expect_fail": ["R2"], "what": "the X3D coordinates compared without the unit scale"},
+  {"id": "skip-the-frame", "expect_fail": ["R2"], "what": "the X3D read in its y-up frame, without undoing IFC_ZUP_TO_YUP"},
+  {"id": "unlisted-key", "expect_fail": ["R3"], "what": "the loss list without Pset_Bridge.Role"},
+  {"id": "remove-a-diagonal", "expect_fail": ["REF1"], "what": "one diagonal deleted: the truss is a mechanism and must be reported as one, not solved"},
+  {"id": "stiffness-sign", "expect_fail": ["REF1"], "what": "the stiffness solver's member force with its sign flipped"},
+  {"id": "sections-wrong-depth", "expect_fail": ["REF2"], "what": "the hand formula with depth 0.9 m"},
+  {"id": "thin-web", "expect_fail": ["R4"], "what": "web members 25 x 25 x 2 mm"},
+  {"id": "drop-pattern-case", "expect_fail": ["R4-coverage"], "what": "LC3 left out: the envelope no longer covers every declared case"},
+  {"id": "truss-in-millimetres", "expect_fail": ["R4", "R6"], "what": "node coordinates 1000 times too large with the loads unchanged: a determinate truss keeps the same forces, so only capacity and deflection can see it"},
+  {"id": "transposed-471", "expect_fail": ["REF5"], "what": "the E3 limit typed as 4.17 instead of 4.71"},
+  {"id": "typed-span", "expect_fail": ["R7"], "what": "span typed as 8.4 m instead of read from the columns"}
+ ],
+ "exploration": {
+  "when": "27 Nov 2026, before the limits were written",
+  "numbers": "Building only (the truss had not been run): 111 of 111 elements matched by GlobalId; worst bounding-box difference 5.3e-6 mm, worst area difference 2.5e-8 relative, worst volume difference 8.1e-9 relative; total volume 300.95 m3. IfcOpenShell 0.9.0.post1.",
+  "honesty": "The building limits were written with these numbers in view and are derived from function. The truss limits were written before any truss solver ran."
+ },
+ "limits": {
+  "committed_before_run_of_record": true,
+  "bbox_diff_mm": {"max": 0.01, "why": "one hundredth of the IFC file's own length unit (1 mm)"},
+  "area_rel": {"max": 1e-6, "why": "X3D text carries 7 to 9 significant digits; a part in a million is a real change of shape, not rounding"},
+  "volume_rel": {"max": 1e-6, "why": "as area"},
+  "utilisation": {"max": 1.0, "why": "R4: demand / design strength, resistance factors already inside the strength"},
+  "slenderness": {"max": 200.0, "why": "R5"},
+  "deflection_ratio": {"min": 240.0, "why": "R6: span / deflection"},
+  "solver_agreement_rel": {"max": 1e-9, "why": "REF1, REF2, REF4: two exact routes to one linear answer, relative to the largest force or deflection"},
+  "equilibrium_rel": {"max": 1e-9, "why": "REF3"},
+  "e3_continuity_rel": {"max": 1e-3, "why": "REF5: 0.658^2.25 and 0.877 / 2.25 differ by 0.05 % by construction of the specification's rounded constants"},
+  "span_from_ifc_mm": {"max": 1.0, "why": "R7: the span used must be within 1 mm of the column centre distance read from the IFC"}
+ }
+}
