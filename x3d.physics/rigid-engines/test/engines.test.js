@@ -73,3 +73,38 @@ test('rapier sub-steps: the cradle passes the impulse to the last ball with 4 su
   const run = async (sub) => { const c = cradle(), s = await openScene(sceneXml(c, 'live'), 'rapier'); s.BR.physEngines.rapierOpts = { sub }; const b = s.node('B_ball4'); let mx = -9, mn = 9; for (let i = 0; i < 480; i++) { s.advance(1 / 60); const y = b.f.position[1]; mx = Math.max(mx, y); mn = Math.min(mn, y); } return mx - mn; };
   const r1 = await run(1), r4 = await run(4); assert.ok(r1 < 0.3, 'sub 1 rise ' + r1); assert.ok(r4 > 0.55 && r4 < 0.75, 'sub 4 rise ' + r4);
 });
+
+/* SingleAxisHingeJoint with the default range (minAngle -pi, maxAngle pi). X3D 4.0 clause 37.4.12: "A hinge may not travel more than pi radians ... in either direction from its initial position". ODE, which the
+   component was modelled on, treats a stop at exactly +-pi as no stop. The built-in engine takes the X3D reading; Rapier and cannon-es take ODE's unless use({ hingeStop: 'x3d' }). Found by x3d.engineering/fourbar. */
+const { head: H0, tail: T0, rb: RB, col: COL, joint: JT } = require('../lib/scenes');
+const spinner = (extra = '') => ({ id: 'hinge-default', T: 4, probes: ['Bar'], xml: H0('hinge-default') + `<RigidBodyCollection DEF="W" gravity="0 0 0">${COL('bounce="0"')}${RB('Frame', [0, 0, -0.5], '<Box size="0.2 0.2 0.2"/>', 'mass="1" fixed="true"')}${RB('Bar', [0.5, 0, 0], '<Box size="1 0.1 0.1"/>', 'mass="1" angularVelocity="0 0 3" linearVelocity="0 1.5 0" ' + extra)}${JT('SingleAxisHingeJoint', 'anchorPoint="0 0 0" axis="0 0 1"', 'Frame', 'Bar')}</RigidBodyCollection>` + T0 });
+const travel = (tr) => { let last = null, th = 0, mx = 0; for (const p of tr.Bar.p) { const a = Math.atan2(p[1], p[0]); if (last !== null) { let d = a - last; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI; th += d; } last = a; mx = Math.max(mx, Math.abs(th)); } return [mx, th]; };
+
+test('builtin: a default-range hinge stops pi from its start (X3D 4.0 clause 37.4.12)', async () => {
+  const [mx] = travel((await record(spinner(), 'builtin')).tr);
+  assert.ok(mx > 3.0 && mx < Math.PI + 0.03, 'max travel ' + mx);
+});
+for (const eng of ['rapier', 'cannon']) {
+  test(`${eng}: a default-range hinge turns freely by default, and the adapter says so in its notes`, async () => {
+    const r = await record(spinner(), eng), [mx] = travel(r.tr);
+    assert.ok(mx > 11.5, 'about 12 rad in 4 s at 3 rad/s, got ' + mx);
+    assert.ok(r.notes.some((n) => /SingleAxisHingeJoint/.test(n) && /37\.4\.12/.test(n) && /hingeStop: 'x3d'/.test(n)), 'the note names the clause and the option: ' + JSON.stringify(r.notes));
+  });
+  test(`${eng}: with hingeStop 'x3d' the same hinge stops pi from its start, and writes no such note`, async () => {
+    const r = await record(spinner(), eng, { hingeStop: 'x3d' }), [mx] = travel(r.tr);
+    assert.ok(mx > 3.0 && mx < Math.PI + 0.03, 'max travel ' + mx);
+    assert.ok(!r.notes.some((n) => /37\.4\.12/.test(n)), JSON.stringify(r.notes));
+  });
+  test(`${eng}: the x3d stop does not stick: a torque the other way brings the bar back off it`, async () => {
+    const r = await record(spinner('torques="0 0 -0.3"'), eng, { hingeStop: 'x3d' }), [mx, end] = travel(r.tr);
+    assert.ok(mx > 3.0 && mx < Math.PI + 0.03, 'max travel ' + mx); assert.ok(end < Math.PI - 0.5, 'came back to ' + end);
+  });
+  test(`${eng}: an explicit range is untouched by the option (door stops at 1.0 rad either way)`, async () => {
+    for (const hingeStop of ['engine', 'x3d']) { const s = sc('hinge-limit'), [hmax] = Object.values(s.analyse((await record(s, eng, { hingeStop })).tr)); assert.ok(hmax <= 1.01, hingeStop + ': hinge max angle ' + hmax); }
+  });
+}
+test("builtin: the torque case comes back off the stop too", async () => {
+  const [mx, end] = travel((await record(spinner('torques="0 0 -0.3"'), 'builtin')).tr);
+  assert.ok(mx > 3.0 && mx < Math.PI + 0.03, 'max travel ' + mx); assert.ok(end < Math.PI - 0.5, 'came back to ' + end);
+});
+test("use(): an unknown hingeStop throws", async () => { const { BR } = await load(); assert.throws(() => BR.physEngines.use('rapier', { hingeStop: 'maybe' }), /hingeStop/); });

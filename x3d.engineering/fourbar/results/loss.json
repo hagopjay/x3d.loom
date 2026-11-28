@@ -16,7 +16,16 @@
     "rapier": 18.94155156491344,
     "cannon": 18.528744628838528
    },
-   "note": "The adapters read the default range as 'no stop' and write no note. Under clause 37.4.12 the stop is the standard's behaviour."
+   "said_in_adapter_notes": {
+    "rapier": true,
+    "cannon": true
+   },
+   "max_travel_rad_with_hingeStop_x3d": {
+    "builtin": 3.144674282808127,
+    "rapier": 3.157309473119942,
+    "cannon": 3.1621310068342376
+   },
+   "note": "The adapters read the default range as 'no stop', which is ODE's convention, and since 28 Nov say so in their notes. Clause 37.4.12 read literally stops the hinge at pi; use({ hingeStop: 'x3d' }) applies that."
   },
   {
    "field": "RigidBody inertia",

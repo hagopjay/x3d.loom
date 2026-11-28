@@ -19,7 +19,14 @@
   const builtinTick = P.tick, H = 1 / 240;
   const E = BR.physEngines = { engines: {}, current: 'builtin', contactMode: 'last', notes: [], version: 'ENG-1' };
   E.register = (name, eng) => { E.engines[name] = eng; return E; };
-  E.use = (name, opts) => { if (name !== 'builtin' && !E.engines[name]) throw new Error('physics engine not registered: ' + name); E.current = name; if (opts && opts.contactMode) E.contactMode = opts.contactMode; return E; };
+  /* hingeStop: what a SingleAxisHingeJoint with the default range (minAngle -pi, maxAngle pi) does in Rapier and cannon-es.
+     'engine' (default): no stop, the hinge turns freely, and the adapter says so in its notes. This is ODE's convention, the engine the component was modelled on: "For rotational joints, this stop must be
+                         greater than -pi to be effective" (ODE user guide 7.5.1), so a stop at exactly +-pi is no stop.
+     'x3d':              the stop is applied as X3D 4.0 clause 37.4.12 words it: "A hinge may not travel more than pi radians ... in either direction from its initial position". The built-in engine always does this. */
+  E.hingeStop = 'engine';
+  E.use = (name, opts) => { if (name !== 'builtin' && !E.engines[name]) throw new Error('physics engine not registered: ' + name); E.current = name; if (opts && opts.contactMode) E.contactMode = opts.contactMode;
+    const hs = (opts && opts.hingeStop) || 'engine'; if (hs !== 'engine' && hs !== 'x3d') throw new Error("hingeStop must be 'engine' or 'x3d': " + hs); E.hingeStop = hs; return E; };
+  E.hingeNote = (J, engine) => 'SingleAxisHingeJoint ' + (J.node.def || '') + ': default minAngle/maxAngle (-pi, pi) taken as no stop in ' + engine + ", so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here";
   E.list = () => ['builtin', ...Object.keys(E.engines)];
 
   const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]], mul = (a, k) => [a[0] * k, a[1] * k, a[2] * k], dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
