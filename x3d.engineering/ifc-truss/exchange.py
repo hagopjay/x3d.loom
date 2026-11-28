@@ -118,6 +118,19 @@ def tube(a, b, sec):
         quads.append((8 + k, 8 + n, 12 + n, 12 + k))              # inner wall, facing the hole
         quads.append((k, n, 8 + n, 8 + k))                        # end ring at a
         quads.append((4 + k, 12 + k, 12 + n, 4 + n))              # end ring at b
+    # The ring order above is counter-clockwise only when u x v points from a to b, which depends on the member's
+    # direction. Measure the enclosed volume and turn every face round when it is negative, so solid="true" with
+    # ccw="true" is a true statement for every member (found by x3d_mcp's mesh-inside-out check, 28 Nov 2026).
+    def vol(qs):
+        t = 0.0
+        for q in qs:
+            for i in (1, 2):
+                p0, p1, p2 = pts[q[0]], pts[q[i]], pts[q[i + 1]]
+                t += (p0[0] * (p1[1] * p2[2] - p1[2] * p2[1]) - p0[1] * (p1[0] * p2[2] - p1[2] * p2[0]) + p0[2] * (p1[0] * p2[1] - p1[1] * p2[0])) / 6
+        return t
+    if vol(quads) < 0:
+        quads = [tuple(reversed(q)) for q in quads]
+    assert vol(quads) > 0, "tube mesh encloses no positive volume"
     return pts, quads
 
 

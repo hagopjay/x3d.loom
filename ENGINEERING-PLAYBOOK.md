@@ -373,4 +373,5 @@ There is no `kit/loom engineering` subcommand. The `requirements` witness is the
 - **`[FBR]` changed a measure and narrowed its claim after exploration.** The card says so, the limits are derived from the part, and the failing probes are kept. That the limits were not fitted to the numbers is the author's word (S).
 - **`[TNS]` material values are Suspected**, and it has no dynamics and no second engine. A cross-check on MuJoCo tendons or PhysX distance joints is the next rung of its ladder.
 - **X3D has no member that only pulls.** Whether a rope or distance-limit joint belongs in the rigid-body component is a question for the standard's authors; nothing has been sent to anyone.
+- **The truss meshes were inside out until 28 November** (failure mode 532): fixed in the writer by measured volume, scenes rebuilt, receipt re-issued. The three truss stills predate the fix and were not re-rendered.
 - **Six disciplines** have a page and no study.
