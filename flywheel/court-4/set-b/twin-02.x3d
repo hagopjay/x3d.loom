@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='description' content='A fence of three identical wooden posts standing side by side at x = -2, 0 and 2, all sharing one post shape.'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='FenceView' description='Fence from the front' position='0 0.5 9'/>
+    <Transform DEF='FencePost' translation='-2 0 0'>
+      <Shape DEF='PostShape'>
+        <Appearance>
+          <Material diffuseColor='0.55 0.35 0.2'/>
+        </Appearance>
+        <Cylinder height='2.4' radius='0.2'/>
+      </Shape>
+    </Transform>
+    <Transform translation='0 0 0'>
+      <Shape USE='PostShape'/>
+    </Transform>
+    <Transform translation='2 0 0'>
+      <Shape USE='PostShape'/>
+    </Transform>
+  </Scene>
+</X3D>

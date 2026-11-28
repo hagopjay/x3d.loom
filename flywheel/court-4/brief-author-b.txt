@@ -1,0 +1,44 @@
+You are the blind author of a sealed test set for an X3D checker. You write the test; someone else, who must not see it yet, is changing the checker. Your value comes from NOT knowing what the checker checks.
+
+## Blindness rules (hard)
+- Work ONLY inside WORK/author-b/ (your folder) and read ONLY WORK/kit/ (neutral kit: the public X3D 4.0 XSD in kit/xsd/x3d-4.0.xsd, and the complete X_ITE 16.8.0 distribution in kit/x_ite/, with every component file under kit/x_ite/assets/components/, so any profile and component loads). Do not read the sibling folder author-a, the other brief file, or anything else outside your folder and the kit.
+- Do NOT read, list, grep or open anything under /home/user, /mnt/project-files, or any memory folder. Those hold the checker and earlier test sets. Reading them spoils the test.
+- No network use except what Playwright needs locally. No git, no pushes, no spending.
+- Do not try to guess what the checker catches, and do not design faults to beat it or to flatter it. Write the mistakes you believe matter most in real X3D written by an AI model or a hurried person.
+
+## What to write
+Category: STRUCTURE AND DATA (a static scene that is wrong, with no dependence on events over time). That means: node placement and containment, DEF/USE, geometry (indices, counts, winding, normals, colours and texture coordinates per vertex or per face, degenerate or non-manifold data, Extrusion/ElevationGrid/NURBS parameters), field values, ranges and units (angles in radians, colours 0 to 1, unit rotation axes, scales), appearance and materials (Material, PhysicalMaterial, textures, texture transforms), lights, viewpoints and navigation, grouping/transform hierarchy and bounding boxes, LOD/Switch static settings, Inline and URLs, metadata, units, profile and component declarations, Proto declarations and instances.
+
+Write, as X3D 4.0 XML files (complete documents with XML declaration, DOCTYPE optional, `<X3D profile=... version='4.0'>`, head, Scene). Declare the profile and the component statements each scene really needs under the X3D 4.0 standard (for example `profile='Immersive'` plus a `<component>` line for anything Immersive lacks), unless a wrong declaration IS the planted mistake:
+1. `fault-01.x3d` … `fault-20.x3d`: 20 small scenes (roughly 15 to 80 lines), each with exactly ONE planted mistake that makes the scene look or load differently from what its author plainly intended. Make the intent obvious from DEF names and a `<meta name='description'>` that states the intent WITHOUT naming the mistake. Spread across families: at most 2 faults of the same family. Mix severities: some that break the standard outright, and at least half that are legal X3D (schema-valid) that renders wrong. Mix subtlety: some obvious, some that an expert would miss on a first read.
+2. `twin-01.x3d` … `twin-20.x3d`: for each fault, the minimal corrected scene (the same file with only the mistake fixed). Each twin must look as the description says.
+3. `decoy-01.x3d` … `decoy-05.x3d`: 5 scenes that look suspicious to a hasty reviewer but are correct X3D 4.0 and render as their description says (unusual but legal constructs).
+
+## Checks you must run yourself
+- Every file is well-formed XML (lxml).
+- XSD: validate every file against kit/xsd/x3d-4.0.xsd with lxml (`etree.XMLSchema(etree.parse(path))`, it loads). Twins and decoys MUST be XSD-valid. Faults may or may not be; record which.
+- X_ITE witness (do it for as many pairs as your time allows, and for ALL decoys): Chromium and Playwright are pre-installed (`require('playwright')` works from any directory in Node 22; `chromium.launch()` needs no options; do not install anything). Serve your folder plus the kit over a local http server, load a page with `<x3d-canvas>` using kit/x_ite/x_ite.min.js, load the scene, and compare fault against twin: screenshot both at the same size and report the fraction of pixels that differ, and/or read values through the X_ITE SAI (`canvas.browser`, `browser.currentScene`), and collect console errors and warnings. The twin should show the intended picture and the fault should differ (or log an error). Decoys must load with zero console errors and draw something. Be honest: if a "fault" turns out to render the same as its twin in X_ITE, either replace it or keep it and mark `engine_disagrees: true` with the reason (some faults are real but invisible in one engine).
+
+## Manifest
+Write `MANIFEST.json`: an object keyed by file name. For each fault: `{"category": "...family...", "fault": "one sentence naming the mistake", "viewer_sees": "what a viewer observes", "spec": "error per the X3D standard (say which rule)" | "legal, renders wrong", "xsd_valid": true|false, "witness": "x_ite-16.8.0" | "reasoned", "witness_note": "what you measured, e.g. 31% of pixels differ from twin; console: 1 error", "twin": "twin-NN.x3d"}`. For each twin and decoy: `{"category", "intent", "xsd_valid": true, "witness", "witness_note"}`; decoys add `"why_suspicious"`.
+Also keep your witness harness script and its raw output (`witness.json`) in the folder (keep screenshots out of the folder or delete them before sealing; the sealed folder should stay under 2 MB).
+
+## Seal and report
+When done, make a deterministic archive and hash it:
+`cd <your folder> && tar --sort=name --mtime='2026-11-28 00:00Z' --owner=0 --group=0 --numeric-owner -cf ../author-b.tar . && sha256sum ../author-b.tar > ../author-b.sha256`
+I must stay blind until the checker is frozen, so your final report is a FIXED FORM and nothing else. Do not name any node type, field, family, file content or topic anywhere in it, not even in passing. Copy this form and fill in the values:
+
+```
+FAULTS: <number>
+TWINS: <number>
+DECOYS: <number>
+FAULTS_XSD_INVALID: <number>
+PAIRS_WITNESSED_IN_X_ITE: <number>
+PAIRS_REASONED: <number>
+DECOYS_ZERO_CONSOLE_ERRORS: <number>
+PAIRS_WHERE_ENGINE_DISAGREED: <number>
+ARCHIVE_SHA256: <64 hex>
+TOOLS: Python <v>, lxml <v>, Node <v>, Playwright <v>, Chromium <v>, X_ITE 16.8.0, <software or hardware GL>
+BLOCKERS: none   (or one line that names no scene content)
+```
+Time-box yourself to about 30 minutes of work; a complete set of 45 files with honest witness labels beats a perfect harness.

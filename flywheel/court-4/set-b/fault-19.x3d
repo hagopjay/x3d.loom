@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='description' content='A chair whose Transform carries one catalog record, a metadata set named catalog that holds exactly three entries: sku, finish and priceEUR.'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='ChairView' description='Chair' position='2.5 2 4' orientation='-0.42345 0.89774 0.12144 0.61843'/>
+    <Transform DEF='Chair'>
+      <MetadataSet DEF='CatalogRecord' containerField='metadata' name='catalog'>
+        <MetadataString containerField='value' name='sku' value='"CH-204"'/>
+        <MetadataString containerField='value' name='finish' value='"oak"'/>
+        <MetadataFloat containerField='metadata' name='priceEUR' value='129.5'/>
+      </MetadataSet>
+      <Transform DEF='Seat' translation='0 0.5 0'>
+        <Shape>
+          <Appearance DEF='Oak'>
+            <Material diffuseColor='0.65 0.45 0.25'/>
+          </Appearance>
+          <Box size='1 0.1 1'/>
+        </Shape>
+      </Transform>
+      <Transform DEF='Backrest' translation='0 1.05 -0.45'>
+        <Shape>
+          <Appearance USE='Oak'/>
+          <Box size='1 1 0.1'/>
+        </Shape>
+      </Transform>
+    </Transform>
+  </Scene>
+</X3D>

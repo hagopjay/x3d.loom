@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='description' content='A signpost arrow (shaft with a cone tip) laid on its side so that the tip points along the +X axis, a quarter turn from upright.'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='ArrowView' description='Arrow from the front' position='0 0 8'/>
+    <Transform DEF='ArrowPointingAlongPlusX' rotation='0 0 1 -90'>
+      <Shape DEF='Shaft'>
+        <Appearance DEF='ArrowPaint'>
+          <Material diffuseColor='0.9 0.8 0.1'/>
+        </Appearance>
+        <Cylinder height='2' radius='0.12'/>
+      </Shape>
+      <Transform DEF='TipOffset' translation='0 1.3 0'>
+        <Shape DEF='Tip'>
+          <Appearance USE='ArrowPaint'/>
+          <Cone bottomRadius='0.35' height='0.6'/>
+        </Shape>
+      </Transform>
+    </Transform>
+  </Scene>
+</X3D>

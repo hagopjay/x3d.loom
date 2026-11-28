@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='description' content='Two steel bolts, one upright and one lying on its side, both reusing a single bolt shape that is defined once inside a switched-off library group.'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='BoltView' description='Both bolts' position='0 0 7'/>
+    <Switch DEF='HiddenDefinitionLibrary' whichChoice='-1'>
+      <Shape DEF='BoltShape'>
+        <Appearance>
+          <Material diffuseColor='0.6 0.62 0.65' specularColor='0.8 0.8 0.8' shininess='0.6'/>
+        </Appearance>
+        <Cylinder height='1.8' radius='0.3'/>
+      </Shape>
+    </Switch>
+    <Transform DEF='UprightBolt' translation='-1.3 0 0'>
+      <Shape USE='BoltShape'/>
+    </Transform>
+    <Transform DEF='LyingBolt' translation='1.3 0 0' rotation='0 0 1 1.5708'>
+      <Shape USE='BoltShape'/>
+    </Transform>
+  </Scene>
+</X3D>

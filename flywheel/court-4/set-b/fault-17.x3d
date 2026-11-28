@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='description' content='A smooth green hill: one curved surface patch with a 4 by 4 control net whose four middle points are lifted.'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='HillView' description='Hill from the front' position='0 4 6' orientation='-1.00000 0.00000 0.00000 0.54042'/>
+    <Shape DEF='SmoothHill'>
+      <Appearance>
+        <Material diffuseColor='0.2 0.7 0.3'/>
+      </Appearance>
+      <NurbsPatchSurface DEF='HillPatch' solid='false' uDimension='4' vDimension='4' uOrder='3' vOrder='3' uTessellation='16' vTessellation='16'>
+        <Coordinate DEF='HillControlNet' containerField='controlPoint' point='-1.5 0 1.5, -0.5 0 1.5, 0.5 0 1.5, 1.5 0 1.5, -1.5 0 0.5, -0.5 2 0.5, 0.5 2 0.5, 1.5 0 0.5, -1.5 0 -0.5, -0.5 2 -0.5, 0.5 2 -0.5, 1.5 0 -0.5, -1.5 0 -1.5, -0.5 0 -1.5, 0.5 0 -1.5, 1.5 0 -1.5'/>
+      </NurbsPatchSurface>
+    </Shape>
+  </Scene>
+</X3D>

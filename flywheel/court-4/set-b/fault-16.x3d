@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='description' content='A grey base plate with a red angle bracket standing on it; the bracket is brought in from the neighbouring file support-bracket.x3d.'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='AssemblyView' description='Plate and bracket' position='3 3 6' orientation='-0.58651 0.79802 0.13846 0.57523'/>
+    <Transform DEF='BasePlate' translation='0 -0.1 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.55 0.55 0.6'/>
+        </Appearance>
+        <Box size='4 0.2 3'/>
+      </Shape>
+    </Transform>
+    <Transform DEF='BracketPlacement' translation='0 0 0'>
+      <Inline DEF='BracketInline' load='true' url='"support_bracket.x3d"'/>
+    </Transform>
+  </Scene>
+</X3D>

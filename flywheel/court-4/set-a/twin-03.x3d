@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A windmill whose blades keep turning, one turn every six seconds, for as long as the scene is open."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 10'/>
+    <Transform DEF='Tower' translation='0 -2 -0.3'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.8 0.8 0.7'/>
+        </Appearance>
+        <Cylinder height='4' radius='0.3'/>
+      </Shape>
+    </Transform>
+    <Transform DEF='Blades'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.5 0.3 0.1'/>
+        </Appearance>
+        <Box size='4 0.3 0.1'/>
+      </Shape>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.5 0.3 0.1'/>
+        </Appearance>
+        <Box size='0.3 4 0.1'/>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF='BladeClock' cycleInterval='6' loop='true'/>
+    <OrientationInterpolator DEF='BladeTurn' key='0 0.25 0.5 0.75 1' keyValue='0 0 1 0 0 0 1 1.5708 0 0 1 3.1416 0 0 1 4.7124 0 0 1 6.2832'/>
+    <ROUTE fromNode='BladeClock' fromField='fraction_changed' toNode='BladeTurn' toField='set_fraction'/>
+    <ROUTE fromNode='BladeTurn' fromField='value_changed' toNode='Blades' toField='set_rotation'/>
+  </Scene>
+</X3D>

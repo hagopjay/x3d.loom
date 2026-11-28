@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A sliding door that opens two metres to the side and closes again, repeating every five seconds from the moment the scene starts."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 1 10'/>
+    <Transform DEF='Door' translation='0 1 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.4 0.25 0.1'/>
+        </Appearance>
+        <Box size='1.2 2 0.1'/>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF='DoorClock' cycleInterval='5' loop='true'/>
+    <PositionInterpolator DEF='DoorSlide' key='0 0.5 1' keyValue='0 1 0 2 1 0 0 1 0'/>
+    <ROUTE fromNode='DoorClock' fromField='fraction_changed' toNode='DoorSlide' toField='set_fraction'/>
+    <ROUTE fromNode='DoorSlide' fromField='value_changed' toNode='Door' toField='set_translation'/>
+  </Scene>
+</X3D>

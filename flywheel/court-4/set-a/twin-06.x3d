@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A globe that spins steadily about its vertical axis, one full turn every four seconds."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 8'/>
+    <Transform DEF='Globe'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.2 0.4 0.9'/>
+        </Appearance>
+        <Sphere radius='1.5'/>
+      </Shape>
+      <Transform DEF='Marker' translation='1.5 0 0'>
+        <Shape>
+          <Appearance>
+            <Material diffuseColor='1 0.8 0'/>
+          </Appearance>
+          <Box size='0.3 0.3 0.3'/>
+        </Shape>
+      </Transform>
+    </Transform>
+    <TimeSensor DEF='SpinClock' cycleInterval='4' loop='true'/>
+    <OrientationInterpolator DEF='SpinTurn' key='0 0.25 0.5 0.75 1' keyValue='0 1 0 0 0 1 0 1.5708 0 1 0 3.1416 0 1 0 4.7124 0 1 0 6.2832'/>
+    <ROUTE fromNode='SpinClock' fromField='fraction_changed' toNode='SpinTurn' toField='set_fraction'/>
+    <ROUTE fromNode='SpinTurn' fromField='value_changed' toNode='Globe' toField='set_rotation'/>
+  </Scene>
+</X3D>

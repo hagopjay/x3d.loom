@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A warning beacon that flashes: it goes from dark to bright red and back once every half second."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 6'/>
+    <Shape>
+      <Appearance>
+        <Material DEF='BeaconMaterial' diffuseColor='0.2 0.2 0.2' emissiveColor='0 0 0'/>
+      </Appearance>
+      <Sphere radius='0.8'/>
+    </Shape>
+    <TimeSensor DEF='FlashClock' cycleInterval='500' loop='true'/>
+    <ColorInterpolator DEF='FlashColour' key='0 0.5 1' keyValue='0 0 0 1 0 0 0 0 0'/>
+    <ROUTE fromNode='FlashClock' fromField='fraction_changed' toNode='FlashColour' toField='set_fraction'/>
+    <ROUTE fromNode='FlashColour' fromField='value_changed' toNode='BeaconMaterial' toField='set_emissiveColor'/>
+  </Scene>
+</X3D>
