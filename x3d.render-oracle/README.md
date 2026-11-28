@@ -229,3 +229,6 @@ python3 tools/oracle.py RUN --repeat RUN2 --expected ~/x3d.wgpu/conformance/expe
 python3 tools/report.py RUN OUT
 ```
 Playwright's own pinned Chromium is not installed here; `render_web.js` falls back to a global `playwright` (NODE_PATH). Vulkan: `VK_ICD_FILENAMES` points at the SwiftShader ICD inside Chromium.
+
+## scenes-260: one scene per node (28 Nov, batch 1)
+`tools/make_scenes_260.py` writes `scenes-260/<Node>.x3d` for all 260 X3D 4.0 nodes, using the shortest legal parent chains and attribute tables of the Blender node board (x3d-blender-io `tools/node_board_probe.py`, add-on 2.9.0), so Blender, X_ITE, three.js, Babylon and wgpu share one row key. `index.json` records per node: file, component, level, `kind` (visible / invisible; invisible nodes get a parse/handled check, never AGREE/NEAR/FAR) and XSD validity. Batch 1: 260 nodes, 239 valid against x3d-4.0.xsd (lxml 6.1.3), 21 invalid and 1 with no legal chain, listed in `index.json` for batch 2. No engine has rendered them yet: no grade is claimed.
