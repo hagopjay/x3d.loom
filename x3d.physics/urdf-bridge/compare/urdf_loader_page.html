@@ -1,0 +1,33 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>urdf-loader fk</title><link rel="icon" href="data:,">
+<script type="importmap">{"imports":{"three":"/nm/three/build/three.module.js","three/":"/nm/three/","urdf-loader":"/nm/urdf-loader/src/URDFLoader.js"}}</script>
+</head><body>
+<script type="module">
+// Kinematics only: urdf-loader parses the URDF in the browser (its own DOMParser path), meshes are not loaded
+// (loadMeshCb returns an empty Object3D), then window.fk(poses) sets each pose with robot.setJointValue (urdf-loader
+// applies mimic joints itself) and reads every link's matrixWorld. No rotation is added: the robot stays z-up as authored.
+import URDFLoader from 'urdf-loader';
+import * as THREE from 'three';
+window.fk = async (urdfText, poses, mimicFromLoader) => {
+  const loader = new URDFLoader();
+  loader.loadMeshCb = (path, manager, done) => done(new THREE.Object3D());
+  loader.parseVisual = false; loader.parseCollision = false;
+  const robot = loader.parse(urdfText);
+  const out = [];
+  for (const q of poses) {
+    for (const [j, v] of Object.entries(q)) {
+      const jt = robot.joints[j];
+      if (!jt) continue;
+      if (mimicFromLoader && jt.mimicJoint) continue; // let urdf-loader drive followers from their leader
+      jt.setJointValue(v);
+    }
+    robot.updateMatrixWorld(true);
+    const frames = {};
+    for (const [n, l] of Object.entries(robot.links)) frames[n] = Array.from(l.matrixWorld.elements); // column-major
+    out.push(frames);
+  }
+  return { links: Object.keys(robot.links).length, joints: Object.keys(robot.joints).length, frames: out,
+           mimic: Object.values(robot.joints).filter((j) => j.mimicJoint).map((j) => [j.name, j.mimicJoint, j.multiplier, j.offset]) };
+};
+window.__ready = true;
+</script></body></html>

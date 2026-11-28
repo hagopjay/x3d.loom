@@ -196,10 +196,10 @@ def convert(urdf: Path, out: Path, mesh_root: Path | None = None, pose: dict | N
                 meta(ms, "MetadataDouble", "offset", mim.get("offset", "0"))
             q = float(pose.get(jn, 0.0))
             meta(ms, "MetadataDouble", "position", q)
-            if jt == "prismatic":
-                tj.set("translation", " ".join(repr(a * q) for a in ax))
+            n = math.sqrt(sum(a * a for a in ax))
+            if jt == "prismatic":  # URDF normalises the axis: a slide of q metres is q along the unit axis
+                tj.set("translation", " ".join(repr(a / n * q) for a in ax))
             else:
-                n = math.sqrt(sum(a * a for a in ax))
                 tj.set("rotation", " ".join(repr(a / n) for a in ax) + " " + repr(q))
         stats["joints"] += 1
         link(j.find("child").get("link"), tj)

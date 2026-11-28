@@ -126,7 +126,8 @@ def build(scene: Path, rows, out: Path, split_keys=True, info=None):
         keys = " ".join(num((t - t0) / T) for t, _ in track)
         ax = d["axis"]
         if d["type"] == "prismatic":
-            kv = ", ".join(" ".join(num(a * q) for a in ax) for _, q in track)
+            n = math.sqrt(sum(a * a for a in ax))  # URDF normalises the axis
+            kv = ", ".join(" ".join(num(a / n * q) for a in ax) for _, q in track)
             ET.SubElement(sc, "PositionInterpolator", {"DEF": f"{j}__replay", "key": keys, "keyValue": kv})
             field = "set_translation"
         else:
