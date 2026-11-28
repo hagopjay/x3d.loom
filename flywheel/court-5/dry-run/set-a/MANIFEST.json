@@ -1,0 +1,34 @@
+{
+ "fault-01.x3d": {
+  "category": "route-type",
+  "fault": "DUMMY: a ScalarInterpolator drives Transform.set_scale, SFFloat into SFVec3f.",
+  "twin": "twin-01.x3d",
+  "dummy_expect_checks": [
+   "*route*"
+  ]
+ },
+ "twin-01.x3d": {},
+ "fault-02.x3d": {
+  "category": "animation-value",
+  "fault": "DUMMY: the door's last key value is a tenth of a quarter turn, so it barely opens.",
+  "twin": "twin-02.x3d",
+  "dummy_expect_checks": []
+ },
+ "twin-02.x3d": {},
+ "fault-03.x3d": {
+  "category": "address",
+  "fault": "DUMMY: the Inline url is misspelt and no such file is in the folder.",
+  "twin": "twin-03.x3d",
+  "dummy_expect_checks": [
+   "*inline*",
+   "*url*",
+   "*file*"
+  ]
+ },
+ "twin-03.x3d": {},
+ "decoy-01.x3d": {
+  "category": "lighting",
+  "intent": "DUMMY: a lamp that stays lit.",
+  "why_suspicious": "nothing; it is a dummy"
+ }
+}

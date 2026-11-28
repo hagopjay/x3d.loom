@@ -1,0 +1,89 @@
+{
+ "about": "Classes of mistake that the X3D object model (X3DUOM) itself lets us enumerate. Hand-chosen by the kernel editor on 28 November 2026 from the attributes the model carries, with no test set open. A class applies to a field or a node when the model's own attribute says so (the 'applies' line); nothing here is taken from a planted fault.",
+ "field_classes": {
+  "F01-range": {
+   "mistake": "the value is outside the range the standard states for the field",
+   "applies": "the field has minInclusive, maxInclusive, minExclusive or maxExclusive"
+  },
+  "F02-enumeration": {
+   "mistake": "the value is not one of the listed values",
+   "applies": "the field lists enumeration values and does not allow additional ones"
+  },
+  "F03-child-type": {
+   "mistake": "the field holds a node of a type it does not accept",
+   "applies": "the field has acceptableNodeTypes"
+  },
+  "F04-route-to-non-input": {
+   "mistake": "a ROUTE ends at a field that takes no events",
+   "applies": "accessType is outputOnly or initializeOnly"
+  },
+  "F05-route-from-non-output": {
+   "mistake": "a ROUTE starts at a field that sends no events",
+   "applies": "accessType is inputOnly or initializeOnly"
+  },
+  "F06-route-type": {
+   "mistake": "a ROUTE joins the field to a field of another type",
+   "applies": "accessType is inputOnly, outputOnly or inputOutput"
+  },
+  "F07-index": {
+   "mistake": "an index points past the end of the array it indexes, or the -1 separators are wrong",
+   "applies": "the field is MFInt32 and its name ends in Index"
+  },
+  "F08-address": {
+   "mistake": "the address finds nothing, or finds a file of the wrong kind",
+   "applies": "the field is MFString and its name contains url"
+  },
+  "F09-time": {
+   "mistake": "time values under which the node never runs, never stops, or ran once in 1970",
+   "applies": "the field is SFTime and can be written (inputOutput or initializeOnly)"
+  },
+  "F10-switched-off": {
+   "mistake": "the node is switched off by this field and nothing ever switches it on",
+   "applies": "the field is SFBool, can be written, and is named enabled, on, visible or load"
+  }
+ },
+ "node_classes": {
+  "N01-sensor-unheard": {
+   "mistake": "the sensor's outputs go nowhere, or the thing it should watch is not there",
+   "applies": "the node inherits X3DSensorNode"
+  },
+  "N02-parallel-arrays": {
+   "mistake": "key and keyValue disagree in length, or key does not rise",
+   "applies": "the node has both a key and a keyValue field"
+  },
+  "N03-bindable": {
+   "mistake": "the wrong one is bound first, or the one that matters is never bound",
+   "applies": "the node inherits X3DBindableNode"
+  },
+  "N04-def-use": {
+   "mistake": "USE of a DEF that is missing or of another node type, or a USE that carries its own fields",
+   "applies": "every node"
+  },
+  "N05-component": {
+   "mistake": "the node is used although the profile and component statements do not include its component at its level",
+   "applies": "every node (componentInfo)"
+  }
+ },
+ "cell_states": {
+  "unprobed": "nobody has tested this cell yet",
+  "xsd": "the X3D 4.0 schema already refuses the mistake",
+  "caught": "a probe pair exists: the kernel names the mistake on the wrong file and is silent on the corrected one",
+  "missed": "a probe pair exists, the mistake can be stated from the file, and the kernel says nothing: open work",
+  "needs-intent": "the file is legal either way; only what the author meant decides",
+  "not-a-mistake": "the standard allows it and no browser we test behaves differently",
+  "probe-broken": "the generated twin fails the schema: the generator, or a disagreement between the schema and the object model, is at fault",
+  "no-probe": "the generator cannot build this cell",
+  "kernel-crash": "the kernel raised an exception on a probe file"
+ },
+ "pair_classes": {
+  "P01-low-above-high": {
+   "mistake": "the field that names the low end is above the field that names the high end",
+   "applies": "two writable numeric fields of one node and one type whose names differ only by min/max, inner/outer, start/end, start/stop or near/far (munitionStartPoint and munitionEndPoint are two points, not a range, and are left out)"
+  },
+  "P02-array-not-rising": {
+   "mistake": "an array the standard requires to be in non-decreasing order goes down",
+   "applies": "an MFFloat or MFDouble field named key, knot, uKnot, vKnot, range, skyAngle or groundAngle"
+  }
+ },
+ "about_pair_classes": "Added 28 November 2026 after the first probe showed that one-field classes were already 97.4% closed. These are the relations between fields that the object model's own field names reveal. Relations stated only in the standard's prose are not here yet."
+}
