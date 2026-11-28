@@ -1,0 +1,120 @@
+P001  SFFloat output of ScalarInterpolator routed to SFVec3f translation.
+P002  ROUTE targets Cylinder.radius, an initializeOnly field.
+P003  ROUTE source is PositionInterpolator.set_fraction, an inputOnly field.
+P004  Misspelled event name fraction_change (should be fraction_changed).
+P005  stopTime (2) earlier than startTime (5), loop false.
+P006  cycleInterval is 0.
+P007  Interpolator has 3 keys but 2 keyValues.
+P008  Keys not ascending (0.8 then 0.4).
+P009  Keys extend to 2 but TimeSensor fraction only reaches 1; last key never reached.
+P010  Orientation step of 4 rad (>pi) between two keys.
+P011  Full 0..2pi spin written as one step.
+P012  TouchSensor lives in its own Group, sibling of no geometry.
+P013  TouchSensor enabled=false is the only trigger for the timer.
+P014  BooleanToggle output (toggle) is never routed anywhere.
+P015  IntegerSequencer value 3 drives Switch with only 2 children (and routes to whichChoice, which is inputOutput).
+P016  Sequencer has keys and input but no ROUTE out.
+P017  Two interpolators drive Transform.translation simultaneously (fan-in).
+P018  ROUTE cycle between two transforms with no break.
+P019  ProximitySensor size 0 0 0 (disabled).
+P020  Script has no url/source and routed outputs.
+P021  Material placed directly under Shape instead of inside Appearance
+P022  Appearance outside a Shape, as direct Scene child
+P023  USE of a Sphere DEF inside an Appearance slot (wrong type)
+P024  Duplicate DEF name A on two different shapes
+P025  coordIndex lacks -1 face terminators
+P026  coordIndex 4 is one past end of 4 points
+P027  creaseAngle 30 given in degrees (radians expected)
+P028  ElevationGrid 3x3 needs 9 heights, 8 given
+P029  Extrusion with a single spine point
+P030  transparency 1 on the only object
+P031  PhysicalMaterial roughness 2 (range 0..1)
+P032  Colour given as 255 0 0
+P033  fieldOfView 45 in degrees (radians, max <pi)
+P034  SpotLight cutOffAngle < beamWidth
+P035  rotation angle 90 written in degrees (radians expected)
+P036  scale 0 on one axis, degenerate flat box
+P037  Object 10000 km from origin
+P038  LOD range not ascending
+P039  Background skyAngle has 3 values but 2 skyColors (needs n+1=4 colours for 3 angles)
+P040  DirectionalLight direction 0 0 0
+P041  TimeSensor ROUTE source field is misspelt fraction_change instead of fraction_changed
+P042  The interpolator SFVec3f output is routed to Lamp set_rotation (SFRotation) instead of set_translation
+P043  ROUTE fromField is Leader set_translation (an inputOnly event) instead of translation_changed
+P044  TimeSensor has loop=false with a startTime long in the past, though the pulse is meant to repeat forever
+P045  ROUTE toNode is door but the node is DEF Door (case mismatch)
+P046  PositionInterpolator has three keys but only two keyValue triples
+P047  ScalarInterpolator key list 0 0.8 0.5 is not non-decreasing (should be 0 0.5 1)
+P048  TouchSensor sits in a different Group from the sphere, so it is not a sibling of the geometry it should sense
+P049  PlaneSensor minPosition 2 0 and maxPosition 0 0 are swapped (min greater than max leaves x unconstrained)
+P050  The clock is left enabled (default) so the spinner runs from load, though it should wait for the first click
+P051  PositionDamper tau is 0 (no smoothing) instead of 0.5
+P052  ProximitySensor size is 0 0 0 (disabled) instead of 30 30 30
+P053  The Wall Shape is a sibling of the Collision node instead of its child
+P054  StringSensor enteredText is routed to the label instead of finalText
+P055  IntegerSequencer last keyValue is 3 but the Switch has only choices 0..2
+P056  Script handler function is named onTick but the inputOnly field is named tick, so it is never called
+P057  The Closeup Viewpoint is listed before Overview, so Closeup is bound at load
+P058  The watched Inline has load=false so it never loads and LoadSensor never reports isLoaded
+P059  Anchor url fragment is #Closeup but the Viewpoint is DEF CloseUp (case mismatch)
+P060  LOD range is 20 5 (decreasing) instead of 5 20
+P061  One face of the indexed face set references vertex index 8 but only vertices 0 to 7 exist.
+P062  LOD range has three entries for three children; it must have one fewer entry than children.
+P063  ccw is set to false although the faces are wound counter-clockwise seen from outside.
+P064  Six per-face normals are supplied while normalPerVertex is true and there are eight vertices.
+P065  Colour components are written on a 0 to 255 scale instead of 0 to 1.
+P066  The ProtoInstance sets a field called towerColour but the prototype declares towerColor.
+P067  The TextureCoordinate holds three points for a four-vertex face.
+P068  The cross-section points are ordered so the outline crosses itself (a bow-tie) instead of tracing the square.
+P069  height lists 11 values but xDimension times zDimension is 12.
+P070  The uKnot vector has six values but uDimension plus uOrder needs seven.
+P071  The scene uses a NURBS node but neither the profile nor a component statement provides the NURBS component.
+P072  USE refers to wheel but the node was defined as Wheel; names are case sensitive.
+P073  The blue ball reuses the DEF name RedPost, so the later USE resolves to the ball.
+P074  Material is placed directly in Shape instead of inside Appearance.
+P075  The rotation angle is written as 90, which X3D reads as ninety radians.
+P076  fieldOfView is given as 60 (degrees) but is in radians and must be in (0, pi).
+P077  The headlight is switched off and the scene has no other light, so the lit sphere is unlit.
+P078  whichChoice is 3, counted from one, but choices are indexed from zero so index 3 selects nothing.
+P079  shininess is 50 where the legal range is 0 to 1.
+P080  The DirectionalLight direction is the zero vector.
+P081  The size animation uses a ScalarInterpolator, so an SFFloat value_changed is routed to Transform.set_scale, which is SFVec3f.
+P082  The grow animation is routed to Box.size, an initializeOnly field that cannot receive events, instead of to the enclosing Transform's scale.
+P083  The TimeSensor that should run forever has no loop='true'; with the default startTime of 0 and loop FALSE it never becomes active.
+P084  cycleInterval is written in milliseconds (500) although the field is in seconds, so one flash takes 500 s instead of 0.5 s.
+P085  The PositionInterpolator has four keys but only three keyValues; the second 'top' position that makes the platform wait is missing.
+P086  The full turn is given as two keys, angle 0 and angle 6.2832 about the same axis; these are the same orientation, and an OrientationInterpolator takes the shortest path between them, which is no motion.
+P087  Both TimeSensors carry the same DEF name (copy-paste); the ROUTEs at the end both resolve to one of them, so both lanterns share one clock.
+P088  The first ROUTE names fromNode='DoorTimer', but no node has that DEF; the clock is called DoorClock.
+P089  The scene declares profile Immersive only, but uses a ColorChaser, which belongs to the Followers component that Immersive does not include; the component statement is missing.
+P090  The first ROUTE uses fromField='fraction'; TimeSensor has no such field, the output is fraction_changed.
+P091  The IntegerSequencer counts 1, 2, 3 while the Switch children are numbered 0, 1, 2.
+P092  The TouchSensor sits among the floor's children instead of beside the button's geometry, so it senses the floor and not the button.
+P093  The PlaneSensor's trackPoint_changed is routed to the puck instead of translation_changed, so the puck's centre is put at the pointer's hit point instead of moving by the drag distance.
+P094  The ProximitySensor has no size, and the default size 0 0 0 disables the sensor.
+P095  The script compares actionKeyPress against browser DOM key codes (39 and 37); the X3D action-key codes for right and left arrow are 20 and 19.
+P096  The script's function is named clicked, but the input field is named set_clicked; a Script handler must have exactly the field's name, so it is never called.
+P097  TouchSensor.isActive sends TRUE on press and FALSE on release, and the script flips its state on every event without looking at the value, so each click flips the lamp twice.
+P098  Both PositionInterpolators are routed to the same inner Transform's translation in the same timestamp, so one overwrites the other; the crossing should drive the outer BeePath Transform.
+P099  The target position is routed to the damper's set_value, which sets the output immediately, instead of to set_destination, which it would glide towards.
+P100  TouchSensor.isActive is routed straight to Viewpoint.set_bind, so the FALSE sent on release unbinds the close-up viewpoint again.
+P101  Material is placed directly inside Shape instead of inside an Appearance node.
+P102  Two Transform USE elements carry their own translation attributes, as if USE made an editable copy; a USE is the same node and other attributes are ignored.
+P103  USE='brassLook' does not match the declared DEF='BrassLook' (names are case sensitive), so the reference dangles.
+P104  coordIndex is written 1-based: every index is one too high, so index 6 is out of range for the six coordinates and every face uses the wrong corners.
+P105  The lid face is listed clockwise (3 7 6 2) while all other faces are counter-clockwise, with ccw and solid at TRUE, so the lid is back-face culled and its normal points inward.
+P106  Five colours are meant one per face, but colorPerVertex is left at its default TRUE, so the five colours are applied to the five vertices and blended across faces.
+P107  The Extrusion crossSection is not closed (the first point is not repeated at the end), so only three of the four side walls are generated.
+P108  xDimension and zDimension are swapped (3 and 5 instead of 5 and 3) while the 15 heights are laid out as 3 rows of 5, so the heights are re-read as 5 rows of 3.
+P109  The rotation angle is given in degrees (-90) but SFRotation angles are radians; -90 rad is about a 117 degree turn the other way round.
+P110  diffuseColor is written on a 0-255 scale (255 128 0); colour components must be in 0..1.
+P111  transparency='1' was written where full opacity was meant (transparency is the inverse of opacity/alpha), making the ball completely invisible.
+P112  TextureTransform scale='0.25 0.25' was used to repeat the tile four times; the transform acts on texture coordinates, so 0.25 magnifies the image fourfold and 4 is needed to repeat it.
+P113  DirectionalLight direction='0 1 0' was written as if it were the place the light comes from; direction is the way the light travels, so the sun shines upward from below.
+P114  The camera is moved to z=-8 behind the statue but keeps the default orientation, which looks along -Z, away from the statue.
+P115  whichChoice='2' was used for the second child; choices are numbered from 0, so 2 is out of range for two children and nothing is chosen.
+P116  The Inline url says support_bracket.x3d (underscore) but the file is support-bracket.x3d (hyphen), so the reference cannot be resolved.
+P117  The scene uses a NURBS surface node under profile Immersive without a <component name='NURBS' level='1'/> statement; Immersive does not include the NURBS component.
+P118  The first ProtoInstance sets fieldValue name='color', but the prototype interface declares the field as 'pillarColor'; the value is discarded and the default grey is used.
+P119  The third entry of the MetadataSet has containerField='metadata' instead of 'value', so priceEUR becomes metadata about the set itself rather than one of its payload entries.
+P120  The door Transform rotates about its own origin (the middle of the leaf) because no center is given for the hinge edge.

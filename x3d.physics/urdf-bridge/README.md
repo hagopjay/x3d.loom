@@ -115,6 +115,48 @@ python3 replay_check.py ur5_robot.urdf recordings/ur5-sweep.mcap scenes/ur5-swee
 python3 browser/xite_replay.py ur5_robot.urdf recordings/ur5-sweep.mcap scenes/ur5-sweep.x3d --xite DIR_WITH_x_ite --out results/ur5-sweep-xite-receipt.json
 ```
 
+## Other URDF loaders, held to the same MuJoCo (28 Nov 2026)
+
+The same 100 seed-7 poses inside the joint limits, every link frame against MuJoCo 4.0.1's own URDF compile, plus a
+third robot built to hit corners the two showroom robots miss: `robots/stress.urdf` (`make_stress_urdf.py`, seed 11;
+13 links, 12 joints; rpy at the pitch = ±π/2 singularity and beyond π, axes that are neither unit length nor along
+x/y/z, prismatic and continuous joints, a fixed-joint chain, branching, a mimic joint with multiplier −0.5 and offset
+0.25).
+
+| loader | how it ran | UR5 | Panda (mimic finger) | stress | grade |
+|---|---|---|---|---|---|
+| **this bridge** (`urdf2x3d.py`, X3D read back by `fk_check.py`) | Python | 4.7e-16 m | 5.6e-16 m | **0.64 m before the fix**, 1.8e-15 m after | Confirmed |
+| **urdf-loader 0.13.1** (gkjohnson, three.js 0.187.0) | in Chromium 158.0.8127.36 headless; it parses the URDF itself; `compare/urdf_loader_check.py` | 6.0e-16 m | 5.8e-16 m, mimic applied by the loader | 1.1e-15 m | Confirmed |
+| **Unity URDF-Importer 0.5.2-preview** (Unity Technologies, Apache-2.0) | its import arithmetic ported line by line to numpy at Unity's float32 (`compare/unity_importer_port.py`); **Unity itself not run** | 4.2e-7 m | 2.2e-7 m, **but the importer has no mimic**: a finger left undriven is 0.040 m off | 3.5e-7 m (rotation 1.5 rad off on the undriven mimic joint) | Likely |
+
+Rotations follow the positions in every row (worst 1.1e-15 rad for urdf-loader, 6.2e-7 rad for the Unity port).
+
+**What this says.**
+- **urdf-loader is exact.** On all three robots it matches MuJoCo to rounding, including the mimic joint, a
+  non-unit prismatic axis and the rpy singularity. For a browser viewer of a URDF it is the right tool, and the
+  answer to "how accurate" is: as accurate as MuJoCo, on these three. It uses the meshes as they are (DAE, STL, OBJ)
+  and keeps no X3D, so it is a viewer, not a carrier.
+- **The stress robot caught a bug in this bridge.** A prismatic joint's slide was written as `axis * q`. URDF and
+  MuJoCo normalise the axis, so with axis length 2.2 the link landed 0.64 m off. UR5 and Panda never showed it
+  because their axes are unit length. Fixed in `urdf2x3d.py`, `fk_check.py` and `ros2_replay.py`; the two committed
+  robot scenes are byte for byte unchanged.
+- **Unity's importer is right up to float32**, read from its source: `Ros2Unity(v) = (-v.y, v.z, v.x)`, origins as
+  `Euler(+pitch, -yaw, -roll)` (Unity turns z, then x, then y, which is URDF's roll, pitch, yaw), revolute joints
+  about `FromToRotation(x, -axis)` (the minus undoes the mirror), prismatic about `+axis`. A planted swap of roll and
+  pitch in the port is caught (π rad off). Three things it does not do: **`<mimic>` is not read at all** (no match in
+  the joint sources); joint values are float32 degrees; and `UrdfJoint.IsRevoluteOrContinuous` is written as
+  `Revolute || Revolute`, so it never says true for a continuous joint (a latent bug: nothing in that repository
+  calls it; Confirmed by reading).
+- **Frames differ by a quarter turn.** The same robot taken URDF → this bridge → X3D → x3d.lab's io.x3d.unity faces
+  **90 degrees about Unity's up axis** from one imported by Unity's URDF-Importer: −90° with io.x3d.unity's native
+  mirror Z, +90° with its glTFast mirror X (`yaw_from_x3d_route_to_importer_deg` in each receipt). Both are
+  correct for their own convention (ROS x forward becomes Unity +z in the importer, Unity +x through X3D). A
+  digital twin mixing the two routes must turn one of them; it is the same kind of trap as failure mode 304.
+
+Receipts: `results/*-urdf-loader-receipt.json`, `results/*-unity-importer-port.json`, `results/stress-fk-receipt.json`.
+`compare/package.json` pins three 0.187.0 and urdf-loader 0.13.1 (`npm install` there; node_modules is not committed).
+urdf2gltf: the npm package was unpublished in 2021, so there is nothing to measure.
+
 ## Not claimed
 
 Dynamics (masses and inertias are not carried), collision behaviour, visual meshes in DAE or OBJ, Gazebo and
