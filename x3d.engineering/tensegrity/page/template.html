@@ -1,0 +1,248 @@
+<title>Tensegrity Workbench</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/x_ite@16.5.1/dist/x_ite.min.js"></script>
+<!-- X_ITE 16.5.1 stylesheet (MIT, copyright 2009 Holger Seelig and other contributors), icons and fonts removed.
+     A viewer that blocks the CDN stylesheet leaves the 3D surface hidden; the page adopts this copy into the player. -->
+<script type="text/x-css" id="xite-css">
+/*__XITE_CSS__*/
+</script>
+<style>
+/* Layout: a workbench. One dark 3D stage beside one instrument panel; findings and the audit trail below, in a measured column grid. */
+:root {
+  --bg: #f2f4f8; --panel: #ffffff; --ink: #131a26; --muted: #556176; --line: #d3dae6; --soft: #e8ecf3;
+  --tension: #1c69cf; --compression: #bf4a28; --ok: #17805a; --warn: #a86a12; --bad: #bd3327; --stage: #0b1019; --stage-ink: #dfe7f5;
+  --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif; --body: "Inter", "Segoe UI", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c1017; --panel: #141a25; --ink: #e7edf6; --muted: #94a1b6; --line: #273142; --soft: #1b2331;
+  --tension: #68aaff; --compression: #f08663; --ok: #4fc592; --warn: #e2b04a; --bad: #ff7466; --stage: #070a10; --stage-ink: #dfe7f5; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c1017; --panel: #141a25; --ink: #e7edf6; --muted: #94a1b6; --line: #273142; --soft: #1b2331;
+  --tension: #68aaff; --compression: #f08663; --ok: #4fc592; --warn: #e2b04a; --bad: #ff7466; --stage: #070a10; --stage-ink: #dfe7f5; color-scheme: dark }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 28px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(28px, 4.2vw, 44px); line-height: 1.05; font-weight: 700; }
+h2 { font-size: 22px; font-weight: 600; }
+h3 { font-size: 16px; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--tension); }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.lede { max-width: 66ch; color: var(--muted); font-size: 16px; }
+.head { display: flex; flex-direction: column; gap: 12px; }
+.c { color: var(--compression); font-weight: 600; } .t { color: var(--tension); font-weight: 600; }
+.note { font-size: 13px; color: var(--muted); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+.bench { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 880px) { .bench { grid-template-columns: minmax(0, 1fr); } }
+.stage { position: relative; background: var(--stage); border-radius: 10px; overflow: hidden; aspect-ratio: 1 / 1; max-height: 78vh; width: 100%; min-width: 0; }
+@media (min-width: 881px) { .stage { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); } }
+.stage img.poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.stage x3d-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.stage .hud { position: absolute; left: 12px; right: 12px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: space-between; pointer-events: none; }
+.stage .hud > * { pointer-events: auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; font: 12px/1.2 var(--mono); color: var(--stage-ink); background: rgba(7, 10, 16, 0.72); padding: 6px 9px; border-radius: 6px; }
+.legend i { display: inline-block; width: 18px; height: 4px; border-radius: 2px; vertical-align: middle; margin-right: 5px; }
+.views { display: flex; gap: 4px; }
+.views button { font: 12px/1 var(--mono); color: var(--stage-ink); background: rgba(7, 10, 16, 0.72); border: 1px solid rgba(223, 231, 245, 0.25); border-radius: 6px; padding: 6px 8px; cursor: pointer; }
+.views button[aria-pressed="true"] { border-color: var(--stage-ink); }
+.stage .msg { position: absolute; top: 10px; left: 12px; right: 12px; font: 12px/1.35 var(--mono); color: var(--stage-ink); background: rgba(7, 10, 16, 0.72); padding: 6px 9px; border-radius: 6px; }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; min-width: 0; }
+.tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+.tabs button { font: 600 13px/1.25 var(--display); color: var(--muted); background: none; border: 0; border-bottom: 3px solid transparent; padding: 12px 8px 10px; cursor: pointer; text-align: left; }
+.tabs button small { display: block; font: 400 11px/1.3 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 3px; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--compression); }
+.lesson { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.ctl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: baseline; }
+.ctl label { font-weight: 500; }
+.ctl output { font: 500 14px/1 var(--mono); font-variant-numeric: tabular-nums; }
+.ctl input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: var(--compression); margin: 4px 0 0; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.seg { display: flex; flex-wrap: wrap; gap: 4px; }
+.seg button, .btn { font: 500 13px/1 var(--body); color: var(--ink); background: var(--soft); border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--tension); outline-offset: 2px; }
+.gauge { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; align-items: center; }
+.gauge .bar { height: 10px; background: var(--soft); border-radius: 5px; overflow: hidden; }
+.gauge .bar i { display: block; height: 100%; background: var(--tension); border-radius: 5px; width: 0; }
+.gauge .cap { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+.say { border-left: 3px solid var(--line); padding: 2px 0 2px 12px; }
+.say.on { border-left-color: var(--ok); }
+.say.off { border-left-color: var(--warn); }
+.read { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.read div { background: var(--panel); padding: 8px 10px; min-width: 0; }
+.read dt { font: 400 11px/1.3 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.read dd { margin: 2px 0 0; font: 500 17px/1.2 var(--mono); font-variant-numeric: tabular-nums; }
+.read dd small { font-size: 12px; color: var(--muted); font-weight: 400; }
+dl { margin: 0; }
+.chips { display: flex; flex-direction: column; gap: 6px; }
+.chip { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 13px; padding: 6px 9px; border-radius: 6px; background: var(--soft); }
+.chip b { font: 600 11px/1 var(--mono); letter-spacing: 0.08em; padding: 4px 6px; border-radius: 4px; color: var(--panel); background: var(--muted); }
+.chip.ok b { background: var(--ok); } .chip.bad b { background: var(--bad); }
+.chip span.v { font: 13px/1 var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+.window { position: relative; height: 26px; background: var(--soft); border-radius: 6px; }
+.window .band { position: absolute; top: 0; bottom: 0; background: color-mix(in srgb, var(--ok) 32%, transparent); border-left: 2px solid var(--ok); border-right: 2px solid var(--ok); }
+.window .pin { position: absolute; top: -4px; bottom: -4px; width: 3px; background: var(--ink); border-radius: 2px; transform: translateX(-1px); }
+.window span { position: absolute; top: 5px; font: 11px/16px var(--mono); color: var(--ink); white-space: nowrap; }
+.chart { width: 100%; height: auto; display: block; }
+.chart text { font: 10px var(--mono); fill: var(--muted); }
+.chart .ax { stroke: var(--line); stroke-width: 1; fill: none; }
+.chart .cv { stroke: var(--compression); stroke-width: 2; fill: none; }
+.chart .tg { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 3; fill: none; }
+.chart .dot { fill: var(--ink); }
+
+.find { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px 28px; }
+.find article { display: flex; flex-direction: column; gap: 6px; border-top: 2px solid var(--ink); padding-top: 10px; min-width: 0; }
+.find .big { font: 600 26px/1.1 var(--mono); font-variant-numeric: tabular-nums; color: var(--compression); }
+.find article:nth-child(even) .big { color: var(--tension); }
+.find p { color: var(--muted); }
+.find p strong { color: var(--ink); font-weight: 600; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 11px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td.mono { white-space: nowrap; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px 28px; }
+.two ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); }
+.foot { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+section { display: flex; flex-direction: column; gap: 14px; }
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div class="eyebrow">X3D engineering study C · not for construction</div>
+    <h1>Tensegrity Workbench</h1>
+    <p class="lede">Three <span class="c">struts</span> that never touch, held apart by nine <span class="t">cables</span> that are never slack. Fuller called it tensional integrity. Everything about it, the odd 150° twist, the springiness, the way it stiffens when you tighten it, falls out of one matrix. Operate the three lessons, then read what the numbers say.</p>
+  </header>
+
+  <div class="bench">
+    <div class="stage" id="stage">
+      <img class="poster" id="poster" alt="A three-strut tensegrity prism: three red struts crossing in mid-air, tied by nine thin blue cables" src="__POSTER__">
+      <x3d-canvas id="xc" splashScreen="false" contextMenu="false" notifications="false" timings="false"></x3d-canvas>
+      <div class="msg" id="msg" hidden></div>
+      <div class="hud">
+        <div class="legend" id="legend"></div>
+        <div class="views" role="group" aria-label="Camera">
+          <button type="button" id="view-0" aria-pressed="true">3/4</button><button type="button" id="view-1" aria-pressed="false">Top</button><button type="button" id="view-2" aria-pressed="false">Side</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="tabs" role="tablist" aria-label="Lessons">
+        <button type="button" role="tab" id="tab-twist" aria-selected="true" aria-controls="lesson-twist"><small>Lesson 1</small>Find the twist</button>
+        <button type="button" role="tab" id="tab-load" aria-selected="false" aria-controls="lesson-load"><small>Lesson 2</small>Prestress is the stiffness</button>
+        <button type="button" role="tab" id="tab-six" aria-selected="false" aria-controls="lesson-six"><small>Lesson 3</small>Six struts</button>
+      </div>
+
+      <div class="lesson" id="lesson-twist" role="tabpanel" aria-labelledby="tab-twist">
+        <p>Turn the top triangle against the base. At almost every angle this is an ordinary frame with nothing to spare. Look for the one angle where it can be tightened against itself.</p>
+        <div class="ctl"><label for="twist">Twist of the top triangle</label><output id="twist-out" for="twist">150.0°</output>
+          <input type="range" id="twist" min="90" max="210" step="0.5" value="150"></div>
+        <div class="row"><button class="btn" type="button" id="twist-snap">Snap to 150°</button><span class="note">Use the Top view to see the angle.</span></div>
+        <div class="gauge"><div class="bar"><i id="twist-bar"></i></div><output class="mono" id="twist-sig">0.0000</output>
+          <div class="cap">Smallest singular value of the 18 × 12 equilibrium matrix. Zero means the 12 member forces are no longer independent.</div></div>
+        <div class="read"><dl><div><dt>Self-stress states</dt><dd id="twist-s">1</dd></div></dl><dl><div><dt>Floppy modes</dt><dd id="twist-m">1</dd></div></dl></div>
+        <p class="say on" id="twist-say"></p>
+        <p class="note">Maxwell's count for 12 members and 6 joints is 12 − (3 × 6 − 6) = 0. That count always equals self-stress states minus floppy modes, so the two appear together or not at all.</p>
+      </div>
+
+      <div class="lesson" id="lesson-load" role="tabpanel" aria-labelledby="tab-load" hidden>
+        <p>The prism at 150°, 1 m tall, on aluminium tubes and 3 mm wire rope. Set how hard the cables are pulled before any load arrives, then load it. The page solves the shape live.</p>
+        <div class="ctl"><label for="pre">Prestress in each side cable</label><output id="pre-out" for="pre">600 N</output>
+          <input type="range" id="pre" min="0" max="1400" step="10" value="600"></div>
+        <div class="window" id="window" aria-hidden="true"><div class="band" id="win-band"></div><div class="pin" id="win-pin"></div><span id="win-lab"></span></div>
+        <p class="note">Green band: where the study's 14 load cases all pass, __FLOOR__ N to __CEIL__ N.</p>
+        <div class="row"><span class="note">Load</span>
+          <div class="seg" id="case" role="group" aria-label="Load case">
+            <button type="button" data-c="press" aria-pressed="true">Press</button><button type="button" data-c="one" aria-pressed="false">Press one joint</button><button type="button" data-c="push" aria-pressed="false">Side push</button><button type="button" data-c="lift" aria-pressed="false">Lift</button><button type="button" data-c="twist" aria-pressed="false">Twist</button>
+          </div></div>
+        <div class="ctl"><label for="load">Load</label><output id="load-out" for="load">800 N</output>
+          <input type="range" id="load" min="0" max="1600" step="20" value="800"></div>
+        <div class="read">
+          <dl><div><dt>Top drops</dt><dd id="r-drop">0</dd></div></dl><dl><div><dt>Top turns</dt><dd id="r-turn">0</dd></div></dl>
+          <dl><div><dt>Worst strut</dt><dd id="r-strut">0</dd></div></dl><dl><div><dt>Worst cable</dt><dd id="r-cable">0</dd></div></dl>
+          <dl><div><dt>Slackest cable</dt><dd id="r-slack">0</dd></div></dl><dl><div><dt>Softest stiffness</dt><dd id="r-soft">0</dd></div></dl>
+        </div>
+        <div class="chips" id="chips"></div>
+        <svg class="chart" id="chart" viewBox="0 0 360 170" role="img" aria-label="Movement against load at this prestress"></svg>
+        <p class="note">Solid: movement against load at this prestress. Dashed: the straight line a linear analysis would draw from the first 100 N. The gap is the structure stiffening as it deforms.</p>
+        <div class="row"><span class="note">Show movement at</span><div class="seg" id="exag" role="group" aria-label="Displayed movement scale"><button type="button" data-x="1" aria-pressed="true">true scale</button><button type="button" data-x="5" aria-pressed="false">5 times</button></div></div>
+      </div>
+
+      <div class="lesson" id="lesson-six" role="tabpanel" aria-labelledby="tab-six" hidden>
+        <p>The shape Fuller and Snelson made famous: six struts in three parallel pairs, 24 cables. Slide the pairs apart or together and find where it locks.</p>
+        <div class="ctl"><label for="gap">Gap between parallel struts</label><output id="gap-out" for="gap">0.500 L</output>
+          <input type="range" id="gap" min="0.3" max="0.7" step="0.005" value="0.5"></div>
+        <div class="row"><button class="btn" type="button" id="gap-snap">Snap to half a strut</button></div>
+        <div class="gauge"><div class="bar"><i id="gap-bar"></i></div><output class="mono" id="gap-sig">0.0000</output>
+          <div class="cap">Smallest singular value of the 36 × 30 equilibrium matrix.</div></div>
+        <p class="say on" id="gap-say"></p>
+        <div class="ctl"><label for="pre6">Prestress in each cable</label><output id="pre6-out" for="pre6">200 N</output>
+          <input type="range" id="pre6" min="0" max="600" step="10" value="200"></div>
+        <div class="ctl"><label for="sq">Squeeze on the top triangle</label><output id="sq-out" for="sq">0 N</output>
+          <input type="range" id="sq" min="0" max="600" step="10" value="0"></div>
+        <div class="read">
+          <dl><div><dt>Each strut carries</dt><dd id="s-strut">0</dd></div></dl><dl><div><dt>Cables carry</dt><dd id="s-cable">0</dd></div></dl>
+          <dl><div><dt>Top drops</dt><dd id="s-drop">0</dd></div></dl><dl><div><dt>Slack cables</dt><dd id="s-slack">0</dd></div></dl>
+        </div>
+        <p class="note">This shape is shown and solved, not designed: no strength check is made on it here.</p>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="eyebrow">What the numbers say</div>
+    <h2>Ten things the study measured</h2>
+    <div class="find">
+      <article><div class="big">150°</div><h3>The shape is found, not chosen</h3><p>The smallest singular value of the equilibrium matrix reaches zero at exactly 90° + 180°/3. <strong>Height and radius do not matter.</strong> The study changed both, and made the top smaller than the base, and the root stayed at 150° to better than __TWIST_ERR__ rad. For 4, 5 and 6 struts the roots are 135°, 126° and 120°.</p></article>
+      <article><div class="big">0 = 1 − 1</div><h3>Maxwell's count says there is nothing to prestress</h3><p>12 members, 6 joints: 12 − 12 = 0, exactly rigid, nothing spare. Calladine's 1978 reading of Maxwell supplies the fine print: the count equals self-stress states minus floppy modes. At 150° both are 1. <strong>The structure buys its prestress with a floppy mode.</strong></p></article>
+      <article><div class="big">__K_PER_N__ N/m per N</div><h3>Stiffness is rented from prestress</h3><p>The floppy mode has no material stiffness at all. Its stiffness is __K600__ N/m at 600 N of prestress and 0 at 0 N, on a straight line. The next mode is __KNEXT__ N/m, __KRATIO__ times stiffer. <strong>A tensegrity is tuned like a drum skin</strong>, not built like a wall.</p></article>
+      <article><div class="big">__TURN__°</div><h3>It is a screw</h3><p>Press down with 800 N and the top drops __DROP__ mm but turns __TURN__°, which is __RIM__ mm of travel at the rim. The floppy mode couples shortening to twist, so <strong>most of what you feel is rotation</strong>.</p></article>
+      <article><div class="big">__TIGHT__</div><h3>Push, pull or twist: every cable tightens</h3><p>Pressing, lifting and twisting in either sense (four load cases) each raised the tension in all nine cables and the compression in all three struts. Lifting the top with 300 N took the struts from __STRUT_PRE__ N to __STRUT_LIFT__ N of compression. <strong>Only an off-centre load loosens a cable.</strong></p></article>
+      <article><div class="big">__FLOOR__ to __CEIL__ N</div><h3>Prestress has a floor and a ceiling</h3><p>Below __FLOOR__ N the top turns more than 5° under the press, and near 200 N a side push lets a cable go slack. Above __CEIL__ N a strut passes its buckling allowance and a cable its strength allowance almost together. <strong>The design sits at 600 N</strong>: struts at __U_STRUT__, cables at __U_CABLE__ of what is allowed.</p></article>
+      <article><div class="big">s = 1</div><h3>There is no spare cable</h3><p>One self-stress state means zero redundancy. The study removed one side cable and the count of self-stress states went to 0: the prestress has nowhere to live. A truss with a redundant member forgives a cut. <strong>This does not.</strong></p></article>
+      <article><div class="big">__U_YIELD__ vs __U_STRUT__</div><h3>Buckling governs, again</h3><p>Against yield the worst strut is at __U_YIELD__ of capacity. Against Euler buckling the same strut is at __U_STRUT__. As in the four-bar study, <strong>the check that looks comfortable is not the one that decides</strong>.</p></article>
+      <article><div class="big">√6</div><h3>The six-strut classic has the same census</h3><p>Parallel struts sit exactly half a strut apart, every cable is 0.612 of a strut long, and each strut carries √6 = 2.449 times a cable's tension. 30 members, 12 joints, count 0, one self-stress, one floppy mode: the prism's arithmetic in a rounder body.</p></article>
+      <article><div class="big">6 joints, 0 ropes</div><h3>X3D can show it and cannot yet be it</h3><p>X3D 4.0's physics component offers six joint nodes and none is a rope, a spring or a distance limit. These scenes carry the tensegrity as geometry, names, metadata and keyframes. <strong>That gap is where a heavier engine belongs</strong>: PhysX has distance joints and MuJoCo has tendons.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Audit trail</div>
+    <h2>How each number was checked</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Check</th><th>Result</th><th>Able to fail?</th></tr></thead>
+      <tbody>
+        <tr><td>Every requirement and reference on the study card</td><td class="mono">__GATES__ gates</td><td>__CONTROLS__ controls caught: each one broke the gate it names</td></tr>
+        <tr><td>Twist found by search against the closed form, 3 to 6 struts</td><td class="mono">under __TWIST_ERR__ rad</td><td>Yes: the formula with a minus sign is rejected</td></tr>
+        <tr><td>Two static solvers that share only the member law, 14 load cases</td><td class="mono">__SOLVERS__ m</td><td>Yes: stopping the second solver early is rejected</td></tr>
+        <tr><td>Stiffness matrix against a finite difference of the forces</td><td class="mono">__FD__ relative</td><td>Yes: a flipped sign on the prestress term is rejected</td></tr>
+        <tr><td>This page's solver (the script below, unchanged) against the numpy bank</td><td class="mono">__PAGE__ m</td><td>Yes: a wrong prestress pattern misses by __PAGE_CTL__ m</td></tr>
+        <tr><td>The X3D scene read back and joined to the bank by name</td><td class="mono">6 of 6 joints, 12 of 12 members</td><td>Yes: a joint moved 20 mm and a force edited by 1 N are both rejected</td></tr>
+        <tr><td>X3D 4.0 schema and semantic checks on the three scenes</td><td class="mono">0 errors</td><td>Validator: x3d_mcp at ca0e75c</td></tr>
+      </tbody></table></div>
+    <div class="two">
+      <div><h3>Not checked</h3><ul><li>Nobody outside the session has recomputed a number, so read every result as likely, not confirmed.</li><li>Material values (rope area, rope modulus, breaking load) are from memory and need the maker's sheet.</li><li>No dynamics: there is no mass model and no measured frequency.</li><li>Struts are ideal pin-ended columns; end fittings, cable terminations, fatigue and temperature are not modelled.</li><li>No licensed engineer has reviewed it.</li></ul></div>
+      <div><h3>Where it came from</h3><ul><li>Kenneth Snelson built the first one, the X-Piece, in 1948 at Black Mountain College, where Buckminster Fuller was teaching. Fuller gave it its name, from "tensional integrity". Sources differ on the year he coined it. <a href="https://en.wikipedia.org/wiki/Tensegrity">Tensegrity, Wikipedia</a>.</li><li>C. R. Calladine, "Buckminster Fuller's 'Tensegrity' structures and Clerk Maxwell's rules for the construction of stiff frames", International Journal of Solids and Structures 14 (1978), 161 to 172. <a href="https://doi.org/10.1016/0020-7683(78)90052-5">doi:10.1016/0020-7683(78)90052-5</a>. Cited from its record and summaries; the full text was not read.</li></ul></div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div>Numbers: Python __PY__, numpy __NP__, from x3d.loom <span class="mono">x3d.engineering/tensegrity</span>. Page solver checked under Node __NODE__. 3D view: X_ITE 16.5.1, unpatched, with its stylesheet carried in the page.</div>
+    <div>A worked study. Not a certified design and not for manufacture.</div>
+  </footer>
+</div>
+
+<script>
+/*__SOLVER__*/
+</script>
+<script>
+const DATA = /*__DATA__*/;
+/*__APP__*/
+</script>

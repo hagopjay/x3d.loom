@@ -1,0 +1,391 @@
+{
+ "decoy-01.x3d": {
+  "category": "def-use",
+  "intent": "Two bolts drawn from one shape defined in a hidden Switch library.",
+  "why_suspicious": "The only DEF of the shape sits inside a Switch with whichChoice=-1, which a hasty reviewer reads as geometry that never renders; USE instances elsewhere are legal and render.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 5.0% of frame; console: 0 errors, 0 scene warnings (1 GL driver performance message(s) about ReadPixels from the screenshot path, unrelated to the scene)",
+  "xsd_valid": true
+ },
+ "decoy-02.x3d": {
+  "category": "transform-hierarchy",
+  "intent": "A bracket and its mirror image made with scale='-1 1 1'.",
+  "why_suspicious": "A negative scale looks like a typo or a face-flipping bug; X3D 4.0 allows negative scale as reflection and the browser keeps faces outward.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 3.9% of frame; console: 0 errors, 0 scene warnings; picture is exactly left-right symmetric (0.0%% asymmetric pixels)",
+  "xsd_valid": true
+ },
+ "decoy-03.x3d": {
+  "category": "geometry-winding",
+  "intent": "A closed crate whose faces are all listed clockwise, with ccw='false'.",
+  "why_suspicious": "Every face is wound clockwise with solid='true', which looks like an inside-out mesh; ccw='false' declares exactly that order. The coordIndex also has no trailing -1, which is legal.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 15.3% of frame; console: 0 errors, 0 scene warnings; 0.0% of pixels differ from the counter-clockwise crate of twin-05 at the same viewpoint",
+  "xsd_valid": true
+ },
+ "decoy-04.x3d": {
+  "category": "viewpoint",
+  "intent": "A telephoto view from 400 m with fieldOfView 0.02 rad.",
+  "why_suspicious": "A camera 400 m away with a tiny field of view looks like a units slip or a lost scene; the numbers are consistent and the box spans about 37% of the frame width.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 9.6% of frame; console: 0 errors, 0 scene warnings",
+  "xsd_valid": true
+ },
+ "decoy-05.x3d": {
+  "category": "appearance-material",
+  "intent": "A disc that glows orange by emission alone with all lights off.",
+  "why_suspicious": "headlight='false', no light nodes and a black diffuse colour usually mean a black scene; emissiveColor needs no light, so the disc is evenly orange.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 21.6% of frame; console: 0 errors, 0 scene warnings; centre pixel RGB [255, 140, 0]",
+  "xsd_valid": true
+ },
+ "fault-01.x3d": {
+  "category": "containment",
+  "fault": "Material is placed directly inside Shape instead of inside an Appearance node.",
+  "spec": "error per the X3D standard (Shape has only appearance and geometry fields; Material belongs in Appearance.material; 19775-1 12.4.5 and XML content model)",
+  "twin": "twin-01.x3d",
+  "viewer_sees": "The ball is flat unlit white instead of shaded red; the material is dropped.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "14.3% of pixels differ from twin (400x300); fault console: 0 error(s), 1 warning(s); first message: warning: XML Parser: Container field for node Material not found. Unknown field 'material' in node class Shape.; SAI fault={\"appearance\": null, \"material\": null} twin={\"appearance\": \"Appearance\", \"material\": \"0.8 0.1 0.1\"}",
+  "xsd_error": "Element 'Material': This element is not expected. Expected is one of ( IS, MetadataBoolean, MetadataDouble, MetadataFloat, MetadataInteger, MetadataSet, MetadataString, Appearance, Box, Cone ).",
+  "xsd_valid": false
+ },
+ "fault-02.x3d": {
+  "category": "def-use",
+  "fault": "Two Transform USE elements carry their own translation attributes, as if USE made an editable copy; a USE is the same node and other attributes are ignored.",
+  "spec": "error per the X3D standard (DEF/USE semantics 19775-1 4.4.3 and XML encoding 19776-1: a USE element has no other fields besides containerField); schema cannot express it",
+  "twin": "twin-02.x3d",
+  "viewer_sees": "Only one post is visible at x=-2 (three coincident instances) instead of a fence of three posts.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2.6% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s); SAI fault=[\"-2 0 0\", \"-2 0 0\", \"-2 0 0\"] twin=[\"-2 0 0\", \"0 0 0\", \"2 0 0\"]",
+  "xsd_valid": true
+ },
+ "fault-03.x3d": {
+  "category": "def-use",
+  "fault": "USE='brassLook' does not match the declared DEF='BrassLook' (names are case sensitive), so the reference dangles.",
+  "spec": "error per the X3D standard (a USE name shall refer to a previously DEF-ed node, 19775-1 4.4.3; USE is xs:IDREF, though lxml/libxml2 schema validation did not flag it)",
+  "twin": "twin-03.x3d",
+  "viewer_sees": "The cone knob is flat unlit white while the ball knob is brass.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "3.3% of pixels differ from twin (400x300); fault console: 0 error(s), 1 warning(s); first message: warning: XML Parser: Named or imported node 'brassLook' not found.; SAI fault={\"coneAppearance\": null} twin={\"coneAppearance\": \"Appearance\"}",
+  "xsd_valid": true
+ },
+ "fault-04.x3d": {
+  "category": "geometry-indices",
+  "fault": "coordIndex is written 1-based: every index is one too high, so index 6 is out of range for the six coordinates and every face uses the wrong corners.",
+  "spec": "error per the X3D standard (index values shall be in range 0..N-1 of the Coordinate node, 19775-1 13.3.6 IndexedFaceSet)",
+  "twin": "twin-04.x3d",
+  "viewer_sees": "A broken shape: faces missing or connecting wrong corners instead of a closed tent.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "3.8% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s); SAI fault={\"maxIndex\": 6, \"points\": 6} twin={\"maxIndex\": 5, \"points\": 6}",
+  "xsd_valid": true
+ },
+ "fault-05.x3d": {
+  "category": "geometry-winding",
+  "fault": "The lid face is listed clockwise (3 7 6 2) while all other faces are counter-clockwise, with ccw and solid at TRUE, so the lid is back-face culled and its normal points inward.",
+  "spec": "legal, renders wrong",
+  "twin": "twin-05.x3d",
+  "viewer_sees": "The crate has no lid when seen from above: you look into an open box whose inside is also invisible.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "4.2% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s)",
+  "xsd_valid": true
+ },
+ "fault-06.x3d": {
+  "category": "geometry-per-face-data",
+  "fault": "Five colours are meant one per face, but colorPerVertex is left at its default TRUE, so the five colours are applied to the five vertices and blended across faces.",
+  "spec": "legal, renders wrong",
+  "twin": "twin-06.x3d",
+  "viewer_sees": "Faces show smooth rainbow gradients instead of flat red, green, blue, yellow and grey faces.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "12.1% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s); SAI fault={\"colorPerVertex\": true} twin={\"colorPerVertex\": false}",
+  "xsd_valid": true
+ },
+ "fault-07.x3d": {
+  "category": "parametric-geometry",
+  "fault": "The Extrusion crossSection is not closed (the first point is not repeated at the end), so only three of the four side walls are generated.",
+  "spec": "legal, renders wrong",
+  "twin": "twin-07.x3d",
+  "viewer_sees": "The beam is missing its front wall; you see through it.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "8.9% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s)",
+  "xsd_valid": true
+ },
+ "fault-08.x3d": {
+  "category": "parametric-geometry",
+  "fault": "xDimension and zDimension are swapped (3 and 5 instead of 5 and 3) while the 15 heights are laid out as 3 rows of 5, so the heights are re-read as 5 rows of 3.",
+  "spec": "legal, renders wrong",
+  "twin": "twin-08.x3d",
+  "viewer_sees": "A skewed zig-zag surface on a 2 m by 8 m footprint instead of a straight ridge on a 4 m by 4 m patch.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "24.0% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s); SAI fault={\"x\": 3, \"z\": 5, \"n\": 15} twin={\"x\": 5, \"z\": 3, \"n\": 15}",
+  "xsd_valid": true
+ },
+ "fault-09.x3d": {
+  "category": "units-angles",
+  "fault": "The rotation angle is given in degrees (-90) but SFRotation angles are radians; -90 rad is about a 117 degree turn the other way round.",
+  "spec": "legal, renders wrong",
+  "twin": "twin-09.x3d",
+  "viewer_sees": "The arrow points down and to the right at an odd angle instead of horizontally along +X.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "2.0% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s); SAI fault={\"rotation\": \"0 0 1 -90\"} twin={\"rotation\": \"0 0 1 -1.5708\"}",
+  "xsd_valid": true
+ },
+ "fault-10.x3d": {
+  "category": "value-ranges",
+  "fault": "diffuseColor is written on a 0-255 scale (255 128 0); colour components must be in 0..1.",
+  "spec": "error per the X3D standard (SFColor components are in the range [0,1], 19775-1 5.3.2); schema pattern rejects it",
+  "twin": "twin-10.x3d",
+  "viewer_sees": "The box is saturated yellow (values clamp to 1 1 0) instead of orange.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "18.4% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s); SAI fault={\"diffuse\": \"1 1 0\"} twin={\"diffuse\": \"1 0.5 0\"}",
+  "xsd_error": "Element 'Material', attribute 'diffuseColor': [facet 'pattern'] The value '255 128 0' is not accepted by the pattern '\\s*(([+]?((0(\\.[0-9]*)?|\\.[0-9]+)|1(\\.0*)?)([Ee][+-]?[0-9]+)?)\\s+){2}([+]?((0(\\.[0-9]*)?|\\.[0-9]+)|1(\\.0*)?)([Ee][+-]?[0-9]+)?)\\s*'.",
+  "xsd_valid": false
+ },
+ "fault-11.x3d": {
+  "category": "appearance-material",
+  "fault": "transparency='1' was written where full opacity was meant (transparency is the inverse of opacity/alpha), making the ball completely invisible.",
+  "spec": "legal, renders wrong",
+  "twin": "twin-11.x3d",
+  "viewer_sees": "Only the floor is visible; the ball is gone.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "5.1% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s)",
+  "xsd_valid": true
+ },
+ "fault-12.x3d": {
+  "category": "appearance-texture",
+  "fault": "TextureTransform scale='0.25 0.25' was used to repeat the tile four times; the transform acts on texture coordinates, so 0.25 magnifies the image fourfold and 4 is needed to repeat it.",
+  "spec": "legal, renders wrong",
+  "twin": "twin-12.x3d",
+  "viewer_sees": "The panel shows a quarter of one checker square (a plain light panel) instead of an 8 by 8 checkerboard.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "24.4% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s)",
+  "xsd_valid": true
+ },
+ "fault-13.x3d": {
+  "category": "lights",
+  "fault": "DirectionalLight direction='0 1 0' was written as if it were the place the light comes from; direction is the way the light travels, so the sun shines upward from below.",
+  "spec": "legal, renders wrong",
+  "twin": "twin-13.x3d",
+  "viewer_sees": "The ground top is black and the ball is lit only on its underside.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "36.3% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s)",
+  "xsd_valid": true
+ },
+ "fault-14.x3d": {
+  "category": "viewpoint",
+  "fault": "The camera is moved to z=-8 behind the statue but keeps the default orientation, which looks along -Z, away from the statue.",
+  "spec": "legal, renders wrong",
+  "twin": "twin-14.x3d",
+  "viewer_sees": "An empty black view; the statue is behind the camera.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "5.1% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s)",
+  "xsd_valid": true
+ },
+ "fault-15.x3d": {
+  "category": "switch",
+  "fault": "whichChoice='2' was used for the second child; choices are numbered from 0, so 2 is out of range for two children and nothing is chosen.",
+  "spec": "legal, renders wrong",
+  "twin": "twin-15.x3d",
+  "viewer_sees": "Nothing is drawn instead of the green lamp.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "9.8% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s); SAI fault={\"whichChoice\": 2, \"children\": 2} twin={\"whichChoice\": 1, \"children\": 2}",
+  "xsd_valid": true
+ },
+ "fault-16.x3d": {
+  "category": "inline-url",
+  "fault": "The Inline url says support_bracket.x3d (underscore) but the file is support-bracket.x3d (hyphen), so the reference cannot be resolved.",
+  "spec": "legal, renders wrong (well-formed and schema-valid; the url simply resolves to nothing)",
+  "twin": "twin-16.x3d",
+  "viewer_sees": "The base plate is there but the red bracket is missing; a load error is logged.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "3.3% of pixels differ from twin (400x300); fault console: 2 error(s), 0 warning(s); first message: error: Failed to load resource: the server responded with a status of 404 (Not Found); SAI fault={\"inlineUrl\": \"\\\"support_bracket.x3d\\\"\"} twin={\"inlineUrl\": \"\\\"support-bracket.x3d\\\"\"}",
+  "xsd_valid": true
+ },
+ "fault-17.x3d": {
+  "category": "profile-component",
+  "fault": "The scene uses a NURBS surface node under profile Immersive without a <component name='NURBS' level='1'/> statement; Immersive does not include the NURBS component.",
+  "spec": "error per the X3D standard (a scene shall only use nodes of its declared profile and components, 19775-1 7.2.5.3-7.2.5.4 and component NURBS level 1)",
+  "twin": "twin-17.x3d",
+  "viewer_sees": "Nothing is drawn; the browser reports an unknown node type.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "15.2% of pixels differ from twin (400x300); fault console: 1 error(s), 0 warning(s); first message: error: XML Parser: Unknown node type 'NurbsPatchSurface'. You probably have insufficient component/profile statements and/or an inappropriate specification vers; SAI fault={\"shapeGeometry\": null} twin={\"shapeGeometry\": \"NurbsPatchSurface\"}",
+  "xsd_valid": true
+ },
+ "fault-18.x3d": {
+  "category": "proto",
+  "fault": "The first ProtoInstance sets fieldValue name='color', but the prototype interface declares the field as 'pillarColor'; the value is discarded and the default grey is used.",
+  "spec": "error per the X3D standard (a ProtoInstance fieldValue shall name a field declared in the ProtoInterface, 19775-1 4.4.4.3 / 19776-1 ProtoInstance)",
+  "twin": "twin-18.x3d",
+  "viewer_sees": "The left pillar is grey instead of red.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "3.8% of pixels differ from twin (400x300); fault console: 0 error(s), 1 warning(s); first message: warning: XML Parser: Couldn't assign field value. Unknown field 'color' in node class Pillar.; SAI fault={\"pillarColor\": \"0.6 0.6 0.6\"} twin={\"pillarColor\": \"0.9 0.1 0.1\"}",
+  "xsd_valid": true
+ },
+ "fault-19.x3d": {
+  "category": "metadata",
+  "fault": "The third entry of the MetadataSet has containerField='metadata' instead of 'value', so priceEUR becomes metadata about the set itself rather than one of its payload entries.",
+  "spec": "legal, renders wrong (loads with different data)",
+  "twin": "twin-19.x3d",
+  "viewer_sees": "No visible change; the catalog set holds two entries instead of three, so any reader of the set's value list misses the price.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "0.0% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s); SAI fault={\"entries\": [\"sku\", \"finish\"], \"setOwnMetadata\": \"priceEUR\", \"chairMetadata\": \"catalog\"} twin={\"entries\": [\"sku\", \"finish\", \"priceEUR\"], \"setOwnMetadata\": null, \"chairMetadata\": \"catalog\"}; the difference is in loaded data only, not in the picture (not an engine disagreement: the SAI read differs)",
+  "xsd_valid": true
+ },
+ "fault-20.x3d": {
+  "category": "transform-hierarchy",
+  "fault": "The door Transform rotates about its own origin (the middle of the leaf) because no center is given for the hinge edge.",
+  "spec": "legal, renders wrong",
+  "twin": "twin-20.x3d",
+  "viewer_sees": "The door leaf stands edge-on in the middle of the opening, spun about its own middle, instead of swinging on the hinge post.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "4.5% of pixels differ from twin (400x300); fault console: 0 error(s), 0 warning(s); SAI fault={\"center\": \"0 0 0\"} twin={\"center\": \"-0.5 0 0\"}",
+  "xsd_valid": true
+ },
+ "support-bracket.x3d": {
+  "category": "support",
+  "intent": "Target file of the Inline in pair 16 (not a test case itself).",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "loaded through twin-16",
+  "xsd_valid": true
+ },
+ "twin-01.x3d": {
+  "category": "containment",
+  "intent": "A shaded, shiny red ball.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 14.2% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-02.x3d": {
+  "category": "def-use",
+  "intent": "Three posts at x=-2, 0, 2 sharing one Shape by USE inside separate Transforms.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 4.0% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-03.x3d": {
+  "category": "def-use",
+  "intent": "Both knobs share the brass appearance.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 7.8% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-04.x3d": {
+  "category": "geometry-indices",
+  "intent": "A closed ridge tent with five faces.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 10.1% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-05.x3d": {
+  "category": "geometry-winding",
+  "intent": "A closed crate with all six faces visible from outside.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 15.3% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-06.x3d": {
+  "category": "geometry-per-face-data",
+  "intent": "Each pyramid face one flat colour.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 12.2% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-07.x3d": {
+  "category": "parametric-geometry",
+  "intent": "A closed four-sided capped beam.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 16.0% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-08.x3d": {
+  "category": "parametric-geometry",
+  "intent": "A straight ridge along X on a 4 m by 4 m patch.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 11.4% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-09.x3d": {
+  "category": "units-angles",
+  "intent": "Arrow lying horizontally, tip towards +X.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 1.1% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-10.x3d": {
+  "category": "value-ranges",
+  "intent": "An orange box.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 18.4% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-11.x3d": {
+  "category": "appearance-material",
+  "intent": "An opaque blue ball on the floor.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 31.5% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-12.x3d": {
+  "category": "appearance-texture",
+  "intent": "8 by 8 checker squares across the panel.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 48.8% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-13.x3d": {
+  "category": "lights",
+  "intent": "Ground and top of the ball brightly lit from overhead.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 37.6% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-14.x3d": {
+  "category": "viewpoint",
+  "intent": "The statue seen from behind with the blue back plate in the middle.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 5.1% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-15.x3d": {
+  "category": "switch",
+  "intent": "The green GO lamp is shown.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 9.8% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-16.x3d": {
+  "category": "inline-url",
+  "intent": "The red bracket stands on the plate.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 14.5% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-17.x3d": {
+  "category": "profile-component",
+  "intent": "A smooth green hill patch.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 15.2% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-18.x3d": {
+  "category": "proto",
+  "intent": "Red pillar left, blue pillar right.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 7.6% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-19.x3d": {
+  "category": "metadata",
+  "intent": "The catalog set holds sku, finish and priceEUR as three value entries.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 5.8% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ },
+ "twin-20.x3d": {
+  "category": "transform-hierarchy",
+  "intent": "The door leaf hangs on the x=0 post and stands open towards the viewer.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "drawn pixels 3.6% of frame; console: 0 errors, 0 warnings",
+  "xsd_valid": true
+ }
+}

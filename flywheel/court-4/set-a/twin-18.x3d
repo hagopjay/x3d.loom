@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A bee that flies from left to right across the view every four seconds and, at the same time, bobs up and down four times per crossing."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 12'/>
+    <Transform DEF='BeePath'>
+      <Transform DEF='Bee'>
+        <Shape>
+          <Appearance>
+            <Material diffuseColor='1 0.8 0'/>
+          </Appearance>
+          <Sphere radius='0.3'/>
+        </Shape>
+      </Transform>
+    </Transform>
+    <TimeSensor DEF='FlightClock' cycleInterval='4' loop='true'/>
+    <PositionInterpolator DEF='Crossing' key='0 1' keyValue='-4 0 0 4 0 0'/>
+    <PositionInterpolator DEF='Bobbing' key='0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1' keyValue='0 0 0 0 0.5 0 0 0 0 0 0.5 0 0 0 0 0 0.5 0 0 0 0 0 0.5 0 0 0 0'/>
+    <ROUTE fromNode='FlightClock' fromField='fraction_changed' toNode='Crossing' toField='set_fraction'/>
+    <ROUTE fromNode='FlightClock' fromField='fraction_changed' toNode='Bobbing' toField='set_fraction'/>
+    <ROUTE fromNode='Crossing' fromField='value_changed' toNode='BeePath' toField='set_translation'/>
+    <ROUTE fromNode='Bobbing' fromField='value_changed' toNode='Bee' toField='set_translation'/>
+  </Scene>
+</X3D>

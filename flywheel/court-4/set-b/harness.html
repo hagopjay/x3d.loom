@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>witness</title>
+<style>html,body{margin:0;background:#000}x3d-canvas{display:block;width:400px;height:300px}</style>
+<script src="/kit/x_ite/x_ite.min.js"></script></head>
+<body><x3d-canvas id="c" splashScreen="false" notifications="false" timings="false" contextMenu="false" cache="false"></x3d-canvas>
+<script>
+window.runWitness = async function (url, probe) {
+  const browser = document.getElementById('c').browser;
+  const out = { loaded: false };
+  try { await browser.loadURL(new X3D.MFString(url)); out.loaded = true; }
+  catch (e) { out.loadError = String(e && e.message || e); }
+  // wait for external resources (inlines, textures) and a few frames
+  const t0 = performance.now();
+  while (performance.now() - t0 < 1500) {
+    await new Promise(r => requestAnimationFrame(r));
+    if (performance.now() - t0 > 600 && browser.getLoadCount && browser.getLoadCount() === 0) break;
+  }
+  for (let i = 0; i < 5; i++) await new Promise(r => requestAnimationFrame(r));
+  try {
+    const scene = browser.currentScene;
+    out.profile = scene.profile ? scene.profile.name : null;
+    out.components = Array.from(scene.components || [], c => c.name + ':' + c.level);
+    out.rootNodes = Array.from(scene.rootNodes, n => n ? n.getNodeTypeName() : 'NULL');
+    if (probe) { try { out.probe = (new Function('browser', 'scene', 'X3D', probe))(browser, scene, X3D); } catch (e) { out.probeError = String(e); } }
+    const gl = browser.getContext ? browser.getContext() : null;
+    out.renderer = browser.getRenderingProperty ? null : null;
+    try { const c = document.createElement('canvas'); const g = c.getContext('webgl2'); const d = g.getExtension('WEBGL_debug_renderer_info'); out.renderer = d ? g.getParameter(d.UNMASKED_RENDERER_WEBGL) : g.getParameter(g.RENDERER); } catch (e) {}
+    out.x_ite = browser.version;
+  } catch (e) { out.saiError = String(e); }
+  return out;
+};
+</script></body></html>

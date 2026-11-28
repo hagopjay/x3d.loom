@@ -1,0 +1,23 @@
+You are an independent reader judging the output of an X3D checker against a test set with known answers. You have not seen the checker's code and must not look for it.
+
+## Rules
+- Read ONLY these: WORK/reader/packet.json (your input), the test files under WORK/open/a/ and open/b/ (the .x3d files and MANIFEST.json, witness.json), and the neutral references in WORK/kit/ (X3D 4.0 XSD in kit/xsd/, and kit/X3dUnifiedObjectModel-4.0.xml, the standard's object model with each node's component and level and each field's type and access). Also WORK/reader/court3-faults.json: the 40 planted mistakes of an EARLIER test set (court 3), as one sentence each; you need it only for task 4.
+- Do NOT read anything under /home/user, /mnt/project-files, any memory folder, or court4/score/, court4/mcp-old/, court4/author-a/, court4/author-b/, the sibling court3 folder,. No network, no git.
+- Write your output ONLY to WORK/reader/verdicts.json.
+
+## The input
+packet.json is a list of 90 entries, one per test file: `file` (a/... is a behaviour set, b/... a structure set), `role` (fault, twin or decoy), `manifest` (the author's answer key: for a fault, the planted mistake in `fault`, what a viewer sees, and whether the standard forbids it; for a twin or decoy, the intent), `xsd_valid` and `xsd_errors` (schema result), and `diagnostics`: every finding the checker produced for that file, each with an `id`, a `level` (error, warning, info), a `check` name and a `message`. Each fault-NN file has exactly one planted mistake; twin-NN is the same scene with only that mistake fixed; decoys are meant to be legal scenes that look suspicious.
+
+## What to judge
+1. For every diagnostic on a FAULT file: does it name the planted mistake? "Names" means the finding is about the same node or ROUTE and the same defect the manifest describes, or about its direct and specific consequence (for example a finding that a group is empty when the planted mistake was putting the child outside that group). A finding about some other property of the file (a naming note, an undeclared component when the mistake is not about components, another slip the author made in both the fault and its twin) does not name it. Tip: if the identical diagnostic also appears on the twin, it cannot be about the planted mistake.
+2. For every FAULT: is it a real fault, that is, does the fault file really differ from its twin in the way the manifest says, and is the manifest's claim about X3D correct as far as you can tell? Answer real / not-a-fault / unsure, with one line of reason. Look at the files.
+3. For every diagnostic at level warning or error on a TWIN or DECOY file: is the complaint right (the file really has that problem under the X3D 4.0 standard, even if harmless or pedantic), wrong (the file does not have that problem), or doubtful? Use the object model file to check component levels, field types and containment. One line of reason each. Also judge, the same way, every info-level diagnostic on a twin or decoy whose `check` is not one of `unused-def`, `naming-convention`, `profile-component-fix` (those three are general notes; ignore them).
+4. For every FAULT: does it repeat a fault of the earlier set? "Repeats" means the same mistake on the same kind of node (for example both are a ROUTE whose fromNode has the wrong letter case, or both are a rotation angle written in degrees), even when the scene around it differs. Same broad family but a different mistake is NOT a repeat. Give the court3_file it repeats, or null.
+
+Judge strictly and independently. Do not try to be generous to the checker or to the test authors.
+
+## Output format
+verdicts.json: `{"faults": {"a/fault-01.x3d": {"real": "real|not-a-fault|unsure", "reason": "...", "naming": ["<diagnostic id>", ...], "repeats_court3": "<court3_file>" | null}, ...}, "legal": {"<diagnostic id>": {"verdict": "right|wrong|doubtful", "reason": "..."}, ...}, "notes": "anything a reader of the score should know"}`. `naming` lists the ids of the diagnostics that name the planted mistake (empty list if none). Include all 40 faults.
+
+## Report back
+A short summary: how many faults you judged real / not-a-fault / unsure (list the non-real ones with reasons), how many fault files have at least one naming diagnostic (list which do NOT, by file), the count of right / wrong / doubtful complaints on legal files with the wrong and doubtful ones listed, how many faults repeat a court 3 fault (list the pairs), and any pattern you noticed. Time-box: about 20 minutes.

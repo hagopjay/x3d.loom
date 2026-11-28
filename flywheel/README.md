@@ -60,3 +60,14 @@ opened ([`court-3/PREREG.md`](court-3/PREREG.md)). On that one unseen set the ol
 40 and the new one (`d647a10`, 11 checks written from courts 2 and 2b) catches 25, with none lost and no complaint
 from the new checks on the 50 legal files. Of four expectations three held and one failed by one (26 was expected).
 Seen sets at the same commit: 37 of 40. The set is now seen and is a regression set from here on.
+
+## Blind court 4 (28 November 2026)
+
+[`court-4/RESULTS.md`](court-4/RESULTS.md): the second sealed test, one turn later. Two new blind authors wrote 40
+faults, 40 corrected twins and 10 decoys; the plan and the frozen kernel were pushed before the set was opened
+([`court-4/PREREG.md`](court-4/PREREG.md)). On that unseen set the old kernel (`ca0e75c`) catches 19 of 40 and the
+new one (`c185673`, 20 checks for scenes that are legal and play wrong) catches 23, with none lost and no warning
+or error on the 50 legal files. The target was 30 and was missed. A second reader marked 19 of the 40 faults as
+repeats of court 3: the new kernel names 18 of those and 5 of the 21 that are new (the old one 16 and 3). Of five
+expectations four held. The set is now seen and is a regression set from here on. The next court should give its
+authors the list of mistakes already planted and take its headline from new mistakes only.

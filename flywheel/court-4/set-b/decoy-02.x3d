@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='description' content='A right-hand L bracket at x = +1.5 and its exact mirror image, a left-hand bracket, at x = -1.5, made by reflecting the same group across the YZ plane.'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='PairView' description='Mirrored pair' position='0 0 9'/>
+    <Transform DEF='RightHandPlacement' translation='1.5 0 0'>
+      <Group DEF='RightHandBracket'>
+        <Shape>
+          <Appearance DEF='BracketPaint'>
+            <Material diffuseColor='0.2 0.5 0.8'/>
+          </Appearance>
+          <Box size='0.4 2 0.4'/>
+        </Shape>
+        <Transform translation='0.8 -0.8 0'>
+          <Shape>
+            <Appearance USE='BracketPaint'/>
+            <Box size='1.2 0.4 0.4'/>
+          </Shape>
+        </Transform>
+      </Group>
+    </Transform>
+    <Transform DEF='MirroredLeftHandPlacement' translation='-1.5 0 0' scale='-1 1 1'>
+      <Group USE='RightHandBracket'/>
+    </Transform>
+  </Scene>
+</X3D>

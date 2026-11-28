@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A crate that grows from a small cube into a pillar four times as tall over four seconds, then starts again."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 1.5 12'/>
+    <Transform DEF='Crate'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.6 0.4 0.2'/>
+        </Appearance>
+        <Box DEF='CrateBox' size='1 1 1'/>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF='GrowClock' cycleInterval='4' loop='true'/>
+    <PositionInterpolator DEF='GrowSize' key='0 1' keyValue='1 1 1 1 4 1'/>
+    <ROUTE fromNode='GrowClock' fromField='fraction_changed' toNode='GrowSize' toField='set_fraction'/>
+    <ROUTE fromNode='GrowSize' fromField='value_changed' toNode='Crate' toField='scale'/>
+  </Scene>
+</X3D>

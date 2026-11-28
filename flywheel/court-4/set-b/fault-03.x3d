@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='description' content='Two drawer knobs, a ball and a cone, that both wear the same polished brass look.'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='KnobView' description='Both knobs' position='0 0 7'/>
+    <Transform DEF='BallKnob' translation='-1.3 0 0'>
+      <Shape>
+        <Appearance DEF='BrassLook'>
+          <Material diffuseColor='0.75 0.55 0.15' specularColor='0.9 0.8 0.4' shininess='0.5'/>
+        </Appearance>
+        <Sphere radius='0.8'/>
+      </Shape>
+    </Transform>
+    <Transform DEF='ConeKnob' translation='1.3 0 0'>
+      <Shape>
+        <Appearance USE='brassLook'/>
+        <Cone bottomRadius='0.8' height='1.6'/>
+      </Shape>
+    </Transform>
+  </Scene>
+</X3D>

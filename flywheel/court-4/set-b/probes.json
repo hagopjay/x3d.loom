@@ -1,0 +1,16 @@
+{
+ "pair-01.x3d": "const s=scene.getNamedNode('RedBall'); return {appearance: s.appearance ? s.appearance.getNodeTypeName() : null, material: s.appearance && s.appearance.material ? String(s.appearance.material.diffuseColor) : null};",
+ "pair-02.x3d": "return Array.from(scene.rootNodes).filter(n=>n.getNodeTypeName()==='Transform').map(n=>String(n.translation));",
+ "pair-03.x3d": "const a=scene.getNamedNode('ConeKnob').children[0].appearance; return {coneAppearance: a ? a.getNodeTypeName() : null};",
+ "pair-04.x3d": "const m=scene.getNamedNode('TentMesh'); return {maxIndex: Math.max(...Array.from(m.coordIndex)), points: m.coord.point.length};",
+ "pair-06.x3d": "return {colorPerVertex: scene.getNamedNode('PyramidMesh').colorPerVertex};",
+ "pair-08.x3d": "const g=scene.getNamedNode('RidgeHeights'); return {x:g.xDimension, z:g.zDimension, n:g.height.length};",
+ "pair-09.x3d": "return {rotation: String(scene.getNamedNode('ArrowPointingAlongPlusX').rotation)};",
+ "pair-10.x3d": "return {diffuse: String(scene.getNamedNode('OrangePaint').diffuseColor)};",
+ "pair-15.x3d": "const s=scene.getNamedNode('SignalLamp'); return {whichChoice: s.whichChoice, children: s.children.length};",
+ "pair-16.x3d": "return {inlineUrl: String(scene.getNamedNode('BracketInline').url)};",
+ "pair-17.x3d": "return {shapeGeometry: scene.rootNodes[1] && scene.rootNodes[1].geometry ? scene.rootNodes[1].geometry.getNodeTypeName() : null};",
+ "pair-18.x3d": "const p=scene.getNamedNode('RedPillarLeft'); let c=null; try{c=String(p.pillarColor)}catch(e){c='ERR '+e}; return {pillarColor:c};",
+ "pair-19.x3d": "const s=scene.getNamedNode('CatalogRecord'); return {entries: Array.from(s.value).map(n=>n.name), setOwnMetadata: s.metadata ? s.metadata.name : null, chairMetadata: scene.getNamedNode('Chair').metadata ? scene.getNamedNode('Chair').metadata.name : null};",
+ "pair-20.x3d": "return {center: String(scene.getNamedNode('DoorLeafOpenQuarterTurn').center)};"
+}

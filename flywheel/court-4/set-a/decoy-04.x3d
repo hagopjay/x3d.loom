@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A slider block that swings left and right, two metres each way, once every four seconds, moved by a script that writes its position directly."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 10'/>
+    <Transform DEF='Slider'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.2 0.7 0.7'/>
+        </Appearance>
+        <Box size='1 1 1'/>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF='SwingClock' cycleInterval='4' loop='true'/>
+    <Script DEF='Swinger' directOutput='true'>
+      <field name='set_fraction' type='SFFloat' accessType='inputOnly'/>
+      <field name='target' type='SFNode' accessType='initializeOnly'>
+        <Transform USE='Slider'/>
+      </field>
+<![CDATA[ecmascript:
+function set_fraction (fraction)
+{
+   target.translation = new SFVec3f (2 * Math.sin (2 * Math.PI * fraction), 0, 0);
+}
+]]>
+    </Script>
+    <ROUTE fromNode='SwingClock' fromField='fraction_changed' toNode='Swinger' toField='set_fraction'/>
+  </Scene>
+</X3D>

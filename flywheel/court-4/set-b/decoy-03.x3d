@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 4.0//EN" "https://www.web3d.org/specifications/x3d-4.0.dtd">
+<X3D profile='Immersive' version='4.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.0.xsd'>
+  <head>
+    <meta name='description' content='A closed solid crate with six square sides whose corners are listed clockwise on every face, seen from above so that its lid, front and right side are visible.'/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='CrateView' description='Crate from above' position='3.5 3.5 5' orientation='-0.63250 0.74846 0.19938 0.79723'/>
+    <Shape DEF='ClockwiseCrate'>
+      <Appearance>
+        <Material diffuseColor='0.7 0.5 0.25'/>
+      </Appearance>
+      <IndexedFaceSet DEF='ClockwiseMesh' ccw='false' solid='true' coordIndex='3 2 1 0 -1 6 7 4 5 -1 2 6 5 1 -1 7 3 0 4 -1 7 6 2 3 -1 0 1 5 4'>
+        <Coordinate DEF='CrateCorners' point='-1 -1 1, 1 -1 1, 1 1 1, -1 1 1, -1 -1 -1, 1 -1 -1, 1 1 -1, -1 1 -1'/>
+      </IndexedFaceSet>
+    </Shape>
+  </Scene>
+</X3D>

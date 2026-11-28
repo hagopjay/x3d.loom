@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A buoy that bobs up and down every three seconds, from the moment the scene loads and for as long as it stays open."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 10'/>
+    <Transform DEF='Buoy'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='1 0.4 0'/>
+        </Appearance>
+        <Cone bottomRadius='0.5' height='1.2'/>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF='BobClock' cycleInterval='3' loop='true' startTime='1' stopTime='0'/>
+    <PositionInterpolator DEF='BobPath' key='0 0.5 1' keyValue='0 0 0 0 1 0 0 0 0'/>
+    <ROUTE fromNode='BobClock' fromField='fraction_changed' toNode='BobPath' toField='set_fraction'/>
+    <ROUTE fromNode='BobPath' fromField='value_changed' toNode='Buoy' toField='set_translation'/>
+  </Scene>
+</X3D>

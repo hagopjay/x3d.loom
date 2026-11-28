@@ -4,6 +4,8 @@
 
 Start from [SCIENCE-PLAYBOOK.md](SCIENCE-PLAYBOOK.md) when the subject is a numerical method, and from [PHYSICS-PLAYBOOK.md](PHYSICS-PLAYBOOK.md) when an engine steps the scene. This playbook adds what a *design* needs on top of both: a requirement, a margin, a named rule, and a list of what was lost on the way in.
 
+**Added later on 28 November: a third study, `[TNS]`,** a tensegrity prism and the six-strut classic ([x3d.engineering/tensegrity/](x3d.engineering/tensegrity/), end of section 5). It was built after the playbook and under it, so it tests the spine and did not pay for it. It added no pattern and six failure modes (526 to 531).
+
 **What is written and what is not.** The spine (section 2) and two chapters, Mechanical and Civil/AEC, are written from studies that ran. Six more disciplines have one page each (section 6) that names the first study that would pay for a chapter. Nothing in those six pages is a result.
 
 Grades as in LOOM-v1.md: **C** measured here by the thread that built it, **L** read or reasoned, **S** suspected. Every number below is C on the rig named beside it unless marked. Under law 44 all of them stay Likely until someone who did not write them has recomputed them, and nobody has.
@@ -246,6 +248,38 @@ Largest slenderness of any compression member is 93.3 against a limit of 200. Ea
 
 **X3D components this chapter uses:** CADGeometry (6 nodes: the truss is a CADAssembly of 33 CADParts), Geospatial (11) once a model carries a map conversion. **Not claimed:** a frame with moments, a slab, a connection, a foundation, a second building, any real code check.
 
+### A third study: a tensegrity prism, designed `[TNS]`
+
+Built after the two chapters, to see whether the spine holds for a structure with no rigid joint at all: three aluminium struts that never touch, held by nine ropes. Files in [x3d.engineering/tensegrity/](x3d.engineering/tensegrity/). Rig: Python 3.13.18, numpy 2.5.3, Node v22.23.5. **17 of 17 gates, 17 of 17 controls caught.**
+
+**One matrix, three answers.** The equilibrium matrix A (three rows per joint, one column per member) is taken apart by SVD. Its rank r gives the self-stress states s = b − r and the mechanisms m = 3j − 6 − r.
+
+| Question | What the matrix says (C) | How it was held |
+|---|---|---|
+| Form | A loses rank at one twist of the top triangle: 150° for 3 struts, 135°, 126°, 120° for 4, 5, 6 (π/2 + π/n), unchanged across four heights, radii and top radii | root found by bisection on the smallest singular value, held against the closed form to better than 1e-9 rad |
+| Count | 12 members, 6 joints, s = 1, m = 1; Maxwell's count 12 − 18 + 6 = 0 = s − m | m is counted from the null space of Aᵀ with the six rigid motions projected out, so the identity can fail (failure mode 526) |
+| Stress pattern | strut : polygon cable : side cable force densities = −1 : 1/(2 sin(π/n)) : 1, and the force-density matrix has nullity 4 | SVD stress against the closed form and against Schek's matrix |
+| Stiffness | the mechanism's stiffness is 1.63 N/m per newton of side-cable prestress, 0 at 0 N; the next mode is 56 times stiffer | tangent stiffness against central differences of the internal force, 1.1e-10 relative |
+
+**The design** (requirement first, E1): carry 800 N pressed on the top triangle, with no cable slack, no strut past half its Euler load, no cable past a third of its breaking load, and a drop under 10 mm. R 0.40 m, H 1.00 m, struts 1.264 m of 25 × 2 mm tube, 3 mm rope, 14 load cases.
+
+| Prestress in each side cable | Verdict (C) |
+|---|---|
+| 50, 100, 200 N | fail: a cable goes slack and the drop is over the limit |
+| 400 N | fail: drop over the limit |
+| **600 N (design)**, 800, 1,000 N | pass. At 600 N: strut buckling 0.78, cable 0.77, least cable tension 0.41 of prestress, press drop 6.45 mm with a 4.66° turn |
+| 1,200, 1,400 N | fail: strut and cable over their allowances |
+
+The window, by bisection, is 489 N to 1,114 N. It is a window and not a threshold: too little prestress and the structure is soft and a cable goes slack, too much and prestress alone uses up the members (E2, E8). Two solvers with nothing in common but the member list, a load-stepped Newton on the tangent stiffness and a dynamic relaxation with kinetic damping, agree to 5.2e-11 m (E7).
+
+**The six-strut classic** from the same code: 6 struts, 24 cables, 12 joints, s = 1, m = 1 when parallel struts sit half a strut apart; every cable is √6/4 = 0.612 of a strut; a strut carries √6 times a cable's force.
+
+**What X3D could and could not hold** (E6). The scenes carry geometry, a name per member, and per-member metadata (length, prestress, worst force, capacity, utilisation, governing case), and the press is 17 static solutions played by interpolators. They carry no physics: X3D 4.0's rigid-body component has six joint nodes and none is a rope, a spring or a distance limit, so a member that only pulls cannot be written (C, read from the object model x3d_mcp ships at ca0e75c). `results/loss.json` lists what stayed outside the scene.
+
+**A page that solves, held to the bank.** The teaching page ([x3d.engineering/tensegrity/page/](x3d.engineering/tensegrity/page/)) lets a reader change prestress and load and solves in the browser. Its solver is a separate JavaScript implementation, and `page_solver_check.js` holds it against the Python bank on five load cases (worst 5.8e-10 m); a control with a wrong prestress pattern misses by 1.3 mm. Every number the page quotes is copied from the bank or the verdict at build time and the build fails on a missing one.
+
+**Assumptions and limits** (all on the card): pinned frictionless joints, straight weightless members, linear elastic material, static loads only, supports that remove exactly the six rigid motions. **The rope's area, modulus and breaking load and the tube's modulus and yield are recalled from memory (S)**; the conclusions scale with them. No dynamics, no fatigue, no creep of the rope, no joint or end-fitting design, no engine cross-check (MuJoCo tendons or PhysX distance joints would be the independent one, and neither was run). The history lines on the page (Snelson 1948, Fuller's name, Calladine 1978) were checked on the web; Calladine's paper was located by its record and not read.
+
 ## 6. Six disciplines, one page each
 
 None of these is a chapter. Each names what exists in the repos today, the references a study could hold itself to, and the one study that would pay for the chapter. "Exists" is from the survey of 27 November 2026 (x3d.loom 4a8dcd2 and seven sibling repos); node counts are tallied from `x3d.threejs/bridge/NODES.md` (260 nodes, 36 components).
@@ -306,7 +340,7 @@ None of these is a chapter. Each names what exists in the repos today, the refer
 | Card | [kit/templates/ENGINEERING-STUDY-CARD.md](kit/templates/ENGINEERING-STUDY-CARD.md); each study's `card.json` | requirements, load cases, envelope, limits, code clauses with grades, the two exchange lists, controls |
 | Profile | `kit/profiles/x3d-engineering.json` (`x3d-engineering/v1`) | grammar, meaning, traps, and a `requirements` witness; four witnesses visibly not run |
 | Witness | each study's `check.py`, run by `kit/loom command --name requirements` | exit 0 only when every gate passes and every control is caught |
-| Runner | `x3d.engineering/accept.sh fourbar` or `ifc-truss` | build, witnesses, accept, receipt, stale-witness control |
+| Runner | `x3d.engineering/accept.sh fourbar`, `ifc-truss` or `tensegrity` | build, witnesses, accept, receipt, stale-witness control |
 
 There is no `kit/loom engineering` subcommand. The `requirements` witness is the study's own script run through the kit's generic command adapter, so the kit proves the script ran green on this exact candidate and nothing more. A kit witness that reads a `loom.eng-card/1` and checks that every requirement has a gate and every control names one is the obvious next piece, and it is not built.
 
@@ -322,7 +356,9 @@ There is no `kit/loom engineering` subcommand. The `requirements` witness is the
 | Controls (E9) | each `results/verdict.json` `controls`; `fourbar/scenes/mutant-*.x3d`, `control-four-hinges.x3d`; `ifc-truss/controls/` |
 | Hinge clause | `fourbar/results/verdict.json` `hinge_stop`; `scenes/control-four-hinges.x3d` |
 | Validator and the name rule | `ifc-truss/results/validator-note.json` |
-| Receipts | `runs/engineering-fourbar-20261128/`, `runs/engineering-ifc-truss-20261128/` |
+| Third study `[TNS]`: form, count, window, two solvers | `tensegrity/card.json`, `results/bank.json`, `results/verdict.json`, `results/loss.json` |
+| A page's solver held to the bank | `tensegrity/page_solver_check.js`, `results/page-solver.json`, `page/build_page.py` |
+| Receipts | `runs/engineering-fourbar-20261128/`, `runs/engineering-ifc-truss-20261128/`, `runs/engineering-tensegrity-20261128/` |
 | Stills and their rig | each study's `stills/rig.json` |
 
 ## 9. Open
@@ -335,4 +371,6 @@ There is no `kit/loom engineering` subcommand. The `requirements` witness is the
 - **The validator's name rule** is fixed in x3d_mcp (4519043): `name` on the four CAD nodes and the six metadata nodes is read as free text, from the object model. The spaced control scene went from 34 errors to 0.
 - **A real GPU, a second browser and a paired visual review** are `visible_not_run`. The stills are a look at the scenes, not a witness.
 - **`[FBR]` changed a measure and narrowed its claim after exploration.** The card says so, the limits are derived from the part, and the failing probes are kept. That the limits were not fitted to the numbers is the author's word (S).
+- **`[TNS]` material values are Suspected**, and it has no dynamics and no second engine. A cross-check on MuJoCo tendons or PhysX distance joints is the next rung of its ladder.
+- **X3D has no member that only pulls.** Whether a rope or distance-limit joint belongs in the rigid-body component is a question for the standard's authors; nothing has been sent to anyone.
 - **Six disciplines** have a page and no study.

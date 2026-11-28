@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="Press the right-arrow key to nudge the cart one metre to the right, and the left-arrow key to nudge it one metre to the left."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 12'/>
+    <Transform DEF='Cart'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.7 0.2 0.7'/>
+        </Appearance>
+        <Box size='1 0.6 0.6'/>
+      </Shape>
+    </Transform>
+    <KeySensor DEF='ArrowKeys'/>
+    <Script DEF='Nudge'>
+      <field name='set_arrow' type='SFInt32' accessType='inputOnly'/>
+      <field name='x' type='SFFloat' accessType='initializeOnly' value='0'/>
+      <field name='position_changed' type='SFVec3f' accessType='outputOnly'/>
+<![CDATA[ecmascript:
+function set_arrow (code)
+{
+   if (code == 39) x += 1; // right arrow
+   if (code == 37) x -= 1; // left arrow
+
+   position_changed = new SFVec3f (x, 0, 0);
+}
+]]>
+    </Script>
+    <ROUTE fromNode='ArrowKeys' fromField='actionKeyPress' toNode='Nudge' toField='set_arrow'/>
+    <ROUTE fromNode='Nudge' fromField='position_changed' toNode='Cart' toField='set_translation'/>
+  </Scene>
+</X3D>

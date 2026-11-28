@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="Click the statue to jump to the close-up view, and stay in the close-up view after the mouse button is released."/>
+  </head>
+  <Scene>
+    <Viewpoint DEF='Overview' description='Overview' position='0 0 12'/>
+    <Viewpoint DEF='CloseUp' description='Close-up' position='0 0 4'/>
+    <Group>
+      <TouchSensor DEF='StatueTouch' description='go to the close-up view'/>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.8 0.8 0.75'/>
+        </Appearance>
+        <Cylinder height='2' radius='0.5'/>
+      </Shape>
+    </Group>
+    <BooleanFilter DEF='PressOnly'/>
+    <ROUTE fromNode='StatueTouch' fromField='isActive' toNode='PressOnly' toField='set_boolean'/>
+    <ROUTE fromNode='PressOnly' fromField='inputTrue' toNode='CloseUp' toField='set_bind'/>
+  </Scene>
+</X3D>
