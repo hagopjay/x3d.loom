@@ -1,0 +1,405 @@
+{
+ "schema": "loom.eng-card/1",
+ "study": "fourbar",
+ "title": "Four-bar crank-rocker: one linkage, three engines, three strength checks",
+ "question": "Does this linkage turn a full crank revolution into a rocker swing, with enough transmission angle and enough strength, and do three physics engines reading the same X3D file agree with the closed form?",
+ "label": "A worked study. Not a certified design and not for manufacture.",
+ "units": {
+  "length": "m",
+  "angle": "rad",
+  "mass": "kg",
+  "force": "N",
+  "torque": "N m",
+  "stress": "Pa",
+  "frame": "X3D: right-handed, y up; the mechanism lies in the xy plane and turns about +z"
+ },
+ "params": {
+  "a": {
+   "value": 0.3,
+   "unit": "m",
+   "what": "crank, pin A to pin B",
+   "source": "chosen"
+  },
+  "b": {
+   "value": 0.9,
+   "unit": "m",
+   "what": "coupler, pin B to pin C",
+   "source": "chosen"
+  },
+  "c": {
+   "value": 0.7,
+   "unit": "m",
+   "what": "rocker, pin D to pin C",
+   "source": "chosen"
+  },
+  "d": {
+   "value": 1.0,
+   "unit": "m",
+   "what": "ground link, pin A to pin D",
+   "source": "chosen"
+  },
+  "T_out": {
+   "value": 1200.0,
+   "unit": "N m",
+   "what": "resisting torque on the rocker, either direction, held at every crank angle (quasi-static)",
+   "source": "chosen load case"
+  },
+  "coupler_w": {
+   "value": 0.03,
+   "unit": "m",
+   "what": "coupler bar width",
+   "source": "chosen"
+  },
+  "coupler_t": {
+   "value": 0.01,
+   "unit": "m",
+   "what": "coupler bar thickness (the weak axis)",
+   "source": "chosen"
+  },
+  "pin_d": {
+   "value": 0.008,
+   "unit": "m",
+   "what": "pin diameter, double shear",
+   "source": "chosen"
+  },
+  "Fy": {
+   "value": 250000000.0,
+   "unit": "Pa",
+   "what": "minimum yield strength",
+   "source": "ASTM A36/A36M, 36 ksi [250 MPa] for plates, bars and shapes under 8 in thick. Read from a search summary on 27 Nov 2026, not from the standard: Likely"
+  },
+  "E": {
+   "value": 200000000000.0,
+   "unit": "Pa",
+   "what": "Young's modulus of steel",
+   "source": "textbook value (29,000 ksi in AISC 360): Likely, from memory"
+  },
+  "FS": {
+   "value": 2.0,
+   "unit": "1",
+   "what": "factor of safety on every strength check",
+   "source": "study allowable, chosen on this card. No code governs this mechanism"
+  }
+ },
+ "requirements": [
+  {
+   "id": "R1",
+   "shall": "The linkage shall be a Grashof crank-rocker: shortest plus longest link no longer than the other two, with the crank the shortest link. In the claimed envelope the crank shall complete at least 2 full revolutions in every qualifying engine.",
+   "check": "grashof + engine revolutions"
+  },
+  {
+   "id": "R2",
+   "shall": "At every crank speed in the claimed envelope, at least two independent engines shall hold the rocker angle to the closed-form rocker angle for the measured crank angle.",
+   "check": "max |theta4 measured - theta4 closed form|"
+  },
+  {
+   "id": "R3",
+   "shall": "The transmission angle shall stay between 45 and 135 degrees over the whole revolution.",
+   "check": "closed form over 360 crank angles",
+   "source": "45 degrees as the floor for transmitting force: University of Arkansas open text 'Mechanism Posture and Position Analysis' (search summary, Likely). Other texts say 40."
+  },
+  {
+   "id": "R4",
+   "shall": "With T_out applied in either direction at every crank angle, demand shall not exceed capacity on coupler yield, coupler Euler buckling and pin double shear, each with FS.",
+   "check": "utilisation = demand / capacity <= 1"
+  },
+  {
+   "id": "R5",
+   "shall": "At every crank speed in the claimed envelope, at least two independent engines shall keep every pin closed.",
+   "check": "max pin gap in the plane"
+  },
+  {
+   "id": "R6",
+   "shall": "At every crank speed in the claimed envelope, at least two independent engines shall keep every bar end in its own layer.",
+   "check": "max travel of any bar end out of its z layer"
+  }
+ ],
+ "references": [
+  {
+   "id": "REF1",
+   "kind": "closed-form",
+   "what": "rocker and coupler angle by circle intersection"
+  },
+  {
+   "id": "REF2",
+   "kind": "second-solver",
+   "what": "Newton on the vector loop equation, started 0.05 rad off"
+  },
+  {
+   "id": "REF3",
+   "kind": "identity",
+   "what": "Freudenstein's equation residual"
+  },
+  {
+   "id": "REF4",
+   "kind": "identity",
+   "what": "power balance: crank torque from statics times crank speed equals T_out times rocker speed"
+  },
+  {
+   "id": "REF5",
+   "kind": "order",
+   "what": "velocity ratios against a central difference of the closed form"
+  },
+  {
+   "id": "REF6",
+   "kind": "cross-implementation",
+   "what": "three engines stepping one X3D RigidBodyPhysics file: built-in, Rapier 0.21.0, cannon-es 0.20.0"
+  }
+ ],
+ "envelope": {
+  "claimed_crank_speeds_rad_s": [
+   1
+  ],
+  "probe_crank_speeds_rad_s": [
+   3,
+   10,
+   30
+  ],
+  "crank_speeds_rad_s": [
+   1,
+   3,
+   10,
+   30
+  ],
+  "what": "initial crank speed at 60 degrees; the linkage then coasts with no gravity, so the engine check is purely kinematic. The claim is made only where at least two engines qualify; the probes are run and reported, never gated."
+ },
+ "controls": {
+  "scene_mutants": [
+   {
+    "id": "mutant-coupler-plus2pct",
+    "links": {
+     "b": 0.918
+    },
+    "omega2": 3,
+    "expect_fail": [
+     "R2"
+    ],
+    "what": "the scene's coupler is 2 % long; the card is unchanged"
+   },
+   {
+    "id": "mutant-nongrashof",
+    "links": {
+     "a": 0.65
+    },
+    "omega2": 3,
+    "expect_fail": [
+     "R1"
+    ],
+    "what": "crank 0.65 m: shortest plus longest exceeds the other two"
+   },
+   {
+    "id": "mutant-low-transmission",
+    "links": {
+     "a": 0.4
+    },
+    "omega2": 3,
+    "expect_fail": [
+     "R3"
+    ],
+    "what": "crank 0.40 m: the transmission angle dips under 45 degrees"
+   },
+   {
+    "id": "control-four-hinges",
+    "links": {},
+    "omega2": 3,
+    "pins": "hinge",
+    "expect_fail": [
+     "R1-on-a-standard-engine"
+    ],
+    "what": "all four pins are SingleAxisHingeJoints. X3D 4.0 clause 37.4.12 stops a hinge pi radians from its initial position, so an engine that follows the standard cannot turn the crank"
+   }
+  ],
+  "analysis_mutants": [
+   {
+    "id": "crossed-branch",
+    "expect_fail": [
+     "R2"
+    ],
+    "what": "compare the engines with the other assembly branch of the closed form"
+   },
+   {
+    "id": "thin-coupler",
+    "expect_fail": [
+     "R4"
+    ],
+    "what": "coupler thickness 5 mm instead of 10"
+   },
+   {
+    "id": "velocity-sign",
+    "expect_fail": [
+     "REF5"
+    ],
+    "what": "rocker velocity ratio with its sign flipped"
+   },
+   {
+    "id": "newton-wrong-link",
+    "expect_fail": [
+     "REF2"
+    ],
+    "what": "Newton solver given a rocker 1 mm long"
+   }
+  ]
+ },
+ "exchange": {
+  "format": "X3D 4.0 RigidBodyPhysics, read by the x3d.loom bridge reader",
+  "identity": "DEF names Crank, Coupler, Rocker, Frame, PinA to PinD",
+  "loss": "see results/loss.json"
+ },
+ "exploration": {
+  "when": "27 Nov 2026, before the limits below were written",
+  "rig": "Node v22.23.5, x3d.loom bridge reader at 4a8dcd2, Rapier 0.21.0, cannon-es 0.20.0, 60 Hz samples of a 240 Hz step",
+  "numbers": {
+   "columns": [
+    "crank speed rad/s",
+    "engine",
+    "rocker error deg",
+    "pin gap mm",
+    "bar end out of plane mm"
+   ],
+   "rows": [
+    [
+     1,
+     "builtin",
+     0.013,
+     0.0793,
+     2.197
+    ],
+    [
+     1,
+     "rapier",
+     0.0001,
+     0.0009,
+     0.018
+    ],
+    [
+     1,
+     "cannon",
+     0.0366,
+     0.2162,
+     4.965
+    ],
+    [
+     3,
+     "builtin",
+     0.0803,
+     0.4269,
+     6.734
+    ],
+    [
+     3,
+     "rapier",
+     0.0011,
+     0.0079,
+     0.181
+    ],
+    [
+     3,
+     "cannon",
+     0.2128,
+     1.1077,
+     10.654
+    ],
+    [
+     10,
+     "builtin",
+     0.5839,
+     2.9188,
+     17.014
+    ],
+    [
+     10,
+     "rapier",
+     0.0113,
+     0.0845,
+     2.06
+    ],
+    [
+     10,
+     "cannon",
+     2.7085,
+     8.3125,
+     169.068
+    ],
+    [
+     30,
+     "builtin",
+     8.6885,
+     23.9067,
+     274.739
+    ],
+    [
+     30,
+     "rapier",
+     0.2333,
+     0.9567,
+     34.976
+    ],
+    [
+     30,
+     "cannon",
+     10.9183,
+     42.5149,
+     239.608
+    ]
+   ]
+  },
+  "findings": [
+   "With four SingleAxisHingeJoints the built-in engine stops the crank pi radians from its start (X3D 4.0 clause 37.4.12) while the Rapier and cannon-es adapters let it turn: the two full-turn pins became BallJoints.",
+   "A ball pin whose anchor is 10 mm off the crank's own axis lets the crank's free spin drag the mechanism out of plane (bar ends up to 10 mm out at 1 rad/s in every engine): the anchors were moved onto the axis.",
+   "Worst case: speed. Every engine degrades with crank speed; at 30 rad/s none keeps the bars in their layers."
+  ],
+  "honesty": "The run of record is the same deterministic computation as this exploration, so the limits were written with these numbers in view. Each limit is therefore derived from function, with its derivation stated, and the thinnest margin (cannon-es, bar end out of plane at 1 rad/s) is flagged for a second reader."
+ },
+ "limits": {
+  "committed_before_run_of_record": true,
+  "rocker_error_deg": {
+   "max": 0.5,
+   "why": "0.5 degrees is 6.1 mm at the tip of the 0.7 m rocker, the positioning tolerance asked of the output"
+  },
+  "pin_gap_mm": {
+   "max": 1.0,
+   "why": "one eighth of the 8 mm pin: beyond that the pin has left its hole"
+  },
+  "out_of_plane_mm": {
+   "max": 5.0,
+   "why": "half of the 10 mm face gap between neighbouring bar layers (layers 20 mm apart, bars 10 mm thick), so two neighbours cannot touch"
+  },
+  "crank_revolutions": {
+   "min": 2.0,
+   "why": "R1"
+  },
+  "min_engines": {
+   "value": 2,
+   "why": "a claim needs two independent implementations (law 25)"
+  },
+  "transmission_angle_deg": {
+   "min": 45.0,
+   "max": 135.0,
+   "why": "R3"
+  },
+  "utilisation": {
+   "max": 1.0,
+   "why": "R4, with FS already inside the capacity"
+  },
+  "newton_vs_closed_rad": {
+   "max": 1e-09,
+   "why": "REF2: two routes to the same angles"
+  },
+  "freudenstein_residual": {
+   "max": 1e-12,
+   "why": "REF3"
+  },
+  "power_balance_relative": {
+   "max": 1e-09,
+   "why": "REF4"
+  },
+  "velocity_ratio_vs_difference": {
+   "max": 1e-06,
+   "why": "REF5, central difference with h = 1e-5 rad"
+  },
+  "hinge_travel_rad": {
+   "max": 3.2,
+   "why": "control: pi plus a 0.06 rad allowance for a soft stop; an engine past this ignored the standard's hinge stop"
+  }
+ }
+}
