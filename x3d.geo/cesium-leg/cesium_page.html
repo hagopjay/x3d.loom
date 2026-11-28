@@ -1,0 +1,37 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>cesium witness</title><link rel="icon" href="data:,">
+<script>window.CESIUM_BASE_URL = '/nm/cesium/Build/Cesium/';</script>
+<script src="/nm/cesium/Build/Cesium/Cesium.js"></script>
+<link rel="stylesheet" href="/nm/cesium/Build/Cesium/Widgets/widgets.css">
+<style>html,body,#c{margin:0;width:100%;height:100%;overflow:hidden;background:#000}</style></head>
+<body><div id="c"></div>
+<script>
+// Witness page. Offline: no Cesium ion, no imagery, no terrain (the WGS84 ellipsoid). window.measure(tilesetUrl,
+// samples) loads one 3D Tiles tileset, waits until it is loaded, then asks Cesium where the geometry is with
+// scene.sampleHeightMostDetailed at each (lon, lat): the height of the tileset's top surface there, or undefined.
+// It also returns the tile's computed transform and the ENU frame Cesium builds itself at the declared point.
+Cesium.Ion.defaultAccessToken = undefined;
+const viewer = new Cesium.Viewer('c', { baseLayer: false, baseLayerPicker: false, geocoder: false, homeButton: false,
+  sceneModePicker: false, navigationHelpButton: false, animation: false, timeline: false, fullscreenButton: false,
+  infoBox: false, selectionIndicator: false, skyBox: false, skyAtmosphere: false, terrainProvider: new Cesium.EllipsoidTerrainProvider() });
+viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#2b3a2b');
+window.globeOff = (off) => { viewer.scene.globe.show = !off; };
+window.measure = async (url, samples, declared) => {
+  viewer.scene.primitives.removeAll();
+  const ts = await Cesium.Cesium3DTileset.fromUrl(url);
+  viewer.scene.primitives.add(ts);
+  await viewer.zoomTo(ts);
+  for (let i = 0; i < 600 && !ts.tilesLoaded; i++) { viewer.scene.render(); await new Promise((r) => setTimeout(r, 50)); }
+  const carto = samples.map(([lon, lat]) => Cesium.Cartographic.fromDegrees(lon, lat));
+  const res = await viewer.scene.sampleHeightMostDetailed(carto, [], 0.1);
+  const enu = Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.fromDegrees(declared[1], declared[0], declared[2]));
+  const bs = ts.boundingSphere.center, bc = Cesium.Cartographic.fromCartesian(bs);
+  return { loaded: ts.tilesLoaded, heights: res.map((c) => (c && c.height !== undefined ? c.height : null)),
+           computedTransform: Array.from(Cesium.Matrix4.toArray(ts.root.computedTransform)),
+           cesiumEnuAtDeclared: Array.from(Cesium.Matrix4.toArray(enu)),
+           boundingSphereCenterDeg: [Cesium.Math.toDegrees(bc.latitude), Cesium.Math.toDegrees(bc.longitude), bc.height],
+           version: Cesium.VERSION };
+};
+window.shot = async () => { viewer.scene.render(); return true; };
+window.__ready = true;
+</script></body></html>
