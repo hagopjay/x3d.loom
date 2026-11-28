@@ -64,7 +64,9 @@
           if (t === 'BallJoint') { const c = new C.PointToPointConstraint(A.body, new C.Vec3(...J.pa), B.body, new C.Vec3(...J.pb)); world.addConstraint(c); joints.push({ J, t, c }); }
           else if (t === 'SingleAxisHingeJoint') {
             const c = new C.HingeConstraint(A.body, B.body, { pivotA: new C.Vec3(...J.pa), pivotB: new C.Vec3(...J.pb), axisA: new C.Vec3(...J.axA), axisB: new C.Vec3(...J.axB) }); world.addConstraint(c);
-            joints.push({ J, t, c, lim: f.maxAngle - f.minAngle < 2 * Math.PI - 1e-6 ? [f.minAngle, f.maxAngle] : null });
+            const full = !(f.maxAngle - f.minAngle < 2 * Math.PI - 1e-6), stop = !full || E.hingeStop === 'x3d';      // a full-range hinge has a stop only when the X3D reading is asked for
+            if (full && !stop) notes.push(E.hingeNote(J, 'cannon-es'));
+            joints.push({ J, t, c, lim: stop ? [f.minAngle, f.maxAngle] : null });
           } else if (t === 'SliderJoint' || t === 'UniversalJoint' || t === 'DoubleAxisHingeJoint') joints.push({ J, t, A, B });
           else if (t === 'MotorJoint') joints.push({ J, t, A, B });
           else { notes.push(t + ': not mapped to cannon-es, left out'); }

@@ -401,5 +401,14 @@
    "max": 3.2,
    "why": "control: pi plus a 0.06 rad allowance for a soft stop; an engine past this ignored the standard's hinge stop"
   }
- }
+ },
+ "amendments": [
+  {
+   "date": "2026-11-28",
+   "after": "the run of record of 27-28 Nov and the adapter change in x3d.physics/rigid-engines",
+   "what": "Two gates added on the four-hinge control. hinge-stop-is-said: every engine that lets the default-range hinge travel past the limit names clause 37.4.12 in its notes. hinge-stop-x3d-option: with use({ hingeStop: 'x3d' }) all three engines keep the hinge within limits.hinge_travel_rad, a limit that was on the card before.",
+   "why": "The first run found the adapters dropped the stop without a note. The ODE user guide, read afterwards, shows the adapters follow ODE's convention (a stop at exactly pi is not effective), so the honest state is two readings, each now stated by the engine that takes it.",
+   "limits_changed": "none"
+  }
+ ]
 }

@@ -1,0 +1,56 @@
+{
+ "west": {
+  "guid": "0mtO8SgNjVJx$EG34wq5Li",
+  "cx": -4.0,
+  "cy": 1.0,
+  "top": 4.1000000000000005
+ },
+ "east": {
+  "guid": "2jv1dsX5LQG9LB0NV87I8Q",
+  "cx": 4.0,
+  "cy": 1.0,
+  "top": 4.1000000000000005
+ },
+ "span_m": 8.0,
+ "x0_m": -4.0,
+ "bearing_z_m": 4.1000000000000005,
+ "line_y_m": 1.0,
+ "tops_differ_m": 0.0
+}
+members 33 checks {'solver_agreement_rel': 1.5842600708838673e-14, 'sections_rel': 2.4187176654715533e-16, 'equilibrium_rel': 1.6612243840021772e-16, 'deflection_rel': 1.4459630948066733e-14, 'sls_deflection_m': 0.007418563916859409, 'deflection_ratio': 1078.3758271353868, 'cases_run': ['LC1', 'LC2', 'LC3', 'SLS'], 'self_weight_N': 1797.9414004504981}
+gates 22/22  controls caught 13/13
+  PASS  R1-building
+  PASS  R2-building
+  PASS  frame-building
+  PASS  R1-truss
+  PASS  R2-truss
+  PASS  frame-truss
+  PASS  R3
+  PASS  R3-carried-arrived-equal
+  PASS  R3-lost-is-absent
+  PASS  R4
+  PASS  R4-coverage
+  PASS  R5
+  PASS  R6
+  PASS  R7
+  PASS  REF1
+  PASS  REF2
+  PASS  REF3
+  PASS  REF4
+  PASS  REF5
+  PASS  numbers-in-IFC-equal-the-bank
+  PASS  numbers-in-X3D-equal-the-bank
+  PASS  design.json-reproduces
+  caught   swap-two-guids: expected ['R2'], failed ['R2']
+  caught   drop-one-element: expected ['R1'], failed ['R1']
+  caught   millimetres-read-as-metres: expected ['R2'], failed ['R2']
+  caught   skip-the-frame: expected ['R2'], failed ['R2']
+  caught   unlisted-key: expected ['R3'], failed ['R3']
+  caught   remove-a-diagonal: expected ['REF1'], failed ['REF1']
+  caught   stiffness-sign: expected ['REF1'], failed ['REF1']
+  caught   sections-wrong-depth: expected ['REF2'], failed ['REF2']
+  caught   thin-web: expected ['R4'], failed ['R4']
+  caught   drop-pattern-case: expected ['R4-coverage'], failed ['R4-coverage']
+  caught   truss-in-millimetres: expected ['R4', 'R6'], failed ['R4', 'R5', 'R6']
+  caught   transposed-471: expected ['REF5'], failed ['REF5']
+  caught   typed-span: expected ['R7'], failed ['R7']

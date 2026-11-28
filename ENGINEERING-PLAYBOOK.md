@@ -1,6 +1,6 @@
 # Engineering under the Loom: the playbook
 
-**28 November 2026.** For anything that makes an engineering claim behind an X3D scene: a part is strong enough, a mechanism reaches its positions, a building arrived whole from another format, a vehicle stays inside its envelope. It comes from two studies built under the Loom for this purpose, a **four-bar linkage stepped on three rigid-body engines** (source `[FBR]`, [x3d.engineering/fourbar/](x3d.engineering/fourbar/)) and an **IFC building with a roof truss designed across its court** (`[TRS]`, [x3d.engineering/ifc-truss/](x3d.engineering/ifc-truss/)). The laws it leans on are 15, 17, 19, 25, 28, 40, 42, 43 and 44 in [LOOM-v1.md](LOOM-v1.md); it adds no law. Its failure modes are 505 to 513, its profile is `x3d-engineering/v1`, and its card is [kit/templates/ENGINEERING-STUDY-CARD.md](kit/templates/ENGINEERING-STUDY-CARD.md).
+**28 November 2026.** For anything that makes an engineering claim behind an X3D scene: a part is strong enough, a mechanism reaches its positions, a building arrived whole from another format, a vehicle stays inside its envelope. It comes from two studies built under the Loom for this purpose, a **four-bar linkage stepped on three rigid-body engines** (source `[FBR]`, [x3d.engineering/fourbar/](x3d.engineering/fourbar/)) and an **IFC building with a roof truss designed across its court** (`[TRS]`, [x3d.engineering/ifc-truss/](x3d.engineering/ifc-truss/)). The laws it leans on are 15, 17, 19, 25, 28, 40, 42, 43 and 44 in [LOOM-v1.md](LOOM-v1.md); it adds no law. Its failure modes are 505 to 515, its profile is `x3d-engineering/v1`, and its card is [kit/templates/ENGINEERING-STUDY-CARD.md](kit/templates/ENGINEERING-STUDY-CARD.md).
 
 Start from [SCIENCE-PLAYBOOK.md](SCIENCE-PLAYBOOK.md) when the subject is a numerical method, and from [PHYSICS-PLAYBOOK.md](PHYSICS-PLAYBOOK.md) when an engine steps the scene. This playbook adds what a *design* needs on top of both: a requirement, a margin, a named rule, and a list of what was lost on the way in.
 
@@ -168,7 +168,7 @@ What is not done: the rows are not ranked by consequence. An FMEA orders failure
 
 ## 4. Chapter M: Mechanical
 
-**The study.** A Grashof crank-rocker, a = 0.30, b = 0.90, c = 0.70, d = 1.00 m, steel bars 30 × 10 mm on 8 mm pins, resisting 1,200 N·m at the rocker. Six requirements, six references, eight controls. Result: **8 of 8 gates, 8 of 8 controls caught.**
+**The study.** A Grashof crank-rocker, a = 0.30, b = 0.90, c = 0.70, d = 1.00 m, steel bars 30 × 10 mm on 8 mm pins, resisting 1,200 N·m at the rocker. Six requirements, six references, eight controls. Result at the first run: **8 of 8 gates, 8 of 8 controls caught**; 10 of 10 gates after the amendment of 28 November described below.
 
 ![The four-bar in X_ITE; the coupler's colour is its utilisation](x3d.engineering/fourbar/stills/fourbar-view-a.png)
 
@@ -178,15 +178,19 @@ What is not done: the rows are not ranked by consequence. An FMEA orders failure
 
 **What the engines found.** See the table under E8.
 
-**The finding worth the study: a hinge is not a crank pin.** The first scene used four `SingleAxisHingeJoint` nodes. In the built-in engine the crank turned about half a revolution and came back. More solver iterations made no difference. The cause is in the standard: X3D 4.0 clause 37.4.12 gives `minAngle` and `maxAngle` defaults of −π and π and says "A hinge may not travel more than π radians (or the equivalent angle base units) in either direction from its initial position." The built-in engine honours it. The Rapier and cannon-es adapters read the default range as "no stop" and write no note.
+**The finding worth the study: a hinge is not a crank pin.** The first scene used four `SingleAxisHingeJoint` nodes. In the built-in engine the crank turned about half a revolution and came back. More solver iterations made no difference. The cause is in the standard: X3D 4.0 clause 37.4.12 gives `minAngle` and `maxAngle` defaults of −π and π and says "A hinge may not travel more than π radians (or the equivalent angle base units) in either direction from its initial position." The built-in engine takes that at its word. The Rapier and cannon-es adapters read the default range as "no stop", and at the first run they wrote no note.
 
-| Engine | Maximum hinge travel, four-hinge scene | Reading |
-|---|---|---|
-| Built-in | 3.1447 rad | stops at π, as the clause says |
-| Rapier 0.21.0 adapter | 18.94 rad | turns freely; the stop is dropped without a note |
-| cannon-es 0.20.0 adapter | 18.53 rad | turns freely; the stop is dropped without a note |
+| Engine | Maximum hinge travel, four-hinge scene | With `hingeStop: 'x3d'` | Reading |
+|---|---|---|---|
+| Built-in | 3.1447 rad | 3.1447 rad | stops at π, as the clause says |
+| Rapier 0.21.0 adapter | 18.94 rad | 3.1573 rad | turns freely by default and now says so in its notes |
+| cannon-es 0.20.0 adapter | 18.53 rad | 3.1621 rad | turns freely by default and now says so in its notes |
 
-So the same valid file is a rocking linkage in one engine and a turning one in two others, and the engine that looked broken was the one following the standard (failure mode 505). The clause was read from the published specification on 27 November 2026. The study's fix is to pin the two full-turn joints with `BallJoint` and keep the four-hinge scene as a control. The adapters' silence is a law 40 loss and is in `results/loss.json`.
+So the same valid file is a rocking linkage in one engine and a turning one in two others (failure mode 505). The clause was read from the published specification on 27 November 2026. The study's fix is to pin the two full-turn joints with `BallJoint` and keep the four-hinge scene as a control.
+
+**Correction, 28 November: there are two readings, and the first write-up named only one.** This section first said the engine that looked broken was the one following the standard. That is true of the X3D text and it is half the story. The RigidBodyPhysics component was modelled on ODE (L), and ODE's user guide says of its stops: "For rotational joints, this stop must be greater than -pi to be effective" (v0.5, section 7.5.1, read 28 November). In ODE a stop at exactly ±π is no stop, so X3D's defaults read as "free hinge" there. The two adapters follow that convention; so does X_ITE 16.6.0, which applies no hinge limit at all (`x3d.physics/rigid-engines/README.md`). The built-in engine is the only one of the five that takes the X3D sentence literally. Which reading the standard intends is a question for its authors and is not settled here (failure mode 514).
+
+What was fixed is the part that was wrong under either reading, the silence. Each adapter now writes a note naming the clause when it lets a default-range hinge turn, and `use(name, { hingeStop: 'x3d' })` makes it apply the stop (third column above; limit 3.2 rad). The default behaviour is unchanged: the study's pose hash is the same before and after the change. The study gained two gates for this, so it now reads **10 of 10 gates, 8 of 8 controls caught**. Making Rapier hold a stop that sits on its own angle wrap needed a velocity motor, and releasing that motor with a factor of 0 turned out to be a rigid hold: the bar stayed on the stop under a torque the other way. A test written for exactly that caught it (failure mode 515).
 
 **The second finding: where the anchor sits.** With ball pins the mechanism first left its plane in all three engines (pin gap about 10 mm, tilt up to 1.5 rad). Pin B's anchor was 10 mm off the crank's own axis, which coupled the crank's free spin about its length to a tilt. Anchors on the bar's axis fixed it (failure mode 506). The measure that caught it honestly is out-of-plane travel in millimetres against half the layer gap, a limit that comes from the part and not from the run.
 
@@ -238,7 +242,7 @@ Largest slenderness of any compression member is 93.3 against a limit of 200. Ea
 
 **The assumptions that carry the result** (all on the card): pinned joints, loads at the panel points, K = 1.0 with the member length as the unbraced length, which means the top chord is taken as braced out of plane at every panel point. No connection is designed. No wind, snow, seismic or uplift case is run. Four of the five code clauses are Suspected (E3).
 
-**What the validator taught.** The first truss scene passed the X3D 4.0 schema and failed Meaning with 34 errors, all one rule: x3d_mcp's `naming-convention` reports whitespace in any `name` attribute as illegal. On CADAssembly, CADPart and CADFace the X3D 4.0 object model that the validator itself ships types `name` as a plain SFString label. The rule and the object model disagree (C); which should change is a judgment (L, the rule). The shipped scenes use names without spaces, and the spaced original is kept as `controls/truss-spaced-names.x3d` so the count can be reproduced (failure mode 512). IFC names with spaces, such as `Column -4/1`, travel as MetadataString values, which the rule does not read.
+**What the validator taught.** The first truss scene passed the X3D 4.0 schema and failed Meaning with 34 errors, all one rule: x3d_mcp's `naming-convention` reports whitespace in any `name` attribute as illegal. On CADAssembly, CADPart and CADFace the X3D 4.0 object model that the validator itself ships types `name` as a plain SFString label. The rule and the object model disagree (C); which should change is a judgment (L, the rule). The shipped scenes use names without spaces, and the spaced original is kept as `controls/truss-spaced-names.x3d` so the count can be reproduced (failure mode 512). The rule was changed on 28 November (x3d_mcp 4519043) to read the field's type from the object model; the spaced original now has 0 errors. IFC names with spaces, such as `Column -4/1`, travel as MetadataString values, which the rule does not read.
 
 **X3D components this chapter uses:** CADGeometry (6 nodes: the truss is a CADAssembly of 33 CADParts), Geospatial (11) once a model carries a map conversion. **Not claimed:** a frame with moments, a slab, a connection, a foundation, a second building, any real code check.
 
@@ -262,7 +266,7 @@ None of these is a chapter. Each names what exists in the repos today, the refer
 - **X3D components:** RigidBodyPhysics (14), HAnim (6), Picking (5).
 - **References that exist:** forward kinematics in closed form; a Jacobian by finite difference; a second engine on random poses.
 - **First study:** one open URDF arm to X3D joints, every link name surviving the round trip (E5), reach and joint limits as requirements (E1), a loss receipt for what URDF says that X3D cannot hold (E6).
-- **Carry over from chapter M:** the hinge clause. A revolute joint that must turn past π cannot be a SingleAxisHingeJoint.
+- **Carry over from chapter M:** the hinge clause. A revolute joint that must turn past π is portable only as a BallJoint or a MotorJoint; as a SingleAxisHingeJoint it stops in one engine and turns in others.
 
 ### 6.3 Aerospace
 
@@ -327,8 +331,8 @@ There is no `kit/loom engineering` subcommand. The `requirements` witness is the
 - **Four code clauses are Suspected.** Someone with the AISC 360 and ASCE 7 texts should confirm or correct the five lines in the code table. Until then the truss "passes" a set of rules that were partly recalled.
 - **Severity.** The failure table is not ranked (E9).
 - **Operating data.** No as-operated replay in either study (E10).
-- **The adapters' hinge stop.** Rapier and cannon-es adapters drop `minAngle` and `maxAngle` silently. The fix belongs in the bridge reader, with a note when a default stop is not applied.
-- **The validator's name rule.** Whether `naming-convention` should skip `name` fields the object model types as SFString is a question for x3d_mcp.
+- **Which reading of the hinge stop the standard intends.** Both adapters now state theirs and can apply the other (fixed 28 November). The question itself belongs to the standard's authors; nothing has been sent to anyone.
+- **The validator's name rule** is fixed in x3d_mcp (4519043): `name` on the four CAD nodes and the six metadata nodes is read as free text, from the object model. The spaced control scene went from 34 errors to 0.
 - **A real GPU, a second browser and a paired visual review** are `visible_not_run`. The stills are a look at the scenes, not a witness.
 - **`[FBR]` changed a measure and narrowed its claim after exploration.** The card says so, the limits are derived from the part, and the failing probes are kept. That the limits were not fitted to the numbers is the author's word (S).
 - **Six disciplines** have a page and no study.

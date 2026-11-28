@@ -146,6 +146,16 @@ def main():
             obey = [e for e, t in travel.items() if t <= LIM["hinge_travel_rad"]["max"]]
             ignore = [e for e, t in travel.items() if t > LIM["hinge_travel_rad"]["max"]]
             verdict["hinge_stop"] = {"clause": "X3D 4.0 (ISO/IEC 19775-1) 37.4.12", "max_travel_rad": travel, "engines_that_stop": obey, "engines_that_ignore_the_stop": ignore}
+            # amendment of 28 Nov (card.json "amendments"): the adapters now say when they take the default range as no stop, and apply the stop when asked
+            said = {r["engine"]: any("37.4.12" in n and "SingleAxisHingeJoint" in n for n in r.get("notes", [])) for r in traj["runs"] if r["case"] == m["id"] and r["engine"] in ignore}
+            asked = {r["engine"]: max_travel(r) for r in traj.get("runs_x3d_stop", []) if r["case"] == m["id"]}
+            verdict["hinge_stop"].update({
+                "two_readings": {"x3d_text": "A hinge may not travel more than pi radians (or the equivalent angle base units) in either direction from its initial position (X3D 4.0, 37.4.12; read from the published specification 27 Nov 2026)",
+                                 "ode_convention": "For rotational joints, this stop must be greater than -pi to be effective (ODE v0.5 user guide 7.5.1, dParamLoStop; read 28 Nov 2026). A stop at exactly pi is no stop",
+                                 "which_engine_takes_which": "the built-in engine takes the X3D text; the Rapier and cannon-es adapters take ODE's convention by default"},
+                "adapter_says_so_in_its_notes": said, "max_travel_rad_with_hingeStop_x3d": asked})
+            verdict["gates"]["hinge-stop-is-said"] = bool(said) and all(said.values())
+            verdict["gates"]["hinge-stop-x3d-option"] = len(asked) == 3 and all(t <= LIM["hinge_travel_rad"]["max"] for t in asked.values())
             if obey and not all(engines[e]["checks"]["revolutions"]["pass"] for e in obey):
                 failed.add("R1-on-a-standard-engine")
         control(m["id"], m["what"], m["expect_fail"], failed)
@@ -173,7 +183,8 @@ def main():
     loss = {"schema": "loom.eng-loss/1", "format": CARD["exchange"]["format"], "items": [
         {"field": "SingleAxisHingeJoint minAngle / maxAngle defaults (-pi, pi)", "lost_in": hs.get("engines_that_ignore_the_stop", []),
          "kept_in": hs.get("engines_that_stop", []), "evidence": hs.get("max_travel_rad"),
-         "note": "The adapters read the default range as 'no stop' and write no note. Under clause 37.4.12 the stop is the standard's behaviour."},
+         "said_in_adapter_notes": hs.get("adapter_says_so_in_its_notes"), "max_travel_rad_with_hingeStop_x3d": hs.get("max_travel_rad_with_hingeStop_x3d"),
+         "note": "The adapters read the default range as 'no stop', which is ODE's convention, and since 28 Nov say so in their notes. Clause 37.4.12 read literally stops the hinge at pi; use({ hingeStop: 'x3d' }) applies that."},
         {"field": "RigidBody inertia", "lost_in": ["builtin", "rapier", "cannon"], "kept_in": [],
          "note": "Inertia is derived from the collision shapes in all three (LOOM-v1 failure mode 140). The kinematic checks here do not depend on it."},
         {"field": "pin clearance, friction, bar elasticity", "lost_in": ["the model"], "kept_in": [],

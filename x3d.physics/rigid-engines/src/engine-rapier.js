@@ -40,10 +40,11 @@
         const t = J.node.type, f = J.node.f, A = eb.get(J.A), B = eb.get(J.B); if (!A || !B) continue;
         const rel = J.qrel0, offAxis = Math.abs(Math.abs(rel[3]) - 1) > 1e-6;
         if (offAxis && ['SingleAxisHingeJoint', 'SliderJoint', 'UniversalJoint', 'DoubleAxisHingeJoint'].includes(t)) ctx.notes.push(t + ' ' + (J.node.def || '') + ': the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset');
-        let jd = null, lim = null, kind = t;
+        let jd = null, lim = null, kind = t, x3dStop = null;
         const pa = V(J.pa), pb = V(J.pb);
         if (t === 'BallJoint') jd = R.JointData.spherical(pa, pb);
-        else if (t === 'SingleAxisHingeJoint') { jd = R.JointData.revoluteWithAxes(pa, pb, V(J.axA), V(J.axB)); lim = [f.minAngle, f.maxAngle]; }
+        else if (t === 'SingleAxisHingeJoint') { jd = R.JointData.revoluteWithAxes(pa, pb, V(J.axA), V(J.axB)); lim = [f.minAngle, f.maxAngle];
+          if (!(lim[1] - lim[0] < 2 * Math.PI - 1e-6)) { if (E.hingeStop === 'x3d') x3dStop = [lim[0], lim[1]]; else ctx.notes.push(E.hingeNote(J, 'Rapier')); } }
         else if (t === 'SliderJoint') {                  // anchors: A's origin, and the same world point seen from B; Rapier measures the displacement from that rest pose, X3D the absolute separation of the origins
           const d = U.rotv(J.A.q, J.d0), s0 = U.dot(U.rotv(J.A.q, J.axA), d);
           jd = R.JointData.prismatic(V([0, 0, 0]), V(U.rotv(U.qconj(J.B.q), U.mul(d, -1))), V(J.axA)); lim = [f.minSeparation - s0, f.maxSeparation - s0];
@@ -57,8 +58,13 @@
         if (kind === 'motor') { joints.push({ J, kind, A, B }); continue; }
         const ij = world.createImpulseJoint(jd, A.rb, B.rb, true);
         if (lim && lim[1] > lim[0] && (t === 'SliderJoint' ? isFinite(lim[0]) && isFinite(lim[1]) : lim[1] - lim[0] < 2 * Math.PI - 1e-6)) ij.setLimits(lim[0], lim[1]);
-        joints.push({ J, kind, ij, A, B });
+        joints.push({ J, kind, ij, A, B, x3dStop });
       }
+      const hasX3dStop = joints.some((j) => j.x3dStop);
+      /* Releasing the hold: a motor cannot be switched off once set, and Rapier 0.21.0 treats a factor of exactly 0 as a rigid hold at the target speed (the bar stayed on the stop under a torque the other way; test
+         'the x3d stop does not stick'). A vanishing factor makes it vanishingly soft instead. */
+      const MOTOR_FREE = 1e-9;
+      const MOTOR_HOLD = 1e4;                                                                                           // 1/s: velocity-hold stiffness of the stop, mass independent (acceleration based)
       const body = (B) => eb.get(B);
       const pull = () => { for (const [B, e] of eb) { if (e.b.fixed || !(e.b.mass > 0)) continue; const t = e.rb.translation(), r = e.rb.rotation(), v = e.rb.linvel(), w = e.rb.angvel(); B.x = [t.x, t.y, t.z]; B.q = [r.x, r.y, r.z, r.w]; B.v = [v.x, v.y, v.z]; B.w = [w.x, w.y, w.z]; } };
       return {
@@ -67,9 +73,23 @@
           for (const [, e] of eb) { if (e.b.fixed || !(e.b.mass > 0)) continue; const f = e.b.node.f; e.rb.resetForces(true); e.rb.resetTorques(true);
             let F = [0, 0, 0], T = [0, 0, 0]; for (const k of f.forces || []) F = U.add(F, k); for (const k of f.torques || []) T = U.add(T, k); if (F[0] || F[1] || F[2]) e.rb.addForce(V(F), true); if (T[0] || T[1] || T[2]) e.rb.addTorque(V(T), true); }
           for (const j of joints) if (j.kind === 'motor') this._motor(j, h);
-          for (let i = 0; i < sub; i++) world.step();
+          for (let i = 0; i < sub; i++) { world.step(); if (hasX3dStop) { pull(); for (const j of joints) if (j.x3dStop) this._x3dStop(j, hs); } }
           pull();
           for (const j of joints) this.jointState(j.J);
+        },
+        /* The X3D stop at +-pi from the initial pose. Rapier's own revolute limit measures a wrapped angle, so a limit at exactly +-pi sits on the wrap and cannot hold. The stop is applied here instead, as an inelastic
+           angular impulse about the hinge axis whenever the continuous angle is past the stop and still moving outwards (stopBounce 0), with a small pull back so the overshoot of one step does not accumulate. */
+        _x3dStop(j, h) {
+          const J = j.J, a = U.rotv(J.A.q, J.axA), th = U.twist(J, a), raw = th > j.x3dStop[1] ? th - j.x3dStop[1] : th < j.x3dStop[0] ? th - j.x3dStop[0] : 0, over = Math.abs(raw) > 1e-4 ? raw : 0; J.th = th;   /* within 1e-4 rad of the stop the joint is free again, so the hold cannot stick */ if (!over) { if (j.held) { j.ij.configureMotorVelocity(0, MOTOR_FREE); j.held = false; } return; }
+          const dyn = (e) => !e.b.fixed && e.b.mass > 0, wa = j.A.rb.angvel(), wb = j.B.rb.angvel(), wrel = (wb.x - wa.x) * a[0] + (wb.y - wa.y) * a[1] + (wb.z - wa.z) * a[2];
+          const want = -0.2 * over / h, s = Math.sign(over);
+          /* past the stop: hold the joint's own velocity at the return speed inside Rapier's solve, so the rest of a closed chain cannot push it further during the next step */
+          if (!j.held) { j.ij.configureMotorModel(R.MotorModel.AccelerationBased); j.held = true; } j.ij.configureMotorVelocity(want, MOTOR_HOLD);
+          if (s * (wrel - want) <= 0) return;                                                                          // already coming back fast enough
+          const inv = (e) => { if (!dyn(e)) return 0; const m = e.rb.effectiveWorldInvInertia().elements;             // symmetric 3x3: m11 m12 m13 m22 m23 m33
+            return a[0] * (m[0] * a[0] + m[1] * a[1] + m[2] * a[2]) + a[1] * (m[1] * a[0] + m[3] * a[1] + m[4] * a[2]) + a[2] * (m[2] * a[0] + m[4] * a[1] + m[5] * a[2]); };
+          const k = inv(j.A) + inv(j.B); if (!(k > 0)) return; const lam = (want - wrel) / k, imp = V(U.mul(a, lam)), neg = V(U.mul(a, -lam));
+          if (dyn(j.B)) j.B.rb.applyTorqueImpulse(imp, true); if (dyn(j.A)) j.A.rb.applyTorqueImpulse(neg, true);
         },
         _motor(j, h) { const f = j.J.node.f, n = Math.max(0, Math.min(3, f.enabledAxes | 0)), T = [f.axis1Torque, f.axis2Torque, f.axis3Torque], X = [f.motor1Axis, f.motor2Axis, f.motor3Axis];
           for (let i = 0; i < n; i++) { if (!T[i]) continue; const len = Math.hypot(...X[i]) || 1, a = U.rotv(j.J.A.q, U.mul(X[i], 1 / len)), t = U.mul(a, T[i]);

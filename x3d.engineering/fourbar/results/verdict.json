@@ -16,7 +16,9 @@
   "REF3": true,
   "REF4": true,
   "REF5": true,
-  "R1-R2-R5-R6@1rad/s": true
+  "R1-R2-R5-R6@1rad/s": true,
+  "hinge-stop-is-said": true,
+  "hinge-stop-x3d-option": true
  },
  "engines": {
   "fourbar-w1": {
@@ -102,7 +104,9 @@
     },
     "notes": [
      "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
-     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
     ]
    },
    "cannon": {
@@ -144,7 +148,10 @@
       "margin": 0.006972764044092528
      }
     },
-    "notes": []
+    "notes": [
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
+    ]
    }
   },
   "fourbar-w3": {
@@ -230,7 +237,9 @@
     },
     "notes": [
      "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
-     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
     ]
    },
    "cannon": {
@@ -272,7 +281,10 @@
       "margin": -1.1308493630157805
      }
     },
-    "notes": []
+    "notes": [
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
+    ]
    }
   },
   "fourbar-w10": {
@@ -358,7 +370,9 @@
     },
     "notes": [
      "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
-     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
     ]
    },
    "cannon": {
@@ -400,7 +414,10 @@
       "margin": -32.813628343801945
      }
     },
-    "notes": []
+    "notes": [
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
+    ]
    }
   },
   "fourbar-w30": {
@@ -486,7 +503,9 @@
     },
     "notes": [
      "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
-     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
     ]
    },
    "cannon": {
@@ -528,7 +547,10 @@
       "margin": -46.92164787909081
      }
     },
-    "notes": []
+    "notes": [
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
+    ]
    }
   },
   "mutant-coupler-plus2pct": {
@@ -614,7 +636,9 @@
     },
     "notes": [
      "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
-     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
     ]
    },
    "cannon": {
@@ -656,7 +680,10 @@
       "margin": -1.131218108287864
      }
     },
-    "notes": []
+    "notes": [
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
+    ]
    }
   },
   "mutant-nongrashof": {
@@ -742,7 +769,9 @@
     },
     "notes": [
      "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
-     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
     ]
    },
    "cannon": {
@@ -784,7 +813,10 @@
       "margin": -11.036990670583696
      }
     },
-    "notes": []
+    "notes": [
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
+    ]
    }
   },
   "mutant-low-transmission": {
@@ -870,7 +902,9 @@
     },
     "notes": [
      "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
-     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
     ]
    },
    "cannon": {
@@ -912,7 +946,10 @@
       "margin": -1.7198327284280048
      }
     },
-    "notes": []
+    "notes": [
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
+    ]
    }
   },
   "control-four-hinges": {
@@ -998,9 +1035,13 @@
     },
     "notes": [
      "SingleAxisHingeJoint PinA: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinA: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
      "SingleAxisHingeJoint PinB: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinB: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
      "SingleAxisHingeJoint PinC: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
-     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset"
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: the two bodies start rotated against each other; Rapier aligns the joint frames at load, so the first steps correct that offset",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in Rapier, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
     ]
    },
    "cannon": {
@@ -1042,7 +1083,12 @@
       "margin": 0.3682024871457854
      }
     },
-    "notes": []
+    "notes": [
+     "SingleAxisHingeJoint PinA: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinB: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinC: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here",
+     "SingleAxisHingeJoint PinD: default minAngle/maxAngle (-pi, pi) taken as no stop in cannon-es, so the hinge turns freely (ODE's convention). X3D 4.0 clause 37.4.12 stops a hinge pi from its initial position, and the built-in engine does; use({ hingeStop: 'x3d' }) to apply that stop here"
+    ]
    }
   }
  },
@@ -1248,11 +1294,25 @@
   "engines_that_ignore_the_stop": [
    "rapier",
    "cannon"
-  ]
+  ],
+  "two_readings": {
+   "x3d_text": "A hinge may not travel more than pi radians (or the equivalent angle base units) in either direction from its initial position (X3D 4.0, 37.4.12; read from the published specification 27 Nov 2026)",
+   "ode_convention": "For rotational joints, this stop must be greater than -pi to be effective (ODE v0.5 user guide 7.5.1, dParamLoStop; read 28 Nov 2026). A stop at exactly pi is no stop",
+   "which_engine_takes_which": "the built-in engine takes the X3D text; the Rapier and cannon-es adapters take ODE's convention by default"
+  },
+  "adapter_says_so_in_its_notes": {
+   "rapier": true,
+   "cannon": true
+  },
+  "max_travel_rad_with_hingeStop_x3d": {
+   "builtin": 3.144674282808127,
+   "rapier": 3.157309473119942,
+   "cannon": 3.1621310068342376
+  }
  },
  "summary": {
-  "gates": 8,
-  "gates_passed": 8,
+  "gates": 10,
+  "gates_passed": 10,
   "controls": 8,
   "controls_caught": 8,
   "failures": [],
