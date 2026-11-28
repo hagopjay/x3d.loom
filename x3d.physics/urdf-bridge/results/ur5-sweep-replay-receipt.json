@@ -1,0 +1,57 @@
+{
+ "schema": "x3d.loom/ros2-replay-receipt/1",
+ "urdf": "ur5_robot.urdf",
+ "recording": "ur5-sweep.mcap",
+ "recording_sha256": "3dafa93e93ce0e7eebd8149b4822293c393b4bedd3aeeb150d160d59db88252c",
+ "recording_info": {
+  "messages": 361,
+  "problems": [],
+  "chunks": [
+   "zstd"
+  ],
+  "profile": "ros2",
+  "library": "mcap-python/1.6.0 mcap-ros2-support/0.6.0"
+ },
+ "x3d": "ur5-sweep.x3d",
+ "x3d_sha256": "ee985798ad3d33edb8071483b0f1358a1c0149cdfe2f32c5729494d961086d47",
+ "mujoco": "4.0.1",
+ "tolerance": {
+  "position_m": 1e-09,
+  "rotation_rad": 1e-09
+ },
+ "result": {
+  "samples": 721,
+  "messages": 361,
+  "links": 11,
+  "worst_at_messages": {
+   "position_m": 4.085720730265628e-12,
+   "rotation_rad": 1.1894626768659898e-11
+  },
+  "worst_at_midpoints": {
+   "position_m": 4.0542263836304084e-12,
+   "rotation_rad": 1.179183605908091e-11
+  },
+  "pass": true
+ },
+ "controls": [
+  {
+   "control": "keys not split for SLERP (--no-split)",
+   "caught": false,
+   "worst_at_midpoints_m": 4.0542263836304084e-12,
+   "worst_at_midpoints_rad": 1.179183605908091e-11,
+   "note": "no step between messages reaches pi in this recording, so splitting changes nothing"
+  },
+  {
+   "control": "one ROUTE sent to the wrong joint",
+   "caught": true,
+   "worst_at_messages_m": 0.6647752097195996,
+   "worst_at_messages_rad": 1.3999960049420002
+  },
+  {
+   "control": "keys shifted by one message",
+   "caught": true,
+   "worst_at_messages_m": 0.030503282750063414,
+   "worst_at_messages_rad": 0.10026796417932528
+  }
+ ]
+}
