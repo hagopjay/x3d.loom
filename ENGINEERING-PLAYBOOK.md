@@ -6,7 +6,7 @@ Start from [SCIENCE-PLAYBOOK.md](SCIENCE-PLAYBOOK.md) when the subject is a nume
 
 **Added later on 28 November: a third study, `[TNS]`,** a tensegrity prism and the six-strut classic ([x3d.engineering/tensegrity/](x3d.engineering/tensegrity/), end of section 5). It was built after the playbook and under it, so it tests the spine and did not pay for it. It added no pattern and six failure modes (526 to 531).
 
-**Added later still on 28 November: a fourth study, `[FTB]`,** a 30 m truss footbridge under a moving crowd ([x3d.engineering/footbridge/](x3d.engineering/footbridge/), end of section 5). Built under the playbook; it added no pattern and failure modes 539 to 544. Failure mode 538 is a fault it led back to in the roof truss of `[IFT]`.
+**Added later still on 28 November: a fourth study, `[FTB]`,** a 30 m truss footbridge under a moving crowd ([x3d.engineering/footbridge/](x3d.engineering/footbridge/), end of section 5). Built under the playbook; it added no pattern and failure modes 545 to 550. Failure mode 544 is a fault it led back to in the roof truss of `[IFT]`.
 
 **What is written and what is not.** The spine (section 2) and two chapters, Mechanical and Civil/AEC, are written from studies that ran. Six more disciplines have one page each (section 6) that names the first study that would pay for a chapter. Nothing in those six pages is a result.
 
@@ -301,9 +301,9 @@ The roof truss of `[IFT]` carried loads that stay put. A bridge carries people w
 | The idle member V5 | carries 0 kN from the crowd; without it the top chord's slenderness goes 64 to 129 (limit 120) and its strength 627 to 257 kN against a demand of 563 kN | bank `probes.V5` |
 | Depth 2 to 4 m, sized again each time | steel 1,825 to 2,389 kg with no trend; frequency 3.18 to 4.51 Hz; sag 66 to 27 mm | bank `probes.depth` |
 
-**Two things the envelope pattern (E8) caught.** The frequency requirement is written for the empty bridge and passes. The same bridge with the crowd it is designed to carry sits at 2.26 Hz. The design crowd is 439 kg/m², 19.8 t on a deck whose truss, floor and steel weigh 8.9 t. Reporting the requirement at one mass state alone would have hidden that (failure mode 542). And a full-deck analysis, the natural first run, shows no member reversing at all (541).
+**Two things the envelope pattern (E8) caught.** The frequency requirement is written for the empty bridge and passes. The same bridge with the crowd it is designed to carry sits at 2.26 Hz. The design crowd is 439 kg/m², 19.8 t on a deck whose truss, floor and steel weigh 8.9 t. Reporting the requirement at one mass state alone would have hidden that (failure mode 548). And a full-deck analysis, the natural first run, shows no member reversing at all (547).
 
-**A prediction that was wrong.** The card said 60 × 4 mm diagonals would fail strength and slenderness. They fail slenderness only (185 against 120); the worst push is 37.0 kN against 40.7 kN. The card carries a dated amendment narrowing that control's expectation; no limit moved (540).
+**A prediction that was wrong.** The card said 60 × 4 mm diagonals would fail strength and slenderness. They fail slenderness only (185 against 120); the worst push is 37.0 kN against 40.7 kN. The card carries a dated amendment narrowing that control's expectation; no limit moved (546).
 
 **What X3D held** (E6). Member centre lines and widths (read back and compared), 13 numbers and labels per member as metadata, and the crowd walk as colours keyed from 21 static solutions. Not held: supports, loads, factors, the influence lines, wall thickness, deflection, the mode shape. X3D 4.0 has no node for a load, a support or a section property.
 
@@ -405,6 +405,6 @@ There is no `kit/loom engineering` subcommand. The `requirements` witness is the
 - **`[FBR]` changed a measure and narrowed its claim after exploration.** The card says so, the limits are derived from the part, and the failing probes are kept. That the limits were not fitted to the numbers is the author's word (S).
 - **`[TNS]` material values are Suspected**, and it has no dynamics and no second engine. A cross-check on MuJoCo tendons or PhysX distance joints is the next rung of its ladder.
 - **X3D has no member that only pulls.** Whether a rope or distance-limit joint belongs in the rigid-body component is a question for the standard's authors; nothing has been sent to anyone.
-- **The roof truss meshes were inside out until 28 November** (failure mode 538): fixed in the writer by measured volume, scenes rebuilt, receipt re-issued. The three truss stills predate the fix and were not re-rendered.
+- **The roof truss meshes were inside out until 28 November** (failure mode 544): fixed in the writer by measured volume, scenes rebuilt, receipt re-issued. The three truss stills predate the fix and were not re-rendered.
 - **`[FTB]` is a plane model.** Lateral vibration under a crowd, wind, fatigue and every connection are outside it, and its frequency rule, deflection limit and dead-load factors are recalled, not read.
 - **Six disciplines** have a page and no study.
