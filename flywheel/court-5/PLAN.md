@@ -114,7 +114,7 @@ above or a gate below, except P6, which only arm S addresses.
 | G0 plan | this folder is merged | this pull request |
 | G1 kernel turn | grid probed class by class, checks written, each labelled in `provenance.json`; the nine file-stateable court 4 misses handled as `misses` | two passes done 28 Nov (`grid/PROBE-RESULTS.md`): 14 of 17 classes probed, old kernel `2943b78` left 167 cells missed and crashed on 6, new kernel `d446f94` (x3d_mcp pull request 44) closes all; one-field classes were 97.4% closed before, the two relation classes 40%; still to do: relations from the standard's prose, three unprobed classes, the nine court 4 misses |
 | G2 dry run | `dry-run/run.sh` passes on the frozen scripts with the frozen kernel | passes today on the scaffold (old `ebe969b`, new `2943b78`, X_ITE 16.8.0) |
-| G3 seal | three fresh authors, forbidden every repository and memory, return the fixed form and a hash | arm S sealed 28 Nov (see below); sets a, b, c need the owner's go |
+| G3 seal | three fresh authors, forbidden every repository and memory, return the fixed form and a hash | DONE 28 Nov: arm S and sets a, b, c sealed (owner's go 13:49 UTC); hashes and the authors' counts are in `PREREG-DRAFT.md`; 60 faults, 60 twins, 15 decoys in arm F |
 | G4 freeze | kernel commit and `PREREG.md` pushed before any archive is opened | |
 | G5 open | intent stripped, both kernels run once, play test run once | |
 | G6 read | a fresh second reader, blind to which kernel said what, and the editor's reading written first | |
