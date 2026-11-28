@@ -15,6 +15,9 @@ for f in sorted(new):
     folder = f'{sets}/set-{s}' if os.path.isdir(f'{sets}/set-{s}') else f'{sets}/{s}'
     man = json.load(open(f'{folder}/MANIFEST.json')).get(name, {})
     role = name.split('-')[0]
+    if role not in ('fault', 'twin', 'decoy'):
+        print('left out of the packet (a helper file an Inline points at, not a test file):', f)
+        continue
     seen = {}
     for k, res in (('old', old), ('new', new)):
         for d in res[f]['semantic']:

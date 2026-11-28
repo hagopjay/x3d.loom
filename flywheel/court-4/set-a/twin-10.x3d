@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A drawbridge that tilts up to sixty degrees and comes back down, once every six seconds."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Side' position='2 1 12'/>
+    <Transform DEF='BridgeDeck' center='-2 0 0' translation='2 0 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.5 0.5 0.5'/>
+        </Appearance>
+        <Box size='4 0.2 1.5'/>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF='BridgeClock' cycleInterval='6' loop='true'/>
+    <OrientationInterpolator DEF='BridgeTilt' key='0 0.5 1' keyValue='0 0 1 0 0 0 1 1.0472 0 0 1 0'/>
+    <ROUTE fromNode='BridgeClock' fromField='fraction_changed' toNode='BridgeTilt' toField='set_fraction'/>
+    <ROUTE fromNode='BridgeTilt' fromField='value_changed' toNode='BridgeDeck' toField='set_rotation'/>
+  </Scene>
+</X3D>

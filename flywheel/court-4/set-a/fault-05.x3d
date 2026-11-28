@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A lift platform on a four-second loop: it rises three metres, waits at the top, then comes back down."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 1.5 12'/>
+    <Transform DEF='Platform'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0.3 0.5 0.8'/>
+        </Appearance>
+        <Box size='2 0.2 2'/>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF='LiftClock' cycleInterval='4' loop='true'/>
+    <PositionInterpolator DEF='LiftPath' key='0 0.4 0.6 1' keyValue='0 0 0 0 3 0 0 0 0'/>
+    <ROUTE fromNode='LiftClock' fromField='fraction_changed' toNode='LiftPath' toField='set_fraction'/>
+    <ROUTE fromNode='LiftPath' fromField='value_changed' toNode='Platform' toField='set_translation'/>
+  </Scene>
+</X3D>

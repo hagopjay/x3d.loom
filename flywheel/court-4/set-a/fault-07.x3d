@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="Two lanterns, each on its own clock: the left one bobs up and down every two seconds, the right one every three seconds."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 10'/>
+    <Transform DEF='LeftLantern' translation='-2 0 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='1 0.7 0.2'/>
+        </Appearance>
+        <Sphere radius='0.5'/>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF='BobClock' cycleInterval='2' loop='true'/>
+    <PositionInterpolator DEF='LeftBob' key='0 0.5 1' keyValue='-2 0 0 -2 1 0 -2 0 0'/>
+    <Transform DEF='RightLantern' translation='2 0 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='1 0.7 0.2'/>
+        </Appearance>
+        <Sphere radius='0.5'/>
+      </Shape>
+    </Transform>
+    <TimeSensor DEF='BobClock' cycleInterval='3' loop='true'/>
+    <PositionInterpolator DEF='RightBob' key='0 0.5 1' keyValue='2 0 0 2 1 0 2 0 0'/>
+    <ROUTE fromNode='BobClock' fromField='fraction_changed' toNode='LeftBob' toField='set_fraction'/>
+    <ROUTE fromNode='LeftBob' fromField='value_changed' toNode='LeftLantern' toField='set_translation'/>
+    <ROUTE fromNode='BobClock' fromField='fraction_changed' toNode='RightBob' toField='set_fraction'/>
+    <ROUTE fromNode='RightBob' fromField='value_changed' toNode='RightLantern' toField='set_translation'/>
+  </Scene>
+</X3D>

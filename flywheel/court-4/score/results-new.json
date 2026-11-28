@@ -1,0 +1,2364 @@
+{
+ "kernel": "c185673da18c086235d3193fcda5caae9e136906",
+ "dirty": false,
+ "src_sha256": {
+  "plays_checks.py": "5c724333ff8aa39538bd825d0af9f5428a4c6f9afd2711b8545696d6b5adeeb4",
+  "inert_checks.py": "e1a568f0e75eb45e314d128d71df56617afe52bdc867f082b2619f29fd790814",
+  "data_checks.py": "ad36e2c3e5601230c3219b1772262fcbf556db80ea3f3d2e2ee7bce90c0ca4c8",
+  "semantic.py": "93d55e598fc7cff05612e691c90ad2dbfd1a08bca09b0055c97c17bd3ecc1302"
+ },
+ "files": {
+  "a/decoy-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/decoy-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Marker' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Marker"
+    }
+   ]
+  },
+  "a/decoy-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/decoy-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/decoy-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CopyOffset' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "CopyOffset"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Stage' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Stage"
+    }
+   ]
+  },
+  "a/fault-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "route-type-mismatch",
+     "message": "ROUTE type mismatch: PulseSize.value_changed is SFFloat but PulsingBall.set_scale is SFVec3f. ROUTE requires matching field types.",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/fault-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Crate' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Crate"
+    },
+    {
+     "level": "error",
+     "check": "route-wrong-access-type",
+     "message": "ROUTE toField='size' on Box has accessType='initializeOnly' -- must be 'inputOnly' or 'inputOutput' to be a ROUTE destination.",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/fault-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Tower' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Tower"
+    },
+    {
+     "level": "warning",
+     "check": "timesensor-never-starts",
+     "message": "TimeSensor (DEF='BladeClock') has loop false and startTime 0, and nothing in this file ROUTEs to its startTime, enabled or loop, so it never starts and what it drives stays still. Set loop='true', or ROUTE a time such as a TouchSensor touchTime to set_startTime.",
+     "node": "TimeSensor",
+     "DEF": "BladeClock"
+    }
+   ]
+  },
+  "a/fault-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/fault-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "interpolator-key-length",
+     "message": "PositionInterpolator (DEF='LiftPath'): keyValue has 9 values, not divisible by the 4 key(s). Each key needs a whole keyValue entry.",
+     "node": "PositionInterpolator",
+     "DEF": "LiftPath"
+    }
+   ]
+  },
+  "a/fault-06.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Marker' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Marker"
+    },
+    {
+     "level": "warning",
+     "check": "orientation-never-turns",
+     "message": "OrientationInterpolator (DEF='SpinTurn') is written to turn 6.2832 rad from key value 0 to 1, but its key values are all the same orientation to within 1.5e-05 rad, so nothing turns. A full turn needs steps shorter than pi, for example angles 0, 2.094, 4.189, 6.283.",
+     "node": "OrientationInterpolator",
+     "DEF": "SpinTurn"
+    }
+   ]
+  },
+  "a/fault-07.x3d": {
+   "xsd": {
+    "valid": false,
+    "errors": [
+     "Line 26: Element 'TimeSensor', attribute 'DEF': 'BobClock' is not a valid value of the atomic type 'xs:ID'."
+    ]
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "duplicate-def",
+     "message": "Duplicate DEF name 'BobClock': first used on TimeSensor, also used on TimeSensor. DEF names must be unique within a scene.",
+     "node": "TimeSensor",
+     "DEF": "BobClock"
+    }
+   ]
+  },
+  "a/fault-08.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='DoorClock' (TimeSensor) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "TimeSensor",
+     "DEF": "DoorClock"
+    },
+    {
+     "level": "error",
+     "check": "route-missing-from-node",
+     "message": "ROUTE fromNode='DoorTimer' not found. Available DEFs: Door, DoorClock, DoorSlide.",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/fault-09.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "ColorChaser (component Followers level 1, not declared) is outside profile 'Immersive'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "ColorChaser",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='Followers' level='1'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/fault-10.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "route-invalid-from-field",
+     "message": "ROUTE fromField='fraction' does not exist on TimeSensor (DEF='BridgeClock').",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/fault-11.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BlueCone' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "BlueCone"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='GreenBall' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "GreenBall"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RedCube' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "RedCube"
+    },
+    {
+     "level": "warning",
+     "check": "switch-index-past-children",
+     "message": "ROUTE routes 'FramePicker' to Switch 'Frames', whose key values reach 3 but the Switch has only 3 child(ren) (indices 0 to 2). While the value is 3 the viewer sees nothing. Add children or lower the values (-1 shows nothing on purpose).",
+     "node": "ROUTE",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/fault-12.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Bulb' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Bulb"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Floor' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Floor"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RedButton' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "RedButton"
+    }
+   ]
+  },
+  "a/fault-13.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/fault-14.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "warning",
+     "check": "sensor-zero-size",
+     "message": "ProximitySensor (DEF='GateZone') has size 0 0 0 (the default), so it never senses anything and never sends enterTime. Set size to the region to watch, for example size=\"10 10 10\".",
+     "node": "ProximitySensor",
+     "DEF": "GateZone"
+    }
+   ]
+  },
+  "a/fault-15.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/fault-16.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "warning",
+     "check": "script-handler-missing",
+     "message": "Script (DEF='Gilder') receives events on its inputOnly field 'set_clicked', but its script has no function named 'set_clicked', so nothing runs when the event arrives and its outputs never change. Name the function after the field. Did you mean 'clicked'? The script defines: clicked.",
+     "node": "Script",
+     "DEF": "Gilder"
+    }
+   ]
+  },
+  "a/fault-17.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/fault-18.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BeePath' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "BeePath"
+    },
+    {
+     "level": "warning",
+     "check": "route-fan-in",
+     "message": "ROUTE Bee.translation is driven by both 'Crossing' and 'Bobbing'; when both fire in the same frame the winner is undefined.",
+     "node": "ROUTE",
+     "DEF": ""
+    }
+   ]
+  },
+  "a/fault-19.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='LeftPost' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "LeftPost"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RightPost' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "RightPost"
+    }
+   ]
+  },
+  "a/fault-20.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Overview' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Overview"
+    }
+   ]
+  },
+  "a/twin-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CrateBox' (Box) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Box",
+     "DEF": "CrateBox"
+    }
+   ]
+  },
+  "a/twin-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Tower' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Tower"
+    }
+   ]
+  },
+  "a/twin-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-06.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Marker' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Marker"
+    }
+   ]
+  },
+  "a/twin-07.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-08.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-09.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-10.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-11.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BlueCone' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "BlueCone"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='GreenBall' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "GreenBall"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RedCube' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "RedCube"
+    }
+   ]
+  },
+  "a/twin-12.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Bulb' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Bulb"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Floor' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Floor"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RedButton' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "RedButton"
+    }
+   ]
+  },
+  "a/twin-13.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-14.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-15.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-16.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-17.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-18.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": []
+  },
+  "a/twin-19.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='LeftPost' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "LeftPost"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RightPost' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "RightPost"
+    }
+   ]
+  },
+  "a/twin-20.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Overview' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "Overview"
+    }
+   ]
+  },
+  "b/decoy-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BoltView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "BoltView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='HiddenDefinitionLibrary' (Switch) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Switch",
+     "DEF": "HiddenDefinitionLibrary"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='LyingBolt' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "LyingBolt"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='UprightBolt' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "UprightBolt"
+    }
+   ]
+  },
+  "b/decoy-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='MirroredLeftHandPlacement' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "MirroredLeftHandPlacement"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PairView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "PairView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RightHandPlacement' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "RightHandPlacement"
+    }
+   ]
+  },
+  "b/decoy-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='ClockwiseCrate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "ClockwiseCrate"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='ClockwiseMesh' (IndexedFaceSet) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "IndexedFaceSet",
+     "DEF": "ClockwiseMesh"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CrateCorners' (Coordinate) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Coordinate",
+     "DEF": "CrateCorners"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CrateView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "CrateView"
+    }
+   ]
+  },
+  "b/decoy-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='LongLens' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "LongLens"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='MarkerBox' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "MarkerBox"
+    }
+   ]
+  },
+  "b/decoy-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='DiscFacingViewer' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "DiscFacingViewer"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='DiscView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "DiscView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='EmissionOnly' (Material) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Material",
+     "DEF": "EmissionOnly"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='GlowingDisc' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "GlowingDisc"
+    }
+   ]
+  },
+  "b/fault-01.x3d": {
+   "xsd": {
+    "valid": false,
+    "errors": [
+     "Line 11: Element 'Material': This element is not expected. Expected is one of ( IS, MetadataBoolean, MetadataDouble, MetadataFloat, MetadataInteger, MetadataSet, MetadataString, Appearance, Box, Cone )."
+    ]
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='FrontView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "FrontView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RedBall' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "RedBall"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RedPaint' (Material) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Material",
+     "DEF": "RedPaint"
+    },
+    {
+     "level": "error",
+     "check": "containerfield-unknown",
+     "message": "Material containerField='material' but Shape has no field named 'material'. Material's default containerField is 'material', which does not fit a Shape -- an explicit containerField is required here.",
+     "node": "Material",
+     "DEF": "RedPaint"
+    },
+    {
+     "level": "info",
+     "check": "shape-no-appearance",
+     "message": "Shape (DEF='RedBall') has no Appearance. The shape will render with a default white material.",
+     "node": "Shape",
+     "DEF": "RedBall"
+    }
+   ]
+  },
+  "b/fault-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='FenceView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "FenceView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PostShape' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "PostShape"
+    }
+   ]
+  },
+  "b/fault-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "use-undefined-def",
+     "message": "USE='brassLook' references a DEF that does not exist in this scene. Available DEF names: BallKnob, BrassLook, ConeKnob, KnobView.",
+     "node": "",
+     "DEF": "brassLook"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BallKnob' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "BallKnob"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BrassLook' (Appearance) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Appearance",
+     "DEF": "BrassLook"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='ConeKnob' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "ConeKnob"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='KnobView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "KnobView"
+    }
+   ]
+  },
+  "b/fault-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RidgeTent' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "RidgeTent"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='TentCorners' (Coordinate) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Coordinate",
+     "DEF": "TentCorners"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='TentMesh' (IndexedFaceSet) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "IndexedFaceSet",
+     "DEF": "TentMesh"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='TentView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "TentView"
+    },
+    {
+     "level": "error",
+     "check": "index-out-of-range",
+     "message": "IndexedFaceSet (DEF='TentMesh') coordIndex uses 6 but the coordinate node has 6 point(s) (valid 0 to 5, -1 ends a face); 3 bad entries.",
+     "node": "IndexedFaceSet",
+     "DEF": "TentMesh"
+    },
+    {
+     "level": "info",
+     "check": "mesh-unused-point",
+     "message": "Coordinate (DEF='TentCorners') 1 of 6 point(s) are used by no index; they cost memory and skew bounds.",
+     "node": "Coordinate",
+     "DEF": "TentCorners"
+    }
+   ]
+  },
+  "b/fault-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Crate"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CrateCorners' (Coordinate) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Coordinate",
+     "DEF": "CrateCorners"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CrateMesh' (IndexedFaceSet) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "IndexedFaceSet",
+     "DEF": "CrateMesh"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CrateView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "CrateView"
+    }
+   ]
+  },
+  "b/fault-06.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='FacePaints' (Color) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Color",
+     "DEF": "FacePaints"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PaintedPyramid' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "PaintedPyramid"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PyramidCorners' (Coordinate) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Coordinate",
+     "DEF": "PyramidCorners"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PyramidMesh' (IndexedFaceSet) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "IndexedFaceSet",
+     "DEF": "PyramidMesh"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PyramidView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "PyramidView"
+    }
+   ]
+  },
+  "b/fault-07.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BeamView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "BeamView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='ClosedBeam' (Extrusion) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Extrusion",
+     "DEF": "ClosedBeam"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='SquareBeam' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "SquareBeam"
+    }
+   ]
+  },
+  "b/fault-08.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CentredTerrain' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "CentredTerrain"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RidgeHeights' (ElevationGrid) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "ElevationGrid",
+     "DEF": "RidgeHeights"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RidgeTerrain' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "RidgeTerrain"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='TerrainView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "TerrainView"
+    }
+   ]
+  },
+  "b/fault-09.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='ArrowPointingAlongPlusX' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "ArrowPointingAlongPlusX"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='ArrowView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "ArrowView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Shaft' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Shaft"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Tip' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Tip"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='TipOffset' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "TipOffset"
+    },
+    {
+     "level": "warning",
+     "check": "angle-looks-like-degrees",
+     "message": "Transform (DEF='ArrowPointingAlongPlusX') has rotation with the angle -90. X3D angles are in radians, and -90 reads as degrees: write -1.5708 for -90 degrees, or add a UNIT statement for angles.",
+     "node": "Transform",
+     "DEF": "ArrowPointingAlongPlusX"
+    }
+   ]
+  },
+  "b/fault-10.x3d": {
+   "xsd": {
+    "valid": false,
+    "errors": [
+     "Line 11: Element 'Material', attribute 'diffuseColor': [facet 'pattern'] The value '255 128 0' is not accepted by the pattern '\\s*(([+]?((0(\\.[0-9]*)?|\\.[0-9]+)|1(\\.0*)?)([Ee][+-]?[0-9]+)?)\\s+){2}([+]?((0(\\.[0-9]*)?|\\.[0-9]+)|1(\\.0*)?)([Ee][+-]?[0-9]+)?)\\s*'."
+    ]
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BoxView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "BoxView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='OrangeBox' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "OrangeBox"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='OrangePaint' (Material) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Material",
+     "DEF": "OrangePaint"
+    },
+    {
+     "level": "error",
+     "check": "colour-out-of-range",
+     "message": "Material (DEF='OrangePaint') diffuseColor: the colour is '255 128 0', but each component must be between 0 and 1 (2 components out of range). Clamp to 0..1, or divide by 255 if the values were written as 0..255.",
+     "node": "Material",
+     "DEF": "OrangePaint"
+    }
+   ]
+  },
+  "b/fault-11.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Ball' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Ball"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BallView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "BallView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Floor' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Floor"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='SolidOpaqueBlue' (Material) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Material",
+     "DEF": "SolidOpaqueBlue"
+    },
+    {
+     "level": "warning",
+     "check": "shape-fully-transparent",
+     "message": "Shape has a Material with transparency 1 and nothing in this file ROUTEs to that transparency, so the Shape is never seen. Lower the transparency (0 is opaque), or remove the Shape.",
+     "node": "Shape",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/fault-12.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CheckerTile' (PixelTexture) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "PixelTexture",
+     "DEF": "CheckerTile"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PanelQuad' (IndexedFaceSet) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "IndexedFaceSet",
+     "DEF": "PanelQuad"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PanelView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "PanelView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RepeatFourTimes' (TextureTransform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "TextureTransform",
+     "DEF": "RepeatFourTimes"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='TiledPanel' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "TiledPanel"
+    }
+   ]
+  },
+  "b/fault-13.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Ball' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Ball"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Ground' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Ground"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='HighCorner' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "HighCorner"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='NoonSunOverhead' (DirectionalLight) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "DirectionalLight",
+     "DEF": "NoonSunOverhead"
+    }
+   ]
+  },
+  "b/fault-14.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BackPlate' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "BackPlate"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BackView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "BackView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Figure' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Figure"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Pedestal' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Pedestal"
+    },
+    {
+     "level": "warning",
+     "check": "viewpoint-sees-nothing",
+     "message": "Viewpoint (DEF='BackView') is the first Viewpoint, so the scene opens on it, and all the geometry in this file lies behind it (position 0 1 -8, looking along -0 -0 -1): the screen opens empty. Turn the orientation towards the scene or move the position.",
+     "node": "Viewpoint",
+     "DEF": "BackView"
+    }
+   ]
+  },
+  "b/fault-15.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='GoLampSecondState' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "GoLampSecondState"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='LampView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "LampView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='SignalLamp' (Switch) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Switch",
+     "DEF": "SignalLamp"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='StopLampFirstState' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "StopLampFirstState"
+    },
+    {
+     "level": "warning",
+     "check": "switch-index-past-children",
+     "message": "Switch (DEF='SignalLamp') has whichChoice=2 but only 2 child(ren) (indices 0 to 1), so it shows nothing. Use an index below 2, or -1 if showing nothing is the intent.",
+     "node": "Switch",
+     "DEF": "SignalLamp"
+    }
+   ]
+  },
+  "b/fault-16.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='AssemblyView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "AssemblyView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BasePlate' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "BasePlate"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BracketInline' (Inline) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Inline",
+     "DEF": "BracketInline"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BracketPlacement' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "BracketPlacement"
+    }
+   ]
+  },
+  "b/fault-17.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "error",
+     "check": "profile-component",
+     "message": "NurbsPatchSurface (component NURBS level 1, not declared) is outside profile 'Immersive'. Browsers that enforce the header (X_ITE, x3d-tidy) refuse to load it.",
+     "node": "NurbsPatchSurface",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "profile-component-fix",
+     "message": "Add to <head>: <component name='NURBS' level='1'/> -- or raise the profile (Immersive covers most content, Full covers everything).",
+     "node": "",
+     "DEF": ""
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='HillControlNet' (Coordinate) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Coordinate",
+     "DEF": "HillControlNet"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='HillPatch' (NurbsPatchSurface) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "NurbsPatchSurface",
+     "DEF": "HillPatch"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='HillView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "HillView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='SmoothHill' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "SmoothHill"
+    }
+   ]
+  },
+  "b/fault-18.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BluePillarRight' (ProtoInstance) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "ProtoInstance",
+     "DEF": "BluePillarRight"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PillarView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "PillarView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RedPillarLeft' (ProtoInstance) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "ProtoInstance",
+     "DEF": "RedPillarLeft"
+    },
+    {
+     "level": "error",
+     "check": "proto-field-unknown",
+     "message": "ProtoInstance (DEF='RedPillarLeft') sets fieldValue 'color', but prototype 'Pillar' declares no such field (it declares: pillarColor, position). The value is dropped and the default stays.",
+     "node": "ProtoInstance",
+     "DEF": "RedPillarLeft"
+    }
+   ]
+  },
+  "b/fault-19.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Backrest' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Backrest"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CatalogRecord' (MetadataSet) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "MetadataSet",
+     "DEF": "CatalogRecord"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Chair' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Chair"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='ChairView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "ChairView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Seat' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Seat"
+    }
+   ]
+  },
+  "b/fault-20.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='DoorLeaf' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "DoorLeaf"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='DoorLeafOpenQuarterTurn' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "DoorLeafOpenQuarterTurn"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='DoorView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "DoorView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='HingePost' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "HingePost"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='LatchPost' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "LatchPost"
+    }
+   ]
+  },
+  "b/support-bracket.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='AngleBracket' (Group) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Group",
+     "DEF": "AngleBracket"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Foot' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Foot"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='UprightLeg' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "UprightLeg"
+    },
+    {
+     "level": "info",
+     "check": "no-viewpoint",
+     "message": "Scene has no Viewpoint node. The browser will use a default camera. Consider adding a Viewpoint for a defined initial view.",
+     "node": "",
+     "DEF": ""
+    }
+   ]
+  },
+  "b/twin-01.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='FrontView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "FrontView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RedBall' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "RedBall"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RedPaint' (Material) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Material",
+     "DEF": "RedPaint"
+    }
+   ]
+  },
+  "b/twin-02.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='FencePost' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "FencePost"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='FenceView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "FenceView"
+    }
+   ]
+  },
+  "b/twin-03.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BallKnob' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "BallKnob"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='ConeKnob' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "ConeKnob"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='KnobView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "KnobView"
+    }
+   ]
+  },
+  "b/twin-04.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RidgeTent' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "RidgeTent"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='TentCorners' (Coordinate) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Coordinate",
+     "DEF": "TentCorners"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='TentMesh' (IndexedFaceSet) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "IndexedFaceSet",
+     "DEF": "TentMesh"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='TentView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "TentView"
+    }
+   ]
+  },
+  "b/twin-05.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Crate' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Crate"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CrateCorners' (Coordinate) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Coordinate",
+     "DEF": "CrateCorners"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CrateMesh' (IndexedFaceSet) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "IndexedFaceSet",
+     "DEF": "CrateMesh"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CrateView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "CrateView"
+    }
+   ]
+  },
+  "b/twin-06.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='FacePaints' (Color) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Color",
+     "DEF": "FacePaints"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PaintedPyramid' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "PaintedPyramid"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PyramidCorners' (Coordinate) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Coordinate",
+     "DEF": "PyramidCorners"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PyramidMesh' (IndexedFaceSet) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "IndexedFaceSet",
+     "DEF": "PyramidMesh"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PyramidView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "PyramidView"
+    }
+   ]
+  },
+  "b/twin-07.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BeamView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "BeamView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='ClosedBeam' (Extrusion) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Extrusion",
+     "DEF": "ClosedBeam"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='SquareBeam' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "SquareBeam"
+    }
+   ]
+  },
+  "b/twin-08.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CentredTerrain' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "CentredTerrain"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RidgeHeights' (ElevationGrid) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "ElevationGrid",
+     "DEF": "RidgeHeights"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RidgeTerrain' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "RidgeTerrain"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='TerrainView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "TerrainView"
+    }
+   ]
+  },
+  "b/twin-09.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='ArrowPointingAlongPlusX' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "ArrowPointingAlongPlusX"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='ArrowView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "ArrowView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Shaft' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Shaft"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Tip' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "Tip"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='TipOffset' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "TipOffset"
+    }
+   ]
+  },
+  "b/twin-10.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BoxView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "BoxView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='OrangeBox' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "OrangeBox"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='OrangePaint' (Material) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Material",
+     "DEF": "OrangePaint"
+    }
+   ]
+  },
+  "b/twin-11.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Ball' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Ball"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BallView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "BallView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Floor' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Floor"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='SolidOpaqueBlue' (Material) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Material",
+     "DEF": "SolidOpaqueBlue"
+    }
+   ]
+  },
+  "b/twin-12.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CheckerTile' (PixelTexture) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "PixelTexture",
+     "DEF": "CheckerTile"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PanelQuad' (IndexedFaceSet) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "IndexedFaceSet",
+     "DEF": "PanelQuad"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PanelView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "PanelView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RepeatFourTimes' (TextureTransform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "TextureTransform",
+     "DEF": "RepeatFourTimes"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='TiledPanel' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "TiledPanel"
+    }
+   ]
+  },
+  "b/twin-13.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Ball' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Ball"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Ground' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Ground"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='HighCorner' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "HighCorner"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='NoonSunOverhead' (DirectionalLight) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "DirectionalLight",
+     "DEF": "NoonSunOverhead"
+    }
+   ]
+  },
+  "b/twin-14.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BackPlate' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "BackPlate"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BackView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "BackView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Figure' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Figure"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Pedestal' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Pedestal"
+    }
+   ]
+  },
+  "b/twin-15.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='GoLampSecondState' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "GoLampSecondState"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='LampView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "LampView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='SignalLamp' (Switch) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Switch",
+     "DEF": "SignalLamp"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='StopLampFirstState' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "StopLampFirstState"
+    }
+   ]
+  },
+  "b/twin-16.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='AssemblyView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "AssemblyView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BasePlate' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "BasePlate"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BracketInline' (Inline) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Inline",
+     "DEF": "BracketInline"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BracketPlacement' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "BracketPlacement"
+    }
+   ]
+  },
+  "b/twin-17.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='HillControlNet' (Coordinate) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Coordinate",
+     "DEF": "HillControlNet"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='HillPatch' (NurbsPatchSurface) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "NurbsPatchSurface",
+     "DEF": "HillPatch"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='HillView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "HillView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='SmoothHill' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "SmoothHill"
+    }
+   ]
+  },
+  "b/twin-18.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='BluePillarRight' (ProtoInstance) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "ProtoInstance",
+     "DEF": "BluePillarRight"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='PillarView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "PillarView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='RedPillarLeft' (ProtoInstance) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "ProtoInstance",
+     "DEF": "RedPillarLeft"
+    }
+   ]
+  },
+  "b/twin-19.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Backrest' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Backrest"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='CatalogRecord' (MetadataSet) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "MetadataSet",
+     "DEF": "CatalogRecord"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Chair' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Chair"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='ChairView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "ChairView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='Seat' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "Seat"
+    }
+   ]
+  },
+  "b/twin-20.x3d": {
+   "xsd": {
+    "valid": true,
+    "errors": []
+   },
+   "semantic": [
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='DoorLeaf' (Shape) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Shape",
+     "DEF": "DoorLeaf"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='DoorLeafOpenQuarterTurn' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "DoorLeafOpenQuarterTurn"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='DoorView' (Viewpoint) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Viewpoint",
+     "DEF": "DoorView"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='HingePost' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "HingePost"
+    },
+    {
+     "level": "info",
+     "check": "unused-def",
+     "message": "DEF='LatchPost' (Transform) is defined but never USE'd and no ROUTE, IMPORT or EXPORT names it. This is fine if you reference it externally (Script, SAI).",
+     "node": "Transform",
+     "DEF": "LatchPost"
+    }
+   ]
+  }
+ }
+}

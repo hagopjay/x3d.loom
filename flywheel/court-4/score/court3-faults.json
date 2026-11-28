@@ -1,0 +1,202 @@
+[
+ {
+  "court3_file": "a/fault-01.x3d",
+  "family": "route-wiring",
+  "planted_mistake": "TimeSensor ROUTE source field is misspelt fraction_change instead of fraction_changed"
+ },
+ {
+  "court3_file": "a/fault-02.x3d",
+  "family": "route-type",
+  "planted_mistake": "The interpolator SFVec3f output is routed to Lamp set_rotation (SFRotation) instead of set_translation"
+ },
+ {
+  "court3_file": "a/fault-03.x3d",
+  "family": "route-access",
+  "planted_mistake": "ROUTE fromField is Leader set_translation (an inputOnly event) instead of translation_changed"
+ },
+ {
+  "court3_file": "a/fault-04.x3d",
+  "family": "timing-loop",
+  "planted_mistake": "TimeSensor has loop=false with a startTime long in the past, though the pulse is meant to repeat forever"
+ },
+ {
+  "court3_file": "a/fault-05.x3d",
+  "family": "route-wiring",
+  "planted_mistake": "ROUTE toNode is door but the node is DEF Door (case mismatch)"
+ },
+ {
+  "court3_file": "a/fault-06.x3d",
+  "family": "interpolator-keys",
+  "planted_mistake": "PositionInterpolator has three keys but only two keyValue triples"
+ },
+ {
+  "court3_file": "a/fault-07.x3d",
+  "family": "interpolator-keys",
+  "planted_mistake": "ScalarInterpolator key list 0 0.8 0.5 is not non-decreasing (should be 0 0.5 1)"
+ },
+ {
+  "court3_file": "a/fault-08.x3d",
+  "family": "pointing-sensor",
+  "planted_mistake": "TouchSensor sits in a different Group from the sphere, so it is not a sibling of the geometry it should sense"
+ },
+ {
+  "court3_file": "a/fault-09.x3d",
+  "family": "drag-sensor",
+  "planted_mistake": "PlaneSensor minPosition 2 0 and maxPosition 0 0 are swapped (min greater than max leaves x unconstrained)"
+ },
+ {
+  "court3_file": "a/fault-10.x3d",
+  "family": "trigger-toggle",
+  "planted_mistake": "The clock is left enabled (default) so the spinner runs from load, though it should wait for the first click"
+ },
+ {
+  "court3_file": "a/fault-11.x3d",
+  "family": "follower",
+  "planted_mistake": "PositionDamper tau is 0 (no smoothing) instead of 0.5"
+ },
+ {
+  "court3_file": "a/fault-12.x3d",
+  "family": "environment-sensor",
+  "planted_mistake": "ProximitySensor size is 0 0 0 (disabled) instead of 30 30 30"
+ },
+ {
+  "court3_file": "a/fault-13.x3d",
+  "family": "environment-sensor",
+  "planted_mistake": "The Wall Shape is a sibling of the Collision node instead of its child"
+ },
+ {
+  "court3_file": "a/fault-14.x3d",
+  "family": "key-sensor",
+  "planted_mistake": "StringSensor enteredText is routed to the label instead of finalText"
+ },
+ {
+  "court3_file": "a/fault-15.x3d",
+  "family": "switch-sequencer",
+  "planted_mistake": "IntegerSequencer last keyValue is 3 but the Switch has only choices 0..2"
+ },
+ {
+  "court3_file": "a/fault-16.x3d",
+  "family": "script",
+  "planted_mistake": "Script handler function is named onTick but the inputOnly field is named tick, so it is never called"
+ },
+ {
+  "court3_file": "a/fault-17.x3d",
+  "family": "viewpoint-binding",
+  "planted_mistake": "The Closeup Viewpoint is listed before Overview, so Closeup is bound at load"
+ },
+ {
+  "court3_file": "a/fault-18.x3d",
+  "family": "load-sensor",
+  "planted_mistake": "The watched Inline has load=false so it never loads and LoadSensor never reports isLoaded"
+ },
+ {
+  "court3_file": "a/fault-19.x3d",
+  "family": "anchor-navigation",
+  "planted_mistake": "Anchor url fragment is #Closeup but the Viewpoint is DEF CloseUp (case mismatch)"
+ },
+ {
+  "court3_file": "a/fault-20.x3d",
+  "family": "lod",
+  "planted_mistake": "LOD range is 20 5 (decreasing) instead of 5 20"
+ },
+ {
+  "court3_file": "b/fault-01.x3d",
+  "family": "geometry-indices",
+  "planted_mistake": "One face of the indexed face set references vertex index 8 but only vertices 0 to 7 exist."
+ },
+ {
+  "court3_file": "b/fault-02.x3d",
+  "family": "lod-switch",
+  "planted_mistake": "LOD range has three entries for three children; it must have one fewer entry than children."
+ },
+ {
+  "court3_file": "b/fault-03.x3d",
+  "family": "winding",
+  "planted_mistake": "ccw is set to false although the faces are wound counter-clockwise seen from outside."
+ },
+ {
+  "court3_file": "b/fault-04.x3d",
+  "family": "normals",
+  "planted_mistake": "Six per-face normals are supplied while normalPerVertex is true and there are eight vertices."
+ },
+ {
+  "court3_file": "b/fault-05.x3d",
+  "family": "colour",
+  "planted_mistake": "Colour components are written on a 0 to 255 scale instead of 0 to 1."
+ },
+ {
+  "court3_file": "b/fault-06.x3d",
+  "family": "proto",
+  "planted_mistake": "The ProtoInstance sets a field called towerColour but the prototype declares towerColor."
+ },
+ {
+  "court3_file": "b/fault-07.x3d",
+  "family": "texture-coordinates",
+  "planted_mistake": "The TextureCoordinate holds three points for a four-vertex face."
+ },
+ {
+  "court3_file": "b/fault-08.x3d",
+  "family": "extrusion",
+  "planted_mistake": "The cross-section points are ordered so the outline crosses itself (a bow-tie) instead of tracing the square."
+ },
+ {
+  "court3_file": "b/fault-09.x3d",
+  "family": "elevationgrid",
+  "planted_mistake": "height lists 11 values but xDimension times zDimension is 12."
+ },
+ {
+  "court3_file": "b/fault-10.x3d",
+  "family": "nurbs",
+  "planted_mistake": "The uKnot vector has six values but uDimension plus uOrder needs seven."
+ },
+ {
+  "court3_file": "b/fault-11.x3d",
+  "family": "profile-component",
+  "planted_mistake": "The scene uses a NURBS node but neither the profile nor a component statement provides the NURBS component."
+ },
+ {
+  "court3_file": "b/fault-12.x3d",
+  "family": "def-use",
+  "planted_mistake": "USE refers to wheel but the node was defined as Wheel; names are case sensitive."
+ },
+ {
+  "court3_file": "b/fault-13.x3d",
+  "family": "def-use",
+  "planted_mistake": "The blue ball reuses the DEF name RedPost, so the later USE resolves to the ball."
+ },
+ {
+  "court3_file": "b/fault-14.x3d",
+  "family": "containment",
+  "planted_mistake": "Material is placed directly in Shape instead of inside Appearance."
+ },
+ {
+  "court3_file": "b/fault-15.x3d",
+  "family": "angle-units",
+  "planted_mistake": "The rotation angle is written as 90, which X3D reads as ninety radians."
+ },
+ {
+  "court3_file": "b/fault-16.x3d",
+  "family": "angle-units",
+  "planted_mistake": "fieldOfView is given as 60 (degrees) but is in radians and must be in (0, pi)."
+ },
+ {
+  "court3_file": "b/fault-17.x3d",
+  "family": "navigation-lighting",
+  "planted_mistake": "The headlight is switched off and the scene has no other light, so the lit sphere is unlit."
+ },
+ {
+  "court3_file": "b/fault-18.x3d",
+  "family": "lod-switch",
+  "planted_mistake": "whichChoice is 3, counted from one, but choices are indexed from zero so index 3 selects nothing."
+ },
+ {
+  "court3_file": "b/fault-19.x3d",
+  "family": "material-range",
+  "planted_mistake": "shininess is 50 where the legal range is 0 to 1."
+ },
+ {
+  "court3_file": "b/fault-20.x3d",
+  "family": "lights",
+  "planted_mistake": "The DirectionalLight direction is the zero vector."
+ }
+]

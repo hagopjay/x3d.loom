@@ -1,0 +1,383 @@
+{
+ "decoy-01.x3d": {
+  "category": "event-utilities",
+  "intent": "A light switch: each click on the plate flips the lamp. The first click turns it on, the next click turns it off, and so on.",
+  "why_suspicious": "TouchSensor.isActive (TRUE on press, FALSE on release) is routed straight into a toggle, which looks like a double flip per click; and the ROUTE reads 'toggle_changed' although the field is called 'toggle'. Both are fine: BooleanToggle ignores FALSE inputs, and toggle is inputOutput so the _changed form is allowed.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Lamp.on after real clicks 1, 2, 3: true, false, true. Console errors: 0.",
+  "xsd_valid": true
+ },
+ "decoy-02.x3d": {
+  "category": "orientation-interpolation",
+  "intent": "A globe that spins steadily about its vertical axis, one full turn every four seconds.",
+  "why_suspicious": "The keyValue runs from angle 0 to angle 6.2832 about one axis, the classic 'does not rotate' trap; but there are four keys 120 degrees apart, so every segment is less than half a turn and the shortest path is the intended direction.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Globe turn about +Y tracks 2*pi*fraction (worst deviation 0 rad, sampling skew included); folded angle max 3.113 over 4.2 s. Console errors: 0.",
+  "xsd_valid": true
+ },
+ "decoy-03.x3d": {
+  "category": "timesensor",
+  "intent": "A buoy that bobs up and down every three seconds, from the moment the scene loads and for as long as it stays open.",
+  "why_suspicious": "startTime='1' and stopTime='0' look like a clock that is stopped before it starts, and like times that are long past. A stopTime not later than startTime is ignored, and a looping sensor whose startTime is in the past simply runs.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Buoy.translation.y max 0.98 over 3.4 s; clock still active at the end: true. Console errors: 0.",
+  "xsd_valid": true
+ },
+ "decoy-04.x3d": {
+  "category": "script",
+  "intent": "A slider block that swings left and right, two metres each way, once every four seconds, moved by a script that writes its position directly.",
+  "why_suspicious": "Nothing is routed out of the Script and nothing is routed into the Transform, so it looks unconnected. The Script holds the Transform in an SFNode field (USE) and writes its translation directly, which is allowed because directOutput='true'.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Slider.translation.x min -1.998 max 2 over 4.2 s. Console errors: 0.",
+  "xsd_valid": true
+ },
+ "decoy-05.x3d": {
+  "category": "routes",
+  "intent": "A leader cube that hops between two spots every second, staying put between hops, and a ball that copies the leader's position exactly, one metre higher.",
+  "why_suspicious": "ROUTE statements sit inside Transform nodes instead of at the end of the Scene; a key value is repeated (0.5 0.5), a Transform is routed straight to another Transform with no interpolator, one ROUTE writes 'translation' without set_, and sensors and interpolators are children of a Transform. All legal: ROUTE may appear wherever a child node may, keys need only be non-decreasing (a repeated key makes a step), and inputOutput fields can be routed from and to under either name.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Leader.translation.x values seen: -1.5 1.5; Copy.translation.x equal to it in every sample: true. Console errors: 0.",
+  "xsd_valid": true
+ },
+ "fault-01.x3d": {
+  "category": "route-type",
+  "fault": "The size animation uses a ScalarInterpolator, so an SFFloat value_changed is routed to Transform.set_scale, which is SFVec3f.",
+  "spec": "error per the X3D standard (ISO/IEC 19775-1 4.4.8.1 Routes: source and destination fields of a ROUTE shall have the same type)",
+  "twin": "twin-01.x3d",
+  "viewer_sees": "The ball never changes size.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "PulsingBall.scale.x max 1 over 2.6 s. X_ITE console warning: XML Parser: Bad ROUTE specification: source field type must match destination field type of fields named \"value_changed\" and \"scale\". Twin: PulsingBall.scale.x max 1.496 over 2.6 s.",
+  "xsd_valid": true
+ },
+ "fault-02.x3d": {
+  "category": "route-access",
+  "fault": "The grow animation is routed to Box.size, an initializeOnly field that cannot receive events, instead of to the enclosing Transform's scale.",
+  "spec": "error per the X3D standard (ISO/IEC 19775-1 4.4.2.2 and 4.4.8.1: a ROUTE destination shall be an inputOnly or inputOutput field; Box.size is initializeOnly)",
+  "twin": "twin-02.x3d",
+  "viewer_sees": "The crate stays a small cube.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "max of Crate.scale.y / CrateBox.size.y 1 over 3.2 s. X_ITE console warning: XML Parser: Bad ROUTE specification: destination field \"size\" must be an input. Twin: max of Crate.scale.y / CrateBox.size.y 3.584 over 3.2 s.",
+  "xsd_valid": true
+ },
+ "fault-03.x3d": {
+  "category": "timesensor",
+  "fault": "The TimeSensor that should run forever has no loop='true'; with the default startTime of 0 and loop FALSE it never becomes active.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-03.x3d",
+  "viewer_sees": "The blades never turn.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Blades.rotation.angle max 0 over 2.5 s, clock isActive seen false. Twin: Blades.rotation.angle max 3.202 over 2.5 s, clock isActive seen true.",
+  "xsd_valid": true
+ },
+ "fault-04.x3d": {
+  "category": "timesensor",
+  "fault": "cycleInterval is written in milliseconds (500) although the field is in seconds, so one flash takes 500 s instead of 0.5 s.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-04.x3d",
+  "viewer_sees": "The beacon looks frozen at whatever brightness it had on load; it drifts imperceptibly.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "BeaconMaterial.emissiveColor.r swing (max minus min) 0.008 over 2 s. Twin: BeaconMaterial.emissiveColor.r swing (max minus min) 0.98 over 2 s.",
+  "xsd_valid": true
+ },
+ "fault-05.x3d": {
+  "category": "interpolator-keys",
+  "fault": "The PositionInterpolator has four keys but only three keyValues; the second 'top' position that makes the platform wait is missing.",
+  "spec": "error per the X3D standard (ISO/IEC 19775-1 19.4.6 PositionInterpolator / 19.3.1 X3DInterpolatorNode: keyValue shall contain exactly as many values as key)",
+  "twin": "twin-05.x3d",
+  "viewer_sees": "The platform does not wait at the top (in X_ITE it starts sinking the moment it arrives and then sits at the bottom); other players may do something else, since the result is undefined.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Platform.translation.y while clock fraction in 0.43..0.57: min 0.559 max 2.261 (8 samples). Twin: Platform.translation.y while clock fraction in 0.43..0.57: min 3 max 3 (9 samples).",
+  "xsd_valid": true
+ },
+ "fault-06.x3d": {
+  "category": "orientation-interpolation",
+  "fault": "The full turn is given as two keys, angle 0 and angle 6.2832 about the same axis; these are the same orientation, and an OrientationInterpolator takes the shortest path between them, which is no motion.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-06.x3d",
+  "viewer_sees": "The globe does not spin at all.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Globe.rotation angle (folded to 0..pi) max 0 over 2.5 s. Twin: Globe.rotation angle (folded to 0..pi) max 3.11 over 2.5 s.",
+  "xsd_valid": true
+ },
+ "fault-07.x3d": {
+  "category": "def-names",
+  "fault": "Both TimeSensors carry the same DEF name (copy-paste); the ROUTEs at the end both resolve to one of them, so both lanterns share one clock.",
+  "spec": "error per the X3D standard (ISO/IEC 19775-1 4.4.3 DEF/USE semantics and 19776-1 XML encoding: DEF is of type ID and shall be unique in the document)",
+  "twin": "twin-07.x3d",
+  "viewer_sees": "Both lanterns bob in perfect step on one shared clock; the left lantern's two-second rhythm is gone.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "max |left.y - right.y| 0; left y range 0.967, right y range 0.967 over 3.2 s. Twin: max |left.y - right.y| 0.663; left y range 0.982, right y range 0.985 over 3.2 s.",
+  "xsd_valid": false
+ },
+ "fault-08.x3d": {
+  "category": "route-endpoint",
+  "fault": "The first ROUTE names fromNode='DoorTimer', but no node has that DEF; the clock is called DoorClock.",
+  "spec": "error per the X3D standard (ISO/IEC 19775-1 4.4.8.1 Routes and the 19776-1 XML encoding ROUTE statement: fromNode shall be the DEF name of a node defined earlier in the scene)",
+  "twin": "twin-08.x3d",
+  "viewer_sees": "The door never moves.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Door.translation.x max 0 over 5.3 s. X_ITE console warning: XML Parser: Unknown named or imported node 'DoorTimer'. Twin: Door.translation.x max 1.979 over 5.3 s.",
+  "xsd_valid": true
+ },
+ "fault-09.x3d": {
+  "category": "profile-component",
+  "engine_disagrees": true,
+  "fault": "The scene declares profile Immersive only, but uses a ColorChaser, which belongs to the Followers component that Immersive does not include; the component statement is missing.",
+  "spec": "error per the X3D standard (ISO/IEC 19775-1 7.2.5.3-7.2.5.4 PROFILE and COMPONENT statements, and Annex on Immersive profile: a scene shall use only nodes supported by its declared profile and components; Followers level 1 is not in Immersive)",
+  "twin": "twin-09.x3d",
+  "viewer_sees": "A strictly conforming Immersive player may refuse the node, leaving the panel blue for ever; X_ITE only warns and plays it.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "PanelMaterial.diffuseColor.r max 1 over 3 s. X_ITE console warning: Node type 'ColorChaser' does not match component/profile statements in 'fault-09.x3d'. Twin: PanelMaterial.diffuseColor.r max 1 over 3 s.",
+  "xsd_valid": true
+ },
+ "fault-10.x3d": {
+  "category": "route-endpoint",
+  "fault": "The first ROUTE uses fromField='fraction'; TimeSensor has no such field, the output is fraction_changed.",
+  "spec": "error per the X3D standard (ISO/IEC 19775-1 4.4.8.1 Routes: the ROUTE shall name an existing output field of the source node; 8.4.1 TimeSensor has fraction_changed)",
+  "twin": "twin-10.x3d",
+  "viewer_sees": "The drawbridge never tilts.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "BridgeDeck.rotation.angle max 0 over 6.3 s. X_ITE console warning: XML Parser: Unknown field 'fraction' in node class TimeSensor. Twin: BridgeDeck.rotation.angle max 1.044 over 6.3 s.",
+  "xsd_valid": true
+ },
+ "fault-11.x3d": {
+  "category": "switch-index",
+  "fault": "The IntegerSequencer counts 1, 2, 3 while the Switch children are numbered 0, 1, 2.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-11.x3d",
+  "viewer_sees": "The red cube is only visible before the first sequencer event (in X_ITE never again); the sign shows ball, cone, then nothing for a second.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Frames.whichChoice values seen over 3.6 s: 1 2 3. Twin: Frames.whichChoice values seen over 3.6 s: 0 1 2.",
+  "xsd_valid": true
+ },
+ "fault-12.x3d": {
+  "category": "pointing-sensor-scope",
+  "fault": "The TouchSensor sits among the floor's children instead of beside the button's geometry, so it senses the floor and not the button.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-12.x3d",
+  "viewer_sees": "Clicking the red button does nothing; clicking the floor lights the bulb.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after a real click on the button at the canvas centre, BulbMaterial.emissiveColor.r max 0. Twin: after a real click on the button at the canvas centre, BulbMaterial.emissiveColor.r max 1.",
+  "xsd_valid": true
+ },
+ "fault-13.x3d": {
+  "category": "drag-sensor",
+  "fault": "The PlaneSensor's trackPoint_changed is routed to the puck instead of translation_changed, so the puck's centre is put at the pointer's hit point instead of moving by the drag distance.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-13.x3d",
+  "viewer_sees": "On grabbing the puck anywhere but its centre it jumps so that its centre is under the pointer, and it jumps again on every new grab.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "grabbed 40 px right of the puck centre and dragged 2 px: |Puck.translation.x| 0.861 (2 px is about 0.04 m, 40 px about 0.83 m). Twin: grabbed 40 px right of the puck centre and dragged 2 px: |Puck.translation.x| 0.041 (2 px is about 0.04 m, 40 px about 0.83 m).",
+  "xsd_valid": true
+ },
+ "fault-14.x3d": {
+  "category": "environment-sensor",
+  "fault": "The ProximitySensor has no size, and the default size 0 0 0 disables the sensor.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-14.x3d",
+  "viewer_sees": "The gate never opens, however close the visitor is.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Gate.translation.x max 0 over 3 s; zone isActive seen false. Twin: Gate.translation.x max 2 over 3 s; zone isActive seen true.",
+  "xsd_valid": true
+ },
+ "fault-15.x3d": {
+  "category": "key-sensor",
+  "fault": "The script compares actionKeyPress against browser DOM key codes (39 and 37); the X3D action-key codes for right and left arrow are 20 and 19.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-15.x3d",
+  "viewer_sees": "The arrow keys do nothing.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "real key presses: after two right arrows Cart.translation.x = 0; after one left arrow = 0. Twin: real key presses: after two right arrows Cart.translation.x = 2; after one left arrow = 1.",
+  "xsd_valid": true
+ },
+ "fault-16.x3d": {
+  "category": "script",
+  "fault": "The script's function is named clicked, but the input field is named set_clicked; a Script handler must have exactly the field's name, so it is never called.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-16.x3d",
+  "viewer_sees": "Clicking the tile does nothing; it stays grey.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after a real click on the tile, TileMaterial.diffuseColor r 0.5 b 0.5. Twin: after a real click on the tile, TileMaterial.diffuseColor r 1 b 0.",
+  "xsd_valid": true
+ },
+ "fault-17.x3d": {
+  "category": "script",
+  "fault": "TouchSensor.isActive sends TRUE on press and FALSE on release, and the script flips its state on every event without looking at the value, so each click flips the lamp twice.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-17.x3d",
+  "viewer_sees": "The lamp flashes on only while the mouse button is held down and is off again after every click.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Lamp.on after real clicks 1, 2, 3: false, false, false. Twin: Lamp.on after real clicks 1, 2, 3: true, false, true.",
+  "xsd_valid": true
+ },
+ "fault-18.x3d": {
+  "category": "route-fan-in",
+  "fault": "Both PositionInterpolators are routed to the same inner Transform's translation in the same timestamp, so one overwrites the other; the crossing should drive the outer BeePath Transform.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-18.x3d",
+  "viewer_sees": "The bee only does one of the two motions (in X_ITE it bobs in place at the centre and never crosses).",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "bee position (BeePath + Bee translation) over 3 s: x range 0, y range 0.5. Twin: bee position (BeePath + Bee translation) over 3 s: x range 7.9, y range 0.484.",
+  "xsd_valid": true
+ },
+ "fault-19.x3d": {
+  "category": "follower",
+  "fault": "The target position is routed to the damper's set_value, which sets the output immediately, instead of to set_destination, which it would glide towards.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-19.x3d",
+  "viewer_sees": "The marker teleports from post to post every two seconds with no glide.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Marker.translation.x over 4.4 s: 0 samples strictly between the posts (|x| < 1.7), max 2. Twin: Marker.translation.x over 4.4 s: 33 samples strictly between the posts (|x| < 1.7), max 1.999.",
+  "xsd_valid": true
+ },
+ "fault-20.x3d": {
+  "category": "viewpoint-binding",
+  "fault": "TouchSensor.isActive is routed straight to Viewpoint.set_bind, so the FALSE sent on release unbinds the close-up viewpoint again.",
+  "spec": "legal, plays wrong",
+  "twin": "twin-20.x3d",
+  "viewer_sees": "The view moves to the close-up only while the mouse button is held, then snaps back to the overview.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "0.6 s after a real click and release on the statue, CloseUp.isBound = false, Overview.isBound = true. Twin: 0.6 s after a real click and release on the statue, CloseUp.isBound = true, Overview.isBound = false.",
+  "xsd_valid": true
+ },
+ "twin-01.x3d": {
+  "category": "route-type",
+  "intent": "A ball that pulses: it swells to one and a half times its size and shrinks back, once every two seconds, forever.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "PulsingBall.scale.x max 1.496 over 2.6 s.",
+  "xsd_valid": true
+ },
+ "twin-02.x3d": {
+  "category": "route-access",
+  "intent": "A crate that grows from a small cube into a pillar four times as tall over four seconds, then starts again.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "max of Crate.scale.y / CrateBox.size.y 3.584 over 3.2 s.",
+  "xsd_valid": true
+ },
+ "twin-03.x3d": {
+  "category": "timesensor",
+  "intent": "A windmill whose blades keep turning, one turn every six seconds, for as long as the scene is open.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Blades.rotation.angle max 3.202 over 2.5 s, clock isActive seen true.",
+  "xsd_valid": true
+ },
+ "twin-04.x3d": {
+  "category": "timesensor",
+  "intent": "A warning beacon that flashes: it goes from dark to bright red and back once every half second.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "BeaconMaterial.emissiveColor.r swing (max minus min) 0.98 over 2 s.",
+  "xsd_valid": true
+ },
+ "twin-05.x3d": {
+  "category": "interpolator-keys",
+  "intent": "A lift platform on a four-second loop: it rises three metres, waits at the top, then comes back down.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Platform.translation.y while clock fraction in 0.43..0.57: min 3 max 3 (9 samples).",
+  "xsd_valid": true
+ },
+ "twin-06.x3d": {
+  "category": "orientation-interpolation",
+  "intent": "A globe that spins steadily about its vertical axis, one full turn every four seconds.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Globe.rotation angle (folded to 0..pi) max 3.11 over 2.5 s.",
+  "xsd_valid": true
+ },
+ "twin-07.x3d": {
+  "category": "def-names",
+  "intent": "Two lanterns, each on its own clock: the left one bobs up and down every two seconds, the right one every three seconds.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "max |left.y - right.y| 0.663; left y range 0.982, right y range 0.985 over 3.2 s.",
+  "xsd_valid": true
+ },
+ "twin-08.x3d": {
+  "category": "route-endpoint",
+  "intent": "A sliding door that opens two metres to the side and closes again, repeating every five seconds from the moment the scene starts.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Door.translation.x max 1.979 over 5.3 s.",
+  "xsd_valid": true
+ },
+ "twin-09.x3d": {
+  "category": "profile-component",
+  "intent": "A wall panel that starts blue and eases smoothly to orange during the first two seconds after the scene loads.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "PanelMaterial.diffuseColor.r max 1 over 3 s.",
+  "xsd_valid": true
+ },
+ "twin-10.x3d": {
+  "category": "route-endpoint",
+  "intent": "A drawbridge that tilts up to sixty degrees and comes back down, once every six seconds.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "BridgeDeck.rotation.angle max 1.044 over 6.3 s.",
+  "xsd_valid": true
+ },
+ "twin-11.x3d": {
+  "category": "switch-index",
+  "intent": "A three-frame sign that shows a red cube, then a green ball, then a blue cone, one second each, over and over.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Frames.whichChoice values seen over 3.6 s: 0 1 2.",
+  "xsd_valid": true
+ },
+ "twin-12.x3d": {
+  "category": "pointing-sensor-scope",
+  "intent": "Click the round red button in the middle to make the bulb above it glow yellow. Clicking the floor does nothing.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after a real click on the button at the canvas centre, BulbMaterial.emissiveColor.r max 1.",
+  "xsd_valid": true
+ },
+ "twin-13.x3d": {
+  "category": "drag-sensor",
+  "intent": "Drag the green puck across the table: wherever you grab it, it moves by exactly as much as the pointer moves, without jumping.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "grabbed 40 px right of the puck centre and dragged 2 px: |Puck.translation.x| 0.041 (2 px is about 0.04 m, 40 px about 0.83 m).",
+  "xsd_valid": true
+ },
+ "twin-14.x3d": {
+  "category": "environment-sensor",
+  "intent": "A gate that slides open when the visitor is within five metres of it. The visitor starts three metres away, so the gate opens straight away.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Gate.translation.x max 2 over 3 s; zone isActive seen true.",
+  "xsd_valid": true
+ },
+ "twin-15.x3d": {
+  "category": "key-sensor",
+  "intent": "Press the right-arrow key to nudge the cart one metre to the right, and the left-arrow key to nudge it one metre to the left.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "real key presses: after two right arrows Cart.translation.x = 2; after one left arrow = 1.",
+  "xsd_valid": true
+ },
+ "twin-16.x3d": {
+  "category": "script",
+  "intent": "Click the grey tile and it turns gold.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "after a real click on the tile, TileMaterial.diffuseColor r 1 b 0.",
+  "xsd_valid": true
+ },
+ "twin-17.x3d": {
+  "category": "script",
+  "intent": "A light switch: each click on the plate flips the lamp. The first click turns it on, the next click turns it off, and so on.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Lamp.on after real clicks 1, 2, 3: true, false, true.",
+  "xsd_valid": true
+ },
+ "twin-18.x3d": {
+  "category": "route-fan-in",
+  "intent": "A bee that flies from left to right across the view every four seconds and, at the same time, bobs up and down four times per crossing.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "bee position (BeePath + Bee translation) over 3 s: x range 7.9, y range 0.484.",
+  "xsd_valid": true
+ },
+ "twin-19.x3d": {
+  "category": "follower",
+  "intent": "A marker that glides smoothly, never jumping, to whichever of two posts is the current target. The target swaps between the left and the right post every two seconds.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "Marker.translation.x over 4.4 s: 33 samples strictly between the posts (|x| < 1.7), max 1.999.",
+  "xsd_valid": true
+ },
+ "twin-20.x3d": {
+  "category": "viewpoint-binding",
+  "intent": "Click the statue to jump to the close-up view, and stay in the close-up view after the mouse button is released.",
+  "witness": "x_ite-16.8.0",
+  "witness_note": "0.6 s after a real click and release on the statue, CloseUp.isBound = true, Overview.isBound = false.",
+  "xsd_valid": true
+ }
+}

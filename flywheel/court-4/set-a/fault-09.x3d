@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="A wall panel that starts blue and eases smoothly to orange during the first two seconds after the scene loads."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 6'/>
+    <Shape>
+      <Appearance>
+        <Material DEF='PanelMaterial' diffuseColor='0 0 1'/>
+      </Appearance>
+      <Box size='3 2 0.1'/>
+    </Shape>
+    <ColorChaser DEF='PanelEase' duration='2' initialValue='0 0 1' initialDestination='1 0.5 0'/>
+    <ROUTE fromNode='PanelEase' fromField='value_changed' toNode='PanelMaterial' toField='set_diffuseColor'/>
+  </Scene>
+</X3D>

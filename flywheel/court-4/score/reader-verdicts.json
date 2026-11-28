@@ -1,0 +1,296 @@
+{
+ "faults": {
+  "a/fault-01.x3d": {
+   "real": "real",
+   "reason": "Twin has a PositionInterpolator, fault a ScalarInterpolator (SFFloat) routed to Transform.set_scale (SFVec3f); ROUTE types must match.",
+   "naming": [
+    "d0004"
+   ],
+   "repeats_court3": "a/fault-02.x3d"
+  },
+  "a/fault-02.x3d": {
+   "real": "real",
+   "reason": "Only the ROUTE target differs: CrateBox.size instead of Crate.scale; object model gives Box.size as initializeOnly, not a legal ROUTE destination.",
+   "naming": [
+    "d0005"
+   ],
+   "repeats_court3": null
+  },
+  "a/fault-03.x3d": {
+   "real": "real",
+   "reason": "Fault drops loop='true'; object model defaults loop false, startTime 0, so the sensor's single cycle is long past and it never runs.",
+   "naming": [
+    "d0007"
+   ],
+   "repeats_court3": "a/fault-04.x3d"
+  },
+  "a/fault-04.x3d": {
+   "real": "real",
+   "reason": "cycleInterval 500 instead of 0.5; legal value, wrong only against the stated half-second flash; witness shows near-frozen beacon.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "a/fault-05.x3d": {
+   "real": "real",
+   "reason": "Four keys with nine keyValue numbers (three triples) versus twelve in the twin; keyValue count must match key count.",
+   "naming": [
+    "d0009"
+   ],
+   "repeats_court3": "a/fault-06.x3d"
+  },
+  "a/fault-06.x3d": {
+   "real": "real",
+   "reason": "Two keys, angle 0 and 6.2832 about the same axis, are the same orientation; twin uses five quarter-turn keys. Legal but no motion.",
+   "naming": [
+    "d0010"
+   ],
+   "repeats_court3": null
+  },
+  "a/fault-07.x3d": {
+   "real": "real",
+   "reason": "Second TimeSensor is DEF='BobClock' like the first (twin: RightBobClock); duplicate DEF, also schema-invalid (xs:ID).",
+   "naming": [
+    "d0012"
+   ],
+   "repeats_court3": "b/fault-13.x3d"
+  },
+  "a/fault-08.x3d": {
+   "real": "real",
+   "reason": "ROUTE fromNode='DoorTimer' while the only clock is DEF='DoorClock'; dangling ROUTE source.",
+   "naming": [
+    "d0014"
+   ],
+   "repeats_court3": "a/fault-05.x3d"
+  },
+  "a/fault-09.x3d": {
+   "real": "real",
+   "reason": "Component statement for Followers removed; object model puts ColorChaser in Followers level 1, which the Immersive node list does not include. Plays the same in X_ITE but breaks the header rule.",
+   "naming": [
+    "d0015",
+    "d0016"
+   ],
+   "repeats_court3": "b/fault-11.x3d"
+  },
+  "a/fault-10.x3d": {
+   "real": "real",
+   "reason": "fromField='fraction' instead of fraction_changed; TimeSensor has no field 'fraction'.",
+   "naming": [
+    "d0017"
+   ],
+   "repeats_court3": "a/fault-01.x3d"
+  },
+  "a/fault-11.x3d": {
+   "real": "real",
+   "reason": "IntegerSequencer keyValue 1 2 3 against a three-child Switch (0..2); twin has 0 1 2. Legal, shows nothing at 3 and never child 0.",
+   "naming": [
+    "d0018"
+   ],
+   "repeats_court3": "a/fault-15.x3d"
+  },
+  "a/fault-12.x3d": {
+   "real": "real",
+   "reason": "TouchSensor moved from the RedButton Transform into the Floor Transform, so it senses the floor box, not the button.",
+   "naming": [],
+   "repeats_court3": "a/fault-08.x3d"
+  },
+  "a/fault-13.x3d": {
+   "real": "real",
+   "reason": "ROUTE takes PlaneSensor.trackPoint_changed instead of translation_changed (both SFVec3f outputs); legal, puck snaps to the hit point.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "a/fault-14.x3d": {
+   "real": "real",
+   "reason": "size attribute removed; object model default for ProximitySensor.size is 0 0 0, which senses nothing.",
+   "naming": [
+    "d0025"
+   ],
+   "repeats_court3": "a/fault-12.x3d"
+  },
+  "a/fault-15.x3d": {
+   "real": "real",
+   "reason": "Script tests actionKeyPress against 39/37 (DOM codes); X3D action-key values for right/left are 20/19 as in the twin.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "a/fault-16.x3d": {
+   "real": "real",
+   "reason": "Function is named clicked but the inputOnly field is set_clicked; the handler must carry the field's name, so it never runs.",
+   "naming": [
+    "d0026"
+   ],
+   "repeats_court3": "a/fault-16.x3d"
+  },
+  "a/fault-17.x3d": {
+   "real": "real",
+   "reason": "Script flips on every isActive event (TRUE and FALSE) because the 'if (value)' test of the twin is gone; two flips per click.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "a/fault-18.x3d": {
+   "real": "real",
+   "reason": "Both PositionInterpolators are routed to Bee.set_translation; twin sends Crossing to the outer BeePath. One motion overwrites the other.",
+   "naming": [
+    "d0027"
+   ],
+   "repeats_court3": null
+  },
+  "a/fault-19.x3d": {
+   "real": "real",
+   "reason": "Target is routed to PositionDamper.set_value instead of set_destination (both inputOnly SFVec3f); output jumps instead of gliding.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "a/fault-20.x3d": {
+   "real": "real",
+   "reason": "isActive is routed straight to Viewpoint.set_bind; twin filters it through BooleanFilter.inputTrue. FALSE on release unbinds the view.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "b/fault-01.x3d": {
+   "real": "real",
+   "reason": "Material is a direct child of Shape, with no Appearance; Shape has no material field and the file is schema-invalid.",
+   "naming": [
+    "d0064",
+    "d0065"
+   ],
+   "repeats_court3": "b/fault-14.x3d"
+  },
+  "b/fault-02.x3d": {
+   "real": "real",
+   "reason": "Two <Transform USE='FencePost' translation=.../> replace the twin's separate Transforms; attributes on a USE are not applied, so three posts coincide. (Whether the standard calls the extra attributes an error or just ignores them I could not confirm from the kit; the wrong result is certain.)",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "b/fault-03.x3d": {
+   "real": "real",
+   "reason": "USE='brassLook' against DEF='BrassLook'; names are case sensitive, the USE dangles.",
+   "naming": [
+    "d0069"
+   ],
+   "repeats_court3": "b/fault-12.x3d"
+  },
+  "b/fault-04.x3d": {
+   "real": "real",
+   "reason": "Every coordIndex value is one higher than in the twin; index 6 exceeds the six points (0..5) and point 0 is never used.",
+   "naming": [
+    "d0077",
+    "d0074"
+   ],
+   "repeats_court3": "b/fault-01.x3d"
+  },
+  "b/fault-05.x3d": {
+   "real": "real",
+   "reason": "Lid face is 3 7 6 2 (clockwise from above, normal -Y) where the twin has 3 2 6 7 (normal +Y); with ccw and solid true the lid is culled.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "b/fault-06.x3d": {
+   "real": "real",
+   "reason": "colorPerVertex='false' removed; five colours then map to the five vertices instead of the five faces. Legal, blended colours.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "b/fault-07.x3d": {
+   "real": "real",
+   "reason": "crossSection lacks the repeated closing point of the twin, so one side wall is not generated. Legal.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "b/fault-08.x3d": {
+   "real": "real",
+   "reason": "xDimension and zDimension are 3 and 5 instead of 5 and 3 while the 15 heights are laid out as 3 rows of 5. Legal count, wrong surface.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "b/fault-09.x3d": {
+   "real": "real",
+   "reason": "rotation angle -90 instead of -1.5708; SFRotation angles are radians.",
+   "naming": [
+    "d0096"
+   ],
+   "repeats_court3": "b/fault-15.x3d"
+  },
+  "b/fault-10.x3d": {
+   "real": "real",
+   "reason": "diffuseColor='255 128 0' instead of '1 0.5 0'; SFColor components are limited to 0..1 and the schema rejects it.",
+   "naming": [
+    "d0103"
+   ],
+   "repeats_court3": "b/fault-05.x3d"
+  },
+  "b/fault-11.x3d": {
+   "real": "real",
+   "reason": "transparency='1' on a Material named SolidOpaqueBlue (twin 0); legal, ball invisible.",
+   "naming": [
+    "d0108"
+   ],
+   "repeats_court3": null
+  },
+  "b/fault-12.x3d": {
+   "real": "real",
+   "reason": "TextureTransform scale 0.25 0.25 instead of 4 4 on a node named RepeatFourTimes; legal, magnifies instead of repeating.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "b/fault-13.x3d": {
+   "real": "real",
+   "reason": "DirectionalLight direction 0 1 0 instead of 0 -1 0 on a node named NoonSunOverhead; light travels upward. Legal.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "b/fault-14.x3d": {
+   "real": "real",
+   "reason": "Viewpoint at 0 1 -8 without the twin's half-turn orientation; default view direction is -Z, away from the scene.",
+   "naming": [
+    "d0121"
+   ],
+   "repeats_court3": null
+  },
+  "b/fault-15.x3d": {
+   "real": "real",
+   "reason": "whichChoice='2' on a Switch with two children (0..1); twin has 1. Nothing is drawn.",
+   "naming": [
+    "d0127"
+   ],
+   "repeats_court3": "b/fault-18.x3d"
+  },
+  "b/fault-16.x3d": {
+   "real": "real",
+   "reason": "Inline url support_bracket.x3d (underscore); the file present in the folder is support-bracket.x3d.",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "b/fault-17.x3d": {
+   "real": "real",
+   "reason": "Component statement for NURBS removed; NurbsPatchSurface is NURBS level 1, not in the Immersive node list.",
+   "naming": [
+    "d0136",
+    "d0134"
+   ],
+   "repeats_court3": "b/fault-11.x3d"
+  },
+  "b/fault-18.x3d": {
+   "real": "real",
+   "reason": "fieldValue name='color' where the prototype declares pillarColor; the value is dropped.",
+   "naming": [
+    "d0142"
+   ],
+   "repeats_court3": "b/fault-06.x3d"
+  },
+  "b/fault-19.x3d": {
+   "real": "real",
+   "reason": "Third entry has containerField='metadata' instead of 'value'; object model allows both on MetadataSet, so it is legal but the set holds two entries. No visible change (0.0% pixels).",
+   "naming": [],
+   "repeats_court3": null
+  },
+  "b/fault-20.x3d": {
+   "real": "real",
+   "reason": "center='-0.5 0 0' removed from the door Transform, so it turns about the leaf's middle rather than the hinge edge. Legal.",
+   "naming": [],
+   "repeats_court3": null
+  }
+ },
+ "legal": {},
+ "notes": "LEGAL FILES: the 50 twins and decoys carry no warning or error at all, and no info finding outside unused-def (110 unused-def notes, ignored as instructed), so there was nothing to judge under task 3; the 'legal' map is empty and the checker raised no false alarm on them. NAMING: 23 of 40 fault files have a naming finding (a: 13 of 20, b: 10 of 20). Not named: a/04, a/12, a/13, a/15, a/17, a/19, a/20, b/02, b/05, b/06, b/07, b/08, b/12, b/13, b/16, b/19, b/20. I did not count unused-def notes as naming even where they appear only on the fault and stem from the mistake (a/02 d0006, a/08 d0013, a/18 d0028, b/02 d0067, b/03 d0070): they say the DEF is probably fine and do not point at the defect. Only b/02 would change if they were counted (d0067 is its sole fault-only finding). I did count two consequence findings (b/01 d0065 Shape has no Appearance; b/04 d0074 one point unused) and the two profile-component-fix notes (d0016, d0134); none of these changes a per-file result. d0009 names the right defect but its wording ('9 values, not divisible by the 4 keys') is loose: the real rule is three numbers per key. d0018 reports only the out-of-range value 3 and not that child 0 is never shown. REPEATS: 19 faults marked as repeating court 3. 14 are close repeats (a/03, a/05, a/10, a/11, a/12, a/14, a/16, b/01, b/03, b/09, b/10, b/15, b/17, b/18). 5 are loose repeats, the same defect on the same kind of statement but with a different detail: a/01 (ROUTE type mismatch, other type pair), a/07 (duplicate DEF, on TimeSensors rather than shapes), a/08 (ROUTE node name not found, wrong word on fromNode rather than wrong case on toNode), a/09 (missing component statement, Followers rather than NURBS), b/04 (coordIndex out of range, all indices 1-based rather than one bad index). A stricter reader would set those 5 to null. Same family but judged different, so null: a/02 (ROUTE to an initializeOnly field vs ROUTE from an inputOnly field), b/06 (colorPerVertex vs normalPerVertex), b/13 (light direction reversed vs zero), b/05 (one face reversed vs ccw flag), a/13, a/19, a/20, b/07, b/08, b/16. PATTERN: 18 of the 19 repeats are named (the exception is a/12, the misplaced TouchSensor); of the 21 faults that do not repeat court 3 only 5 are named (a/02, a/06, a/18, b/11, b/14). With the strict count: 13 of 14 close repeats named, 10 of 26 others. By kind: 13 of the 14 faults the manifest calls standard violations are named (b/02 missed), against 10 of the 26 legal-but-wrong ones. REALNESS: all 40 fault files differ from their twin in exactly the stated way (single-change diffs). a/09 and b/19 are real but show no visible difference in the witness player. The key-code claim in a/15 and the USE-attribute claim in b/02 rest on my knowledge of the standard, not on the kit."
+}

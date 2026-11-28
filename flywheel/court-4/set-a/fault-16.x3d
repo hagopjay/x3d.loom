@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <meta name='description' content="Click the grey tile and it turns gold."/>
+  </head>
+  <Scene>
+    <Viewpoint description='Front' position='0 0 8'/>
+    <Group>
+      <TouchSensor DEF='TileTouch' description='turn the tile gold'/>
+      <Shape>
+        <Appearance>
+          <Material DEF='TileMaterial' diffuseColor='0.5 0.5 0.5'/>
+        </Appearance>
+        <Box size='2 2 0.2'/>
+      </Shape>
+    </Group>
+    <Script DEF='Gilder'>
+      <field name='set_clicked' type='SFTime' accessType='inputOnly'/>
+      <field name='colour_changed' type='SFColor' accessType='outputOnly'/>
+<![CDATA[ecmascript:
+function clicked (time)
+{
+   colour_changed = new SFColor (1, 0.8, 0);
+}
+]]>
+    </Script>
+    <ROUTE fromNode='TileTouch' fromField='touchTime' toNode='Gilder' toField='set_clicked'/>
+    <ROUTE fromNode='Gilder' fromField='colour_changed' toNode='TileMaterial' toField='set_diffuseColor'/>
+  </Scene>
+</X3D>
